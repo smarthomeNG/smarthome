@@ -109,11 +109,15 @@ class CLIHandler(lib.connection.Stream):
         if not value:
             self.push("You have to specify an item value. Syntax: up item = value\n")
             return
-        item = self.sh.return_item(path)
-        if not hasattr(item, '_type'):
-            self.push("Could not find item with a valid type specified: '{0}'\n".format(path))
-            return
-        item(value, 'CLI', self.source)
+        items = self.sh.match_items(path)
+        if len(items):
+            for item in items:
+                if not hasattr(item, '_type'):
+                    self.push("Item has no valid type specified: '{0}'\n".format(item.id()))
+                    return
+                item(value, 'CLI', self.source)
+        else:
+            self.push("Could not find any item with given pattern: '{0}'\n".format(path))
 
     def tr(self, logic):
         if not self.updates_allowed:
