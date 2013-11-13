@@ -75,19 +75,27 @@ class CLIHandler(lib.connection.Stream):
     def cl(self):
         self.sh.log.clean(self.sh.now())
 
-    def ls(self, path):
+    def ls(self, path, match=True):
         if not path:
             for item in self.sh:
                 self.push("{0}\n".format(item.id()))
         else:
-            item = self.sh.return_item(path)
-            if hasattr(item, 'id'):
-                if item._type:
-                    self.push("{0} = {1}\n".format(item.id(), item()))
-                else:
-                    self.push("{}\n".format(item.id()))
-                for child in item:
-                    self.ls(child.id())
+            if match:
+               items = self.sh.match_items(path)
+               childs = False
+            else:
+               items = [self.sh.return_item(path)]
+               childs = True
+            if len(items):
+                for item in items:
+                    if hasattr(item, 'id'):
+                        if item._type:
+                            self.push("{0} = {1}\n".format(item.id(), item()))
+                        else:
+                            self.push("{}\n".format(item.id()))
+                        if childs:
+                            for child in item:
+                                self.ls(child.id(), False)
             else:
                 self.push("Could not find path: {}\n".format(path))
 
