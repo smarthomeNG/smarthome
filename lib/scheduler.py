@@ -494,11 +494,10 @@ class Scheduler(threading.Thread):
             if entry == '*':
                 item_range = list(range(low, high + 1))
             else:
-                for item in entry.split(','):
-                    item = int(item)
-                    if item > high:  # entry above range
-                        item = high  # truncate value to highest possible
-                    item_range.append(item)
+                item = int(entry)
+                if item > high:  # entry above range
+                    item = high  # truncate value to highest possible
+                item_range.append(item)
             for entry in item_range:
                 result.append('{:02d}'.format(entry))
 
