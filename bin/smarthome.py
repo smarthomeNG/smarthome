@@ -119,6 +119,7 @@ class SmartHome():
     __children = []
     __item_dict = {}
     _utctz = TZ
+    _dbapis = {}
 
     def __init__(self, smarthome_conf=BASE + '/etc/smarthome.conf'):
         global TZ
@@ -228,8 +229,21 @@ class SmartHome():
             del(self._tz, tzinfo)
         self._tzinfo = TZ
 
+        #############################################################
+        # Database APIs
+        #############################################################
+        if hasattr(self, '_db'):
+            if type(self._db) is not list:
+                self._db = [self._db]
+            for db in self._db:
+                name, sep, package = db.partition(':')
+                self._dbapis[name] = package
+        if 'sqlite3' not in self._dbapis.values():
+            self._dbapis['sqlite'] = 'sqlite3'
+
         logger.info("Start SmartHome.py {0}".format(VERSION))
         logger.debug("Python {0}".format(sys.version.split()[0]))
+        logger.debug("DB-APIs {0}".format(", ".join(["%s" % key for key in self._dbapis.keys()])))
 
         #############################################################
         # Link Tools
@@ -372,6 +386,14 @@ class SmartHome():
             logger.info("SmartHome.py stopped")
         logging.shutdown()
         exit()
+
+    #################################################################
+    # DB API
+    #################################################################
+    def dbapi(self, name):
+        if name not in self._dbapis:
+            raise Exception('DB API {} not registered')
+        return __import__(self._dbapis[name])
 
     #################################################################
     # Item Methods
