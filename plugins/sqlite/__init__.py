@@ -20,7 +20,6 @@
 #########################################################################
 
 import logging
-import sqlite3
 import datetime
 import functools
 import time
@@ -58,6 +57,7 @@ class SQL():
         self._dump_cycle = int(cycle)
         self._buffer = {}
         self._buffer_lock = threading.Lock()
+        sqlite3 = self._sh.dbapi('sqlite')
 #       sqlite3.register_adapter(datetime.datetime, self._timestamp)
         logger.debug("SQLite {0}".format(sqlite3.sqlite_version))
         self._fdb_lock = threading.Lock()
