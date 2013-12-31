@@ -366,21 +366,26 @@ class Scheduler(threading.Thread):
             for entry in crontab.split('<'):
                 if entry.startswith('sun'):
                     return self._sun(crontab)
-            next_event = self._parse_month(crontab, offset=0)  # this month
+            next_event = self._parse_month(crontab)  # this month
             if not next_event:
-                next_event = self._parse_month(crontab, offset=1)  # next month
+                next_event = self._parse_month(crontab, next_month=True)  # next month
             return next_event
         except:
             logger.error("Error parsing crontab: {}".format(crontab))
             return datetime.datetime.now(tzutc()) + dateutil.relativedelta.relativedelta(years=+10)
 
-    def _parse_month(self, crontab, offset=0):
+    def _parse_month(self, crontab, next_month=False):
         now = self._sh.now()
         minute, hour, day, wday = crontab.split(' ')
         # evaluate the crontab strings
         minute_range = self._range(minute, 00, 59)
         hour_range = self._range(hour, 00, 23)
-        mdays = calendar.monthrange(now.year, now.month + offset)[1]
+        if not next_month:
+            mdays = calendar.monthrange(now.year, now.month)[1]
+        elif now.month == 12:
+            mdays = calendar.monthrange(now.year + 1, 1)[1]
+        else:
+            mdays = calendar.monthrange(now.year, now.month + 1)[1]
         if wday == '*' and day == '*':
             day_range = self._day_range('0, 1, 2, 3, 4, 5, 6')
         elif wday != '*' and day == '*':
@@ -392,7 +397,7 @@ class Scheduler(threading.Thread):
             day_range = self._range(day, 0o1, mdays)
         # combine the differnt ranges
         event_range = sorted([str(day) + '-' + str(hour) + '-' + str(minute) for minute in minute_range for hour in hour_range for day in day_range])
-        if offset:  # next month
+        if next_month:  # next month
             next_event = event_range[0]
             next_time = now + dateutil.relativedelta.relativedelta(months=+1)
         else:  # this month

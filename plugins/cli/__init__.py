@@ -64,6 +64,8 @@ class CLIHandler(lib.connection.Stream):
             self.rl(cmd.lstrip('rl').strip())
         elif cmd.startswith('rr'):
             self.rr(cmd.lstrip('rr').strip())
+        elif cmd == 'rt' or cmd == 'runtime':
+            self.rt()
         elif cmd == 'help' or cmd == 'h':
             self.usage()
         elif cmd in ('quit', 'q', 'exit', 'x'):
@@ -160,6 +162,10 @@ class CLIHandler(lib.connection.Stream):
         for t in threading.enumerate():
             self.push("{0}\n".format(t.name))
 
+    def rt(self):
+        # return SH.py runtime
+        self.push("Runtime: {}\n".format(self.sh.runtime()))
+
     def usage(self):
         self.push('cl: clean (memory) log\n')
         self.push('ls: list the first level items\n')
@@ -172,6 +178,7 @@ class CLIHandler(lib.connection.Stream):
         self.push('tr logic: trigger logic\n')
         self.push('rl logic: reload logic\n')
         self.push('rr logic: reload and run logic\n')
+        self.push('rt: return runtime\n')
         self.push('quit: quit the session\n')
         self.push('q: alias for quit\n')
 

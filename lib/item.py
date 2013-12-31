@@ -432,6 +432,9 @@ class Item():
     def prev_value(self):
         return self.__prev_value
 
+    def remove_timer(self):
+        self._sh.scheduler.remove(self.id() + '-Timer')
+
     def return_children(self):
         for child in self.__children:
             yield child
