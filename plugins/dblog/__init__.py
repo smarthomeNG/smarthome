@@ -72,10 +72,12 @@ class DbLog():
         self.connected = True
         logger.info("DbLog: Connected using {}!".format(db))
 
-        self._fdb.execute(self._create_db_log)
-        self._fdb.execute(self._create_db_item)
-        self._fdb.execute(self._create_index_log)
-        self._fdb.execute(self._create_index_item)
+        cur = self._fdb.cursor()
+        cur.execute(self._create_db_log)
+        cur.execute(self._create_db_item)
+        cur.execute(self._create_index_log)
+        cur.execute(self._create_index_item)
+        cur.close()
         self._fdb_lock.release()
         smarthome.scheduler.add('DbLog dump', self._dump, cycle=self._dump_cycle, prio=5)
 
@@ -133,26 +135,38 @@ class DbLog():
                     self._fdb_lock.acquire()
 
                     # Create new item ID
-                    id = self._fdb.execute("SELECT id FROM item where name = ?;", (item.id(),)).fetchone()
+                    cur = self._fdb.cursor()
+                    cur.execute("SELECT id FROM item where name = ?;", (item.id(),))
+                    id = cur.fetchone()
+                    cur.close()
                     if id == None:
-                        id = self._fdb.execute("SELECT MAX(id) FROM item;").fetchone()
-                        self._fdb.execute("INSERT INTO item(id, name) VALUES(?,?);", (1 if id[0] == None else id[0]+1, item.id()))
-                        id = self._fdb.execute("SELECT id FROM item where name = ?;", (item.id(),)).fetchone()
+                        cur = self._fdb.cursor()
+                        cur.execute("SELECT MAX(id) FROM item;")
+                        id = cur.fetchone()
+                        cur.close()
+
+                        cur = self._fdb.cursor()
+                        cur.execute("INSERT INTO item(id, name) VALUES(?,?);", (1 if id[0] == None else id[0]+1, item.id()))
+                        cur.execute("SELECT id FROM item where name = ?;", (item.id(),))
+                        id = cur.fetchone()
+                        cur.close()
 
                     id = id[0]
                     logger.debug('Dumping {} (id {}) with {} values'.format(item.id(), id, len(tuples)))
 
+                    cur = self._fdb.cursor()
                     for t in tuples:
                         _insert = ( t[0], id, t[1], t[2], t[3] )
 
                         # time, item_id, val_str, val_num, val_bool
-                        self._fdb.execute("INSERT INTO log VALUES (?,?,?,?,?);", _insert)
+                        cur.execute("INSERT INTO log VALUES (?,?,?,?,?);", _insert)
 
                     t = tuples[-1]
                     _update = ( t[0], t[1], t[2], t[3], id )
 
                     # time, item_id, val_str, val_num, val_bool
-                    self._fdb.execute("UPDATE item SET time = ?, val_str = ?, val_num = ?, val_bool = ? WHERE id = ?;", _update)
+                    cur.execute("UPDATE item SET time = ?, val_str = ?, val_num = ?, val_bool = ? WHERE id = ?;", _update)
+                    cur.close()
 
                     self._fdb.commit()
                 except Exception as e:
