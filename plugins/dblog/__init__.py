@@ -24,6 +24,7 @@ import datetime
 import functools
 import time
 import threading
+import lib.db
 from urllib.parse import urlparse, parse_qs
 
 logger = logging.getLogger('')
@@ -40,7 +41,6 @@ class DbLog():
       'create_index_log' : "CREATE INDEX log_item_id ON log (item_id);",
       'create_index_item' : "CREATE INDEX item_name ON item (name);"
     }
-    styles = ('qmark', 'format', 'numeric')
 
     def __init__(self, smarthome, db, connect, cycle=10):
         self._sh = smarthome
@@ -49,45 +49,10 @@ class DbLog():
         self._buffer = {}
         self._buffer_lock = threading.Lock()
 
-        if type(connect) is not list:
-            connect = [connect]
+        self._db = lib.db.Database("DbLog", self._sh.dbapi(db), connect)
+        self._db.connect()
+        self._db.setup(self._setup)
 
-        self._params = {}
-        for arg in connect:
-           key, sep, value = arg.partition(':')
-           for t in int, float, str:
-             try:
-               v = t(value)
-               break
-             except:
-               pass
-           self._params[key] = v
-
-        dbapi = self._sh.dbapi(db)
-        self.style = dbapi.paramstyle
-        if self.style not in self.styles:
-            logger.error("DbLog: Format style {} not supported (only {})".format(self.style, self.styles))
-            return
-
-        self._fdb_lock = threading.Lock()
-        self._fdb_lock.acquire()
-        try:
-            self._fdb = dbapi.connect(**self._params)
-        except Exception as e:
-            logger.error("DbLog: Could not connect to the database: {}".format(e))
-            self._fdb_lock.release()
-            return
-        self.connected = True
-        logger.info("DbLog: Connected using {} (using {} style)!".format(db, self.style))
-
-        cur = self._fdb.cursor()
-        for n in self._setup:
-            try:
-                cur.execute(self._setup[n])
-            except Exception as e:
-                logger.warn("DbLog: Query '{}' failed - maybe exists already: {}".format(n, e))
-        cur.close()
-        self._fdb_lock.release()
         smarthome.scheduler.add('DbLog dump', self._dump, cycle=self._dump_cycle, prio=5)
 
     def parse_item(self, item):
@@ -103,14 +68,8 @@ class DbLog():
     def stop(self):
         self.alive = False
         self._dump()
-        self._fdb_lock.acquire()
-        try:
-            self._fdb.close()
-        except Exception:
-            pass
-        finally:
-            self.connected = False
-            self._fdb_lock.release()
+        self._db.close()
+        self.connected = False
 
     def update_item(self, item, caller=None, source=None, dest=None):
         if item.type() == 'num':
@@ -144,69 +103,40 @@ class DbLog():
 
             if len(tuples):
                 try:
-                    self._fdb_lock.acquire()
+                    self._db.lock()
 
                     # Create new item ID
-                    id = self._fetchone("SELECT id FROM item where name = ?;", (item.id(),))
+                    id = self._db.fetchone("SELECT id FROM item where name = ?;", (item.id(),))
                     if id == None:
-                        id = self._fetchone("SELECT MAX(id) FROM item;")
+                        id = self._db.fetchone("SELECT MAX(id) FROM item;")
 
-                        cur = self._fdb.cursor()
-                        self._execute("INSERT INTO item(id, name) VALUES(?,?);", (1 if id[0] == None else id[0]+1, item.id()), cur)
-                        id = self._fetchone("SELECT id FROM item where name = ?;", (item.id(),), cur)
+                        cur = self._db.cursor()
+                        self._db.execute("INSERT INTO item(id, name) VALUES(?,?);", (1 if id[0] == None else id[0]+1, item.id()), cur)
+                        id = self._db.fetchone("SELECT id FROM item where name = ?;", (item.id(),), cur)
                         cur.close()
 
                     id = id[0]
                     logger.debug('Dumping {}/{} with {} values'.format(item.id(), id, len(tuples)))
 
-                    cur = self._fdb.cursor()
+                    cur = self._db.cursor()
                     for t in tuples:
                         _insert = ( t[0], id, t[1], t[2], t[3] )
 
                         # time, item_id, val_str, val_num, val_bool
-                        self._execute("INSERT INTO log VALUES (?,?,?,?,?);", _insert, cur)
+                        self._db.execute("INSERT INTO log VALUES (?,?,?,?,?);", _insert, cur)
 
                     t = tuples[-1]
                     _update = ( t[0], t[1], t[2], t[3], id )
 
                     # time, item_id, val_str, val_num, val_bool
-                    self._execute("UPDATE item SET time = ?, val_str = ?, val_num = ?, val_bool = ? WHERE id = ?;", _update, )
+                    self._db.execute("UPDATE item SET time = ?, val_str = ?, val_num = ?, val_bool = ? WHERE id = ?;", _update, )
                     cur.close()
 
-                    self._fdb.commit()
+                    self._db.commit()
                 except Exception as e:
                     logger.warning("DbLog: problem updating {}: {}".format(item.id(), e))
                 finally:
-                    self._fdb_lock.release()
-
-    def _execute(self, stmt, params=(), cur=None):
-        stmt = self._format(stmt)
-        if cur == None:
-            c = self._fdb.cursor()
-            result = c.execute(stmt, params)
-            c.close()
-        else:
-            result = cur.execute(stmt, params)
-        return result
-
-    def _fetchone(self, stmt, params=(), cur=None):
-        cur = self._fdb.cursor()
-        self._execute(stmt, params, cur)
-        result = cur.fetchone()
-        cur.close()
-        return result
-
-    def _format(self, stmt):
-        if self.style == 'qmark':
-            return stmt
-        elif self.style == 'format':
-            return stmt.replace('?', '%s')
-        elif self.style == 'numeric':
-            cnt = 1
-            while '?' in stmt:
-                stmt = stmt.replace('?', ':' + str(cnt), 1)
-                cnt = cnt + 1
-            return stmt
+                    self._db.release()
 
     def _timestamp(self, dt):
         return int(time.mktime(dt.timetuple())) * 1000 + int(dt.microsecond / 1000)
