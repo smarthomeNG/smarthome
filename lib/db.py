@@ -35,19 +35,23 @@ class Database():
         self._name = name
         self._dbapi = dbapi
 
-        if type(connect) is not list:
-            connect = [connect]
-
         self._params = {}
-        for arg in connect:
-           key, sep, value = arg.partition(':')
-           for t in int, float, str:
-             try:
-               v = t(value)
-               break
-             except:
-               pass
-           self._params[key] = v
+        if type(connect) is str:
+            connect = [trim(p) for p in connect.split('|')]
+
+        if type(connect) is list:
+            for arg in connect:
+               key, sep, value = arg.partition(':')
+               for t in int, float, str:
+                 try:
+                   v = t(value)
+                   break
+                 except:
+                   pass
+               self._params[key] = v
+
+        elif type(connect) is dict:
+            self._params = connect
 
         self._style = self._dbapi.paramstyle
         if self._style not in self._styles:
