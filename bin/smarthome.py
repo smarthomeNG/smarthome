@@ -237,9 +237,12 @@ class SmartHome():
                 self._db = [self._db]
             for db in self._db:
                 name, sep, package = db.partition(':')
-                self._dbapis[name] = package
-        if 'sqlite3' not in self._dbapis.values():
-            self._dbapis['sqlite'] = 'sqlite3'
+                try:
+                    self._dbapis[name] = __import__(package)
+                except ImportError as e:
+                    logger.error("DB-API import failed for \"{}\": {}".format(package, e))
+        if 'sqlite' not in self._dbapis:
+            self._dbapis['sqlite'] = __import__('sqlite3')
 
         logger.info("Start SmartHome.py {0}".format(VERSION))
         logger.debug("Python {0}".format(sys.version.split()[0]))
@@ -394,7 +397,7 @@ class SmartHome():
     def dbapi(self, name):
         if name not in self._dbapis:
             raise Exception('DB API {} not registered')
-        return __import__(self._dbapis[name])
+        return self._dbapis[name]
 
     #################################################################
     # Item Methods
