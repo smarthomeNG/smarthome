@@ -40,6 +40,7 @@ If you like, you can also give the serial port a descriptive name with this.
 #    update_cycle = 20
 #    use_checksum = no
 #    reset_baudrate = no
+#    no_waiting = yes
 </pre>
 
 Description of the attributes:
@@ -48,6 +49,18 @@ Description of the attributes:
 * __update_cycle__: interval in seconds how often the data is read from the meter - be careful not to set a shorter interval than a read operation takes (default: 60)
 * __use_checksum__: controls the checksum check of the received data - disable if you get continuous checksum errors/timeouts (yes/no - default: yes)
 * __reset_baudrate__: determines if the baudrate is reset to 300 baud in every read cycle or left at full speed - disable to improve performance if your meter allows it (yes/no - default: yes)
+* __no_waiting__: omit additional waiting times required for some meters - enable to improve performance if your meter allows it (yes/no - default: no)
+
+Setup procedure:
+
+1. Set only __serialport__ and start in debug-mode
+ * not working: try to disable __use_checksum__ / use fixed __baudrate__ / cry for help
+ * working: move on
+2. Optimize for speed
+ * disable __reset_baudrate__ - still works?
+ * enable __no_waiting__ - still works?
+3. Read the time a reading takes from the debug-output
+ * set __update_cycle__ to a meaningfull value
 
 ## items.conf
 
@@ -59,13 +72,11 @@ Attributes:
 * __dlms_obis_code__: obis code such as 'x.y', 'x.y.z' or 'x.y.z*q'
  
 <pre>
-[Stromzaehler]
-  [[Bezug]]
-    [[[Energie]]]
-      type = num
-      dlms_obis_code = 1.8.1
-  [[Lieferung]]
-    [[[Energie]]]
-      type = num
-      dlms_obis_code = 2.8.1
+[Smartmeter]
+  [[Import_Energy]]
+    type = num
+    dlms_obis_code = 1.8.1
+  [[Export_Energy]]
+    type = num
+    dlms_obis_code = 2.8.1
 </pre>

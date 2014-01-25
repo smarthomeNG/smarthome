@@ -289,7 +289,7 @@ items = { d0: sh.wetter.vorhersage.heute, d1: sh.wetter.vorhersage.morgen, d2: s
 for date in forecast:
     if date.date() in items:
         base = items[date.date()]
-        if date.hour == 5:
+        if date.hour == 6:
             frame = base.frueh
         elif date.hour == 11:
             frame = base.mittag

@@ -109,7 +109,7 @@ def pages(smarthome, directory):
             with open("{0}/{1}.html".format(outdir, item.id()), 'w') as f:
                 f.write(r)
         except Exception as e:
-            logger.warning("Could not write to {0}/{1}.html".format(outdir, item.id()))
+            logger.warning("Could not write to {0}/{1}.html: {}".format(outdir, item.id(), e))
     nav = parse_tpl(tpldir + '/navigation.html', [('{{ visu_navis }}', nav_lis)])
     try:
         with open(outdir + '/navigation.html', 'w') as f:

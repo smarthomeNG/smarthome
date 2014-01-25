@@ -1,5 +1,18 @@
 # ComfoAir
 
+The ComfoAir plugin is designed to connect to a Zehnder ComfoAir KWL (heat-recovery ventilation) system and read out and write its parameters.
+Primarly supported is the ComfoAir 350, which uses the following protocol: http://www.see-solutions.de/sonstiges/Protokollbeschreibung_ComfoAir.pdf
+There exist identical systems from different manufactures which use the exact same protocol, known is the Wernig G90-380 and supposedly some types of Paul Lüftung Germany.
+
+Additional support for the ComfoAir 500 was added but the protocol is not fully investigated yet:  http://matsab.de/images/comfoair/Protokoll_CA500_Avignon.pdf
+
+The ComfoAir plugin uses a separate commands.py file which contains the different control- (control characters like start sequence, acknowledge etc.) and commandsets for the supported systems. 
+
+You can configure the plugin to connect by TCP (host and port) using a TCP to serial (RS232 for ComfoAir 350 or RS485 for ComfoAir 500) converter or provide a direct serial connection on the host system.
+
+WARNING!
+* Don't use the CC Ease command panel parallel with the plugin. They would both try to communicate with ComfoAir at the same time and create big troubles (corrupt the config in ComfoAir in worst case).
+
 # Requirements
 
 This plugin has no requirements or dependencies.
@@ -18,16 +31,6 @@ This plugin has no requirements or dependencies.
     #serialport = /dev/ttyUSB0  # Enable this if you want to use a serial connection
 
 </pre>
-
-The ComfoAir plugin is designed to connect to a Zehnder ComfoAir KWL (heat-recovery ventilation) system and read out and write its parameters.
-Primarly supported is the ComfoAir 350, which uses the following protocol: http://www.see-solutions.de/sonstiges/Protokollbeschreibung_ComfoAir.pdf
-There exist identical systems from different manufactures which use the exact same protocol, known is the Wernig G90-380 and supposedly some types of Paul Lüftung Germany.
-
-Additional support for the ComfoAir 500 was added but the protocol is not fully investigated yet:  http://matsab.de/images/comfoair/Protokoll_CA500_Avignon.pdf
-
-The ComfoAir plugin uses a separate commands.py file which contains the different control- (control characters like start sequence, acknowledge etc.) and commandsets for the supported systems. 
-
-You can configure the plugin to connect by TCP (host and port) using a TCP to serial (RS232 for ComfoAir 350 or RS485 for ComfoAir 500) converter or provide a direct serial connection on the host system.
 
 ## items.conf
 

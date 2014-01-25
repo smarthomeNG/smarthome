@@ -287,15 +287,17 @@ class WebSocketHandler(lib.connection.Stream):
         elif command == 'monitor':
             if data['items'] == [None]:
                 return
+            items = []
             for path in list(set(data['items']).difference(set(self.monitor['item']))):
                 if path in self.items:
-                    self.json_send({'cmd': 'item', 'items': [[path, self.items[path]['item']()]]})
+                    items.append([path, self.items[path]['item']()])
                 else:
                     logger.warning("Client {0} requested invalid item: {1}".format(self.addr, path))
+            self.json_send({'cmd': 'item', 'items': items})
             self.monitor['item'] = data['items']
         elif command == 'ping':
             self.json_send({'cmd': 'pong'})
-        elif command == 'logic':  # logic
+        elif command == 'logic':
             if 'name' not in data or 'val' not in data:
                 return
             name = data['name']
@@ -367,8 +369,8 @@ class WebSocketHandler(lib.connection.Stream):
             else:
                 self.handshake_failed()
         elif b'Sec-WebSocket-Key2' in self.header:
-            self.parse_data = self.hixie76_handshake
-            self.set_terminator(8)
+            self.found_terminator = self.hixie76_handshake
+            self.terminator = 8
         else:
             self.handshake_failed()
 
@@ -383,6 +385,7 @@ class WebSocketHandler(lib.connection.Stream):
         return not 0 == (byte & (1 << bit))
 
     def rfc6455_handshake(self):
+        logger.debug("rfc6455 Handshake")
         self.terminator = 8
         self.found_terminator = self.rfc6455_parse
         self.json_send = self.rfc6455_send
@@ -451,26 +454,33 @@ class WebSocketHandler(lib.connection.Stream):
 
     def hixie76_send(self, data):
         data = json.dumps(data, cls=JSONEncoder, separators=(',', ':'))
-        self.push("\x00{0}\xff".format(data).encode())
+        packet = bytearray()
+        packet.append(0x00)
+        packet.extend(data.encode())
+        packet.append(0xff)
+        self.send(packet)
 
     def hixie76_parse(self, data):
         self.json_parse(data.decode().lstrip('\x00'))
 
     def hixie76_handshake(self, key3):
+        logger.debug("Hixie76 Handshake")
         key1 = self.header[b'Sec-WebSocket-Key1'].decode()
         key2 = self.header[b'Sec-WebSocket-Key2'].decode()
         spaces1 = key1.count(" ")
         spaces2 = key2.count(" ")
         num1 = int("".join([c for c in key1 if c.isdigit()])) // spaces1
         num2 = int("".join([c for c in key2 if c.isdigit()])) // spaces2
-        key = hashlib.md5(struct.pack('>II8s', num1, num2, key3)).digest()
+        key = hashlib.md5()
+        key.update(struct.pack('>II', num1, num2))
+        key.update(key3)
         # send header
-        self.push(b'HTTP/1.1 101 Web Socket Protocol Handshake\r\n')
-        self.push(b'Upgrade: WebSocket\r\n')
-        self.push(b'Connection: Upgrade\r\n')
-        self.push(b"Sec-WebSocket-Origin: " + self.header[b'Origin'] + b"\r\n")
-        self.push(b"Sec-WebSocket-Location: ws://" + self.header[b'Host'] + b"/\r\n\r\n")
-        self.push(key)
-        self.parse_data = self.hixie76_parse
+        self.send(b'HTTP/1.1 101 Web Socket Protocol Handshake\r\n')
+        self.send(b'Upgrade: WebSocket\r\n')
+        self.send(b'Connection: Upgrade\r\n')
+        self.send(b"Sec-WebSocket-Origin: " + self.header[b'Origin'] + b"\r\n")
+        self.send(b"Sec-WebSocket-Location: ws://" + self.header[b'Host'] + b"/\r\n\r\n")
+        self.send(key.digest())
+        self.found_terminator = self.hixie76_parse
         self.json_send = self.hixie76_send
-        self.set_terminator(b"\xff")
+        self.terminator = b"\xff"

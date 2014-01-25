@@ -48,78 +48,51 @@ Description of the attributes:
 
 ## items.conf
 
-### AC_POWER
-
-Current power feed to the grid (W)
-
-### DAY_YIELD
-
-Todays yield (Wh)
-
-### TOTAL_YIELD
-
-Total yield of the inverter (Wh)
-
-### INV_SERIAL
-
-Serial number of the inverter
-
-### INV_ADDRESS
-
-MAC-address of the inverter
-
-### LAST_UPDATE
-
-String represensting date/time of last successful read operation
-
-### DC_POWER_STRING<x>
-
-DC power supplied by string <x> (W)
-
-### DC_VOLTAGE_STRING<x>
-
-DC voltage supplied by string <x> (V)
-
-### DC_CURRENT_STRING<x>
-
-DC current supplied by string <x> (A)
-
 <pre>
-[Wechselrichter]
-  [[Einspeiseleistung]]
+[Inverter]
+  [[Feeding_Power_in_W]]
     type = num
-    sma = "AC_POWER"
-  [[Tagesertrag]]
+    sma = AC_P_TOTAL
+  [[Daily_Yield_in_Wh]]
     type = num
-    sma = "DAY_YIELD"
-  [[Gesamtertrag]]
+    sma = E_DAY
+  [[Total_Yield_in_Wh]]
     type = num
-    sma = "TOTAL_YIELD"
-  [[Seriennummer]]
+    sma = E_TOTAL
+  [[Serial_Number]]
     type = num
-    sma = "INV_SERIAL"
-  [[MAC_Adresse]]
+    sma = INV_SERIAL
+  [[MAC_Address]]
     type = str
-    sma = "INV_ADDRESS"
-  [[Letzte_Aktualisierung]]
+    sma = INV_ADDRESS
+  [[Last_Update_Of_Data]]
     type = str
-    sma = "LAST_UPDATE"
-  [[DC_Leistung_String1]]
+    sma = LAST_UPDATE
+  [[DC_Power_String1_in_W]]
     type = num
-    sma = "DC_POWER_STRING1"
-  [[DC_Leistung_String2]]
+    sma = DC_STRING1_P
+  [[DC_Power_String2_in_W]]
     type = num
-    sma = "DC_POWER_STRING2"
-  [[DC_Spannung_String1]]
+    sma = DC_STRING2_P
+  [[DC_Voltage_String1_in_V]]
     type = num
-    sma = "DC_VOLTAGE_STRING1"
-  [[DC_Spannung_String2]]
+    sma = DC_STRING1_U
+  [[DC_Voltage_String2_in_V]]
     type = num
-    sma = "DC_VOLTAGE_STRING2"
-  [[DC_Strom_String1]]
+    sma = DC_STRING2_U
+  [[DC_Current_String1_in_A]]
     type = num
-    sma = "DC_CURRENT_STRING1"
-  [[DC_Strom_String2]]
+    sma = DC_STRING1_I
+  [[DC_Current_String2_in_A]]
     type = num
-    sma = "DC_CURRENT_STRING2"
+    sma = DC_STRING2_I
+  [[Operating_Time_in_h]]
+    type = num
+    sma = OPERATING_TIME
+  [[Feeding_Time_in_h]]
+    type = num
+    sma = FEEDING_TIME
+  [[Grid_Frequency_in_Hz]]
+    type = num
+    sma = GRID_FREQUENCY
 </pre>

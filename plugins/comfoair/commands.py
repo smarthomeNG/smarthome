@@ -78,7 +78,7 @@ commandset = {
     'comfoair500': {
         'ReadComfortTemperature':       { 'Command': 0x008B00, 'CommandBytes': 3, 'Type': 'Read', 'ResponsePosition': 2, 'ValueBytes': 1, 'ValueTransform': 'Temperature' },
         'ReadFreshAirTemperature':      { 'Command': 0x008500, 'CommandBytes': 3, 'Type': 'Read', 'ResponsePosition': 4, 'ValueBytes': 1, 'ValueTransform': 'Temperature' }, # Frischluft, außen
-        'ReadSupplyAirTemperature':     { 'Command': 0x008500, 'CommandBytes': 3, 'Type': 'Read', 'ResponsePosition': 7, 'ValueBytes': 1, 'ValueTransform': 'Temperature' }, # Zuluft, innen
+        'ReadIntakeAirTemperature':     { 'Command': 0x008500, 'CommandBytes': 3, 'Type': 'Read', 'ResponsePosition': 7, 'ValueBytes': 1, 'ValueTransform': 'Temperature' }, # Ansaugluft vor Comfofond (ComfoAir 500 has no Sensor for Supply Air - External Sensor ( e.g. Onewire ) required for full calculation)
         'ReadExtractAirTemperature':    { 'Command': 0x008500, 'CommandBytes': 3, 'Type': 'Read', 'ResponsePosition': 5, 'ValueBytes': 1, 'ValueTransform': 'Temperature' }, # Abluft, innen
         'ReadExhaustAirTemperature':    { 'Command': 0x008500, 'CommandBytes': 3, 'Type': 'Read', 'ResponsePosition': 6, 'ValueBytes': 1, 'ValueTransform': 'Temperature' }, # Fortluft, außen
         'ReadSupplyAirPercentage':      { 'Command': 0x008700, 'CommandBytes': 3, 'Type': 'Read', 'ResponsePosition': 1, 'ValueBytes': 1 },
@@ -88,6 +88,7 @@ commandset = {
         'ReadBypassPercentage':         { 'Command': 0x008500, 'CommandBytes': 3, 'Type': 'Read', 'ResponsePosition': 1, 'ValueBytes': 1 },
         'ReadEnthalpyPercentage':       { 'Command': 0x00C100, 'CommandBytes': 3, 'Type': 'Read', 'ResponsePosition': 1, 'ValueBytes': 1 },
         'ReadEnthalpyTemperature':      { 'Command': 0x00C100, 'CommandBytes': 3, 'Type': 'Read', 'ResponsePosition': 2, 'ValueBytes': 1, 'ValueTransform': 'Temperature' },
-        'WriteVentilationLevel':        { 'Command': 0x00A001, 'CommandBytes': 3, 'Type': 'Write', 'ValueBytes': 1 }
+        'WriteVentilationLevel':        { 'Command': 0x00A001, 'CommandBytes': 3, 'Type': 'Write', 'ValueBytes': 1 },
+        'ReadEwtPercentage':            { 'Command': 0x008700, 'CommandBytes': 3, 'Type': 'Read', 'ResponsePosition': 5, 'ValueBytes': 1 } # EWT on/off Wobei 49 EWT Pumpe "ein" repräsentiert - und 17 EWT aus.
     }
 }

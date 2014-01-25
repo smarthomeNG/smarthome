@@ -320,7 +320,7 @@ class Item():
     def _init_run(self):
         if self._eval_trigger:
             if self._eval:
-                self._sh.trigger(name=self._path, obj=self.__run_eval, by='Init', value={'caller': 'Init'})
+                self._sh.trigger(name=self._path, obj=self.__run_eval, by='Init', value={'value': self._value, 'caller': 'Init'})
 
     def __run_eval(self, value=None, caller='Eval', source=None, dest=None):
         if self._eval:
@@ -362,7 +362,7 @@ class Item():
                 self._lock.notify_all()
                 self._change_logger("Item {} = {} via {} {} {}".format(self._path, value, caller, source, dest))
         self._lock.release()
-        if _changed or self._enforce_updates:
+        if _changed or self._enforce_updates or self._type == 'scene':
             self.__last_update = self._sh.now()
             for method in self.__methods_to_trigger:
                 try:
@@ -432,6 +432,9 @@ class Item():
     def prev_value(self):
         return self.__prev_value
 
+    def remove_timer(self):
+        self._sh.scheduler.remove(self.id() + '-Timer')
+
     def return_children(self):
         for child in self.__children:
             yield child
@@ -479,10 +482,3 @@ class Item():
 
     def type(self):
         return self._type
-
-
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    i = Item('sh', 'parent', 'path1', {'type': 'str', 'child1': {'type': 'bool'}, 'value': 'tqwer'})
-    i = Item('sh', 'parent', 'path', {'type': 'str', 'value': 'tqwer'})
-    i('test2')

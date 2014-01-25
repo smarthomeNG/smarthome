@@ -100,8 +100,7 @@ class Modbus():
                     if (datatype == 'VT_R4'):
                         value = round(self._decode_vt_r4(regaddr), 1)
                     elif (datatype == 'VT_UI1'):
-                        value = (self._decode_vt_array_ui1(regaddr, 0x0001)
-                                 == 0x0001)
+                        value = (self._decode_vt_array_ui1(regaddr, 0x0001) == 0x0001)
                     elif (datatype == 'VT_ARRAY_UI1') and ('modbus_datamask' in item.conf):
                         mask = int(item.conf['modbus_datamask'], 0)
                         value = self._decode_vt_array_ui1(regaddr, mask)
@@ -111,16 +110,18 @@ class Modbus():
                         value = self._decode_vt_bstr(regaddr)
                     elif (datatype == 'VT_TIME'):
                         value = self._decode_vt_time(regaddr)
+                        if (item.type() == 'str'):
+                            value = str(value)
                     elif (datatype == 'VT_DATE'):
                         value = self._decode_vt_date(regaddr)
+                        if (item.type() == 'str'):
+                            value = str(value)
                     else:
-                        logger.warning(
-                            "Modbus: DataType unknown: {}".format(datatype))
+                        logger.warning("Modbus: DataType unknown: {}".format(datatype))
                         continue
                     item(value, 'Modbus', "Reg {}".format(regaddr))
                 except Exception as e:
-                    logger.error(
-                        "Modbus: Exception when updating {} {}".format(item, e))
+                    logger.error("Modbus: Exception when updating {} {}".format(item, e))
 
     def _decode_vt_r4(self, addr):
         return struct.unpack('f', bytes([self._holding_registers[addr] & 0xFF, self._holding_registers[addr] >> 8, self._holding_registers[addr + 16] & 0xFF, self._holding_registers[addr + 16] >> 8]))[0]
@@ -131,8 +132,7 @@ class Modbus():
     def _decode_vt_bstr(self, addr):
         bstr = bytearray()
         for i in range(8):
-            bstr += bytes([self._holding_registers[addr + i * 16] &
-                          0xFF, self._holding_registers[addr + i * 16] >> 8])
+            bstr += bytes([self._holding_registers[addr + i * 16] & 0xFF, self._holding_registers[addr + i * 16] >> 8])
         return bstr.decode('cp850')
 
     def _decode_vt_time(self, addr):
@@ -159,8 +159,7 @@ class Modbus():
     def parse_item(self, item):
         if ('modbus_regaddr' in item.conf) and ('modbus_datatype' in item.conf):
             modbus_regaddr = int(item.conf['modbus_regaddr'])
-            logger.debug("modbus: {0} connected to register {1:#04x} with datatype {2}".format(
-                item, modbus_regaddr, item.conf['modbus_datatype']))
+            logger.debug("modbus: {0} connected to register {1:#04x} with datatype {2}".format(item, modbus_regaddr, item.conf['modbus_datatype']))
             if not modbus_regaddr in self._update:
                 self._update[modbus_regaddr] = {'items': [item], 'logics': []}
             else:
@@ -200,9 +199,7 @@ class Modbus():
             logger.warning(
                 "Modbus: no response when reading holding registers")
         elif (response[2] != (2 * quantity)):
-            logger.warning(
-                "Modbus: wrong response length when reading holding registers")
+            logger.warning("Modbus: wrong response length when reading holding registers")
         else:
             for i in range(0, 2 * quantity - 2, 2):
-                self._holding_registers[
-                    start_address + (i * 8)] = int.from_bytes(response[3 + i:5 + i], byteorder='big')
+                self._holding_registers[start_address + (i * 8)] = int.from_bytes(response[3 + i:5 + i], byteorder='big')

@@ -149,11 +149,12 @@ sh.return\_items()
 Returns all item objects.
 ``for item in sh.return_items():     logger.info(item.id())``
 
-sh.match\_items(regexpath)
+sh.match\_items(regex)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Returns all items matching a regular expression path.
+Returns all items matching a regular expression path and optional attribute.
 ``for item in sh.match_items('*.lights'):     # selects all items ending with 'lights'     logger.info(item.id())``
+``for item in sh.match_items('*.lights:special'):     # selects all items ending with 'lights' and attribute 'special'     logger.info(item.id())``
 
 sh.find\_items(configattribute)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

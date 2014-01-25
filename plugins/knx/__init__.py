@@ -64,7 +64,11 @@ class KNX(lib.connection.Client):
 
     def groupwrite(self, ga, payload, dpt, flag='write'):
         pkt = bytearray([0, 39])
-        pkt.extend(self.encode(ga, 'ga'))
+        try:
+            pkt.extend(self.encode(ga, 'ga'))
+        except:
+            logger.warning('KNX: problem encoding ga: {}'.format(ga))
+            return
         pkt.extend([0])
         pkt.extend(self.encode(payload, dpt))
         if flag == 'write':
@@ -79,13 +83,21 @@ class KNX(lib.connection.Client):
 
     def _cacheread(self, ga):
         pkt = bytearray([0, 116])
-        pkt.extend(self.encode(ga, 'ga'))
+        try:
+            pkt.extend(self.encode(ga, 'ga'))
+        except:
+            logger.warning('KNX: problem encoding ga: {}'.format(ga))
+            return
         pkt.extend([0, 0])
         self._send(pkt)
 
     def groupread(self, ga):
         pkt = bytearray([0, 39])
-        pkt.extend(self.encode(ga, 'ga'))
+        try:
+            pkt.extend(self.encode(ga, 'ga'))
+        except:
+            logger.warning('KNX: problem encoding ga: {}'.format(ga))
+            return
         pkt.extend([0, KNXREAD])
         self._send(pkt)
 
@@ -273,16 +285,15 @@ class KNX(lib.connection.Client):
         if 'knx_send' in item.conf:
             if isinstance(item.conf['knx_send'], str):
                 item.conf['knx_send'] = [item.conf['knx_send'], ]
-            if 'knx_status' in item.conf:
-                logger.warning("KNX: {} knx_send and kxn_status defined. Ignoring knx_status!".format(item.id()))
-                del(item.conf['knx_status'])
-            return self.update_item
-        elif 'knx_status' in item.conf:
+
+        if 'knx_status' in item.conf:
             if isinstance(item.conf['knx_status'], str):
                 item.conf['knx_status'] = [item.conf['knx_status'], ]
+
+        if 'knx_status' in item.conf or 'knx_send' in item.conf:
             return self.update_item
-        else:
-            return None
+
+        return None
 
     def parse_logic(self, logic):
         if 'knx_dpt' in logic.conf:

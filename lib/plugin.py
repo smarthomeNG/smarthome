@@ -64,11 +64,13 @@ class Plugins():
     def start(self):
         logger.info('Start Plugins')
         for plugin in self._threads:
+            logger.debug('Starting {} Plugin'.format(plugin.name))
             plugin.start()
 
     def stop(self):
         logger.info('Stop Plugins')
         for plugin in self._threads:
+            logger.debug('Stopping {} Plugin'.format(plugin.name))
             plugin.stop()
 
 

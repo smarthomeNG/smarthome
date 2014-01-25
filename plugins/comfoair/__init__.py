@@ -31,7 +31,6 @@ logger = logging.getLogger('ComfoAir')
 class ComfoAir():
 
     def __init__(self, smarthome, host=None, port=0, serialport=None, kwltype='comfoair350'):
-        self.log_err('###############')
         self.connected = False
         self._sh = smarthome
         self._params = {}
@@ -264,113 +263,121 @@ class ComfoAir():
                 entry['nexttime'] = currenttime + entry['cycle']
         
     def send_command(self, commandname, value=None):
-        #self.log_debug('Got a new send job: Command {} with value {}'.format(commandname, value))
-        
-        # Get command config
-        commandconf = self._commandset[commandname]
-        commandcode = int(commandconf['Command'])
-        commandcodebytecount = commandconf['CommandBytes']
-        commandtype = commandconf['Type']
-        commandvaluebytes = commandconf['ValueBytes']
-        #self.log_debug('Command config: {}'.format(commandconf))
-        
-        # Transform value for write commands
-        #self.log_debug('Got value: {}'.format(value))
-        if 'ValueTransform' in commandconf and value is not None and value != '' and commandtype == 'Write':
-            commandtransform = commandconf['ValueTransform']
-            value = self.value_transform(value, commandtype, commandtransform)
-            #self.log_debug('Transformed value using method {} to {}'.format(commandtransform, value))
-
-        # Build value byte array
-        valuebytes = bytearray()
-        if value is not None and commandvaluebytes > 0:
-            valuebytes = self.int2bytes(value, commandvaluebytes)
-        #self.log_debug('Created value bytes: {}'.format(valuebytes))
-
-        # Calculate the checksum
-        commandbytes = self.int2bytes(commandcode, commandcodebytecount)
-        payload = bytearray()
-        payload.extend(commandbytes)
-        if len(valuebytes) > 0:
-            payload.extend(valuebytes)
-        checksum = self.calc_checksum(payload)
-
-        # Build packet
-        packet = bytearray()
-        packet.extend(self.int2bytes(self._controlset['PacketStart'], 2))
-        packet.extend(commandbytes)
-        if len(valuebytes) > 0:
-            packet.extend(self.encode_specialchars(valuebytes))
-        packet.extend(self.int2bytes(checksum, 1))
-        packet.extend(self.int2bytes(self._controlset['PacketEnd'], 2))
-        self.log_info('Preparing command {} with value {} (transformed to value byte \'{}\') to be sent.'.format(commandname, value, self.bytes2hexstring(valuebytes)))
-        
-        if not self.connected:
-            raise Exception("No connection to ComfoAir.")
-        
-        # Use a lock to allow only one sender at a time
-        self._lock.acquire()
         try:
-            self.send_bytes(packet)
-            self.log_info('Successfully sent packet: {}'.format(self.bytes2hexstring(packet)))
+            #self.log_debug('Got a new send job: Command {} with value {}'.format(commandname, value))
+            
+            # Get command config
+            commandconf = self._commandset[commandname]
+            commandcode = int(commandconf['Command'])
+            commandcodebytecount = commandconf['CommandBytes']
+            commandtype = commandconf['Type']
+            commandvaluebytes = commandconf['ValueBytes']
+            #self.log_debug('Command config: {}'.format(commandconf))
+            
+            # Transform value for write commands
+            #self.log_debug('Got value: {}'.format(value))
+            if 'ValueTransform' in commandconf and value is not None and value != '' and commandtype == 'Write':
+                commandtransform = commandconf['ValueTransform']
+                value = self.value_transform(value, commandtype, commandtransform)
+                #self.log_debug('Transformed value using method {} to {}'.format(commandtransform, value))
+    
+            # Build value byte array
+            valuebytes = bytearray()
+            if value is not None and commandvaluebytes > 0:
+                valuebytes = self.int2bytes(value, commandvaluebytes)
+            #self.log_debug('Created value bytes: {}'.format(valuebytes))
+    
+            # Calculate the checksum
+            commandbytes = self.int2bytes(commandcode, commandcodebytecount)
+            payload = bytearray()
+            payload.extend(commandbytes)
+            if len(valuebytes) > 0:
+                payload.extend(valuebytes)
+            checksum = self.calc_checksum(payload)
+    
+            # Build packet
+            packet = bytearray()
+            packet.extend(self.int2bytes(self._controlset['PacketStart'], 2))
+            packet.extend(commandbytes)
+            if len(valuebytes) > 0:
+                packet.extend(self.encode_specialchars(valuebytes))
+            packet.extend(self.int2bytes(checksum, 1))
+            packet.extend(self.int2bytes(self._controlset['PacketEnd'], 2))
+            self.log_info('Preparing command {} with value {} (transformed to value byte \'{}\') to be sent.'.format(commandname, value, self.bytes2hexstring(valuebytes)))
+            
+            # Use a lock to allow only one sender at a time
+            self._lock.acquire()
+
+            if not self.connected:
+                raise Exception("No connection to ComfoAir.")
+            
+            try:
+                self.send_bytes(packet)
+                self.log_info('Successfully sent packet: {}'.format(self.bytes2hexstring(packet)))
+            except Exception as e:
+                raise Exception('Exception while sending: {}'.format(e))
+            
+            if commandtype == 'Read':
+                packet = bytearray()
+                
+                # Try to receive a packet start, a command and a data length byte
+                firstpartlen = len(self._packetstart) + self._commandlength + 1
+                while self.alive and len(packet) < firstpartlen:
+                    try:
+                        bytestoreceive = firstpartlen - len(packet)
+                        self.log_debug('Trying to receive {} bytes for the first part of the response.'.format(bytestoreceive))
+                        chunk = self.read_bytes(bytestoreceive)
+                        self.log_info('Received {} bytes chunk of response part 1: {}'.format(len(chunk), self.bytes2hexstring(chunk)))
+                        if len(chunk)  == 0:
+                            raise Exception('Received 0 bytes chunk - ignoring packet!')
+                        
+                        # Cut away old ACK (but only if the telegram wasn't started already)
+                        if len(packet) == 0:
+                            chunk = self.remove_ack_begin(chunk)
+                        packet.extend(chunk)
+                    except socket.timeout:
+                        raise Exception("error receiving first part of packet: timeout")
+                    except Exception as e:
+                        raise Exception("error receiving first part of packet: {}".format(e))
+    
+                datalen = packet[firstpartlen - 1]
+                #self.log_info('Got a data length of: {}'.format(datalen))
+                packetlen = firstpartlen + datalen + self._checksumlength + len(self._packetend)
+    
+                # Try to receive the second part of the packet
+                while self.alive and len(packet) < packetlen or packet[-2:] != self._packetend:
+                    try:
+                        # In case of doubled special characters, the packet can be longer (try one byte more at a time)
+                        if len(packet) >= packetlen and packet[-2:] != self._packetend:
+                            packetlen = len(packet) + 1
+                            self.log_info('Extended packet length because of encoded characters.'.format(self.bytes2hexstring(chunk)))
+                        
+                        # Receive next chunk
+                        bytestoreceive = packetlen - len(packet)
+                        self.log_debug('Trying to receive {} bytes for the second part of the response.'.format(bytestoreceive))
+                        chunk = self.read_bytes(bytestoreceive)
+                        self.log_info('Received {} bytes chunk of response part 2: {}'.format(len(chunk), self.bytes2hexstring(chunk)))
+                        packet.extend(chunk)
+                        if len(chunk)  == 0:
+                            raise Exception('Received 0 bytes chunk - ignoring packet!')
+                    except socket.timeout:
+                        raise Exception("error receiving second part of packet: timeout")
+                    except Exception as e:
+                        raise Exception("error receiving second part of packet: {}".format(e))
+    
+                # Send ACK
+                self.send_bytes(self._acknowledge)
+                
+                # Parse response
+                self.parse_response(packet)
+        
         except Exception as e:
             self.disconnect()
+            self.log_err("send_command failed: {}".format(e))
+
+        finally:            
+            # At the end, release the lock
             self._lock.release()
-            raise Exception('Exception while sending: {}'.format(e))
-        
-        if commandtype == 'Read':
-            packet = bytearray()
-            
-            # Try to receive a packet start, a command and a data length byte
-            firstpartlen = len(self._packetstart) + self._commandlength + 1
-            while len(packet) < firstpartlen:
-                try:
-                    chunk = self.read_bytes(firstpartlen - len(packet))
-                    chunk = self.remove_ack_begin(chunk)
-                    packet.extend(chunk)
-                    self.log_info('Received chunk of response: {}'.format(self.bytes2hexstring(chunk)))
-                except socket.timeout:
-                    self.disconnect()
-                    self._lock.release()
-                    raise Exception("error receiving first part of packet: timeout")
-                except Exception as e:
-                    self.disconnect()
-                    self._lock.release()
-                    raise Exception("error receiving first part of packet: {}".format(e))
-
-            datalen = packet[firstpartlen - 1]
-            #self.log_info('Got a data length of: {}'.format(datalen))
-            packetlen = firstpartlen + datalen + self._checksumlength + len(self._packetend)
-
-            # Try to receive the second part of the packet
-            while len(packet) < packetlen or packet[-2:] != self._packetend:
-                try:
-                    # In case of doubled special characters, the packet can be longer (try one byte more at a time)
-                    if len(packet) >= packetlen and packet[-2:] != self._packetend:
-                        packetlen = len(packet) + 1
-                        self.log_info('Extended packet length because of encoded characters.'.format(self.bytes2hexstring(chunk)))
-                    
-                    # Receive next chunk
-                    chunk = self.read_bytes(packetlen - len(packet))
-                    packet.extend(chunk)
-                    self.log_info('Received chunk of response: {}'.format(self.bytes2hexstring(chunk)))
-                except socket.timeout:
-                    self.disconnect()
-                    self._lock.release()
-                    raise Exception("error receiving second part of packet: timeout")
-                except Exception as e:
-                    self.disconnect()
-                    self._lock.release()
-                    raise Exception("error receiving second part of packet: {}".format(e))
-
-            # Send ACK
-            self.send_bytes(self._acknowledge)
-            
-            # Parse response
-            self.parse_response(packet)
-        
-        # At the end, release the lock
-        self._lock.release()
 
     def parse_response(self, response):
         #resph = self.bytes2int(response)
@@ -436,38 +443,43 @@ class ComfoAir():
     def run(self):
         self.alive = True
         self._sh.scheduler.add('ComfoAir-init', self.send_init_commands, prio=5, cycle=600, offset=2)
-        while self.alive:  # wait for init read to finish
+        maxloops = 20
+        loops = 0 
+        while self.alive and not self._initread and loops < maxloops:  # wait for init read to finish
             time.sleep(0.5)
-            if self._initread:
-                break
+            loops += 1
         self._sh.scheduler.remove('ComfoAir-init')
                 
     def stop(self):
+        self._sh.scheduler.remove('ComfoAir-cyclic')
         self.alive = False
         self.disconnect()
        
     def send_init_commands(self):
-        # Do the init read commands
-        if self._init_cmds != []:
-            if self.connected:
-                self.log_info('Starting initial read commands.')
-                for commandcode in self._init_cmds:
-                    commandname = self.commandname_by_commandcode(commandcode)
-                    self.send_command(commandname)
-
-        # Find the shortest cycle
-        shortestcycle = -1
-        for commandname in list(self._cyclic_cmds.keys()):
-            entry = self._cyclic_cmds[commandname]
-            if shortestcycle == -1 or entry['cycle'] < shortestcycle:
-                shortestcycle = entry['cycle']
-
-        # Start the worker thread
-        if shortestcycle != -1:
-            # Balance unnecessary calls and precision
-            workercycle = int(shortestcycle / 2)
-            self._sh.scheduler.add('ComfoAir-cyclic-reads', self.handle_cyclic_cmds, cycle=workercycle, prio=5, offset=0)
-            self.log_info('Added cyclic worker thread ({} sec cycle). Shortest item update cycle found: {} sec.'.format(workercycle, shortestcycle))
+        try:
+            # Do the init read commands
+            if self._init_cmds != []:
+                if self.connected:
+                    self.log_info('Starting initial read commands.')
+                    for commandcode in self._init_cmds:
+                        commandname = self.commandname_by_commandcode(commandcode)
+                        self.send_command(commandname)
+    
+            # Find the shortest cycle
+            shortestcycle = -1
+            for commandname in list(self._cyclic_cmds.keys()):
+                entry = self._cyclic_cmds[commandname]
+                if shortestcycle == -1 or entry['cycle'] < shortestcycle:
+                    shortestcycle = entry['cycle']
+    
+            # Start the worker thread
+            if shortestcycle != -1:
+                # Balance unnecessary calls and precision
+                workercycle = int(shortestcycle / 2)
+                self._sh.scheduler.add('ComfoAir-cyclic', self.handle_cyclic_cmds, cycle=workercycle, prio=5, offset=0)
+                self.log_info('Added cyclic worker thread ({} sec cycle). Shortest item update cycle found: {} sec.'.format(workercycle, shortestcycle))
+        finally:
+            self._initread = True
 
     def remove_ack_begin(self, packet):
         # Cut old ACK responses from ComfoAir before the real message
@@ -507,7 +519,7 @@ class ComfoAir():
             encodedpacket.append(char)
             if char == specialchar:
                 # Encoding works by doubling the special char
-                self.log_debug('Encoded special char at position {} of data bytes {}.'.format(count, packet))
+                self.log_debug('Encoded special char at position {} of data bytes {}.'.format(count, self.bytes2hexstring(packet)))
                 encodedpacket.append(char)
         #self.log_debug('Encoded data bytes: {}.'.format(encodedpacket))
         return encodedpacket
@@ -523,7 +535,7 @@ class ComfoAir():
                 prevchar = packet[count - 1]
             if char == specialchar and prevchar == specialchar and specialcharremoved == 0:
                 # Decoding works by dropping double sepcial chars
-                self.log_debug('Decoded special char at position {} of packet {}.'.format(count, packet))
+                self.log_debug('Decoded special char at position {} of packet {}.'.format(count, self.bytes2hexstring(packet)))
                 specialcharremoved = 1
             else:
                 decodedpacket.append(char)

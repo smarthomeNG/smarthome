@@ -65,14 +65,14 @@ The attribute keywords are:
         [[[light]]]
             name = Light
             type = bool
-            visu = yes
+            visu_acl = rw
             sv_widget = &#123;&#123; device.dimmer('second.sleeping.light', 'Light', 'second.sleeping.light', 'second.sleeping.light.level') &#125;&#125;
             knx_dpt = 1
             knx_listen = 3/2/12
             knx_send = 3/2/12
             [[[[level]]]]
                 type = num
-                visu = yes
+                visu_acl = rw
                 knx_dpt = 5
                 knx_listen = 3/2/14
                 knx_send = 3/2/14
@@ -89,14 +89,14 @@ The page generator will replace it with the current path. This way you could eas
         [[[light]]]
             name = Light
             type = bool
-            visu = yes
+            visu_acl = rw
             sv_widget = &#123;&#123; device.dimmer('item', 'item.name', 'item', 'item.level') &#125;&#125;
             knx_dpt = 1
             knx_listen = 3/2/12
             knx_send = 3/2/12
             [[[[level]]]]
                 type = num
-                visu = yes
+                visu_acl = rw
                 knx_dpt = 5
                 knx_listen = 3/2/14
                 knx_send = 3/2/14

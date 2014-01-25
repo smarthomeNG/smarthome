@@ -28,7 +28,7 @@ logger = logging.getLogger('DLMS')
 
 class DLMS():
 
-    def __init__(self, smarthome, serialport, baudrate="auto", update_cycle="60", use_checksum = True, reset_baudrate = True):
+    def __init__(self, smarthome, serialport, baudrate="auto", update_cycle="60", use_checksum = True, reset_baudrate = True, no_waiting = False):
         self._sh = smarthome
         self._obis_codes = {}
         self._init_seq = bytes('/?!\r\n', 'ascii')
@@ -43,15 +43,10 @@ class DLMS():
                 pow2 >>= 1
                 self._request[2] += 1
         self._update_cycle = int(update_cycle)
-        self._use_checksum = self.cast_bool_arg(use_checksum)
-        self._reset_baudrate = self.cast_bool_arg(reset_baudrate)
+        self._use_checksum = smarthome.string2bool(use_checksum)
+        self._reset_baudrate = smarthome.string2bool(reset_baudrate)
+        self._no_waiting = smarthome.string2bool(no_waiting)
         self._serial = serial.Serial(serialport, 300, bytesize=serial.SEVENBITS, parity=serial.PARITY_EVEN, timeout=2)
-
-    def cast_bool_arg(self, value):
-        if value.lower() in ['0', 'false', 'no', 'off']:
-            return False
-        elif value.lower() in ['1', 'true', 'yes', 'on']:
-            return True
 
     def run(self):
         self.alive = True
@@ -96,7 +91,11 @@ class DLMS():
             logger.debug("dlms: meter returned capability for {} Baud".format(self._baudrate))
             self._request[2] = response[4]
         try:
+            if not self._no_waiting:
+                time.sleep(0.5)
             self._serial.write(self._request)
+            if not self._no_waiting:
+                time.sleep(0.25)
             self._serial.drainOutput()
             self._serial.flushInput()
             if (self._baudrate != self._serial.baudrate):

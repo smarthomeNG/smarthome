@@ -18,7 +18,8 @@ Following attributes are supported in smarthome.conf:
 -  ``lat``, ``lon``, ``elev``: geographic coordinates of your home
    (latitude, longitude, elevation). lat and lon are necessary for
    sunrise/sunset calculation, dealing with the position of the sun.
--  ``tz``: used timezone
+-  ``tz``: timezone
+-  ``item_change_log``: log item changes with loglevel info
 
 Sample Configuration
 ~~~~~~~~~~~~~~~~~~~~
@@ -244,14 +245,15 @@ Item Attributes
    specify this attribute. (If you do not specify this attribute the
    item is only useful for structuring your item tree). Supported
    types:
--  bool: boolean type (on, 1, True or off, 0, False). True or False are
+   -  bool: boolean type (on, 1, True or off, 0, False). True or False are
    internally used. Use e.g. ``if sh.item(): ...``.
--  num: any number (integer or float).
--  str: regular string or unicode string.
--  list: list/array of values. Usefull e.g. for some KNX dpts.
--  dict: python dictionary for generic purposes.
--  foo: pecial purposes. No validation is done.
--  scene: special keyword to support scenes
+   -  num: any number (integer or float).
+   -  str: regular string or unicode string.
+   -  list: list/array of values. Usefull e.g. for some KNX dpts.
+   -  dict: python dictionary for generic purposes.
+   -  foo: pecial purposes. No validation is done.
+   -  scene: special keyword to support scenes
+
 -  ``value``: initial value of that item.
 -  ``name``: name which would be the str representation of the item
    (optional).
@@ -267,6 +269,7 @@ Item Attributes
    these attributes.
 -  ``crontab`` and ``cycle``: see logic.conf for possible options to set
    the value of an item at the specified times / cycles.
+- ``autotimer`` see the item function below. e.g. ``autotimer = 10m = 42``
 
 Scenes
 ^^^^^^
@@ -386,6 +389,16 @@ return\_children()
 Returns the children of an item.
 ``for child in sh.item.return_children(): ...``
 
+
+autotimer(time, value)
+^^^^^^^^^^^^^^^^^^^^^^
+Set a timer to run at every item change. Specify the time (in seconds), or use m to specify minutes. e.g. autotimer('10m', 42) to set the item after 10 minutes to 42.
+If you call autotimer() without a timer or value, the functionality will be disabled.
+
+timer(time, value)
+^^^^^^^^^^^^^^^^^^
+Same as autotimer, excepts it runs only once.
+
 age()
 ^^^^^
 
@@ -405,6 +418,13 @@ prev\_change()
 ^^^^^^^^^^^^^^
 
 Returns a datetime object with the time of the next to last change.
+
+
+prev\_value()
+^^^^^^^^^^^^^^
+
+Returns the value of the next to last change.
+
 
 last\_update()
 ^^^^^^^^^^^^^^

@@ -230,6 +230,7 @@ class SmartHome():
 
         logger.info("Start SmartHome.py {0}".format(VERSION))
         logger.debug("Python {0}".format(sys.version.split()[0]))
+        self._starttime = datetime.datetime.now()
 
         #############################################################
         # Link Tools
@@ -239,15 +240,17 @@ class SmartHome():
         #############################################################
         # Link Sun and Moon
         #############################################################
-        if hasattr(self, '_lon') and hasattr(self, '_lat'):
+        self.sun = False
+        self.moon = False
+        if lib.orb.ephem is None:
+            logger.warning("Could not find/use ephem!")
+        elif not hasattr(self, '_lon') and hasattr(self, '_lat'):
+            logger.warning('No latitude/longitude specified => you could not use the sun and moon object.')
+        else:
             if not hasattr(self, '_elev'):
                 self._elev = None
             self.sun = lib.orb.Orb('sun', self._lon, self._lat, self._elev)
             self.moon = lib.orb.Orb('moon', self._lon, self._lat, self._elev)
-        else:
-            logger.warning('No latitude/longitude specified => you could not use the sun and moon object.')
-            self.sun = None
-            self.moon = None
 
     #################################################################
     # Process Methods
@@ -480,6 +483,9 @@ class SmartHome():
 
     def utcinfo(self):
         return self._utctz
+
+    def runtime(self):
+        return datetime.datetime.now() - self._starttime
 
     #################################################################
     # Helper Methods
