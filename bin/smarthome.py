@@ -311,6 +311,7 @@ class SmartHome():
             item._init_prerun()
         for item in self.return_items():
             item._init_run()
+        logger.info("Items: {}".format(len(self.__items)))
 
         #############################################################
         # Start Connections

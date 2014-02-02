@@ -20,6 +20,9 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
 
 import time
+import logging
+
+logger = logging.getLogger('Whatsapp')
 
 class Debugger():
 	enabled = True
@@ -44,6 +47,7 @@ class Debugger():
 		disabledTypes = ["sql"]
 		if messageType.lower() not in disabledTypes:
 			try:
+				logger.info(message)
 				print(message)
 			except UnicodeEncodeError:
 				print ("Skipped debug message because of UnicodeDecodeError")

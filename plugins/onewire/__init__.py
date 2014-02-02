@@ -207,11 +207,11 @@ class OwBase():
                 return keys
             elif page3[0] == 0xF4:  # AMSv2 V
                 return {'V': 'VAD'}
-            elif page3 == 0x48554D4944495433:  # DataNab
+            elif page3 == b'HUMIDIT3': # DataNab
                 keys['H'] = 'humidity'
                 return keys
             else:
-                logger.info("1-Wire: unknown sensor {0} {1} page3: TBD".format(addr, typ))
+                logger.info("1-Wire: unknown sensor {0} {1} page3: {2}".format(addr, typ, page3))
                 keys.update({'V': 'VAD', 'VDD': 'VDD'})
                 return keys
         elif typ == 'DS2401':  # iButton

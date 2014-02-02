@@ -30,9 +30,9 @@ else:
 
 import hashlib
 from .waresponseparser import ResponseParser
-from Yowsup.Common.debugger import Debugger as WADebug
-from Yowsup.Common.constants import Constants
-from Yowsup.Common.utilities import Utilities
+from ..debugger import Debugger as WADebug
+from ..constants import Constants
+from ..utilities import Utilities
 
 class WARequest(object):
 

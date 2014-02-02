@@ -66,7 +66,7 @@ def get_pid(filename):
     return 0
 
 
-def kill(filename, wait=5):
+def kill(filename, wait=10):
     pid = get_pid(filename)
     delay = 0.25
     waited = 0
@@ -78,7 +78,7 @@ def kill(filename, wait=5):
             except OSError:
                 os._exit(0)
             waited += delay
-            time.sleep(0.25)
+            time.sleep(delay)
         try:
             print("Killing {}".format(os.path.basename(filename)))
             os.kill(pid, signal.SIGKILL)

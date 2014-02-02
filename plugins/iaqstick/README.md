@@ -39,12 +39,12 @@ Description of the attributes:
 
 ## items.conf
 
-You can use all commands available by the serial interface.
-
-For a explanation of all available commands type 'help' when connected to robot
-
 Attributes:
+* __iaqstick_id__: used to distinguish multiple sticks
 * __iaqstick_info__: used to get data from the stick
+ 
+To get the Stick-ID, start sh.py and check the log saying: "iaqstick: Vendor: AppliedSensor / Product: iAQ Stick / Stick-ID: <this-is-your-stick-id>".
+Don't bother if you are going to use a single stick anyway.
  
 Fields:
 * __ppm__: get the air quality measured in part-per-million (ppm)
@@ -53,6 +53,6 @@ Fields:
 [iAQ_Stick]
   [[PPM]]
     type = num
-    sqlite = true
+    iaqstick_id = H02004-266272
     iaqstick_info = ppm
 </pre>

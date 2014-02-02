@@ -22,6 +22,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from .Yowsup.Common.utilities import Utilities
 from .Yowsup.Common.debugger import Debugger
 from .Yowsup.connectionmanager import YowsupConnectionManager
+import os
 import hashlib
 import base64
 from .Yowsup.Media.uploader import MediaUploader
@@ -30,8 +31,6 @@ import logging
 #from urllib.request import urlopen
 from shutil import copyfileobj
 import urllib
-import datetime, sys
-import logging
 
 logger = logging.getLogger('Whatsapp')
 
@@ -65,25 +64,22 @@ class WhatsappListenerClient:
         self.username = username
         self.methodsInterface.call("auth_login", (username, password))
         
-        
-        #while True:
-        #    raw_input()    
 
     def onAuthSuccess(self, username):
-        logger.info("Authed %s" % username)
+        logger.info("Whatsapp: Authed %s" % username)
         self.methodsInterface.call("ready")
 
     def onAuthFailed(self, username, err):
-        logger.error("Auth Failed!")
+        logger.error("Whatsapp: Auth Failed!")
 
     def onDisconnected(self, reason):
-        logger.info("Disconnected because %s" %reason)
+        logger.info("Whatsapp: Disconnected because %s" %reason)
         if self.autoreconnect:
             self._sh.whatsapp.createListener()
 
     def onMessageReceived(self, messageId, jid, messageContent, timestamp, wantsReceipt, pushName, isBroadCast):
         formattedDate = datetime.datetime.fromtimestamp(timestamp).strftime('%d-%m-%Y %H:%M')
-        logger.debug("%s [%s]:%s"%(jid, formattedDate, messageContent))
+        logger.info("Whatsapp: %s [%s]:%s"%(jid, formattedDate, messageContent))
 
         absender = jid.split('@',1)[0]
         self._absender = absender
@@ -94,7 +90,7 @@ class WhatsappListenerClient:
 
             self._sh.trigger(name=self._logic, value=messageContent, source=absender)
         else:
-            logger.warn("Sender is not trusted: "+absender)
+            logger.warn("Whatsapp: Sender is not trusted: "+absender)
 
     def sendImage(self,url):
         #Fuer den Preview muesste man das Bild verkleinern, auslesen und dan base64 encodene, das war mir zu stressig, deswegen gibts bei mir nur eine kleine Himbeere als Vorschau ;)
@@ -105,9 +101,9 @@ class WhatsappListenerClient:
             stream = base64.b64encode(f.read())
             self.methodsInterface.call("message_imageSend",(receiver_jid, url, "Raspberry Pi", str(os.path.getsize(path)), stream))
         except IOError as e:
-            logger.error("I/O error:"+e.strerror)
+            logger.error("Whatsapp: I/O error:"+e.strerror)
         except:
-            logger.error("Unexpected error:"+ sys.exc_info()[0])
+            logger.error("Whatsapp: Unexpected error:"+ sys.exc_info()[0])
             raise
         finally:
             f.close()
@@ -128,10 +124,10 @@ class WhatsappListenerClient:
         self.sendImage(url)
 
     def onUploadRequestError(self,_hash):
-        logger.error("Error on Upload Image")
+        logger.error("Whatsapp: Error on Upload Image")
 
     def onImageReceived(self, messageId, jid, preview, url,  size, receiptRequested, isBroadcast):
-        logger.info("img received")
+        logger.info("Whatsapp: img received")
         self.methodsInterface.call("message_send", (jid, "Image received"))
         self.methodsInterface.call("message_ack", (jid, messageId))
 
@@ -159,4 +155,6 @@ class WhatsappListenerClient:
         img.close()
         hsh = base64.b64encode(sha1.digest())
         self.methodsInterface.call("media_requestUpload", (hsh, "image", os.path.getsize(localpath)))
+
+
 
