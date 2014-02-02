@@ -64,7 +64,11 @@ class KNX(lib.connection.Client):
 
     def groupwrite(self, ga, payload, dpt, flag='write'):
         pkt = bytearray([0, 39])
-        pkt.extend(self.encode(ga, 'ga'))
+        try:
+            pkt.extend(self.encode(ga, 'ga'))
+        except:
+            logger.warning('KNX: problem encoding ga: {}'.format(ga))
+            return
         pkt.extend([0])
         pkt.extend(self.encode(payload, dpt))
         if flag == 'write':
@@ -79,13 +83,21 @@ class KNX(lib.connection.Client):
 
     def _cacheread(self, ga):
         pkt = bytearray([0, 116])
-        pkt.extend(self.encode(ga, 'ga'))
+        try:
+            pkt.extend(self.encode(ga, 'ga'))
+        except:
+            logger.warning('KNX: problem encoding ga: {}'.format(ga))
+            return
         pkt.extend([0, 0])
         self._send(pkt)
 
     def groupread(self, ga):
         pkt = bytearray([0, 39])
-        pkt.extend(self.encode(ga, 'ga'))
+        try:
+            pkt.extend(self.encode(ga, 'ga'))
+        except:
+            logger.warning('KNX: problem encoding ga: {}'.format(ga))
+            return
         pkt.extend([0, KNXREAD])
         self._send(pkt)
 

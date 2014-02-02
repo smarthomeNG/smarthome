@@ -257,15 +257,17 @@ class SmartHome():
         #############################################################
         # Link Sun and Moon
         #############################################################
-        if hasattr(self, '_lon') and hasattr(self, '_lat'):
+        self.sun = False
+        self.moon = False
+        if lib.orb.ephem is None:
+            logger.warning("Could not find/use ephem!")
+        elif not hasattr(self, '_lon') and hasattr(self, '_lat'):
+            logger.warning('No latitude/longitude specified => you could not use the sun and moon object.')
+        else:
             if not hasattr(self, '_elev'):
                 self._elev = None
             self.sun = lib.orb.Orb('sun', self._lon, self._lat, self._elev)
             self.moon = lib.orb.Orb('moon', self._lon, self._lat, self._elev)
-        else:
-            logger.warning('No latitude/longitude specified => you could not use the sun and moon object.')
-            self.sun = None
-            self.moon = None
 
     #################################################################
     # Process Methods
@@ -326,6 +328,7 @@ class SmartHome():
             item._init_prerun()
         for item in self.return_items():
             item._init_run()
+        logger.info("Items: {}".format(len(self.__items)))
 
         #############################################################
         # Start Connections

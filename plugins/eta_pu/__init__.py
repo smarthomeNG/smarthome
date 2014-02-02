@@ -134,12 +134,19 @@ class ETA_PU():
         self._setname = setname
 
     def run(self):
-        self.del_set(self._setname)
-        self.add_set(self._setname)
-        self.fill_set(self._setname)
+        self.rebuild_set()
         self._sh.scheduler.add(__ETA_PU__, self.update_status, cycle=self._cycle)
         self.alive = True
 
+
+    def rebuild_set(self):
+        try:
+            self.del_set(self._setname)
+            self.add_set(self._setname)
+            self.fill_set(self._setname)
+        except:
+            logger.error('Failed to rebuild.. ETA offline?')
+ 
     '''
     add the list of URIs to an existing varset
     '''
@@ -245,31 +252,36 @@ class ETA_PU():
     helper function called by update status
     called periodically to update the var_items
     '''
+
     def update_var_status(self):
-        self._objects.clear()
-        # fetch response
-        response = self.fetch_xml('{0}/{1}'.format(self._setpath, self._setname))
-        if response is None:
-            return
-        for uri in self._uri.keys():
-            element = response.find(".//*[@uri='%s']" % uri)
-            if element is None:
-                 logger.error('element not found: {}'.format(uri))
-                 continue
-            # store parameters needed when update_var_item is called
-            self._objects[uri] = EtaValue(element)
-            logger.debug('looking for {} in respones'.format(uri))
-            for item in self._uri[uri]:
-                logger.debug('update item {}'.format(uri))
-                # update item value
-                # logger.debug(str(item.conf))
-                if item.conf[__ETA_TYPE__] == 'calc':
-                    value = int(element.text) / int(element.attrib['scaleFactor'])- int(element.attrib['advTextOffset'])
-                else:
-                    value = element.attrib[item.conf[__ETA_TYPE__]]
-                if item.type() == 'num':
-                    value = value.replace(',', '.')
-                item(value, caller=__ETA_PU__)
+        try:
+            self._objects.clear()
+            # fetch response
+            response = self.fetch_xml('{0}/{1}'.format(self._setpath, self._setname))
+            if response is None:
+                return
+            for uri in self._uri.keys():
+                element = response.find(".//*[@uri='%s']" % uri)
+                if element is None:
+                     logger.error('element not found: {}'.format(uri))
+                     continue
+                # store parameters needed when update_var_item is called
+                self._objects[uri] = EtaValue(element)
+                logger.debug('looking for {} in respones'.format(uri))
+                for item in self._uri[uri]:
+                    logger.debug('update item {}'.format(uri))
+                    # update item value
+                    # logger.debug(str(item.conf))
+                    if item.conf[__ETA_TYPE__] == 'calc':
+                        value = int(element.text) / int(element.attrib['scaleFactor'])- int(element.attrib['advTextOffset'])
+                    else:
+                        value = element.attrib[item.conf[__ETA_TYPE__]]
+                    if isinstance(item, str):
+                        value = value.replace(',', '.')
+                    item(value, caller=__ETA_PU__)
+        except:
+            logger.error('Update var failed, trying to rebuild varset...')
+            self.rebuild_set()
 
     '''
     helper function called by update status

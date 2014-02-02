@@ -287,15 +287,17 @@ class WebSocketHandler(lib.connection.Stream):
         elif command == 'monitor':
             if data['items'] == [None]:
                 return
+            items = []
             for path in list(set(data['items']).difference(set(self.monitor['item']))):
                 if path in self.items:
-                    self.json_send({'cmd': 'item', 'items': [[path, self.items[path]['item']()]]})
+                    items.append([path, self.items[path]['item']()])
                 else:
                     logger.warning("Client {0} requested invalid item: {1}".format(self.addr, path))
+            self.json_send({'cmd': 'item', 'items': items})
             self.monitor['item'] = data['items']
         elif command == 'ping':
             self.json_send({'cmd': 'pong'})
-        elif command == 'logic':  # logic
+        elif command == 'logic':
             if 'name' not in data or 'val' not in data:
                 return
             name = data['name']

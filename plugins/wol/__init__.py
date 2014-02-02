@@ -114,8 +114,7 @@ class WOL():
         try:
             _s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             _s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-            _s.connect('255.255.255.255', 9)
-            _s.sendall(magic)
+            _s.sendto(magic, ('255.255.255.255', 9))
         except:
             pass
         finally:

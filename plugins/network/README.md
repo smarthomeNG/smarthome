@@ -40,7 +40,7 @@ If this attribute is set to 'yes' you could update this item with the generic li
 <pre>
 [test]
     [[item1]]
-        type = string
+        type = str
         nw = yes
 </pre>
 
@@ -53,12 +53,12 @@ You could specify the `nw_udp_listen` and `nw_tcp_listen` attribute to an item t
 <pre>
 [test]
     [[item1]]
-        type = string
+        type = str
         # bind to 0.0.0.0:7777 (every IP address)
         nw_tcp_listen = 7777
 
     [[item2]]
-        type = string
+        type = str
         # bind to 0.0.0.0:7777 and 127.0.0.1:8888
         nw_udp_listen = 127.0.0.1:8888
 </pre>
@@ -70,15 +70,15 @@ This attribute allows you to specify a host and port to send item updates to.
 <pre>
 [test]
     [[item1]]
-        type = string
+        type = str
         nw_udp_send = 11.11.11.11:7777  # sends an UDP packet with the item value as payload
 
     [[item2]]
-        type = string
+        type = str
         nw_udp_send = 11.11.11.11:7777=special data  # sends an UDP packet with 'special data' as payload
 
     [[item3]]
-        type = string
+        type = str
         nw_udp_send = 11.11.11.11:7777=command: itemvalue  # sends an UDP packet with 'command: ' and the current item value as payload
 </pre>
 

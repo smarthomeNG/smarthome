@@ -218,7 +218,7 @@ class Item():
                 try:
                     child = Item(smarthome, self, child_path, value)
                 except Exception as e:
-                    logger.error("Item {}: problem creating: {}".format(child_path, e))
+                    logger.exception("Item {}: problem creating: {}".format(child_path, e))
                 else:
                     vars(self)[attr] = child
                     smarthome.add_item(child_path, child)
@@ -362,7 +362,7 @@ class Item():
                 self._lock.notify_all()
                 self._change_logger("Item {} = {} via {} {} {}".format(self._path, value, caller, source, dest))
         self._lock.release()
-        if _changed or self._enforce_updates:
+        if _changed or self._enforce_updates or self._type == 'scene':
             self.__last_update = self._sh.now()
             for method in self.__methods_to_trigger:
                 try:
@@ -442,7 +442,7 @@ class Item():
     def return_parent(self):
         return self.__parent
 
-    def set(self, value, caller='Logic', source=None, dest=None):
+    def set(self, value, caller='Logic', source=None, dest=None, prev_change=None, last_change=None):
         try:
             value = self.cast(value)
         except:
@@ -453,8 +453,14 @@ class Item():
             return
         self._lock.acquire()
         self._value = value
-        self.__prev_change = self.__last_change
-        self.__last_change = self._sh.now()
+        if prev_change is None:
+            self.__prev_change = self.__last_change
+        else:
+            self.__prev_change = prev_change
+        if last_change is None:
+            self.__last_change = self._sh.now()
+        else:
+            self.__last_change = last_change
         self.__changed_by = "{0}:{1}".format(caller, None)
         self._lock.release()
         self._change_logger("Item {} = {} via {} {} {}".format(self._path, value, caller, source, dest))
@@ -482,10 +488,3 @@ class Item():
 
     def type(self):
         return self._type
-
-
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    i = Item('sh', 'parent', 'path1', {'type': 'str', 'child1': {'type': 'bool'}, 'value': 'tqwer'})
-    i = Item('sh', 'parent', 'path', {'type': 'str', 'value': 'tqwer'})
-    i('test2')

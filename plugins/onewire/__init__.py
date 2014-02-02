@@ -207,11 +207,11 @@ class OwBase():
                 return keys
             elif page3[0] == 0xF4:  # AMSv2 V
                 return {'V': 'VAD'}
-            elif page3 == 0x48554D4944495433:  # DataNab
+            elif page3 == b'HUMIDIT3': # DataNab
                 keys['H'] = 'humidity'
                 return keys
             else:
-                logger.info("1-Wire: unknown sensor {0} {1} page3: TBD".format(addr, typ))
+                logger.info("1-Wire: unknown sensor {0} {1} page3: {2}".format(addr, typ, page3))
                 keys.update({'V': 'VAD', 'VDD': 'VDD'})
                 return keys
         elif typ == 'DS2401':  # iButton
@@ -236,7 +236,7 @@ class OneWire(OwBase):
     alive = True
     _discovered = False
     _flip = {0: '1', False: '1', 1: '0', True: '0', '0': True, '1': False}
-    _supported = {'T': 'Temperature', 'H': 'Humidity', 'V': 'Voltage', 'BM': 'Busmaster', 'B': 'iButton', 'L': 'Light/Lux', 'IA': 'Input A', 'IB': 'Input B', 'OA': 'Output A', 'OB': 'Output B', 'T9': 'Temperature 9Bit', 'T10': 'Temperature 10Bit', 'T11': 'Temperature 11Bit', 'T12': 'Temperature 12Bit'}
+    _supported = {'T': 'Temperature', 'H': 'Humidity', 'V': 'Voltage', 'BM': 'Busmaster', 'B': 'iButton', 'L': 'Light/Lux', 'IA': 'Input A', 'IB': 'Input B', 'OA': 'Output A', 'OB': 'Output B', 'T9': 'Temperature 9Bit', 'T10': 'Temperature 10Bit', 'T11': 'Temperature 11Bit', 'T12': 'Temperature 12Bit', 'VOC': 'VOC'}
 
     def __init__(self, smarthome, cycle=300, io_wait=5, button_wait=0.5, host='127.0.0.1', port=4304):
         OwBase.__init__(self, host, port)
@@ -391,9 +391,11 @@ class OneWire(OwBase):
                         value = round(10 ** ((float(value) / 47) * 1000))
                     else:
                         value = 0
-                if key.startswith('T') and value == '85':
+                elif key.startswith('T') and value == '85':
                     logger.info("1-Wire: problem reading {0}. Wiring problem?".format(addr))
                     continue
+                elif key == 'VOC':
+                    value = value * 310 + 450
                 item(value, '1-Wire', path)
         cycletime = time.time() - start
         logger.debug("1-Wire: sensor cycle takes {0} seconds".format(cycletime))
@@ -478,6 +480,8 @@ class OneWire(OwBase):
             logger.info("1-Wire: unknown sensor specified for {0} using path: {1}".format(item.id(), path))
         else:
             path = None
+            if key == 'VOC':
+                path = '/' + addr + '/VAD'
         if addr in table:
             table[addr][key] = {'item': item, 'path': path}
         else:

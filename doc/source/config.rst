@@ -419,6 +419,13 @@ prev\_change()
 
 Returns a datetime object with the time of the next to last change.
 
+
+prev\_value()
+^^^^^^^^^^^^^^
+
+Returns the value of the next to last change.
+
+
 last\_update()
 ^^^^^^^^^^^^^^
 

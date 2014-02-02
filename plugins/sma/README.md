@@ -24,6 +24,7 @@ $ bluez-test-device list
 Tested with:
 * SMA SunnyBoy 5000TL-21
 * SMA Sunny Tripower 8000TL-10
+* SMA Sunny Tripower 12000TL-10
 
 Should work with other SMA inverters as well - please let me know!
 
@@ -86,13 +87,22 @@ Description of the attributes:
   [[DC_Current_String2_in_A]]
     type = num
     sma = DC_STRING2_I
-  [[Operating_Time_in_h]]
+  [[Operating_Time_in_s]]
     type = num
     sma = OPERATING_TIME
-  [[Feeding_Time_in_h]]
+  [[Feeding_Time_in_s]]
     type = num
     sma = FEEDING_TIME
   [[Grid_Frequency_in_Hz]]
     type = num
     sma = GRID_FREQUENCY
+  [[Inverter_Status]]
+    type = str
+    sma = STATUS
+  [[Relais_Status]]
+    type = str
+    sma = GRID_RELAY
+  [[Software_Version]]
+    type = str
+    sma = SW_VERSION
 </pre>
