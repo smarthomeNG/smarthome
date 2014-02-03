@@ -36,10 +36,10 @@ class DbLog():
     # SQL queries
     # time, item_id, val_str, val_num, val_bool
     _setup = {
-      'create_db_log' : "CREATE TABLE log (time INTEGER, item_id INTEGER, val_str TEXT, val_num REAL, val_bool BOOLEAN);",
-      'create_db_item' : "CREATE TABLE item (id INTEGER, name varchar(255), time INTEGER, val_str TEXT, val_num REAL, val_bool BOOLEAN);",
-      'create_index_log' : "CREATE INDEX log_item_id ON log (item_id);",
-      'create_index_item' : "CREATE INDEX item_name ON item (name);"
+      '1' : "CREATE TABLE log (time INTEGER, item_id INTEGER, val_str TEXT, val_num REAL, val_bool BOOLEAN);",
+      '2' : "CREATE TABLE item (id INTEGER, name varchar(255), time INTEGER, val_str TEXT, val_num REAL, val_bool BOOLEAN);",
+      '3' : "CREATE INDEX log_item_id ON log (item_id);",
+      '4' : "CREATE INDEX item_name ON item (name);"
     }
 
     def __init__(self, smarthome, db, connect, cycle=10):

@@ -20,6 +20,7 @@
 #########################################################################
 
 import logging
+import datetime
 import time
 import threading
 
@@ -84,11 +85,24 @@ class Database():
     def setup(self, queries):
         self.lock()
         cur = self.cursor()
-        for q in queries:
-            try:
-                cur.execute(queries[q])
-            except Exception as e:
-                logger.warn("Database [{}]: Setup query '{}' failed - maybe exists already: {}".format(self._name, q, e))
+        try:
+            version, = self.fetchone("SELECT MAX(version) FROM version;", cur=cur)
+        except Exception as e:
+            self.execute("CREATE TABLE version(version NUMERIC, updated DATETIME)", cur=cur)
+            version, = self.fetchone("SELECT MAX(version) FROM version;", cur=cur)
+        if version == None:
+            version = 0
+        logger.info("Database [{}]: Version {} found".format(self._name, version))
+        for v in sorted(queries.keys()):
+            if float(v) > version:
+                logger.info("Database [{}]: Upgrading to version {}".format(self._name, v))
+                self.execute(queries[v], cur=cur)
+
+                dt = datetime.datetime.utcnow()
+                ts = int(time.mktime(dt.timetuple()) * 1000 + dt.microsecond / 1000)
+                self.execute("INSERT INTO version(version, updated) VALUES(?, ?);", (v, ts), cur)
+
+        self.commit()
         cur.close()
         self.release()
 
