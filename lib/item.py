@@ -264,7 +264,7 @@ class Item():
         #############################################################
         # Plugins
         #############################################################
-        for plugin in self._sh.return_plugins():
+        for plugin in self._sh.return_plugins() if 'plugin' not in self.conf else [self._sh.return_plugin(self.conf['plugin'])]:
             if hasattr(plugin, 'parse_item'):
                 update = plugin.parse_item(self)
                 if update:
