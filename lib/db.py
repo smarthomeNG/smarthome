@@ -73,13 +73,13 @@ class Database():
         self.release()
 
     def close(self):
-        self._fdb_lock.acquire()
+        self.lock()
         try:
             self._dbapi.close()
         except Exception:
             pass
         finally:
-            self._fdb_lock.release()
+            self.release()
         self._dbapi = None
 
     def setup(self, queries):
@@ -106,8 +106,8 @@ class Database():
         cur.close()
         self.release()
 
-    def lock(self):
-        self._fdb_lock.acquire()
+    def lock(self, timeout=-1):
+        self._fdb_lock.acquire(timeout=timeout)
 
     def release(self):
         self._fdb_lock.release()
