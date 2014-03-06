@@ -107,7 +107,7 @@ class Database():
         self.release()
 
     def lock(self, timeout=-1):
-        self._fdb_lock.acquire(timeout=timeout)
+        return self._fdb_lock.acquire(timeout=timeout)
 
     def release(self):
         self._fdb_lock.release()
