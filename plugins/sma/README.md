@@ -39,6 +39,7 @@ Should work with other SMA inverters as well - please let me know!
     bt_addr = 00:80:25:21:7F:58
 #    password = 0000
 #    update_cycle = 60
+#    allowed_timedelta = 10
 </pre>
 
 Description of the attributes:
@@ -46,6 +47,7 @@ Description of the attributes:
 * __bt_addr__: MAC-address of the inverter (find out with 'hcitool scan')
 * __password__: password for accessing the inverter in user-mode (default 0000)
 * __update_cycle__: interval in seconds how often the data is read from the inverter (default 60)
+* __allowed_timedelta__: allowed difference of inverter to system time - if above, inverter is set to system time - set to -1 to disable (default 60)
 
 ## items.conf
 

@@ -62,13 +62,15 @@ class Sonos():
         self._val = {}
         self._init_cmds = []
         self.subscribe_thread = None
-        self.stop_treads = False
+        self.stop_threads = False
         UDPDispatcher(self.parse_input, host, port)
 
     def parse_input(self, source, dest, data):
         try:
             values = data.split('\n')
             for value in values:
+                #removes all trailing '\r', issue in sonos-broker 0.1.5 and prior versions
+                value = value.rstrip('\r')
                 logger.debug(value)
                 self.update_items_with_data(value)
 
@@ -76,15 +78,16 @@ class Sonos():
             logger.debug(err)
 
     def run(self):
+        self.alive = True
         self.subscribe_thread = threading.Thread(target=self.subscribe())
         self.subscribe_thread.start()
-        self.alive = True
+
 
     def subscribe(self):
         counter = 120
         while True:
             #main thread is going to be stopped, exit thread
-            if self.stop_treads:
+            if self.stop_threads:
                 return
             if counter == 120:
                 logger.debug('(re)registering to sonos broker server ...')
@@ -97,11 +100,11 @@ class Sonos():
                 counter = 0
 
             sleep(1)
-            counter += counter
+            counter += 1
 
     def stop(self):
-        self.stop_treads = True
         self.alive = False
+        self.stop_threads = True
 
     def resolve_cmd(self, item, attr):
         if '<sonos_uid>' in item.conf[attr]:
@@ -193,6 +196,12 @@ class Sonos():
                 if command[2] == 'volume':
                     if isinstance(value, int):
                         cmd = self.command.volume(command[1], int(value))
+                if command[2] == 'next':
+                    if isinstance(value, int):
+                        cmd = self.command.next(command[1], int(value))
+                if command[2] == 'previous':
+                    if isinstance(value, int):
+                        cmd = self.command.previous(command[1], int(value))
                 if command[2] == 'play_uri':
                     cmd = self.command.play_uri(command[1], value)
 
@@ -252,6 +261,14 @@ class SonosCommand():
         return "speaker/{}/mute/set/{}".format(uid, int(value))
 
     @staticmethod
+    def next(uid, value):
+        return "speaker/{}/next/set/{}".format(uid, int(value))
+
+    @staticmethod
+    def previous(uid, value):
+        return "speaker/{}/previous/set/{}".format(uid, int(value))
+
+    @staticmethod
     def play(uid, value):
         return "speaker/{}/play/set/{}".format(uid, int(value))
 
@@ -300,3 +317,5 @@ class SonosCommand():
             return False
         except:
             return None
+
+

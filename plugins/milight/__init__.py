@@ -243,7 +243,9 @@ class milight():
         if self.hue > 1:
             self.hue = self.hue - 1
            
-        self.hue = int((1-self.hue)*255)  
+        self.hue = ((1-self.hue)*255)
+        if re != gn:
+            self.hue =self.hue+0.001
         self.lum = hls[1] *255
         self.sat =  hls[1]
          
@@ -357,13 +359,14 @@ class milight():
                     self.huecalc (item())
                     logger.info("miLight HUE: {0}".format(self.hue))
                     logger.info("miLight LUM: {0}".format(self.lum))
-                    calibrate = 178 + int(self.white_calibrate)
+                    calibrate = 178.5 + int(self.white_calibrate)
                     if self.hue == calibrate:
                             self.white (group,1)
                     else: 
+                            self.hue=int(self.hue)
                             self.col(group, self.hue)
                     if self.bricontrol:
-                        if self.lum <= self.cutoff:
+                        if self.lum <= float(self.cutoff):
                             self.switch(group, 0)
                         else:
                             self.switch(group, 1)
@@ -373,4 +376,3 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     myplugin = milight('smarthome-dummy')
     myplugin.run()
-Enter file contents here

@@ -3,21 +3,6 @@
 Configuration
 =============
 
-Remark: 
--------
-The rrd plugin and the sqlite plugin can not be used together. Some pros and cons:
-
-RRD
-+ a stable, reliable tool
-+ is used in a many data logging and graphing tools
-- slow moving development
-- only few new features on the roadmap
-
-SQLite
-+ part of python, no additional installation necessary
-+ accurate logging of changing times
-+ more analysis functionality
-
 plugin.conf
 -----------
 <pre>
@@ -25,15 +10,17 @@ plugin.conf
     class_name = SQL
     class_path = plugins.sqlite
 #   path = None
+#   dumpfile = /tmp/smarthomedb.dump
 </pre>
 
-The path attribute allows you to specify the of the SQLite database.
+The `path` attribute allows you to specify the of the SQLite database.
+
+If you specify a `dumpfile`, SmartHome.py dumps the database every night into this file.
 
 items.conf
 --------------
 
-For num and bool items, you could set the attribute: `sqlite`. By this you enable logging of the item values.
-If you set this attribute to `init`, SmartHome.py tries to set the item to the last know value (like cache = yes).
+For num and bool items, you could set the attribute: `sqlite`. By this you enable logging of the item values and SmartHome.py set the item to the last know value at start up (equal cache = yes).
 
 <pre>
 [outside]
@@ -47,6 +34,17 @@ If you set this attribute to `init`, SmartHome.py tries to set the item to the l
 
 # Functions
 This plugin adds one item method to every item which has sqlite enabled.
+
+## cleanup()
+This function removes orphaned item entries which are no longer referenced in the item configuration.
+
+## dump(filename)
+Dumps the database into the specified file.
+`sh.sql.dump('/tmp/smarthomedb.dump')` writes the database content into /tmp/smarthomedb.dump
+
+## move(old, new)
+This function renames item entries.
+`sh.sql.move('my.old.item', 'my.new.item')`
 
 ## sh.item.db(function, start, end='now')
 This method returns you an value for the specified function and timeframe.

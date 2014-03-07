@@ -31,15 +31,15 @@ Advanced options in plugin.conf. Please be careful.
 * 'cycle' = timeperiod between two sensor cycles. Default 300 seconds. If you decrease the cycle to much you could destabilise the bus, because of the increased power consumption.
 * 'io_wait' = timeperiod between two requests of 1-wire I/O chip. Default 5 seconds.
 * 'button_wait' = timeperiod between two requests of ibutton-busmaster. Default 0.5 seconds.
- 
+
 
 
 items.conf
 --------------
 
 ### name
-This is a name for the defined sensor information. 
- 
+This is a name for the defined sensor information.
+
 ### type
 This is the type of the sensor data. Currently 'num' and 'bool' are supported.
 
@@ -57,7 +57,7 @@ This is the type of the sensor data. Currently 'num' and 'bool' are supported.
 * 'Ox' - output - could be OA or OB (depends on the choosen output)
 * 'VDD' - voltage of sensor powering (most DS2438 based sensors)
 
-for ibuttons:
+For ibuttons:
 
 * 'BM' - ibutton master
 * 'B' - ibutton

@@ -184,7 +184,7 @@ logger = logging.getLogger('SMA')
 
 class SMA():
 
-    def __init__(self, smarthome, bt_addr, password="0000", update_cycle="60"):
+    def __init__(self, smarthome, bt_addr, password="0000", update_cycle="60", allowed_timedelta="10"):
         self._sh = smarthome
         self._update_cycle = int(update_cycle)
         self._fields = {}
@@ -193,6 +193,7 @@ class SMA():
         self._reply_lock = threading.Condition()
         self._inv_bt_addr = bt_addr
         self._inv_password = password
+        self._allowed_timedelta = int(allowed_timedelta)
         self._inv_last_read_timestamp_utc = 0
         self._inv_serial = 0
         self._own_bt_addr_le = bytearray(BCAST_ADDR)
@@ -214,7 +215,9 @@ class SMA():
             self._reply_lock.wait(5)
             self._reply_lock.release()
             self._cmd_lock.release()
-        if 'LAST_UPDATE' in self._fields:
+        if ('LAST_UPDATE' in self._fields) and not (self._inv_last_read_timestamp_utc == 0):
+            self._inv_last_read_datetime = datetime.fromtimestamp(self._inv_last_read_timestamp_utc, tz.tzlocal())
+            self._inv_last_read_str = self._inv_last_read_datetime.strftime("%d.%m.%Y %H:%M:%S")
             for item in self._fields['LAST_UPDATE']['items']:
                 item(self._inv_last_read_str, 'SMA', self._inv_serial)
 
@@ -242,17 +245,23 @@ class SMA():
             return
         
         # set time if diff is to big
-        self._inv_send_request(lris[name_to_id['STATUS'] & 0xFFFF00][2])
-        msg = self._recv_smanet2_msg()
-        if (msg is not None):
-            host_utc = int(time.time())
-            inv_utc = int.from_bytes(msg[45:49], byteorder='little')
-            diff = inv_utc - host_utc
-            logger.info("sma: inverter utc timestamp = {}s / host utc timestamp = {}s / diff = {}s".format(inv_utc, host_utc, diff))
-            if abs(diff) > 60:
-                self._inv_set_time()
+        try:
+            if self._allowed_timedelta >= 0:
+                self._inv_send_request(lris[name_to_id['STATUS'] & 0xFFFF00][2])
                 msg = self._recv_smanet2_msg()
-                logger.info("sma: reply - len={} data=[{}]\n".format(len(msg), ', '.join(['0x%02x' % b for b in msg[41:]])))
+                if (msg is not None):
+                    host_localtime = int(time.time())
+                    inv_localtime = int.from_bytes(msg[45:49], byteorder='little')
+                    diff = inv_localtime - host_localtime
+                    logger.info("sma: inverter timestamp = {}s / host timestamp = {}s / diff = {}s".format(inv_localtime, host_localtime, diff))
+                    if (abs(diff) > self._allowed_timedelta) and not (inv_localtime == 0):
+                        self._inv_set_time()
+                        msg = self._recv_smanet2_msg()
+                        if msg is not None:
+                            logger.debug("sma: reply - len={} data=[{}]\n".format(len(msg), ', '.join(['0x%02x' % b for b in msg[41:]])))
+        except Exception as e:
+            logger.error("sma: adjusting inverter time failed - {}".format(e))
+            return
         
         self._sh.scheduler.add('SMA', self._update_values, prio=5, cycle=self._update_cycle)
         # receive messages from inverter
@@ -292,8 +301,6 @@ class SMA():
                             # update timestamp
                             if (timestamp_utc > self._inv_last_read_timestamp_utc):
                                 self._inv_last_read_timestamp_utc = timestamp_utc
-                                self._inv_last_read_datetime = datetime.fromtimestamp(self._inv_last_read_timestamp_utc, tz.tzlocal())
-                                self._inv_last_read_str = self._inv_last_read_datetime.strftime("%d.%m.%Y %H:%M:%S")
                 except Exception as e:
                     logger.error("sma: rx: exception - {}".format(e))
                     logger.error("sma: rx - exception when parsing msg - len={} data=[{}]\n".format(len(msg), ', '.join(['0x%02x' % b for b in msg])))
@@ -608,7 +615,8 @@ class SMA():
         self._send_count = (self._send_count + 1) & 0x7FFF
         msg += SMANET2_HDR + bytes([0x10, 0xA0]) + BCAST_ADDR + bytes([0x00, 0x00]) + self._inv_bt_addr_le + bytes([0x00] + [0x00] + [0, 0, 0, 0]) + (self._send_count | 0x8000).to_bytes(2, byteorder='little')
         msg += int(0xF000020A).to_bytes(4, byteorder='little') + int(0x00236D00).to_bytes(4, byteorder='little') + int(0x00236D00).to_bytes(4, byteorder='little') + int(0x00236D00).to_bytes(4, byteorder='little')
-        utc_time = int(time.time()).to_bytes(4, byteorder='little')
-        msg += utc_time + utc_time + utc_time + time.localtime().tm_gmtoff.to_bytes(4, byteorder='little') + utc_time + bytes([0x01, 0x00, 0x00, 0x00])
+        local_time = int(time.time()).to_bytes(4, byteorder='little')
+        msg += local_time + local_time + local_time + round((datetime.now()-datetime.utcnow()).total_seconds()).to_bytes(4, byteorder='little') + local_time + bytes([0x01, 0x00, 0x00, 0x00])
+#        msg += local_time + local_time + local_time + time.localtime().tm_gmtoff.to_bytes(4, byteorder='little') + local_time + bytes([0x01, 0x00, 0x00, 0x00])
         # send msg to inverter
         self._send_msg(msg)

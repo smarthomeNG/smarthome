@@ -204,9 +204,9 @@ class Item():
                         low = high
                     self._threshold = True
                     self.__th_crossed = False
-                    self.__th_low = float(low)
-                    self.__th_high = float(high)
-                    logger.debug("Item {}: set threshold => low: {} high: {}}".format(self._path, self.__th_low, self.__th_high))
+                    self.__th_low = float(low.strip())
+                    self.__th_high = float(high.strip())
+                    logger.debug("Item {}: set threshold => low: {} high: {}".format(self._path, self.__th_low, self.__th_high))
                 else:
                     self.conf[attr] = value
         #############################################################

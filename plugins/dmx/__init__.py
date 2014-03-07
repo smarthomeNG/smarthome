@@ -108,4 +108,4 @@ class DMX():
     def update_item(self, item, caller=None, source=None, dest=None):
         #logger.debug("update dmx channel {0:03d}".format(item.dmx_ch))
         for channel in item.conf['dmx_ch']:
-            self.send(channel, item())
+            self.send(channel, int(item()))

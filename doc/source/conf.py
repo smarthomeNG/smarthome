@@ -109,6 +109,7 @@ html_theme_options = {
         ("Logics", "logic"),
         ("Plugins", "plugin"),
         ("Bugs", "https://github.com/mknx/smarthome/issues?state=open", True),
+        ("Wiki", "https://github.com/mknx/smarthome/wiki", True),
         ("Download", "https://github.com/mknx/smarthome/releases", True),
     ],
 
@@ -188,7 +189,7 @@ html_theme_path = doc.sphinx_bootstrap_theme.get_html_theme_path()
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
+html_static_path = ["_static", "img"]
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.

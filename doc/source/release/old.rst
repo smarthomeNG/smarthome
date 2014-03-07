@@ -88,7 +88,7 @@ Bug Fixes
 -------------------------------------------------------------------
 
 `Martin <http://knx-user-forum.de/members/sipple.html>`_ has created an
-`overview </smarthome/img/big_picture.pdf>`_ how SmartHome.py interacts
+`overview </_static/img/big_picture.pdf>`_ how SmartHome.py interacts
 with KNX, 1-Wire and the smartVISU.
 
 2013-02-02: `Release of an Raspberry Pi image with SmartHome.py and smartVISU <https://github.com/mknx/smarthome/wiki/SmartHome.pi>`_

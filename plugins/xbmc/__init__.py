@@ -147,7 +147,7 @@ class xbmc(lib.connection.Client):
                     self._items['title']('', 'XBMC')
             if event['method'] in ['Player.OnPlay']:
                 # use a different thread for event handling
-                self._sh.trigger('xmbc-event', self._parse_event, 'XBMC', value={'event': event})
+                self._sh.trigger('xbmc-event', self._parse_event, 'XBMC', value={'event': event})
             elif event['method'] in ['Application.OnVolumeChanged']:
                 if 'mute' in self._items:
                     self._set_item('mute', event['params']['data']['muted'])
@@ -156,9 +156,12 @@ class xbmc(lib.connection.Client):
 
     def _parse_event(self, event):
         if event['method'] == 'Player.OnPlay':
-            result = self._send('Player.GetActivePlayers')['result'][0]
-            playerid = result['playerid']
-            typ = result['type']
+            result = self._send('Player.GetActivePlayers')['result']
+            if len(result) == 0:
+                logger.info("XBMC: no active player found.")
+                return
+            playerid = result[0]['playerid']
+            typ = result[0]['type']
             self._items['state']('Playing', 'XBMC')
             if typ == 'video':
                 result = self._send('Player.GetItem', {"properties": ["title"], "playerid": playerid}, "VideoGetItem")['result']
@@ -172,14 +175,17 @@ class xbmc(lib.connection.Client):
                 if 'media' in self._items:
                     self._items['media'](typ.capitalize(), 'XBMC')
                 result = self._send('Player.GetItem', {"properties": ["title", "artist"], "playerid": playerid}, "AudioGetItem")['result']
-                artist = result['item']['artist'][0]
+                if len(result['item']['artist']) == 0:
+                    artist = 'unknown'
+                else:
+                    artist = result['item']['artist'][0]
                 title = artist + ' - ' + result['item']['title']
             elif typ == 'picture':
                 if 'media' in self._items:
                     self._items['media'](typ.capitalize(), 'XBMC')
                 title = ''
             else:
-                logger.warning("Unknown type: {0}".format(typ))
+                logger.warning("XBMC: Unknown type: {0}".format(typ))
                 return
             if 'title' in self._items:
                 self._items['title'](title, 'XBMC')

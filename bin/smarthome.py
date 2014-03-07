@@ -49,8 +49,8 @@ import traceback
 #####################################################################
 logger = logging.getLogger('')
 BASE = '/'.join(os.path.realpath(__file__).split('/')[:-2])
-sys.path.append(BASE)
-sys.path.append(BASE + '/lib/3rd')
+sys.path.insert(0, BASE)
+sys.path.insert(1, BASE + '/lib/3rd')
 
 #####################################################################
 # Import 3rd Party Modules

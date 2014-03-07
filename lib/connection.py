@@ -116,7 +116,6 @@ class Connections(Base):
                         con = self._connections[fileno]
                         con._out()
                     except Exception as e:  # noqa
-#                       logger.exception("{}: {}".format(self._name, e))
                         con.close()
                         continue
                 if event & (select.EPOLLHUP | select.EPOLLERR):
@@ -202,6 +201,7 @@ class Stream(Base):
         self.address = address
         self.inbuffer = bytearray()
         self.outbuffer = collections.deque()
+        self.__olock = threading.Lock()
         self._frame_size_in = 4096
         self._frame_size_out = 4096
         self.terminator = b'\r\n'
@@ -258,11 +258,6 @@ class Stream(Base):
                 cut = index + len(terminator)
                 self.inbuffer = self.inbuffer[cut:]
                 self.found_terminator(data)
-            try:
-                self._out()
-            except:
-                self.close()
-                break
 
     def _is_balanced(self):
         stack = []
@@ -280,24 +275,30 @@ class Stream(Base):
         return False
 
     def _out(self):
-        while self.outbuffer and self.connected:
-            frame = self.outbuffer.pop()
-            if not frame:
-                if frame is None:
-                    self.close()
-                    return
-                continue  # ignore empty frames
-            try:
+        if not self.__olock.acquire(timeout=1):
+            return
+        try:
+            while self.connected:
+                frame = self.outbuffer.pop()
+                if not frame:
+                    if frame is None:
+                        self.close()
+                        return
+                    continue  # ignore empty frames
                 sent = self.socket.send(frame)
-            except socket.error:
-#               logger.exception("{}: {}".format(self._name, e))
-                self.outbuffer.append(frame)
-                return
-            else:
                 if sent < len(frame):
                     self.outbuffer.append(frame[sent:])
-        if self._close_after_send:
+            if self._close_after_send:
+                self.close()
+        except IndexError:  # buffer empty
+            return
+        except socket.error:
+            self.outbuffer.append(frame)
+        except Exception as e:  # noqa
+            logger.exception("{}: {}".format(self._name, e))
             self.close()
+        finally:
+            self.__olock.release()
 
     def balance(self, bopen, bclose):
         self._balance_open = ord(bopen)
@@ -354,7 +355,7 @@ class Stream(Base):
                 self.outbuffer.appendleft(data[i:i + frame_size])
         else:
             self.outbuffer.appendleft(data)
-        self._poller.trigger(self.socket.fileno())
+        self._out()
         return True
 
 
