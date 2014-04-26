@@ -23,6 +23,7 @@ import logging
 import datetime
 import time
 import threading
+import re
 
 logger = logging.getLogger('')
 
@@ -85,11 +86,12 @@ class Database():
     def setup(self, queries):
         self.lock()
         cur = self.cursor()
+        version_table = re.sub('[^a-z0-9]', '', self.name.lower()) + "_version";
         try:
-            version, = self.fetchone("SELECT MAX(version) FROM version;", cur=cur)
+            version, = self.fetchone("SELECT MAX(version) FROM " + version_table + ";", cur=cur)
         except Exception as e:
-            self.execute("CREATE TABLE version(version NUMERIC, updated DATETIME)", cur=cur)
-            version, = self.fetchone("SELECT MAX(version) FROM version;", cur=cur)
+            self.execute("CREATE TABLE " + version_table + "(version NUMERIC, updated DATETIME)", cur=cur)
+            version, = self.fetchone("SELECT MAX(version) FROM " + version_table + ";", cur=cur)
         if version == None:
             version = 0
         logger.info("Database [{}]: Version {} found".format(self._name, version))
@@ -100,7 +102,7 @@ class Database():
 
                 dt = datetime.datetime.utcnow()
                 ts = int(time.mktime(dt.timetuple()) * 1000 + dt.microsecond / 1000)
-                self.execute("INSERT INTO version(version, updated) VALUES(?, ?);", (v, ts), cur)
+                self.execute("INSERT INTO " + version_table + "(version, updated) VALUES(?, ?);", (v, ts), cur)
 
         self.commit()
         cur.close()
