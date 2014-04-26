@@ -45,7 +45,7 @@ class CLIHandler(lib.connection.Stream):
         cmd = data.decode().strip()
         if cmd.startswith('ls'):
             self.push("Items:\n======\n")
-            self.ls(cmd.lstrip('ls').strip())
+            self.ls(cmd.lstrip('ls').strip(), '*' in cmd or ':' in cmd)
         elif cmd == 'la':
             self.la()
         elif cmd == 'lo':
