@@ -90,7 +90,7 @@ class Database():
         try:
             version, = self.fetchone("SELECT MAX(version) FROM " + version_table + ";", cur=cur)
         except Exception as e:
-            self.execute("CREATE TABLE " + version_table + "(version NUMERIC, updated DATETIME)", cur=cur)
+            self.execute("CREATE TABLE " + version_table + "(version NUMERIC, updated BIGINT)", cur=cur)
             version, = self.fetchone("SELECT MAX(version) FROM " + version_table + ";", cur=cur)
         if version == None:
             version = 0
