@@ -86,7 +86,7 @@ class Database():
     def setup(self, queries):
         self.lock()
         cur = self.cursor()
-        version_table = re.sub('[^a-z0-9]', '', self.name.lower()) + "_version";
+        version_table = re.sub('[^a-z0-9]', '', self._name.lower()) + "_version";
         try:
             version, = self.fetchone("SELECT MAX(version) FROM " + version_table + ";", cur=cur)
         except Exception as e:
