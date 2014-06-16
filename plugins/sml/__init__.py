@@ -51,7 +51,7 @@ class Sml():
 
     def run(self):
         self.alive = True
-        self._sh.scheduler.add('Sml', self._refresh, cycle=self.cycle)
+        self._sh.scheduler.add('Sml' + str(self._sh.get_plugin_ident(self)), self._refresh, cycle=self.cycle)
 
     def stop(self):
         self.alive = False
