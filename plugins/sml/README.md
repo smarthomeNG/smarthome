@@ -52,6 +52,37 @@ Description of the attributes:
    * `host` - instead of serial port you can use a network connection
    * `port` - additionally to the host configuration you can specify a port
 
+If you have more then one power meter device or serial device in use,
+please configure this plugin multiple times and restrict the items to
+the different plugin instances using the `plugin` setting:
+
+<pre>
+[sml1]
+  class_name = Sml
+  class_path = plugins.sml
+  serialport = /dev/ttyUSB0
+
+[sml2]
+  class_name = Sml
+  class_path = plugins.sml
+  serialport = /dev/ttyUSB1
+</pre>
+
+<pre>
+[power]
+  [[home]]
+    [[[total]]]
+      type = num
+      plugin = sml1
+      sml_obis = 1-0:1.8.0*255
+  [[pv]]
+    [[[total]]]
+      type = num
+      plugin = sml2
+      sml_obis = 1-0:1.8.0*255
+</pre>
+
+
 ## items.conf
 
 You can assign a value retrieved by the plugin to some of your items
