@@ -187,7 +187,7 @@ class KNX(lib.connection.Client):
             payload = data[8:]
         if flg == 'write' or flg == 'response':
             if dst not in self.gal:  # update item/logic
-                self._busmonitor("knx: {0} set {1} to {2}".format(src, dst, binascii.hexlify(payload).decode()))
+                self._busmonitor("KNX: {0} set {1} to {2}".format(src, dst, binascii.hexlify(payload).decode()))
                 return
             dpt = self.gal[dst]['dpt']
             try:
@@ -196,7 +196,7 @@ class KNX(lib.connection.Client):
                 logger.exception("KNX: Problem decoding frame from {0} to {1} with '{2}' and DPT {3}. Exception: {4}".format(src, dst, binascii.hexlify(payload).decode(), dpt, e))
                 return
             if val is not None:
-                self._busmonitor("knx: {0} set {1} to {2}".format(src, dst, val))
+                self._busmonitor("KNX: {0} set {1} to {2}".format(src, dst, val))
                 #print "in:  {0}".format(self.decode(payload, 'hex'))
                 #out = ''
                 #for i in self.encode(val, dpt):
