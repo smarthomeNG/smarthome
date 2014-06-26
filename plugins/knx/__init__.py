@@ -36,7 +36,7 @@ logger = logging.getLogger('')
 
 class KNX(lib.connection.Client):
 
-    def __init__(self, smarthome, time_ga=None, date_ga=None, send_time=False, busmonitor=False, host='127.0.0.1', port=6720):
+    def __init__(self, smarthome, time_ga=None, date_ga=None, send_time=False, busmonitor=False, host='127.0.0.1', port=6720, instance='default'):
         lib.connection.Client.__init__(self, host, port, monitor=True)
         self._sh = smarthome
         self.gal = {}
@@ -45,6 +45,7 @@ class KNX(lib.connection.Client):
         self._cache_ga = []
         self.time_ga = time_ga
         self.date_ga = date_ga
+        self.instance = instance
         self._lock = threading.Lock()
         if smarthome.string2bool(busmonitor):
             self._busmonitor = logger.info
@@ -235,6 +236,14 @@ class KNX(lib.connection.Client):
         else:
             return None
 
+        if 'knx_instance' in item.conf:
+            if not item.conf['knx_instance'] == self.instance:
+                return None
+        else:
+            if not self.instance == 'default':
+                return None
+        logger.debug("KNX: Item {0} is mapped to KNX Instance {1}".format(item, self.instance))
+
         if 'knx_listen' in item.conf:
             knx_listen = item.conf['knx_listen']
             if isinstance(knx_listen, str):
@@ -299,6 +308,14 @@ class KNX(lib.connection.Client):
                 return None
         else:
             return None
+
+        if 'knx_instance' in logic.conf:
+            if not logic.conf['knx_instance'] == self.instance:
+                return None
+        else:
+            if not self.instance == 'default':
+                return None
+        logger.debug("KNX: Logic {0} is mapped to KNX Instance {1}".format(logic, self.instance))
 
         if 'knx_listen' in logic.conf:
             knx_listen = logic.conf['knx_listen']
