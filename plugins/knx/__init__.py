@@ -52,7 +52,7 @@ class KNX(lib.connection.Client):
         else:
             self._busmonitor = logger.debug
         if send_time:
-            self._sh.scheduler.add('KNX time', self._send_time, prio=5, cycle=int(send_time))
+            self._sh.scheduler.add('KNX[{0}] time'.format(self.instance), self._send_time, prio=5, cycle=int(send_time))
 
     def _send(self, data):
         if len(data) < 2 or len(data) > 0xffff:
