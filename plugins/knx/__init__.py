@@ -209,7 +209,7 @@ class KNX(lib.connection.Client):
             else:
                 logger.warning("KNX[{0}]: Wrong payload '{3}' for ga '{2}' with dpt '{1}'.".format(self.instance, dpt, dst, binascii.hexlify(payload).decode()))
         elif flg == 'read':
-            logger.debug("KNX[{0}]: {1} read {2}".format(src, dst))
+            logger.debug("KNX[{0}]: {1} read {2}".format(self.instance, src, dst))
             if dst in self.gar:  # read item
                 if self.gar[dst]['item'] is not None:
                     item = self.gar[dst]['item']
