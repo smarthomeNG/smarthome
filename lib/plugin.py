@@ -73,6 +73,11 @@ class Plugins():
                return thread.ident
         return None
 
+    def get_plugin_name(self, plugin):
+        for thread in self._threads:
+            if thread.plugin == plugin:
+               return thread.name
+
     def start(self):
         logger.info('Start Plugins')
         for plugin in self._threads:
