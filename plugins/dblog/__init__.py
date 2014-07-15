@@ -129,7 +129,7 @@ class DbLog():
                     _update = ( t[0], t[1], t[2], t[3], id )
 
                     # time, item_id, val_str, val_num, val_bool
-                    self._db.execute("UPDATE item SET time = ?, val_str = ?, val_num = ?, val_bool = ? WHERE id = ?;", _update, )
+                    self._db.execute("UPDATE item SET time = ?, val_str = ?, val_num = ?, val_bool = ? WHERE id = ?;", _update, cur)
                     cur.close()
 
                     self._db.commit()
