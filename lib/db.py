@@ -134,17 +134,25 @@ class Database():
         return result
 
     def fetchone(self, stmt, params=(), cur=None):
-        cur = self._dbapi.cursor()
-        self.execute(stmt, params, cur)
-        result = cur.fetchone()
-        cur.close()
+        if cur == None:
+            c = self.cursor()
+            self.execute(stmt, params, c)
+            result = c.fetchone()
+            c.close()
+        else:
+            self.execute(stmt, params, cur)
+            result = cur.fetchone()
         return result
 
     def fetchall(self, stmt, params=(), cur=None):
-        cur = self.cursor()
-        self.execute(stmt, params, cur)
-        result = cur.fetchall()
-        cur.close()
+        if cur == None:
+            c = self.cursor()
+            self.execute(stmt, params, c)
+            result = c.fetchall()
+            c.close()
+        else:
+            self.execute(stmt, params, cur)
+            result = cur.fetchall()
         return result
 
     def _format(self, stmt):
