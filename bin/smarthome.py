@@ -399,7 +399,7 @@ class SmartHome():
     #################################################################
     def dbapi(self, name):
         if name not in self._dbapis:
-            raise Exception('DB API {} not registered')
+            raise Exception('DB API {} not registered'.format(name))
         return self._dbapis[name]
 
     #################################################################
