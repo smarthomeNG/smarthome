@@ -264,7 +264,31 @@ class Item():
         #############################################################
         # Plugins
         #############################################################
-        for plugin in self._sh.return_plugins() if 'plugin' not in self.conf else [self._sh.return_plugin(self.conf['plugin'])]:
+        confPlugins = []
+        if 'plugin' in self.conf:
+            for pluginName in self.conf['plugin'] if type(self.conf['plugin']) is list else [self.conf['plugin']]:
+                plugin = self._sh.return_plugin(pluginName)
+                if plugin is None:
+                   logger.error("Item {}: attached plugin {} not found.".format(self.id(), pluginName))
+                else:
+                   confPlugins.append(plugin)
+
+        for plugin in self._sh.return_plugins():
+
+            # Check if plugin is explicitely configured in item or not
+            if len(confPlugins) and plugin not in confPlugins:
+                configurePlugin = True
+                for confPlugin in confPlugins:
+
+                    # Skip plugin if plugin was not configured explictely, but another instance
+                    # of the same class
+                    if plugin != confPlugin and issubclass(type(plugin), type(confPlugin)):
+                       configurePlugin = False
+                       break
+
+                if configurePlugin == False:
+                   continue
+
             if hasattr(plugin, 'parse_item'):
                 update = plugin.parse_item(self)
                 if update:
