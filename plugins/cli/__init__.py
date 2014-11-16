@@ -58,6 +58,8 @@ class CLIHandler(lib.connection.Stream):
             self.cl()
         elif cmd.startswith('update ') or cmd.startswith('up '):
             self.update(cmd.lstrip('update').strip())
+        elif cmd.startswith('dump'):
+            self.dump(cmd.lstrip('dump ').strip())
         elif cmd.startswith('tr'):
             self.tr(cmd.lstrip('tr').strip())
         elif cmd.startswith('rl'):
@@ -117,6 +119,27 @@ class CLIHandler(lib.connection.Stream):
             return
         item(value, 'CLI', self.source)
 
+    def dump(self, data):
+        item = self.sh.return_item(data)
+        if item != None:
+            self.push("Item {} ".format(item.id()))
+            self.push("{\n")
+            self.push("  type = {}\n".format(item.type()))
+            self.push("  value = {}\n".format(item()))
+            self.push("  age = {}\n".format(item.age()))
+            self.push("  last_change = {}\n".format(item.last_change()))
+            self.push("  changed by = {}\n".format(item.changed_by()))
+            self.push("  previous value = {}\n".format(item.prev_value()))
+            self.push("  previous age = {}\n".format(item.prev_age()))
+            self.push("  previous_change = {}\n".format(item.prev_change()))
+            self.push("  config = {\n")
+            for name in item.conf:
+                self.push("    {} = {}\n".format(name, item.conf[name]))
+            self.push("  }\n")
+            self.push("}\n")
+        else:
+            self.push("Nothing found\n")
+
     def tr(self, logic):
         if not self.updates_allowed:
             self.push("Logic triggering is not allowed.\n")
@@ -175,6 +198,7 @@ class CLIHandler(lib.connection.Stream):
         self.push('lt: list current thread names\n')
         self.push('update item = value: update the specified item with the specified value\n')
         self.push('up: alias for update\n')
+        self.push('dump item: dump details about given item\n')
         self.push('tr logic: trigger logic\n')
         self.push('rl logic: reload logic\n')
         self.push('rr logic: reload and run logic\n')
