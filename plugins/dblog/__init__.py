@@ -36,8 +36,8 @@ class DbLog():
     # SQL queries
     # time, item_id, val_str, val_num, val_bool
     _setup = {
-      '1' : "CREATE TABLE log (time BIGINT, item_id INTEGER, val_str TEXT, val_num REAL, val_bool BOOLEAN);",
-      '2' : "CREATE TABLE item (id INTEGER, name varchar(255), time BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN);",
+      '1' : "CREATE TABLE log (time BIGINT, item_id INTEGER, duration BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN);",
+      '2' : "CREATE TABLE item (id INTEGER, name varchar(255), time BIGINT, duration BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN);",
       '3' : "CREATE INDEX log_item_id_time ON log (item_id, time);",
       '4' : "CREATE INDEX item_name ON item (name);"
     }
@@ -72,6 +72,7 @@ class DbLog():
         self.connected = False
 
     def update_item(self, item, caller=None, source=None, dest=None):
+        duration = self._timestamp(item.last_change()) - self._timestamp(item.prev_change())
         if item.type() == 'num':
            val_str = None
            val_num = float(item())
@@ -85,7 +86,7 @@ class DbLog():
            val_num = None
            val_bool = None
 
-        self._buffer[item].append((self._timestamp(self._sh.now()), val_str, val_num, val_bool))
+        self._buffer[item].append((self._timestamp(self._sh.now()), duration, val_str, val_num, val_bool))
 
     def _datetime(self, ts):
         return datetime.datetime.fromtimestamp(ts / 1000, self._sh.tzinfo())
@@ -120,16 +121,16 @@ class DbLog():
 
                     cur = self._db.cursor()
                     for t in tuples:
-                        _insert = ( t[0], id, t[1], t[2], t[3] )
+                        _insert = ( t[0], id, t[1], t[2], t[3], t[4] )
 
                         # time, item_id, val_str, val_num, val_bool
-                        self._db.execute("INSERT INTO log VALUES (?,?,?,?,?);", _insert, cur)
+                        self._db.execute("INSERT INTO log VALUES (?,?,?,?,?,?);", _insert, cur)
 
                     t = tuples[-1]
-                    _update = ( t[0], t[1], t[2], t[3], id )
+                    _update = ( t[0], t[1], t[2], t[3], t[4], id )
 
                     # time, item_id, val_str, val_num, val_bool
-                    self._db.execute("UPDATE item SET time = ?, val_str = ?, val_num = ?, val_bool = ? WHERE id = ?;", _update, cur)
+                    self._db.execute("UPDATE item SET time = ?, duration = ?, val_str = ?, val_num = ?, val_bool = ? WHERE id = ?;", _update, cur)
                     cur.close()
 
                     self._db.commit()
