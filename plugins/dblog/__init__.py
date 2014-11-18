@@ -37,7 +37,7 @@ class DbLog():
     # time, item_id, val_str, val_num, val_bool
     _setup = {
       '1' : "CREATE TABLE log (time BIGINT, item_id INTEGER, duration BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN);",
-      '2' : "CREATE TABLE item (id INTEGER, name varchar(255), time BIGINT, duration BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN);",
+      '2' : "CREATE TABLE item (id INTEGER, name varchar(255), time BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN);",
       '3' : "CREATE INDEX log_item_id_time ON log (item_id, time);",
       '4' : "CREATE INDEX item_name ON item (name);"
     }
@@ -127,10 +127,10 @@ class DbLog():
                         self._db.execute("INSERT INTO log VALUES (?,?,?,?,?,?);", _insert, cur)
 
                     t = tuples[-1]
-                    _update = ( t[0], t[1], t[2], t[3], t[4], id )
+                    _update = ( t[0], t[2], t[3], t[4], id )
 
                     # time, item_id, val_str, val_num, val_bool
-                    self._db.execute("UPDATE item SET time = ?, duration = ?, val_str = ?, val_num = ?, val_bool = ? WHERE id = ?;", _update, cur)
+                    self._db.execute("UPDATE item SET time = ?, val_str = ?, val_num = ?, val_bool = ? WHERE id = ?;", _update, cur)
                     cur.close()
 
                     self._db.commit()
