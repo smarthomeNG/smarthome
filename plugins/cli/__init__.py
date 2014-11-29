@@ -59,7 +59,7 @@ class CLIHandler(lib.connection.Stream):
         elif cmd.startswith('update ') or cmd.startswith('up '):
             self.update(cmd.lstrip('update').strip())
         elif cmd.startswith('dump'):
-            self.dump(cmd.lstrip('dump ').strip())
+            self.dump(cmd.lstrip('dump').strip())
         elif cmd.startswith('tr'):
             self.tr(cmd.lstrip('tr').strip())
         elif cmd.startswith('rl'):
@@ -119,8 +119,8 @@ class CLIHandler(lib.connection.Stream):
             return
         item(value, 'CLI', self.source)
 
-    def dump(self, data):
-        item = self.sh.return_item(data)
+    def dump(self, path):
+        item = self.sh.return_item(path)
         if item != None:
             self.push("Item {} ".format(item.id()))
             self.push("{\n")
@@ -209,7 +209,7 @@ class CLIHandler(lib.connection.Stream):
 
 class CLI(lib.connection.Server):
 
-    def __init__(self, smarthome, update='False', ip='127.0.0.1', port=2323):
+    def __init__(self, smarthome, update='False', ip='127.0.0.1', port=2525):
         lib.connection.Server.__init__(self, ip, port)
         self.sh = smarthome
         self.updates_allowed = smarthome.string2bool(update)
