@@ -67,31 +67,39 @@ class DbLog():
 
     def stop(self):
         self.alive = False
-        self._dump()
+        self._dump(True)
         self._db.close()
         self.connected = False
 
     def update_item(self, item, caller=None, source=None, dest=None):
-        duration = self._timestamp(item.last_change()) - self._timestamp(item.prev_change())
-        if item.type() == 'num':
+        start = self._timestamp(item.prev_change())
+        end = self._timestamp(item.last_change())
+
+        t = [start, end - start]
+        t.extend(self._item_value_tuple(item.type(), item.prev_value()))
+
+        self._buffer[item].append(tuple(t))
+
+    def _item_value_tuple(self, item_type, item_val):
+        if item_type == 'num':
            val_str = None
-           val_num = float(item())
+           val_num = float(item_val)
            val_bool = None
-        elif item.type() == 'bool':
+        elif item_type == 'bool':
            val_str = None
            val_num = None
-           val_bool = bool(item())
+           val_bool = bool(item_val)
         else:
-           val_str = str(item())
+           val_str = str(item_val)
            val_num = None
            val_bool = None
 
-        self._buffer[item].append((self._timestamp(self._sh.now()), duration, val_str, val_num, val_bool))
+        return [val_str, val_num, val_bool]
 
     def _datetime(self, ts):
         return datetime.datetime.fromtimestamp(ts / 1000, self._sh.tzinfo())
 
-    def _dump(self):
+    def _dump(self, finalize=False):
         if not self.connected:
             pass
 
@@ -102,7 +110,7 @@ class DbLog():
             self._buffer[item] = []
             self._buffer_lock.release()
 
-            if len(tuples):
+            if len(tuples) or finalize:
                 try:
                     self._db.lock()
 
@@ -117,20 +125,40 @@ class DbLog():
                         cur.close()
 
                     id = id[0]
+
+                    # Get current values of item
+                    start = self._timestamp(item.last_change())
+                    end = self._timestamp(self._sh.now())
+                    val = self._item_value_tuple(item.type(), item())
+
+                    # When finalizing (e.g. plugin shutdown) add current value to item and log
+                    if finalize:
+                        _update = [end]
+                        _update.extend(val)
+                        _update.append(id)
+
+                        current = [start, id, end - start]
+                        current.extend(val)
+                        tuples.append(tuple(current))
+
+                    else:
+                        _update = [start]
+                        _update.extend(val)
+                        _update.append(id)
+
+                    # Dump tuples
                     logger.debug('Dumping {}/{} with {} values'.format(item.id(), id, len(tuples)))
 
                     cur = self._db.cursor()
                     for t in tuples:
                         _insert = ( t[0], id, t[1], t[2], t[3], t[4] )
 
-                        # time, item_id, val_str, val_num, val_bool
+                        # time, item_id, duration, val_str, val_num, val_bool
                         self._db.execute("INSERT INTO log VALUES (?,?,?,?,?,?);", _insert, cur)
 
-                    t = tuples[-1]
-                    _update = ( t[0], t[2], t[3], t[4], id )
+                    # time, val_str, val_num, val_bool, item_id
+                    self._db.execute("UPDATE item SET time = ?, val_str = ?, val_num = ?, val_bool = ? WHERE id = ?;", tuple(_update), cur)
 
-                    # time, item_id, val_str, val_num, val_bool
-                    self._db.execute("UPDATE item SET time = ?, val_str = ?, val_num = ?, val_bool = ? WHERE id = ?;", _update, cur)
                     cur.close()
 
                     self._db.commit()
