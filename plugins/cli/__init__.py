@@ -209,7 +209,7 @@ class CLIHandler(lib.connection.Stream):
 
 class CLI(lib.connection.Server):
 
-    def __init__(self, smarthome, update='False', ip='127.0.0.1', port=2525):
+    def __init__(self, smarthome, update='False', ip='127.0.0.1', port=2323):
         lib.connection.Server.__init__(self, ip, port)
         self.sh = smarthome
         self.updates_allowed = smarthome.string2bool(update)
