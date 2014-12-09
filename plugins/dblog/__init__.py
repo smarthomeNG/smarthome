@@ -44,7 +44,6 @@ class DbLog():
 
     def __init__(self, smarthome, db, connect, cycle=10):
         self._sh = smarthome
-        self.connected = False
         self._dump_cycle = int(cycle)
         self._buffer = {}
         self._buffer_lock = threading.Lock()
@@ -69,7 +68,6 @@ class DbLog():
         self.alive = False
         self._dump(True)
         self._db.close()
-        self.connected = False
 
     def update_item(self, item, caller=None, source=None, dest=None):
         start = self._timestamp(item.prev_change())
@@ -100,9 +98,6 @@ class DbLog():
         return datetime.datetime.fromtimestamp(ts / 1000, self._sh.tzinfo())
 
     def _dump(self, finalize=False):
-        if not self.connected:
-            pass
-
         logger.debug('Starting dump')
         for item in self._buffer:
             self._buffer_lock.acquire()
@@ -111,6 +106,32 @@ class DbLog():
             self._buffer_lock.release()
 
             if len(tuples) or finalize:
+
+                # Test connectivity
+                retry = 5
+                while retry > 0:
+                    try:
+                        self._db.lock()
+
+                        if self._db.connected() == False:
+                            self._db.connect()
+
+                        self._db.fetchone("SELECT 1");
+
+                        retry = -1
+
+                    except Exception as e:
+                        logger.warning("DbLog: connection error: {}".format(e))
+                        self._db.close()
+                        retry = retry - 1
+                        time.sleep(2)
+                    finally:
+                        self._db.release()
+
+                if retry == 0:
+                    logger.error("DbLog: connection not recovered, skipping dump");
+                    return
+
                 try:
                     self._db.lock()
 
@@ -137,7 +158,7 @@ class DbLog():
                         _update.extend(val)
                         _update.append(id)
 
-                        current = [start, id, end - start]
+                        current = [start, end - start]
                         current.extend(val)
                         tuples.append(tuple(current))
 
