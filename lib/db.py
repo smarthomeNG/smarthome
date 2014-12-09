@@ -36,6 +36,7 @@ class Database():
     def __init__(self, name, dbapi, connect):
         self._name = name
         self._dbapi = dbapi
+        self._connected = False
 
         self._params = {}
         if type(connect) is str:
@@ -69,7 +70,7 @@ class Database():
             logger.error("Database [{}]: Could not connect to the database: {}".format(self._name, e))
             self.release()
             raise
-        self.connected = True
+        self._connected = True
         logger.info("Database [{}]: Connected with {} using \"{}\" style".format(self._name, self._dbapi, self._style))
         self.release()
 
@@ -82,6 +83,10 @@ class Database():
         finally:
             self.release()
         self._dbapi = None
+        self._connected = False
+
+    def connected(self):
+        return self._connected
 
     def setup(self, queries):
         self.lock()
