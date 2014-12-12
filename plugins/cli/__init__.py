@@ -59,7 +59,7 @@ class CLIHandler(lib.connection.Stream):
         elif cmd.startswith('update ') or cmd.startswith('up '):
             self.update(cmd.lstrip('update').strip())
         elif cmd.startswith('dump'):
-            self.dump(cmd.lstrip('dump').strip())
+            self.dump(cmd.lstrip('dump').strip(), '*' in cmd or ':' in cmd)
         elif cmd.startswith('tr'):
             self.tr(cmd.lstrip('tr').strip())
         elif cmd.startswith('rl'):
@@ -119,24 +119,30 @@ class CLIHandler(lib.connection.Stream):
             return
         item(value, 'CLI', self.source)
 
-    def dump(self, path):
-        item = self.sh.return_item(path)
-        if item != None:
-            self.push("Item {} ".format(item.id()))
-            self.push("{\n")
-            self.push("  type = {}\n".format(item.type()))
-            self.push("  value = {}\n".format(item()))
-            self.push("  age = {}\n".format(item.age()))
-            self.push("  last_change = {}\n".format(item.last_change()))
-            self.push("  changed by = {}\n".format(item.changed_by()))
-            self.push("  previous value = {}\n".format(item.prev_value()))
-            self.push("  previous age = {}\n".format(item.prev_age()))
-            self.push("  previous_change = {}\n".format(item.prev_change()))
-            self.push("  config = {\n")
-            for name in item.conf:
-                self.push("    {} = {}\n".format(name, item.conf[name]))
-            self.push("  }\n")
-            self.push("}\n")
+    def dump(self, path, match=True):
+        if match:
+            items = self.sh.match_items(path)
+        else:
+            items = [self.sh.return_item(path)]
+        if len(items):
+            for item in items:
+                if hasattr(item, 'id') and item._type:
+                    self.push("Item {} ".format(item.id()))
+                    self.push("{\n")
+                    self.push("  type = {}\n".format(item.type()))
+                    self.push("  value = {}\n".format(item()))
+                    self.push("  age = {}\n".format(item.age()))
+                    self.push("  last_change = {}\n".format(item.last_change()))
+                    self.push("  changed by = {}\n".format(item.changed_by()))
+                    self.push("  previous value = {}\n".format(item.prev_value()))
+                    self.push("  previous age = {}\n".format(item.prev_age()))
+                    self.push("  previous_change = {}\n".format(item.prev_change()))
+                    if hasattr(item, 'conf'):
+                        self.push("  config = {\n")
+                        for name in item.conf:
+                            self.push("    {} = {}\n".format(name, item.conf[name]))
+                        self.push("  }\n")
+                    self.push("}\n")
         else:
             self.push("Nothing found\n")
 
