@@ -57,6 +57,8 @@ class DbLog():
     def parse_item(self, item):
         if 'dblog' in item.conf:
             self._buffer[item] = []
+            item.series = functools.partial(self._series, item=item.id())
+            item.db = functools.partial(self._single, item=item.id())
             return self.update_item
         else:
             return None
@@ -187,6 +189,110 @@ class DbLog():
                     logger.warning("DbLog: problem updating {}: {}".format(item.id(), e))
                 finally:
                     self._db.release()
+
+    def _series(self, func, start, end='now', count=100, ratio=1, update=False, step=None, sid=None, item=None):
+        init = not update
+        if sid is None:
+            sid = item + '|' + func + '|' + start + '|' + end
+        istart = self._parse_ts(start)
+        iend = self._parse_ts(end)
+        if step is None:
+            if count != 0:
+                step = int((iend - istart) / count)
+            else:
+                step = iend - istart
+        reply = {'cmd': 'series', 'series': None, 'sid': sid}
+        reply['params'] = {'update': True, 'item': item, 'func': func, 'start': iend, 'end': end, 'step': step, 'sid': sid}
+        reply['update'] = self._sh.now() + datetime.timedelta(seconds=int(step / 1000))
+        where = " FROM log WHERE item_id = ? AND time + duration > ? AND time <= ? GROUP BY ROUND(time / ?)"
+        if func == 'avg':
+            query = "SELECT MIN(time), ROUND(AVG((val_num * duration) / SUM(duration)), 2)" + where + " ORDER BY time ASC"
+        elif func == 'min':
+            query = "SELECT MIN(time), MIN(val_num)" + where
+        elif func == 'max':
+            query = "SELECT MIN(time), MAX(val_num)" + where
+        elif func == 'on':
+            query = "SELECT MIN(time), ROUND(SUM(val_bool * duration) / SUM(duration), 2)" + where + " ORDER BY time ASC"
+        else:
+            raise NotImplementedError
+        _item = self._sh.return_item(item)
+        #if self._buffer[_item] != [] and end == 'now':
+        #    self._insert(_item)
+        id = self._db.fetchone("SELECT id FROM item where name = ?", (item,))
+        logger.debug(query);
+        tuples = list(self._db.fetchall(query, (id[0], istart, iend, step)))
+        if tuples:
+            if istart > tuples[0][0]:
+                tuples[0] = (istart, tuples[0][1])
+            if end != 'now':
+                tuples.append((iend, tuples[-1][1]))
+        else:
+            tuples = []
+        item_change = self._timestamp(_item.last_change())
+        if item_change < iend:
+            value = float(_item())
+            if item_change < istart:
+                tuples.append((istart, value))
+            elif init:
+                tuples.append((item_change, value))
+            if init:
+                tuples.append((iend, value))
+        if tuples:
+            reply['series'] = tuples
+        return reply
+
+    def _single(self, func, start, end='now', item=None):
+        start = self._parse_ts(start)
+        end = self._parse_ts(end)
+        where = " FROM log WHERE item_id = ? AND time + duration > ? AND time <= ?"
+        if func == 'avg':
+            query = "SELECT ROUND(AVG((val_num * duration) / SUM(duration)), 2)" + where
+        elif func == 'min':
+            query = "SELECT MIN(val_num)" + where
+        elif func == 'max':
+            query = "SELECT MAX(val_num)" + where
+        elif func == 'on':
+            query = "SELECT ROUND(SUM(val_bool * duration) / SUM(duration), 2)" + where
+        else:
+            logger.warning("Unknown export function: {0}".format(func))
+            return
+        _item = self._sh.return_item(item)
+        #if self._buffer[_item] != [] and end == 'now':
+        #    self._insert(_item)
+        id = self._db.fetchone("SELECT id FROM item where name = ?", (item,))
+        logger.debug(query);
+        tuples = list(self._db.fetchall(query, (id[0], start, end)))
+        if tuples is None:
+            return
+        return tuples[0][0]
+
+    def _parse_ts(self, frame):
+        minute = 60 * 1000
+        hour = 60 * minute
+        day = 24 * hour
+        week = 7 * day
+        month = 30 * day
+        year = 365 * day
+
+        _frames = {'i': minute, 'h': hour, 'd': day, 'w': week, 'm': month, 'y': year}
+        try:
+            return int(frame)
+        except:
+            pass
+        ts = self._timestamp(self._sh.now())
+        if frame == 'now':
+            fac = 0
+            frame = 0
+        elif frame[-1] in _frames:
+            fac = _frames[frame[-1]]
+            frame = frame[:-1]
+        else:
+            return frame
+        try:
+            ts = ts - int(float(frame) * fac)
+        except:
+            logger.warning("DBLog: Unknown time frame '{0}'".format(frame))
+        return ts
 
     def _timestamp(self, dt):
         return int(time.mktime(dt.timetuple())) * 1000 + int(dt.microsecond / 1000)
