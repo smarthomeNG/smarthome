@@ -206,7 +206,7 @@ class DbLog():
         reply['update'] = self._sh.now() + datetime.timedelta(seconds=int(step / 1000))
         where = " FROM log WHERE item_id = ? AND time + duration > ? AND time <= ? GROUP BY ROUND(time / ?)"
         if func == 'avg':
-            query = "SELECT MIN(time), ROUND(AVG((val_num * duration) / SUM(duration)), 2)" + where + " ORDER BY time ASC"
+            query = "SELECT MIN(time), ROUND(AVG(val_num * duration) / AVG(duration), 2)" + where + " ORDER BY time ASC"
         elif func == 'min':
             query = "SELECT MIN(time), MIN(val_num)" + where
         elif func == 'max':
@@ -215,11 +215,7 @@ class DbLog():
             query = "SELECT MIN(time), ROUND(SUM(val_bool * duration) / SUM(duration), 2)" + where + " ORDER BY time ASC"
         else:
             raise NotImplementedError
-        _item = self._sh.return_item(item)
-        #if self._buffer[_item] != [] and end == 'now':
-        #    self._insert(_item)
         id = self._db.fetchone("SELECT id FROM item where name = ?", (item,))
-        logger.debug(query);
         tuples = list(self._db.fetchall(query, (id[0], istart, iend, step)))
         if tuples:
             if istart > tuples[0][0]:
@@ -228,15 +224,6 @@ class DbLog():
                 tuples.append((iend, tuples[-1][1]))
         else:
             tuples = []
-        item_change = self._timestamp(_item.last_change())
-        if item_change < iend:
-            value = float(_item())
-            if item_change < istart:
-                tuples.append((istart, value))
-            elif init:
-                tuples.append((item_change, value))
-            if init:
-                tuples.append((iend, value))
         if tuples:
             reply['series'] = tuples
         return reply
@@ -246,7 +233,7 @@ class DbLog():
         end = self._parse_ts(end)
         where = " FROM log WHERE item_id = ? AND time + duration > ? AND time <= ?"
         if func == 'avg':
-            query = "SELECT ROUND(AVG((val_num * duration) / SUM(duration)), 2)" + where
+            query = "SELECT ROUND(AVG(val_num * duration) / AVG(duration), 2)" + where
         elif func == 'min':
             query = "SELECT MIN(val_num)" + where
         elif func == 'max':
@@ -256,11 +243,7 @@ class DbLog():
         else:
             logger.warning("Unknown export function: {0}".format(func))
             return
-        _item = self._sh.return_item(item)
-        #if self._buffer[_item] != [] and end == 'now':
-        #    self._insert(_item)
         id = self._db.fetchone("SELECT id FROM item where name = ?", (item,))
-        logger.debug(query);
         tuples = list(self._db.fetchall(query, (id[0], start, end)))
         if tuples is None:
             return
