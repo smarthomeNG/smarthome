@@ -215,8 +215,7 @@ class DbLog():
             query = "SELECT MIN(time), ROUND(SUM(val_bool * duration) / SUM(duration), 2)" + where + " ORDER BY time ASC"
         else:
             raise NotImplementedError
-        id = self._db.fetchone("SELECT id FROM item where name = ?", (item,))
-        tuples = list(self._db.fetchall(query, (id[0], istart, iend, step)))
+        tuples = self._fetch(query, item, istart, iend, step)
         if tuples:
             if istart > tuples[0][0]:
                 tuples[0] = (istart, tuples[0][1])
@@ -224,8 +223,7 @@ class DbLog():
                 tuples.append((iend, tuples[-1][1]))
         else:
             tuples = []
-        if tuples:
-            reply['series'] = tuples
+        reply['series'] = tuples
         return reply
 
     def _single(self, func, start, end='now', item=None):
@@ -243,11 +241,25 @@ class DbLog():
         else:
             logger.warning("Unknown export function: {0}".format(func))
             return
-        id = self._db.fetchone("SELECT id FROM item where name = ?", (item,))
-        tuples = list(self._db.fetchall(query, (id[0], start, end)))
+        tuples = self._fetch(query, item, start, end)
         if tuples is None:
             return
-        return tuples[0][0]
+        return tuples[0]
+
+    def _fetch(self, query, item, start, end, step):
+        self._db.lock()
+        try:
+            id = self._db.fetchone("SELECT id FROM item where name = ?", (item,))
+            tuples = self._db.fetchall(query, (id[0], start, end, step))
+        except Exception as e:
+            pass 
+        finally:
+            self._db.release()
+        if tuples is None:
+            return None
+        else:
+            return list(tuples)
+
 
     def _parse_ts(self, frame):
         minute = 60 * 1000
