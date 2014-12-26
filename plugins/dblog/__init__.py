@@ -252,14 +252,13 @@ class DbLog():
             id = self._db.fetchone("SELECT id FROM item where name = ?", (item,))
             tuples = self._db.fetchall(query, (id[0], start, end, step))
         except Exception as e:
-            pass 
+            logger.warn("DBLog: Error fetching data for {}: {}".format(item, e))
         finally:
             self._db.release()
         if tuples is None:
             return None
         else:
             return list(tuples)
-
 
     def _parse_ts(self, frame):
         minute = 60 * 1000
