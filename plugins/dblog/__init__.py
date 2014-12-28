@@ -215,7 +215,7 @@ class DbLog():
             query = "SELECT MIN(time), ROUND(SUM(val_bool * duration) / SUM(duration), 2)" + where + " ORDER BY time ASC"
         else:
             raise NotImplementedError
-        tuples = self._fetch(query, item, istart, iend, step)
+        tuples = self._fetch(query, item, [istart, iend, step])
         if tuples:
             if istart > tuples[0][0]:
                 tuples[0] = (istart, tuples[0][1])
@@ -241,16 +241,17 @@ class DbLog():
         else:
             logger.warning("Unknown export function: {0}".format(func))
             return
-        tuples = self._fetch(query, item, start, end, None)
+        tuples = self._fetch(query, item, [start, end])
         if tuples is None:
             return
         return tuples[0]
 
-    def _fetch(self, query, item, start, end, step):
+    def _fetch(self, query, item, params):
         self._db.lock()
         try:
             id = self._db.fetchone("SELECT id FROM item where name = ?", (item,))
-            tuples = self._db.fetchall(query, (id[0], start, end, step))
+            params.insert(0, id[0])
+            tuples = self._db.fetchall(query, tuple(params))
         except Exception as e:
             logger.warn("DBLog: Error fetching data for {}: {}".format(item, e))
         finally:
