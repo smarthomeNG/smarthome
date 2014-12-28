@@ -244,7 +244,7 @@ class DbLog():
         tuples = self._fetch(query, item, [start, end])
         if tuples is None:
             return
-        return tuples[0]
+        return tuples[0][0]
 
     def _fetch(self, query, item, params):
         self._db.lock()
