@@ -241,7 +241,7 @@ class DbLog():
         else:
             logger.warning("Unknown export function: {0}".format(func))
             return
-        tuples = self._fetch(query, item, start, end)
+        tuples = self._fetch(query, item, start, end, None)
         if tuples is None:
             return
         return tuples[0]
