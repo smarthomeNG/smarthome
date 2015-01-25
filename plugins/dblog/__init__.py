@@ -99,9 +99,9 @@ class DbLog():
     def _datetime(self, ts):
         return datetime.datetime.fromtimestamp(ts / 1000, self._sh.tzinfo())
 
-    def _dump(self, finalize=False):
+    def _dump(self, finalize=False, items=None):
         logger.debug('Starting dump')
-        for item in self._buffer:
+        for item in self._buffer if items == None else items:
             self._buffer_lock.acquire()
             tuples = self._buffer[item]
             self._buffer[item] = []
@@ -215,6 +215,9 @@ class DbLog():
             query = "SELECT MIN(time), ROUND(SUM(val_bool * duration) / SUM(duration), 2)" + where + " ORDER BY time ASC"
         else:
             raise NotImplementedError
+        _item = self._sh.return_item(item)
+        if self._buffer[_item] != []:
+            self._dump(items=[_item])
         tuples = self._fetch(query, item, [istart, iend, step])
         if tuples:
             if istart > tuples[0][0]:
@@ -223,6 +226,15 @@ class DbLog():
                 tuples.append((iend, tuples[-1][1]))
         else:
             tuples = []
+        item_change = self._timestamp(_item.last_change())
+        if item_change < iend:
+            value = float(_item())
+            if item_change < istart:
+                tuples.append((istart, value))
+            elif init:
+                tuples.append((item_change, value))
+            if init:
+                tuples.append((iend, value))
         reply['series'] = tuples
         return reply
 
@@ -241,6 +253,9 @@ class DbLog():
         else:
             logger.warning("Unknown export function: {0}".format(func))
             return
+        _item = self._sh.return_item(item)
+        if self._buffer[_item] != []:
+            self._dump(items=[_item])
         tuples = self._fetch(query, item, [start, end])
         if tuples is None:
             return
