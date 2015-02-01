@@ -133,9 +133,9 @@ class CLIHandler(lib.connection.Stream):
                     self.push("  value = {}\n".format(item()))
                     self.push("  age = {}\n".format(item.age()))
                     self.push("  last_change = {}\n".format(item.last_change()))
-                    self.push("  changed by = {}\n".format(item.changed_by()))
-                    self.push("  previous value = {}\n".format(item.prev_value()))
-                    self.push("  previous age = {}\n".format(item.prev_age()))
+                    self.push("  changed_by = {}\n".format(item.changed_by()))
+                    self.push("  previous_value = {}\n".format(item.prev_value()))
+                    self.push("  previous_age = {}\n".format(item.prev_age()))
                     self.push("  previous_change = {}\n".format(item.prev_change()))
                     if hasattr(item, 'conf'):
                         self.push("  config = {\n")
