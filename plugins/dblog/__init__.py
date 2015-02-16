@@ -101,7 +101,11 @@ class DbLog():
 
     def _dump(self, finalize=False, items=None):
         logger.debug('Starting dump')
-        for item in self._buffer if items == None else items:
+        if items == None:
+            self._buffer_lock.acquire()
+            items = list(self._buffer.keys())
+            self._buffer_lock.release()
+        for item in items:
             self._buffer_lock.acquire()
             tuples = self._buffer[item]
             self._buffer[item] = []
