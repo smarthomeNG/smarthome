@@ -47,6 +47,7 @@ class DbLog():
         self._dump_cycle = int(cycle)
         self._buffer = {}
         self._buffer_lock = threading.Lock()
+        self._dump_lock = threading.Lock()
 
         self._db = lib.db.Database("DbLog", self._sh.dbapi(db), connect)
         self._db.connect()
@@ -100,11 +101,17 @@ class DbLog():
         return datetime.datetime.fromtimestamp(ts / 1000, self._sh.tzinfo())
 
     def _dump(self, finalize=False, items=None):
+        if self._dump_lock.acquire(False) == False:
+            logger.debug('Skipping dump, since other dump running!')
+            return
+
         logger.debug('Starting dump')
+
         if items == None:
             self._buffer_lock.acquire()
             items = list(self._buffer.keys())
             self._buffer_lock.release()
+
         for item in items:
             self._buffer_lock.acquire()
             tuples = self._buffer[item]
@@ -136,6 +143,7 @@ class DbLog():
 
                 if retry == 0:
                     logger.error("DbLog: connection not recovered, skipping dump");
+                    self._dump_lock.release()
                     return
 
                 try:
@@ -193,6 +201,8 @@ class DbLog():
                     logger.warning("DbLog: problem updating {}: {}".format(item.id(), e))
                 finally:
                     self._db.release()
+        logger.debug('Dump completed')
+        self._dump_lock.release()
 
     def _series(self, func, start, end='now', count=100, ratio=1, update=False, step=None, sid=None, item=None):
         init = not update
