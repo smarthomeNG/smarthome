@@ -32,7 +32,6 @@ logger = logging.getLogger('')
 
 class DbLog():
 
-    _version = 2
     # SQL queries
     # time, item_id, val_str, val_num, val_bool
     _setup = {
@@ -42,7 +41,7 @@ class DbLog():
       '4' : "CREATE INDEX item_name ON item (name);"
     }
 
-    def __init__(self, smarthome, db, connect, cycle=10):
+    def __init__(self, smarthome, db, connect, cycle=60):
         self._sh = smarthome
         self._dump_cycle = int(cycle)
         self._buffer = {}
