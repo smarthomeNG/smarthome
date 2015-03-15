@@ -138,6 +138,28 @@ class Database():
             result = cur.execute(stmt, params)
         return result
 
+    def verify(self, retry=5):
+        while retry > 0:
+            try:
+                self.lock()
+
+                if self.connected() == False:
+                    self.connect()
+
+                self.fetchone("SELECT 1");
+
+                retry = -1
+
+            except Exception as e:
+                logger.warning("Database [{}]: Connection error {}".format(self._name, e))
+                self.close()
+                retry = retry - 1
+                time.sleep(2)
+            finally:
+                self.release()
+
+        return retry
+
     def fetchone(self, stmt, params=(), cur=None):
         if cur == None:
             c = self.cursor()
