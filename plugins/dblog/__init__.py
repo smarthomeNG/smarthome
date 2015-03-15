@@ -126,7 +126,20 @@ class DbLog():
                     return
 
                 try:
-                    self._db.lock()
+
+                    # Can't lock, restore data
+                    if not self._db.lock(10):
+                        self._buffer_lock.acquire()
+                        if item in self._buffer:
+                            self._buffer[item] = tubles + self._buffer[item]
+                        else:
+                            self._buffer[item] = tubles
+                        self._buffer_lock.release()
+                        if finalize:
+                            logger.error("DbLog: can't dump {} items due to fail to acquire lock!".format(len(self._buffer)))
+                        else:
+                            logger.error("DbLog: can't dump {} items due to fail to acquire lock - will try on next dump".format(len(self._buffer)))
+                        return
 
                     # Create new item ID
                     id = self._db.fetchone("SELECT id FROM item where name = ?;", (item.id(),))
@@ -255,7 +268,9 @@ class DbLog():
         return tuples[0][0]
 
     def _fetch(self, query, item, params):
-        self._db.lock()
+        if not self._db.lock(10):
+            logger.error("DbLog: can't fetch data due to fail to acquire lock")
+            return None
         try:
             id = self._db.fetchone("SELECT id FROM item where name = ?", (item,))
             params.insert(0, id[0])
