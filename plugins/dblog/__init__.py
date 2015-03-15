@@ -120,27 +120,7 @@ class DbLog():
             if len(tuples) or finalize:
 
                 # Test connectivity
-                retry = 5
-                while retry > 0:
-                    try:
-                        self._db.lock()
-
-                        if self._db.connected() == False:
-                            self._db.connect()
-
-                        self._db.fetchone("SELECT 1");
-
-                        retry = -1
-
-                    except Exception as e:
-                        logger.warning("DbLog: connection error: {}".format(e))
-                        self._db.close()
-                        retry = retry - 1
-                        time.sleep(2)
-                    finally:
-                        self._db.release()
-
-                if retry == 0:
+                if self._db.verify(5) == 0:
                     logger.error("DbLog: connection not recovered, skipping dump");
                     self._dump_lock.release()
                     return
