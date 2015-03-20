@@ -141,7 +141,7 @@ class Database():
     def verify(self, retry=5):
         while retry > 0:
             try:
-                self.lock()
+                self.lock(2)
 
                 if self.connected() == False:
                     self.connect()
@@ -154,7 +154,6 @@ class Database():
                 logger.warning("Database [{}]: Connection error {}".format(self._name, e))
                 self.close()
                 retry = retry - 1
-                time.sleep(2)
             finally:
                 self.release()
 
