@@ -125,22 +125,22 @@ class DbLog():
                     self._dump_lock.release()
                     return
 
+                # Can't lock, restore data
+                if not self._db.lock(10):
+                    self._buffer_lock.acquire()
+                    if item in self._buffer:
+                        self._buffer[item] = tuples + self._buffer[item]
+                    else:
+                        self._buffer[item] = tuples
+                    self._buffer_lock.release()
+                    if finalize:
+                        logger.error("DbLog: can't dump {} items due to fail to acquire lock!".format(len(self._buffer)))
+                    else:
+                        logger.error("DbLog: can't dump {} items due to fail to acquire lock - will try on next dump".format(len(self._buffer)))
+                    self._dump_lock.release()
+                    return
+
                 try:
-
-                    # Can't lock, restore data
-                    if not self._db.lock(10):
-                        self._buffer_lock.acquire()
-                        if item in self._buffer:
-                            self._buffer[item] = tubles + self._buffer[item]
-                        else:
-                            self._buffer[item] = tubles
-                        self._buffer_lock.release()
-                        if finalize:
-                            logger.error("DbLog: can't dump {} items due to fail to acquire lock!".format(len(self._buffer)))
-                        else:
-                            logger.error("DbLog: can't dump {} items due to fail to acquire lock - will try on next dump".format(len(self._buffer)))
-                        return
-
                     # Create new item ID
                     id = self._db.fetchone("SELECT id FROM item where name = ?;", (item.id(),))
                     if id == None:
