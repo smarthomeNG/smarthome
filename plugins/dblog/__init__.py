@@ -268,7 +268,7 @@ class DbLog():
         return tuples[0][0]
 
     def _fetch(self, query, item, params):
-        if not self._db.lock(60):
+        if not self._db.lock(300):
             logger.error("DbLog: can't fetch data due to fail to acquire lock")
             return None
         try:
