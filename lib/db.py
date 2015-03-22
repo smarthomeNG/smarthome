@@ -143,10 +143,10 @@ class Database():
             locked = False
 
             try:
-                locked = self.lock(2):
-
-                if locked and self.connected() == False:
+                if self.connected() == False:
                     self.connect()
+
+                locked = self.lock(2):
 
                 self.fetchone("SELECT 1");
 
