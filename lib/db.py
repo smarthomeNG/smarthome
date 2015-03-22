@@ -146,7 +146,7 @@ class Database():
                 if self.connected() == False:
                     self.connect()
 
-                locked = self.lock(2):
+                locked = self.lock(2)
 
                 self.fetchone("SELECT 1");
 
