@@ -101,7 +101,7 @@ class DbLog():
 
     def _dump(self, finalize=False, items=None):
         if self._dump_lock.acquire(False) == False:
-            logger.debug('Skipping dump, since other dump running!')
+            logger.warning('Skipping dump, since other dump running!')
             return
 
         logger.debug('Starting dump')
@@ -126,7 +126,7 @@ class DbLog():
                     return
 
                 # Can't lock, restore data
-                if not self._db.lock(10):
+                if not self._db.lock(300):
                     self._buffer_lock.acquire()
                     if item in self._buffer:
                         self._buffer[item] = tuples + self._buffer[item]
@@ -191,8 +191,7 @@ class DbLog():
                     self._db.commit()
                 except Exception as e:
                     logger.warning("DbLog: problem updating {}: {}".format(item.id(), e))
-                finally:
-                    self._db.release()
+                self._db.release()
         logger.debug('Dump completed')
         self._dump_lock.release()
 
@@ -268,6 +267,7 @@ class DbLog():
         return tuples[0][0]
 
     def _fetch(self, query, item, params):
+        tuples = None
         if not self._db.lock(300):
             logger.error("DbLog: can't fetch data due to fail to acquire lock")
             return None
@@ -275,13 +275,10 @@ class DbLog():
             id = self._db.fetchone("SELECT id FROM item where name = ?", (item,))
             params.insert(0, id[0])
             tuples = self._db.fetchall(query, tuple(params))
-            if tuples is not None:
-                return list(tuples)
         except Exception as e:
-            logger.warn("DBLog: Error fetching data for {}: {}".format(item, e))
-        finally:
-            self._db.release()
-        return None
+            logger.warning("DBLog: Error fetching data for {}: {}".format(item, e))
+        self._db.release()
+        return None if tuples is None else list(tuples)
 
     def _parse_ts(self, frame):
         minute = 60 * 1000
