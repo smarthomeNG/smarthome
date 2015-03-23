@@ -37,6 +37,7 @@ class Database():
         self._name = name
         self._dbapi = dbapi
         self._connected = False
+        self._conn = None
 
         self._params = {}
         if type(connect) is str:
@@ -65,24 +66,24 @@ class Database():
     def connect(self):
         self.lock()
         try:
-            self._dbapi = self._dbapi.connect(**self._params)
+            self._conn = self._dbapi.connect(**self._params)
         except Exception as e:
             logger.error("Database [{}]: Could not connect to the database: {}".format(self._name, e))
             self.release()
             raise
         self._connected = True
-        logger.info("Database [{}]: Connected with {} using \"{}\" style".format(self._name, self._dbapi, self._style))
+        logger.info("Database [{}]: Connected with {} using \"{}\" style".format(self._name, self._conn, self._style))
         self.release()
 
     def close(self):
         self.lock()
         try:
-            self._dbapi.close()
+            self._conn.close()
         except Exception:
             pass
         finally:
             self.release()
-        self._dbapi = None
+        self._conn = None
         self._connected = False
 
     def connected(self):
@@ -120,13 +121,13 @@ class Database():
         self._fdb_lock.release()
 
     def commit(self):
-        self._dbapi.commit()
+        self._conn.commit()
 
     def rollback(self):
-        self._dbapi.rollback()
+        self._conn.rollback()
 
     def cursor(self):
-        return self._dbapi.cursor()
+        return self._conn.cursor()
 
     def execute(self, stmt, params=(), cur=None):
         stmt = self._format(stmt)
@@ -148,7 +149,7 @@ class Database():
 
                 locked = self.lock(2)
 
-                self.fetchone("SELECT 1");
+                self.fetchone("SELECT 1")
 
                 retry = -1
 
