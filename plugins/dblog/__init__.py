@@ -100,7 +100,7 @@ class DbLog():
         return datetime.datetime.fromtimestamp(ts / 1000, self._sh.tzinfo())
 
     def _dump(self, finalize=False, items=None):
-        if self._dump_lock.acquire(False) == False:
+        if self._dump_lock.acquire(timeout=60) == False:
             logger.warning('Skipping dump, since other dump running!')
             return
 
