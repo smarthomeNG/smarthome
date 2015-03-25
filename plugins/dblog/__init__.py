@@ -121,7 +121,7 @@ class DbLog():
 
                 # Test connectivity
                 if self._db.verify(5) == 0:
-                    logger.error("DbLog: connection not recovered, skipping dump");
+                    logger.error("DbLog: Connection not recovered, skipping dump");
                     self._dump_lock.release()
                     return
 
@@ -276,7 +276,7 @@ class DbLog():
             params.insert(0, id[0])
             tuples = self._db.fetchall(query, tuple(params))
         except Exception as e:
-            logger.warning("DBLog: Error fetching data for {}: {}".format(item, e))
+            logger.warning("DbLog: Error fetching data for {}: {}".format(item, e))
         self._db.release()
         return None if tuples is None else list(tuples)
 
@@ -305,7 +305,7 @@ class DbLog():
         try:
             ts = ts - int(float(frame) * fac)
         except:
-            logger.warning("DBLog: Unknown time frame '{0}'".format(frame))
+            logger.warning("DbLog: Unknown time frame '{0}'".format(frame))
         return ts
 
     def _timestamp(self, dt):
