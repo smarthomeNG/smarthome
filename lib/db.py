@@ -69,11 +69,11 @@ class Database():
             self._conn = self._dbapi.connect(**self._params)
         except Exception as e:
             logger.error("Database [{}]: Could not connect to the database: {}".format(self._name, e))
-            self.release()
             raise
+        finally:
+            self.release()
         self._connected = True
         logger.info("Database [{}]: Connected with {} using \"{}\" style".format(self._name, self._conn, self._style))
-        self.release()
 
     def close(self):
         self.lock()
@@ -158,8 +158,9 @@ class Database():
                 self.close()
                 retry = retry - 1
 
-            if locked:
-                self.release()
+            finally:
+                if locked:
+                    self.release()
 
         return retry
 
