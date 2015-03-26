@@ -149,9 +149,9 @@ class Database():
 
                 locked = self.lock(2)
 
-                self.fetchone("SELECT 1")
-
-                retry = -1
+                if locked:
+                    self.fetchone("SELECT 1")
+                    retry = -1
 
             except Exception as e:
                 logger.warning("Database [{}]: Connection error {}".format(self._name, e))
