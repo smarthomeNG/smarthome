@@ -278,6 +278,7 @@ class DbLog():
         except Exception as e:
             logger.warning("DbLog: Error fetching data for {}: {}".format(item, e))
         self._db.release()
+        logger.debug("Fetch {} (args {}): {}".format(query, params, tuples))
         return None if tuples is None else list(tuples)
 
     def _parse_ts(self, frame):
