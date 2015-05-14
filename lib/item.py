@@ -24,6 +24,7 @@ import logging
 import os
 import pickle
 import threading
+import json
 
 logger = logging.getLogger('')
 
@@ -40,6 +41,8 @@ def _cast_str(value):
 
 
 def _cast_list(value):
+    if isinstance(value, str):
+        value = json.loads(value)
     if isinstance(value, list):
         return value
     else:
@@ -47,6 +50,8 @@ def _cast_list(value):
 
 
 def _cast_dict(value):
+    if isinstance(value, str):
+        value = json.loads(value)
     if isinstance(value, dict):
         return value
     else:
