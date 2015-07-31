@@ -41,9 +41,10 @@ class DbLog():
       '4' : "CREATE INDEX item_name ON item (name);"
     }
 
-    def __init__(self, smarthome, db, connect, cycle=60):
+    def __init__(self, smarthome, db, connect, name= "default", cycle=60):
         self._sh = smarthome
         self._dump_cycle = int(cycle)
+        self._name = name
         self._buffer = {}
         self._buffer_lock = threading.Lock()
         self._dump_lock = threading.Lock()
@@ -52,10 +53,10 @@ class DbLog():
         self._db.connect()
         self._db.setup(self._setup)
 
-        smarthome.scheduler.add('DbLog dump', self._dump, cycle=self._dump_cycle, prio=5)
+        smarthome.scheduler.add('DbLog dump ' + name, self._dump, cycle=self._dump_cycle, prio=5)
 
     def parse_item(self, item):
-        if 'dblog' in item.conf:
+        if 'dblog' in item.conf and item.conf['dblog'] == self._name:
             self._buffer[item] = []
             item.series = functools.partial(self._series, item=item.id())
             item.db = functools.partial(self._single, item=item.id())

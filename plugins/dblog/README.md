@@ -51,6 +51,7 @@ registration.
     class_path = plugins.dblog
     db = sqlite
     connect = database:/path/to/log.db | check_same_thread:0
+    #name = default
 </pre>
 
 The following attributes can be used in the plugin configuration:
@@ -61,6 +62,8 @@ The following attributes can be used in the plugin configuration:
      used to invoke the `connect()` function of the DB API 2 implementation
      (for SQLite lookup [here](http://docs.python.org/3.2/library/sqlite3.html#sqlite3.connect),
      other databases depends on implementation)
+   * `name` - if you register multiple dblog instances you can use the `dblog`
+     setting on item and use the name of the plugin
 
 ## items.conf
 
@@ -68,13 +71,14 @@ The plugin supports the types `str`, `num` and `bool` which can be logged
 into the database.
 
 ### dblog
-This attribute enables the database logging when set to a value (e.g. `yes`).
+This attribute enables the database logging when set. Just use the name of
+the registered dblog plugin instance (see `name` attribute above).
 
 <pre>
 [some]
     [[item]]
         type = num
-        dblog = yes
+        dblog = default
 </pre>
 
 
