@@ -33,10 +33,10 @@ logger = logging.getLogger('')
 class DbLog():
 
     # SQL queries
-    # time, item_id, val_str, val_num, val_bool
+    # time, item_id, val_str, val_num, val_bool, changed
     _setup = {
-      '1' : "CREATE TABLE log (time BIGINT, item_id INTEGER, duration BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN);",
-      '2' : "CREATE TABLE item (id INTEGER, name varchar(255), time BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN);",
+      '1' : "CREATE TABLE log (time BIGINT, item_id INTEGER, duration BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN, changed BIGINT);",
+      '2' : "CREATE TABLE item (id INTEGER, name varchar(255), time BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN, changed BIGINT);",
       '3' : "CREATE INDEX log_item_id_time ON log (item_id, time);",
       '4' : "CREATE INDEX item_name ON item (name);"
     }
@@ -142,13 +142,15 @@ class DbLog():
                     return
 
                 try:
+                    changed = self._timestamp(self._sh.now())
+
                     # Create new item ID
                     id = self._db.fetchone("SELECT id FROM item where name = ?;", (item.id(),))
                     if id == None:
                         id = self._db.fetchone("SELECT MAX(id) FROM item;")
 
                         cur = self._db.cursor()
-                        self._db.execute("INSERT INTO item(id, name) VALUES(?,?);", (1 if id[0] == None else id[0]+1, item.id()), cur)
+                        self._db.execute("INSERT INTO item(id, name, changed) VALUES(?,?,?);", (1 if id[0] == None else id[0]+1, item.id(), changed), cur)
                         id = self._db.fetchone("SELECT id FROM item where name = ?;", (item.id(),), cur)
                         cur.close()
 
@@ -163,6 +165,7 @@ class DbLog():
                     if finalize:
                         _update = [end]
                         _update.extend(val)
+                        _update.append(changed)
                         _update.append(id)
 
                         current = [start, end - start]
@@ -172,6 +175,7 @@ class DbLog():
                     else:
                         _update = [start]
                         _update.extend(val)
+                        _update.append(changed)
                         _update.append(id)
 
                     # Dump tuples
@@ -179,13 +183,13 @@ class DbLog():
 
                     cur = self._db.cursor()
                     for t in tuples:
-                        _insert = ( t[0], id, t[1], t[2], t[3], t[4] )
+                        _insert = ( t[0], id, t[1], t[2], t[3], t[4], changed )
 
-                        # time, item_id, duration, val_str, val_num, val_bool
-                        self._db.execute("INSERT INTO log VALUES (?,?,?,?,?,?);", _insert, cur)
+                        # time, item_id, duration, val_str, val_num, val_bool, changed
+                        self._db.execute("INSERT INTO log VALUES (?,?,?,?,?,?,?);", _insert, cur)
 
-                    # time, val_str, val_num, val_bool, item_id
-                    self._db.execute("UPDATE item SET time = ?, val_str = ?, val_num = ?, val_bool = ? WHERE id = ?;", tuple(_update), cur)
+                    # time, val_str, val_num, val_bool, changed, item_id
+                    self._db.execute("UPDATE item SET time = ?, val_str = ?, val_num = ?, val_bool = ?, changed = ? WHERE id = ?;", tuple(_update), cur)
 
                     cur.close()
 

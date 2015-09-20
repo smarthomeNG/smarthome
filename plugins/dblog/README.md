@@ -23,6 +23,7 @@ The `item` table contains the following columns:
   * Column `val_str` - the string value if type is `str`
   * Column `val_num` - the number value if type is `num`
   * Column `val_bool` - the boolean value if type is `bool`
+  * Column `changed` - the unix timestamp in microseconds of record change
 
 The `log` table contains the following columns:
 
@@ -31,6 +32,7 @@ The `log` table contains the following columns:
   * Column `val_str` - the string value if type is `str`
   * Column `val_num` - the number value if type is `num`
   * Column `val_bool` - the boolean value if type is `bool`
+  * Column `changed` - the unix timestamp in microseconds of record change
 
 # Requirements
 
