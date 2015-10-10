@@ -85,5 +85,42 @@ the registered dblog plugin instance (see `name` attribute above).
 
 
 # Functions
-This plugin does not provide additional functions.
+This plugin adds functions to retrieve data for items.
 
+## sh.item.db(function, start, end='now')
+Function like the SQLite plugin is registering: this method returns you an value
+for the specified function and timeframe.
+
+Supported functions are:
+
+   * `avg`: for the average value
+   * `max`: for the maximum value
+   * `min`: for the minimum value
+   * `on`: percentage (as float from 0.00 to 1.00) where the value has been greater than 0.
+
+For the timeframe you have to specify a start point and a optional end point. By default it ends 'now'.
+The time point could be specified with `<number><interval>`, where interval could be:
+
+   * `i`: minute
+   * `h`: hour
+   * `d`: day
+   * `w`: week
+   + `m`: month
+   * `y`: year
+
+e.g.
+<pre>
+sh.outside.temperature.db('min', '1d')  # returns the minimum temperature within the last day
+sh.outside.temperature.db('avg', '2w', '1w')  # returns the average temperature of the week before last week
+</pre>
+
+## sh.item.series(function, start, end='now', count=100)
+This method returns historical values for the specified function and timeframe.
+
+Supported functions and timeframes are same as supported in the `db` function.
+
+e.g.
+<pre>
+sh.outside.temperature.series('min', '1d', count=10)  # returns 10 minimum values within the last day
+sh.outside.temperature.series('avg', '2w', '1w')  # returns the average values of the week before last week
+</pre>

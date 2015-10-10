@@ -61,6 +61,7 @@ class DbLog():
             self._buffer[item] = []
             item.series = functools.partial(self._series, item=item.id())
             item.db = functools.partial(self._single, item=item.id())
+            item.dbapi = self._dbapi
             return self.update_item
         else:
             return None
@@ -100,6 +101,9 @@ class DbLog():
 
     def _datetime(self, ts):
         return datetime.datetime.fromtimestamp(ts / 1000, self._sh.tzinfo())
+
+    def _dbapi(self):
+        return self._db
 
     def _dump(self, finalize=False, items=None):
         if self._dump_lock.acquire(timeout=60) == False:
