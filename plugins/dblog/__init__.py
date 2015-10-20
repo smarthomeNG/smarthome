@@ -63,7 +63,7 @@ class DbLog():
             item.series = functools.partial(self._series, item=item.id())
             item.db = functools.partial(self._single, item=item.id())
             item.dbapi = self._dbapi
-            item.prepare = self._prepare
+            item.dbprepare = self._prepare
             return self.update_item
         else:
             return None

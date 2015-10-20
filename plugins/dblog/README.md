@@ -138,7 +138,7 @@ db = sh.outside.temperature.dbapi()
 db.fetchall('select * from item where id = 42')   # retrieve all values for the given item
 </pre>
 
-## sh.item.prepare()
+## sh.item.dbprepare()
 This method returns a prepared statement which includes the replaced table names in case
 you configured a table prefix for the plugin.
 
