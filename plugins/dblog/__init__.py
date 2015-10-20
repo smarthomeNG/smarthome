@@ -32,29 +32,30 @@ logger = logging.getLogger('')
 
 class DbLog():
 
-    # SQL queries
+    # SQL queries: {item} = item table name, {log} = log table name
     # time, item_id, val_str, val_num, val_bool, changed
     _setup = {
-      '1' : "CREATE TABLE log (time BIGINT, item_id INTEGER, duration BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN, changed BIGINT);",
-      '2' : "CREATE TABLE item (id INTEGER, name varchar(255), time BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN, changed BIGINT);",
-      '3' : "CREATE INDEX log_item_id_time ON log (item_id, time);",
-      '4' : "CREATE INDEX log_item_id_changed ON log (item_id, changed);",
-      '5' : "CREATE INDEX item_name ON item (name);"
+      '1' : "CREATE TABLE {log} (time BIGINT, item_id INTEGER, duration BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN, changed BIGINT);",
+      '2' : "CREATE TABLE {item} (id INTEGER, name varchar(255), time BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN, changed BIGINT);",
+      '3' : "CREATE INDEX {log}_{item}_id_time ON {log} (item_id, time);",
+      '4' : "CREATE INDEX {log}_{item}_id_changed ON {log} (item_id, changed);",
+      '5' : "CREATE INDEX {item}_name ON item (name);"
     }
 
-    def __init__(self, smarthome, db, connect, name= "default", cycle=60):
+    def __init__(self, smarthome, db, connect, name= "default", prefix="", cycle=60):
         self._sh = smarthome
         self._dump_cycle = int(cycle)
         self._name = name
+        self._tables = {table: table if prefix == "" else prefix + "_" + table for table in ["log", "item"]}
         self._buffer = {}
         self._buffer_lock = threading.Lock()
         self._dump_lock = threading.Lock()
 
-        self._db = lib.db.Database("DbLog", self._sh.dbapi(db), connect)
+        self._db = lib.db.Database(("" if prefix == "" else prefix.capitalize() + "_") + "DbLog", self._sh.dbapi(db), connect)
         self._db.connect()
-        self._db.setup(self._setup)
+        self._db.setup({i: self._prepare(query) for i, query in self._setup.items()})
 
-        smarthome.scheduler.add('DbLog dump ' + name, self._dump, cycle=self._dump_cycle, prio=5)
+        smarthome.scheduler.add('DbLog dump ' + name + ("" if prefix == "" else " [" + prefix + "]"), self._dump, cycle=self._dump_cycle, prio=5)
 
     def parse_item(self, item):
         if 'dblog' in item.conf and item.conf['dblog'] == self._name:
@@ -62,6 +63,7 @@ class DbLog():
             item.series = functools.partial(self._series, item=item.id())
             item.db = functools.partial(self._single, item=item.id())
             item.dbapi = self._dbapi
+            item.prepare = self._prepare
             return self.update_item
         else:
             return None
@@ -104,6 +106,9 @@ class DbLog():
 
     def _dbapi(self):
         return self._db
+
+    def _prepare(self, query):
+        return query.format(**self._tables)
 
     def _dump(self, finalize=False, items=None):
         if self._dump_lock.acquire(timeout=60) == False:
@@ -150,13 +155,13 @@ class DbLog():
                     changed = self._timestamp(self._sh.now())
 
                     # Create new item ID
-                    id = self._db.fetchone("SELECT id FROM item where name = ?;", (item.id(),))
+                    id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = ?;"), (item.id(),))
                     if id == None:
-                        id = self._db.fetchone("SELECT MAX(id) FROM item;")
+                        id = self._db.fetchone(self._prepare("SELECT MAX(id) FROM {item};"))
 
                         cur = self._db.cursor()
-                        self._db.execute("INSERT INTO item(id, name, changed) VALUES(?,?,?);", (1 if id[0] == None else id[0]+1, item.id(), changed), cur)
-                        id = self._db.fetchone("SELECT id FROM item where name = ?;", (item.id(),), cur)
+                        self._db.execute(self._prepare("INSERT INTO item(id, name, changed) VALUES(?,?,?);"), (1 if id[0] == None else id[0]+1, item.id(), changed), cur)
+                        id = self._db.fetchone(self._prepare("SELECT id FROM item where name = ?;"), (item.id(),), cur)
                         cur.close()
 
                     id = id[0]
@@ -191,10 +196,10 @@ class DbLog():
                         _insert = ( t[0], id, t[1], t[2], t[3], t[4], changed )
 
                         # time, item_id, duration, val_str, val_num, val_bool, changed
-                        self._db.execute("INSERT INTO log VALUES (?,?,?,?,?,?,?);", _insert, cur)
+                        self._db.execute(self._prepare("INSERT INTO {log} VALUES (?,?,?,?,?,?,?);"), _insert, cur)
 
                     # time, val_str, val_num, val_bool, changed, item_id
-                    self._db.execute("UPDATE item SET time = ?, val_str = ?, val_num = ?, val_bool = ?, changed = ? WHERE id = ?;", tuple(_update), cur)
+                    self._db.execute(self._prepare("UPDATE {item} SET time = ?, val_str = ?, val_num = ?, val_bool = ?, changed = ? WHERE id = ?;"), tuple(_update), cur)
 
                     cur.close()
 
@@ -219,7 +224,7 @@ class DbLog():
         reply = {'cmd': 'series', 'series': None, 'sid': sid}
         reply['params'] = {'update': True, 'item': item, 'func': func, 'start': iend, 'end': end, 'step': step, 'sid': sid}
         reply['update'] = self._sh.now() + datetime.timedelta(seconds=int(step / 1000))
-        where = " FROM log WHERE item_id = ? AND time + duration > ? AND time <= ? GROUP BY ROUND(time / ?)"
+        where = self._prepare(" FROM {log} WHERE item_id = ? AND time + duration > ? AND time <= ? GROUP BY ROUND(time / ?)")
         if func == 'avg':
             query = "SELECT MIN(time), ROUND(AVG(val_num * duration) / AVG(duration), 2)" + where + " ORDER BY time ASC"
         elif func == 'min':
@@ -256,7 +261,7 @@ class DbLog():
     def _single(self, func, start, end='now', item=None):
         start = self._parse_ts(start)
         end = self._parse_ts(end)
-        where = " FROM log WHERE item_id = ? AND time + duration > ? AND time <= ?"
+        where = self._prepare(" FROM {log} WHERE item_id = ? AND time + duration > ? AND time <= ?")
         if func == 'avg':
             query = "SELECT ROUND(AVG(val_num * duration) / AVG(duration), 2)" + where
         elif func == 'min':

@@ -54,6 +54,7 @@ registration.
     db = sqlite
     connect = database:/path/to/log.db | check_same_thread:0
     #name = default
+    #prefix = log
 </pre>
 
 The following attributes can be used in the plugin configuration:
@@ -66,6 +67,8 @@ The following attributes can be used in the plugin configuration:
      other databases depends on implementation)
    * `name` - if you register multiple dblog instances you can use the `dblog`
      setting on item and use the name of the plugin
+   * `prefix` - if you want to log into an existing database with other tables
+     you can specify a prefix for the plugins' tables
 
 ## items.conf
 
@@ -88,7 +91,7 @@ the registered dblog plugin instance (see `name` attribute above).
 This plugin adds functions to retrieve data for items.
 
 ## sh.item.db(function, start, end='now')
-Function like the SQLite plugin is registering: this method returns you an value
+Function like the SQLite plugin is registering: this method returns you a value
 for the specified function and timeframe.
 
 Supported functions are:
@@ -124,3 +127,24 @@ e.g.
 sh.outside.temperature.series('min', '1d', count=10)  # returns 10 minimum values within the last day
 sh.outside.temperature.series('avg', '2w', '1w')  # returns the average values of the week before last week
 </pre>
+
+## sh.item.dbapi()
+This method returns the database object (implementing the DB-API interface specification)
+which can be used to fire SQL directly.
+
+e.g.
+<pre>
+db = sh.outside.temperature.dbapi()
+db.fetchall('select * from item where id = 42')   # retrieve all values for the given item
+</pre>
+
+## sh.item.prepare()
+This method returns a prepared statement which includes the replaced table names in case
+you configured a table prefix for the plugin.
+
+e.g.
+<pre>
+db = sh.outside.temperature.dbapi()
+db.fetchall(db.prepare('select * from {item} where id = 42'))   # retrieve all values for the given item
+</pre>
+
