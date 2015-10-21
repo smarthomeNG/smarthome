@@ -128,23 +128,72 @@ sh.outside.temperature.series('min', '1d', count=10)  # returns 10 minimum value
 sh.outside.temperature.series('avg', '2w', '1w')  # returns the average values of the week before last week
 </pre>
 
-## sh.item.dbapi()
-This method returns the database object (implementing the DB-API interface specification)
-which can be used to fire SQL directly.
+## sh.item.dblog()
+This method returns the associated `dblog` plugin instance. See the list of method below
+to know what you can do with this instance.
 
 e.g.
 <pre>
-db = sh.outside.temperature.dbapi()
-db.fetchall('select * from item where id = 42')   # retrieve all values for the given item
+dblog = sh.outside.temperature.dblog()       # get associated dblog instance
 </pre>
 
-## sh.item.dbprepare()
-This method returns a prepared statement which includes the replaced table names in case
-you configured a table prefix for the plugin.
+## dblog.id(item)
+This method returns the ID in the database for the given item.
 
 e.g.
 <pre>
-db = sh.outside.temperature.dbapi()
-db.fetchall(db.prepare('select * from {item} where id = 42'))   # retrieve all values for the given item
+dblog = sh.outside.temperature.dblog()       # get associated dblog instance
+dblog.id(sh.outside.temperature)             # returns the ID for the given item
 </pre>
+
+## dblog.db()
+This method will return the associated database connection object. This can
+be used to execute native query, but you should use the plugin methods below.
+The database connection object can be used for locking.
+
+<pre>
+dblog = sh.outside.temperature.dblog()       # get associated dblog instance
+dblog.db().lock()                            # lock the connection for processing
+... do something
+dblog.db().release()                         # release lock again after processing
+</pre>
+
+### dblog.insertLog(id, time, duration=0, val=None, it=None, changed=None, cur=None)
+This method will insert a new log entry for the given item with the following
+data (in the `log` database table):
+* `id` - the item ID to insert an item for
+* `time` - the timestamp (in microseconds) to record the log for
+* `duration` - the amount of time to record the given value for
+* `val` - the value to record
+* `it` - the item type / type of value as string (e.g. 'str', 'num', 'bool')
+* `changed` - the timestamp (in microseconds) when the change was created
+* `cur` - specifies an existing cursor
+
+### dblog.updateLog(id, time, duration=0, val=None, it=None, changed=None, cur=None)
+This method will update an existing log entry (in the `log` database table)
+identified by item id and time. See `insertLog()` method for the details of the
+parameters.
+
+### dblog.deleteLog(id, time = None, time_start = None, time_end = None, changed = None, changed_start = None, changed_end = None, cur = None)
+This method will delete the given items identified by the given parameters. If
+you omit the parameters it will completely ignored.
+
+* `id` - the item ID to delete items for
+* `time` - the timestamp (in microseconds) to delete the log for
+* `time_start` / `time_end` - can be used instead of `time` parameter to specify a time range
+* `changed` - the timestamp (in microseconds) of changed value to delete
+* `changed_start` / `changed_end` - can be used instead of `changed` parameter to specify a time range
+* `cur` - specifies an existing cursor
+
+e.g.
+<pre>
+dblog.deleteLog(1)            # delete ALL log entries for item 1
+dblog.deleteLog(1, 12345)     # delete log entry for item 1 and timestamp 12345
+</pre>
+
+### dblog.updateItem(id, time, duration=0, val=None, it=None, changed=None, cur=None)
+This method will register the given value as the last/current value of the
+item (in the `item` database table).
+
+
 

@@ -62,8 +62,7 @@ class DbLog():
             self._buffer[item] = []
             item.series = functools.partial(self._series, item=item.id())
             item.db = functools.partial(self._single, item=item.id())
-            item.dbapi = self._dbapi
-            item.dbprepare = self._prepare
+            item.dblog = self
             return self.update_item
         else:
             return None
@@ -80,10 +79,72 @@ class DbLog():
         start = self._timestamp(item.prev_change())
         end = self._timestamp(item.last_change())
 
-        t = [start, end - start]
-        t.extend(self._item_value_tuple(item.type(), item.prev_value()))
+        self._buffer[item].append((start, end - start, item.prev_value()))
 
-        self._buffer[item].append(tuple(t))
+    def id(self, item):
+        id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = ?;"), (item.id(),))
+        if id == None:
+            id = self._db.fetchone(self._prepare("SELECT MAX(id) FROM {item};"))
+
+            cur = self._db.cursor()
+            self._db.execute(self._prepare("INSERT INTO {item}(id, name, changed) VALUES(?,?,?);"), (1 if id[0] == None else id[0]+1, item.id(), changed), cur)
+            id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = ?;"), (item.id(),), cur)
+            cur.close()
+
+        return id[0]
+
+    def updateItem(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
+        params = [time]
+        params.extend(self._item_value_tuple(it, val))
+        params.append(changed)
+        params.append(id)
+        self._db.execute(self._prepare("UPDATE {item} SET time = ?, val_str = ?, val_num = ?, val_bool = ?, changed = ? WHERE id = ?;"), tuple(params), cur)
+
+    def insertLog(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
+        params = [time, id, duration]
+        params.extend(self._item_value_tuple(it, val))
+        params.append(changed)
+        self._db.execute(self._prepare("INSERT INTO {log} VALUES (?,?,?,?,?,?,?);"), tuple(params), cur)
+
+    def updateLog(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
+        params = [duration]
+        params.extend(self._item_value_tuple(it, val))
+        params.append(changed)
+        params.append(id)
+        params.append(time)
+        self._db.execute(self._prepare("UPDATE {log} SET duration = ?, val_str = ?, val_num = ?, val_bool = ?, changed = ? WHERE item_id = ? AND time = ?;"), tuple(params), cur)
+
+    def readLog(self, item, time, cur = None):
+        params = [id, time]
+        return self._db.exeucte(self._prepare("SELECT * FROM {log} WHERE item_id = ? AND time = ?;"), tuple(params))
+
+    def deleteLog(self, id, time = None, time_start = None, time_end = None, changed = None, changed_start = None, changed_end = None, cur = None):
+        params = [id]
+        params.append(time)
+        params.append(1 if time          == None else 0)
+        params.append(time_start)
+        params.append(1 if time_start    == None else 0)
+        params.append(time_end)
+        params.append(1 if time_end      == None else 0)
+        params.append(changed)
+        params.append(1 if changed       == None else 0)
+        params.append(changed_start)
+        params.append(1 if changed_start == None else 0)
+        params.append(changed_end)
+        params.append(1 if changed_end   == None else 0)
+
+        self._db.execute(self._prepare(
+            "DELETE FROM {log} WHERE "
+            "  (item_id = ?         ) AND "
+            "  (time    = ? OR 1 = ?) AND "
+            "  (time    > ? OR 1 = ?) AND "
+            "  (time    < ? OR 1 = ?) AND "
+            "  (changed = ? OR 1 = ?) AND "
+            "  (changed > ? OR 1 = ?) AND "
+            "  (changed < ? OR 1 = ?);    "), tuple(params), cur)
+
+    def db(self):
+        return self._db
 
     def _item_value_tuple(self, item_type, item_val):
         if item_type == 'num':
@@ -103,9 +164,6 @@ class DbLog():
 
     def _datetime(self, ts):
         return datetime.datetime.fromtimestamp(ts / 1000, self._sh.tzinfo())
-
-    def _dbapi(self):
-        return self._db
 
     def _prepare(self, query):
         return query.format(**self._tables)
@@ -154,52 +212,31 @@ class DbLog():
                 try:
                     changed = self._timestamp(self._sh.now())
 
-                    # Create new item ID
-                    id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = ?;"), (item.id(),))
-                    if id == None:
-                        id = self._db.fetchone(self._prepare("SELECT MAX(id) FROM {item};"))
-
-                        cur = self._db.cursor()
-                        self._db.execute(self._prepare("INSERT INTO item(id, name, changed) VALUES(?,?,?);"), (1 if id[0] == None else id[0]+1, item.id(), changed), cur)
-                        id = self._db.fetchone(self._prepare("SELECT id FROM item where name = ?;"), (item.id(),), cur)
-                        cur.close()
-
-                    id = id[0]
+                    id = self.id(item)
 
                     # Get current values of item
                     start = self._timestamp(item.last_change())
                     end = self._timestamp(self._sh.now())
-                    val = self._item_value_tuple(item.type(), item())
+                    val = item()
 
                     # When finalizing (e.g. plugin shutdown) add current value to item and log
                     if finalize:
-                        _update = [end]
-                        _update.extend(val)
-                        _update.append(changed)
-                        _update.append(id)
+                        _update = (end, val, changed)
 
-                        current = [start, end - start]
-                        current.extend(val)
-                        tuples.append(tuple(current))
+                        current = (start, end - start, val)
+                        tuples.append(current)
 
                     else:
-                        _update = [start]
-                        _update.extend(val)
-                        _update.append(changed)
-                        _update.append(id)
+                        _update = (start, val, changed)
 
                     # Dump tuples
                     logger.debug('Dumping {}/{} with {} values'.format(item.id(), id, len(tuples)))
 
                     cur = self._db.cursor()
                     for t in tuples:
-                        _insert = ( t[0], id, t[1], t[2], t[3], t[4], changed )
+                        self.insertLog(id, t[0], t[1], t[2], item.type(), changed, cur)
 
-                        # time, item_id, duration, val_str, val_num, val_bool, changed
-                        self._db.execute(self._prepare("INSERT INTO {log} VALUES (?,?,?,?,?,?,?);"), _insert, cur)
-
-                    # time, val_str, val_num, val_bool, changed, item_id
-                    self._db.execute(self._prepare("UPDATE {item} SET time = ?, val_str = ?, val_num = ?, val_bool = ?, changed = ? WHERE id = ?;"), tuple(_update), cur)
+                    self.updateItem(id, _update[0], None, _update[1], item.type(), _update[2], cur)
 
                     cur.close()
 
