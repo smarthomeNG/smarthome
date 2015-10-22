@@ -128,13 +128,13 @@ sh.outside.temperature.series('min', '1d', count=10)  # returns 10 minimum value
 sh.outside.temperature.series('avg', '2w', '1w')  # returns the average values of the week before last week
 </pre>
 
-## sh.item.dblog()
-This method returns the associated `dblog` plugin instance. See the list of method below
+## sh.item.dblog
+This property returns the associated `dblog` plugin instance. See the list of method below
 to know what you can do with this instance.
 
 e.g.
 <pre>
-dblog = sh.outside.temperature.dblog()       # get associated dblog instance
+dblog = sh.outside.temperature.dblog         # get associated dblog instance
 </pre>
 
 ## dblog.id(item)
@@ -142,7 +142,7 @@ This method returns the ID in the database for the given item.
 
 e.g.
 <pre>
-dblog = sh.outside.temperature.dblog()       # get associated dblog instance
+dblog = sh.outside.temperature.dblog         # get associated dblog instance
 dblog.id(sh.outside.temperature)             # returns the ID for the given item
 </pre>
 
@@ -152,7 +152,7 @@ be used to execute native query, but you should use the plugin methods below.
 The database connection object can be used for locking.
 
 <pre>
-dblog = sh.outside.temperature.dblog()       # get associated dblog instance
+dblog = sh.outside.temperature.dblog         # get associated dblog instance
 dblog.db().lock()                            # lock the connection for processing
 ... do something
 dblog.db().release()                         # release lock again after processing
