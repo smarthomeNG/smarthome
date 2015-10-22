@@ -87,7 +87,7 @@ class DbLog():
             id = self._db.fetchone(self._prepare("SELECT MAX(id) FROM {item};"))
 
             cur = self._db.cursor()
-            self._db.execute(self._prepare("INSERT INTO {item}(id, name, changed) VALUES(?,?,?);"), (1 if id[0] == None else id[0]+1, item.id(), changed), cur)
+            self._db.execute(self._prepare("INSERT INTO {item}(id, name) VALUES(?,?);"), (1 if id[0] == None else id[0]+1, item.id()), cur)
             id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = ?;"), (item.id(),), cur)
             cur.close()
 
