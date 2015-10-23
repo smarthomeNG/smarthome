@@ -116,7 +116,7 @@ class DbLog():
 
     def readLog(self, item, time, cur = None):
         params = [id, time]
-        return self._db.exeucte(self._prepare("SELECT * FROM {log} WHERE item_id = ? AND time = ?;"), tuple(params))
+        return self._db.execute(self._prepare("SELECT * FROM {log} WHERE item_id = ? AND time = ?;"), tuple(params))
 
     def deleteLog(self, id, time = None, time_start = None, time_end = None, changed = None, changed_start = None, changed_end = None, cur = None):
         params = [id]
