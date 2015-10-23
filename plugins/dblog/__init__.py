@@ -114,9 +114,9 @@ class DbLog():
         params.append(time)
         self._db.execute(self._prepare("UPDATE {log} SET duration = ?, val_str = ?, val_num = ?, val_bool = ?, changed = ? WHERE item_id = ? AND time = ?;"), tuple(params), cur)
 
-    def readLog(self, item, time, cur = None):
+    def readLog(self, id, time, cur = None):
         params = [id, time]
-        return self._db.execute(self._prepare("SELECT * FROM {log} WHERE item_id = ? AND time = ?;"), tuple(params))
+        return self._db.execute(self._prepare("SELECT * FROM {log} WHERE item_id = ? AND time = ?;"), tuple(params), cur)
 
     def deleteLog(self, id, time = None, time_start = None, time_end = None, changed = None, changed_start = None, changed_end = None, cur = None):
         params = [id]

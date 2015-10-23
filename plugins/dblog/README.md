@@ -174,7 +174,7 @@ This method will update an existing log entry (in the `log` database table)
 identified by item id and time. See `insertLog()` method for the details of the
 parameters.
 
-### dblog.readLog(item, time, cur = None)
+### dblog.readLog(id, time, cur = None)
 This method will read existing log data for given item and time.
 
 ### dblog.deleteLog(id, time = None, time_start = None, time_end = None, changed = None, changed_start = None, changed_end = None, cur = None)
