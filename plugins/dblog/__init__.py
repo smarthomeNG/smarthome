@@ -319,10 +319,13 @@ class DbLog():
         return tuples[0][0]
 
     def _fetch(self, query, item, params):
-        tuples = None
+        if self._db.verify(5) == 0:
+            logger.error("DbLog: Connection not recovered")
+            return None
         if not self._db.lock(300):
             logger.error("DbLog: can't fetch data due to fail to acquire lock")
             return None
+        tuples = None
         try:
             id = self._db.fetchone("SELECT id FROM item where name = ?", (item,))
             params.insert(0, id[0])
