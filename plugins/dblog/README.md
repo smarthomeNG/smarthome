@@ -84,8 +84,19 @@ the registered dblog plugin instance (see `name` attribute above).
     [[item]]
         type = num
         dblog = default
+        #dblog_acl = rw
 </pre>
 
+### dblog_acl
+Specifies if the dblog plugin should be used for read only or read and write values (which is
+the default). Sometimes you only want to use the database to read values from and just ignore
+changes on the items and do not populate them to the database. Useful if you generate the
+database data by external modules, but want still able to change the items to reflect the
+current state.
+
+Use "rw" to specify that changes will also populate to the database, use "ro" to simple ignore
+changes on the items and do not populate them to the database. Only read items from the database
+when using the methods described below for retrieving data.
 
 # Functions
 This plugin adds functions to retrieve data for items.

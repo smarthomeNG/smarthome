@@ -76,10 +76,12 @@ class DbLog():
         self._db.close()
 
     def update_item(self, item, caller=None, source=None, dest=None):
-        start = self._timestamp(item.prev_change())
-        end = self._timestamp(item.last_change())
+        acl = 'rw' if not 'dblog_acl' in item.conf else item.conf['dblog_acl']
+        if acl is 'rw':
+            start = self._timestamp(item.prev_change())
+            end = self._timestamp(item.last_change())
 
-        self._buffer[item].append((start, end - start, item.prev_value()))
+            self._buffer[item].append((start, end - start, item.prev_value()))
 
     def id(self, item):
         id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = ?;"), (item.id(),))
