@@ -205,9 +205,32 @@ dblog.deleteLog(1)            # delete ALL log entries for item 1
 dblog.deleteLog(1, 12345)     # delete log entry for item 1 and timestamp 12345
 </pre>
 
+### dblog.insertItem(name, cur=None)
+This method will insert a new item entry with the given name/id and return the ID
+of the newly inserted item.
+
+e.g.
+<pre>
+id = dblog.insertItem("some.test.item")   # insert new item
+</pre>
+
 ### dblog.updateItem(id, time, duration=0, val=None, it=None, changed=None, cur=None)
 This method will register the given value as the last/current value of the
 item (in the `item` database table).
+
+e.g.
+<pre>
+dblog.updateItem(id, 12345, 0, 100)       # update item value in database for timestamp 12345, duration 0, value 100
+</pre>
+
+
+### dblog.readItem(id, cur=None)
+This method will read the item data including all fields.
+
+e.g.
+<pre>
+data = dblog.readItem(id)            # read all fields of item which contains the last item status
+</pre>
 
 
 

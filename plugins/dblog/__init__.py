@@ -76,23 +76,27 @@ class DbLog():
         self._db.close()
 
     def update_item(self, item, caller=None, source=None, dest=None):
-        acl = 'rw' if not 'dblog_acl' in item.conf else item.conf['dblog_acl']
+        acl = 'rw' if 'dblog_acl' not in item.conf else item.conf['dblog_acl']
         if acl is 'rw':
             start = self._timestamp(item.prev_change())
             end = self._timestamp(item.last_change())
 
             self._buffer[item].append((start, end - start, item.prev_value()))
 
-    def id(self, item):
+    def id(self, item, create=True):
         id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = ?;"), (item.id(),))
-        if id == None:
-            id = self._db.fetchone(self._prepare("SELECT MAX(id) FROM {item};"))
 
+        if id == None and create == True:
             cur = self._db.cursor()
-            self._db.execute(self._prepare("INSERT INTO {item}(id, name) VALUES(?,?);"), (1 if id[0] == None else id[0]+1, item.id()), cur)
-            id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = ?;"), (item.id(),), cur)
+            id = [self.insertItem(item.id(), cur)]
             cur.close()
 
+        return None if id == None else id[0]
+
+    def insertItem(self, name, cur=None):
+        id = self._db.fetchone(self._prepare("SELECT MAX(id) FROM {item};"), tuple(), cur)
+        self._db.execute(self._prepare("INSERT INTO {item}(id, name) VALUES(?,?);"), (1 if id[0] == None else id[0]+1, name), cur)
+        id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = ?;"), (name,), cur)
         return id[0]
 
     def updateItem(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
@@ -101,6 +105,10 @@ class DbLog():
         params.append(changed)
         params.append(id)
         self._db.execute(self._prepare("UPDATE {item} SET time = ?, val_str = ?, val_num = ?, val_bool = ?, changed = ? WHERE id = ?;"), tuple(params), cur)
+
+    def readItem(self, id, cur=None):
+        params = [id]
+        return self._db.fetchone(self._prepare("SELECT * from {item} WHERE id = ?;"), tuples(params), cur)
 
     def insertLog(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
         params = [time, id, duration]
