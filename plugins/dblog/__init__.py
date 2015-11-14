@@ -323,7 +323,7 @@ class DbLog():
         _item = self._sh.return_item(item)
         if self._buffer[_item] != []:
             self._dump(items=[_item])
-        tuples = self._fetch(query, item, [start, end, istart])
+        tuples = self._fetch(query, item, [start, end, start])
         if tuples is None:
             return
         return tuples[0][0]
