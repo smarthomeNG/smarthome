@@ -271,7 +271,7 @@ class DbLog():
         reply = {'cmd': 'series', 'series': None, 'sid': sid}
         reply['params'] = {'update': True, 'item': item, 'func': func, 'start': iend, 'end': end, 'step': step, 'sid': sid}
         reply['update'] = self._sh.now() + datetime.timedelta(seconds=int(step / 1000))
-        where = self._prepare(" FROM {log} WHERE item_id = ? AND time >= (SELECT MAX(time) FROM {log} WHERE item_id = ? AND time < ?) AND time <= ? AND time + duration > ? GROUP BY ROUND(time / ?)")
+        where = self._prepare(" FROM {log} WHERE item_id = ? AND time >= (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = ? AND time < ?) AND time <= ? AND time + duration > ? GROUP BY ROUND(time / ?)")
         if func == 'avg':
             query = "SELECT MIN(time), ROUND(AVG(val_num * duration) / AVG(duration), 2)" + where + " ORDER BY time ASC"
         elif func == 'min':
