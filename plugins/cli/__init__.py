@@ -142,6 +142,14 @@ class CLIHandler(lib.connection.Stream):
                         for name in item.conf:
                             self.push("    {} = {}\n".format(name, item.conf[name]))
                         self.push("  }\n")
+                    self.push("  logics = [\n")
+                    for trigger in item.get_logic_triggers():
+                        self.push("    {}\n".format(trigger))
+                    self.push("  ]\n")
+                    self.push("  triggers = [\n")
+                    for trigger in item.get_method_triggers():
+                        self.push("    {}\n".format(trigger))
+                    self.push("  ]\n")
                     self.push("}\n")
         else:
             self.push("Nothing found\n")
