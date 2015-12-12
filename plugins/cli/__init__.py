@@ -56,6 +56,8 @@ class CLIHandler(lib.connection.Stream):
             self.lt()
         elif cmd == 'cl':
             self.cl()
+        elif cmd.startswith('log'):
+            self.loglevel(cmd.lstrip('log').strip())
         elif cmd.startswith('update ') or cmd.startswith('up '):
             self.update(cmd.lstrip('update').strip())
         elif cmd.startswith('tr'):
@@ -76,6 +78,24 @@ class CLIHandler(lib.connection.Stream):
 
     def cl(self):
         self.sh.log.clean(self.sh.now())
+
+    def loglevel(self, level):
+        logger = logging.getLogger('')
+        if level:
+            num_level = getattr(logging, level.upper(), None)
+            if not isinstance(num_level, int):
+                self.push("Invalid log level: {}\n".format(level))
+                return
+        if level:
+            logger.setLevel(num_level)
+        else:
+            self.push("{} - {}:\n".format(type(logger).__name__, logging.getLevelName(logger.getEffectiveLevel())))
+        for handler in logger.handlers:
+            if isinstance(handler, logging.FileHandler):
+                if level:
+                    handler.setLevel(num_level)
+                else:
+                    self.push("{} - {}\n".format(type(handler).__name__, logging.getLevelName(getattr(handler, "level"))))
 
     def ls(self, path):
         if not path:
@@ -168,6 +188,8 @@ class CLIHandler(lib.connection.Stream):
 
     def usage(self):
         self.push('cl: clean (memory) log\n')
+        self.push('log: show current log level\n')
+        self.push('log lvl: set log level\n')
         self.push('ls: list the first level items\n')
         self.push('ls item: list item and every child item (with values)\n')
         self.push('la: list all items (with values)\n')
