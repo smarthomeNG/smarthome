@@ -39,7 +39,7 @@ class DbLog():
       '2' : "CREATE TABLE {item} (id INTEGER, name varchar(255), time BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN, changed BIGINT);",
       '3' : "CREATE INDEX {log}_{item}_id_time ON {log} (item_id, time);",
       '4' : "CREATE INDEX {log}_{item}_id_changed ON {log} (item_id, changed);",
-      '5' : "CREATE INDEX {item}_name ON item (name);"
+      '5' : "CREATE INDEX {item}_name ON {item} (name);"
     }
 
     def __init__(self, smarthome, db, connect, name= "default", prefix="", cycle=60):
