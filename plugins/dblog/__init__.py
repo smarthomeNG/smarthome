@@ -337,7 +337,7 @@ class DbLog():
             return None
         tuples = None
         try:
-            id = self._db.fetchone("SELECT id FROM item where name = ?", (item,))
+            id = self._db.fetchone(self._prepare("SELECT id FROM item where name = ?"), (item,))
             params.insert(0, id[0])
             params.insert(0, id[0])
             tuples = self._db.fetchall(query, tuple(params))
