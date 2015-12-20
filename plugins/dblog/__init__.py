@@ -108,7 +108,7 @@ class DbLog():
 
     def readItem(self, id, cur=None):
         params = [id]
-        return self._db.fetchone(self._prepare("SELECT * from {item} WHERE id = ?;"), tuples(params), cur)
+        return self._db.fetchone(self._prepare("SELECT * from {item} WHERE id = ?;"), tuple(params), cur)
 
     def insertLog(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
         params = [time, id, duration]
