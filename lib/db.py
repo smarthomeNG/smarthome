@@ -41,7 +41,7 @@ class Database():
 
         self._params = {}
         if type(connect) is str:
-            connect = [trim(p) for p in connect.split('|')]
+            connect = [p.strip() for p in connect.split('|')]
 
         if type(connect) is list:
             for arg in connect:
