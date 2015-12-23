@@ -308,7 +308,7 @@ class DbLog():
     def _single(self, func, start, end='now', item=None):
         start = self._parse_ts(start)
         end = self._parse_ts(end)
-        where = self._prepare(" FROM {log} WHERE item_id = ? AND time >= (SELECT MAX(time) FROM {log} WHERE item_id = ? AND time < ?) AND time <= ? AND time + duration > ?")
+        where = self._prepare(" FROM {log} WHERE item_id = ? AND time >= (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = ? AND time < ?) AND time <= ? AND time + duration > ?")
         if func == 'avg':
             query = "SELECT ROUND(AVG(val_num * duration) / AVG(duration), 2)" + where
         elif func == 'min':
