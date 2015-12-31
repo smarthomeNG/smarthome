@@ -244,8 +244,13 @@ class DbLog():
                     logger.debug('Dumping {}/{} with {} values'.format(item.id(), id, len(tuples)))
 
                     cur = self._db.cursor()
+                    stamps = []
                     for t in tuples:
-                        self.insertLog(id, t[0], t[1], t[2], item.type(), changed, cur)
+                        if t[0] in stamps:
+                            self.insertLog(id, t[0], t[1], t[2], item.type(), changed, cur)
+                            stamps.append(t[0])
+                        else:
+                            self.updateLog(id, t[0], t[1], t[2], item.type(), changed, cur)
 
                     self.updateItem(id, _update[0], None, _update[1], item.type(), _update[2], cur)
 
