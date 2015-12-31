@@ -259,6 +259,7 @@ class DbLog():
                     self._db.commit()
                 except Exception as e:
                     logger.warning("DbLog: problem updating {}: {}".format(item.id(), e))
+                    self._db.rollback()
                 self._db.release()
         logger.debug('Dump completed')
         self._dump_lock.release()
