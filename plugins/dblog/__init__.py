@@ -37,9 +37,10 @@ class DbLog():
     _setup = {
       '1' : "CREATE TABLE {log} (time BIGINT, item_id INTEGER, duration BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN, changed BIGINT);",
       '2' : "CREATE TABLE {item} (id INTEGER, name varchar(255), time BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN, changed BIGINT);",
-      '3' : "CREATE INDEX {log}_{item}_id_time ON {log} (item_id, time);",
+      '3' : "CREATE UNIQUE INDEX {log}_{item}_id_time ON {log} (item_id, time);",
       '4' : "CREATE INDEX {log}_{item}_id_changed ON {log} (item_id, changed);",
-      '5' : "CREATE INDEX {item}_name ON {item} (name);"
+      '5' : "CREATE UNIQUE INDEX {item}_id ON {item} (id);",
+      '6' : "CREATE INDEX {item}_name ON {item} (name);"
     }
 
     def __init__(self, smarthome, db, connect, name= "default", prefix="", cycle=60):
