@@ -84,13 +84,11 @@ class DbLog():
 
             self._buffer[item].append((start, end - start, item.prev_value()))
 
-    def id(self, item, create=True):
-        id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = ?;"), (item.id(),))
+    def id(self, item, create=True, cur=None):
+        id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = ?;"), (item.id(),), cur)
 
         if id == None and create == True:
-            cur = self._db.cursor()
             id = [self.insertItem(item.id(), cur)]
-            cur.close()
 
         return None if id == None else id[0]
 
@@ -223,8 +221,6 @@ class DbLog():
                 try:
                     changed = self._timestamp(self._sh.now())
 
-                    id = self.id(item)
-
                     # Get current values of item
                     start = self._timestamp(item.last_change())
                     end = self._timestamp(self._sh.now())
@@ -240,10 +236,12 @@ class DbLog():
                     else:
                         _update = (start, val, changed)
 
+                    cur = self._db.cursor()
+                    id = self.id(item, cur=cur)
+
                     # Dump tuples
                     logger.debug('Dumping {}/{} with {} values'.format(item.id(), id, len(tuples)))
 
-                    cur = self._db.cursor()
                     stamps = []
                     for t in tuples:
                         if t[0] in stamps:
