@@ -244,7 +244,7 @@ class DbLog():
 
                     stamps = []
                     for t in tuples:
-                        if t[0] in stamps:
+                        if t[0] not in stamps:
                             self.insertLog(id, t[0], t[1], t[2], item.type(), changed, cur)
                             stamps.append(t[0])
                         else:
