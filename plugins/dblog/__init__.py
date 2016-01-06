@@ -192,7 +192,7 @@ class DbLog():
         for item in items:
             self._buffer_lock.acquire()
             tuples = self._buffer[item]
-            self._buffer[item] = []
+            self._buffer[item] = self._buffer[item][len(tuples):]
             self._buffer_lock.release()
 
             if len(tuples) or finalize:
