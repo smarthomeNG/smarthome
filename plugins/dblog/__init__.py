@@ -242,13 +242,11 @@ class DbLog():
                     # Dump tuples
                     logger.debug('Dumping {}/{} with {} values'.format(item.id(), id, len(tuples)))
 
-                    stamps = []
                     for t in tuples:
-                        if t[0] not in stamps:
-                            self.insertLog(id, t[0], t[1], t[2], item.type(), changed, cur)
-                            stamps.append(t[0])
-                        else:
+                        if len(self.readLog(id, t[0], cur)):
                             self.updateLog(id, t[0], t[1], t[2], item.type(), changed, cur)
+                        else:
+                            self.insertLog(id, t[0], t[1], t[2], item.type(), changed, cur)
 
                     self.updateItem(id, _update[0], None, _update[1], item.type(), _update[2], cur)
 
