@@ -200,6 +200,21 @@ class SmartHome():
             logger.warning("Problem reading smarthome.conf: {0}".format(e))
 
         #############################################################
+        # Database APIs
+        #############################################################
+        if hasattr(self, '_db'):
+            if type(self._db) is not list:
+                self._db = [self._db]
+            for db in self._db:
+                name, sep, package = db.partition(':')
+                try:
+                    self._dbapis[name] = __import__(package)
+                except ImportError as e:
+                    logger.error("DB-API import failed for \"{}\": {}".format(package, e))
+        if 'sqlite' not in self._dbapis:
+            self._dbapis['sqlite'] = __import__('sqlite3')
+
+        #############################################################
         # Setting debug level and adding memory handler
         #############################################################
         if hasattr(self, '_loglevel'):
@@ -228,21 +243,6 @@ class SmartHome():
                 logger.warning("Problem parsing timezone: {}. Using UTC.".format(self._tz))
             del(self._tz, tzinfo)
         self._tzinfo = TZ
-
-        #############################################################
-        # Database APIs
-        #############################################################
-        if hasattr(self, '_db'):
-            if type(self._db) is not list:
-                self._db = [self._db]
-            for db in self._db:
-                name, sep, package = db.partition(':')
-                try:
-                    self._dbapis[name] = __import__(package)
-                except ImportError as e:
-                    logger.error("DB-API import failed for \"{}\": {}".format(package, e))
-        if 'sqlite' not in self._dbapis:
-            self._dbapis['sqlite'] = __import__('sqlite3')
 
         logger.info("Start SmartHome.py {0}".format(VERSION))
         logger.debug("Python {0}".format(sys.version.split()[0]))
