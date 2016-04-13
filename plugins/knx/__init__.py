@@ -36,7 +36,7 @@ logger = logging.getLogger('')
 
 class KNX(lib.connection.Client):
 
-    def __init__(self, smarthome, time_ga=None, date_ga=None, send_time=False, busmonitor=False, host='127.0.0.1', port=6720):
+    def __init__(self, smarthome, time_ga=None, date_ga=None, send_time=False, busmonitor=False, host='127.0.0.1', port=6720, instance='default'):
         lib.connection.Client.__init__(self, host, port, monitor=True)
         self._sh = smarthome
         self.gal = {}
@@ -45,17 +45,18 @@ class KNX(lib.connection.Client):
         self._cache_ga = []
         self.time_ga = time_ga
         self.date_ga = date_ga
+        self.instance = instance
         self._lock = threading.Lock()
         if smarthome.string2bool(busmonitor):
             self._busmonitor = logger.info
         else:
             self._busmonitor = logger.debug
         if send_time:
-            self._sh.scheduler.add('KNX time', self._send_time, prio=5, cycle=int(send_time))
+            self._sh.scheduler.add('KNX[{0}] time'.format(self.instance), self._send_time, prio=5, cycle=int(send_time))
 
     def _send(self, data):
         if len(data) < 2 or len(data) > 0xffff:
-            logger.debug('KNX: Illegal data size: {}'.format(repr(data)))
+            logger.debug('KNX[{0}]: Illegal data size: {1}'.format(self.instance, repr(data)))
             return False
         # prepend data length
         send = bytearray(len(data).to_bytes(2, byteorder='big'))
@@ -67,7 +68,7 @@ class KNX(lib.connection.Client):
         try:
             pkt.extend(self.encode(ga, 'ga'))
         except:
-            logger.warning('KNX: problem encoding ga: {}'.format(ga))
+            logger.warning('KNX[{0}]: problem encoding ga: {1}'.format(self.instance, ga))
             return
         pkt.extend([0])
         pkt.extend(self.encode(payload, dpt))
@@ -76,7 +77,7 @@ class KNX(lib.connection.Client):
         elif flag == 'response':
             flag = KNXRESP
         else:
-            logger.warning("KNX: groupwrite telegram for {0} with unknown flag: {1}. Please choose beetween write and response.".format(ga, flag))
+            logger.warning("KNX[{0}]: groupwrite telegram for {1} with unknown flag: {2}. Please choose beetween write and response.".format(self.instance, ga, flag))
             return
         pkt[5] = flag | pkt[5]
         self._send(pkt)
@@ -86,7 +87,7 @@ class KNX(lib.connection.Client):
         try:
             pkt.extend(self.encode(ga, 'ga'))
         except:
-            logger.warning('KNX: problem encoding ga: {}'.format(ga))
+            logger.warning('KNX[{0}]: problem encoding ga: {1}'.format(self.instance, ga))
             return
         pkt.extend([0, 0])
         self._send(pkt)
@@ -96,7 +97,7 @@ class KNX(lib.connection.Client):
         try:
             pkt.extend(self.encode(ga, 'ga'))
         except:
-            logger.warning('KNX: problem encoding ga: {}'.format(ga))
+            logger.warning('KNX[{0}]: problem encoding ga: {1}'.format(self.instance, ga))
             return
         pkt.extend([0, KNXREAD])
         self._send(pkt)
@@ -118,17 +119,17 @@ class KNX(lib.connection.Client):
         self.found_terminator = self.parse_length
         if self._cache_ga != []:
             if self.connected:
-                logger.debug('KNX: reading eibd cache')
+                logger.debug('KNX[{0}]: reading eibd cache'.format(self.instance))
                 for ga in self._cache_ga:
                     self._cacheread(ga)
                 self._cache_ga = []
-        logger.debug('KNX: enable group monitor')
+        logger.debug('KNX[{0}]: enable group monitor'.format(self.instance))
         init = bytearray([0, 38, 0, 0, 0])
         self._send(init)
         self.terminator = 2
         if self._init_ga != []:
             if self.connected:
-                logger.debug('KNX: init read')
+                logger.debug('KNX[{0}]: init read'.format(self.instance))
                 for ga in self._init_ga:
                     self.groupread(ga)
                 self._init_ga = []
@@ -144,7 +145,7 @@ class KNX(lib.connection.Client):
         try:
             self.terminator = struct.unpack(">H", length)[0]
         except:
-            logger.error("KNX: problem unpacking length: {0}".format(length))
+            logger.error("KNX[{0}]: problem unpacking length: {1}".format(self.instance, length))
             self.close()
 
     def encode(self, data, dpt):
@@ -166,7 +167,7 @@ class KNX(lib.connection.Client):
 #           logger.debug("Ignore telegram.")
             return
         if (data[6] & 0x03 or (data[7] & 0xC0) == 0xC0):
-            logger.debug("KNX: Unknown APDU")
+            logger.debug("KNX[{0}]: Unknown APDU".format(self.instance))
             return
         src = self.decode(data[2:4], 'pa')
         dst = self.decode(data[4:6], 'ga')
@@ -178,7 +179,7 @@ class KNX(lib.connection.Client):
         elif flg == KNXRESP:
             flg = 'response'
         else:
-            logger.warning("KNX: Unknown flag: {0:02x} src: {1} dest: {2}".format(flg, src, dst))
+            logger.warning("KNX[{0}]: Unknown flag: {1:02x} src: {2} dest: {3}".format(self.instance, flg, src, dst))
             return
         if len(data) == 8:
             payload = bytearray([data[7] & 0x3f])
@@ -186,16 +187,16 @@ class KNX(lib.connection.Client):
             payload = data[8:]
         if flg == 'write' or flg == 'response':
             if dst not in self.gal:  # update item/logic
-                self._busmonitor("knx: {0} set {1} to {2}".format(src, dst, binascii.hexlify(payload).decode()))
+                self._busmonitor("KNX[{0}]: {1} set {2} to {3}".format(self.instance, src, dst, binascii.hexlify(payload).decode()))
                 return
             dpt = self.gal[dst]['dpt']
             try:
                 val = self.decode(payload, dpt)
             except Exception as e:
-                logger.exception("KNX: Problem decoding frame from {0} to {1} with '{2}' and DPT {3}. Exception: {4}".format(src, dst, binascii.hexlify(payload).decode(), dpt, e))
+                logger.exception("KNX[{0}]: Problem decoding frame from {1} to {2} with '{3}' and DPT {4}. Exception: {5}".format(self.instance, src, dst, binascii.hexlify(payload).decode(), dpt, e))
                 return
             if val is not None:
-                self._busmonitor("knx: {0} set {1} to {2}".format(src, dst, val))
+                self._busmonitor("KNX[{0}]: {1} set {2} to {3}".format(self.instance, src, dst, val))
                 #print "in:  {0}".format(self.decode(payload, 'hex'))
                 #out = ''
                 #for i in self.encode(val, dpt):
@@ -206,9 +207,9 @@ class KNX(lib.connection.Client):
                 for logic in self.gal[dst]['logics']:
                     logic.trigger('KNX', src, val, dst)
             else:
-                logger.warning("KNX: Wrong payload '{2}' for ga '{1}' with dpt '{0}'.".format(dpt, dst, binascii.hexlify(payload).decode()))
+                logger.warning("KNX[{0}]: Wrong payload '{3}' for ga '{2}' with dpt '{1}'.".format(self.instance, dpt, dst, binascii.hexlify(payload).decode()))
         elif flg == 'read':
-            logger.debug("KNX: {0} read {1}".format(src, dst))
+            logger.debug("KNX[{0}]: {1} read {2}".format(self.instance, src, dst))
             if dst in self.gar:  # read item
                 if self.gar[dst]['item'] is not None:
                     item = self.gar[dst]['item']
@@ -225,22 +226,30 @@ class KNX(lib.connection.Client):
 
     def parse_item(self, item):
         if 'knx_dtp' in item.conf:
-            logger.warning("KNX: Ignoring {0}: please change knx_dtp to knx_dpt.".format(item))
+            logger.warning("KNX[{0}]: Ignoring {1}: please change knx_dtp to knx_dpt.".format(self.instance, item))
             return None
         if 'knx_dpt' in item.conf:
             dpt = item.conf['knx_dpt']
             if dpt not in dpts.decode:
-                logger.warning("KNX: Ignoring {0} unknown dpt: {1}".format(item, dpt))
+                logger.warning("KNX[{0}]: Ignoring {1} unknown dpt: {2}".format(self.instance, item, dpt))
                 return None
         else:
             return None
+
+        if 'knx_instance' in item.conf:
+            if not item.conf['knx_instance'] == self.instance:
+                return None
+        else:
+            if not self.instance == 'default':
+                return None
+        logger.debug("KNX[{1}]: Item {0} is mapped to KNX Instance {1}".format(item, self.instance))
 
         if 'knx_listen' in item.conf:
             knx_listen = item.conf['knx_listen']
             if isinstance(knx_listen, str):
                 knx_listen = [knx_listen, ]
             for ga in knx_listen:
-                logger.debug("KNX: {0} listen on {1}".format(item, ga))
+                logger.debug("KNX[{0}]: {1} listen on {2}".format(self.instance, item, ga))
                 if not ga in self.gal:
                     self.gal[ga] = {'dpt': dpt, 'items': [item], 'logics': []}
                 else:
@@ -249,7 +258,7 @@ class KNX(lib.connection.Client):
 
         if 'knx_init' in item.conf:
             ga = item.conf['knx_init']
-            logger.debug("KNX: {0} listen on and init with {1}".format(item, ga))
+            logger.debug("KNX[{0}]: {1} listen on and init with {2}".format(self.instance, item, ga))
             if not ga in self.gal:
                 self.gal[ga] = {'dpt': dpt, 'items': [item], 'logics': []}
             else:
@@ -259,7 +268,7 @@ class KNX(lib.connection.Client):
 
         if 'knx_cache' in item.conf:
             ga = item.conf['knx_cache']
-            logger.debug("KNX: {0} listen on and init with cache {1}".format(item, ga))
+            logger.debug("KNX[{0}]: {1} listen on and init with cache {2}".format(self.instance, item, ga))
             if not ga in self.gal:
                 self.gal[ga] = {'dpt': dpt, 'items': [item], 'logics': []}
             else:
@@ -272,11 +281,11 @@ class KNX(lib.connection.Client):
             if isinstance(knx_reply, str):
                 knx_reply = [knx_reply, ]
             for ga in knx_reply:
-                logger.debug("KNX: {0} reply to {1}".format(item, ga))
+                logger.debug("KNX[{0}]: {1} reply to {2}".format(self.instance, item, ga))
                 if ga not in self.gar:
                     self.gar[ga] = {'dpt': dpt, 'item': item, 'logic': None}
                 else:
-                    logger.warning("KNX: {0} knx_reply ({1}) already defined for {2}".format(item.id(), ga, self.gar[ga]['item']))
+                    logger.warning("KNX[{0}]: {1} knx_reply ({2}) already defined for {3}".format(self.instance, item.id(), ga, self.gar[ga]['item']))
 
         if 'knx_send' in item.conf:
             if isinstance(item.conf['knx_send'], str):
@@ -295,17 +304,25 @@ class KNX(lib.connection.Client):
         if 'knx_dpt' in logic.conf:
             dpt = logic.conf['knx_dpt']
             if dpt not in dpts.decode:
-                logger.warning("KNX: Ignoring {0} unknown dpt: {1}".format(logic, dpt))
+                logger.warning("KNX[{0}]: Ignoring {1} unknown dpt: {2}".format(self.instance, logic, dpt))
                 return None
         else:
             return None
+
+        if 'knx_instance' in logic.conf:
+            if not logic.conf['knx_instance'] == self.instance:
+                return None
+        else:
+            if not self.instance == 'default':
+                return None
+        logger.debug("KNX[{1}]: Logic {0} is mapped to KNX Instance {1}".format(logic, self.instance))
 
         if 'knx_listen' in logic.conf:
             knx_listen = logic.conf['knx_listen']
             if isinstance(knx_listen, str):
                 knx_listen = [knx_listen, ]
             for ga in knx_listen:
-                logger.debug("KNX: {0} listen on {1}".format(logic, ga))
+                logger.debug("KNX[{0}]: {1} listen on {2}".format(self.instance, logic, ga))
                 if not ga in self.gal:
                     self.gal[ga] = {'dpt': dpt, 'items': [], 'logics': [logic]}
                 else:
@@ -316,13 +333,13 @@ class KNX(lib.connection.Client):
             if isinstance(knx_reply, str):
                 knx_reply = [knx_reply, ]
             for ga in knx_reply:
-                logger.debug("KNX: {0} reply to {1}".format(logic, ga))
+                logger.debug("KNX[{0}]: {1} reply to {2}".format(self.instance, logic, ga))
                 if ga in self.gar:
                     if self.gar[ga]['logic'] is False:
                         obj = self.gar[ga]['item']
                     else:
                         obj = self.gar[ga]['logic']
-                    logger.warning("KNX: {0} knx_reply ({1}) already defined for {2}".format(logic, ga, obj))
+                    logger.warning("KNX[{0}]: {1} knx_reply ({2}) already defined for {3}".format(self.instance, logic, ga, obj))
                 else:
                     self.gar[ga] = {'dpt': dpt, 'item': None, 'logic': logic}
 
