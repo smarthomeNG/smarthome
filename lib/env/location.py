@@ -13,3 +13,10 @@ if sh.sun:
     day = sh.sun.rise(-6).day != sh.sun.set(-6).day
     sh.env.location.day(day)
     sh.env.location.night(not day)
+    
+    # setting altitude/azimut
+    azimut, altitude = sh.sun.pos()
+    azimut = round(azimut,2)
+    altitude = round(altitude,2)
+    sh.env.location.azimut(azimut)
+    sh.env.location.altitude(altitude)
