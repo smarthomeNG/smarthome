@@ -21,7 +21,30 @@
     VTC200
  
  2. Python3 package 'minimalmodbus-0.7' or later. (install it with pip3 or easy_setup).
+ 3. Python3 package 'pyserial-3.0.1' or later. (install it with pip3 or easy_setup).
  
+ If you use a virtual serial device like /dev/ttyVUSB0, sometimes an error occurs:
+ 
+    ...
+    File "/usr/local/lib/python3.2/site-packages/serial/serialposix.py", line 605, in _update_dtr_state
+    fcntl.ioctl(self.fd, TIOCMBIS, TIOCM_DTR_str)
+    IOError: [Errno 22] Invalid argument
+    ...
+    
+ Due to a bug in the current pyserial implementation, you have to change the 'minimalmodbus.py' code and change
+ following line:
+ 
+    self.serial = _SERIALPORTS[port] = serial.Serial(port=port, baudrate=BAUDRATE, parity=PARITY, bytesize=BYTESIZE, 
+    stopbits=STOPBITS, timeout=TIMEOUT)
+ 
+ to 
+    
+    self.serial = _SERIALPORTS[port] = serial.Serial(port=port, baudrate=BAUDRATE, parity=PARITY, bytesize=BYTESIZE, 
+    stopbits=STOPBITS, timeout=TIMEOUT, rtscts=True, dsrdtr=True)
+
+ Normally, you can find the file in '/usr/local/lib/python3.2/site-packages/minimalmodbus.py'. (It depends on your 
+ python installation, maybe you have to change the python version 3.2 to your needs.)
+
 
 ## Supported Hardware
 
