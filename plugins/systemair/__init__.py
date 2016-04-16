@@ -281,8 +281,6 @@ class Systemair():
             else:
                 if not item in self._update_coil[modbus_coiladdr]['items']:
                     self._update_coil[modbus_coiladdr]['items'].append(item)
-            self.my_coil_items.append(item)
-            
         return self.update_item
 
     def _write_register_value(self, item, repeat_count=0):
