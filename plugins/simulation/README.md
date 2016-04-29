@@ -64,8 +64,9 @@ Add to your item tree some adminstrative items:
 These items are needed to control the simulation plugin. If they do not exist,
 the plugin will fail to initialize.
 
-state: is set by the plugin and can be read in order to see which state the plugin
+<strong>state</strong>: is set by the plugin and can be read in order to see which state the plugin
        is in. 
+       
        00: Stop
            The plugin is inactive. It does not record or play anything
        01: Standby
@@ -75,8 +76,8 @@ state: is set by the plugin and can be read in order to see which state the plug
        04: Play
            The plugin plays the event file
 
-control:
-The control item is set by the user to 
+<strong>control</strong>: The control item is set by the user to 
+
        01: Stop
            Setting control to 01 will stop recording or playback
        02: Play
@@ -86,13 +87,13 @@ The control item is set by the user to
            Setting control to 03 will start recording. If playback is running, it will
            be stopped automatically
 
-message:
+<strong>message</strong>:
 The message item is set by the plugin depending in the events. In case of recording
 it contains the last recorded event. In case of playback it contains the next event.
 In case of errors, it will contain an error message. Use this in a visualization
 in order to see what the plugin is doing.
 
-tank:
+<strong>tank</strong>:
 Thank contains the actual value of day that are stored in the events file. The value 
 will grow up to 14 and then stay constant. Put his in the visu in case you want to
 see if there are already enough events to start a playback.
