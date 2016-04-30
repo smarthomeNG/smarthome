@@ -23,7 +23,11 @@ plugin.conf
 
 items.conf:
 
- `sim = track` attribute : Add sim = track to each item that want to be included in the simulation
+ `sim = track` 
+ 
+ Add sim = track to each item that you want to include in the simulation. All items with with the sim
+ Attribute are tracked in the data_file. Each change of the item is stored as one line. Only bool
+ and number items are supportet.
 
 Example:
 ```
@@ -215,7 +219,7 @@ Day and Trigger are ignored for the time being and might be used later.
 
 <strong>State Diagram</strong>
 
-The following sstate diagram shows the state changes depenging on the control item.
+The following state diagram shows the state changes depenging on the control item.
 The state is stored in the state item. 
 
 ![Statediagram](state_diagram.png)
