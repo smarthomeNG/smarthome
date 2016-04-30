@@ -209,8 +209,9 @@ Day;Time;Item;Value;Trigger e.g:
 
 Tue;06:05:27;OG.Tobias.Deckenlicht;True;KNX
 ```
-At 00:00 the string "NextDay" is put into one line. Day and Trigger
-are ignored for the time being and might be used later. 
+At 00:00 the string "NextDay" is put into one line. The value of Trigger
+is the source from where the item was changed during record. 
+Day and Trigger are ignored for the time being and might be used later. 
 
 <strong>State Diagram</strong>
 
