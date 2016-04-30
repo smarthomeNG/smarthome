@@ -200,7 +200,9 @@ The png files for the lamps are in the package.
 
 Internals
 ---------
-Event file format:
+
+<strong>Event file format</strong>
+
 Each event is stored in one line in the following format:
 ```
 Day;Time;Item;Value;Trigger e.g:
@@ -209,3 +211,11 @@ Tue;06:05:27;OG.Tobias.Deckenlicht;True;KNX
 ```
 At 00:00 the string "NextDay" is put into one line. Day and Trigger
 are ignored for the time being and might be used later. 
+
+<strong>State Diagram</strong>
+
+The following sstate diagram shows the state changes depenging on the control item.
+The state is stored in the state item. 
+
+![Statediagram](state_diagram.png)
+
