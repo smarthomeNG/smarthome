@@ -1,11 +1,4 @@
----
-title: Solarlog Plugin
-summary: A plugin to retrieve informations from SolarLog devices.
-uid: index
-layout: default
-created: 2011-06-08T20:58:06+0200
-changed: 2011-06-08T20:58:06+0200
----
+# Solarlog
 
 # Requirements
 This plugin has no requirements or dependencies.

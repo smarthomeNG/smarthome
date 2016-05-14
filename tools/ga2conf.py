@@ -26,7 +26,7 @@ import re
 from collections import namedtuple
 import xml.etree.ElementTree as ET
 
-NS_URL = '{http://knx.org/xml/project/10}'
+NS_URL = '{http://knx.org/xml/project/11}'
 FIND_GA = NS_URL + 'GroupAddress'
 
 def write_dpt(dpt, depth, f):
@@ -48,6 +48,11 @@ def write_dpt(dpt, depth, f):
 
 def write_dict(a, depth, f):
     if 'sh_attributes' in a.keys():
+        if a['sh_attributes']['knx_dpt']:
+           write_dpt(int(a['sh_attributes']['knx_dpt'][0]), depth, f)   
+           del(a['sh_attributes']['type'])
+           del(a['sh_attributes']['visu'])
+           del(a['sh_attributes']['knx_dpt'])
         write_attributes(a['sh_attributes'], depth, f)
 
     for k in a.keys():

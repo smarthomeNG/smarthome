@@ -1,8 +1,4 @@
----
-title: ECMD
-layout: default
-summary: Ethersex ECMD protocoll.
----
+# ECMD
 
 # Requirements
 

@@ -1,8 +1,4 @@
----
-title: My Plugin
-layout: default
-summary: Summary of the plugin purpose.
----
+# My Plugin
 
 # Requirements
 

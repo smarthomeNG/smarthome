@@ -1,10 +1,4 @@
----
-title: Russound Plugin
-layout: default
-summary: Plugin to control a Russound audio device with RIO over TCP.
-created: 2012-10-15T21:18:27+0200
-changed: 2012-10-15T21:18:27+0200
----
+# Russound
 
 Requirements
 ============

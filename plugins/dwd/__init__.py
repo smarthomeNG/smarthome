@@ -46,7 +46,7 @@ class DWD():
         self.lock = threading.Lock()
         self.tz = dateutil.tz.gettz('Europe/Berlin')
         try:
-            warnings = csv.reader(open(self._warnings_csv, "r"), delimiter=';')
+            warnings = csv.reader(open(self._warnings_csv, "r", encoding='utf_8'), delimiter=';')
         except IOError as e:
             logger.error('Could not open warning catalog {}: {}'.format(self._warnings_csv, e))
         for row in warnings:
@@ -189,9 +189,10 @@ class DWD():
                 elif line.startswith('Vorhersage'):
                     header = line
                 elif line.count(location):
-                    header = re.sub(r"/\d\d?", '', header)
                     day, month, year = re.findall(r"\d\d\.\d\d\.\d\d\d\d", header)[0].split('.')
                     date = datetime.datetime(int(year), int(month), int(day), hour, tzinfo=self.tz)
+                    if re.search("\d\d\/\d\d", header):
+                        date = date + datetime.timedelta(days=-1)
                     space = re.compile(r'  +')
                     fc = space.split(line)
                     forecast[date] = fc[1:]
@@ -234,6 +235,8 @@ class DWD():
                                 forecast[day0][kind.tag] = value
                             elif day.tag == 'tomorrow':
                                 forecast[day1][kind.tag] = value
+                            elif day.tag == 'dayafter_to':
+                                forecast[day2][kind.tag] = value
                             else:
                                 logger.debug("unknown day: {0}".format(day.tag))
         fxp.clear()

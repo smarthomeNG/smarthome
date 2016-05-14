@@ -77,6 +77,8 @@ class IMAP():
             return
         uids = data[0].split()
         for uid in uids:
+            if not self.alive:
+                break
             try:
                 rsp, data = imap.uid('fetch', uid, '(RFC822)')
                 if rsp != 'OK':
@@ -85,8 +87,9 @@ class IMAP():
                 mail = email.message_from_bytes(data[0][1])
                 to = email.utils.parseaddr(mail['To'])[1]
                 fo = email.utils.parseaddr(mail['From'])[1]
-                sub, encoding = email.header.decode_header(mail['Subject'])[0]
-                subject = sub.decode()
+                subject, encoding = email.header.decode_header(mail['Subject'])[0]
+                if encoding is not None:
+                    subject = subject.decode(encoding)
             except Exception as e:
                 logger.exception("IMAP: problem parsing message {}: {}".format(uid, e))
                 continue

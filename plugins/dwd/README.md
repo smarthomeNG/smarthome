@@ -1,10 +1,4 @@
----
-title: DWD Plugin
-layout: default
-summary: Plugin to fetch weather warnings and forecasts from Deutscher Wetterrdienst (DWD)
-created: 2011-04-08T20:59:34+0200
-changed: 2011-04-08T20:59:34+0200
----
+# DWD
 
 Requirements
 ============

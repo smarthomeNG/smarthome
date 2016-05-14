@@ -145,7 +145,6 @@ def _fadejob(item, dest, step, delta):
 
 
 class Item():
-    __defaults = {'num': 0, 'str': '', 'bool': False, 'list': [], 'dict': {}, 'foo': None, 'scene': 0}
 
     def __init__(self, smarthome, parent, path, config):
         self._autotimer = False
@@ -205,9 +204,9 @@ class Item():
                         low = high
                     self._threshold = True
                     self.__th_crossed = False
-                    self.__th_low = float(low)
-                    self.__th_high = float(high)
-                    logger.debug("Item {}: set threshold => low: {} high: {}}".format(self._path, self.__th_low, self.__th_high))
+                    self.__th_low = float(low.strip())
+                    self.__th_high = float(high.strip())
+                    logger.debug("Item {}: set threshold => low: {} high: {}".format(self._path, self.__th_low, self.__th_high))
                 else:
                     self.conf[attr] = value
         #############################################################
@@ -219,7 +218,7 @@ class Item():
                 try:
                     child = Item(smarthome, self, child_path, value)
                 except Exception as e:
-                    logger.error("Item {}: problem creating: ()".format(child_path, e))
+                    logger.exception("Item {}: problem creating: {}".format(child_path, e))
                 else:
                     vars(self)[attr] = child
                     smarthome.add_item(child_path, child)
@@ -238,24 +237,31 @@ class Item():
         #############################################################
         # Type
         #############################################################
+        __defaults = {'num': 0, 'str': '', 'bool': False, 'list': [], 'dict': {}, 'foo': None, 'scene': 0}
         if self._type is None:
             logger.debug("Item {}: no type specified.".format(self._path))
             return
-        if self._type not in self.__defaults:
-            logger.error("Item {}: type '{}' unknown. Please use one of: {}.".format(self._path, self._type, ', '.join(list(self.__defaults.keys()))))
+        if self._type not in __defaults:
+            logger.error("Item {}: type '{}' unknown. Please use one of: {}.".format(self._path, self._type, ', '.join(list(__defaults.keys()))))
             raise AttributeError
         self.cast = globals()['_cast_' + self._type]
         #############################################################
         # Value
         #############################################################
         if self._value is None:
-            self._value = self.__defaults[self._type]
+            self._value = __defaults[self._type]
         try:
             self._value = self.cast(self._value)
         except:
             logger.error("Item {}: value {} does not match type {}.".format(self._path, self._value, self._type))
             raise
         self.__prev_value = self._value
+        #############################################################
+        # Cache write/init
+        #############################################################
+        if self._cache:
+            if not os.path.isfile(self._cache):
+                _cache_write(self._cache, self._value)
         #############################################################
         # Crontab/Cycle
         #############################################################
@@ -290,7 +296,7 @@ class Item():
         return vars(self)[item]
 
     def __bool__(self):
-        return self._value
+        return bool(self._value)
 
     def __str__(self):
         return self._name
@@ -316,11 +322,15 @@ class Item():
                     self._eval = ' + '.join(items)
                 elif self._eval == 'avg':
                     self._eval = '({0})/{1}'.format(' + '.join(items), len(items))
+                elif self._eval == 'max':
+                    self._eval = 'max({0})'.format(','.join(items))
+                elif self._eval == 'min':
+                    self._eval = 'min({0})'.format(','.join(items))
 
     def _init_run(self):
         if self._eval_trigger:
             if self._eval:
-                self._sh.trigger(name=self._path, obj=self.__run_eval, by='Init', value={'caller': 'Init'})
+                self._sh.trigger(name=self._path, obj=self.__run_eval, by='Init', value={'value': self._value, 'caller': 'Init'})
 
     def __run_eval(self, value=None, caller='Eval', source=None, dest=None):
         if self._eval:
@@ -362,7 +372,7 @@ class Item():
                 self._lock.notify_all()
                 self._change_logger("Item {} = {} via {} {} {}".format(self._path, value, caller, source, dest))
         self._lock.release()
-        if _changed or self._enforce_updates:
+        if _changed or self._enforce_updates or self._type == 'scene':
             self.__last_update = self._sh.now()
             for method in self.__methods_to_trigger:
                 try:
@@ -383,7 +393,7 @@ class Item():
                 self._sh.trigger(name=item.id(), obj=item.__run_eval, value=args, by=caller, source=source, dest=dest)
         if _changed and self._cache and not self._fading:
             try:
-                _cache_write(self._cache, value)
+                _cache_write(self._cache, self._value)
             except Exception as e:
                 logger.warning("Item: {}: could update cache {}".format(self._path, e))
         if self._autotimer and caller != 'Autotimer' and not self._fading:
@@ -432,6 +442,9 @@ class Item():
     def prev_value(self):
         return self.__prev_value
 
+    def remove_timer(self):
+        self._sh.scheduler.remove(self.id() + '-Timer')
+
     def return_children(self):
         for child in self.__children:
             yield child
@@ -439,7 +452,7 @@ class Item():
     def return_parent(self):
         return self.__parent
 
-    def set(self, value, caller='Logic', source=None, dest=None):
+    def set(self, value, caller='Logic', source=None, dest=None, prev_change=None, last_change=None):
         try:
             value = self.cast(value)
         except:
@@ -450,8 +463,14 @@ class Item():
             return
         self._lock.acquire()
         self._value = value
-        self.__prev_change = self.__last_change
-        self.__last_change = self._sh.now()
+        if prev_change is None:
+            self.__prev_change = self.__last_change
+        else:
+            self.__prev_change = prev_change
+        if last_change is None:
+            self.__last_change = self._sh.now()
+        else:
+            self.__last_change = last_change
         self.__changed_by = "{0}:{1}".format(caller, None)
         self._lock.release()
         self._change_logger("Item {} = {} via {} {} {}".format(self._path, value, caller, source, dest))
@@ -477,8 +496,5 @@ class Item():
         else:
             self._sh.scheduler.add(self.id() + '-Timer', self.__call__, value={'value': value, 'caller': caller}, next=next)
 
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    i = Item('sh', 'parent', 'path1', {'type': 'str', 'child1': {'type': 'bool'}, 'value': 'tqwer'})
-    i = Item('sh', 'parent', 'path', {'type': 'str', 'value': 'tqwer'})
-    i('test2')
+    def type(self):
+        return self._type

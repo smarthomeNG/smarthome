@@ -1,3 +1,5 @@
+# Squeezebox
+
 # Requirements
 
 A properly installed and configured Logitech Media Server is required.

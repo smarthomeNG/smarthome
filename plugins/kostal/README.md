@@ -1,8 +1,4 @@
----
-title: KOSTAL plugin
-layout: default
-summary: Retrieve data from a KOSTAL inverter module
----
+# KOSTAL
 
 # Requirements
 

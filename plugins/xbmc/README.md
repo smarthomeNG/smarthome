@@ -1,9 +1,4 @@
----
-title: XBMC Plugin
-summary: A Plugin to communicate with XBMC
-uid: index
-layout: default
----
+# XBMC
 
 Requirements
 ============

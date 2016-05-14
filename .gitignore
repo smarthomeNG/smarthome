@@ -3,3 +3,5 @@
 *.tgz
 *.zip
 /visu
+/doc/build
+/doc/sphinx_bootstrap_theme

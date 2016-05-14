@@ -1,9 +1,4 @@
----
-title: rrdtool Plugin
-summary: Plugin to build round robin databases and create graphs
-uid: rrdplugin
-layout: default
----
+# RRDTool
 
 Requirements
 ============
@@ -14,6 +9,21 @@ $ sudo python3 setup.py install</pre>
 
 Configuration
 =============
+
+Remark: 
+-------
+The rrd plugin and the sqlite plugin can not be used together. Some pros and cons:
+
+RRD
++ a stable, reliable tool
++ is used in a many data logging and graphing tools
+- slow moving development
+- only few new features on the roadmap
+
+SQLite
++ part of python, no additional installation necessary
++ accurate logging of changing times
++ more analysis functionality
 
 plugin.conf
 -----------
@@ -40,6 +50,11 @@ Set this item attribute to log the minimum as well. Default is no.
 
 ### rrd_max
 Set this item attribute to log the maximum as well. Default is no.
+
+### rrd_mode
+Set the type of data source. Default ist `gauge`.
+  * `gauge` - should be used for things like temperatures.
+  * `counter` - should be used for continuous incrementing counters like the Powermeter (kWh), watercounter (m³), pellets (kg).
 
 <pre>
 [outside]

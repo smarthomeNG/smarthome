@@ -101,9 +101,9 @@ class VR100():
         try:
             cmd = item.conf['vr100_cmd']
             value = item()
-            if (type(value) == 'bool'):
+            if isinstance(value, bool):
                 value = 'on' if value else 'off'
-            if cmd.upper().startswith('CLEAN') and not value:
+            if cmd.lower().startswith('clean') and not value:
                 # allow stopping cleaning by setting item to false
                 cmd = 'clean stop'
             self._send(cmd.format(value))

@@ -1,10 +1,4 @@
----
-title: iCal Plugin
-summary:
-layout: default
-created: 2011-04-08T20:00:36+0200
-changed: 2011-04-08T20:00:36+0200
----
+# iCal
 
 # Requirements
 This plugin has no requirements or dependencies.

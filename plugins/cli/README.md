@@ -1,10 +1,4 @@
----
-title: CLI
-layout: default
-summary: Simple Command Line Interface to access SmartHome.py with telnet
-created: 2011-04-12T21:12:34+0200
-changed: 2011-04-12T21:12:34+0200
----
+# CLI
 
 Configuration
 =============

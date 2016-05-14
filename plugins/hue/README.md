@@ -1,8 +1,4 @@
----
-title: HUE Plugin
-layout: default
-summary: Plugin to control lamps via Philips hue bridge
----
+# Phillips HUE
 
 # Requirements
 

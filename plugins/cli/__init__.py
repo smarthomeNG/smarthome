@@ -64,6 +64,8 @@ class CLIHandler(lib.connection.Stream):
             self.rl(cmd.lstrip('rl').strip())
         elif cmd.startswith('rr'):
             self.rr(cmd.lstrip('rr').strip())
+        elif cmd == 'rt' or cmd == 'runtime':
+            self.rt()
         elif cmd == 'help' or cmd == 'h':
             self.usage()
         elif cmd in ('quit', 'q', 'exit', 'x'):
@@ -89,7 +91,7 @@ class CLIHandler(lib.connection.Stream):
             if len(items):
                 for item in items:
                     if hasattr(item, 'id'):
-                        if item._type:
+                        if item.type():
                             self.push("{0} = {1}\n".format(item.id(), item()))
                         else:
                             self.push("{}\n".format(item.id()))
@@ -102,7 +104,7 @@ class CLIHandler(lib.connection.Stream):
     def la(self):
         self.push("Items:\n======\n")
         for item in self.sh.return_items():
-            if item._type:
+            if item.type():
                 self.push("{0} = {1}\n".format(item.id(), item()))
             else:
                 self.push("{0}\n".format(item.id()))
@@ -120,8 +122,8 @@ class CLIHandler(lib.connection.Stream):
         items = self.sh.match_items(path)
         if len(items):
             for item in items:
-                if not hasattr(item, '_type'):
-                    self.push("Item has no valid type specified: '{0}'\n".format(item.id()))
+                if not item.type():
+                    self.push("Could not find item with a valid type specified: '{0}'\n".format(path))
                     return
                 item(value, 'CLI', self.source)
         else:
@@ -159,7 +161,7 @@ class CLIHandler(lib.connection.Stream):
 
     def lo(self):
         self.push("Logics:\n")
-        for logic in self.sh.return_logics():
+        for logic in sorted(self.sh.return_logics()):
             nt = self.sh.scheduler.return_next(logic)
             if nt is not None:
                 self.push("{0} (scheduled for {1})\n".format(logic, nt.strftime('%Y-%m-%d %H:%M:%S%z')))
@@ -171,6 +173,10 @@ class CLIHandler(lib.connection.Stream):
         self.push("{0} Threads:\n".format(threading.activeCount()))
         for t in threading.enumerate():
             self.push("{0}\n".format(t.name))
+
+    def rt(self):
+        # return SH.py runtime
+        self.push("Runtime: {}\n".format(self.sh.runtime()))
 
     def usage(self):
         self.push('cl: clean (memory) log\n')
@@ -184,6 +190,7 @@ class CLIHandler(lib.connection.Stream):
         self.push('tr logic: trigger logic\n')
         self.push('rl logic: reload logic\n')
         self.push('rr logic: reload and run logic\n')
+        self.push('rt: return runtime\n')
         self.push('quit: quit the session\n')
         self.push('q: alias for quit\n')
 

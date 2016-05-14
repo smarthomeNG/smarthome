@@ -1,411 +1,563 @@
 #!/usr/bin/env python
-# vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+#########################################################################
+# Copyright 2013 Stefan Kals
+#########################################################################
+#  ComfoAir-Plugin for SmartHome.py.  http://mknx.github.com/smarthome/
 #
-# Copyright 2013 KNX-User-Forum e.V.            http://knx-user-forum.de/
-#
-#  This file is part of SmartHome.py.    http://mknx.github.io/smarthome/
-#
-#  SmartHome.py is free software: you can redistribute it and/or modify
+#  This plugin is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  SmartHome.py is distributed in the hope that it will be useful,
+#  This plugin is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with SmartHome.py. If not, see <http://www.gnu.org/licenses/>.
-#
+#  along with this plugin. If not, see <http://www.gnu.org/licenses/>.
+#########################################################################
+
 import logging
+import socket
+import time
 import serial
+import re
 import threading
 from . import commands
-import re
-import sys
 
-logger = logging.getLogger('')
+logger = logging.getLogger('ComfoAir')
 
+class ComfoAir():
 
-class comfoAir():
-
-    def __init__(self, smarthome, serialport, update_time=300):
+    def __init__(self, smarthome, host=None, port=0, serialport=None, kwltype='comfoair350'):
+        self.connected = False
         self._sh = smarthome
+        self._params = {}
+        self._init_cmds = []
+        self._cyclic_cmds = {}
         self._lock = threading.Lock()
-        self._port = serialport
-        self._update_time = update_time
-        self._sh.scheduler.add('comfoAir', self.__iterate,
-                               cycle=self._update_time, prio=5, offset=0)
-        self._listenItems = []
-        self._connection = None
+        self._host = host
+        self._port = int(port)
+        self._serialport = serialport
+        self._connection_attempts = 0
+        self._connection_errorlog = 60
+        self._initread = False
+        smarthome.connections.monitor(self)
 
-    def run(self):
-        self.alive = True
+        # Load controlset and commandset
+        if kwltype in commands.controlset and kwltype in commands.commandset:
+            self._controlset = commands.controlset[kwltype]
+            self._commandset = commands.commandset[kwltype]
+            self.log_info('Loaded commands for KWL type \'{}\''.format(kwltype))
+        else:
+            self.log_err('Commands for KWL type \'{}\' could not be found!'.format(kwltype))
+            return None
 
-    def stop(self):
-        self.alive = False
+        # Remember packet config
+        self._packetstart = self.int2bytes(self._controlset['PacketStart'], 2)
+        self._packetend = self.int2bytes(self._controlset['PacketEnd'], 2)
+        self._acknowledge = self.int2bytes(self._controlset['Acknowledge'], 2)
+        self._specialchar = self.int2bytes(self._controlset['SpecialCharacter'], 1)
+        self._reponsecommandinc = self._controlset['ResponseCommandIncrement']
+        self._commandlength = 2
+        self._checksumlength = 1
+        
+    def connect(self):
+        if self._serialport is not None:
+            self.connect_serial()
+        else:
+            self.connect_tcp()
+        
+    def connect_tcp(self):
+        self._lock.acquire()
+        try:
+            self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self._sock.settimeout(2)
+            self._sock.connect((self._host, self._port))
+        except Exception as e:
+            self._connection_attempts -= 1
+            if self._connection_attempts <= 0:
+                self.log_err('could not connect to {}:{}: {}'.format(self._host, self._port, e))
+                self._connection_attempts = self._connection_errorlog
+            self._lock.release()
+            return
+        else:
+            self.connected = True
+            self.log_info('connected to {}:{}'.format(self._host, self._port))
+            self._connection_attempts = 0
+            self._lock.release()
+    
+    def connect_serial(self):
+        self._lock.acquire()
+        try:
+            self._serialconnection = serial.Serial(
+                    self._serialport, 9600, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE, timeout=2)
+        except Exception as e:
+            self._connection_attempts -= 1
+            if self._connection_attempts <= 0:
+                self.log_err('could not connect to {}: {}'.format(self._serialport, e))
+                self._connection_attempts = self._connection_errorlog
+            self._lock.release()
+            return
+        else:
+            self.connected = True
+            self.log_info('connected to {}'.format(self._serialport))
+            self._connection_attempts = 0
+            self._lock.release()
 
+    def disconnect(self):
+        if self._serialport is not None:
+            self.disconnect_serial()
+        else:
+            self.disconnect_tcp()
+        
+    def disconnect_tcp(self): 
+        self.connected = False
+        try:
+            self._sock.shutdown(socket.SHUT_RDWR)
+        except:
+            pass
+        try:
+            self._sock.close()
+        except:
+            pass
+
+    def disconnect_serial(self): 
+        self.connected = False
+        try:
+            self._serialconnection.close()
+            self._serialconnection = None
+        except:
+            pass
+        
+    def send_bytes(self, packet):
+        if self._serialport is not None:
+            self.send_bytes_serial(packet)
+        else:
+            self.send_bytes_tcp(packet)
+        
+    def send_bytes_tcp(self, packet):
+        self._sock.sendall(packet)
+
+    def send_bytes_serial(self, packet):
+        self._serialconnection.write(packet)
+        
+    def read_bytes(self, length):
+        if self._serialport is not None:
+            return self.read_bytes_serial(length)
+        else:
+            return self.read_bytes_tcp(length)
+        
+    def read_bytes_tcp(self, length):
+        return self._sock.recv(length)
+
+    def read_bytes_serial(self, length):
+        return self._serialconnection.read(length)
+ 
     def parse_item(self, item):
-        if 'comfoAir_listen' in item.conf:
-            commandKey = item.conf['comfoAir_listen']
-            if commandKey.startswith('KEY_'):
-                if commandKey in commands.commands:
-                    logger.debug(
-                        "ComfoAir parse_item(): {0} send command {1}".format(item, commandKey))
-                    self._listenItems.append(item)
+        # Process the read config
+        if 'comfoair_read' in item.conf:
+            commandname = item.conf['comfoair_read']
+            if (commandname == None or commandname not in self._commandset):
+                self.log_err('Item {} contains invalid read command \'{}\'!'.format(item, commandname))
+                return None
+            
+            # Remember the read config to later update this item if the configured response comes in
+            self.log_info('Item {} reads by using command \'{}\'.'.format(item, commandname))
+            commandconf = self._commandset[commandname]
+            commandcode = commandconf['Command']
+
+            if not commandcode in self._params:
+                self._params[commandcode] = {'commandname': [commandname], 'items': [item]}
+            elif not item in self._params[commandcode]['items']:
+                self._params[commandcode]['commandname'].append(commandname)
+                self._params[commandcode]['items'].append(item)
+
+            # Allow items to be automatically initiated on startup
+            if ('comfoair_init' in item.conf and item.conf['comfoair_init'] == 'true'):
+                self.log_info('Item {} is initialized on startup.'.format(item))
+                # Only add the item to the initial commands if it is not cyclic. Cyclic commands get called on init because this is the first cycle...
+                if not commandcode in self._init_cmds and 'comfoair_read_cycle' not in item.conf:
+                    self._init_cmds.append(commandcode)
+
+            # Allow items to be cyclically updated
+            if ('comfoair_read_cycle' in item.conf):
+                cycle = int(item.conf['comfoair_read_cycle'])
+                self.log_info('Item {} should read cyclic every {} seconds.'.format(item, cycle))
+
+                if not commandcode in self._cyclic_cmds:
+                    self._cyclic_cmds[commandcode] = {'cycle': cycle, 'nexttime': 0}
                 else:
-                    logger.debug(
-                        "ComfoAir parse_item(): Ignoring {0}: Key was not found in command list".format(commandKey))
-            else:
-                logger.warning(
-                    "ComfoAir parse_item(): Ignoring {0}: String have to begin with KEY_.".format(item))
-        elif 'comfoAir_send' in item.conf:
-            commandKey = item.conf['comfoAir_send']
-            if commandKey.startswith('KEY_'):
-                if commandKey in commands.commands:
-                    logger.debug(
-                        "ComfoAir parse_item(): {0} send command {1}".format(item, commandKey))
-                    return self.update_item
-                else:
-                    logger.debug(
-                        "ComfoAir parse_item(): Ignoring {0}: Key was not found in command list".format(commandKey))
-            else:
-                logger.warning(
-                    "ComfoAir parse_item(): Ignoring {0}: String have to begin with KEY_.".format(item))
+                    # If another item requested this command already with a longer cycle, use the shorter cycle now
+                    if self._cyclic_cmds[commandcode]['cycle'] > cycle:
+                        self._cyclic_cmds[commandcode]['cycle'] = cycle
+
+        # Process the send config
+        if 'comfoair_send' in item.conf:
+            commandname = item.conf['comfoair_send']
+            if commandname == None:
+                return None
+            elif commandname not in self._commandset:
+                self.log_err('Item {} contains invalid write command \'{}\'!'.format(item, commandname))
+                return None
+            
+            self.log_info('Item {} writes by using command \'{}\''.format(item, commandname))
+            return self.update_item
+        else:
+            return None
 
     def parse_logic(self, logic):
         pass
 
     def update_item(self, item, caller=None, source=None, dest=None):
-        if self.__connectSerial():
-            try:
-                self.__push(item.conf['comfoAir_send'], item, False)
-                # iterate through items to get the current values
-                self.__iterate()
-            finally:
-                self.__disconnectSerial()
+        if caller != 'ComfoAir' and 'comfoair_send' in item.conf:
+            commandname = item.conf['comfoair_send']
 
-    def __connectSerial(self):
-        try:
-            if self._connection is None:
-                self._connection = serial.Serial(
-                    self._port, 9600, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE, timeout=1)
-                logger.info(
-                    "ComfoAir __connectSerial(): Communication with ComfoAir established")
-            return True
-        except (serial.SerialException, ValueError) as e:
-            logger.error("ComfoAir __connectSerial(): " + e.message)
-            return False
+            if type(item) != int:
+                value = int(item())
+            else:
+                value = item()
 
-    def __disconnectSerial(self):
-        if self._connection is not None:
-            self._connection.close()
-            logger.info(
-                "ComfoAir __disconnectSerial(): Communication with ComfoAir closed")
-            self._connection = None
+            # Send write command
+            self.send_command(commandname, value)
 
-    def __iterate(self):
-        if self.__connectSerial():
-            try:
-                for listenItem in self._listenItems:
-                    key = listenItem.conf['comfoAir_listen']
-                    self.__push(key, listenItem, True)
-            except:
-                e = sys.exc_info()[0]
-                logger.error("ComfoAir __iterate():" + e)
-            finally:
-                self.__disconnectSerial()
-
-    def __push(self, commandKey, item, requiredAnswer):
-
-        logger.info("ComfoAir __push(): CommandKey = " + commandKey)
-        answer = None
-        if commandKey == "KEY_Komforttemperatur":
-            commando = commands.commands[commandKey] + \
-                str(self.__getComfoAirTemperature(int(item())))
-            logger.debug("ComfoAir __push(): Set comfort temperature to " +
-                         str(item()) + "! Command = " + str(commando))
-            answer = self.__command_send(commando, requiredAnswer)
-        else:
-            answer = self.__command_send(
-                commands.commands[commandKey], requiredAnswer)
-
-        if requiredAnswer:
-            if answer is not None:
-                answerArray = answer.split('/')
-
-                if commandKey == "KEY_Komforttemp":
-                    item(int(answerArray[0]))
-                elif commandKey == "KEY_Aussentemp":
-                    item(int(answerArray[1]))
-                elif commandKey == "KEY_Zulufttemp":
-                    item(int(answerArray[2]))
-                elif commandKey == "KEY_Ablufttemp":
-                    item(int(answerArray[3]))
-                elif commandKey == "KEY_Fortlufttemp":
-                    item(int(answerArray[4]))
-                elif commandKey == "KEY_EWTtemp":
-                    item(int(answerArray[5]))
-                elif commandKey == "KEY_Vent_Zuluft_Status":
-                    item(int(answerArray[0]))
-                elif commandKey == "KEY_Vent_Zuluft_Umdrehungen":
-                    item(int(answerArray[1]))
-                elif commandKey == "KEY_Vent_Abluft_Status":
-                    item(int(answerArray[2]))
-                elif commandKey == "KEY_Vent_Abluft_Umdrehungen":
-                    item(int(answerArray[3]))
-                elif commandKey == "KEY_BypassZustand":
-                    item(int(answerArray[0]))
-                elif commandKey == "KEY_StundenFilter":
-                    item(int(answerArray[0]))
-                elif commandKey == "KEY_Badschalter":
-                    item(int(answerArray[0]))
-                elif commandKey == "KEY_AktuelleStufe":
-                    item(int(answerArray[0]))
-
-    def __calculate_checksum(self, data):
-        chk_data = data.replace(" ", "")
-        checksum = 0
-        y = 0
-        chk_datasum = chk_data + "AD"
-        logger.debug(
-            "ComfoAir __calculate_checksum(): String to calculate checksum: " + chk_datasum)
-        x07warschon = False
-        laenge = len(chk_datasum) / 2
-
-        for i in range(0, laenge):
-            wertstring = chk_datasum[y:y + 2]
-            wertbetrag = int(wertstring, 16)
-            if wertbetrag == 7:
-                if x07warschon:
-                    y += 2
-                    continue
+            # If a read command should be sent after write
+            if 'comfoair_read' in item.conf and 'comfoair_read_afterwrite' in item.conf:
+                readcommandname = item.conf['comfoair_read']
+                readafterwrite = item.conf['comfoair_read_afterwrite']
+                self.log_info('Attempting read after write for item {}, command {}, delay {}'.format(item, readcommandname, readafterwrite))
+                if readcommandname is not None and readafterwrite is not None:
+                    aw = float(readafterwrite)
+                    time.sleep(aw)
+                    self.send_command(readcommandname)
+            
+            # If commands should be triggered after this write        
+            if 'comfoair_trigger' in item.conf:
+                trigger = item.conf['comfoair_trigger']
+                if trigger == None:
+                    self.log_err('Item {} contains invalid trigger command list \'{}\'!'.format(item, trigger))
                 else:
-                    x07warschon = True
+                    tdelay = 5 # default delay
+                    if 'comfoair_trigger_afterwrite' in item.conf:
+                        tdelay = float(item.conf['comfoair_trigger_afterwrite'])
+                    if type(trigger) != list:
+                        trigger = [trigger] 
+                    for triggername in trigger:
+                        triggername = triggername.strip()
+                        if triggername is not None and readafterwrite is not None:
+                            self.log_info('Triggering command {} after write for item {}'.format(triggername, item))
+                            time.sleep(tdelay)
+                            self.send_command(triggername)
 
-            checksum += wertbetrag
-            y = y + 2
-
-        return hex(checksum)[-2:]
-
-    def __command_send(self, data, requiredAnswer):
-        answer = None
-        ackbytes = self.__HexToByte("07F3")
-
-        # calculate checksum
-        checksum = self.__calculate_checksum(data)
-        logger.debug(
-            "ComfoAir __command_send(): Received checksum: " + checksum)
-
-        # build command string (start + command + checksum + end)
-        commandstring = "07F0" + data + checksum + "070F"
-        logger.debug(
-            "ComfoAir __command_send(): Final command string: " + commandstring)
-
-        # convert from HEX to Byte
-        commandbytes = self.__HexToByte(commandstring)
-        logger.debug("ComfoAir __command_send(): Command-Bytes: " +
-                     self.__ByteToHex(commandbytes))
-
-        # number of Bytes
-        numberBytes = len(commandbytes)
-        logger.debug("ComfoAir __command_send(): Number of Bytes: " +
-                     str(numberBytes))
-
+    def handle_cyclic_cmds(self):
+        # Read all cyclic commands
+        currenttime = time.time()
+        for commandcode in list(self._cyclic_cmds.keys()):
+            entry = self._cyclic_cmds[commandcode]
+            # Is the command already due?
+            if entry['nexttime'] <= currenttime:
+                commandname = self.commandname_by_commandcode(commandcode)
+                self.log_info('Triggering cyclic read command: {}'.format(commandname))
+                self.send_command(commandname)
+                entry['nexttime'] = currenttime + entry['cycle']
+        
+    def send_command(self, commandname, value=None):
         try:
+            #self.log_debug('Got a new send job: Command {} with value {}'.format(commandname, value))
+            
+            # Get command config
+            commandconf = self._commandset[commandname]
+            commandcode = int(commandconf['Command'])
+            commandcodebytecount = commandconf['CommandBytes']
+            commandtype = commandconf['Type']
+            commandvaluebytes = commandconf['ValueBytes']
+            #self.log_debug('Command config: {}'.format(commandconf))
+            
+            # Transform value for write commands
+            #self.log_debug('Got value: {}'.format(value))
+            if 'ValueTransform' in commandconf and value is not None and value != '' and commandtype == 'Write':
+                commandtransform = commandconf['ValueTransform']
+                value = self.value_transform(value, commandtype, commandtransform)
+                #self.log_debug('Transformed value using method {} to {}'.format(commandtransform, value))
+    
+            # Build value byte array
+            valuebytes = bytearray()
+            if value is not None and commandvaluebytes > 0:
+                valuebytes = self.int2bytes(value, commandvaluebytes)
+            #self.log_debug('Created value bytes: {}'.format(valuebytes))
+    
+            # Calculate the checksum
+            commandbytes = self.int2bytes(commandcode, commandcodebytecount)
+            payload = bytearray()
+            payload.extend(commandbytes)
+            if len(valuebytes) > 0:
+                payload.extend(valuebytes)
+            checksum = self.calc_checksum(payload)
+    
+            # Build packet
+            packet = bytearray()
+            packet.extend(self.int2bytes(self._controlset['PacketStart'], 2))
+            packet.extend(commandbytes)
+            if len(valuebytes) > 0:
+                packet.extend(self.encode_specialchars(valuebytes))
+            packet.extend(self.int2bytes(checksum, 1))
+            packet.extend(self.int2bytes(self._controlset['PacketEnd'], 2))
+            self.log_info('Preparing command {} with value {} (transformed to value byte \'{}\') to be sent.'.format(commandname, value, self.bytes2hexstring(valuebytes)))
+            
+            # Use a lock to allow only one sender at a time
             self._lock.acquire()
 
-            # send command
-            if self._connection.write(commandbytes) == numberBytes:
-                logger.debug(
-                    "ComfoAir __command_send(): Sending command successfully")
+            if not self.connected:
+                raise Exception("No connection to ComfoAir.")
+            
+            try:
+                self.send_bytes(packet)
+                self.log_info('Successfully sent packet: {}'.format(self.bytes2hexstring(packet)))
+            except Exception as e:
+                raise Exception('Exception while sending: {}'.format(e))
+            
+            if commandtype == 'Read':
+                packet = bytearray()
+                
+                # Try to receive a packet start, a command and a data length byte
+                firstpartlen = len(self._packetstart) + self._commandlength + 1
+                while self.alive and len(packet) < firstpartlen:
+                    try:
+                        bytestoreceive = firstpartlen - len(packet)
+                        self.log_debug('Trying to receive {} bytes for the first part of the response.'.format(bytestoreceive))
+                        chunk = self.read_bytes(bytestoreceive)
+                        self.log_info('Received {} bytes chunk of response part 1: {}'.format(len(chunk), self.bytes2hexstring(chunk)))
+                        if len(chunk)  == 0:
+                            raise Exception('Received 0 bytes chunk - ignoring packet!')
+                        
+                        # Cut away old ACK (but only if the telegram wasn't started already)
+                        if len(packet) == 0:
+                            chunk = self.remove_ack_begin(chunk)
+                        packet.extend(chunk)
+                    except socket.timeout:
+                        raise Exception("error receiving first part of packet: timeout")
+                    except Exception as e:
+                        raise Exception("error receiving first part of packet: {}".format(e))
+    
+                datalen = packet[firstpartlen - 1]
+                #self.log_info('Got a data length of: {}'.format(datalen))
+                packetlen = firstpartlen + datalen + self._checksumlength + len(self._packetend)
+    
+                # Try to receive the second part of the packet
+                while self.alive and len(packet) < packetlen or packet[-2:] != self._packetend:
+                    try:
+                        # In case of doubled special characters, the packet can be longer (try one byte more at a time)
+                        if len(packet) >= packetlen and packet[-2:] != self._packetend:
+                            packetlen = len(packet) + 1
+                            self.log_info('Extended packet length because of encoded characters.'.format(self.bytes2hexstring(chunk)))
+                        
+                        # Receive next chunk
+                        bytestoreceive = packetlen - len(packet)
+                        self.log_debug('Trying to receive {} bytes for the second part of the response.'.format(bytestoreceive))
+                        chunk = self.read_bytes(bytestoreceive)
+                        self.log_info('Received {} bytes chunk of response part 2: {}'.format(len(chunk), self.bytes2hexstring(chunk)))
+                        packet.extend(chunk)
+                        if len(chunk)  == 0:
+                            raise Exception('Received 0 bytes chunk - ignoring packet!')
+                    except socket.timeout:
+                        raise Exception("error receiving second part of packet: timeout")
+                    except Exception as e:
+                        raise Exception("error receiving second part of packet: {}".format(e))
+    
+                # Send ACK
+                self.send_bytes(self._acknowledge)
+                
+                # Parse response
+                self.parse_response(packet)
+        
+        except Exception as e:
+            self.disconnect()
+            self.log_err("send_command failed: {}".format(e))
 
-                # If command is a listen command then an answer is required
-                if requiredAnswer:
-                    reciv = ''
-                    exit = 0
-                    while exit < 2500:
-                        retValue = self._connection.read(45)
-                        logger.debug(
-                            "ComfoAir __command_send(): Read: " + self.__ByteToHex(retValue))
-                        if len(retValue) > 0:
-                            sin = self.__ByteToHex(retValue)
-                            reciv = reciv + sin
-                            exit = 0
-                        else:
-                            exit += 1
-
-                        if reciv.endswith("07 0F"):
-                            if reciv[-8:] != "07 07 0F":
-                                logger.debug(
-                                    "ComfoAir __command_send(): End of answer")
-                                break
-
-                    if self._connection.write(ackbytes) != 2:
-                        logger.error(
-                            "ComfoAir __command_send(): Number of send bytes are not equal to command string")
-                        return None
-
-                    if reciv == "":
-                        logger.error(
-                            "ComfoAir __command_send(): No data received")
-                        return None
-
-                    reciv = reciv.replace(" ", "")
-                    # while string end not equal to "070F"
-                    while len(reciv) > 3 and reciv[-4:] != "070F":
-                        reciv = reciv[-2:]
-
-                    # Remove 070F at end of string
-                    reciv = reciv[0:-4]
-                    logger.debug(
-                        "ComfoAir __command_send(): String without 070F at end: " + reciv)
-
-                    # Remove 07F3 at end of string
-                    if reciv[-4:] == "07F3":
-                        reciv = reciv[0:-4]
-                        logger.debug(
-                            "ComfoAir __command_send(): String without 07F3 at end: " + reciv)
-
-                    logger.debug(
-                        "ComfoAir __command_send(): First two Bytes = " + reciv[0:4])
-
-                    while len(reciv) > 3 and reciv[0:4] != "07F0":
-                        reciv = reciv[2:]
-
-                    reciv = reciv[4:]
-                    logger.debug(
-                        "ComfoAir __command_send(): Reciv without 07F0 at begin: " + reciv)
-
-                    # hier muss noch eine Überprüfung gemacht werden ob nicht
-                    # versehentlich mehrere Datenstrings in einem datenpaket
-                    # enthalten sind
-
-                    # Seperate checksum from recieved string
-                    checksum = 0
-                    checksum = reciv[-2:]
-                    logger.debug(
-                        "ComfoAir __command_send(): Read checksum: " + checksum)
-                    reciv = reciv[0:-2]
-                    logger.debug(
-                        "ComfoAir __command_send(): Data string without checksum: " + reciv)
-
-                    # calculate checksum for received string
-                    rcv_checksum = self.__calculate_checksum(reciv)
-
-                    logger.debug(
-                        "ComfoAir __command_send(): Calculate checksum for received string: " + rcv_checksum)
-
-                    if str(rcv_checksum).upper() == str(checksum).upper():
-                        logger.debug(
-                            "ComfoAir __command_send(): Checksums are equal")
-
-                        # remove doubles 07
-                        logger.debug(
-                            "ComfoAir __command_send(): String before 07 cleaning: " + reciv)
-                        reciv = re.sub("0707", "07", reciv)
-                        logger.debug(
-                            "ComfoAir __command_send(): String after 07 cleaning: " + reciv)
-
-                        # identify temperature
-                        if re.search("00D209", reciv) is not None:
-                            t1 = self.__getTemperature(reciv[6:8])
-                            t2 = self.__getTemperature(reciv[8:10])
-                            t3 = self.__getTemperature(reciv[10:12])
-                            t4 = self.__getTemperature(reciv[12:14])
-                            t5 = self.__getTemperature(reciv[14:16])
-                            t7 = self.__getTemperature(reciv[18:20])
-                            logger.debug("ComfoAir __command_send(): Comfort temperature (Soll) = " + str(t1) + "; Outdoor temperature (Aussen) = " + str(t2) + "; Incoming air temperature (Zuluft)= " +
-                                         str(t3) + "; Outgoing air temperature(Abluft) = " + str(t4) + "; Exit air temperature(Fortluft) = " + str(t5) + "; EWT temperature = " + str(t7))
-
-                            answer = str(t1) + "/" + str(t2) + "/" + str(t3) + \
-                                "/" + str(t4) + "/" + \
-                                str(t5) + "/" + str(t7)
-
-                        # Status Ventilator
-                        elif re.search("000C06", reciv) is not None:
-                            vent_zul = int(reciv[6:8], 16)
-                            vent_abl = int(reciv[8:10], 16)
-                            vent_zul_um = 1875000 / int(reciv[10:14], 16)
-                            vent_abl_um = 1875000 / int(reciv[14:18], 16)
-                            logger.debug("ComfoAir __command_send(): Incoming vent(Zuluft) = " + str(vent_zul) + "% " +
-                                         str(vent_zul_um) + "U/min; Outgoing vent(Abluft) = " + str(vent_abl) + "% " + str(vent_abl_um) + "U/min")
-
-                            answer = str(vent_zul) + "/" + str(vent_zul_um) + \
-                                "/" + str(vent_abl) + \
-                                "/" + str(vent_abl_um)
-
-                        # Current state
-                        elif re.search("00CE0E", reciv) is not None:
-                            #currentState = reciv[22:24]
-                            currentState = int(reciv[22:24], 16)
-                            logger.debug(
-                                "ComfoAir __command_send(): Current State = " + str(currentState))
-
-                            #answer = str(currentState[-1:])
-                            answer = str(currentState)
-
-                        # Current state of bypass
-                        elif re.search("000E04", reciv) is not None:
-                            currentBypass = int(reciv[6:8], 16)
-                            logger.debug(
-                                "ComfoAir __command_send(): Current bypass state = " + str(currentBypass))
-
-                            answer = str(currentBypass)
-
-                        # Filter operating hours
-                        elif re.search("00DE14", reciv) is not None:
-                            filterHour = int(reciv[36:41], 16)
-                            logger.debug(
-                                "ComfoAir __command_send(): Filter operating hours = " + str(filterHour))
-
-                            answer = str(filterHour)
-
-                        # Bathswitch active?
-                        elif re.search("000402", reciv) is not None:
-                            bathSwitch = int(reciv[8:10], 16)
-                            logger.debug(
-                                "ComfoAir __command_send(): Bathswitch = " + str(bathSwitch))
-
-                            answer = str(bathSwitch)
-                    else:
-                        logger.debug(
-                            "ComfoAir __command_send(): Checksum are not equal")
-                else:
-                    retValue = self._connection.read(45)
-                    logger.debug("ComfoAir __command_send(): Read: " +
-                                 self.__ByteToHex(retValue))
-                    if (self.__ByteToHex(retValue)).split(" ") == "07F3":
-                            return None
-            else:
-                logger.error(
-                    "ComfoAir __command_send():Number of send bytes are not equal to command string")
-
-            return answer
-
-        except ValueError as exception:
-            logger.error("ComfoAir __command_send():" + exception.message)
-        finally:
+        finally:            
+            # At the end, release the lock
             self._lock.release()
 
-    def __getTemperature(self, hexStr):
-        return int(hexStr, 16) / 2 - 20
+    def parse_response(self, response):
+        #resph = self.bytes2int(response)
+        self.log_info('Successfully received response: {}'.format(self.bytes2hexstring(response)))
 
-    def __getComfoAirTemperature(self, temp):
-        temp = (temp + 20) * 2
-        return hex(temp)[-2:]
+        # A telegram looks like this: start sequence (2 bytes), command (2 bytes), data length (1 byte), data, checksum (1 byte), end sequence (2 bytes, already cut away)
+        commandcodebytes = response[2:4]
+        commandcodebytes[1] -= self._reponsecommandinc # The request command of this response is -1 (for comfoair 350)
+        commandcodebytes.append(0) # Add a data length byte of 0 (always true for read commands)
+        commandcode = self.bytes2int(commandcodebytes)
 
-    def __HexToByte(self, hexStr):
+        # Remove begin and checksum to get the data
+        rawdatabytes = response[5:-3]
 
-        bytes = []
+        # Decode special characters
+        databytes = self.decode_specialchars(rawdatabytes)
+        self.log_debug('Corresponding read command: {}, decoded data: {} (raw: {})'.format(self.bytes2hexstring(commandcodebytes), self.bytes2hexstring(databytes), self.bytes2hexstring(rawdatabytes)))
 
-        hexStr = ''.join(hexStr.split(" "))
+        # Validate checksum
+        packetpart = bytearray()
+        packetpart.extend(response[2:5]) # Command and data length
+        packetpart.extend(databytes) # Decoded data bytes
+        checksum = self.calc_checksum(packetpart)
+        receivedchecksum = response[len(response) - len(self._packetend) - 1]
+        if (receivedchecksum != checksum):
+            self.log_err('Calculated checksum of {} does not match received checksum of {}! Ignoring reponse.'.format(checksum, receivedchecksum))
+            return
 
-        for i in range(0, len(hexStr), 2):
-            bytes.append(chr(int(hexStr[i:i + 2], 16)))
+        # Find items using this response command
+        if commandcode in self._params.keys():
+            # Iterate over all corresponding items
+            for i in range(0, len(self._params[commandcode]['items'])):
+                item = self._params[commandcode]['items'][i]
+                commandname = self._params[commandcode]['commandname'][i]
 
-        return ''.join(bytes)
+                # Get command config
+                commandconf = self._commandset[commandname]
+                commandtype = commandconf['Type']
+                commandvaluebytes = commandconf['ValueBytes']
+                commandresppos = 0
+                if 'ResponsePosition' in commandconf:
+                    commandresppos = commandconf['ResponsePosition']
+                commandtransform = ''
+                if 'ValueTransform' in commandconf:
+                    commandtransform = commandconf['ValueTransform']
 
-    def __ByteToHex(self, byteStr):
-        return ''.join(["%02X " % ord(x) for x in byteStr]).strip()
+                # Is there enough data for the configured position?
+                index = commandresppos - 1
+                if index + commandvaluebytes <= len(databytes):
+                    # Extract value
+                    valuebytes = databytes[index:index + commandvaluebytes]
+                    rawvalue = self.bytes2int(valuebytes)
+                
+                    # Tranform value
+                    value = self.value_transform(rawvalue, commandtype, commandtransform)
+                    self.log_debug('Matched command {} and read transformed value {} (raw value was {}) from byte position {} and byte length {}.'.format(commandname, value, rawvalue, commandresppos, commandvaluebytes))
+
+                    # Update item
+                    item(value, 'ComfoAir')
+                else:
+                    self.log_err('Telegram did not contain enough data bytes for the configured command {} to extract a value!'.format(commandname))
+
+    def run(self):
+        self.alive = True
+        self._sh.scheduler.add('ComfoAir-init', self.send_init_commands, prio=5, cycle=600, offset=2)
+        maxloops = 20
+        loops = 0 
+        while self.alive and not self._initread and loops < maxloops:  # wait for init read to finish
+            time.sleep(0.5)
+            loops += 1
+        self._sh.scheduler.remove('ComfoAir-init')
+                
+    def stop(self):
+        self._sh.scheduler.remove('ComfoAir-cyclic')
+        self.alive = False
+        self.disconnect()
+       
+    def send_init_commands(self):
+        try:
+            # Do the init read commands
+            if self._init_cmds != []:
+                if self.connected:
+                    self.log_info('Starting initial read commands.')
+                    for commandcode in self._init_cmds:
+                        commandname = self.commandname_by_commandcode(commandcode)
+                        self.send_command(commandname)
+    
+            # Find the shortest cycle
+            shortestcycle = -1
+            for commandname in list(self._cyclic_cmds.keys()):
+                entry = self._cyclic_cmds[commandname]
+                if shortestcycle == -1 or entry['cycle'] < shortestcycle:
+                    shortestcycle = entry['cycle']
+    
+            # Start the worker thread
+            if shortestcycle != -1:
+                # Balance unnecessary calls and precision
+                workercycle = int(shortestcycle / 2)
+                self._sh.scheduler.add('ComfoAir-cyclic', self.handle_cyclic_cmds, cycle=workercycle, prio=5, offset=0)
+                self.log_info('Added cyclic worker thread ({} sec cycle). Shortest item update cycle found: {} sec.'.format(workercycle, shortestcycle))
+        finally:
+            self._initread = True
+
+    def remove_ack_begin(self, packet):
+        # Cut old ACK responses from ComfoAir before the real message
+        acklen = len(self._acknowledge)
+        while len(packet) >= acklen and packet[0:acklen] == self._acknowledge:
+            packet = packet[acklen:]
+        return packet
+    
+    def calc_checksum(self, packetpart):
+        return (sum(packetpart) + 173) % 256
+    
+    def log_debug(self, text):    
+        logger.debug('ComfoAir: {}'.format(text))    
+
+    def log_info(self, text):    
+        logger.info('ComfoAir: {}'.format(text))    
+
+    def log_err(self, text):    
+        logger.error('ComfoAir: {}'.format(text))    
+    
+    def int2bytes(self, value, length):
+        # Limit value to the passed byte length
+        value = value % (2 ** (length * 8))
+        return value.to_bytes(length, byteorder='big')
+    
+    def bytes2int(self, bytesvalue):
+        return int.from_bytes(bytesvalue, byteorder='big', signed=False)
+    
+    def bytes2hexstring(self, bytesvalue):
+        return ":".join("{:02x}".format(c) for c in bytesvalue)
+                
+    def encode_specialchars(self, packet):
+        specialchar = self._controlset['SpecialCharacter']
+        encodedpacket = bytearray()
+        for count in range(len(packet)):
+            char = packet[count]
+            encodedpacket.append(char)
+            if char == specialchar:
+                # Encoding works by doubling the special char
+                self.log_debug('Encoded special char at position {} of data bytes {}.'.format(count, self.bytes2hexstring(packet)))
+                encodedpacket.append(char)
+        #self.log_debug('Encoded data bytes: {}.'.format(encodedpacket))
+        return encodedpacket
+    
+    def decode_specialchars(self, packet):
+        specialchar = self._controlset['SpecialCharacter']
+        decodedpacket = bytearray()
+        prevchar = ''
+        specialcharremoved = 0
+        for count in range(len(packet)):
+            char = packet[count]
+            if count > 0:
+                prevchar = packet[count - 1]
+            if char == specialchar and prevchar == specialchar and specialcharremoved == 0:
+                # Decoding works by dropping double sepcial chars
+                self.log_debug('Decoded special char at position {} of packet {}.'.format(count, self.bytes2hexstring(packet)))
+                specialcharremoved = 1
+            else:
+                decodedpacket.append(char)
+                # Reset dropping marker
+                specialcharremoved = 0
+        return decodedpacket
+    
+    def value_transform(self, value, commandtype, transformmethod):
+        if transformmethod == 'Temperature':
+            if commandtype == 'Read':
+                return value / 2 - 20
+            elif commandtype == 'Write':
+                return (value + 20) * 2
+        elif transformmethod == 'RPM':
+            if commandtype == 'Read':
+                return int(1875000 / value)
+            elif commandtype == 'Write':
+                return int(1875000 / value)
+        return value
+    
+    def commandname_by_commandcode(self, commandcode):
+        for commandname in self._commandset.keys():
+            if self._commandset[commandname]['Command'] == commandcode:
+                return commandname
+        return None

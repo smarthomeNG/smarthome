@@ -52,9 +52,9 @@ class iCal():
     def update_item(self, item, caller=None, source=None, dest=None):
         pass
 
-    def __call__(self, ics, delta=1, offset=0):
+    def __call__(self, ics, delta=1, offset=0, username=None, password=None, timeout=2):
         if ics.startswith('http'):
-            ical = self._sh.tools.fetch_url(ics)
+            ical = self._sh.tools.fetch_url(ics, username=username, password=password, timeout=timeout)
             if ical is False:
                 return {}
             ical = ical.decode()
@@ -106,10 +106,8 @@ class iCal():
         if par.startswith('TZID='):
             tmp, par, timezone = par.partition('=')
         if 'T' in val:  # ISO datetime
-            if 'Z' in val:
-                dt = datetime.datetime.strptime(val, "%Y%m%dT%H%M%SZ%z")
-            else:
-                dt = datetime.datetime.strptime(val, "%Y%m%dT%H%M%S")
+            val, sep, off = val.partition('Z')
+            dt = datetime.datetime.strptime(val, "%Y%m%dT%H%M%S")
         else:  # date
             y = int(val[0:4])
             m = int(val[4:6])

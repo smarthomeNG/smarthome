@@ -40,7 +40,7 @@ def parse(filename, config=None):
     if config is None:
         config = collections.OrderedDict()
     item = config
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='UTF-8') as f:
         linenu = 0
         parent = collections.OrderedDict()
         for raw in f.readlines():

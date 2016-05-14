@@ -35,12 +35,16 @@ class Scenes():
             logger.warning("Directory scenes not found. Ignoring scenes.".format(self._scenes_dir))
             return
         for item in smarthome.return_items():
-            if item._type == 'scene':
+            if item.type() == 'scene':
                 scene_file = "{}{}.conf".format(self._scenes_dir, item.id())
                 try:
-                    with open(scene_file, 'r') as f:
+                    with open(scene_file, 'r', encoding='UTF-8') as f:
                         reader = csv.reader(f, delimiter=' ')
                         for row in reader:
+                            if row == []:  # ignore empty lines
+                                continue
+                            if row[0][0] == '#':  # ignore comments
+                                continue
                             ditem = smarthome.return_item(row[1])
                             if ditem is None:
                                 ditem = smarthome.return_logic(row[1])

@@ -1,12 +1,8 @@
----
-title: wetter.com Plugin
-layout: default
-summary: load and parse wetter.com weather forecast via API
----
+# wetter.com
 
 # Requirements
 
-wetter.com account with project, recommended: 3 days, a√∂ll data transmitted
+wetter.com account with project, recommended: 3 days, all data transmitted
 
 ## Supported Hardware
 
@@ -42,328 +38,232 @@ none
                 [[[[[temperatur]]]]]
                     [[[[[[max]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[min]]]]]]
                         type = num
-                        visu = yes
                 [[[[[text]]]]]
                     type = str
-                    visu = yes
                 [[[[[code]]]]]
                     type = num
-                    visu = yes
                 [[[[[wind]]]]]
                     [[[[[[geschwindigkeit]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[richtung]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[[text]]]]]]]
                         type = str
-                        visu = yes
                 [[[[[niederschlag]]]]]
                     type = num
-                    visu = yes
             [[[[mittag]]]]
                 [[[[[temperatur]]]]]
                     [[[[[[max]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[min]]]]]]
                         type = num
-                        visu = yes
                 [[[[[text]]]]]
                     type = str
-                    visu = yes
                 [[[[[code]]]]]
                     type = num
-                    visu = yes
                 [[[[[wind]]]]]
                     [[[[[[geschwindigkeit]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[richtung]]]]]]
                         type = num
-                        visu = yes
                         [[[[[[[text]]]]]]]
                             type = str
-                            visu = yes
                 [[[[[niederschlag]]]]]
                     type = num
-                    visu = yes
              [[[[spaet]]]]
                 [[[[[temperatur]]]]]
                     [[[[[[max]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[min]]]]]]
                         type = num
-                        visu = yes
                 [[[[[text]]]]]
                     type = str
-                    visu = yes
                 [[[[[code]]]]]
                     type = num
-                    visu = yes
                 [[[[[wind]]]]]
                     [[[[[[geschwindigkeit]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[richtung]]]]]]
                         type = num
-                        visu = yes
                         [[[[[[[text]]]]]]]
                             type = str
-                            visu = yes
                 [[[[[niederschlag]]]]]
                     type = num
-                    visu = yes
              [[[[nacht]]]]
                 [[[[[temperatur]]]]]
                     [[[[[[max]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[min]]]]]]
                         type = num
-                        visu = yes
                 [[[[[text]]]]]
                     type = str
-                    visu = yes
                 [[[[[code]]]]]
                     type = num
-                    visu = yes
                 [[[[[wind]]]]]
                     [[[[[[geschwindigkeit]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[richtung]]]]]]
                         type = num
-                        visu = yes
                         [[[[[[[text]]]]]]]
                             type = str
-                            visu = yes
                 [[[[[niederschlag]]]]]
                     type = num
-                    visu = yes
         [[[morgen]]]
             [[[[frueh]]]]
                 [[[[[temperatur]]]]]
                     [[[[[[max]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[min]]]]]]
                         type = num
-                        visu = yes
                 [[[[[text]]]]]
                     type = str
-                    visu = yes
                 [[[[[code]]]]]
                     type = num
-                    visu = yes
                 [[[[[wind]]]]]
                     [[[[[[geschwindigkeit]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[richtung]]]]]]
                         type = num
-                        visu = yes
                         [[[[[[[text]]]]]]]
                             type = str
-                            visu = yes
                 [[[[[niederschlag]]]]]
                     type = num
-                    visu = yes
             [[[[mittag]]]]
                 [[[[[temperatur]]]]]
                     [[[[[[max]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[min]]]]]]
                         type = num
-                        visu = yes
                 [[[[[text]]]]]
                     type = str
-                    visu = yes
                 [[[[[code]]]]]
                     type = num
-                    visu = yes
                 [[[[[wind]]]]]
                     [[[[[[geschwindigkeit]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[richtung]]]]]]
                         type = num
-                        visu = yes
                         [[[[[[[text]]]]]]]
                             type = str
-                            visu = yes
                 [[[[[niederschlag]]]]]
                     type = num
-                    visu = yes
              [[[[spaet]]]]
                 [[[[[temperatur]]]]]
                     [[[[[[max]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[min]]]]]]
                         type = num
-                        visu = yes
                 [[[[[text]]]]]
                     type = str
-                    visu = yes
                 [[[[[code]]]]]
                     type = num
-                    visu = yes
                 [[[[[wind]]]]]
                     [[[[[[geschwindigkeit]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[richtung]]]]]]
                         type = num
-                        visu = yes
                         [[[[[[[text]]]]]]]
                             type = str
-                            visu = yes
                 [[[[[niederschlag]]]]]
                     type = num
-                    visu = yes
              [[[[nacht]]]]
                 [[[[[temperatur]]]]]
                     [[[[[[max]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[min]]]]]]
                         type = num
-                        visu = yes
                 [[[[[text]]]]]
                     type = str
-                    visu = yes
                 [[[[[code]]]]]
                     type = num
-                    visu = yes
                 [[[[[wind]]]]]
                     [[[[[[geschwindigkeit]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[richtung]]]]]]
                         type = num
-                        visu = yes
                         [[[[[[[text]]]]]]]
                             type = str
-                            visu = yes
                 [[[[[niederschlag]]]]]
                     type = num
-                    visu = yes
         [[[uebermorgen]]]
             [[[[frueh]]]]
                 [[[[[temperatur]]]]]
                     [[[[[[max]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[min]]]]]]
                         type = num
-                        visu = yes
                 [[[[[text]]]]]
                     type = str
-                    visu = yes
                 [[[[[code]]]]]
                     type = num
-                    visu = yes
                 [[[[[wind]]]]]
                     [[[[[[geschwindigkeit]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[richtung]]]]]]
                         type = num
-                        visu = yes
                         [[[[[[[text]]]]]]]
                             type = str
-                            visu = yes
                 [[[[[niederschlag]]]]]
                     type = num
-                    visu = yes
             [[[[mittag]]]]
                 [[[[[temperatur]]]]]
                     [[[[[[max]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[min]]]]]]
                         type = num
-                        visu = yes
                 [[[[[text]]]]]
                     type = str
-                    visu = yes
                 [[[[[code]]]]]
                     type = num
-                    visu = yes
                 [[[[[wind]]]]]
                     [[[[[[geschwindigkeit]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[richtung]]]]]]
                         type = num
-                        visu = yes
                         [[[[[[[text]]]]]]]
                             type = str
-                            visu = yes
                 [[[[[niederschlag]]]]]
                     type = num
-                    visu = yes
              [[[[spaet]]]]
                 [[[[[temperatur]]]]]
                     [[[[[[max]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[min]]]]]]
                         type = num
-                        visu = yes
                 [[[[[text]]]]]
                     type = str
-                    visu = yes
                 [[[[[code]]]]]
                     type = num
-                    visu = yes
                 [[[[[wind]]]]]
                     [[[[[[geschwindigkeit]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[richtung]]]]]]
                         type = num
-                        visu = yes
                         [[[[[[[text]]]]]]]
                             type = str
-                            visu = yes
                 [[[[[niederschlag]]]]]
                     type = num
-                    visu = yes
              [[[[nacht]]]]
                 [[[[[temperatur]]]]]
                     [[[[[[max]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[min]]]]]]
                         type = num
-                        visu = yes
                 [[[[[text]]]]]
                     type = str
-                    visu = yes
                 [[[[[code]]]]]
                     type = num
-                    visu = yes
                 [[[[[wind]]]]]
                     [[[[[[geschwindigkeit]]]]]]
                         type = num
-                        visu = yes
                     [[[[[[richtung]]]]]]
                         type = num
-                        visu = yes
                         [[[[[[[text]]]]]]]
                             type = str
-                            visu = yes
                 [[[[[niederschlag]]]]]
                     type = num
-                    visu = yes
 
 </pre>
 
@@ -389,7 +289,7 @@ items = { d0: sh.wetter.vorhersage.heute, d1: sh.wetter.vorhersage.morgen, d2: s
 for date in forecast:
     if date.date() in items:
         base = items[date.date()]
-        if date.hour == 5:
+        if date.hour == 6:
             frame = base.frueh
         elif date.hour == 11:
             frame = base.mittag
@@ -414,17 +314,17 @@ This logic will parse the weather data and put it in the example items.conf
 above. Use etc/logic.conf for cyclic call (900s or so, requests are limited
 at 10000 / month)
 
-# Methodes
+# Methods
 
 ## search(location)
 Uses wetter.com to search for your city_code. method will return an
-empty dictionary if no match is found. If more than one math is found,
+empty dictionary if no match is found. If more than one match is found,
 the dictionary will contain at most 20 matches, best match first
 
 ## forecast(city_code)
 Returns forecast data for your city_code (use search or wetter.com
 website to find it). Forecast data is returned as dictionary for each
-date/time (usuall√y three days at four times). Values are min. temperature,
+date/time (usually three days at four times). Values are min. temperature,
 max. temperature, weather condition text, condensation probability, 
 wind speed, wind direction in degree, wind direction text, 
 weather condition code (can be used to select appropriate icon)

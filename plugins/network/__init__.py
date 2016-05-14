@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
-#  Copyright 2012-2013 Marcus Popp                         marcus@popp.mx
+#  Copyright 2012-2014 Marcus Popp                         marcus@popp.mx
 #########################################################################
 #  This file is part of SmartHome.py.    http://mknx.github.io/smarthome/
 #
@@ -20,7 +20,6 @@
 #########################################################################
 
 import logging
-import threading
 import socket
 import urllib.request
 import urllib.parse
@@ -36,12 +35,11 @@ class TCPHandler(lib.connection.Stream):
         lib.connection.Stream.__init__(self, sock, source)
         self.terminator = b'\n'
         self.parser = parser
-        self._lock = threading.Lock()
         self.dest = dest
         self.source = source
 
     def found_terminator(self, data):
-        self.parser(self.source, self.dest, data.decode().strip())
+        self.parser(self.source, self.dest, data.decode(errors="ignore").strip())
         self.close()
 
 
@@ -66,12 +64,11 @@ class HTTPHandler(lib.connection.Stream):
         lib.connection.Stream.__init__(self, sock, source)
         self.terminator = b"\r\n\r\n"
         self.parser = parser
-        self._lock = threading.Lock()
         self.dest = dest
         self.source = source
 
     def found_terminator(self, data):
-        for line in data.decode().splitlines():
+        for line in data.decode(errors="ignore").splitlines():
             if line.startswith('GET'):
                 request = line.split(' ')[1].strip('/')
                 if self.parser(self.source, self.dest, urllib.parse.unquote(request)) is not False:
@@ -113,7 +110,7 @@ class UDPDispatcher(lib.connection.Server):
         except Exception as e:
             logger.exception("{}: {}".format(self._name, e))
             return
-        self.parser(ip, self.dest, data.decode().strip())
+        self.parser(ip, self.dest, data.decode(errors="ignore").strip())
 
 
 class Network():
@@ -144,10 +141,10 @@ class Network():
             sock.close()
             del(sock)
         except Exception as e:
-            logger.warning("UDP: Problem sending data to {}:{}: ".format(host, port, e))
+            logger.warning("UDP: Problem sending data to {}:{}: {}".format(host, port, e))
             pass
         else:
-            logger.debug("UDP: Sending data to {}:{}: ".format(host, port, data))
+            logger.debug("UDP: Sending data to {}:{}: {}".format(host, port, data))
 
     def add_listener(self, proto, ip, port, acl='*', generic=False):
         dest = proto + ':' + ip + ':' + port
@@ -289,9 +286,9 @@ class Network():
         if 'nw_udp_send' in item.conf:
             addr, __, message = item.conf['nw_udp_send'].partition('=')
             if message is None:
-                message = str(item()).encode()
+                message = str(item())
             else:
-                message = message.replace('itemvalue', str(item())).encode()
+                message = message.replace('itemvalue', str(item()))
             host, __, port = addr.partition(':')
             self.udp(host, port, message)
 

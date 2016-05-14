@@ -34,109 +34,144 @@ class iAQ_Stick():
     def __init__(self, smarthome, update_cycle = "10"):
         self._sh = smarthome
         self._update_cycle = int(update_cycle)
-        self._info_tags = {}
+        self._items = {}
+        self._devs = {}
 
-    def xfer_type1(self, msg):
-        out_data = bytes('@{:04X}{}\n@@@@@@@@@@'.format(self._type1_seq, msg), 'utf-8')
-        self._type1_seq = (self._type1_seq + 1) & 0xFFFF
-        ret = self._dev.write(0x02, out_data[:16], self._intf, 1000)
+    def read(self, dev):
         in_data = bytes()
-        while True:
-            ret = bytes(self._dev.read(0x81, 0x10, self._intf, 1000))
-            if len(ret) == 0:
-                break
-            in_data += ret
-        return in_data.decode('iso-8859-1')
-
-    def xfer_type2(self, msg):
-        out_data = bytes('@', 'utf-8') + self._type2_seq.to_bytes(1, byteorder='big') + bytes('{}\n@@@@@@@@@@@@@'.format(msg), 'utf-8')
-        self._type2_seq = (self._type2_seq + 1) if (self._type2_seq < 0xFF) else 0x67
-        ret = self._dev.write(0x02, out_data[:16], self._intf, 1000)
-        in_data = bytes()
-        while True:
-            ret = bytes(self._dev.read(0x81, 0x10, self._intf, 1000))
-            if len(ret) == 0:
-                break
-            in_data += ret
+        try:
+            while True:
+                ret = bytes(dev.read(0x81, 0x10, self._intf, 1000))
+                if len(ret) == 0:
+                    break
+                in_data += ret
+        except Exception as e:
+            logger.error("iaqstick: read - {}".format(e))
+            pass
         return in_data
 
-    def run(self):
-        self._dev = usb.core.find(idVendor=0x03eb, idProduct=0x2013)
-        if self._dev is None:
-            logger.error('iaqstick: iAQ Stick not found')
-            return
-        self._intf = 0
-        self._type1_seq = 0x0001
-        self._type2_seq = 0x67
-        
+    def xfer_type1(self, dev, msg):
+        out_data = bytes('@{:04X}{}\n@@@@@@@@@@'.format(self._devs[dev]['type1_seq'], msg), 'utf-8')
+        self._devs[dev]['type1_seq'] = (self._devs[dev]['type1_seq'] + 1) & 0xFFFF
+        ret = dev.write(0x02, out_data[:16], self._intf, 1000)
+        return self.read(dev).decode('iso-8859-1')
+
+    def xfer_type2(self, dev, msg):
+        out_data = bytes('@', 'utf-8') + self._devs[dev]['type2_seq'].to_bytes(1, byteorder='big') + bytes('{}\n@@@@@@@@@@@@@'.format(msg), 'utf-8')
+        self._devs[dev]['type2_seq'] = (self._devs[dev]['type2_seq'] + 1) if (self._devs[dev]['type2_seq'] < 0xFF) else 0x67
+        ret = dev.write(0x02, out_data[:16], self._intf, 1000)
+        in_data = bytes()
+        return self.read(dev)
+
+    def _init_dev(self, dev):
         try:
-            if self._dev.is_kernel_driver_active(self._intf):
-                self._dev.detach_kernel_driver(self._intf)
-            
-            self._dev.set_configuration(0x01)
-            usb.util.claim_interface(self._dev, self._intf)
-            self._dev.set_interface_altsetting(self._intf, 0x00)
-            
-            manufacturer = usb.util.get_string(self._dev, 0x101, 0x01, 0x409)
-            product = usb.util.get_string(self._dev, 0x101, 0x02, 0x409)
-            logger.info('iaqstick: Manufacturer: {} - Product: {}'.format(manufacturer, product))
-            ret = self.xfer_type1('*IDN?')
-            #print(ret)
-            self._dev.write(0x02, bytes('@@@@@@@@@@@@@@@@', 'utf-8'), self._intf, 1000)
-            ret = self.xfer_type1('KNOBPRE?')
-            #print(ret)
-            ret = self.xfer_type1('WFMPRE?')
-            #print(ret)
-            ret = self.xfer_type1('FLAGS?')
-            #print(ret)
+            if dev.is_kernel_driver_active(self._intf):
+                dev.detach_kernel_driver(self._intf)
+            dev.set_configuration(0x01)
+            usb.util.claim_interface(dev, self._intf)
+            dev.set_interface_altsetting(self._intf, 0x00)
+            vendor = usb.util.get_string(dev, 0x101, 0x01, 0x409)
+            product = usb.util.get_string(dev, 0x101, 0x02, 0x409)
+            self._devs[dev] = {'type1_seq':0x0001, 'type2_seq':0x67}
+            ret = self.xfer_type1(dev, '*IDN?')
+            pos1 = ret.find('S/N:') + 4
+            id = '{:s}-{:d}'.format(bytes.fromhex(ret[pos1:pos1+12]).decode('ascii'), int(ret[pos1+14:pos1+20], 16))
+            logger.info('iaqstick: Vendor: {} / Product: {} / Stick-ID: {}'.format(vendor, product, id))
+            if (id not in self._items):
+                logger.warning('iaqstick: no specific item for Stick-ID {} - use \'iaqstick_id\' to distinguish multiple sticks!'.format(id))
+            #ret = self.xfer_type1(dev, 'KNOBPRE?')
+            #ret = self.xfer_type1(dev, 'WFMPRE?')
+            #ret = self.xfer_type1(dev, 'FLAGS?')
+            return id
         except Exception as e:
             logger.error("iaqstick: init interface failed - {}".format(e))
-        
-        self.alive = True 
+            return None
+
+    def run(self):
+        devs = usb.core.find(idVendor=0x03eb, idProduct=0x2013, find_all=True)
+        if devs is None:
+            logger.error('iaqstick: iAQ Stick not found')
+            return
+        logger.debug('iaqstick: {} iAQ Stick connected'.format(len(devs)))
+        self._intf = 0
+
+        for dev in devs:
+            id = self._init_dev(dev)
+            if id is not None:
+                self._devs[dev]['id'] = id
+
+        self.alive = True
         self._sh.scheduler.add('iAQ_Stick', self._update_values, prio = 5, cycle = self._update_cycle)
         logger.info("iaqstick: init successful")
 
     def stop(self):
         self.alive = False
-        try:
-            usb.util.release_interface(self._dev, self._intf)
-        except Exception as e:
-            logger.error("iaqstick: releasing interface failed - {}".format(e))
+        for dev in self._devs:
+            try:
+                usb.util.release_interface(dev, self._intf)
+                if dev.is_kernel_driver_active(self._intf):
+                    dev.detach_kernel_driver(self._intf)
+            except Exception as e:
+                logger.error("iaqstick: releasing interface failed - {}".format(e))
         try:
             self._sh.scheduler.remove('iAQ_Stick')
         except Exception as e:
             logger.error("iaqstick: removing iAQ_Stick from scheduler failed - {}".format(e))
 
     def _update_values(self):
-        #logger.debug("iaqstick: update")
-        try:
-            self.xfer_type1('FLAGGET?')
-            meas = self.xfer_type2('*TR')
-            ppm = int.from_bytes(meas[2:4], byteorder='little')
-            logger.debug('iaqstick: ppm: {}'.format(ppm))
-            #logger.debug('iaqstick: debug?: {}'.format(int.from_bytes(meas[4:6], byteorder='little')))
-            #logger.debug('iaqstick: PWM: {}'.format(int.from_bytes(meas[6:7], byteorder='little')))
-            #logger.debug('iaqstick: Rh: {}'.format(int.from_bytes(meas[7:8], byteorder='little')*0.01))
-            #logger.debug('iaqstick: Rs: {}'.format(int.from_bytes(meas[8:12], byteorder='little')))
-            if 'ppm' in self._info_tags:
-                for item in self._info_tags['ppm']['items']:
-                    item(ppm, 'iAQ_Stick', 'USB')
-        except Exception as e:
-            logger.error("iaqstick: update failed - {}".format(e))
+        logger.debug("iaqstick: updating {} sticks".format(len(self._devs)))
+        for dev in self._devs:
+            logger.debug("iaqstick: updating {}".format(self._devs[dev]['id']))
+            try:
+                self.xfer_type1(dev, 'FLAGGET?')
+                meas = self.xfer_type2(dev, '*TR')
+                ppm = int.from_bytes(meas[2:4], byteorder='little')
+                logger.debug('iaqstick: ppm: {}'.format(ppm))
+                #logger.debug('iaqstick: debug?: {}'.format(int.from_bytes(meas[4:6], byteorder='little')))
+                #logger.debug('iaqstick: PWM: {}'.format(int.from_bytes(meas[6:7], byteorder='little')))
+                #logger.debug('iaqstick: Rh: {}'.format(int.from_bytes(meas[7:8], byteorder='little')*0.01))
+                #logger.debug('iaqstick: Rs: {}'.format(int.from_bytes(meas[8:12], byteorder='little')))
+                id = self._devs[dev]['id']
+                if id in self._items:
+                    if 'ppm' in self._items[id]:
+                        for item in self._items[id]['ppm']['items']:
+                            item(ppm, 'iAQ_Stick', 'USB')
+                if '*' in self._items:
+                    if 'ppm' in self._items['*']:
+                        for item in self._items['*']['ppm']['items']:
+                            item(ppm, 'iAQ_Stick', 'USB')
+            except Exception as e:
+                logger.error("iaqstick: update failed - {}".format(e))
+                logger.error("iaqstick: Trying to recover ...")
+                broken_id = self._devs[dev]['id']
+                del self._devs[dev]
+                __devs = usb.core.find(idVendor=0x03eb, idProduct=0x2013, find_all=True)
+                for __dev in __devs:
+                    if (__dev not in self._devs):
+                        id = self._init_dev(__dev)
+                        if id == broken_id:
+                            logger.error("iaqstick: {} was ressurrected".format(id))
+                            self._devs[__dev]['id'] = id
+                        else:
+                            logger.error("iaqstick: found other yet unknown stick: {}".format(id))
 
     def parse_item(self, item):
         if 'iaqstick_info' in item.conf:
             logger.debug("parse item: {0}".format(item))
-            info_tag = item.conf['iaqstick_info'].lower()
-            if not info_tag in self._info_tags:
-                self._info_tags[info_tag] = {'items': [item], 'logics': []}
+            if 'iaqstick_id' in item.conf:
+                id = item.conf['iaqstick_id']
             else:
-                self._info_tags[info_tag]['items'].append(item)
+                id = '*'
+            info_tag = item.conf['iaqstick_info'].lower()
+            if not id in self._items:
+                self._items[id] = {'ppm': {'items': [item], 'logics': []}}
+            else:
+                self._items[id]['ppm']['items'].append(item)
         return None
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    myplugin = Plugin('iAQ_Stick')
+    myplugin = Plugin('iaqstick')
     myplugin.run()
 
 #Application Version: 2.19.0 (Id: Form1.frm 1053 2010-06-30 11:00:09Z patrik.arven@appliedsensor.com )
@@ -148,7 +183,7 @@ if __name__ == '__main__':
 #Hardware: C
 #Processor: ATmega32U4
 #Serial number: S/N:48303230303415041020
-#Web address: 
+#Web address:
 #Plot title: Air Quality Trend
 #
 #Channels: 5

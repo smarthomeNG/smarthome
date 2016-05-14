@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
-#  Copyright 2011 KNX-User-Forum e.V.           http://knx-user-forum.de/
+#  Copyright 2013 KNX-User-Forum e.V.           http://knx-user-forum.de/
 #########################################################################
 #  DLMS plugin for SmartHome.py.         http://mknx.github.io/smarthome/
 #
@@ -26,25 +26,31 @@ import re
 
 logger = logging.getLogger('DLMS')
 
-
 class DLMS():
 
-    def __init__(self, smarthome, serialport, baudrate="auto", update_cycle="60"):
+    def __init__(self, smarthome, serialport, baudrate="auto", update_cycle="60", use_checksum = True, reset_baudrate = True, no_waiting = False):
         self._sh = smarthome
-        self._update_cycle = int(update_cycle)
+        self._obis_codes = {}
+        self._init_seq = bytes('/?!\r\n', 'ascii')
+        self._request = bytearray('\x06000\r\n', 'ascii')
         if (baudrate.lower() == 'auto'):
             self._baudrate = -1
         else:
             self._baudrate = int(baudrate)
-        self._obis_codes = {}
-        self._serial = serial.Serial(
-            serialport, 300, bytesize=serial.SEVENBITS, parity=serial.PARITY_EVEN, timeout=2)
-        self._request = bytearray('\x06000\r\n', 'ascii')
+            pow2 = int(self._baudrate / 600)
+            self._request[2] = 0x30
+            while (pow2 > 0):
+                pow2 >>= 1
+                self._request[2] += 1
+        self._update_cycle = int(update_cycle)
+        self._use_checksum = smarthome.string2bool(use_checksum)
+        self._reset_baudrate = smarthome.string2bool(reset_baudrate)
+        self._no_waiting = smarthome.string2bool(no_waiting)
+        self._serial = serial.Serial(serialport, 300, bytesize=serial.SEVENBITS, parity=serial.PARITY_EVEN, timeout=2)
 
     def run(self):
         self.alive = True
-        self._sh.scheduler.add('DLMS', self._update_values,
-                               prio=5, cycle=self._update_cycle)
+        self._sh.scheduler.add('DLMS', self._update_values, prio=5, cycle=self._update_cycle)
 
     def stop(self):
         self.alive = False
@@ -54,83 +60,72 @@ class DLMS():
     def _update_values(self):
         logger.debug("dlms: update")
         start = time.time()
-        init_seq = bytes('/?!\r\n', 'ascii')
-        self._serial.flushInput()
-        self._serial.write(init_seq)
-        response = bytes()
-        prev_length = 0
         try:
+            if self._reset_baudrate:
+                self._serial.baudrate = 300
+                logger.debug("dlms: (re)set baudrate to 300 Baud")
+            self._serial.write(self._init_seq)
+            self._serial.drainOutput()
+            self._serial.flushInput()
+            response = bytes()
+            prev_length = 0
             while self.alive:
                 response += self._serial.read()
                 length = len(response)
                 # break if timeout or newline-character
-                if (length == prev_length) or ((length > len(init_seq)) and (response[-1] == 0x0a)):
+                if (response[-1] == 0x0a):
                     break
+                if (length == prev_length):
+                    logger.warning("dlms: read timeout! - response={}".format(response))
+                    return
                 prev_length = length
         except Exception as e:
             logger.warning("dlms: {0}".format(e))
-        # remove echoed chars if present
-        if (init_seq == response[:len(init_seq)]):
-            response = response[len(init_seq):]
-        if (len(response) >= 5) and ((response[4] - 0x30) in range(6)):
-            if (self._baudrate == -1):
-                baud_capable = 300 * (1 << (response[4] - 0x30))
-            else:
-                baud_capable = self._baudrate
-            if baud_capable > self._serial.baudrate:
-                try:
-                    logger.debug(
-                        "dlms: meter returned capability for higher baudrate {}".format(baud_capable))
-                    # change request to set higher baudrate
-                    self._request[2] = response[4]
-                    self._serial.write(self._request)
-                    logger.debug("dlms: trying to switch baudrate")
-                    switch_start = time.time()
-                    # Alt1:
-                    #self._serial.baudrate = baud_capable
-                    # Alt2:
-                    #settings = self._serial.getSettingsDict()
-                    #settings['baudrate'] = baud_capable
-                    # self._serial.applySettingsDict(settings)
-                    # Alt3:
-                    port = self._serial.port
-                    self._serial.close()
-                    del self._serial
-                    logger.debug("dlms: socket closed - creating new one")
-                    self._serial = serial.Serial(
-                        port, baud_capable, bytesize=serial.SEVENBITS, parity=serial.PARITY_EVEN, timeout=2)
-                    logger.debug(
-                        "dlms: Switching took: {:.2f}s".format(time.time() - switch_start))
-                    logger.debug("dlms: switch done")
-                except Exception as e:
-                    logger.warning("dlms: {0}".format(e))
-                    return
-            else:
-                self._serial.write(self._request)
-        response = bytes()
-        prev_length = 0
+        #logger.warning("dlms: response={}".format(response))
+        if (len(response) < 5) or ((response[4] - 0x30) not in range(6)):
+            logger.warning("dlms: malformed response to init seq={}".format(response))
+            return
+
+        if (self._baudrate == -1):
+            self._baudrate = 300 * (1 << (response[4] - 0x30))
+            logger.debug("dlms: meter returned capability for {} Baud".format(self._baudrate))
+            self._request[2] = response[4]
         try:
+            if not self._no_waiting:
+                time.sleep(0.5)
+            self._serial.write(self._request)
+            if not self._no_waiting:
+                time.sleep(0.25)
+            self._serial.drainOutput()
+            self._serial.flushInput()
+            if (self._baudrate != self._serial.baudrate):
+                # change request to set higher baudrate
+                logger.debug("dlms: switching to {} Baud".format(self._baudrate))
+                self._serial.baudrate = self._baudrate
+            response = bytes()
+            prev_length = 0
             while self.alive:
                 response += self._serial.read()
                 length = len(response)
-                # break if timeout or "ETX"
-                if (length == prev_length) or ((length >= 2) and (response[-2] == 0x03)):
+                if (not self._use_checksum and (response[-1] == 0x03)) or ((length > 1) and (response[-2] == 0x03)):
                     break
+                if (length == prev_length):
+                    logger.warning("dlms: read timeout! - response={}".format(response))
+                    return
                 prev_length = length
         except Exception as e:
             logger.warning("dlms: {0}".format(e))
-        logger.debug("dlms: Reading took: {:.2f}s".format(time.time() - start))
-        # remove echoed chars if present
-        if (self._request == response[:len(self._request)]):
-            response = response[len(self._request):]
-        # perform checks (start with STX, end with ETX, checksum match)
-        checksum = 0
-        for i in response[1:]:
-            checksum ^= i
-        if (len(response) < 5) or (response[0] != 0x02) or (response[-2] != 0x03) or (checksum != 0x00):
-            logger.warning(
-                "dlms: checksum/protocol error: response={} checksum={}".format(' '.join(hex(i) for i in response), checksum))
             return
+
+        logger.debug("dlms: reading took: {:.2f}s".format(time.time() - start))
+        if self._use_checksum:
+            # perform checks (start with STX, end with ETX, checksum match)
+            checksum = 0
+            for i in response[1:]:
+                checksum ^= i
+            if (len(response) < 5) or (response[0] != 0x02) or (response[-2] != 0x03) or (checksum != 0x00):
+                logger.warning("dlms: checksum/protocol error: response={} checksum={}".format(' '.join(hex(i) for i in response), checksum))
+                return
         #print(str(response[1:-4], 'ascii'))
         for line in re.split('\r\n', str(response[1:-4], 'ascii')):
             # if re.match('[0-9]+\.[0-9]\.[0-9](.+)', line): # allows only
@@ -143,14 +138,12 @@ class DLMS():
                     if (len(data) == 2):
                         logger.debug("dlms: {} = {}".format(data[0], data[1]))
                     else:
-                        logger.debug(
-                            "dlms: {} = {} {}".format(data[0], data[1], data[2]))
+                        logger.debug("dlms: {} = {} {}".format(data[0], data[1], data[2]))
                     if data[0] in self._obis_codes:
                         for item in self._obis_codes[data[0]]['items']:
                             item(data[1], 'DLMS', 'OBIS {}'.format(data[0]))
                 except Exception as e:
-                    logger.warning(
-                        "dlms: line={} exception={}".format(line, e))
+                    logger.warning("dlms: line={} exception={}".format(line, e))
 
     def parse_item(self, item):
         if 'dlms_obis_code' in item.conf:

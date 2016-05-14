@@ -64,7 +64,11 @@ class KNX(lib.connection.Client):
 
     def groupwrite(self, ga, payload, dpt, flag='write'):
         pkt = bytearray([0, 39])
-        pkt.extend(self.encode(ga, 'ga'))
+        try:
+            pkt.extend(self.encode(ga, 'ga'))
+        except:
+            logger.warning('KNX: problem encoding ga: {}'.format(ga))
+            return
         pkt.extend([0])
         pkt.extend(self.encode(payload, dpt))
         if flag == 'write':
@@ -79,27 +83,31 @@ class KNX(lib.connection.Client):
 
     def _cacheread(self, ga):
         pkt = bytearray([0, 116])
-        pkt.extend(self.encode(ga, 'ga'))
+        try:
+            pkt.extend(self.encode(ga, 'ga'))
+        except:
+            logger.warning('KNX: problem encoding ga: {}'.format(ga))
+            return
         pkt.extend([0, 0])
         self._send(pkt)
 
     def groupread(self, ga):
         pkt = bytearray([0, 39])
-        pkt.extend(self.encode(ga, 'ga'))
+        try:
+            pkt.extend(self.encode(ga, 'ga'))
+        except:
+            logger.warning('KNX: problem encoding ga: {}'.format(ga))
+            return
         pkt.extend([0, KNXREAD])
         self._send(pkt)
 
     def _send_time(self):
-        now = self._sh.now()
-        if self.time_ga:
-            self.groupwrite(self.time_ga, now, '10')
-        if self.date_ga:
-            self.groupwrite(self.date_ga, now.date(), '11')
+        self.send_time(self.time_ga, self.date_ga)
 
     def send_time(self, time_ga=None, date_ga=None):
         now = self._sh.now()
         if time_ga:
-            self.groupwrite(time_ga, now.time(), '10')
+            self.groupwrite(time_ga, now, '10')
         if date_ga:
             self.groupwrite(date_ga, now.date(), '11')
 
@@ -206,7 +214,7 @@ class KNX(lib.connection.Client):
                     item = self.gar[dst]['item']
                     self.groupwrite(dst, item(), item.conf['knx_dpt'], 'response')
                 if self.gar[dst]['logic'] is not None:
-                    self.gar[dst]['logic'].trigger('KNX', src, 'read', dst)
+                    self.gar[dst]['logic'].trigger('KNX', src, None, dst)
 
     def run(self):
         self.alive = True
@@ -268,18 +276,20 @@ class KNX(lib.connection.Client):
                 if ga not in self.gar:
                     self.gar[ga] = {'dpt': dpt, 'item': item, 'logic': None}
                 else:
-                    logger.warning("KNX: {0} knx_reply ({1}) already defined for {2}".format(item, ga, self.gar[ga]['item']))
+                    logger.warning("KNX: {0} knx_reply ({1}) already defined for {2}".format(item.id(), ga, self.gar[ga]['item']))
 
         if 'knx_send' in item.conf:
             if isinstance(item.conf['knx_send'], str):
                 item.conf['knx_send'] = [item.conf['knx_send'], ]
-            return self.update_item
-        elif 'knx_status' in item.conf:
+
+        if 'knx_status' in item.conf:
             if isinstance(item.conf['knx_status'], str):
                 item.conf['knx_status'] = [item.conf['knx_status'], ]
+
+        if 'knx_status' in item.conf or 'knx_send' in item.conf:
             return self.update_item
-        else:
-            return None
+
+        return None
 
     def parse_logic(self, logic):
         if 'knx_dpt' in logic.conf:

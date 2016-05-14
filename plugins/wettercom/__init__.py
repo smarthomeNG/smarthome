@@ -85,14 +85,18 @@ class wettercom():
                     hour, minute = time.attrib['value'].split(':')
                     d = datetime.datetime(int(year), int(month), int(day),
                                           int(hour))
-                    retval[d] = [time.find('tn').text,
-                                 time.find('tx').text,
-                                 time.find('w_txt').text,
-                                 time.find('pc').text,
-                                 time.find('ws').text,
-                                 time.find('wd').text,
-                                 time.find('wd_txt').text,
-                                 time.find('w').text]
+                    items = [time.find('tn'),
+                             time.find('tx'),
+                             time.find('w_txt'),
+                             time.find('pc'),
+                             time.find('ws'),
+                             time.find('wd'),
+                             time.find('wd_txt'),
+                             time.find('w')]
+
+                    retval[d] = []
+                    for item in items:
+                      retval[d].append(None if item is None else item.text)
 
             return retval
 

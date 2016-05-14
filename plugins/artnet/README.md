@@ -1,9 +1,4 @@
----
-title: Artnet sending Plugin
-layout: default
-summary: This Plugin supports sending ArtNet (DMX over Ethernet) packets
-author: mode@gmx.co.uk
----
+# Artnet
 
 # Requirements
 

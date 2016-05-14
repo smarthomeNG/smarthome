@@ -1,9 +1,4 @@
----
-title: Boxcar Notification Service
-layout: default
-summary: Push Service for iOS Devices
-author: mode@gmx.co.uk
----
+# Boxcar Notification Service
 
 # Requirements
 

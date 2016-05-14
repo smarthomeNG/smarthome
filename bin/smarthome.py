@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
-# Copyright 2011-2013 Marcus Popp                          marcus@popp.mx
+# Copyright 2011-2014 Marcus Popp                          marcus@popp.mx
 #########################################################################
 #  This file is part of SmartHome.py.    http://mknx.github.io/smarthome/
 #
@@ -49,8 +49,8 @@ import traceback
 #####################################################################
 logger = logging.getLogger('')
 BASE = '/'.join(os.path.realpath(__file__).split('/')[:-2])
-sys.path.append(BASE)
-sys.path.append(BASE + '/lib/3rd')
+sys.path.insert(0, BASE)
+sys.path.insert(1, BASE + '/lib/3rd')
 
 #####################################################################
 # Import 3rd Party Modules
@@ -77,13 +77,17 @@ import lib.orb
 #####################################################################
 MODE = 'default'
 LOGLEVEL = logging.INFO
-VERSION = '0.9'
+VERSION = '1.1.'
 TZ = gettz('UTC')
 try:
     os.chdir(BASE)
-    VERSION = subprocess.check_output(['git', 'describe', '--always', '--dirty=+'], stderr=subprocess.STDOUT).decode().strip('\n')
+    commit = subprocess.check_output(['git', 'describe', '--always'], stderr=subprocess.STDOUT).decode().strip('\n').split('-')[1]
+    VERSION += commit
+    branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], stderr=subprocess.STDOUT).decode().strip('\n')
+    if branch != 'master':
+        VERSION += ".dev"
 except Exception as e:
-    pass
+    VERSION += '0.man'
 
 
 #####################################################################
@@ -101,6 +105,7 @@ class LogHandler(logging.StreamHandler):
 
 
 class SmartHome():
+
     base_dir = BASE
     _plugin_conf = BASE + '/etc/plugin.conf'
     _env_dir = BASE + '/lib/env/'
@@ -121,7 +126,13 @@ class SmartHome():
     _utctz = TZ
 
     def __init__(self, smarthome_conf=BASE + '/etc/smarthome.conf'):
+
+        # set default timezone to UTC
         global TZ
+        self.tz = 'UTC'
+        os.environ['TZ'] = self.tz
+        self._tzinfo = TZ
+
         threading.currentThread().name = 'Main'
         self.alive = True
         self.version = VERSION
@@ -151,13 +162,6 @@ class SmartHome():
         signal.signal(signal.SIGTERM, self.stop)
 
         #############################################################
-        # Check Time
-        #############################################################
-        while datetime.date.today().isoformat() < '2013-10-24':  # XXX update date
-            time.sleep(5)
-            logger.info("Waiting for datetime update")
-
-        #############################################################
         # Logging
         #############################################################
         _logdate = "%Y-%m-%d %H:%M:%S"
@@ -182,6 +186,14 @@ class SmartHome():
             print("Error creating logfile {}: {}".format(self._logfile, e))
 
         #############################################################
+        # Check Time
+        #############################################################
+        while datetime.date.today().isoformat() < '2014-03-16':  # XXX update date
+            time.sleep(5)
+            print("Waiting for updated time.")
+            logger.info("Waiting for updated time.")
+
+        #############################################################
         # Catching Exceptions
         #############################################################
         sys.excepthook = self._excepthook
@@ -203,9 +215,10 @@ class SmartHome():
         #############################################################
         if hasattr(self, '_loglevel'):
             try:
-                logging.getLogger('').setLevel(vars(logging)[self._loglevel.upper()])
-            except:
-                pass
+                logger.setLevel(self._loglevel.upper())
+                log_file.setLevel(self._loglevel.upper())
+            except Exception as e:
+                logger.error("Problem setting loglevel to {0}: {1}".format(self._loglevel.upper(), e))
         self.log = lib.log.Log(self, 'env.core.log', ['time', 'thread', 'level', 'message'], maxlen=self._log_buffer)
         log_mem = LogHandler(self.log)
         log_mem.setLevel(logging.WARNING)
@@ -213,23 +226,22 @@ class SmartHome():
         logging.getLogger('').addHandler(log_mem)
 
         #############################################################
-        # Setting (local) tz
+        # Setting (local) tz if set in smarthome.conf
         #############################################################
-        self.tz = 'UTC'
-        os.environ['TZ'] = self.tz
         if hasattr(self, '_tz'):
             tzinfo = gettz(self._tz)
             if tzinfo is not None:
                 TZ = tzinfo
                 self.tz = self._tz
                 os.environ['TZ'] = self.tz
+                self._tzinfo = TZ
             else:
                 logger.warning("Problem parsing timezone: {}. Using UTC.".format(self._tz))
             del(self._tz, tzinfo)
-        self._tzinfo = TZ
 
         logger.info("Start SmartHome.py {0}".format(VERSION))
         logger.debug("Python {0}".format(sys.version.split()[0]))
+        self._starttime = datetime.datetime.now()
 
         #############################################################
         # Link Tools
@@ -239,15 +251,17 @@ class SmartHome():
         #############################################################
         # Link Sun and Moon
         #############################################################
-        if hasattr(self, '_lon') and hasattr(self, '_lat'):
+        self.sun = False
+        self.moon = False
+        if lib.orb.ephem is None:
+            logger.warning("Could not find/use ephem!")
+        elif not hasattr(self, '_lon') and hasattr(self, '_lat'):
+            logger.warning('No latitude/longitude specified => you could not use the sun and moon object.')
+        else:
             if not hasattr(self, '_elev'):
                 self._elev = None
             self.sun = lib.orb.Orb('sun', self._lon, self._lat, self._elev)
             self.moon = lib.orb.Orb('moon', self._lon, self._lat, self._elev)
-        else:
-            logger.warning('No latitude/longitude specified => you could not use the sun and moon object.')
-            self.sun = None
-            self.moon = None
 
     #################################################################
     # Process Methods
@@ -278,7 +292,7 @@ class SmartHome():
         # Init Items
         #############################################################
         logger.info("Init Items")
-        item_conf = {}
+        item_conf = None
         for item_file in sorted(os.listdir(self._env_dir)):
             if item_file.endswith('.conf'):
                 try:
@@ -308,16 +322,8 @@ class SmartHome():
             item._init_prerun()
         for item in self.return_items():
             item._init_run()
-
-        #############################################################
-        # Start Connections
-        #############################################################
-        self.scheduler.add('Connections', self.connections.check, cycle=10, offset=0)
-
-        #############################################################
-        # Start Plugins
-        #############################################################
-        self._plugins.start()
+        self.item_count = len(self.__items)
+        logger.info("Items: {}".format(self.item_count))
 
         #############################################################
         # Init Logics
@@ -328,6 +334,16 @@ class SmartHome():
         # Init Scenes
         #############################################################
         lib.scene.Scenes(self)
+
+        #############################################################
+        # Start Connections
+        #############################################################
+        self.scheduler.add('Connections', self.connections.check, cycle=10, offset=0)
+
+        #############################################################
+        # Start Plugins
+        #############################################################
+        self._plugins.start()
 
         #############################################################
         # Execute Maintenance Method
@@ -481,6 +497,9 @@ class SmartHome():
     def utcinfo(self):
         return self._utctz
 
+    def runtime(self):
+        return datetime.datetime.now() - self._starttime
+
     #################################################################
     # Helper Methods
     #################################################################
@@ -581,7 +600,7 @@ if __name__ == '__main__':
         reload_logics()
         exit(0)
     elif args.version:
-        print("SmartHome.py {0}".format(VERSION))
+        print("{0}".format(VERSION))
         exit(0)
     elif args.stop:
         lib.daemon.kill(__file__)

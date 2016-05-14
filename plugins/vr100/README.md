@@ -1,10 +1,22 @@
+# VR100
+
 # Requirements
 
 bluez
 
 install by
 <pre>
-apt-get install bluez
+$ apt-get install bluez
+$ hcitool scan
+Scanning ...
+        <bt-addr>       <name of your bluetooth-module, e.g. 'HC-05' or custom>
+$ simple-agent hci0 <bt-addr>
+RequestPinCode (/org/bluez/3070/hci0/dev_bt_addr_underscores)
+Enter PIN Code: <pin-code>
+Release
+New device (/org/bluez/3070/hci0/dev_bt_addr_underscores)
+$ bluez-test-device trusted <bt-addr> yes
+$ bluez-test-device list
 </pre>
 
 ## Supported Hardware

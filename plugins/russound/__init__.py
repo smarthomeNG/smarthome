@@ -177,7 +177,7 @@ class Russound(lib.connection.Client):
         if not self.connected:
             self.connect()
 
-        self.send(cmd)
+        self.send(cmd.encode())
 
     def found_terminator(self, resp):
         resp = resp.decode()

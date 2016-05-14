@@ -1,13 +1,12 @@
 In Developement
 ===============
+   * ComfoAir Plugin
    * Denon Plugin
-   * Hue Plugin
-   * eBus Plugin
-   * Squeezebox Plugin
-   * DLMS Plugin
+   * Fritzbox refactoring
+   * Modbus Plugin
 
 # 1.0
-## Contributions from:
+## With Contributions from:
    * Daniel (mode)
    * Jan N. Klug
    * Lars Bernau (lbernau)
@@ -18,17 +17,29 @@ In Developement
    * Mirko Hirsch
    * mptei
    * Niko Will
+   * Oliver Hinckel
    * Robert Budde
    * xtcommerce
 
 ## New Plugins
-   * SMA
-   * NMA
+   * Artnet
+   * Boxcar
+   * DLMS
+   * easymeter
+   * eBusd
+   * ecmd
+   * eta_pu
+   * Hue
+   * iaqstick
+   * Kostal
    * NetIO230B
+   * NMA
+   * SMA
+   * Squeezebox
+   * vr100
    * wettercom
 
-## Features
-   * KNX: knx_status
+## Base Features
    * sh.match_items, eval_trigger and watch_item: supports item attribute matches by ':attribute' e.b. '*:my' every item with the attribute my.
    * item.timer and autotimer
         age() = Alter des aktuellen Wertes, also seit der letzten Änderung in Sekunden
@@ -42,10 +53,14 @@ In Developement
         sh.tools.dt2ts(dt) konvertiert ein datetime in ein Unix Timestamp
         sh.tools.dt2js(dt) konvertiert ein datetime in ein JavaScript Timestamp (Sekunden & Millisekunden)
    * tools.rel2abs()
+   * sh.py -V, -i adding history to interactive mode 
+
+## Plugin Features
+   * Asterisk: `ast_db` attribute to control Asterisk database entries
+   * KNX: new knx_status attribute
    * SQLite: sqlite = init
     sqlite: allowing to set database path via plugin.conf
    *  cli plugin: adding lt to list 
-   * Asterisk: adding ast_db
    * RRDTool: rrd = init, db
    * Network Plugin: nw_udp_send
         nw_upd_send = host:port # sendet den Item Wert an den Host/Port
@@ -53,14 +68,13 @@ In Developement
         nw_udp_send = host:port=commando:itemvalue # sendet 'commando:itemwert' an den Host/Port
 
     * Visu Plugin: acl, visu_acl
-    * sh.py -V, -i adding history to interactive mode 
 
 ## Changes:
    * Python 3.2 migration
    * Visu: visu => visu_acl = rw & plugin acl
-   * predifined items env.core env.system
+   * predifined items env.core env.system used by smartVISU
    * SQLite: speed improvements
-   1-Wire: adding DS18S20 support 
+   * 1-Wire: adding DS18S20 support 
    * new config parser: |
    * improving logic response time
 

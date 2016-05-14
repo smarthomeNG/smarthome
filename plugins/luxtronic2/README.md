@@ -1,11 +1,4 @@
----
-title: Luxtronic2 Plugin
-summary: A plugin to control heatings with Luxtronic 2 controller.
-uid: index
-layout: default
-created: 2011-06-08T20:58:06+0200
-changed: 2011-06-08T20:58:06+0200
----
+# Luxtronic2
 
 # Requirements
 This plugin has no requirements or dependencies.

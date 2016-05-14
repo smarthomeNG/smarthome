@@ -45,7 +45,33 @@ def room(smarthome, room, tpldir):
         rimg = room.conf['sv_img']
     else:
         rimg = ''
-    for item in smarthome.find_children(room, 'sv_widget'):
+    if 'sv_heading_right' in room.conf:
+        heading_right = room.conf['sv_heading_right']
+    else:
+        heading_right = ''
+    if 'sv_heading_center' in room.conf:
+        heading_center = room.conf['sv_heading_center']
+    else:
+        heading_center = ''
+    if 'sv_heading_left' in room.conf:
+        heading_left = room.conf['sv_heading_left']
+    else:
+        heading_left = ''
+    if heading_right != '' or heading_center != '' or heading_left != '':
+        heading = parse_tpl(tpldir + '/heading.html', [('{{ visu_heading_right }}', heading_right), ('{{ visu_heading_center }}', heading_center), ('{{ visu_heading_left }}', heading_left)])
+    else:
+        heading = ''
+    if 'sv_widget' in room.conf:
+        items = [room]
+    else:
+        items = []
+    if room.conf['sv_page'] == 'room':
+        items.extend(smarthome.find_children(room, 'sv_widget'))
+    elif room.conf['sv_page'] == 'overview':
+        items.extend(smarthome.find_items('sv_item_type'))
+    for item in items:
+        if room.conf['sv_page'] == 'overview' and not item.conf['sv_item_type'] == room.conf['sv_overview']:
+            continue
         if 'sv_img' in item.conf:
             img = item.conf['sv_img']
         else:
@@ -56,7 +82,7 @@ def room(smarthome, room, tpldir):
         else:
             widget = item.conf['sv_widget']
             widgets += parse_tpl(tpldir + '/widget.html', [('{{ visu_name }}', str(item)), ('{{ visu_img }}', img), ('{{ visu_widget }}', widget), ('item.name', str(item)), ("'item", "'" + item.id())])
-    return parse_tpl(tpldir + '/room.html', [('{{ visu_name }}', str(room)), ('{{ visu_widgets }}', widgets), ('{{ visu_img }}', rimg)])
+    return parse_tpl(tpldir + '/room.html', [('{{ visu_name }}', str(room)), ('{{ visu_widgets }}', widgets), ('{{ visu_img }}', rimg), ('{{ visu_heading }}', heading)])
 
 
 def pages(smarthome, directory):
@@ -94,17 +120,30 @@ def pages(smarthome, directory):
         except Exception as e:
             logger.warning("Could not delete file {0}: {1}".format(fp, e))
     for item in smarthome.find_items('sv_page'):
+        if item.conf['sv_page'] == 'seperator':
+            nav_lis += parse_tpl(tpldir + '/navi_sep.html', [('{{ name }}', str(item))])
+            continue
+        if item.conf['sv_page'] == 'overview' and not 'sv_overview' in item.conf:
+            logger.error("missing sv_overview for {0}".format(item.id()))
+            continue
         r = room(smarthome, item, tpldir)
         if 'sv_img' in item.conf:
             img = item.conf['sv_img']
         else:
             img = ''
-        nav_lis += parse_tpl(tpldir + '/navi.html', [('{{ visu_page }}', item.id()), ('{{ visu_name }}', str(item)), ('{{ visu_img }}', img)])
+        if 'sv_nav_aside' in item.conf:
+            if isinstance(item.conf['sv_nav_aside'], list):
+                nav_aside = ', '.join(item.conf['sv_nav_aside'])
+            else:
+                nav_aside = item.conf['sv_nav_aside']
+        else:
+            nav_aside = ''
+        nav_lis += parse_tpl(tpldir + '/navi.html', [('{{ visu_page }}', item.id()), ('{{ visu_name }}', str(item)), ('{{ visu_img }}', img), ('{{ visu_aside }}', nav_aside), ('item.name', str(item)), ("'item", "'" + item.id())])
         try:
             with open("{0}/{1}.html".format(outdir, item.id()), 'w') as f:
                 f.write(r)
         except Exception as e:
-            logger.warning("Could not write to {0}/{1}.html".format(outdir, item.id()))
+            logger.warning("Could not write to {0}/{1}.html: {}".format(outdir, item.id(), e))
     nav = parse_tpl(tpldir + '/navigation.html', [('{{ visu_navis }}', nav_lis)])
     try:
         with open(outdir + '/navigation.html', 'w') as f:

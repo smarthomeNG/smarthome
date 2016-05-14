@@ -1,11 +1,4 @@
----
-title: SmartTV Plugin
-summary: A plugin to send remote commands to a SmartTV.
-uid: index
-layout: default
-created: 2013-05-15T20:58:06+0200
-changed: 2013-05-15T20:58:06+0200
----
+# SmartTV
 
 # Requirements
 This plugin has no requirements or dependencies.
@@ -49,12 +42,12 @@ With this attribute you can define to which smarttv device you want to send the 
         smarttv = KEY_MUTE
         smarttv_id = 1
         enforce_updates = true
-  
+
     [[KIKA]]
         name = KIKATV
         type = bool
-        visu = yes
-        smarttv = KEY_1, KEY_0, KEY_6, KEY_ENTER
+        visu_acl = rw
+        smarttv = KEY_1 | KEY_0 | KEY_6 | KEY_ENTER
         smarttv_id = 2
         enforce_updates = true
         knx_dpt = 1

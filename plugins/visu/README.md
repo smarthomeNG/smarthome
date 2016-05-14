@@ -1,17 +1,10 @@
----
-title: Visu Plugin
-summary: WebSocket interface for an jQuery mobile user interface.
-layout: default
-created: 2011-04-12T19:41:03+0200
-changed: 2012-04-12T19:41:03+0200
----
+# Visualisation
 
-This plugin provides an javascript interface for the JQuery mobile framework (shipping with 1.1.1 and jQuery 1.7.1). It has been tested with Chrome (18.0.1025.151), Firefox (11.0), Safari (5.1.5) and mobile Safari (iOS 5.1).
-Right now the WebSocket interface of SmartHome.py only supports nonencrypted connections. Please use a internal network or VPN to connect to the service.
+This plugin provides an WebSocket interface for the smartVISU visualisation framework.
+Right now the WebSocket interface only supports unencrypted connections. Please use a internal network or VPN to connect to the service.
 
 # Requirements
-This plugin needs just a webserver to serve the HTML and JavaScript files for the GUI.
-The example files in 'examples/visu' have to be placed in the _root directory_ of the webserver!
+None.
 
 # Configuration
 
@@ -21,63 +14,41 @@ The example files in 'examples/visu' have to be placed in the _root directory_ o
     class_name = WebSocket
     class_path = plugins.visu
 #   ip='0.0.0.0'
-#   port=2121
-#   visu_dir = False
+#   port=2424
+#   acl = ro
 #   smartvisu_dir = False
 </pre>
 
-This plugins listens by default on every IP address of the host on the TCP port 2121.
-The attribute `visu_dir` and `smartvisu_dir` are described in the subsection autogeneration.
+This plugins listens by default on every IP address of the host on the TCP port 2424.
+It provides read only access to every item. By changing the `acl` attribute to `rw` or `no` you could modify this default 
+The `smartvisu_dir` attribute is described in the smartVISU section.
 
 ## items.conf
 
-Simply set the visu attribute to something to allow read/write access to the item. There are special keywords described in the subsection autogeneration.
+Simply set the visu_acl attribute to something to allow read/write access to the item.
+
 
 <pre>
 [example]
     [[toggle]]
         value = True
         type = bool
-        visu = rw
+        visu_acl = rw
 </pre>
 
 ## logic.conf
-You could specify the `visu` attribute to every logic in your logic.conf. This way you could trigger the logic via the interface.
+You could specify the `visu_acl` attribute to every logic in your logic.conf. This way you could trigger the logic via the interface.
 <pre>
 [dialog]
     filename = 'dialog.py'
-    visu = true
+    visu_acl = true
 </pre>
 
-## Quickstart
 
-   * set the the visu_dir in the plugin.conf to the root directory of you webserver e.g. `/var/www/visu`
-   * copy the basic structure to the root directory `cp -r /usr/local/smarthome/examples/visu/* /var/www/visu/`
-   * copy the example item configuration in your items directory `cp /usr/local/smarthome/examples/items/visu.conf /usr/local/smarthome/items/`
-   * start SmartHome.py
-   * goto http://yourserver/example.html
-
-
-Functions
-=========
-
-## dialog(header, content)
-
-This function opens a jQuery mobile dialog.
-<pre>sh.visu.dialog('Easy', 'going')</pre> would create the following dialog on every client.
-![dialog](/smarthome/img/dialog.png)
-
-## url(url)
-
-Change the current visu page to the specified url. e.g. `sh.visu.url('http://smarthome.local/door.html')`
-
-
-User Interface
-==============
-## smartVISU
+# smartVISU
 
 You could generate pages for the [smartVISU](http://code.google.com/p/smartvisu/) visualisation if you specify the `smartvisu_dir` which should be set to the root directory of your smartVISU installation.
-In the examples directory you could find a configuration with every supported element. `examples/items/smartvisu.conf`  
+In the examples directory you could find a configuration with every supported element. `examples/items/smartvisu.conf` 
 
 The attribute keywords are:
 
@@ -94,14 +65,14 @@ The attribute keywords are:
         [[[light]]]
             name = Light
             type = bool
-            visu = yes
-            sv_widget = "&#123;&#123; device.dimmer('second.sleeping.light', 'Light', 'second.sleeping.light', 'second.sleeping.light.level') &#125;&#125;"
+            visu_acl = rw
+            sv_widget = &#123;&#123; device.dimmer('second.sleeping.light', 'Light', 'second.sleeping.light', 'second.sleeping.light.level') &#125;&#125;
             knx_dpt = 1
             knx_listen = 3/2/12
             knx_send = 3/2/12
             [[[[level]]]]
                 type = num
-                visu = yes
+                visu_acl = rw
                 knx_dpt = 5
                 knx_listen = 3/2/14
                 knx_send = 3/2/14
@@ -118,14 +89,14 @@ The page generator will replace it with the current path. This way you could eas
         [[[light]]]
             name = Light
             type = bool
-            visu = yes
-            sv_widget = "&#123;&#123; device.dimmer('item', 'item.name', 'item', 'item.level') &#125;&#125;"
+            visu_acl = rw
+            sv_widget = &#123;&#123; device.dimmer('item', 'item.name', 'item', 'item.level') &#125;&#125;
             knx_dpt = 1
             knx_listen = 3/2/12
             knx_send = 3/2/12
             [[[[level]]]]
                 type = num
-                visu = yes
+                visu_acl = rw
                 knx_dpt = 5
                 knx_listen = 3/2/14
                 knx_send = 3/2/14

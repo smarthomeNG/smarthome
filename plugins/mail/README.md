@@ -1,11 +1,4 @@
----
-title: Mail Plugin
-summary: A Mail Plugin to send and receive email with IMAP/S and SMTP/S.
-uid: index
-layout: default
-created: 2011-06-08T20:58:06+0200
-changed: 2011-06-08T20:58:06+0200
----
+# Mail
 
 Requirements
 ============
@@ -86,4 +79,4 @@ See the [phonebook logic](https://github.com/mknx/smarthome/wiki/Phonebook) for 
 
 # Functions
 The SMTP object provides one function (sending) and you access without specifing a method name.
-`sh.mail(to, subject, message)` e.g. `sh.mail('admin@smart.home', 'Rain: Help me', u'You could send UTF-8 encoded subjects and messages')`
+`sh.mail(to, subject, message)` e.g. `sh.mail('admin@smart.home', 'Rain: Help me', 'You could send UTF-8 encoded subjects and messages')`

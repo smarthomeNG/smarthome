@@ -39,7 +39,7 @@ class Squeezebox(lib.connection.Client):
         self._init_cmds = []
 
     def _check_mac(self, mac):
-        return re.match("[0-9a-f]{2}([:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", mac.lower())
+        return re.match("[0-9a-fA-F]{2}([:][0-9a-fA-F]{2}){5}", mac)
 
     def _resolv_full_cmd(self, item, attr):
         # check if PlayerID wildcard is used
@@ -47,11 +47,9 @@ class Squeezebox(lib.connection.Client):
             # try to get from parent object
             parent_item = item.return_parent()
             if (parent_item is not None) and ('squeezebox_playerid' in parent_item.conf) and self._check_mac(parent_item.conf['squeezebox_playerid']):
-                item.conf[attr] = item.conf[attr].replace(
-                    '<playerid>', parent_item.conf['squeezebox_playerid'])
+                item.conf[attr] = item.conf[attr].replace('<playerid>', parent_item.conf['squeezebox_playerid'])
             else:
-                logger.warning(
-                    "squeezebox: could not resolve playerid for {0} from parent item {1}".format(item, parent_item))
+                logger.warning("squeezebox: could not resolve playerid for {0} from parent item {1}".format(item, parent_item))
                 return None
         return item.conf[attr]
 
@@ -61,8 +59,7 @@ class Squeezebox(lib.connection.Client):
             if (cmd is None):
                 return None
 
-            logger.debug(
-                "squeezebox: {0} receives updates by \"{1}\"".format(item, cmd))
+            logger.debug("squeezebox: {0} receives updates by \"{1}\"".format(item, cmd))
             if not cmd in self._val:
                 self._val[cmd] = {'items': [item], 'logics': []}
             else:
@@ -74,8 +71,7 @@ class Squeezebox(lib.connection.Client):
                 if (cmd is None):
                     return None
 
-                logger.debug(
-                    "squeezebox: {0} is initialized by \"{1}\"".format(item, cmd))
+                logger.debug("squeezebox: {0} is initialized by \"{1}\"".format(item, cmd))
                 if not cmd in self._val:
                     self._val[cmd] = {'items': [item], 'logics': []}
                 else:
@@ -89,14 +85,36 @@ class Squeezebox(lib.connection.Client):
             cmd = self._resolv_full_cmd(item, 'squeezebox_send')
             if (cmd is None):
                 return None
-            logger.debug(
-                "squeezebox: {0} is send to \"{1}\"".format(item, cmd))
+            logger.debug("squeezebox: {0} is send to \"{1}\"".format(item, cmd))
             return self.update_item
         else:
             return None
 
     def parse_logic(self, logic):
-        pass
+        if 'squeezebox_playerid' in logic.conf:
+            playerid = logic.conf['squeezebox_playerid'];
+            if not self._check_mac(playerid):
+                logger.warning("squeezebox: invalid playerid for {0}".format(logic.name))
+                return None
+        else:
+            playerid = 'playerid_not_set'
+        if 'squeezebox_recv' in logic.conf:
+            cmds = logic.conf['squeezebox_recv']
+            if isinstance(cmds, str):
+                cmds = [cmds, ]
+            for cmd in cmds:
+                cmd = cmd.replace('<playerid>', playerid)
+                if not self._check_mac(cmd.split(maxsplit=1)[0]):
+                    logger.warning("squeezebox: no valid playerid in \"{}\"".format(cmd))
+                    continue
+                logger.debug("squeezebox: {} will be triggered by \"{}\"".format(logic.name, cmd))
+                if not cmd in self._val:
+                    self._val[cmd] = {'items': [], 'logics': [logic]}
+                else:
+                    if not logic in self._val[cmd]['logics']:
+                        self._val[cmd]['logics'].append(logic)
+        else:
+            return None
 
     def update_item(self, item, caller=None, source=None, dest=None):
         # be careful: as the server echoes ALL comands not using this will
@@ -227,6 +245,8 @@ class Squeezebox(lib.connection.Client):
                 if re.match("[+-][0-9]+$", data[-1]) and not isinstance(item(), str):
                     data[-1] = int(data[-1]) + item()
                 item(data[-1], 'LMS', self.address)
+            for logic in self._val[cmd]['logics']:
+                logic.trigger('squeezebox', cmd, data[-1])
 
     def handle_connect(self):
         self.discard_buffers()

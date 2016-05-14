@@ -51,29 +51,59 @@ class SmartTV():
         mac = self._int_to_str(getmac())    # mac of remote
         remote = 'sh.py remote'             # remote name
         dst = self._host                    # ip of tv
-        app = 'python'                      # iphone..iapp.samsung
-        tv = 'UE32ES6300'                   # iphone.UE32ES6300.iapp.samsung
+        app = b'python'                      # iphone..iapp.samsung
+        tv = b'UE32ES6300'                   # iphone.UE32ES6300.iapp.samsung
 
         logger.debug("src = {0}, mac = {1}, remote = {2}, dst = {3}, app = {4}, tv = {5}".format(
             src, mac, remote, dst, app, tv))
 
-        msg = chr(0x64) + chr(0x00) +\
-            chr(len(base64.b64encode(src))) + chr(0x00) + base64.b64encode(src) +\
-            chr(len(base64.b64encode(mac))) + chr(0x00) + base64.b64encode(mac) +\
-            chr(len(base64.b64encode(remote))) + \
-            chr(0x00) + base64.b64encode(remote)
-        pkt = chr(0x00) +\
-            chr(len(app)) + chr(0x00) + app +\
-            chr(len(msg)) + chr(0x00) + msg
-        s.send(pkt)
-        msg = chr(0x00) + chr(0x00) + chr(0x00) +\
-            chr(len(base64.b64encode(key))) + \
-            chr(0x00) + base64.b64encode(key)
-        pkt = chr(0x00) +\
-            chr(len(tv)) + chr(0x00) + tv +\
-            chr(len(msg)) + chr(0x00) + msg
-        s.send(pkt)
-        s.close()
+        src = base64.b64encode(src.encode())
+        mac = base64.b64encode(mac.encode())
+        cmd = base64.b64encode(key.encode())
+        rem = base64.b64encode(remote.encode())
+
+        msg = bytearray([0x64, 0])
+        msg.extend([len(src), 0])
+        msg.extend(src)
+        msg.extend([len(mac), 0])
+        msg.extend(mac)
+        msg.extend([len(rem), 0])
+        msg.extend(rem)
+
+        pkt = bytearray([0])
+        pkt.extend([len(app), 0])
+        pkt.extend(app)
+        pkt.extend([len(msg), 0])
+        pkt.extend(msg)
+
+        try:
+            s.send(pkt)
+        except:
+            try:
+                s.close()
+            except:
+                pass
+            return
+
+        msg = bytearray([0, 0, 0])
+        msg.extend([len(cmd), 0])
+        msg.extend(cmd)
+
+        pkt = bytearray([0])
+        pkt.extend([len(tv), 0])
+        pkt.extend(tv)
+        pkt.extend([len(msg), 0])
+        pkt.extend(msg)
+
+        try:
+            s.send(pkt)
+        except:
+            return
+        finally:
+            try:
+                s.close()
+            except:
+                pass
         logger.debug("Send {0} to Smart TV".format(key))
         time.sleep(0.1)
 

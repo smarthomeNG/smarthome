@@ -1,10 +1,4 @@
----
-title: DMX Plugin
-summary: Plugin to use the NanoDMX interface to access the DMX bus.
-layout: default
-created: 2011-04-12T21:12:34+0200
-changed: 2011-04-12T21:12:34+0200
----
+# DMX
 
 Requirements
 ============

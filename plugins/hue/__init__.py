@@ -58,11 +58,11 @@ class HUE():
             if 'hue_feature' in item.conf:
                 item.hue_feature = item.conf['hue_feature']
             else:
-                if item._type == 'bool':
+                if item.type() == 'bool':
                     item.hue_feature = 'on'
-                elif item._type == 'num':
+                elif item.type() == 'num':
                     item.hue_feature = 'bri'
-                elif item._type == 'dict':
+                elif item.type() == 'dict':
                     item.hue_feature = 'all'
                 else:
                     logger.error(

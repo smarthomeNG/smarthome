@@ -1,18 +1,10 @@
----
-title: Asterisk Plugin
-layout: default
-summary: A UDP Plugin to send and receive UDP Messages and trigger logics.
-created: 2011-08-08T20:58:06+0200
-changed: 2011-08-08T20:58:06+0200
----
-
+# Asterisk
 
 Requirements
 ============
 A running asterisk daemon with a configured Asterisk Manager Interface (AMI) is necessary.
 In manager.config its required to enable at least:
 <code>read = system,call,user,cdr</code> and `write = system,call,orginate`
-In misc/asterisk some configuration files from the authors asterisk are available to learn from.
 
 Configuration
 =============

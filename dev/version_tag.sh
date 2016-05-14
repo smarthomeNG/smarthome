@@ -11,6 +11,7 @@ if [ $# -eq 0 ]; then
 fi
 
 git checkout master
+git merge develop -X theirs
 
 TAG="$1"
 if [ "$1" = '-r' ]; then
@@ -21,19 +22,22 @@ if ! sed -i "s/^VERSION = '.*$/VERSION = '$TAG'/g" bin/smarthome.py; then
     echo "Could not replace VERSION variable." >&2
     exit 2
 fi
-JS=examples/visu/js/smarthome
-if ! sed -i "s/^var shVersion = .*/var shVersion = '$TAG';/g" $JS.js; then
-    echo "Could not replace shVersion variable." >&2
-    exit 2
-fi
-cat $JS.js | grep -v 'console.log' > $JS.tmp.js
-java -jar ./dev/yuicompressor-*.jar $JS.tmp.js -o $JS.min.js --charset utf-8
-rm -f $JS.tmp.js
 
-git add bin/smarthome.py $JS.js $JS.min.js
+#JS=examples/visu/js/smarthome
+#if ! sed -i "s/^var shVersion = .*/var shVersion = '$TAG';/g" $JS.js; then
+#   echo "Could not replace shVersion variable." >&2
+#   exit 2
+#fi
+#cat $JS.js | grep -v 'console.log' > $JS.tmp.js
+#java -jar ./dev/yuicompressor-*.jar $JS.tmp.js -o $JS.min.js --charset utf-8
+#rm -f $JS.tmp.js
+
+git add bin/smarthome.py # $JS.js $JS.min.js
 git commit -m "set version to $TAG"
 
 echo
+
+git diff master..develop
 
 if [ "$1" = '-r' ]; then
     git tag -a -m "set version to $TAG" "$TAG"

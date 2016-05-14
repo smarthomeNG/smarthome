@@ -1,10 +1,4 @@
----
-title: Network Plugin
-summary: A Network Plugin to send and receive TCP/UDP and basic HTTP Messages and trigger logics.
-layout: default
-created: 2011-06-08T20:58:06+0200
-changed: 2011-06-08T20:58:06+0200
----
+# Network
 
 Requirements
 ============
@@ -46,7 +40,7 @@ If this attribute is set to 'yes' you could update this item with the generic li
 <pre>
 [test]
     [[item1]]
-        type = string
+        type = str
         nw = yes
 </pre>
 
@@ -59,17 +53,34 @@ You could specify the `nw_udp_listen` and `nw_tcp_listen` attribute to an item t
 <pre>
 [test]
     [[item1]]
-        type = string
+        type = str
         # bind to 0.0.0.0:7777 (every IP address)
         nw_tcp_listen = 7777
 
     [[item2]]
-        type = string
+        type = str
         # bind to 0.0.0.0:7777 and 127.0.0.1:8888
         nw_udp_listen = 127.0.0.1:8888
 </pre>
 If you send a TCP/UDP packet to the port, the corrosponding item will be set to the TCP/UDP payload.
 <code>$ echo teststring | nc -u 127.0.0.1 8888</code> would set the value of item2 to 'teststring'.
+
+### nw_udp_send
+This attribute allows you to specify a host and port to send item updates to.
+<pre>
+[test]
+    [[item1]]
+        type = str
+        nw_udp_send = 11.11.11.11:7777  # sends an UDP packet with the item value as payload
+
+    [[item2]]
+        type = str
+        nw_udp_send = 11.11.11.11:7777=special data  # sends an UDP packet with 'special data' as payload
+
+    [[item3]]
+        type = str
+        nw_udp_send = 11.11.11.11:7777=command: itemvalue  # sends an UDP packet with 'command: ' and the current item value as payload
+</pre>
 
 logic.conf
 ----------

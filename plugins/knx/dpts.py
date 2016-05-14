@@ -58,7 +58,7 @@ def de3(payload):
 
 def en4002(value):
     if isinstance(value, str):
-        value = value.encode('iso-8859-1')
+        value = value.encode('iso-8859-1', 'replace')
     else:
         value = str(value)
     return [0, ord(value) & 0xff]
@@ -81,7 +81,7 @@ def en5(value):
 def de5(payload):
     if len(payload) != 1:
         return None
-    return struct.unpack('>B', payload)[0]
+    return round(struct.unpack('>B', payload)[0], 1)
 
 
 def en5001(value):
@@ -95,7 +95,7 @@ def en5001(value):
 def de5001(payload):
     if len(payload) != 1:
         return None
-    return struct.unpack('>B', payload)[0] * 100.0 / 255
+    return round(struct.unpack('>B', payload)[0] * 100.0 / 255, 1)
 
 
 def en6(value):
@@ -235,14 +235,14 @@ def de14(payload):
 
 def en16000(value):
     enc = bytearray(1)
-    enc.extend(value.encode('ascii')[:14])
+    enc.extend(value.encode('ascii', 'replace')[:14])
     enc.extend([0] * (15 - len(enc)))
     return enc
 
 
 def en16001(value):
     enc = bytearray(1)
-    enc.extend(value.encode('iso-8859-1')[:14])
+    enc.extend(value.encode('iso-8859-1', 'replace')[:14])
     enc.extend([0] * (15 - len(enc)))
     return enc
 
@@ -277,7 +277,7 @@ def de20(payload):
 
 def en24(value):
     enc = bytearray(1)
-    enc.extend(value.encode('iso-8859-1'))
+    enc.extend(value.encode('iso-8859-1', 'replace'))
     enc.append(0)
     return enc
 

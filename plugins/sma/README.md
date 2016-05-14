@@ -1,16 +1,30 @@
+# SMA
+
 # Requirements
 
 bluez
 
 install by
 <pre>
-apt-get install bluez
+$ apt-get install bluez python-gobject python-dbus
+$ hcitool scan
+Scanning ...
+        <bt-addr>       <name of your inverter, e.g. 'SMA001d SN: 213000xxxx SN213000xxxx'>
+$ bluez-simple-agent hci0 <bt-addr>
+RequestPinCode (/org/bluez/3070/hci0/dev_bt_addr_underscores)
+Enter PIN Code: <pin-code>
+Release
+New device (/org/bluez/3070/hci0/dev_bt_addr_underscores)
+$ bluez-test-device trusted <bt-addr> yes
+$ bluez-test-device list
 </pre>
 
 ## Supported Hardware
 
 Tested with:
 * SMA SunnyBoy 5000TL-21
+* SMA Sunny Tripower 8000TL-10
+* SMA Sunny Tripower 12000TL-10
 
 Should work with other SMA inverters as well - please let me know!
 
@@ -25,6 +39,7 @@ Should work with other SMA inverters as well - please let me know!
     bt_addr = 00:80:25:21:7F:58
 #    password = 0000
 #    update_cycle = 60
+#    allowed_timedelta = 10
 </pre>
 
 Description of the attributes:
@@ -32,81 +47,69 @@ Description of the attributes:
 * __bt_addr__: MAC-address of the inverter (find out with 'hcitool scan')
 * __password__: password for accessing the inverter in user-mode (default 0000)
 * __update_cycle__: interval in seconds how often the data is read from the inverter (default 60)
+* __allowed_timedelta__: allowed difference of inverter to system time - if above, inverter is set to system time - set to -1 to disable (default 60)
 
 ## items.conf
 
-### AC_POWER
-
-Current power feed to the grid (W)
-
-### DAY_YIELD
-
-Todays yield (Wh)
-
-### TOTAL_YIELD
-
-Total yield of the inverter (Wh)
-
-### INV_SERIAL
-
-Serial number of the inverter
-
-### INV_ADDRESS
-
-MAC-address of the inverter
-
-### LAST_UPDATE
-
-String represensting date/time of last successful read operation
-
-### DC_POWER_STRING<x>
-
-DC power supplied by string <x> (W)
-
-### DC_VOLTAGE_STRING<x>
-
-DC voltage supplied by string <x> (V)
-
-### DC_CURRENT_STRING<x>
-
-DC current supplied by string <x> (A)
+The item having 'sma = PLUGIN_ACTIVE' can be set to True/False in order to connect/disconnect to the inverter during night. 
 
 <pre>
-[Wechselrichter]
-  [[Einspeiseleistung]]
+[Inverter]
+  [[Plugin_active]]
+    type = bool
+    sma = PLUGIN_ACTIVE
+  [[Feeding_Power_in_W]]
     type = num
-    sma = "AC_POWER"
-  [[Tagesertrag]]
+    sma = AC_P_TOTAL
+  [[Daily_Yield_in_Wh]]
     type = num
-    sma = "DAY_YIELD"
-  [[Gesamtertrag]]
+    sma = E_DAY
+  [[Total_Yield_in_Wh]]
     type = num
-    sma = "TOTAL_YIELD"
-  [[Seriennummer]]
+    sma = E_TOTAL
+  [[Serial_Number]]
     type = num
-    sma = "INV_SERIAL"
-  [[MAC_Adresse]]
+    sma = INV_SERIAL
+  [[MAC_Address]]
     type = str
-    sma = "INV_ADDRESS"
-  [[Letzte_Aktualisierung]]
+    sma = INV_ADDRESS
+  [[Last_Update_Of_Data]]
     type = str
-    sma = "LAST_UPDATE"
-  [[DC_Leistung_String1]]
+    sma = LAST_UPDATE
+  [[DC_Power_String1_in_W]]
     type = num
-    sma = "DC_POWER_STRING1"
-  [[DC_Leistung_String2]]
+    sma = DC_STRING1_P
+  [[DC_Power_String2_in_W]]
     type = num
-    sma = "DC_POWER_STRING2"
-  [[DC_Spannung_String1]]
+    sma = DC_STRING2_P
+  [[DC_Voltage_String1_in_V]]
     type = num
-    sma = "DC_VOLTAGE_STRING1"
-  [[DC_Spannung_String2]]
+    sma = DC_STRING1_U
+  [[DC_Voltage_String2_in_V]]
     type = num
-    sma = "DC_VOLTAGE_STRING2"
-  [[DC_Strom_String1]]
+    sma = DC_STRING2_U
+  [[DC_Current_String1_in_A]]
     type = num
-    sma = "DC_CURRENT_STRING1"
-  [[DC_Strom_String2]]
+    sma = DC_STRING1_I
+  [[DC_Current_String2_in_A]]
     type = num
-    sma = "DC_CURRENT_STRING2"
+    sma = DC_STRING2_I
+  [[Operating_Time_in_s]]
+    type = num
+    sma = OPERATING_TIME
+  [[Feeding_Time_in_s]]
+    type = num
+    sma = FEEDING_TIME
+  [[Grid_Frequency_in_Hz]]
+    type = num
+    sma = GRID_FREQUENCY
+  [[Inverter_Status]]
+    type = str
+    sma = STATUS
+  [[Relais_Status]]
+    type = str
+    sma = GRID_RELAY
+  [[Software_Version]]
+    type = str
+    sma = SW_VERSION
 </pre>
