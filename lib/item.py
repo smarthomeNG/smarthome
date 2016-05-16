@@ -403,8 +403,14 @@ class Item():
     def add_logic_trigger(self, logic):
         self.__logics_to_trigger.append(logic)
 
+    def remove_logic_trigger(self, logic):
+        self.__logics_to_trigger.remove(logic)
+
     def add_method_trigger(self, method):
         self.__methods_to_trigger.append(method)
+
+    def remove_method_trigger(self, method):
+        self.__methods_to_trigger.remove(method)
 
     def age(self):
         delta = self._sh.now() - self.__last_change
