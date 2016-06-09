@@ -17,20 +17,8 @@ System
 Python
 ------
 
-Python 3.2 is recommended. 2.x is not supported any more.
-``$ sudo apt-get install python3 python3-dev python3-setuptools``
-
-Calculating of sunset/sunrise in triggers,requires installation of
-**ephem** as well.
-
-.. raw:: html
-
-   <pre>
-   <code>
-   $ sudo easy_install3 pip
-   $ sudo pip-3.2 install ephem
-   </code>
-   </pre>
+Python >= 3.2 is required, 2.* is unsupported.
+``$ sudo apt-get install python3 python3-dev python3-setuptools librrd-dev``
 
 User
 ~~~~
