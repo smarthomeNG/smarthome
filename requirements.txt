@@ -1,4 +1,0 @@
-ephem
-python-dateutil
-rrdtool
-pyyaml
