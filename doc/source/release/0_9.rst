@@ -1,0 +1,70 @@
+2013-06-13 Release 0.9
+----------------------
+
+with code contributions and help from: Alexander Rieger, Matthias Lemke
+and Niko Will!
+
+New Plugins
+~~~~~~~~~~~
+
+-  `Fritzbox Plugin <plugins/fritzbox>`_: control anything a FritzBox
+   offers with the web interface.
+-  `Luxtronic2 Plugin <plugins/luxtronic2>`_: get state information and
+   control Luxtronic 2.0 heating controllers.
+-  `MPD Plugin <plugins/mpd>`_: to control Music Player Daemons.
+-  `Samsung Smart TV Plugin <plugins/smarttv>`_: send commands to a
+   SmartTV device.
+-  `Solarlog Plugin <plugins/solarlog>`_: to retrieve information from
+   SolarLog devices.
+-  `SQLite Plugin <plugins/sqlite>`_: to store the item history in a
+   SQLite database.
+-  `XBMC Plugin <plugins/xbmc>`_: to control and monitor your XBMC.
+
+Features
+~~~~~~~~
+
+-  `Item <config>`_: setting values with the crontab and cycle attribute
+-  `Logic <logic>`_: Logic: calling with values by crontab and cycle
+-  `Logic <logic>`_: trigger supports destinations in
+   ``trigger['dest']``
+-  `Logic <logic>`_: de-/activate logics. e.g.
+   ``sh.scheduler.change('alarmclock', active=False)``
+-  `Logic <logic>`_: new basic methods: sh.return\_item,
+   sh.return\_items, sh.match\_items, sh.find\_items, find\_children
+-  `Scene support <config>`_: to set multiple item values at the same
+   time
+-  `1-Wire Plugin <plugins/onewire>`_: rewritten to support many
+   different sensors.
+-  `Asterisk <plugins/asterisk>`_: adding destination support for
+   Userevents
+-  `CLI plugin <plugins/cli>`_: new command 'cl' to clean the memory log
+   of sh.py
+-  `DWD Plugin <plugins/dwd>`_: adding support for Pollen forecast
+-  `KNX Plugin <plugins/knx>`_:
+
+   -  change encoding of dpt10 to use a datetime object and send the
+      isoweekday
+   -  DPT 17 support
+   -  adding support to log all packets (busmonitor)
+
+-  `Mail Plugin <plugins/mail>`_: enable sending UTF-8 mails
+-  `Visu Plugin <plugins/visu>`_:
+
+   -  change url
+   -  smartVISU support multiple widgets with one item
+
+Bug Fixes
+~~~~~~~~~
+
+-  KNX Plugin: fix broken knx\_cache, with support from
+   Robert@knx-user-forum
+
+2013-02-11: Big Picture SmartHome.py with KNX, 1-Wire and smartVISU
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`Martin <http://knx-user-forum.de/members/sipple.html>`_ has created an
+`overview </_static/img/big_picture.pdf>`_ how SmartHome.py interacts
+with KNX, 1-Wire and the smartVISU.
+
+2013-02-02: `Release of an Raspberry Pi image with SmartHome.py and smartVISU <https://github.com/smarthomeng/smarthome/wiki/SmartHome.pi>`_
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

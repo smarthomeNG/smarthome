@@ -1,0 +1,18 @@
+2011-06-21 Release 0.2
+----------------------
+
+Features
+~~~~~~~~
+
+-  Two new `item attributes <config#item-attributes>`_: threshold and
+   offset
+-  `CLI plugin <plugins/cli/>`_ for a simple telnet interface
+-  `DMX plugin <plugins/dmx/>`_ to interact with the DMX bus
+
+Bug Fixes
+~~~~~~~~~
+
+-  sh.sun.set() provided a timezone aware datetime which results in a
+   internal conflict with a third party function.
+-  knx\_ga is splitted into two attributes: knx\_send, knx\_listen. See
+   the `KNX plugin <plugins/knx/>`_ for more information.

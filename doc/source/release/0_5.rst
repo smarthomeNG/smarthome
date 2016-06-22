@@ -1,0 +1,14 @@
+2012-04-12 Release 0.5
+----------------------
+
+Features
+~~~~~~~~
+
+-  `Visu <plugins/visu>`_ with JQuery mobile
+-  ping: sh.ping(host), return True if up, False if down.
+
+Bug Fixes
+~~~~~~~~~
+
+-  using the enviroment timezone (TZ) - if provided
+
