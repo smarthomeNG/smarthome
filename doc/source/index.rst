@@ -1,12 +1,28 @@
-======================
- SmartHome.py
-======================
+SmartHome.py
+============
 
 SmartHome.py is a modular framework to automate your (smart) home.
 
 See the `install <install>`_ and `config <config>`_ section to dive into your smarthome experience.
 
 You could find information about the `Pi image at the wiki page <https://github.com/mknx/smarthome/wiki/SmartHome.pi>`_.
+
+Index
+-----
+
+.. toctree::
+   :name: mastertoc
+   :maxdepth: 1
+   :titlesonly:
+
+   install.rst
+   config.rst
+   plugin.rst
+   logic.rst
+   logging.rst
+
+Version History
+---------------
 
 .. toctree::
    :maxdepth: 1
