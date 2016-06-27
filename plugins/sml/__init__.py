@@ -22,6 +22,7 @@
 
 import logging
 import time
+import socket
 import re
 import serial
 import threading
@@ -74,7 +75,7 @@ class Sml():
 
     def run(self):
         self.alive = True
-        self._sh.scheduler.add('Sml', self._refresh, cycle=self.cycle)
+        self._sh.scheduler.add('Sml-' + str(self._sh.get_plugin_name(self)), self._refresh, cycle=self.cycle)
 
     def stop(self):
         self.alive = False

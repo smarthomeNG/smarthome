@@ -74,6 +74,37 @@ are supported:
    * `smart-meter-gateway-com-1` - The Smart Meter Gateway COM-1
      http://shop.co-met.info/artikeldetails/kategorie/Smart-Metering/artikel/smart-meter-gateway-com-1.html
 
+If you have more then one power meter device or serial device in use,
+please configure this plugin multiple times and restrict the items to
+the different plugin instances using the `plugin` setting:
+
+<pre>
+[sml1]
+  class_name = Sml
+  class_path = plugins.sml
+  serialport = /dev/ttyUSB0
+
+[sml2]
+  class_name = Sml
+  class_path = plugins.sml
+  serialport = /dev/ttyUSB1
+</pre>
+
+<pre>
+[power]
+  [[home]]
+    [[[total]]]
+      type = num
+      plugin = sml1
+      sml_obis = 1-0:1.8.0*255
+  [[pv]]
+    [[[total]]]
+      type = num
+      plugin = sml2
+      sml_obis = 1-0:1.8.0*255
+</pre>
+
+
 ## items.conf
 
 You can assign a value retrieved by the plugin to some of your items by
