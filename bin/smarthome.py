@@ -511,9 +511,12 @@ class SmartHome():
         objects = {}
         for module in list(sys.modules.values()):
             for sym in dir(module):
-                obj = getattr(module, sym)
-                if isinstance(obj, type):
-                    objects[obj] = sys.getrefcount(obj)
+                try:
+                    obj = getattr(module, sym)
+                    if isinstance(obj, type):
+                        objects[obj] = sys.getrefcount(obj)
+                except:
+                    pass
         return objects
 
 
