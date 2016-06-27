@@ -1,0 +1,5 @@
+2011-04-09 Initial Release
+--------------------------
+
+You could find the initial release 0.1 in the
+`download <http://sourceforge.net/projects/smarthome/files/>`_ section.

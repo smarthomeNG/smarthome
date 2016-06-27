@@ -1,0 +1,4 @@
+CherryPy == 3.5.0
+flask == 0.10.1
+flask-restful == 0.3.5
+jsonpickle == 0.9.3

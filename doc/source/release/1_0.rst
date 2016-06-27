@@ -1,11 +1,10 @@
-========================
-Release 1.0 - 2013-11-14
-========================
+2013-11-14 Release 1.0
+----------------------
 
 Change to Python 3.X!!! (for X >= 2)
 
 With Contributions from:
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  Daniel (mode)
 -  Jan N. Klug
@@ -22,7 +21,7 @@ With Contributions from:
 -  xtcommerce
 
 New Plugins
------------
+~~~~~~~~~~~
 
 -  Artnet
 -  Boxcar
@@ -42,7 +41,7 @@ New Plugins
 -  wettercom
 
 Base Features
--------------
+~~~~~~~~~~~~~
 
 -  sh.match\_items, eval\_trigger and watch\_item: supports item
    attribute matches by ':attribute' e.g. '\*:my' every item with the
@@ -64,7 +63,7 @@ Base Features
      - -i: starts the interactive mode
 
 Plugin Features
----------------
+~~~~~~~~~~~~~~~
 
 -  Asterisk: ``ast_db`` attribute to control Asterisk database entries
 -  KNX: new ``knx_status`` attribute
@@ -73,7 +72,7 @@ Plugin Features
 -  SQLite: use ``sqlite = init`` to initialize the item value with the last database entry.
 
 Changes:
---------
+~~~~~~~~
 
 -  Python 3.2 migration
 -  Visu: new attributes ``acl`` and ``visu_acl``
@@ -84,7 +83,7 @@ Changes:
 -  improving logic response time
 
 Migrate:
---------
+~~~~~~~~
 
 If you want to migrate to the new (Python) version, you have to do the following steps:
 

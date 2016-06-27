@@ -1,0 +1,7 @@
+2011-10-29 Release 0.4
+----------------------
+
+Feature
+~~~~~~~
+
+-  KNX Reply with `KNX plugin <plugins/knx>`_

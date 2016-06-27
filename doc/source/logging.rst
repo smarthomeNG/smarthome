@@ -53,6 +53,7 @@ Beispiel:
        handlers: [file, console]
    </code>
    </pre>
+
 format
 ------
 Der Parameter format bschreibt das Aussehen der Logeinträge.

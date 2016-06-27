@@ -1,0 +1,60 @@
+2013-01-31 Release 0.8
+----------------------
+
+with contributions from: Niko Will and Alexander Rieger. Thank you.
+
+I am happy to announce a new cooperation with
+`smartVISU <http://code.google.com/p/smartvisu/>`_ to give you the best
+user interface experience.
+
+New Plugins
+~~~~~~~~~~~
+
+-  `DWD Plugin <plugins/dwd>`_: fetch weather warnings and forecasts
+   from Deutscher Wetterrdienst (DWD).
+-  `Mail Plugin <plugins/mail>`_: sending (SMTP) and receiving (IMAP)
+   mail.
+-  `RRD Plugin <plugins/rrd>`_: build round robin databases.
+-  `Russound Plugin <plugins/russound>`_: control a Russound audio
+   device with RIO over TCP.
+-  `Snom Plugin <plugins/snom>`_: to handle snom VOIP phones.
+
+Features
+~~~~~~~~
+
+-  Base
+
+   -  sh.tools.fetch\_url()
+   -  item.conf: new types list, dict
+   -  sh.moon() with set(), rise(), pos(), light(), phase()
+   -  sh.find\_items('config\_string'), sh.find\_children(self, parent,
+      'config\_string')
+
+-  Asterisk plugin: Call Log and mailbox count
+-  CLI plugin: adding 'rl' to reload and 'rr' to reload and run logic
+-  KNX plugin: DPT 16 support
+-  Network plugin: adding a simple http interface
+-  Visu plugin:
+
+   -  `smartVISU <http://code.google.com/p/smartvisu/>`_ support: to
+      generate pages for and communicate with this visualisation
+      framework.
+   -  plot rrd with flot
+   -  list view
+   -  dpt3 push buttons
+   -  TITLE header template
+   -  adding 'unit' attribute to item.conf
+   -  JQuery: 1.8.3, JQuery Mobile 1.2
+   -  Log view SmartHome.py, Asterisk
+
+Bug Fixes
+~~~~~~~~~
+
+-  KNX plugin: knx\_init/knx\_cache could not work if first connection
+   attempt failed
+
+   -  dpt 10, 11, 16 handling fix
+
+-  Onewire plugin: improve error handling
+-  Workaround for urllib2 memory leakage
+
