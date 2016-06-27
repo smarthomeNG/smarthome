@@ -3,7 +3,9 @@
 Requirements
 ============
 You have to install the python3 bindings for rrdtool:
-<pre>$ sudo apt-get install python3-dev librrd-dev</pre>
+<pre>$ sudo apt-get install python3-dev librrd-dev
+$ cd lib/3rd/rrdtool
+$ sudo python3 setup.py install</pre>
 
 Configuration
 =============

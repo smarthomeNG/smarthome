@@ -1,5 +1,0 @@
-ephem>=3.7
-python-dateutil==2.5.3
-rrdtool
-pyyaml==3.11
-astral==1.0
