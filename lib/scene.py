@@ -23,7 +23,7 @@ import logging
 import os.path
 import csv
 
-logger = logging.getLogger('')
+logger = logging.getLogger(__name__)
 
 
 class Scenes():
@@ -38,7 +38,7 @@ class Scenes():
             if item.type() == 'scene':
                 scene_file = "{}{}.conf".format(self._scenes_dir, item.id())
                 try:
-                    with open(scene_file, 'r') as f:
+                    with open(scene_file, 'r', encoding='UTF-8') as f:
                         reader = csv.reader(f, delimiter=' ')
                         for row in reader:
                             if row == []:  # ignore empty lines

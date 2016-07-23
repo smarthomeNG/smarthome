@@ -32,7 +32,7 @@ logger = logging.getLogger('')
 class iCal():
     DAYS = ("MO", "TU", "WE", "TH", "FR", "SA", "SU")
     FREQ = ("YEARLY", "MONTHLY", "WEEKLY", "DAILY", "HOURLY", "MINUTELY", "SECONDLY")
-    PROPERTIES = ("SUMMARY", "DESCRIPTION", "LOCATION", "CATEGORIES")
+    PROPERTIES = ("SUMMARY", "DESCRIPTION", "LOCATION", "CATEGORIES", "CLASS")
 
     def __init__(self, smarthome):
         self._sh = smarthome
@@ -52,9 +52,9 @@ class iCal():
     def update_item(self, item, caller=None, source=None, dest=None):
         pass
 
-    def __call__(self, ics, delta=1, offset=0, username=None, password=None):
+    def __call__(self, ics, delta=1, offset=0, username=None, password=None, timeout=2):
         if ics.startswith('http'):
-            ical = self._sh.tools.fetch_url(ics, username=username, password=password)
+            ical = self._sh.tools.fetch_url(ics, username=username, password=password, timeout=timeout)
             if ical is False:
                 return {}
             ical = ical.decode()
@@ -117,9 +117,15 @@ class iCal():
         return dt
 
     def _parse_ical(self, ical, ics):
+        #skip = False
         events = {}
         tzinfo = self._sh.tzinfo()
+        ical = ical.replace('\n', '')
         for line in ical.splitlines():
+            #if line == 'BEGIN:VTIMEZONE':
+            #    skip = True
+            #elif line == 'END:VTIMEZONE':
+            #    skip = False
             if line == 'BEGIN:VEVENT':
                 event = {'EXDATES': []}
             elif line == 'END:VEVENT':
@@ -133,7 +139,9 @@ class iCal():
                     logger.warning("iCal: problem parsing {0} no DTSTART for UID: {1}".format(ics, event['UID']))
                     continue
                 if 'DTEND' not in event:
-                    logger.warning("iCal: problem parsing {0} no DTEND for UID: {1}".format(ics, event['UID']))
+                    logger.warning("iCal: Warning in parsing {0} no DTEND for UID: {1}. Setting DTEND from DTSTART".format(ics, event['UID']))
+                    #Set end to start time:
+                    event['DTEND'] = event['DTEND']
                     continue
                 if 'RRULE' in event:
                     event['RRULE'] = self._parse_rrule(event, tzinfo)
@@ -153,7 +161,7 @@ class iCal():
                 key = key.upper()
                 if key == 'TZID':
                     tzinfo = dateutil.tz.gettz(val)
-                elif key in ['UID', 'SUMMARY', 'SEQUENCE', 'RRULE']:
+                elif key in ['UID', 'SUMMARY', 'SEQUENCE', 'RRULE', 'CLASS']:
                     event[key] = val  # noqa
                 elif key in ['DTSTART', 'DTEND', 'EXDATE', 'RECURRENCE-ID']:
                     try:
@@ -175,6 +183,7 @@ class iCal():
         if 'FREQ' not in rrule:
             return
         freq = self.FREQ.index(rrule['FREQ'])
+        #logger.debug("iCal: Frequency: {0}".format(freq))
         del(rrule['FREQ'])
         if 'DTSTART' not in rrule:
             rrule['DTSTART'] = event['DTSTART']

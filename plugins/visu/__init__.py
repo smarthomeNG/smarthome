@@ -26,6 +26,7 @@ import json
 import logging
 import struct
 import ssl
+import struct
 import threading
 
 import lib.connection
@@ -38,13 +39,15 @@ class JSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
             return obj.isoformat()
+        elif isinstance(obj, datetime.date):
+            return obj.isoformat()
         elif isinstance(obj, datetime.timedelta):
             return int(obj.total_seconds())
         return json.JSONEncoder.default(self, obj)
 
 
 class WebSocket(lib.connection.Server):
-
+    
     def __init__(self, smarthome, visu_dir=False, generator_dir=False, ip='0.0.0.0', port=2424, tls='no', smartvisu_dir=False, acl='ro'):
         lib.connection.Server.__init__(self, ip, port)
         self._sh = smarthome
@@ -64,6 +67,17 @@ class WebSocket(lib.connection.Server):
         if generator_dir:  # transition feature
             self.generator_dir = generator_dir
         self.smartvisu_dir = smartvisu_dir
+        logger.warning("")
+        logger.warning("+============================================================================+")
+        logger.warning("! The VISU plugin is depricated                                              !")
+        logger.warning("! - Please switch to the VISU_WEBSOCKET and VISU_SMARTVISU plugins           !")
+        logger.warning("! - The old VISU plugin will be removed in the upcoming smarthomeNG v1.3     !")
+        logger.warning("!                                                                            !")
+        logger.warning("! Please read:                                                               !")
+        logger.warning("!   https://github.com/smarthomeNG/smarthome/wiki/Visu_Unterstützung_in_v1.2 !")
+        logger.warning("+============================================================================+")
+        logger.warning("")
+
 
     def _smartvisu_pages(self, directory):
         from . import smartvisu
@@ -288,7 +302,8 @@ class WebSocketHandler(lib.connection.Stream):
             if data['items'] == [None]:
                 return
             items = []
-            for path in list(set(data['items']).difference(set(self.monitor['item']))):
+#           for path in list(set(data['items']).difference(set(self.monitor['item']))):
+            for path in list(data['items']):
                 if path in self.items:
                     items.append([path, self.items[path]['item']()])
                 else:

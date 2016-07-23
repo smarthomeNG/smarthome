@@ -39,7 +39,7 @@ class TCPHandler(lib.connection.Stream):
         self.source = source
 
     def found_terminator(self, data):
-        self.parser(self.source, self.dest, data.decode().strip())
+        self.parser(self.source, self.dest, data.decode(errors="ignore").strip())
         self.close()
 
 
@@ -68,13 +68,15 @@ class HTTPHandler(lib.connection.Stream):
         self.source = source
 
     def found_terminator(self, data):
-        for line in data.decode().splitlines():
+        for line in data.decode(errors="ignore").splitlines():
             if line.startswith('GET'):
                 request = line.split(' ')[1].strip('/')
                 if self.parser(self.source, self.dest, urllib.parse.unquote(request)) is not False:
                     self.send(b'HTTP/1.1 200 OK\r\n\r\n', close=True)
+                    
                 else:
                     self.send(b'HTTP/1.1 400 Bad Request\r\n\r\n', close=True)
+                   
                 break
 
 
@@ -110,7 +112,7 @@ class UDPDispatcher(lib.connection.Server):
         except Exception as e:
             logger.exception("{}: {}".format(self._name, e))
             return
-        self.parser(ip, self.dest, data.decode().strip())
+        self.parser(ip, self.dest, data.decode(errors="ignore").strip())
 
 
 class Network():
@@ -285,7 +287,7 @@ class Network():
     def update_item(self, item, caller=None, source=None, dest=None):
         if 'nw_udp_send' in item.conf:
             addr, __, message = item.conf['nw_udp_send'].partition('=')
-            if message is None:
+            if not message:
                 message = str(item())
             else:
                 message = message.replace('itemvalue', str(item()))

@@ -313,8 +313,8 @@ class rrule(rrulebase):
                 self._bymonthday = (bymonthday,)
                 self._bynmonthday = ()
         else:
-            self._bymonthday = tuple([x for x in bymonthday if x > 0])
-            self._bynmonthday = tuple([x for x in bymonthday if x < 0])
+            self._bymonthday = tuple([x for x in bymonthday if int(x) > 0])
+            self._bynmonthday = tuple([x for x in bymonthday if int(x) < 0])
         # byweekno
         if byweekno is None:
             self._byweekno = None

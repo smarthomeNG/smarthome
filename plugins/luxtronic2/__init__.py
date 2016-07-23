@@ -265,11 +265,11 @@ class Luxtronic2(LuxBase):
             self.refresh_calculated()
             for c in self._calculated:
                 val = self.get_calculated(c)
-                if val:
+                if val is not None:
                     self._calculated[c](val, 'Luxtronic2')
             for d in self._decoded:
                 val = self.get_calculated(d)
-                if val:
+                if val is not None:
                     self._decoded[d](self._decode(d, val), 'Luxtronic2')
         cycletime = time.time() - start
         logger.debug("cycle takes {0} seconds".format(cycletime))

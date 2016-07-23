@@ -12,7 +12,7 @@ It you want to publish your plugin, get an [github account](https://github.com/u
    * __undo commit__ with the id XXXIDXXX: `git reset --hard XXXIDXXX && git push origin develop --force`
    * __copy commit__ to current branch: `git cherry-pick <commit>`
 
-   Follow the [commit Atom Feed](https://github.com/mknx/smarthome/commits/develop.atom)
+   Follow the [commit Atom Feed](https://github.com/smarthomeNG/smarthome/commits/develop.atom)
 
 ### Global settings
    * only push the current branch (not all): `git config --global push.default current`
@@ -25,13 +25,13 @@ The repositry consist of three main branches:
 
   * __master__: it contains the stable/release code
   * __develop__: is the branch where new features and plugins are merged into
-  * __gh-pages__: this branch contains the SmartHome.py website hostet at: [http://mknx.github.io/smarthome/](http://mknx.github.io/smarthome/)
+  * __gh-pages__: this branch contains the SmartHomeNG.py website 
 
 The branch setup is based on [this model](http://nvie.com/posts/a-successful-git-branching-model/).
 
 ### Getting the Source
   * you could fork the repository on github or
-  * get the repository: `git clone git://github.com/mknx/smarthome.git`
+  * get the repository: `git clone https://github.com/smarthomeNG/smarthome.git
   * create your own (local) branch (from develop) `git checkout -b myplugin develop`
 
 ## Python Version
@@ -71,7 +71,7 @@ In your plugin directory should be a __README.md__ (from the skeleton directory)
    * changes to plugins from other developers must be checked with the developer.
 
 ### Fork
-   * Goto [SmartHome Repo](https://github.com/mknx/smarthome) logged in with your username/password.
+   * Goto [SmartHome Repo](https://github.com/smarthomeNG/smarthome) logged in with your username/password.
    * Click on 'fork' in the right upper corner.
    * Change to your Terminal and enter `git clone https://USER:PASSWORD@github.com/USER/smarthome`
    * Checkout the develop branch `git checkout develop`
@@ -79,11 +79,11 @@ In your plugin directory should be a __README.md__ (from the skeleton directory)
    * Add the file `git add FILE`
    * Commit the changes with a usefull comment: 'git commit'
    * Push your changes to your repository: `git pull && git push`
-   * Create a pull request on github: base: mknx/develop  compare: USER/develop
+   * Create a pull request on github: base: smarthomeNG/develop  compare: USER/develop
 
 
 ### Merge
-If you think your code is ready for prime time send me a __pull request via github__ or an [email](mailto:marcus@popp.mx) with the code.
+If you think your code is ready for prime time send me a __pull request via github__ 
 
 Acitve commiters could merge the myplugin branch into develop with:
 
@@ -96,7 +96,7 @@ Acitve commiters could merge the myplugin branch into develop with:
 If you have problems pushing, you could check the repo git config. Mine looks like this:
 <pre>
 [remote "origin"]
-    url = git@github.com:mknx/smarthome.git
+    url = https://github.com/smarthomeNG/smarthome
     fetch = +refs/heads/*:refs/remotes/origin/*
 [branch "master"]
     remote = origin

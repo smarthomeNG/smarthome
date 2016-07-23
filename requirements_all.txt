@@ -1,0 +1,13 @@
+python_dateutil == 2.5.3
+PyYAML == 3.11
+#ephem >= 3.7
+astral==1.0
+
+#plugins.rest
+CherryPy == 3.5.0
+flask == 0.10.1
+flask-restful == 0.3.5
+jsonpickle == 0.9.3
+
+#plugins.avm
+requests == 2.9.1

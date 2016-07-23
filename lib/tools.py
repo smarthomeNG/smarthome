@@ -18,6 +18,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with SmartHome.py.  If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
+# Anpassungen 2016 Michael Würtenberger
+# Error Item für Verbindungsfehler bei fetch_url
 
 import base64
 import datetime
@@ -27,7 +29,7 @@ import math
 import subprocess
 import time
 
-logger = logging.getLogger('')
+logger = logging.getLogger(__name__)
 
 
 class Tools():
@@ -55,7 +57,8 @@ class Tools():
     def dt2ts(self, dt):
         return time.mktime(dt.timetuple())
 
-    def fetch_url(self, url, username=None, password=None, timeout=2):
+    def fetch_url(self, url, username=None, password=None, timeout=2, warn_no_connect=1, method = 'GET', body=None, errorItem = None):
+        connErrors = ['Host is down', 'timed out', '[Errno 113] No route to host']
         headers = {'Accept': 'text/plain'}
         plain = True
         if url.startswith('https'):
@@ -70,9 +73,14 @@ class Tools():
         if username and password:
             headers['Authorization'] = ('Basic '.encode() + base64.b64encode((username + ':' + password).encode()))
         try:
-            conn.request("GET", purl, headers=headers)
+            conn.request(method, purl, body, headers)
         except Exception as e:
-            logger.warning("Problem fetching {0}: {1}".format(url, e))
+            if format(e) in connErrors:
+                # diese fehler bekommen einen status, der in der visu oder sonst genutzt werden kann
+                if errorItem != None:
+                    errorItem(True,'_fetch_url')
+            if warn_no_connect == 1:
+                logger.warning("Problem fetching {0}: {1}".format(url, e))
             conn.close()
             return False
         resp = conn.getresponse()

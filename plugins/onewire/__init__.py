@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
-#  Copyright 2012-2013 Marcus Popp                         marcus@popp.mx
+#  Copyright 2012-2014 Marcus Popp                         marcus@popp.mx
 #########################################################################
 #  This file is part of SmartHome.py.    http://mknx.github.io/smarthome/
 #
@@ -207,7 +207,7 @@ class OwBase():
                 return keys
             elif page3[0] == 0xF4:  # AMSv2 V
                 return {'V': 'VAD'}
-            elif page3 == b'HUMIDIT3': # DataNab
+            elif page3 == b'HUMIDIT3':  # DataNab
                 keys['H'] = 'humidity'
                 return keys
             else:
@@ -220,6 +220,10 @@ class OwBase():
             return {'IA': 'sensed.A', 'IB': 'sensed.B', 'OA': 'PIO.A', 'OB': 'PIO.B'}
         elif typ == 'DS1420':  # Busmaster
             return {'BM': 'Busmaster'}
+        elif typ == 'DS2423':  # Counter
+            return {'CA': 'counter.A', 'CB': 'counter.B'}
+        elif typ == 'DS2408':  # I/O
+            return {'I0': 'sensed.0', 'I1': 'sensed.1', 'I2': 'sensed.2', 'I3': 'sensed.3', 'I4': 'sensed.4', 'I5': 'sensed.5', 'I6': 'sensed.6', 'I7': 'sensed.7', 'O0': 'PIO.0', 'O1': 'PIO.1', 'O2': 'PIO.2', 'O3': 'PIO.3', 'O4': 'PIO.4', 'O5': 'PIO.5', 'O6': 'PIO.6', 'O7': 'PIO.7'}
         else:
             logger.info("1-Wire: unknown sensor {0} {1}".format(addr, typ))
             return
@@ -236,7 +240,7 @@ class OneWire(OwBase):
     alive = True
     _discovered = False
     _flip = {0: '1', False: '1', 1: '0', True: '0', '0': True, '1': False}
-    _supported = {'T': 'Temperature', 'H': 'Humidity', 'V': 'Voltage', 'BM': 'Busmaster', 'B': 'iButton', 'L': 'Light/Lux', 'IA': 'Input A', 'IB': 'Input B', 'OA': 'Output A', 'OB': 'Output B', 'T9': 'Temperature 9Bit', 'T10': 'Temperature 10Bit', 'T11': 'Temperature 11Bit', 'T12': 'Temperature 12Bit', 'VOC': 'VOC'}
+    _supported = {'T': 'Temperature', 'H': 'Humidity', 'V': 'Voltage', 'BM': 'Busmaster', 'B': 'iButton', 'L': 'Light/Lux', 'IA': 'Input A', 'IB': 'Input B', 'OA': 'Output A', 'OB': 'Output B', 'I0': 'Input 0', 'I1': 'Input 1', 'I2': 'Input 2', 'I3': 'Input 3', 'I4': 'Input 4', 'I5': 'Input 5', 'I6': 'Input 6', 'I7': 'Input 7', 'O0': 'Output 0', 'O1': 'Output 1', 'O2': 'Output 2', 'O3': 'Output 3', 'O4': 'Output 4', 'O5': 'Output 5', 'O6': 'Output 6', 'O7': 'Output 7', 'T9': 'Temperature 9Bit', 'T10': 'Temperature 10Bit', 'T11': 'Temperature 11Bit', 'T12': 'Temperature 12Bit', 'VOC': 'VOC'}
 
     def __init__(self, smarthome, cycle=300, io_wait=5, button_wait=0.5, host='127.0.0.1', port=4304):
         OwBase.__init__(self, host, port)
@@ -379,21 +383,23 @@ class OneWire(OwBase):
                     logger.info("1-Wire: path not found for {0}".format(item.id()))
                     continue
                 try:
-                    value = float(self.read('/uncached' + path).decode())
-                except Exception:
-                    logger.info("1-Wire: problem reading {0}".format(addr))
+                    value = self.read('/uncached' + path).decode()
+                    if key.startswith('T') and value == '85.0000':
+                        logger.info("1-Wire: problem reading {0}. Wiring problem?".format(addr))
+                        continue
+                    value = float(value)
+                except Exception as e:
+                    logger.warning("1-Wire: problem reading {} {}: {}".format(addr, path, e))
                     if not self.connected:
                         return
                     else:
-                        continue
+                        self.close()
+                        break
                 if key == 'L':  # light lux conversion
                     if value > 0:
                         value = round(10 ** ((float(value) / 47) * 1000))
                     else:
                         value = 0
-                elif key.startswith('T') and value == '85':
-                    logger.info("1-Wire: problem reading {0}. Wiring problem?".format(addr))
-                    continue
                 elif key == 'VOC':
                     value = value * 310 + 450
                 item(value, '1-Wire', path)
@@ -431,7 +437,7 @@ class OneWire(OwBase):
                             continue
                         self._buses[bus].append(addr)
                         logger.info("1-Wire: {0} with sensors: {1}".format(addr, ', '.join(list(keys.keys()))))
-                        if 'IA' in keys or 'IB' in keys:
+                        if 'IA' in keys or 'IB' in keys or 'I0' in keys or 'I1' in keys or 'I2' in keys or 'I3' in keys or 'I4' in keys or 'I5' in keys or 'I6' in keys or 'I7' in keys:
                             table = self._ios
                         elif 'BM' in keys:
                             if addr in self._ibutton_masters:
@@ -450,7 +456,7 @@ class OneWire(OwBase):
                             for key in keys:
                                 if key in table[addr]:
                                     table[addr][key]['path'] = sensor + keys[key]
-                            for ch in ['A', 'B']:  # init PIO
+                            for ch in ['A', 'B', '0', '1', '2', '3', '4', '5', '6', '7']:  # init PIO
                                 if 'O' + ch in table[addr]:
                                     try:
                                         self.write(table[addr][key]['path'], self._flip[table[addr][key]['item']()])
@@ -466,7 +472,7 @@ class OneWire(OwBase):
             return
         addr = item.conf['ow_addr']
         key = item.conf['ow_sensor']
-        if key in ['IA', 'IB', 'OA', 'OB']:
+        if key in ['IA', 'IB', 'OA', 'OB', 'I0', 'I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'O0', 'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7']:
             table = self._ios
         elif key == 'B':
             table = self._ibuttons

@@ -192,7 +192,7 @@ class milight():
             if group == 3:
                 data_s = self.white_ch3
             if group == 4:
-                data_s = self.white_ch3
+                data_s = self.white_ch4
             self.send(data_s)        # call UDP to send WHITE if switched on
 
     # disco function  - 2nd command after switch (on)

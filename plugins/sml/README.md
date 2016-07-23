@@ -16,6 +16,8 @@ The plugin was tested with the following hardware:
 
    * Hager EHZ363Z5
    * Hager EHZ363W5
+   * EHM eHZ-GW8 E2A 500 AL1
+   * EHM eHZ-ED300L
 
 # Configuration
 
@@ -28,7 +30,7 @@ The plugin was tested with the following hardware:
   serialport = /dev/ttyUSB0
   # host = 192.168.2.1
   # port = 1234
-
+  # device = raw | hex | <known-device>
 </pre>
 
 The plugin reads data from smart power meter hardware by using a serial
@@ -51,10 +53,30 @@ Description of the attributes:
    * `serialport` - defines the serial port to use to read data from
    * `host` - instead of serial port you can use a network connection
    * `port` - additionally to the host configuration you can specify a port
+   * `device` - specifies connected device to indicate pre-processing
+
+The `device` attribute can be used to specify the connected device and the
+kind of data delivery. Since different devices (e.g. when connecting the
+power meter device via a LAN gateway) the data can be differently. Usually
+when connecting a serial device directly to the power meter device the
+raw data can be directly used with this plugin. Some other devices needs
+to be configured.
+
+The following kinds of device types are supported:
+   * `raw` - this is the default and means the raw SML binary data is
+     send to the plugin
+   * `hex` - can be used in case the SML data is encoded as hex string
+   * or a known device name
+
+In case you have a known device you can also specify this and the plugin
+knows which data pre-processing is required. The following known devices
+are supported:
+   * `smart-meter-gateway-com-1` - The Smart Meter Gateway COM-1
+     http://shop.co-met.info/artikeldetails/kategorie/Smart-Metering/artikel/smart-meter-gateway-com-1.html
 
 ## items.conf
 
-You can assign a value retrieved by the plugin to some of your items
+You can assign a value retrieved by the plugin to some of your items by
 using the OBIS identifier.
 
 Here's a list of OBIS codes which may be useful:
@@ -69,11 +91,42 @@ Here's a list of OBIS codes which may be useful:
    * 1-0:2.8.2*255 - Tariff 2 kWh delivery (out)
    * 1-0:16.7.0*255 - Current Delivery Watt (out)
 
+Instead of assigning the value for a given OBIS code, you can also assign meta
+information for an OBIS code which is included in the data packet sent from
+the power meter device.
+
+For the complete list of properties for an OBIS code see below. They can be
+assigned to items using the `sml_prop` attribute. In case one property is not
+available or explicitely unset it's value will be set to None.
+
+The following properties are available:
+   * `objName` - this is the OBIS code as string / binary data
+   * `status` - a status value
+   * `valTime` - the time of value (as seconds of unit start or as timestamp)
+   * `unit` - identifies the value's unit (e.g. W, kWh, V, A, ...)
+   * `scaler` - the scaler (10-factor shift) used to calculate the real value
+   * `value` - the value
+   * `signature` - the signature to protect the payload
+
+Additionally the following attributes will be calculated and also be provided:
+   * `obis` - the OBIS code as string
+   * `valueReal` - the real value when including the scaler calculation
+   * `unitName` - the name of the unit
+
+
+
 ### sml_obis
 
 This assigns the value for the given OBIS code to the item.
 
 e.g. sml_obis = 1-0:1.8.0*255
+
+### sml_prop
+
+Use this to assign other information for an OBIS code to the item. When not
+explicitely specified it defaults to `valueReal`.
+
+e.g. sml_prop = unitName
 
 ### Example
 
@@ -88,6 +141,10 @@ Here you can find a sample configuration:
     [[[current]]]
       type = num
       sml_obis = 1-0:16.7.0*255
+      [[[unit]]]
+        type = num
+        sml_obis = 1-0:16.7.0*255
+        sml_prop = unitName
 </pre>
 
 ## logic.conf

@@ -21,10 +21,10 @@
 
 import logging
 
-logger = logging.getLogger('')
+logger = logging.getLogger(__name__)
 
 
-class Plugin():
+class PluginName():
 
     def __init__(self, smarthome):
         self._sh = smarthome
@@ -55,5 +55,5 @@ class Plugin():
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    myplugin = Plugin('smarthome-dummy')
+    myplugin = PluginName('smarthome-dummy')
     myplugin.run()

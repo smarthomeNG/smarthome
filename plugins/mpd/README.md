@@ -93,7 +93,7 @@ You could specify a file, directory or URL which will be played if the value of 
 
 ## command(cmd)
 Send any of the commands: `play`, `pause`, `stop`, `next`, `previous`...<br />
-For a complete list see: [http://mpd.wikia.com/wiki/MusicPlayerDaemonCommands](http://mpd.wikia.com/wiki/MusicPlayerDaemonCommands).
+For a complete list see: [http://www.musicpd.org/doc/protocol/command_reference.html](http://www.musicpd.org/doc/protocol/command_reference.html)
 
 ## play(file)
 Plays the specified file, directory or URL.

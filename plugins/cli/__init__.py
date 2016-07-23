@@ -3,7 +3,7 @@
 #########################################################################
 #  Copyright 2012-2013 Marcus Popp                         marcus@popp.mx
 #########################################################################
-#  This file is part of SmartHome.py.    http://mknx.github.io/smarthome/
+#  This file is part of SmartHome.py.    
 #
 #  SmartHome.py is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import logging
 import threading
 import lib.connection
 
-logger = logging.getLogger('')
 
 
 class CLIHandler(lib.connection.Stream):
@@ -45,7 +44,7 @@ class CLIHandler(lib.connection.Stream):
         cmd = data.decode().strip()
         if cmd.startswith('ls'):
             self.push("Items:\n======\n")
-            self.ls(cmd.lstrip('ls').strip())
+            self.ls(cmd.lstrip('ls').strip(), '*' in cmd or ':' in cmd)
         elif cmd == 'la':
             self.la()
         elif cmd == 'lo':
@@ -58,6 +57,8 @@ class CLIHandler(lib.connection.Stream):
             self.cl()
         elif cmd.startswith('update ') or cmd.startswith('up '):
             self.update(cmd.lstrip('update').strip())
+        elif cmd.startswith('dump'):
+            self.dump(cmd.lstrip('dump').strip(), '*' in cmd or ':' in cmd)
         elif cmd.startswith('tr'):
             self.tr(cmd.lstrip('tr').strip())
         elif cmd.startswith('rl'):
@@ -77,19 +78,27 @@ class CLIHandler(lib.connection.Stream):
     def cl(self):
         self.sh.log.clean(self.sh.now())
 
-    def ls(self, path):
+    def ls(self, path, match=True):
         if not path:
             for item in self.sh:
                 self.push("{0}\n".format(item.id()))
         else:
-            item = self.sh.return_item(path)
-            if hasattr(item, 'id'):
-                if item.type():
-                    self.push("{0} = {1}\n".format(item.id(), item()))
-                else:
-                    self.push("{}\n".format(item.id()))
-                for child in item:
-                    self.ls(child.id())
+            if match:
+               items = self.sh.match_items(path)
+               childs = False
+            else:
+               items = [self.sh.return_item(path)]
+               childs = True
+            if len(items):
+                for item in items:
+                    if hasattr(item, 'id'):
+                        if item.type():
+                            self.push("{0} = {1}\n".format(item.id(), item()))
+                        else:
+                            self.push("{}\n".format(item.id()))
+                        if childs:
+                            for child in item:
+                                self.ls(child.id(), False)
             else:
                 self.push("Could not find path: {}\n".format(path))
 
@@ -111,11 +120,50 @@ class CLIHandler(lib.connection.Stream):
         if not value:
             self.push("You have to specify an item value. Syntax: up item = value\n")
             return
-        item = self.sh.return_item(path)
-        if not item.type():
-            self.push("Could not find item with a valid type specified: '{0}'\n".format(path))
-            return
-        item(value, 'CLI', self.source)
+        items = self.sh.match_items(path)
+        if len(items):
+            for item in items:
+                if not item.type():
+                    self.push("Could not find item with a valid type specified: '{0}'\n".format(path))
+                    return
+                item(value, 'CLI', self.source)
+        else:
+            self.push("Could not find any item with given pattern: '{0}'\n".format(path))
+
+    def dump(self, path, match=True):
+        if match:
+            items = self.sh.match_items(path)
+        else:
+            items = [self.sh.return_item(path)]
+        if len(items):
+            for item in items:
+                if hasattr(item, 'id') and item._type:
+                    self.push("Item {} ".format(item.id()))
+                    self.push("{\n")
+                    self.push("  type = {}\n".format(item.type()))
+                    self.push("  value = {}\n".format(item()))
+                    self.push("  age = {}\n".format(item.age()))
+                    self.push("  last_change = {}\n".format(item.last_change()))
+                    self.push("  changed_by = {}\n".format(item.changed_by()))
+                    self.push("  previous_value = {}\n".format(item.prev_value()))
+                    self.push("  previous_age = {}\n".format(item.prev_age()))
+                    self.push("  previous_change = {}\n".format(item.prev_change()))
+                    if hasattr(item, 'conf'):
+                        self.push("  config = {\n")
+                        for name in item.conf:
+                            self.push("    {} = {}\n".format(name, item.conf[name]))
+                        self.push("  }\n")
+                    self.push("  logics = [\n")
+                    for trigger in item.get_logic_triggers():
+                        self.push("    {}\n".format(trigger))
+                    self.push("  ]\n")
+                    self.push("  triggers = [\n")
+                    for trigger in item.get_method_triggers():
+                        self.push("    {}\n".format(trigger))
+                    self.push("  ]\n")
+                    self.push("}\n")
+        else:
+            self.push("Nothing found\n")
 
     def tr(self, logic):
         if not self.updates_allowed:
@@ -175,6 +223,7 @@ class CLIHandler(lib.connection.Stream):
         self.push('lt: list current thread names\n')
         self.push('update item = value: update the specified item with the specified value\n')
         self.push('up: alias for update\n')
+        self.push('dump item: dump details about given item\n')
         self.push('tr logic: trigger logic\n')
         self.push('rl logic: reload logic\n')
         self.push('rr logic: reload and run logic\n')
@@ -186,6 +235,7 @@ class CLIHandler(lib.connection.Stream):
 class CLI(lib.connection.Server):
 
     def __init__(self, smarthome, update='False', ip='127.0.0.1', port=2323):
+        self.logger = logging.getLogger(__name__)
         lib.connection.Server.__init__(self, ip, port)
         self.sh = smarthome
         self.updates_allowed = smarthome.string2bool(update)
@@ -194,7 +244,7 @@ class CLI(lib.connection.Server):
         sock, address = self.accept()
         if sock is None:
             return
-        logger.debug("{}: incoming connection from {} to {}".format(self._name, address, self.address))
+        self.logger.debug("{}: incoming connection from {} to {}".format(self._name, address, self.address))
         CLIHandler(self.sh, sock, address, self.updates_allowed)
 
     def run(self):

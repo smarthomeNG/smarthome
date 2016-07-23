@@ -3,6 +3,10 @@
     filename = init.py
     crontab = init
 
+[env_daily]
+    filename = daily.py
+    crontab = 0 6 * * = init
+
 [env_stat]
     filename = stat.py
     cycle = 300

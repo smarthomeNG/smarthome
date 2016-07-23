@@ -1,0 +1,56 @@
+ <!DOCTYPE html>
+{% extends "base.html" %}
+{% import "navbar.html" as nav with context %}
+{% block navbar %}
+	{{ nav }}
+{% endblock navbar %}
+
+{% block content %}
+    <style>
+    li.L0, li.L1, li.L2, li.L3,
+    li.L5, li.L6, li.L7, li.L8
+    { list-style-type: decimal !important }
+    </style>
+	<div class="container" style="width: 90%;">
+    <h3>SmarthomeNG {{ _('Logfile') }}:</h3><br/>
+    </div>
+    <div class="container" style="width: 90%;">
+        <div class="form-group" style="display:inline;">
+            <div style="float:left; font-size: 20px;">{{ _('Filter') }}:</div>
+            <input type="text" class="form-control" id="text_filter" value="{{ text_filter }}" style= "margin-left: 10px; width: 400px; float:left;"/>
+            <select class="form-control" id="log_level_filter" style="margin-left: 10px; width: 200px; float:left;">
+                <option {% if log_level_filter=="ALL" %}selected{% endif %} value="ALL">ALL</option>
+                <option {% if log_level_filter=="DEBUG" %}selected{% endif %} value="DEBUG">DEBUG</option>
+                <option {% if log_level_filter=="INFO" %}selected{% endif %} value="INFO">INFO</option>
+                <option {% if log_level_filter=="WARNING" %}selected{% endif %} value="WARNING">WARNING</option>
+                <option {% if log_level_filter=="ERROR" %}selected{% endif %} value="ERROR">ERROR</option>
+                <option {% if log_level_filter=="CRITICAL" %}selected{% endif %} value="CRITICAL">CRITICAL</option>
+            </select>
+        </div>
+        <span class="btn btn-default" style="float:left; margin-left: 10px;" onclick="location.href='/log_view.html?text_filter='+$('#text_filter').val()+'&log_level_filter='+$('#log_level_filter').val()">{{ _('Filter anwenden','button') }}</span>
+    </div>
+    <br style="clear:both;"/>
+    <div class="container" style="width: 90%;">
+<pre class="prettyprint linenums{% if current_page > 1 %}:{{ (current_page-1) * 1000 +1}}{% endif %}" style="max-height: 600px;">
+{% if log_lines %}{% for line in log_lines %}{{ line }}
+{% endfor %}{% else %}{{ _('no data available') }}{% endif %}</pre></div>
+<div class="container" style="width: 90%;">
+<table>
+    <tr><td style="width: 50px; text-align: center;">
+        <button type="button" id="fast-backward" class="btn btn-default" style="float:left; margin-left: 10px;" onclick="location.href='/log_view.html?text_filter='+$('#text_filter').val()+'&log_level_filter='+$('#log_level_filter').val()+'&page=1'"><i class="fa fa-fast-backward" aria-hidden="true"></i></button>
+    </td><td style="width: 50px; text-align: center;">
+        <button type="button" id="step-backward" class="btn btn-default" style="float:left; margin-left: 10px;" onclick="location.href='/log_view.html?text_filter='+$('#text_filter').val()+'&log_level_filter='+$('#log_level_filter').val()+'&page={{ current_page-1 }}'"><i class="fa fa-step-backward" aria-hidden="true"></i></button>
+    </td><td style="width: 50px; text-align: center;">
+        ({{ current_page }} / {{ pages }})
+    </td><td style="width: 50px; text-align: center;">
+        <button type="button" id="step-forward" class="btn btn-default" style="float:left; margin-left: 10px;" onclick="location.href='/log_view.html?text_filter='+$('#text_filter').val()+'&log_level_filter='+$('#log_level_filter').val()+'&page={{ current_page+1 }}'"><i class="fa fa-step-forward" aria-hidden="true"></i></button>
+    </td><td style="width: 50px; text-align: center;">
+        <button type="button" id="fast-forward" class="btn btn-default" style="float:left; margin-left: 10px;" onclick="location.href='/log_view.html?text_filter='+$('#text_filter').val()+'&log_level_filter='+$('#log_level_filter').val()+'&page={{ pages }}'"><i class="fa fa-fast-forward" aria-hidden="true"></i></button>
+    </td></tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+ {% if current_page <= 1 %}$('#fast-backward').prop('disabled', true);$('#step-backward').prop('disabled', true);{% endif %}
+ {% if current_page >= pages %}$('#fast-forward').prop('disabled', true);$('#step-forward').prop('disabled', true);{% endif %}
+</script>
+{% endblock %}

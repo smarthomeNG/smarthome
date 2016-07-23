@@ -26,11 +26,12 @@ logger = logging.getLogger('')
 
 class APCUPS():
 
-    def __init__(self, smarthome, host='127.0.0.1', port=3551):
+    def __init__(self, smarthome, host='127.0.0.1', port=3551, cycle=300):
         self._sh = smarthome
         self._host = host
         self._port = port
-        self._cycle = 300
+        self._cycle = int(cycle)
+        #self._cycle = 300
         self._items = {}
 
     def run(self):
@@ -51,7 +52,7 @@ class APCUPS():
 
     def update_item(self, item, caller=None, source=None, dest=None):
         if caller != 'plugin':
-            logger.info("update item: {0}".format(item.id()))
+            logger.debug("update item: {0}".format(item.id()))
 
     def update_status(self):
         # go and grab

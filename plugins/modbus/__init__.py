@@ -191,13 +191,16 @@ class Modbus():
             if (len(msg) >= 3) and (msg[0] == 0x01) and (msg[1] == 0x03) and (len(msg) == (msg[2] + 5)) and (self._calc_crc16(msg[:-2]) == msg[-2:]):
                 return msg
 
+    def _transfer(self, msg):
+        self._send(msg)
+        self._serial.drainOutput()
+        return self._receive()
+
     def _read_holding_registers(self, start_address, quantity):
         msg = bytes([self.slave_address, 0x03]) + start_address.to_bytes(2, byteorder='big') + quantity.to_bytes(2, byteorder='big')
-        self._send(msg)
-        response = self._receive()
+        response = self._transfer(msg)
         if response is None:
-            logger.warning(
-                "Modbus: no response when reading holding registers")
+            logger.warning("Modbus: no response when reading holding registers")
         elif (response[2] != (2 * quantity)):
             logger.warning("Modbus: wrong response length when reading holding registers")
         else:

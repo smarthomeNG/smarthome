@@ -146,7 +146,7 @@ class mpd(lib.connection.Client):
 
     def _send_volume(self, item, caller=None, source=None, dest=None):
         if caller != 'MPD':
-            self._send('setvol {0}'.format(item()), False)
+            self._send('setvol {0}'.format(int(item())), False)
 
     def _send_bool(self, item, caller=None, source=None, dest=None):
         if caller != 'MPD':
