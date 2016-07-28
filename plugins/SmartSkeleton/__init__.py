@@ -32,7 +32,7 @@ class PluginName(SmartPlugin, PluginSensor, PluginAktor):
     Main class of the Plugin. Does all plugin specific stuff and provides the update functions for the service
     """
     ALLOW_MULTIINSTANCE = True
-    PLUGIN_VERSION = "0.0.1"
+    PLUGIN_VERSION = "0.0.2"
 
     def __init__(self, smarthome, cycle=300):
 	    """
