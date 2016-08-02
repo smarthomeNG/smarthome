@@ -25,12 +25,12 @@ import datetime
 import functools
 import time
 import threading
+from lib.model.smartplugin import SmartPlugin
 
-logger = logging.getLogger('')
+class SQL(SmartPlugin):
 
-
-class SQL():
-
+    ALLOW_MULTIINSTANCE = False
+    PLUGIN_VERSION = "1.1.1"
     _version = 3
     _buffer_time = 60 * 1000
     # (period days, granularity hours)
@@ -52,12 +52,13 @@ class SQL():
         ORDER BY _start DESC;"""
 
     def __init__(self, smarthome, cycle=300, path=None, dumpfile=False):
+        self.logger = logging.getLogger(__name__)
 #       sqlite3.register_adapter(datetime.datetime, self._timestamp)
         self._sh = smarthome
         self.connected = False
         self._buffer = {}
         self._buffer_lock = threading.Lock()
-        logger.debug("SQLite {0}".format(sqlite3.sqlite_version))
+        self.logger.debug("SQLite {0}".format(sqlite3.sqlite_version))
         self._fdb_lock = threading.Lock()
         self._fdb_lock.acquire()
         self._dumpfile = dumpfile
@@ -68,15 +69,15 @@ class SQL():
         try:
             self._fdb = sqlite3.connect(self.path, check_same_thread=False)
         except Exception as e:
-            logger.error("SQLite: Could not connect to the database {}: {}".format(self.path, e))
+            self.logger.error("SQLite: Could not connect to the database {}: {}".format(self.path, e))
             self._fdb_lock.release()
             return
         self.connected = True
         integrity = self._fdb.execute("PRAGMA integrity_check(10);").fetchone()[0]
         if integrity == 'ok':
-            logger.debug("SQLite: database integrity ok")
+            self.logger.debug("SQLite: database integrity ok")
         else:
-            logger.error("SQLite: database corrupt. Seek help.")
+            self.logger.error("SQLite: database corrupt. Seek help.")
             self._fdb_lock.release()
             return
         self._fdb.execute("CREATE TABLE IF NOT EXISTS num (_start INTEGER, _item TEXT, _dur INTEGER, _avg REAL, _min REAL, _max REAL, _on REAL);")
@@ -89,9 +90,9 @@ class SQL():
         else:
             version = int(self._fdb.execute("SELECT version FROM common;").fetchone()[0])
             if version < self._version:
-                import plugins.sqlite.upgrade
-                logger.info("SQLite: upgrading database. Please wait!")
-                plugins.sqlite.upgrade.Upgrade(self._fdb, version)
+                import plugins.sqlite_visu2_8.upgrade
+                self.logger.info("SQLite: upgrading database. Please wait!")
+                plugins.sqlite_visu2_8.upgrade.Upgrade(self._fdb, version)
                 self._fdb.execute("UPDATE common SET version=:version;", {'version': self._version})
         self._fdb.commit()
         self._fdb_lock.release()
@@ -111,18 +112,18 @@ class SQL():
         if db_items:
             for item in db_items:
                 if item[0] not in current_items:
-                    logger.info("SQLite: deleting entries for {}".format(item[0]))
+                    self.logger.info("SQLite: deleting entries for {}".format(item[0]))
                     self._execute("DELETE FROM num WHERE _item='{}';".format(item[0]))
 
     def dump(self, dumpfile):
-        logger.info("SQLite: dumping database to {}".format(dumpfile))
+        self.logger.info("SQLite: dumping database to {}".format(dumpfile))
         self._fdb_lock.acquire()
         try:
             with open(dumpfile, 'w') as f:
                 for line in self._fdb.iterdump():
                     f.write('{}\n'.format(line))
         except Exception as e:
-            logger.warning("SQLite: Problem dumping to '{0}': {1}".format(dumpfile, e))
+            self.logger.warning("SQLite: Problem dumping to '{0}': {1}".format(dumpfile, e))
         finally:
             self._fdb_lock.release()
 
@@ -132,7 +133,7 @@ class SQL():
     def parse_item(self, item):
         if 'sqlite' in item.conf:
             if item.type() not in ['num', 'bool']:
-                logger.warning("SQLite: only supports 'num' and 'bool' as types. Item: {} ".format(item.id()))
+                self.logger.warning("SQLite: only supports 'num' and 'bool' as types. Item: {} ".format(item.id()))
                 return
             cache = self._fetchone("SELECT _start,_value from cache WHERE _item = '{}'".format(item.id()))
             if cache is not None:
@@ -195,7 +196,7 @@ class SQL():
             self._fdb.execute(*query)
             self._fdb.commit()
         except Exception as e:
-            logger.warning("SQLite: Problem with '{0}': {1}".format(query, e))
+            self.logger.warning("SQLite: Problem with '{0}': {1}".format(query, e))
         finally:
             self._fdb_lock.release()
 
@@ -207,7 +208,7 @@ class SQL():
                 return
             reply = self._fdb.execute(*query).fetchone()
         except Exception as e:
-            logger.warning("SQLite: Problem with '{0}': {1}".format(query, e))
+            self.logger.warning("SQLite: Problem with '{0}': {1}".format(query, e))
             reply = None
         finally:
             self._fdb_lock.release()
@@ -221,7 +222,7 @@ class SQL():
                 return
             reply = self._fdb.execute(*query).fetchall()
         except Exception as e:
-            logger.warning("SQLite: Problem with '{0}': {1}".format(query, e))
+            self.logger.warning("SQLite: Problem with '{0}': {1}".format(query, e))
             reply = None
         finally:
             self._fdb_lock.release()
@@ -245,7 +246,7 @@ class SQL():
         try:
             ts = ts - int(float(frame) * fac)
         except:
-            logger.warning("SQLite: unkown time frame '{0}'".format(frame))
+            self.logger.warning("SQLite: unkown time frame '{0}'".format(frame))
         return ts
 
     def _insert(self, item):
@@ -276,7 +277,7 @@ class SQL():
             self._fdb.execute("INSERT INTO num VALUES (?,?,?,?,?,?,?);", insert)
             self._fdb.commit()
         except Exception as e:
-            logger.warning("SQLite: problem updating {}: {}".format(item.id(), e))
+            self.logger.warning("SQLite: problem updating {}: {}".format(item.id(), e))
         finally:
             self._fdb_lock.release()
 
@@ -292,7 +293,7 @@ class SQL():
         if not self._fdb_lock.acquire(timeout=2):
             return
         try:
-            logger.debug("SQLite: pack database")
+            self.logger.debug("SQLite: pack database")
             for entry in self.periods:
                 now = self._timestamp(self._sh.now())
                 period, granularity = entry
@@ -309,7 +310,7 @@ class SQL():
             self._fdb.execute("VACUUM;")
             self._fdb.execute("PRAGMA shrink_memory;")
         except Exception as e:
-            logger.exception("problem packing sqlite database: {} period: {} type: {}".format(e, period, type(period)))
+            self.logger.exception("problem packing sqlite database: {} period: {} type: {}".format(e, period, type(period)))
             self._fdb.rollback()
         finally:
             self._fdb_lock.release()
@@ -376,7 +377,7 @@ class SQL():
         elif func == 'on':
             query = "SELECT ROUND(SUM(_on * _dur) / SUM(_dur), 2)" + where
         else:
-            logger.warning("Unknown export function: {0}".format(func))
+            self.logger.warning("Unknown export function: {0}".format(func))
             return
         _item = self._sh.return_item(item)
         if self._buffer[_item] != [] and end == 'now':

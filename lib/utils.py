@@ -13,14 +13,14 @@ IP_REGEX = re.compile(r"""
           # Dotted variants:
           (?:
             # Decimal 1-255 (no leading 0's)
-            [3-9]\d?|2(?:5[0-5]|[0-4]?\d)?|1\d{0,2}
+            [3-9]\d?|2(?:5[0-5]|[0-4]?\d)?|1\d{0,2}|0
           |
             0x0*[0-9a-f]{1,2}  # Hexadecimal 0x0 - 0xFF (possible leading 0's)
           )
           (?:                  # Repeat 0-3 times, separated by a dot
             \.
             (?:
-              [3-9]\d?|2(?:5[0-5]|[0-4]?\d)?|1\d{0,2}
+              [3-9]\d?|2(?:5[0-5]|[0-4]?\d)?|1\d{0,2}|0
             |
               0x0*[0-9a-f]{1,2}
             )
@@ -72,6 +72,26 @@ class Utils(object):
         """
         try:
             return bool(IP_REGEX.search(string))
+        except TypeError:
+            return False
+
+    @staticmethod
+    def is_int(string):
+        try:
+            int(string)
+            return True
+        except ValueError:
+            return False
+        except TypeError:
+            return False
+
+    @staticmethod
+    def is_float(string):
+        try:
+            float(string)
+            return True
+        except ValueError:
+            return False
         except TypeError:
             return False
 

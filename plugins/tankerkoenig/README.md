@@ -12,6 +12,16 @@ All mappings to items need to be done via your own logic.
 
 Forum thread to the plugin: https://knx-user-forum.de/forum/supportforen/smarthome-py/938924-benzinpreis-plugin
 
+Take care not to request the interface too often or for too many petrol stations. Please follow instructions given on
+https://creativecommons.tankerkoenig.de/#techInfo and e.g. use prices function for price retrieval. Static information
+such as name or location can be directly set in your python logics.
+
+Recommended by tankerkoenig is to store meta data (Name, Address etc.) statically in your code, db, file cache etc and
+just request / update prices via get_petrol_station_prices.
+Other ways of using the interface may result in mail communication with responsibles of tankerkoenig, telling you
+of using the interface in the way described above (static storage of meta data). Please take this into account when
+integrating it..
+
 # Configuration
 
 ## plugin.conf
@@ -60,10 +70,11 @@ Gets a list of petrol stations around provided coordinates, depending on a provi
 In the example, sh._lat and sh.._long are the geocoordinates configured for smarthome in etc/smarthome.conf. You
 can also set your own coordinates!
 <pre>
-cheapest = sh.tankerkoenig.get_petrol_stations(sh._lat, sh._lon, 'diesel', 'price', rad='10')
+cheapest = sh.tankerkoenig.get_petrol_stations(sh._lat, sh._lon, 'diesel', 'price', rad='2')
 </pre>
 Returned is an array of petrol station data, with the following available keys:
 'place', 'brand', 'houseNumber', 'street', 'id', 'lng', 'name', 'lat', 'price', 'dist', 'isOpen', 'postCode'
+Note: Take care with too high rad values, as this also increases load on tankerkoenig interface.
 
 ## get_petrol_station_detail(id)
 This funktion gets the details of one petrol station, identified by its internal TankerKoenig ID.
@@ -88,4 +99,9 @@ detail = sh.tankerkoenig.get_petrol_station_detail(sh.petrol_station.DemoBavaria
 sh.petrol_station.DemoBavariaPetrol.name(detail['name'])
 sh.petrol_station.DemoBavariaPetrol.isOpen(detail['isOpen'])
 sh.petrol_station.DemoBavariaPetrol.diesel(detail['diesel'])
+</pre>
+
+## Get prices of two petrol stations
+<pre>
+prices = sh.tankerkoenig.get_petrol_station_prices(['6437ff91-823c-40c6-b556-42553056f7cd','56e30926-02dd-41aa-9e05-1120cbafe34f'])
 </pre>

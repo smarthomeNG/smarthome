@@ -22,7 +22,7 @@ This function has one mandatory and two optional arguments. `sh.ical(file, delta
 
 It returns a dictonary with a datetime.date object as key and an array including
 the event start time
-the event ENd time
+the event end time
 the event's class type (e.g. private calendar entry)
 the event's summary, i.e. content
 

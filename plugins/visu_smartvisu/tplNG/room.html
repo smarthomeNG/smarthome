@@ -1,0 +1,21 @@
+/**
+* -----------------------------------------------------------------------------
+* @package     smartVISU
+* @author      Martin Gleiß
+* @copyright   2012
+* @license     GPL [http://www.gnu.de]
+* -----------------------------------------------------------------------------
+*/
+
+
+{% extends "rooms.html" %}
+
+{% block content %}
+
+	<h1><img class="icon" src='{{ icon0 }}{{ visu_img }}' />{{ visu_name }}</h1>
+
+	{{ visu_heading }}
+	{{ visu_widgets }}
+
+{% endblock %}
+

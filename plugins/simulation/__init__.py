@@ -34,20 +34,23 @@
 
 import logging
 from datetime import datetime, timedelta
+from lib.model.smartplugin import SmartPlugin
 
-logger = logging.getLogger('')
+class Simulation(SmartPlugin):
 
-class Simulation():
+    ALLOW_MULTIINSTANCE = False
+    PLUGIN_VERSION = "1.1.0.3"
 
     def __init__(self, smarthome,data_file):
-        logger.info('Init Simulation release 0.3')
+        self.logger = logging.getLogger(__name__)
+        self.logger.info('Init Simulation release 0.3')
         self._sh = smarthome
         self._datafile=data_file
         self.lastday=''
         smarthome.scheduler.add('midnight', self._midnight, cron='0 0 * *', prio=3)
 
     def run(self):
-        logger.info('Starting Simulation')
+        self.logger.info('Starting Simulation')
         self.alive = True
         self._start_record()
 
@@ -55,11 +58,11 @@ class Simulation():
         # They will not shutdown properly. (It's a python bug)
 
     def stop(self):
-        logger.info('Exit Simulation')
+        self.logger.info('Exit Simulation')
         try:    
             self.file.close()
         except:
-            logger.error('No file to close')
+            self.logger.error('No file to close')
         self.alive = False
 #--------------------------------- parse_item ----------------------------------
     def parse_item(self, item):
@@ -110,12 +113,12 @@ class Simulation():
 
     def _start_record(self):
         tank=self._get_tank()
-        logger.debug('Tank: {}'.format(tank))
+        self.logger.debug('Tank: {}'.format(tank))
         self.tank(tank)
         now = self._sh.now()
         last_entry = self._lastentry.replace(year=now.year, month=now.month, day=now.day,tzinfo=now.tzinfo)
-        logger.debug('last entry: {}'.format(last_entry))
-        logger.debug('now: {}'.format(now))
+        self.logger.debug('last entry: {}'.format(last_entry))
+        self.logger.debug('now: {}'.format(now))
         now -= timedelta(minutes=15)
         if(now.time() < last_entry.time()):
             self._schedule_recording_start(last_entry)
@@ -129,7 +132,7 @@ class Simulation():
         self.state(1,'Simulation')
         self._sh.scheduler.remove('startrecord')
         self._message_item('Recording starts {}'.format(time), caller='Simulation') 
-        logger.debug('Scheduling record start {}'.format(time))
+        self.logger.debug('Scheduling record start {}'.format(time))
         self._sh.scheduler.add('startrecord', self._start_recording, next=time)
 
 #----------------------------- _start_recording --------------------------------
@@ -137,12 +140,12 @@ class Simulation():
         self.state(2,'Simulation')
         self._sh.scheduler.remove('startrecord')
         self._message_item('Recording', caller='Simulation') 
-        logger.debug('starting record')
+        self.logger.debug('starting record')
         self.recording=True
         try:
             self.file=open(self._datafile,'a')
         except IOError as error:
-            logger.error('Cannot open file {} for writing: {}'.format(self._datafile,error))
+            self.logger.error('Cannot open file {} for writing: {}'.format(self._datafile,error))
             self._message_item('cannot write to file','Simulation') 
             self.state(0,'Smulation')
 
@@ -151,35 +154,35 @@ class Simulation():
         self.state(0,'Simulation')
         self._sh.scheduler.remove('startrecord')
         self._message_item('', caller='Simulation') 
-        logger.debug('stop record')
+        self.logger.debug('stop record')
         try:    
             self.file.close()
         except:
-            logger.error('Not running')
+            self.logger.error('Not running')
 
 #----------------------------- _start_playbacl ---------------------------------
     def _start_playback(self):
         self.state(4,'Simulation')
-        logger.debug('Starting playback')
+        self.logger.debug('Starting playback')
         try:    
             self.file=open(self._datafile,'r')
             self._wind_until_now()    
             self._set_item()
         except IOError as error:
-            logger.error('NoFile {}'.format(error))
+            self.logger.error('NoFile {}'.format(error))
             self._message_item('No File','Simulation') 
             self.state(0,'Smulation')
 
 #----------------------------- _stop_playback ---------------------------------
     def _stop_playback(self):
         self.state(0,'Simulation')
-        logger.debug('Stopping playback')
+        self.logger.debug('Stopping playback')
         self._sh.scheduler.remove('simulate')
         self._message_item('Playback stopped','Simulation') 
         try:
             self.file.close()
         except:
-            logger.error('No fileto close')
+            self.logger.error('No fileto close')
 
 #--------------------------------- _set_item -----------------------------------
 # Is called by the scheduler. Sets the item, reads the next event and
@@ -193,12 +196,12 @@ class Simulation():
         if 'value' in kwargs:
             value = kwargs['value']
         if target!= None and value!= None:
-            logger.debug('Setting {} to {}'.format(target,value))
+            self.logger.debug('Setting {} to {}'.format(target,value))
             item=self._sh.return_item(target) 
             try:
                 item(value, caller='Simulation') 
             except:
-                logger.error('Skipped unknown item: {}'.format(target))
+                self.logger.error('Skipped unknown item: {}'.format(target))
         entry=self.file.readline()
         if entry =='NextDay':
             entry=self.file.readline()
@@ -214,14 +217,14 @@ class Simulation():
             next=now.replace(hour=hour, minute=minute,second=seconds)
             dif=next-now
             if (self.lastday != '') and (self.lastday != day):
-                logger.debug('Found next day {} {} {} shitfing to tomorrow.'.format(target, value, next))
+                self.logger.debug('Found next day {} {} {} shitfing to tomorrow.'.format(target, value, next))
                 next=next+timedelta(1)
             self._message_item('Next event: {}<br>{}   {}'.format(time,target,value,'Simulation'))
-            logger.debug('Scheduling {} {} {}'.format(target, value, next))
+            self.logger.debug('Scheduling {} {} {}'.format(target, value, next))
             self._sh.scheduler.add('simulate', self._set_item, value={'target': target, 'value': value}, next=next)
             self.lastday=day    
         else:
-            logger.info('End of file reached, simulation ended')
+            self.logger.info('End of file reached, simulation ended')
             self._message_item('Simulation ended','Simulation') 
             self.state(0,'Smulation')
 
@@ -244,7 +247,7 @@ class Simulation():
                 next=now.replace(hour=hour, minute=minute,second=seconds)
                 dif=next-now
             else:
-                logger.info('End of file reached, simulation ended')
+                self.logger.info('End of file reached, simulation ended')
                 self._message_item('Simulation ended','Simulation') 
                 self.state(0,'Smulation')
                 return None
@@ -252,14 +255,14 @@ class Simulation():
 
 #-------------------------------- do_nothing ----------------------------------
     def _do_nothing(self):
-        logger.debug('Do nothing state: {} control: {}'.format(self.state(), self.control()))
+        self.logger.debug('Do nothing state: {} control: {}'.format(self.state(), self.control()))
 
 #-------------------------------- _midnight ----------------------------------
 # Called by the scheduler at midnight. It writes the NextDas keyword and 
 # removes the first day. 
 
     def _midnight(self):
-        logger.debug('Midnight')
+        self.logger.debug('Midnight')
         if (self.state()==2):
             self.file.write('NextDay\n')
             self.file.flush()
@@ -277,7 +280,7 @@ class Simulation():
         try:    
             self.file=open(self._datafile,'r')
         except IOError as error:
-            logger.error('NoFile {}'.format(error))
+            self.logger.error('NoFile {}'.format(error))
             return 0
         entry='bla'
         tank=0;
@@ -296,16 +299,16 @@ class Simulation():
 # 15th day is finioshed at midnight.
 
     def _remove_first_day(self):
-        logger.debug('Remove Day')
+        self.logger.debug('Remove Day')
         self.file.close()
 #        try:    
         self.file=open(self._datafile,'r')
 #        except IOError as error:
-#        logger.error('NoFile {}'.format(error))
+#        self.logger.error('NoFile {}'.format(error))
 #        try:    
         self.tempfile=open('/tmp/simulation.tmp','w')
 #        except IOError as error:
-#        logger.error('Canot open tempfile: {}'.format(error))
+#        self.logger.error('Canot open tempfile: {}'.format(error))
         entry='bla'    
         while (entry != 'NextDay\n') and (entry!=''):
             entry=self.file.readline()

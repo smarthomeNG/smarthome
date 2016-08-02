@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 #
 #########################################################################
-#  Copyright 2016 René Frieß                        rene.friess@gmail.com
-#  Version 1.1.8
+#  Copyright 2016 René Frieß                        rene.friess(a)gmail.com
+#  Version 1.1.11
 #########################################################################
 #  Free for non-commercial use
 #
-#  Plugin for the software SmartHome.py (NG), which allows to control and read 
+#  Plugin for the software SmartHomeNG, which allows to control and read
 #  enigma2 compatible devices such as the VUSolo4k. For the API, the openwebif
 #  needs to be installed.
 #
@@ -15,38 +15,36 @@
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  SmartHome.py is distributed in the hope that it will be useful,
+#  SmartHomeNG is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with SmartHome.py (NG). If not, see <http://www.gnu.org/licenses/>.
+#  along with SmartHomeNG. If not, see <http://www.gnu.org/licenses/>.
 #
 #########################################################################
 
-import datetime
 import logging
-import socket
 import time
-import threading
 from xml.dom import minidom
 import requests
 from requests.packages import urllib3
 from requests.auth import HTTPDigestAuth
+from lib.model.smartplugin import SmartPlugin
+
 
 class Enigma2Device():
     """
     This class encapsulates information related to a specific Enigma2Device, such has host, port, ssl, username, password, or related items
     """
-    def __init__(self, host, port, ssl, username, password, identifier):
+    def __init__(self, host, port, ssl, username, password):
         self.logger = logging.getLogger(__name__)
         self._host = host
         self._port = port
         self._ssl = ssl
         self._username = username
         self._password = password
-        self._identifier = identifier
         self._items = []
         self._items_fast = []
 
@@ -122,10 +120,12 @@ class Enigma2Device():
         """
         return self._password
 
-class Enigma2():
+class Enigma2(SmartPlugin):
     """
     Main class of the Plugin. Does all plugin specific stuff and provides the update functions for the Enigma2Device
     """
+    ALLOW_MULTIINSTANCE = True
+    PLUGIN_VERSION = "1.1.11"
 
     _url_suffix_map = dict([('about','/web/about'),
                             ('deviceinfo', '/web/deviceinfo'),
@@ -145,7 +145,7 @@ class Enigma2():
                           'e2instandby','e2servicereference']
     _key_event_information = ['current_eventtitle','current_eventdescription','current_eventdescriptionextended','e2servicereference', 'e2servicename']
 
-    def __init__(self, smarthome, username='', password='', host='dreambox', port='80', ssl='True', verify='False', cycle=300, fast_cycle=10, device_id='enigma2'):
+    def __init__(self, smarthome, username='', password='', host='dreambox', port='80', ssl='True', verify='False', cycle=300, fast_cycle=10): #, device_id='enigma2'
         """
         Initalizes the plugin. The parameters describe for this method are pulled from the entry in plugin.conf.
 
@@ -156,27 +156,19 @@ class Enigma2():
         :param ssl:                True or False => https or http in URLs
         :param verify:             True or False => verification of SSL certificate
         :param cycle:              Update cycle in seconds
-        :param device_id:          Internal identifier of the Enigma2Device
         """
         self.logger = logging.getLogger(__name__)
-        self.logger.info('Init Enigma2 Plugin with device_id %s' % device_id)
+        #self.logger.info('Init Enigma2 Plugin with device_id %s' % )
 
         self._session = requests.Session()
         self._timeout = 10
+        self._verify = self.to_bool(verify)
 
-        if verify == 'False':
-            self._verify = False
-        else:
-            self._verify = True
+        ssl = self.to_bool(ssl)
+        if ssl and not self._verify:
+            urllib3.disable_warnings()
 
-        if ssl == 'True':
-            ssl = True
-            if not self._verify:
-                urllib3.disable_warnings()
-        else:
-            ssl = False
-
-        self._enigma2_device = Enigma2Device(host, port, ssl, username, password, device_id)
+        self._enigma2_device = Enigma2Device(host, port, ssl, username, password)
 
         self._cycle = int(cycle)
         self._fast_cycle = int(fast_cycle)
@@ -190,8 +182,8 @@ class Enigma2():
         """
         Run method for the plugin
         """
-        self._sh.scheduler.add(__name__ + "_" + self._enigma2_device.get_identifier(), self._update_loop, cycle=self._cycle)
-        self._sh.scheduler.add(__name__ + "_" + self._enigma2_device.get_identifier() + "_fast", self._update_loop_fast, cycle=self._fast_cycle)
+        self._sh.scheduler.add(__name__ , self._update_loop, cycle=self._cycle)
+        self._sh.scheduler.add(__name__ + "_fast", self._update_loop_fast, cycle=self._fast_cycle)
         self.alive = True
 
     def stop(self):
@@ -201,25 +193,11 @@ class Enigma2():
         self.alive = False
 
 
-    def _build_url(self, suffix, parameter=''):
-        """
-        Builds a request url
-
-        :param suffix: url suffix, e.g. "/upnp/control/x_tam"
-        :return: string of the url, dependent on settings of the Enigma2Device
-        """
-        if self._enigma2_device.is_ssl():
-            url_prefix = "https"
-        else:
-            url_prefix = "http"
-        url = "%s://%s:%s%s?%s" % (url_prefix, self._enigma2_device.get_host(), self._enigma2_device.get_port(), suffix, parameter)
-        return url
-
     def _update_loop(self):
         """
         Starts the update loop for all known items.
         """
-        self.logger.debug('Starting update loop for identifier %s' % self._enigma2_device.get_identifier())
+        self.logger.debug('Starting update loop for instance %s' % self.get_instance_name())
         for item in self._enigma2_device.get_items():
             if not self.alive:
                 return
@@ -229,16 +207,15 @@ class Enigma2():
         """
         Starts the fast update loop for all known items.
         """
-        self._requestLock = threading.Lock()
-        self.logger.debug('Starting update loop for identifier %s' % self._enigma2_device.get_identifier())
+        self.logger.debug('Starting fast update loop for instance %s' % self.get_instance_name())
         for item in self._enigma2_device.get_fast_items():
             if not self.alive:
                 return
-            if item.conf['enigma2_data_type'] in self._key_event_information:
+            if self.get_iattr_value(item.conf, 'enigma2_data_type') in self._key_event_information:
                 self._update_event_items(cache, fast)
-            elif 'enigma2_page' in item.conf:
+            elif not self.get_iattr_value(item.conf, 'enigma2_page') is None:
                 self._update(item, fast)
-            elif item.conf['enigma2_data_type'] == 'current_volume':
+            elif self.get_iattr_value(item.conf, 'enigma2_data_type') == 'current_volume':
                 self._update_volume(item, cache, fast)
 
         # empty response cache
@@ -251,26 +228,23 @@ class Enigma2():
 
         :param item: The item to process.
         """
-        if 'device_id' in item.conf:
-            value = item.conf['device_id']
 
-            if value == self._enigma2_device.get_identifier():
-                # normal items
-                if 'enigma2_page' in item.conf:
-                    if item.conf['enigma2_page'] in ['about', 'powerstate', 'subservices', 'deviceinfo']:
-                        if item.conf['enigma2_data_type'] in self._keys_fast_refresh:
-                            self._enigma2_device._items_fast.append(item)
-                        else:
-                            self._enigma2_device._items.append(item)
-                elif 'enigma2_data_type' in item.conf:
-                    if item.conf['enigma2_data_type'] in self._keys_fast_refresh:
-                        self._enigma2_device._items_fast.append(item)
-                    else:
-                        self._enigma2_device._items.append(item)
-                    if item.conf['enigma2_data_type'] in ['current_volume', 'e2servicereference']:
-                        return self.execute_item
-                elif 'enigma2_remote_command_id' in item.conf or 'sref' in item.conf:
-                    return self.execute_item
+        # normal items
+        if self.has_iattr(item.conf, "enigma2_page"):
+            if self.get_iattr_value(item.conf, 'enigma2_page') in ['about', 'powerstate', 'subservices', 'deviceinfo']:
+                if self.get_iattr_value(item.conf, 'enigma2_data_type') in self._keys_fast_refresh:
+                    self._enigma2_device._items_fast.append(item)
+                else:
+                    self._enigma2_device._items.append(item)
+        elif self.has_iattr(item.conf, "enigma2_data_type"):
+            if self.get_iattr_value(item.conf, 'enigma2_data_type') in self._keys_fast_refresh:
+                self._enigma2_device._items_fast.append(item)
+            else:
+                self._enigma2_device._items.append(item)
+            if self.get_iattr_value(item.conf, 'enigma2_data_type') in ['current_volume', 'e2servicereference']:
+                return self.execute_item
+        elif self.has_iattr(item.conf, "enigma2_remote_command_id") or self.has_iattr(item.conf, "sref"):
+            return self.execute_item
 
     def execute_item(self, item, caller=None, source=None, dest=None):
         """
@@ -281,31 +255,52 @@ class Enigma2():
         """
         if caller != 'Enigma2':
             # enigma2 remote control
-            if 'enigma2_remote_command_id' in item.conf:
-                self.remote_control_command(item.conf['enigma2_remote_command_id'])
-                if item.conf['enigma2_remote_command_id'] in ['105','106','116']:
+            if self.has_iattr(item.conf, 'enigma2_remote_command_id'):
+                self.remote_control_command(self.get_iattr_value(item.conf, 'enigma2_remote_command_id'))
+                if self.get_iattr_value(item.conf, 'enigma2_remote_command_id') in ['105','106','116']:
                     self._update_event_items(cache = False)
-            elif 'sref' in item.conf:
-                self.zap(item.conf['sref'])
+            elif self.has_iattr(item.conf, 'sref'):
+                self.zap(self.get_iattr_value(item.conf, 'sref'))
                 self._update_event_items(cache = False)
-            elif 'enigma2_data_type' in item.conf:
-                if item.conf['enigma2_data_type'] == 'current_volume':
+            elif self.has_iattr(item.conf, 'enigma2_data_type'):
+                if self.get_iattr_value(item.conf, 'enigma2_data_type') == 'current_volume':
                     self.set_volume(item())
-                elif item.conf['enigma2_data_type'] == 'e2servicereference':
+                elif self.get_iattr_value(item.conf, 'enigma2_data_type') == 'e2servicereference':
                     self.zap(item())
 
-    def remote_control_command(self, command_id):
-        url = self._build_url(self._url_suffix_map['remotecontrol'],
-                              'command=%s' % command_id)
+    def box_request(self, suffix, parameter=''):
+        """
+        Send request to Enigma2 box, ret the answer and parse it
+
+        :param suffix: url suffix, e.g. "/upnp/control/x_tam"
+        :param parameter: optional parameter for the url
+        :return: parsed xml result string
+        """
+        if self._enigma2_device.is_ssl():
+            url = "https"
+        else:
+            url = "http"
+        url += "://%s:%s%s?%s" % (self._enigma2_device.get_host(), self._enigma2_device.get_port(), suffix, parameter)
+
         try:
             response = self._session.get(url, timeout=self._timeout,
                                          auth=HTTPDigestAuth(self._enigma2_device.get_user(),
                                                              self._enigma2_device.get_password()), verify=self._verify)
-        except Exception as e:
-            self.logger.error("Exception when sending GET request: %s" % str(e))
-            return
 
-        xml = minidom.parseString(response.content)
+        except Exception as e:
+            self.logger.error("Exception when sending GET request: {0}".format(str(e)))
+            return minidom.parseString('<noanswer/>')
+
+        try:
+            xml = minidom.parseString(response.content)
+        except Exception as e:
+            self.logger.error("Exception when parsing response: %s" % str(e))
+            xml = minidom.parseString('<noanswer/>')
+        return xml
+    
+    def remote_control_command(self, command_id):
+        xml = self.box_request(self._url_suffix_map['remotecontrol'], 'command=%s' % command_id)
+
         e2result_xml = xml.getElementsByTagName('e2result')
         e2resulttext_xml = xml.getElementsByTagName('e2resulttext')
         if (len(e2resulttext_xml) > 0 and len(e2result_xml) > 0):
@@ -320,15 +315,7 @@ class Enigma2():
         :param result: Array of audiotracks with keys: 'e2audiotrackdescription', 'e2audiotrackid', 'e2audiotrackpid', 'e2audiotrackactive'
         """
         result = []
-        url = self._build_url(self._url_suffix_map['getaudiotracks'])
-        try:
-            response = self._session.get(url, timeout=self._timeout, auth=HTTPDigestAuth(self._enigma2_device.get_user(),
-                                                                                         self._enigma2_device.get_password()),
-                                         verify=self._verify)
-            xml = minidom.parseString(response.content)
-        except Exception as e:
-            self.logger.error("Exception when sending GET request: %s" % str(e))
-            return
+        xml = self.box_request(self._url_suffix_map['getaudiotracks'])
 
         e2audiotrack_xml = xml.getElementsByTagName('e2audiotrack')
         if (len(e2audiotrack_xml)) > 0:
@@ -365,17 +352,8 @@ class Enigma2():
         :param e2servicereference: reference to the service
         :param title: optional title of "zap" action
         """
-        url = self._build_url(self._url_suffix_map['zap'],
-                              'sRef=%s&title=%s' % (e2servicereference, title))
-        try:
-            response = self._session.get(url, timeout=self._timeout,
-                                         auth=HTTPDigestAuth(self._enigma2_device.get_user(),
-                                                             self._enigma2_device.get_password()), verify=self._verify)
-        except Exception as e:
-            self.logger.error("Exception when sending GET request: %s" % str(e))
-            return
+        xml = self.box_request(self._url_suffix_map['zap'], 'sRef=%s&title=%s' % (e2servicereference, title))
 
-        xml = minidom.parseString(response.content)
         e2state_xml = xml.getElementsByTagName('e2state')
         e2statetext_xml = xml.getElementsByTagName('e2statetext')
         if (len(e2statetext_xml) > 0 and len(e2state_xml) > 0):
@@ -389,20 +367,11 @@ class Enigma2():
 
         :param value: value of the volume (int from 0 to 100)
         """
-        url = self._build_url(self._url_suffix_map['vol'],
-                              'set=set%s' % (value))
-        try:
-            response = self._session.get(url, timeout=self._timeout,
-                                         auth=HTTPDigestAuth(self._enigma2_device.get_user(),
-                                                             self._enigma2_device.get_password()), verify=self._verify)
-        except Exception as e:
-            self.logger.error("Exception when sending GET request: %s" % str(e))
-            return
+        xml = self.box_request(self._url_suffix_map['vol'], 'set=set%s' % (value))
 
-        xml = minidom.parseString(response.content)
         e2result_xml = xml.getElementsByTagName('e2result')
         e2resulttext_xml = xml.getElementsByTagName('e2resulttext')
-        if (len(e2resulttext_xml) > 0 and len(e2result_xml) > 0):
+        if len(e2resulttext_xml) > 0 and len(e2result_xml) > 0:
             if not e2resulttext_xml[0].firstChild is None and not e2result_xml[0].firstChild is None:
                 if e2result_xml[0].firstChild.data == 'True':
                     self.logger.debug(e2resulttext_xml[0].firstChild.data)
@@ -415,18 +384,11 @@ class Enigma2():
         messagetype=Number from 0 to 3, 0= Yes/No, 1= Info, 2=Message, 3=Attention
         timeout=Can be empty or the Number of seconds the Message should disappear after.
         """
-        url = self._build_url(self._url_suffix_map['message'],'text=%s&type=%s&timeout=%s' % (messagetext, messagetype, timeout))
-        try:
-            response = self._session.get(url, timeout=self._timeout, auth=HTTPDigestAuth(self._enigma2_device.get_user(),
-                                                          self._enigma2_device.get_password()), verify=self._verify)
-        except Exception as e:
-            self.logger.error("Exception when sending GET request: %s" % str(e))
-            return
-        
-        xml = minidom.parseString(response.content)
+        xml = self.box_request(self._url_suffix_map['message'],'text=%s&type=%s&timeout=%s' % (messagetext, messagetype, timeout))
+
         e2result_xml = xml.getElementsByTagName('e2result')
         e2resulttext_xml = xml.getElementsByTagName('e2resulttext')
-        if (len(e2resulttext_xml) > 0 and len(e2result_xml) >0):
+        if len(e2resulttext_xml) > 0 and len(e2result_xml) >0:
             if not e2resulttext_xml[0].firstChild is None and not e2result_xml[0].firstChild is None:
                 if e2result_xml[0].firstChild.data == 'True':
                     self.logger.debug(e2resulttext_xml[0].firstChild.data)
@@ -435,14 +397,7 @@ class Enigma2():
         """
         Retrieves the answer to a currently sent message, take care to take the timeout into account in which the answer can be given and start a thread which is polling the answer for that period.
         """
-        url = self._build_url(self._url_suffix_map['message'],'getanswer=now')
-        try:
-            response = self._session.get(url, timeout=self._timeout, auth=HTTPDigestAuth(self._enigma2_device.get_user(),
-                                                          self._enigma2_device.get_password()), verify=self._verify)
-            xml = minidom.parseString(response.content)
-        except Exception as e:
-            self.logger.error("Exception when sending GET request: %s" % str(e))
-            return
+        xml = self.box_request(self._url_suffix_map['message'],'getanswer=now')
 
         e2result_xml = xml.getElementsByTagName('e2state')
         e2resulttext_xml = xml.getElementsByTagName('e2statetext')
@@ -454,7 +409,7 @@ class Enigma2():
 
     def _update_event_items(self, cache = True, fast = False):
         for item in self._enigma2_device.get_fast_items():
-            if item.conf['enigma2_data_type'] in self._key_event_information:
+            if self.get_iattr_value(item.conf, 'enigma2_data_type') in self._key_event_information:
                 self._update_current_event(item, cache, fast)
 
     def _update_volume(self, item, cache = True, fast = False): #todo add cache
@@ -463,15 +418,7 @@ class Enigma2():
         
         :param item: item to be updated
         """
-        url = self._build_url(self._url_suffix_map['getcurrent'])
-        try:
-            response = self._session.get(url, timeout=self._timeout,
-                                         auth=HTTPDigestAuth(self._enigma2_device.get_user(),
-                                                             self._enigma2_device.get_password()), verify=self._verify)
-            xml = minidom.parseString(response.content)
-        except Exception as e:
-            self.logger.error("Exception when sending GET request: %s" % str(e))
-            return
+        xml = self.box_request(self._url_suffix_map['getcurrent'])
 
         volume = self._get_value_from_xml_node(xml, 'e2current')
         #self.logger.debug("Volume "+volume)
@@ -483,88 +430,68 @@ class Enigma2():
 
         :param item: item to be updated
         """
-        url = self._build_url(self._url_suffix_map['subservices'])
-
-        if not 'enigma2_data_type' in item.conf:
+        if self.get_iattr_value(item.conf, 'enigma2_data_type') is None:
             self.logger.error("No enigma2_data_type set in item!")
             return
 
-        result = self._cached_get_request('subservices', url, cache, fast)
+        xml = self._cached_get_request('subservices', self._url_suffix_map['subservices'], '', cache, fast)
 
-        try:
-            xml = minidom.parseString(result)
-        except Exception as e:
-            self.logger.error("Exception when parsing response: %s" % str(e))
-            return
+        e2servicereference = 'N/A'
+        test_xml = xml.getElementsByTagName('noanswer')
+        if len(test_xml) == 0:
+            element_xml = xml.getElementsByTagName('e2servicereference')
+            if len(element_xml) > 0:
+                e2servicereference = element_xml[0].firstChild.data
+            else:
+                e2servicereference = ''
+                self.logger.error("Attribute %s not available on the Enigma2Device" % self.get_iattr_value(item.conf, 'enigma2_data_type'))
 
-        element_xml = xml.getElementsByTagName('e2servicereference')
-        if (len(element_xml) > 0):
-            e2servicereference = element_xml[0].firstChild.data
-            #self.logger.debug(e2servicereference)
-        else:
-            self.logger.error("Attribute %s not available on the Enigma2Device" % item.conf['enigma2_data_type'])
-
-        if not e2servicereference == 'N/A' and not '1:0:0:0:0:0:0:0:0:0' in e2servicereference:
-            current_epgservice = self.get_current_epgservice_for_service_reference(e2servicereference)
+        if not e2servicereference == 'N/A' and '1:0:0:0:0:0:0:0:0:0' not in e2servicereference:
+            current_epgservice = self.get_current_epgservice_for_service_reference(e2servicereference, cache, fast)
         else:
             current_epgservice = {}
 
-        if item.conf['enigma2_data_type'] == 'e2servicename':
+        if self.get_iattr_value(item.conf, 'enigma2_data_type') == 'e2servicename':
             e2servicename = self._get_value_from_xml_node(xml, 'e2servicename')
             if e2servicename is None or e2servicename == 'N/A':
                 e2servicename = '-'
             item(e2servicename)
-        elif item.conf['enigma2_data_type'] == 'e2servicereference':
+        elif self.get_iattr_value(item.conf, 'enigma2_data_type') == 'e2servicereference':
             if e2servicereference is None or e2servicereference == 'N/A':
                 servicereference = '-'
             else:
                 servicereference = e2servicereference
             item(servicereference)
-        elif item.conf['enigma2_data_type'] == 'current_eventtitle':
+        elif self.get_iattr_value(item.conf, 'enigma2_data_type') == 'current_eventtitle':
             if 'e2eventtitle' in current_epgservice:
                item(current_epgservice['e2eventtitle'])
             else:
                 item('-')
-        elif item.conf['enigma2_data_type'] == 'current_eventdescription':
+        elif self.get_iattr_value(item.conf, 'enigma2_data_type') == 'current_eventdescription':
             if 'e2eventdescription' in current_epgservice:
                 item(current_epgservice['e2eventdescription'])
             else:
                 item('-')
-        elif item.conf['enigma2_data_type'] == 'current_eventdescriptionextended':
+        elif self.get_iattr_value(item.conf, 'enigma2_data_type') == 'current_eventdescriptionextended':
             if 'e2eventdescriptionextended' in current_epgservice:
                 item(current_epgservice['e2eventdescriptionextended'])
             else:
                 item('-')
 
-    def get_current_epgservice_for_service_reference(self, service_reference):
+    def get_current_epgservice_for_service_reference(self, service_reference, cache=True, fast=False):
         """
         Retrieves event information for a given service reference id
 
         :param referece of the service to retrieve data for:
         :return: dict of result data
         """
-        url = self._build_url(self._url_suffix_map['epgservice'], 'sRef=%s' % (service_reference))
-
-        try:
-            response = self._session.get(url, timeout=self._timeout,
-                                         auth=HTTPDigestAuth(self._enigma2_device.get_user(),
-                                                             self._enigma2_device.get_password()),
-                                         verify=self._verify)
-        except Exception as e:
-            self.logger.error("Exception when sending GET request: %s" % str(e))
-            return
-
-        try:
-            xml = minidom.parseString(response.content)
-        except Exception as e:
-            self.logger.error("Exception when parsing response: %s" % str(e))
-            return
-
+        xml = self._cached_get_request('epgservice', self._url_suffix_map['epgservice'], 'sRef=%s' % service_reference, cache, fast)
+            
         e2event_list_xml = xml.getElementsByTagName('e2event')
         result_entry = {}
         if (len(e2event_list_xml) > 0):
             e2eventdescription = self._get_value_from_xml_node(e2event_list_xml[0], 'e2eventdescription')
-            if  e2eventdescription is None:
+            if e2eventdescription is None:
                 e2eventdescription = '-'
             result_entry['e2eventdescription'] = e2eventdescription
 
@@ -588,30 +515,22 @@ class Enigma2():
         :param cache: cache for request true or false
         """
 
-        if not 'enigma2_data_type' in item.conf:
+        if self.get_iattr_value(item.conf, 'enigma2_data_type') is None:
             self.logger.error("No enigma2_data_type set in item!")
             return
 
-        url = self._build_url(self._url_suffix_map[item.conf['enigma2_page']])
+        xml = self._cached_get_request(self.get_iattr_value(item.conf, 'enigma2_page'), self._url_suffix_map[self.get_iattr_value(item.conf, 'enigma2_page')], '', cache, fast)
 
-        result = self._cached_get_request(item.conf['enigma2_page'], url, cache, fast)
-
-        try:
-            xml = minidom.parseString(result)
-        except Exception as e:
-            self.logger.error("Exception when parsing response: %s" % str(e))
-            return
-
-        if "/" in item.conf['enigma2_data_type']:
-            strings = item.conf['enigma2_data_type'].split('/')
+        if "/" in self.get_iattr_value(item.conf, 'enigma2_data_type'):
+            strings = self.get_iattr_value(item.conf, 'enigma2_data_type').split('/')
             parent_element_xml = xml.getElementsByTagName(strings[0])
             if len(parent_element_xml) > 0:
                 element_xml = parent_element_xml[0].getElementsByTagName(strings[1])
             else:
-                self.logger.error("Attribute %s not available on the Enigma2Device" % item.conf['enigma2_data_type'])
+                self.logger.info("Attribute %s not available on the Enigma2Device" % self.get_iattr_value(item.conf, 'enigma2_data_type'))
                 return
         else:
-            element_xml = xml.getElementsByTagName(item.conf['enigma2_data_type'])
+            element_xml = xml.getElementsByTagName(self.get_iattr_value(item.conf, 'enigma2_data_type'))
 
         if (len(element_xml) > 0):
             # self.logger.debug(element_xml[0].firstChild.data)
@@ -623,11 +542,11 @@ class Enigma2():
                         item(0)
             elif item.type() == 'num':
                 if not element_xml[0].firstChild is None:
-                    if (self._represents_int(element_xml[0].firstChild.data)):
+                    if self.is_int(element_xml[0].firstChild.data):
                         item(int(element_xml[0].firstChild.data))
-                    elif (self._represents_float(element_xml[0].firstChild.data)):
+                    elif self.is_float(element_xml[0].firstChild.data):
                         item(float(element_xml[0].firstChild.data))
-                    elif item.conf['enigma2_data_type'] in ['e2capacity', 'e2free']:
+                    elif self.get_iattr_value(item.conf, 'enigma2_data_type') in ['e2capacity', 'e2free']:
                         #self.logger.debug(element_xml[0].firstChild.data)
                         item(int(''.join(filter(lambda s: s.isdigit() or (s.startswith('-') and s[1:].isdigit()), element_xml[0].firstChild.data))))  # remove "GB" String and convert to int
                 else:
@@ -641,38 +560,31 @@ class Enigma2():
                 else:
                     item("-")
         else:
-            self.logger.error("Attribute %s not available on the Enigma2Device" % item.conf['enigma2_data_type'])
+            self.logger.info("Attribute %s not available on the Enigma2Device" % self.get_iattr_value(item.conf, 'enigma2_data_type'))
 
     #helper functions below
 
-    def _cached_get_request(self, cache_key, url, cache=True, fast=False):
+    def _cached_get_request(self, cache_key, urlpart, parameter='', cache=True, fast=False):
         if not fast:
             response_cache = self._response_cache
         else:
             response_cache = self._response_cache_fast
 
-        if not cache_key in response_cache or not cache:
-            try:
-                response = self._session.get(url, timeout=self._timeout,
-                                             auth=HTTPDigestAuth(self._enigma2_device.get_user(),
-                                                                 self._enigma2_device.get_password()),
-                                             verify=self._verify)
-            except Exception as e:
-                self.logger.error("Exception when sending GET request: %s" % str(e))
-                return
+        if cache_key not in response_cache or not cache:
+            xml = self.box_request(urlpart, parameter)
 
             if not fast:
-                self.logger.debug("Filling reponse cache for %s!" % url)
+                self.logger.debug("Filling reponse cache for %s!" % urlpart)
             else:
-                self.logger.debug("Filling fast reponse cache for %s!" % url)
+                self.logger.debug("Filling fast reponse cache for %s!" % urlpart)
 
-            response_cache[cache_key] = response.content
-            return response.content
+            response_cache[cache_key] = xml
+            return xml
         else:
             if not fast:
-                self.logger.debug("Accessing reponse cache for %s!" % url)
+                self.logger.debug("Accessing reponse cache for %s!" % urlpart)
             else:
-                self.logger.debug("Accessing fast reponse cache for %s!" % url)
+                self.logger.debug("Accessing fast reponse cache for %s!" % urlpart)
             return response_cache[cache_key]
 
     def _get_value_from_xml_node(self, node, tag_name):
@@ -682,17 +594,3 @@ class Enigma2():
             if not xml[0].firstChild is None:
                 data = xml[0].firstChild.data
         return data
-
-    def _represents_int(self, string):
-        try:
-            int(string)
-            return True
-        except ValueError:
-            return False
-
-    def _represents_float(self, string):
-        try:
-            float(string)
-            return True
-        except ValueError:
-            return False

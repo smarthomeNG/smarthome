@@ -42,14 +42,16 @@
 
 import logging
 import socket
-from lib.utils import Utils
+from lib.model.smartplugin import SmartPlugin
 
 ITEM_TAG = ['wol_mac']
-
-class WakeOnLan(object):
-    def __init__(self, sh):
+class WakeOnLan(SmartPlugin):
+    PLUGIN_VERSION = "1.1.2"
+    ALLOW_MULTIINSTANCE = True
+    def __init__(self, sh,*args, **kwargs):
         self._sh = sh
         self.logger = logging.getLogger(__name__)
+        print("###"+self.get_instance_name())
 
     def __call__(self, mac_adr):
         self.wake_on_lan(mac_adr)
@@ -61,7 +63,7 @@ class WakeOnLan(object):
         self.alive = False
 
     def parse_item(self, item):
-        if ITEM_TAG[0] in item.conf:
+        if self.has_iattr(item.conf, ITEM_TAG[0]):
             return self.update_item
 
     def parse_logic(self, logic):
@@ -69,13 +71,13 @@ class WakeOnLan(object):
 
     def update_item(self, item, caller=None, source=None, dest=None):
         if item():
-            if ITEM_TAG[0] in item.conf:
-                self.wake_on_lan(item.conf[ITEM_TAG[0]])
+            if self.has_iattr(item.conf, ITEM_TAG[0]):
+                self.wake_on_lan(self.get_iattr_value(item.conf,ITEM_TAG[0]))
 
     def wake_on_lan(self, mac_adr):
         self.logger.debug("WakeOnLan: send magic paket to {}".format(mac_adr))
         # check length and format 
-        if Utils.isMAC(mac_adr) != True:
+        if self.is_mac(mac_adr) != True:
             self.logger.warning("WakeOnLan: invalid mac address {}!".format(mac_adr))
             return
         if len(mac_adr) == 12 + 5:
@@ -88,7 +90,10 @@ class WakeOnLan(object):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         sock.sendto(bytearray.fromhex(data), ('<broadcast>', 7))
-
+    def testprint(self):
+        print(self.get_version())
+        print(self.get_instance_name())
+        print(self.to_bool("yes"))
 if __name__ == '__main__':
     myplugin = WakeOnLan('smarthome-dummy')
     logging.basicConfig(level=logging.DEBUG, format='%(relativeCreated)6d %(threadName)s %(message)s')

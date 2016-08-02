@@ -12,88 +12,15 @@ Visit:  https://github.com/smarthomeNG/
 
 ```
 
-This file gives **smarthome.py** developers additional information about the visu plugin. For information about the configuration of the plugin refer to **README.md**.
+This file gives **smarthome.py** developers of visualization software additional information about the visu_websocket plugin. The following sections describe the implemented websocket protocol, that can be used my a visu to interface with smarthomeNG.
 
-This file describes the widget handling for smartVISU widgets and the protocol of the WebSocket interface.
-
-
-# Files of the Plugin
-The plugin is made up by several files, which are described below.
-
-
-## __ init __.py
-Main file of the plugin. It implements the WebSocket Interface.
-
-## smartvisu.py
-This file contains the code for interfacing with smartVISU.
-
-## sv_widgets.py
-This file implements the smartVISU widget handling of the visu plugin.
-
-## generator.py
-This file contains code for generating a visu, if not using smartVISU. The was the way to create a visualization before the Interfacing with smartVISU was done.
-
-It is unknown if the code is functional, because it hasn't been tested.
-
-
-# Handling of smartVISU widgets
-The visu plugin handles widgets, which a plugin developer delivers with the plugin he has written. For this to wirk, the attribute **`smartvisu_dir`** in the visu section of **`plugin.conf`** must be set. 
-
-It handles widgets that define their own Javascript or css. The Javascript and css files must follow the same naming convention as the html file.
-
-## Add a widget to a plugin
-A developer of a plugin can add widgets to the plugin. He has to create a directory named **sv_widgets** in his plugin directory and add the file(s) of the widget to that directory.
-
-All files in the **sv_widgets** directory are copied to the smartVISU installation.
-
-A widget html-file may contain multiple widgets.
-
-For further automatic integration the widget must follow a name convention. It must be named **`widget_<class>.html`**. Where **`<class>`** is the class name for the import statement in smartVISU. If this convention is followed, a statement in the form of 
-
-```
-	{% import "widget_<class>.html" as <class> %}
-```
-is generated. 
-
-**Example**:
->For a file **`widget_hue.html`** the statement
-
->```
-	{% import "widget_hue.html" as hue %}
-```
-is generated.
-The widgets in that file can be called by the directives
-
-```
-	{{ hue.control( ... ) }}
- or
-	{{ hue.control_group( ... ) }}
-```
-
-If a Javascript file would exist for the hue widget, it would have to have the name  **`widget_hue.js`**. To include this file in smartVISU, the following lines are added to root.html:
->
->```
-{% if isfile('widgets/sh_widgets/widget_hue.js') %}
-	<script type="text/javascript" src="widgets/sh_widgets/widget_hue.js"></script>{% endif %}
-```
-
-The handling of a css file is analog to the Javascript handling.
-
-
-## Modifications to smartVISU made by the visu plugin
-For this functionality to work, smarthome.py must have write access to the smartVISU directory structure. The modifications to smartVISU are minimal invasive. The implementation may change, if smartVISU is forked.
-
-The visu plugin creates a directory named **_sh_widgets** in the **widgets** directory of smartVISU. All files copied from the different plugins are stored in this directory.
-
-On the first run the visu plugin creates a copy of the file **root.html** in the **pages/base** directory of smartVISU. The copied file is called **root_master.html**.
-
-On each start of smarthome.py the visu plugin creates a new version of **root.html**. The new version is made of the contents of **root_master.html** and the necessary statements are inserted.
+For information about the configuration of the plugin refer to **README.md**.
 
 .
 
 # WebSocket Interface
 
-The visa plugin implements a WebSocket server. This section describes the implemented protocol. The messages of the protocol consist of data in jason format. Following are the request commands which the visu plugin handles. 
+The visa plugin implements a WebSocket server. This section describes the implemented protocol. The messages of the protocol consist of data in json format. Following are the request commands which the visu plugin handles. 
 
 
 ## item
@@ -169,7 +96,7 @@ With the **`ping`** command a client checks if the connection to the plugin is a
 The plugin answers with:
 
 ```
-	{"cmd":"ping"}
+	{"cmd":"pong"}
 ```
 
 
@@ -194,7 +121,7 @@ The plugin does not send an answer to the **`logic`** command.
 ## series
 With the **`series`** command a client requests a series of values for an item. The values which are requested are stored in a database using the sqlite plugin. The **`series`** command only returns data for items which are configured to store data via the **sqlite** plugin. 
 
-SmartVISU uses the series command to get data for the plot widget. The following example requests a series of the average values of the last 48 hours:
+The series command is for instance used by SmartVISU to get data for the plot widget. The following example requests a series of the average values of the last 48 hours:
 
 ```
 	{

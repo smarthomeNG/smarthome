@@ -1,0 +1,54 @@
+{% block doc -%}
+<!DOCTYPE html>
+<html{% block html_attribs %}{% endblock html_attribs %}>
+{%- block html %}
+  <head>
+    {%- block head %}
+    <title>{% block title %}{% endblock title %}</title>
+
+    {%- block metas %}
+    <meta name="viewport" content="width=1200">
+    {#
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+	#}
+    {%- endblock metas %}
+
+    {%- block styles %}
+    <!-- Bootstrap
+    <link href="{ {bootstrap_find_resource('css/bootstrap.css', cdn='bootstrap')} }" rel="stylesheet">
+    -->
+    <link rel="icon" href="../static/img/favicon.ico" type="image/png">
+    <link rel="apple-touch-icon" href="../static/img/logo_small_32x32">
+    <link rel="apple-touch-icon" sizes="76x76" href="../static/img/logo_small_76x76.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../static/img/logo_small_120x120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../static/img/logo_small_152x152.png">
+    <link rel="apple-touch-startup-image" href="../static/img/logo_big.png"> 
+
+    <link rel="stylesheet" href="../static/css/font-awesome.min.css" type="text/css"/>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="../static/css/bootstrap-treeview.min.css" type="text/css"/>
+    <link rel="stylesheet" href="../static/css/bootstrap-reload.css" type="text/css"/>
+    {%- endblock styles %}
+    {% block scripts %}
+    <!-- <script src="../static/jquery.js"></script> -->
+    <script src="../static/js/jquery-2.2.3.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="../static/js/bootstrap-treeview.min.js"></script>
+    <script src="../static/js/bootstrap-reload.js"></script>
+    <script src="../static/js/google-prettify/run_prettify.js"></script>
+    {%- endblock scripts %}
+    {%- endblock head %}
+  </head>
+  <body{% block body_attribs %}{% endblock body_attribs %}>
+    {% block body -%}
+    {% block navbar %}
+    {%- endblock navbar %}
+    {% block content -%}
+    {%- endblock content %}
+
+    {%- endblock body %}
+  </body>
+{%- endblock html %}
+</html>
+{% endblock doc -%}

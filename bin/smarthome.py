@@ -226,6 +226,7 @@ class SmartHome():
         elif MODE == 'quiet':
             logging.getLogger().setLevel(logging.WARNING)        
 #       log_file.doRollover()
+        self.logger.warning("--------------------   Init SmartHomeNG {0}   --------------------".format(VERSION))
 
     def initMemLog(self):
         self.log = lib.log.Log(self, 'env.core.log', ['time', 'thread', 'level', 'message'], maxlen=self._log_buffer)
@@ -511,9 +512,12 @@ class SmartHome():
         objects = {}
         for module in list(sys.modules.values()):
             for sym in dir(module):
-                obj = getattr(module, sym)
-                if isinstance(obj, type):
-                    objects[obj] = sys.getrefcount(obj)
+                try:
+                    obj = getattr(module, sym)
+                    if isinstance(obj, type):
+                        objects[obj] = sys.getrefcount(obj)
+                except:
+                    pass
         return objects
 
 

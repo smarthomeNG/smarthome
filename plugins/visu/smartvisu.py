@@ -154,4 +154,3 @@ def pages(smarthome, directory):
         logger.warning("Could not write to {0}/navigation.html".format(outdir))
     shutil.copy(tpldir + '/rooms.html', outdir + '/')
     shutil.copy(tpldir + '/index.html', outdir + '/')
-

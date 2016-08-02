@@ -3,28 +3,32 @@
 #########################################################################
 #  Copyright 2016 <AUTHOR>                                        <EMAIL>
 #########################################################################
-#  This file is part of SmartHomeNG.py.   
+#  This file is part of SmartHomeNG.   
 #
-#  SmartHomeNG.py is free software: you can redistribute it and/or modify
+#  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  SmartHomeNG.py is distributed in the hope that it will be useful,
+#  SmartHomeNG is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with SmartHomeiNG.py. If not, see <http://www.gnu.org/licenses/>.
+#  along with SmartHomeNG. If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
 import logging
-logger = logging.getLogger(__name__)
-class FooClass:
+from lib.model.smartplugin import SmartPlugin
 
-    def __init__(self, smarthome):
-        self.sh = smarthome
+class FooClass(SmartPlugin):
+    PLUGIN_VERSION = "1.x.y"
+    ALLOW_MULTIINSTANCE = False
+
+    def __init__(self, sh, *args, **kwargs):
+        self._sh = sh
+        self.logger = logging.getLogger(__name__)
 
     def run(self):
         logger.debug("run method called")
@@ -32,8 +36,22 @@ class FooClass:
 
     def stop(self):
         self.alive = False
-        self.close()
+
+    def parse_item(self, item):
+        if self.has_iattr(item.conf, 'foo_itemtag'):
+            pass
+            return self.update_item
+
+    def parse_logic(self, logic):
+        pass
+
+    def update_item(self, item, caller=None, source=None, dest=None):
+        if item():
+            if self.has_iattr(item.conf, 'foo_itemtag'):
+                pass
+
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG, format='%(relativeCreated)6d %(threadName)s %(message)s')
     FooClass(None).run()
+

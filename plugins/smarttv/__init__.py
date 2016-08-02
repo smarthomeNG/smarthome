@@ -23,13 +23,13 @@ import logging
 import socket
 import time
 import base64
-
+from lib.model.smartplugin import SmartPlugin
 from uuid import getnode as getmac
 
-logger = logging.getLogger('')
+class SmartTV(SmartPlugin):
 
-
-class SmartTV():
+    ALLOW_MULTIINSTANCE = False # so far not implemented for multiinstance capability
+    PLUGIN_VERSION = "1.1.1"
 
     def __init__(self, smarthome, host, port=55000, tvid=1):
         self.logger = logging.getLogger(__name__)

@@ -33,15 +33,15 @@ class IMAP():
 
     def __init__(self, smarthome, host, username, password, cycle=300, port=None, ssl=False):
         self._sh = smarthome
-        self._ssl = smarthome.string2bool(ssl)
         self._host = host
         self._port = port
         self._username = username
         self._password = password
+        self.cycle = int(cycle)
         self._mail_sub = {}
         self._mail_to = {}
         self._mail = False
-        self._sh.scheduler.add('IMAP', self._cycle, cycle=int(cycle))
+        self._ssl = smarthome.string2bool(ssl)
 
     def _connect(self):
         if self._ssl:
@@ -116,6 +116,7 @@ class IMAP():
 
     def run(self):
         self.alive = True
+        self._sh.scheduler.add('IMAP', self._cycle, cycle=self.cycle)
 
     def stop(self):
         self.alive = False

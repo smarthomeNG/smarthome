@@ -25,6 +25,7 @@ import logging
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
+from lib.model.smartplugin import SmartPlugin
 
 __ETA_PU__ = 'eta_pu'
 __ETA_ERROR__ = 'eta_pu_error'
@@ -120,7 +121,10 @@ class Request():
 '''
 The ETA_PU plugin class.
 '''
-class ETA_PU():
+class ETA_PU(SmartPlugin):
+
+    ALLOW_MULTIINSTANCE = False
+    PLUGIN_VERSION = "1.1.1"
 
     def __init__(self, smarthome, address, port, setpath, setname):
         self._sh = smarthome

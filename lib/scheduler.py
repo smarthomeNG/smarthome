@@ -2,21 +2,22 @@
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
 # Copyright 2011-2014 Marcus Popp                          marcus@popp.mx
+# Copyright 2016- Christian Straßburg
 #########################################################################
-#  This file is part of SmartHome.py.    http://mknx.github.io/smarthome/
+#  This file is part of SmartHomeNG
 #
-#  SmartHome.py is free software: you can redistribute it and/or modify
+#  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  SmartHome.py is distributed in the hope that it will be useful,
+#  SmartHomeNG is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with SmartHome.py.  If not, see <http://www.gnu.org/licenses/>.
+#  along with SmartHomeNG.  If not, see <http://www.gnu.org/licenses/>.
 ##########################################################################
 
 import gc  # noqa
@@ -31,6 +32,7 @@ import os  # noqa
 import random
 import types  # noqa
 import subprocess  # noqa
+from lib.model.smartplugin import SmartPlugin
 
 import dateutil.relativedelta
 from dateutil.relativedelta import MO, TU, WE, TH, FR, SA, SU
@@ -231,6 +233,12 @@ class Scheduler(threading.Thread):
             cycle = {cycle: _value}
         if cycle is not None and offset is None:  # spread cycle jobs
                 offset = random.randint(10, 15)
+        # change name for multi instance plugins 
+        if obj.__class__.__name__ == 'method':
+            if isinstance(obj.__self__, SmartPlugin):
+                if obj.__self__.get_instance_name() != '':
+                    name = name +'_'+ obj.__self__.get_instance_name()
+                    logger.debug("Scheduler: Name changed by adding plugin instance name to: " + name)
         self._scheduler[name] = {'prio': prio, 'obj': obj, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
         if next is None:
             self._next_time(name, offset)
@@ -377,8 +385,8 @@ class Scheduler(threading.Thread):
             if not next_event:
                 next_event = self._parse_month(crontab, next_month=True)  # next month
             return next_event
-        except:
-            logger.error("Error parsing crontab: {}".format(crontab))
+        except Exception as e:
+            logger.error('Error parsing crontab "{}": {}'.format(crontab, e))
             return datetime.datetime.now(tzutc()) + dateutil.relativedelta.relativedelta(years=+10)
 
     def _parse_month(self, crontab, next_month=False):
@@ -402,7 +410,7 @@ class Scheduler(threading.Thread):
             day_range = day_range + self._range(day, 0o1, mdays)
         else:
             day_range = self._range(day, 0o1, mdays)
-        # combine the differnt ranges
+        # combine the different ranges
         event_range = sorted([str(day) + '-' + str(hour) + '-' + str(minute) for minute in minute_range for hour in hour_range for day in day_range])
         if next_month:  # next month
             next_event = event_range[0]
@@ -499,16 +507,35 @@ class Scheduler(threading.Thread):
     def _range(self, entry, low, high):
         result = []
         item_range = []
-        if entry == '*':
-            item_range = list(range(low, high + 1))
-        else:
+
+        # Check for multiple items and process each item recursively
+        if ',' in entry:
             for item in entry.split(','):
-                item = int(item)
+                result.extend(self._range(item, low, high))
+
+        # Check for intervals, e.g. "*/2", "9-17/2"
+        elif '/' in entry:
+             spec_range, interval = entry.split('/')
+             logger.error('Cron spec interval {} {}'.format(entry, interval))
+             result = self._range(spec_range, low, high)[::int(interval)]
+
+        # Check for numeric ranges, e.g. "9-17"
+        elif '-' in entry:
+             spec_low, spec_high = entry.split('-')
+             result = self._range('*', int(spec_low), int(spec_high))
+
+        # Process single item
+        else:
+            if entry == '*':
+                item_range = list(range(low, high + 1))
+            else:
+                item = int(entry)
                 if item > high:  # entry above range
                     item = high  # truncate value to highest possible
                 item_range.append(item)
-        for entry in item_range:
-            result.append('{:02d}'.format(entry))
+            for entry in item_range:
+                result.append('{:02d}'.format(entry))
+
         return result
 
     def _day_range(self, days):

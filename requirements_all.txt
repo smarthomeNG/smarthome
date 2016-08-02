@@ -1,6 +1,7 @@
 python_dateutil == 2.5.3
 PyYAML == 3.11
-
+#ephem >= 3.7
+astral==1.0
 
 #plugins.rest
 CherryPy == 3.5.0

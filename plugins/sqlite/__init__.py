@@ -25,12 +25,13 @@ import datetime
 import functools
 import time
 import threading
+from lib.model.smartplugin import SmartPlugin
 
-logger = logging.getLogger('')
 
+class SQL(SmartPlugin):
 
-class SQL():
-
+    ALLOW_MULTIINSTANCE = False
+    PLUGIN_VERSION = "1.1.1"
     _version = 2
     # (period days, granularity hours)
     periods = [(1900, 168), (400, 24), (32, 1), (7, 0.5), (1, 0.1)]
@@ -53,13 +54,14 @@ class SQL():
         ORDER BY time DESC;"""
 
     def __init__(self, smarthome, cycle=300, path=None):
+        self.logger = logging.getLogger(__name__)
         self._sh = smarthome
         self.connected = False
         self._dump_cycle = int(cycle)
         self._buffer = {}
         self._buffer_lock = threading.Lock()
 #       sqlite3.register_adapter(datetime.datetime, self._timestamp)
-        logger.debug("SQLite {0}".format(sqlite3.sqlite_version))
+        self.logger.debug("SQLite {0}".format(sqlite3.sqlite_version))
         self._fdb_lock = threading.Lock()
         self._fdb_lock.acquire()
         if path is None:
@@ -69,15 +71,15 @@ class SQL():
         try:
             self._fdb = sqlite3.connect(self.path, check_same_thread=False)
         except Exception as e:
-            logger.error("SQLite: Could not connect to the database {}: {}".format(self.path, e))
+            self.logger.error("SQLite: Could not connect to the database {}: {}".format(self.path, e))
             self._fdb_lock.release()
             return
         self.connected = True
         integrity = self._fdb.execute("PRAGMA integrity_check(10);").fetchone()[0]
         if integrity == 'ok':
-            logger.debug("SQLite: database integrity ok")
+            self.logger.debug("SQLite: database integrity ok")
         else:
-            logger.error("SQLite: database corrupt. Seek help.")
+            self.logger.error("SQLite: database corrupt. Seek help.")
             self._fdb_lock.release()
             return
         common = self._fdb.execute("SELECT * FROM sqlite_master WHERE name='common' and type='table';").fetchone()
@@ -88,7 +90,7 @@ class SQL():
         else:
             version = int(self._fdb.execute("SELECT version FROM common;").fetchone()[0])
             if version == 1:
-                logger.warning("SQLite: dropping history!")
+                self.logger.warning("SQLite: dropping history!")
                 self._fdb.execute("DROP TABLE history;")
         self._fdb.execute("DROP INDEX IF EXISTS idx;")
         self._fdb.execute(self._create_db)
@@ -111,7 +113,7 @@ class SQL():
 
     def parse_item(self, item):
         if 'history' in item.conf:  # XXX legacy history option remove sometime
-            logger.warning("{} deprecated history attribute. Use sqlite as keyword instead.".format(item.id()))
+            self.logger.warning("{} deprecated history attribute. Use sqlite as keyword instead.".format(item.id()))
             item.conf['sqlite'] = item.conf['history']
         if 'sqlite' in item.conf:
             item.series = functools.partial(self._series, item=item.id())
@@ -151,6 +153,18 @@ class SQL():
     def _datetime(self, ts):
         return datetime.datetime.fromtimestamp(ts / 1000, self._sh.tzinfo())
 
+    def dump(self, dumpfile):
+        self.logger.info("SQLite: dumping database to {}".format(dumpfile))
+        self._fdb_lock.acquire()
+        try:
+            with open(dumpfile, 'w') as f:
+                for line in self._fdb.iterdump():
+                    f.write('{}\n'.format(line))
+        except Exception as e:
+            self.logger.warning("SQLite: Problem dumping to '{0}': {1}".format(dumpfile, e))
+        finally:
+            self._fdb_lock.release()
+            
     def _dump(self):
         for item in self._buffer:
             self._buffer_lock.acquire()
@@ -170,7 +184,7 @@ class SQL():
                 self._fdb.execute("INSERT INTO history VALUES (?,?,?,?,?,?);", _insert)
                 self._fdb.commit()
             except Exception as e:
-                logger.warning("SQLite: problem updating {}: {}".format(item.id(), e))
+                self.logger.warning("SQLite: problem updating {}: {}".format(item.id(), e))
             finally:
                 self._fdb_lock.release()
 
@@ -210,7 +224,7 @@ class SQL():
         try:
             ts = ts - int(float(frame) * fac)
         except:
-            logger.warning("DB select: unkown time frame '{0}'".format(frame))
+            self.logger.warning("DB select: unkown time frame '{0}'".format(frame))
         return ts
 
     def _fetchone(self, *query):
@@ -222,7 +236,7 @@ class SQL():
         try:
             reply = self._fdb.execute(*query).fetchone()
         except Exception as e:
-            logger.warning("SQLite: Problem with '{0}': {1}".format(query, e))
+            self.logger.warning("SQLite: Problem with '{0}': {1}".format(query, e))
             reply = None
         finally:
             self._fdb_lock.release()
@@ -237,7 +251,7 @@ class SQL():
         try:
             reply = self._fdb.execute(*query).fetchall()
         except Exception as e:
-            logger.warning("SQLite: Problem with '{0}': {1}".format(query, e))
+            self.logger.warning("SQLite: Problem with '{0}': {1}".format(query, e))
             reply = None
         finally:
             self._fdb_lock.release()
@@ -249,7 +263,7 @@ class SQL():
         if not self._fdb_lock.acquire(timeout=2):
             return
         try:
-            logger.debug("SQLite: pack database")
+            self.logger.debug("SQLite: pack database")
             for entry in self.periods:
                 now = self._timestamp(self._sh.now())
                 prev = {}
@@ -279,7 +293,7 @@ class SQL():
             self._fdb.execute("VACUUM;")
             self._fdb.execute("PRAGMA shrink_memory;")
         except Exception as e:
-            logger.exception("problem packing sqlite database: {} period: {} type: {}".format(e, period, type(period)))
+            self.logger.exception("problem packing sqlite database: {} period: {} type: {}".format(e, period, type(period)))
             self._fdb.rollback()
         finally:
             self._fdb_lock.release()
@@ -364,7 +378,7 @@ class SQL():
         elif func == 'on':
             query = "SELECT AVG(power)" + where
         else:
-            logger.warning("Unknown export function: {0}".format(func))
+            self.logger.warning("Unknown export function: {0}".format(func))
             return
         tuples = self._fetchall(query)
         if tuples is None:

@@ -49,7 +49,10 @@ An example is shown below
     class_path = plugins.onewire
 [visu]
     class_name = WebSocket
-    class_path = plugins.visu
+    class_path = plugins.visu_websocket
+[smartvisu]
+    class_name = SmartVisu
+    class_path = plugins.visu_smartvisu
     smartvisu_dir = /var/www/html/smartVISU
 [cli]
     class_name = CLI

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 #
 #########################################################################
-#  Copyright 2016 René Frieß                        rene.friess@gmail.com
-#  Version 0.1
+#  Copyright 2016 René Frieß                        rene.friess(a)gmail.com
+#  Version 1.1.1
 #########################################################################
 #  Free for non-commercial use
 #
@@ -31,10 +31,15 @@
 
 import logging
 import requests
+import json
+from lib.model.smartplugin import SmartPlugin
 
-class TankerKoenig():
+class TankerKoenig(SmartPlugin):
+    ALLOW_MULTIINSTANCE = False
+    PLUGIN_VERSION = "1.1.1"
     _base_url = 'https://creativecommons.tankerkoenig.de/json/'
     _detail_url_suffix = 'detail.php'
+    _prices_url_suffix = 'prices.php'
     _list_url_suffix = 'list.php'
 
     def __init__(self, smarthome, apikey):
@@ -55,7 +60,16 @@ class TankerKoenig():
         self.alive = False
 
     def get_petrol_stations(self, lat, lon, type='diesel', sort='price', rad='4'):
-        #  https://creativecommons.tankerkoenig.de/#techInfo
+        """
+        Returns a list of information for petrol stations around a specific location and radius
+        Should not be used extensively, due to performance issues on tankerkoenig side.
+        https://creativecommons.tankerkoenig.de/#techInfo
+        @param lat: latitude of center to retrieve petrol station information for
+        @param long: longitude of center to retrieve petrol station information for
+        @param type: price type, e.g. diesel
+        @param sort: sort type, e.g. price
+        @param rad: radius in kilometers
+        """
         result_stations = []
         try:
             response = self._session.get(self._build_url("%s?lat=%s&lng=%s&rad=%s&sort=%s&type=%s&apikey=%s" % (self._list_url_suffix, lat, lon, rad, sort, type, self._apikey)))
@@ -74,7 +88,12 @@ class TankerKoenig():
         return result_stations
 
     def get_petrol_station_detail(self, id):
-        #  https://creativecommons.tankerkoenig.de/#techInfo
+        """
+        Returns detail information for a petrol station id
+        Should not be used extensively, due to performance issues on tankerkoenig side.
+        https://creativecommons.tankerkoenig.de/#techInfo
+        @param id: Internal ID of petrol station to retrieve information for
+        """
         try:
             response = self._session.get(self._build_url("%s?id=%s&apikey=%s" % (self._detail_url_suffix, id, self._apikey)))
         except Exception as e:
@@ -89,6 +108,36 @@ class TankerKoenig():
             result_station[key] = i[key]
 
         return result_station
+
+    def get_petrol_station_prices(self, ids):
+        """
+        Returns a list of prices for an array of petrol station ids
+        Recommended to be used by tankerkoenig team due to performance issues!!!
+        https://creativecommons.tankerkoenig.de/#techInfo
+        @param ids: Array of tankerkoenig internal petrol station ids to retrieve the prices for
+        """
+        result_station_prices = []
+        station_ids_string = json.dumps(ids)
+        try:
+            response = self._session.get(
+                self._build_url("%s?ids=%s&apikey=%s" % (self._prices_url_suffix, station_ids_string, self._apikey)))
+        except Exception as e:
+            self.logger.error(
+                "Exception when sending GET request for get_petrol_station_detail: %s" % str(e))
+            return
+        json_obj = response.json()
+        keys = ['e5', 'e10', 'diesel', 'status']
+        for id in ids:
+            result_station = dict()
+            result_station['id'] = id
+            for key in keys:
+                if key in json_obj['prices'][id]:
+                    result_station[key] = json_obj['prices'][id][key]
+                else:
+                    result_station[key] = ""
+            result_station_prices.append(result_station)
+
+        return result_station_prices
 
     def _build_url(self, suffix):
         """

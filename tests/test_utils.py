@@ -47,12 +47,42 @@ class LibUtilsTest(unittest.TestCase):
         self.assertFalse(Utils.is_ip(self))
 
         self.assertTrue(Utils.is_ip("1.2.3.4"))
-        self.assertFalse(Utils.is_ip("0.0.0.0"))
+        self.assertTrue(Utils.is_ip("0.0.0.0"))
         self.assertTrue(Utils.is_ip("255.255.255.255"))
         self.assertFalse(Utils.is_ip("256.256.256.256"))
         self.assertFalse(Utils.is_ip("2561.256.256.256"))
         self.assertFalse(Utils.is_ip("561.256.256.256"))
         self.assertFalse(Utils.is_ip("161.256.256"))
+        self.assertTrue(Utils.is_ip("10.0.0.173"))
+
+    def test_is_int(self):
+        self.assertFalse(Utils.is_int(""))
+        self.assertFalse(Utils.is_int(None))
+        self.assertFalse(Utils.is_int(self))
+
+        self.assertFalse(Utils.is_int("1.2.3.4"))
+        self.assertFalse(Utils.is_int("xyzabcd"))
+        self.assertFalse(Utils.is_int("1.0"))
+        self.assertTrue(Utils.is_int("255"))
+        self.assertTrue(Utils.is_int("0"))
+        self.assertTrue(Utils.is_int("-1"))
+
+    def test_is_float(self):
+        self.assertFalse(Utils.is_float(""))
+        self.assertFalse(Utils.is_float(None))
+        self.assertFalse(Utils.is_float(self))
+
+        self.assertFalse(Utils.is_float("1.2.3.4"))
+        self.assertFalse(Utils.is_float("xyzabcd"))
+        self.assertTrue(Utils.is_float("255"))
+        self.assertTrue(Utils.is_float("0"))
+        self.assertTrue(Utils.is_float("-1"))
+        self.assertTrue(Utils.is_float("1.0"))
+        self.assertTrue(Utils.is_float("0.0"))
+        self.assertTrue(Utils.is_float("5.0"))
+        self.assertTrue(Utils.is_float("-5.0"))
+        self.assertTrue(Utils.is_float("2.01"))
+        self.assertTrue(Utils.is_float("-2.01"))
 
     def test_to_bool(self):
         with self.assertRaises(Exception):
@@ -67,6 +97,7 @@ class LibUtilsTest(unittest.TestCase):
         self.assertFalse(Utils.to_bool(""))
         self.assertFalse(Utils.to_bool("n"))
         self.assertFalse(Utils.to_bool("false"))
+        self.assertFalse(Utils.to_bool("False"))
         self.assertFalse(Utils.to_bool("f"))
         self.assertFalse(Utils.to_bool(0))
 
@@ -76,6 +107,7 @@ class LibUtilsTest(unittest.TestCase):
         self.assertTrue(Utils.to_bool("1"))
         self.assertTrue(Utils.to_bool("y"))
         self.assertTrue(Utils.to_bool("true"))
+        self.assertTrue(Utils.to_bool("True"))
         self.assertTrue(Utils.to_bool("t"))
         self.assertTrue(Utils.to_bool(1))
 
