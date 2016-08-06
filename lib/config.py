@@ -22,7 +22,7 @@
 import logging
 import collections
 
-logger = logging.getLogger('')
+logger = logging.getLogger(__name__)
 
 
 def strip_quotes(string):
@@ -35,7 +35,7 @@ def strip_quotes(string):
 
 
 def parse(filename, config=None):
-    valid_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'
+    valid_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_@*'
     valid_set = set(valid_chars)
     if config is None:
         config = collections.OrderedDict()
@@ -43,9 +43,13 @@ def parse(filename, config=None):
     with open(filename, 'r', encoding='UTF-8') as f:
         linenu = 0
         parent = collections.OrderedDict()
-        for raw in f.readlines():
+        lines = iter(f.readlines())
+        for raw in lines:
             linenu += 1
             line = raw.lstrip('\ufeff')  # remove BOM
+            while line.rstrip().endswith('\\'):
+                linenu += 1
+                line = line.rstrip().rstrip('\\') + next(lines, '').lstrip()
             line = line.partition('#')[0].strip()
             if line is '':
                 continue

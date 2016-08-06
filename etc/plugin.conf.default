@@ -1,0 +1,159 @@
+#[cli]
+#    class_name = CLI
+#    class_path = plugins.cli
+#    ip = 0.0.0.0
+#    update = True 
+
+#[memlog]
+#    class_name = MemLog
+#    class_path = plugins.memlog
+#    name = alert
+
+#[knx]
+#    class_name = KNX
+#    class_path = plugins.knx
+#    host = 127.0.0.1 
+#    port = 6720
+#    send_time = 600 # update date/time every 600 seconds, default none
+#    time_ga = 6/0/0 # default none
+#    date_ga = 6/0/1 # default none
+#    busmonitor = True # log all knx messages, default false
+#    readonly = True # don't write to knx bus, default false
+#    instance = default
+
+#[ow]
+#    class_name = OneWire
+#    class_path = plugins.onewire
+#    host = 127.0.0.1
+#    port = 4304
+
+#[visu]
+#    class_name = WebSocket
+#    class_path = plugins.visu
+#    smartvisu_dir = /var/www/html/smartVISU
+# for Ubuntu 14.04 upwards the base for html has changed
+#    smartvisu_dir = /var/www/html/smartVISU
+
+#[sql]
+#    class_name = SQL
+#    class_path = plugins.sqlite
+
+#[apcups]
+#    class_name = APCUPS
+#    class_path = plugins.apcups
+#    host = localhost
+#    port = 3551 
+
+#[dmx1]
+#    class_name = ArtNet
+#    class_path = plugins.artnet
+#    artnet_subnet = 0
+#    artnet_net = 0
+#    artnet_universe = 0
+#    ip = 192.168.1.123
+#    port = 6454
+
+#[ast]
+#    class_name = Asterisk
+#    class_path = plugins.asterisk
+#    username = admin
+#    password = secret
+#    host = 127.0.0.1 # default
+#    port = 5038 # default
+
+#[fb1]
+#    class_name = AVM
+#    class_path = plugins.avm
+#    username = ... # optional
+#    password = ...
+#    host = fritz.box
+#    port = 49443
+#    cycle = 300
+#    ssl = True     # use https or not
+#    verify = False # verify ssl certificate
+#    call_monitor = True
+#    call_monitor_incoming_filter = ... #optional, don't set if you don't want to watch only one specific number with your call monitor
+#    avm_identifier = fritzbox_1
+
+#[boxcar]
+#    class_name = Boxcar
+#    class_path = plugins.boxcar
+#    apikey     = abcdefghij123456 # Get it from your Boxcar Account
+#    email      = your@mail.org    # Registered with Boxcar
+
+#[comfoair]
+#    class_name = ComfoAir
+#    class_path = plugins.comfoair
+#    kwltype = comfoair350       # Currently supported: comfoair350 and comfoair500
+#    host = 192.168.123.6        # Provide host and port if you want to use TCP connection (for a TCP to serial converter)
+#    port = 5555                 # Port
+#    serialport = /dev/ttyUSB0  # Enable this if you want to use a serial connection
+
+#[datalog]
+#    class_name = DataLog
+#    class_path = plugins.datalog
+#    path = var/log/data
+#    filepatterns = default:{log}-{year}-{month}-{day}.csv | yearly:{log}-{year}.csv
+#    logpatterns = csv:{time};{item};{value}\n
+#    cycle = 300
+
+
+#[dlms]
+#    class_name = DLMS
+#    class_path = plugins.dlms
+#    serialport = /dev/ttyO1
+#    baudrate = 300      # default 300
+#    update_cycle = 20   # default 20
+#    use_checksum = no   # default no
+#    reset_baudrate = no # default no
+#    no_waiting = yes    # default yes
+
+#[dmx]
+#    class_name = DMX
+#    class_path = plugins.dmx
+#    tty = /dev/usbtty...
+#    interface = nanodmx
+
+#[DuW]
+#   class_name = DuW
+#   class_path = plugins.drexelundweiss
+#   tty = /dev/ttyUSB0
+#   Busmonitor = 1
+#   LU_ID = 130
+#   WP_ID = 140
+
+#[squeezebox]
+#    class_name = Squeezebox
+#    class_path = plugins.squeezebox
+#    host = squeezeserver
+#    #    port = <port>
+
+#[uzsu]
+#    class_name = UZSU
+#    class_path = plugins.uzsu
+
+#[simulation]
+#    class_name = Simulation
+#    class_path = plugins.simulation
+#    data_file = /usr/local/smarthome/var/db/simulation.txt
+
+#[nw]
+#    class_name = Network
+#    class_path = plugins.network
+#    ip = 0.0.0.0
+#    port = 2727
+#    http = 8765
+#    tcp_acl= 127.0.0.1 | 192.168.0.34
+#    udp = no
+#    udp_acl= *
+
+#[wol]
+#    class_name = WakeOnLan
+#    class_path = plugins.wol
+
+#[homematic]
+#    class_name = Homematic
+#    class_path = plugins.homematic
+#    host = 192.168.50.250
+#    port = 2001
+

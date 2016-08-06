@@ -29,7 +29,7 @@ import math
 import subprocess
 import time
 
-logger = logging.getLogger('')
+logger = logging.getLogger(__name__)
 
 
 class Tools():

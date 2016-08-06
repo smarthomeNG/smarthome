@@ -1,0 +1,31 @@
+version: 1
+disable_existing_loggers: False
+formatters:
+  simple:
+    format: '%(asctime)s %(levelname)-8s %(threadName)-12s %(message)s'
+    datefmt: '%Y-%m-%d  %H:%M:%S'
+  detail:
+    format: '%(asctime)s %(levelname)-8s %(module)-12s %(threadName)-12s %(message)s -- %(filename)s:%(funcName)s:%(lineno)d'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: detail
+    stream: ext://sys.stdout
+  file:
+    class: logging.handlers.TimedRotatingFileHandler
+    formatter: simple
+    when: midnight
+    backupCount: 7
+    filename: ./var/log/smarthome.log
+#loggers:
+#  plugins.knx:
+#    level: INFO
+#  lib.scheduler:
+#    level: DEBUG
+#  plugins.cli:
+#    level: DEBUG
+root:
+    level: INFO
+    handlers: [file, console]

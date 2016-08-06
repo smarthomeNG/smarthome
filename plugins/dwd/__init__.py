@@ -30,15 +30,19 @@ import dateutil.tz
 import dateutil.relativedelta
 import xml.etree.cElementTree
 import threading
+from lib.model.smartplugin import SmartPlugin
 
-logger = logging.getLogger('')
 
+class DWD(SmartPlugin):
 
-class DWD():
+    ALLOW_MULTIINSTANCE = False
+    PLUGIN_VERSION = "1.1.1"
+
     _dwd_host = 'ftp-outgoing2.dwd.de'
     _warning_cat = {}
 
     def __init__(self, smarthome, username, password=True):
+        self.logger = logging.getLogger(__name__)
         self._sh = smarthome
         self._warnings_csv = smarthome.base_dir + '/plugins/dwd/warnings.csv'
         self._dwd_user = username
@@ -48,7 +52,7 @@ class DWD():
         try:
             warnings = csv.reader(open(self._warnings_csv, "r", encoding='utf_8'), delimiter=';')
         except IOError as e:
-            logger.error('Could not open warning catalog {}: {}'.format(self._warnings_csv, e))
+            self.logger.error('Could not open warning catalog {}: {}'.format(self._warnings_csv, e))
         for row in warnings:
             self._warning_cat[int(row[0])] = {'summary': row[1], 'kind': row[2]}
 
@@ -58,10 +62,10 @@ class DWD():
             try:
                 self._ftp = ftplib.FTP(self._dwd_host, self._dwd_user, self._dwd_password, timeout=1)
             except (socket.error, socket.gaierror) as e:
-                logger.error('Could not connect to {}: {}'.format(self._dwd_host, e))
+                self.logger.error('Could not connect to {}: {}'.format(self._dwd_host, e))
                 self.ftp_quit()
             except ftplib.error_perm as e:
-                logger.error('Could not login: {}'.format(e))
+                self.logger.error('Could not login: {}'.format(e))
                 self.ftp_quit()
 
     def run(self):
@@ -95,7 +99,7 @@ class DWD():
         try:
             self._ftp.retrbinary("RETR {}".format(filename), self._buffer_file)
         except Exception as e:
-            logger.info("problem fetching {0}: {1}".format(filename, e))
+            self.logger.info("problem fetching {0}: {1}".format(filename, e))
             del(self._buffer)
             self._buffer = bytearray()
             self.ftp_quit()
@@ -149,26 +153,30 @@ class DWD():
         last = sorted(files)[-1]
         fb = self._retr_file(last)
 
-        matchObj = re.findall(r'<tr>(.*?)</tr>', fb, re.M|re.I|re.S)   
-        legend = re.sub(cleanr,'', matchObj[0])
-        legend = list(filter(None, [s.strip() for s in legend.splitlines()]))  #filter empty lines
- 
-        fb = fb.splitlines()
-        if len(fb) < 8:
-            logger.info("problem fetching {0}".format(last))
-            return {}
-        header = fb[3] # index angepasst
-        date = re.findall(r"\d\d\.\d\d\.\d\d\d\d", header)[0].split('.')
-        date = "{}-{}-{}".format(date[2], date[1], date[0])      
-        
-        for element in matchObj:                   
-            if element.count(location):                 
-                data_string = re.sub(cleanr,'', element)               
-                data = list(filter(None, [s.strip() for s in data_string.splitlines()]))   #filter empty lines
-                if len(data) == len(legend):                  
-                    return dict(zip(legend, data))
-                else:
-                    logger.error('Number of elements in legend does not match data {} : {}'.format(str(len(legend)), str(len(data))))
+        matchObj = re.findall(r'<tr>(.*?)</tr>', fb, re.M|re.I|re.S)
+        if not matchObj is None:
+            if len(matchObj) > 0:
+                legend = re.sub(cleanr,'', matchObj[0])
+                legend = list(filter(None, [s.strip() for s in legend.splitlines()]))  #filter empty lines
+
+                fb = fb.splitlines()
+                if len(fb) < 8:
+                    self.logger.info("problem fetching {0}".format(last))
+                    return {}
+                header = fb[3] # index angepasst
+                if "Messwerte" in header:
+                    return {}
+                date = re.findall(r"\d\d\.\d\d\.\d\d\d\d", header)[0].split('.')
+                date = "{}-{}-{}".format(date[2], date[1], date[0])
+
+                for element in matchObj:
+                    if element.count(location):
+                        data_string = re.sub(cleanr,'', element)
+                        data = list(filter(None, [s.strip() for s in data_string.splitlines()]))   #filter empty lines
+                        if len(data) == len(legend):
+                            return dict(zip(legend, data))
+                        else:
+                            self.logger.error('Number of elements in legend does not match data {} : {}'.format(str(len(legend)), str(len(data))))
                 
         return {}
 
@@ -199,8 +207,23 @@ class DWD():
                 elif line.startswith('Vorhersage'):
                     header = line
                 elif line.count(location):
-                    header = re.sub(r"/\d\d?", '', header)
-                    day, month, year = re.findall(r"\d\d\.\d\d\.\d\d\d\d", header)[0].split('.')
+                    if frame == 'nacht':
+                        #header = re.sub(r"/\d\d?", '', header)
+                        day, month, year = re.findall(r"\d\d\D\d\d\.\d\d\.\d\d\d\d", header)[0].split('.')  #31/01.06.2016
+                        day1, day2 = day.split("/")
+                        if day2 == "01":
+                            if 1 < int(month) < 10:
+                                month = "0%s"%str(int(month)-1)
+                            elif int(month) == 1: #next day of night in new year, reset to last year
+                                month = "12"
+                                year = str(int(year)-1)
+                            else:
+                                month = str(int(month)-1)
+                        day = day1
+                    else:
+                        header = re.sub(r"/\d\d?", '', header)
+                        day, month, year = re.findall(r"\d\d\.\d\d\.\d\d\d\d", header)[0].split('.')
+                    #self.logger.debug(day+" "+month+" "+year)
                     date = datetime.datetime(int(year), int(month), int(day), hour, tzinfo=self.tz)
                     if re.search("\d\d\/\d\d", header):
                         date = date + datetime.timedelta(days=-1)
@@ -249,6 +272,6 @@ class DWD():
                             elif day.tag == 'dayafter_to':
                                 forecast[day2][kind.tag] = value
                             else:
-                                logger.debug("unknown day: {0}".format(day.tag))
+                                self.logger.debug("unknown day: {0}".format(day.tag))
         fxp.clear()
         return forecast

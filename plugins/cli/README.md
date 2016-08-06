@@ -33,6 +33,7 @@ lo: list all logics and next execution time
 lt: list current thread names
 update item = value: update the specified item with the specified value
 up: alias for update
+dump item: dump details about given item
 tr logic: trigger logic
 rl logic: reload logic
 rr logic: reload and run logic

@@ -8,7 +8,7 @@ plugin.conf
 <pre>
 [sql]
     class_name = SQL
-    class_path = plugins.sqlite
+    class_path = plugins.sqlite_visu2_8
 #   path = None
 #   dumpfile = /tmp/smarthomedb.dump
 </pre>

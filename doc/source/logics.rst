@@ -1,22 +1,135 @@
+
 ======
 Logics
 ======
 
+
 Introduction
 ============
 
-Logic items within SmartHome.py are simple python scripts. SmartHome.py
-expects the logic scripts in /usr/local/smarthome/logics/.
+Logics consist of two parts: One file `etc/logic.conf` contains the configuration
+about when and which logic script to run. The logic script themselves are Python script which are  located in subdirectory /logics/.
 
-Basic Structure
-===============
+A sample logic.conf
+~~~~~~~~~~~~~~~~~~~ 
 
-The most important object is 'sh'. This is the smarthome object. It
-contains every detail about the smarthome. With this object it is
-possible to access all items, plugins and basic functions of
-SmartHome.py. To get the value of an item call the name of it:
-sh.area.item(). To set a new value just specify it as argument:
-sh.area.item(new\_value).
+.. raw:: html
+
+   <pre># /usr/local/smarthome/etc/logic.conf
+    [InitSmarthomeNG]
+        filename = InitSmartHomeNG.py
+        crontab = init
+
+   [Hourly]
+       filename = time.py
+       cycle = 60
+
+   [Gate]
+       filename = gate.py
+       watch_item = gate.alarm # monitor for changes
+
+    [disks]
+        filename = disks.py
+        crontab = init | 0,5,10,15,20,25,30,35,40,45,50,55 * * * # run at start and every 5 minutes
+   </pre>
+
+Within the logic.conf the following attributes control the execution of a logic:
+
+watch\_item
+~~~~~~~~~~~
+
+The list of items will be monitored for changes.
+
+.. raw:: html
+
+   <pre>watch_item = house.alarm | garage.alarm</pre>
+
+Any change of the item house.alarm and garage.alarm triggers the execution of the given logic.
+It is possible to use an asterisk * for any path part (like a regular expression):
+
+.. raw:: html
+
+   <pre>watch_item = *.door</pre>
+
+this will trigger garage.door and also house.door but not house.hallway.door
+
+cycle
+~~~~~
+
+This will trigger the given logic in a recurring way
+
+.. raw:: html
+
+   <pre>cycle = 60</pre>
+
+Optional use a parameter
+
+.. raw:: html
+
+   <pre>cycle = 60 = 100</pre>
+
+This triggers the logic every 60 miutes and passes the values 100 to the logic. The object trigger['value'] can be queried and will here result in '100'
+
+crontab
+~~~~~~~
+
+Like Unix crontab with the following options:
+
+crontab = init Run the logic during the start of SmartHomeNG.
+
+crontab = minute hour day wday
+
+-  minute: single value from 0 to 59, or comma separated list, or \*
+   (every minute)
+-  hour: single value from 0 to 23, or comma separated list, or \*
+   (every hour)
+-  day: single value from 0 to 28, or comma separated list, or \* (every
+   day) Please note: dont use days greater than 28 in the moment.
+-  wday: weekday, single value from 0 to 6 (0 = Monday), or comma
+   separated list, or \* (every day)
+
+crontab = sunrise Runs the logic at every sunrise. Use ``sunset`` to run
+at sunset. For sunset / sunrise you could provide:
+
+-  an horizon offset in degrees e.g. crontab = sunset-6 You have to
+   specify your latitude/longitude in smarthome.conf.
+-  an offset in minutes specified by a 'm' e.g. crontab = sunset-10m
+-  a boundary for the execution
+
+   .. raw:: html
+
+      <pre>crontab = 17:00&lt;sunset  # sunset, but not bevor 17:00 (locale time)
+      crontab = sunset&lt;20:00  # sunset, but not after 20:00 (locale time)
+      crontab = 17:00&lt;sunset&lt;20:00  # sunset, beetween 17:00 and 20:00</pre>
+
+crontab = 15 \* \* \* = 50 Calls the logic with trigger['value'] # == 50
+
+Combine several options with '\|':
+
+.. raw:: html
+
+   <pre>crontab = init = 'start' | sunrise-2 | 0 5 * *</pre>
+
+prio
+~~~~
+
+Sets the priority of the logic script within the execution context of the scheduler. 
+Any value between 0 to 10 is allowed where 1 has the highest priority and 10 the lowest.
+
+Other attributes
+~~~~~~~~~~~~~~~~
+
+Other attributes could be accessed from the the logic with
+self.attribute\_name.
+
+
+Basic Structure of a logic script
+=================================
+
+The most important object is the smarthome object ``sh``. 
+Using this object all items, plugins and basic functions of SmartHomeNG can be accessed.
+To query an item's value call: ``sh.area.item()``
+To set a new value just specify it as argument sh.area.item(new\_value).
 
 .. raw:: html
 
@@ -26,10 +139,9 @@ sh.area.item(new\_value).
        sh.living_room.light('on')
    </pre>
 
-It is very important to access the items always with parantheses ()!
-Otherwise an error could occur.
+Items need to be accessed with parentheses, otherwise an exception will be raised
 
-It is possible to iterate over ``sh`` and the item objects.
+``sh`` can be used to iterate over the item objects:
 
 .. raw:: html
 
@@ -50,8 +162,8 @@ logic
 
 This object provides access to the current logic object. It is possible
 to change logic attributes (crontab, cycle, ...) during runtime. They
-will be lost after restarting SmartHome.py. ``while logic.alive:``
-creates an endless loop. This way SmartHome.py could stop the loop at
+will be lost after restarting SmartHomeNG. ``while logic.alive:``
+creates an endless loop. This way SmartHomeNG could stop the loop at
 shutdown. Next section (trigger) describes the special function
 ``logic.trigger()``. Predefined attributs of the logic object:
 
@@ -90,7 +202,7 @@ localtime.
 
    <pre># a simple loop over the log messages
    for entry in sh.log:
-       print(entry) # remark: if SmartHome.py is run in daemon mode output by 'print' is not visible.
+       print(entry) # remark: if SmartHomeNG is run in daemon mode output by 'print' is not visible.
    </pre>
 
 sh.now and sh.utcnow
@@ -148,20 +260,33 @@ sh.return\_items()
 ~~~~~~~~~~~~~~~~~~
 
 Returns all item objects.
-``for item in sh.return_items():     logger.info(item.id())``
+.. raw:: html
+
+   <pre>for item in sh.return_items():     
+      logger.info(item.id())</pre>
 
 sh.match\_items(regex)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Returns all items matching a regular expression path and optional attribute.
-``for item in sh.match_items('*.lights'):     # selects all items ending with 'lights'     logger.info(item.id())``
-``for item in sh.match_items('*.lights:special'):     # selects all items ending with 'lights' and attribute 'special'     logger.info(item.id())``
+
+.. raw:: html
+
+   <pre>
+   for item in sh.match_items('*.lights'):     # selects all items ending with 'lights'     
+       logger.info(item.id())
+
+   for item in sh.match_items('*.lights:special'):     # selects all items ending with 'lights' and attribute 'special'     
+       logger.info(item.id())</pre>
 
 sh.find\_items(configattribute)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Returns all items with the specified config attribute
-``for item in sh.find_items('my_special_attribute'):     logger.info(item.id())``
+.. raw:: html
+
+   <pre>for item in sh.find_items('my_special_attribute'):     
+       logger.info(item.id())</pre>
 
 find\_children(parentitem, configattribute):
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -248,3 +373,4 @@ In the logic environment are several python modules already loaded:
 -  Queue
 -  subprocess
 
+you could however import more modules as needed with the import statement.

@@ -1,0 +1,22 @@
+ <!DOCTYPE html>
+{% extends "base.html" %}
+{% import "navbar.html" as nav with context %}
+{% block navbar %}
+	{{ nav }}
+{% endblock navbar %}
+
+{% block content %}
+    <style>
+    li.L0, li.L1, li.L2, li.L3,
+    li.L5, li.L6, li.L7, li.L8
+    { list-style-type: decimal !important }
+    </style>
+	<div class="container" style="width: 90%;">
+    <h3>SmarthomeNG {{ _('Logik') }}:</h3>
+        {{ file_path }}<br/><br/>
+    </div>
+    <div class="container"><pre class="prettyprint lang-py linenums" style="max-height: 700px;">{% if logic_lines %}
+{% for line in logic_lines %}{{ line }}
+{% endfor %}{% else %}{{ _('no data available') }}{% endif %}</pre></div>
+{% endblock %}
+

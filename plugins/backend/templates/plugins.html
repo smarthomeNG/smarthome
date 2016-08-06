@@ -1,0 +1,45 @@
+ <!DOCTYPE html>
+{% extends "base.html" %}
+{% import "navbar.html" as nav with context %}
+{% block navbar %}
+    {{ nav }}
+{% endblock navbar %}
+
+{% block content %}
+<div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>{{ _('Nr.') }}</th>
+                    <th>{{ _('Type') }}</th>
+                    <th>{{ _('Plugin') }}</th>
+                    <th>{{ _('Classname') }}</th>
+                    <th>{{ _('Instanz') }}</th>
+                    <th>{{ _('Version') }}</th>
+                    <th>{{ _('Mehrere Instanzen möglich') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in plugins  %}
+                <tr>
+                    <td width="30px">{{ loop.index }}</td>
+                    <td width="30px">{% if p.smartplugin %}SmartPlugin{%else%}Classic{%endif%}
+                    <td width="200px">{{ p.classpath }}</td>
+                    <td width="160px">{{ p.classname }}</td>
+                    {% if p.smartplugin %}
+                        <td width="200px">
+                        {% if p.instancename %}{{ p.instancename }}{%else%}default{%endif%}
+                        </td>
+                        <td width="150px">{{ p.version }}</td>
+                        <td width="160px">{% if p.multiinstance %}{{ _('Ja') }}{%else%}{{ _('Nein') }}{%endif%}</td>
+                    {% else %}
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    {%endif%}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

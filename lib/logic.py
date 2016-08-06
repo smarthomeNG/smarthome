@@ -24,7 +24,7 @@ import os
 
 import lib.config
 
-logger = logging.getLogger('')
+logger = logging.getLogger(__name__)
 
 
 class Logics():

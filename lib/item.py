@@ -25,7 +25,7 @@ import os
 import pickle
 import threading
 
-logger = logging.getLogger('')
+logger = logging.getLogger(__name__)
 
 
 #####################################################################
@@ -262,6 +262,7 @@ class Item():
         if self._cache:
             if not os.path.isfile(self._cache):
                 _cache_write(self._cache, self._value)
+                logger.warning("Item {}: Created cache for item: {}".format(self._cache, self._cache))
         #############################################################
         # Crontab/Cycle
         #############################################################
@@ -373,6 +374,7 @@ class Item():
                 self._change_logger("Item {} = {} via {} {} {}".format(self._path, value, caller, source, dest))
         self._lock.release()
         if _changed or self._enforce_updates or self._type == 'scene':
+            self.__prev_update = self.__last_update #Multiclick
             self.__last_update = self._sh.now()
             for method in self.__methods_to_trigger:
                 try:
@@ -403,8 +405,20 @@ class Item():
     def add_logic_trigger(self, logic):
         self.__logics_to_trigger.append(logic)
 
+    def remove_logic_trigger(self, logic):
+        self.__logics_to_trigger.remove(logic)
+
+    def get_logic_triggers(self):
+        return self.__logics_to_trigger
+
     def add_method_trigger(self, method):
         self.__methods_to_trigger.append(method)
+    
+    def remove_method_trigger(self, method):
+        self.__methods_to_trigger.remove(method)
+
+    def get_method_triggers(self):
+        return self.__methods_to_trigger
 
     def age(self):
         delta = self._sh.now() - self.__last_change
@@ -431,6 +445,11 @@ class Item():
 
     def last_update(self):
         return self.__last_update
+
+    #Multiclick
+    def prev_update_age(self):
+        delta = self.__last_update - self.__prev_update
+        return delta.total_seconds()
 
     def prev_age(self):
         delta = self.__last_change - self.__prev_change

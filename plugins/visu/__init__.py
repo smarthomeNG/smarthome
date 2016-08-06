@@ -47,7 +47,7 @@ class JSONEncoder(json.JSONEncoder):
 
 
 class WebSocket(lib.connection.Server):
-
+    
     def __init__(self, smarthome, visu_dir=False, generator_dir=False, ip='0.0.0.0', port=2424, tls='no', smartvisu_dir=False, acl='ro'):
         lib.connection.Server.__init__(self, ip, port)
         self._sh = smarthome
@@ -67,6 +67,17 @@ class WebSocket(lib.connection.Server):
         if generator_dir:  # transition feature
             self.generator_dir = generator_dir
         self.smartvisu_dir = smartvisu_dir
+        logger.warning("")
+        logger.warning("+============================================================================+")
+        logger.warning("! The VISU plugin is deprecated                                              !")
+        logger.warning("! - Please switch to the VISU_WEBSOCKET and VISU_SMARTVISU plugins           !")
+        logger.warning("! - The old VISU plugin will be removed in the upcoming smarthomeNG v1.3     !")
+        logger.warning("!                                                                            !")
+        logger.warning("! Please read:                                                               !")
+        logger.warning("!   https://github.com/smarthomeNG/smarthome/wiki/Visu_Unterstützung_in_v1.2 !")
+        logger.warning("+============================================================================+")
+        logger.warning("")
+
 
     def _smartvisu_pages(self, directory):
         from . import smartvisu

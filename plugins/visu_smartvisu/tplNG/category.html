@@ -1,0 +1,40 @@
+/**
+* -----------------------------------------------------------------------------
+* @package     smartVISU
+* @author      Martin Gleiß 
+* @copyright   2012
+* @license     GPL [http://www.gnu.de]
+* -----------------------------------------------------------------------------
+*/
+
+
+{% extends "base.html" %}
+
+{% block sidebar %}
+	{% include 'category_nav.html' %}
+{% endblock %}
+
+{% block content %}
+
+	Category Content
+
+	<h1><img class="icon" src='{{ icon0 }}time_manual_mode.svg' />Konfiurationen</h1>
+	<a href="index.php?page=wohnung.config">Konfiguration</a>&nbsp;
+	<a href="index.php?page=beschattung">Beschattung</a>&nbsp;
+	<a href="index.php?page=beleuchtung">Beleuchtungsautomatik</a>&nbsp;
+	<a href="index.php?page=wohnung.verteilung">Verteilung</a>&nbsp;
+	<a href="index.php?page=mlgw">B&O Masterlink Gateway</a>&nbsp;
+	<a href="index.php?page=beoremote">Lintronic - Beo4 Remote</a>&nbsp;
+	<a href="index.php?page=sonos_bo">Sonos Musiksystgem</a>&nbsp;
+	<br>
+
+	<h1><img class="icon" src='{{ icon0 }}time_manual_mode.svg' />Kategorien</h1>
+	<a href="index.php?page=sun_moon">Sonne & Mond</a>&nbsp;
+	<a href="index.php?page=wetter">Wetter (Wunderground)</a>&nbsp;
+	<a href="index.php?page=wohnung.stati">Wohnungs-Helligkeiten</a>&nbsp;
+	<a href="index.php?page=category_phone">Telefonliste</a>&nbsp;
+	<a href="index.php?page=category_calendar">Terminkalender</a>&nbsp;
+
+{% endblock %}
+
+
