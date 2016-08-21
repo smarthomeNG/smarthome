@@ -98,13 +98,29 @@ is a writeable register.
         type = num
         systemair_regaddr = 112
 
-
     [[Frostschutzlevel]]
         # read/write
         # Frotschutzlevel, erlaubte Werte: 70,80,90,100,110,120 = 7,8,9,10,11,12°C
         type = num
         systemair_regaddr = 206
 
+    [[Sollwerttemperatur_Heizregister]]
+        # read/write
+        # Sollwerttemperatur des Heizregisters
+        # Werte 0 - 5 beziehen sich auf die Temperaturen von Temperaturlevel1_Heizregister bis Temperaturlevel5_Heizregister
+	    # anders als die offizielle Beschreibung: Wert 0 ist die Temp. von Temperaturlevel1_Heizregister, 1 von Temperaturlevel2_Heizregister usw.
+	    # Weitere Werte je nach Gerät (6-29) möglich
+	    # in Grad Celsius 0:0, 1:12, 2:13, 3:14, 4:15, 5:16, 6:17, 7:18, 8:19, 9:20, 10:21, 11:22 usw.
+        type = num
+        systemair_regaddr = 207
+        mod_write = true
+
+    [[Isttemperatur_Heizregister]]
+        # read
+        type = num
+        systemair_regaddr = 208
+        eval = value / 10 #to get Celsius
+        
     [[Temperatursensor_1]]
         # read
         type = num
