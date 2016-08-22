@@ -1,28 +1,161 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
-# Copyright 2013 Marcus Popp                               marcus@popp.mx
+# Copyright 2016-       Martin Sinn                         m.sinn@gmx.de
+# Parts Copyright 2013  Marcus Popp                        marcus@popp.mx
 #########################################################################
-#  This file is part of SmartHome.py.    http://mknx.github.io/smarthome/
+#  This file is part of SmartHomeNG
+#  https://github.com/smarthomeNG/smarthome
+#  http://knx-user-forum.de/
 #
-#  SmartHome.py is free software: you can redistribute it and/or modify
+#  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  SmartHome.py is distributed in the hope that it will be useful,
+#  SmartHomeNG is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with SmartHome.py. If not, see <http://www.gnu.org/licenses/>.
+#  along with SmartHomeNG. If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
 import logging
 import collections
+import os
+import lib.shyaml as shyaml
 
 logger = logging.getLogger(__name__)
+
+
+
+def parse_basename(basename, configtype=''):
+    '''
+    Load and parse a single configuration and merge it to the configuration tree
+    The configuration is only specified by the basename.
+    At the moment it looks for a .yaml file or a .conf file
+    .yaml files take preference
+    
+    :param basename: Name of the configuration
+    :param configtype: Optional string with config type (only used for log output)
+    :return: The resulting merged OrderedDict tree
+    '''
+    config = parse(basename+'.yaml')
+    if config == {}:
+        config = parse(basename+'.conf')
+    if config == {}:
+        logger.critical("No file '{}.*' found with {} configuration".format(basename, configtype))
+    return config
+        
+
+def parse_itemsdir(itemsdir, item_conf):
+    '''
+    Load and parse item configurations and merge it to the configuration tree
+    The configuration is only specified by the name of the directory.
+    At the moment it looks for .yaml files and a .conf files
+    Both filetypes are read, even if they have the same basename
+    
+    :param itemsdir: Name of folder containing the configuration files
+    :param item_conf: Optional OrderedDict tree, into which the configuration should be merged
+    :return: The resulting merged OrderedDict tree
+    '''
+    for item_file in sorted(os.listdir(itemsdir)):
+        if item_file.endswith('.conf') or item_file.endswith('.yaml'):
+            try:
+                item_conf = parse(itemsdir + item_file, item_conf)
+            except Exception as e:
+                logger.exception("Problem reading {0}: {1}".format(item_file, e))
+                continue
+    return item_conf
+
+
+def parse(filename, config=None):
+    '''
+    Load and parse a configuration file and merge it to the configuration tree
+    Depending on the extension of the filename, the apropriate parser is called
+    
+    :param filename: Name of the configuration file
+    :param config: Optional OrderedDict tree, into which the configuration should be merged
+    :return: The resulting merged OrderedDict tree
+    '''
+    if filename.endswith('.yaml') and os.path.isfile(filename):
+         return parse_yaml(filename, config)
+    elif filename.endswith('.conf') and os.path.isfile(filename):
+        return parse_conf(filename, config)
+    return {}
+
+
+# --------------------------------------------------------------------------------------
+
+
+def remove_comments(ydata, level=0):
+    '''
+    Removes comments from a dict or OrderedDict structure
+
+    :param ydata: configuration (sub)tree to work on
+    :param level: optional subtree level (used for recursion)
+    '''
+    level_keys = list(ydata.keys())
+    for key in level_keys:
+        if type(ydata[key]).__name__ in ['dict','OrderedDict']:
+            remove_comments(ydata[key], level+1)
+        else:
+            if key.startswith('comment'):
+                ydata.pop(key)
+
+
+def merge(source, destination):
+    '''
+    Merges an OrderedDict Tree into another one
+    
+    Run me with nosetests --with-doctest file.py
+
+    >>> a = { 'first' : { 'all_rows' : { 'pass' : 'dog', 'number' : '1' } } }
+    >>> b = { 'first' : { 'all_rows' : { 'fail' : 'cat', 'number' : '5' } } }
+    >>> merge(b, a) == { 'first' : { 'all_rows' : { 'pass' : 'dog', 'fail' : 'cat', 'number' : '5' } } }
+    True
+    
+    
+    :param source: OrderedDict tree to be merged into another one
+    :param destination: OrderedDict tree, into which the other OrderedDict tree is merged
+    :return: The resulting merged OrderedDict tree
+    '''
+    for key, value in source.items():
+        if isinstance(value, collections.OrderedDict):
+            # get node or create one
+            node = destination.setdefault(key, collections.OrderedDict())
+            merge(value, node)
+        else:
+            if type(value).__name__ == 'list':
+                destination[key] = value
+            else:
+                # convert to string and remove newlines from multiline attributes
+                destination[key] = str(value).replace('\n','')
+
+    return destination
+    
+    
+def parse_yaml(filename, config=None):
+    '''
+    Load and parse a yaml configuration file and merge it to the configuration tree
+
+    :param filename: Name of the configuration file
+    :param config: Optional OrderedDict tree, into which the configuration should be merged
+    :return: The resulting merged OrderedDict tree
+    '''
+    if config is None:
+        config = collections.OrderedDict()
+
+    items = shyaml.yaml_load(filename, ordered=True)
+    remove_comments(items)
+    
+    config = merge(items, config)
+    return config
+    
+
+# --------------------------------------------------------------------------------------
 
 
 def strip_quotes(string):
@@ -34,7 +167,15 @@ def strip_quotes(string):
     return string
 
 
-def parse(filename, config=None):
+def parse_conf(filename, config=None):
+    '''
+    Load and parse a configuration file which is in the old .conf format of smarthome.py
+    and merge it to the configuration tree
+
+    :param filename: Name of the configuration file
+    :param config: Optional OrderedDict tree, into which the configuration should be merged
+    :return: The resulting merged OrderedDict tree
+    '''
     valid_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_@*'
     valid_set = set(valid_chars)
     if config is None:
@@ -104,8 +245,3 @@ def parse(filename, config=None):
                     item[attr] = strip_quotes(value)
         return config
 
-
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    conf = parse('dev.conf')
-    print(conf)
