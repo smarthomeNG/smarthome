@@ -92,13 +92,6 @@ class DuW():
         if self._cmd:
             self._load_cmd()
 
-    def _wait(self,time_lapse):
-    	time_start = time.time()
-    	time_end = (time_start + time_lapse)
-     
-    	while time_end > time.time():
-    		pass
-
     def _convertresponse(self,antwort,teil):
         antwort = antwort.decode()
         allow = string.digits + ' '
@@ -364,7 +357,7 @@ class DuW():
                         logger.exception("Drexel Polling: {0}".format(e))
                     finally:
                         self._lock.release()
-                self._wait(0.1)
+                time.sleep(0.1)
             # exit poll service
             self._pollservice = False
         except Exception as e:
@@ -428,11 +421,10 @@ class DuW():
                         response = bytes()
                 else:
                     retries += 1
-                    self._wait(0.2)
                     logger.info("Drexel read timeout: {0}. Retries: {1}".format(response, retries))
                     if retries >= self._retrylimit:
                        break
-                self._wait(0.1)
+                time.sleep(0.1)
         except Exception as e:
             logger.warning("Drexel Reading: {0}".format(e))
         finally:
