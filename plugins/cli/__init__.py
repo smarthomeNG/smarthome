@@ -667,12 +667,12 @@ class CLICommands:
             logger.setLevel(num_level)
         else:
             handler.push("{} - {}:\n".format(type(logger).__name__, logging.getLevelName(logger.getEffectiveLevel())))
-        for handler in logger.handlers:
-            if isinstance(handler, logging.FileHandler):
+        for loghandler in logger.handlers:
+            if isinstance(loghandler, logging.FileHandler):
                 if parameter:
-                    handler.setLevel(num_level)
+                    loghandler.setLevel(num_level)
                 else:
-                    handler.push("{} - {}\n".format(type(handler).__name__, logging.getLevelName(getattr(handler, "level"))))
+                    handler.push("{} - {}\n".format(type(loghandler).__name__, logging.getLevelName(getattr(loghandlers, "level"))))
 
     # noinspection PyUnusedLocal
     def _cli_ld(self, handler, parameter, source):
