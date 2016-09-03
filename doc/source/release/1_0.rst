@@ -2,7 +2,8 @@
 Release 1.0 - 2013-11-14
 ========================
 
-Change to Python 3.X!!! (for X >= 2)
+Last official release for SmartHome.py. 
+Implements the change to Python 3.x!!! (for x >= 2)
 
 With Contributions from:
 ------------------------

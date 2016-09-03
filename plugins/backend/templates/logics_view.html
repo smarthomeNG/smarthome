@@ -1,0 +1,55 @@
+ <!DOCTYPE html>
+{% extends "base.html" %}
+{% import "navbar.html" as nav with context %}
+{% block navbar %}
+	{{ nav }}
+{% endblock navbar %}
+
+{% block content %}
+    <style>
+    li.L0, li.L1, li.L2, li.L3,
+    li.L5, li.L6, li.L7, li.L8
+    { list-style-type: decimal !important }
+    </style>
+	<div class="container" style="width: 90%;">
+    <h3>SmartHomeNG {{ _('Logik') }}: {{ logic }}</h3>
+        <strong>{{ _('Dateiname') }}:</strong> {{ file_path }}
+        {% if smarthome.scheduler.return_next(logic.name) %}
+        <br/><strong>{{ _('nächste Ausführung') }}:</strong> {% if not logic.enabled %}<span style="color:#bbb;">{% endif %}{{ smarthome.scheduler.return_next(logic.name).strftime('%Y-%m-%d %H:%M:%S%z') }}{% if not logic.enabled %}</span>{% endif %}
+        {% endif %}
+        <br/><br/>
+    </div>
+    <div class="container"><pre class="prettyprint lang-py linenums" style="max-height: 700px;">{% if logic_lines %}
+{% for line in logic_lines %}{{ line }}
+{% endfor %}{% else %}{{ _('no data available') }}{% endif %}</pre></div>
+ <div class="container">
+     <table class="table table-bordered table-hover table-striped">
+         <tr>
+             <td style="width:150px;">
+                <strong>{{ _('Cycle') }}</strong>
+             </td>
+             <td>
+                {% if logic.cycle == None %}-{% else %}{{ logic.cycle}} {% endif %}
+             </td>
+         </tr>
+          <tr>
+             <td>
+               <strong>{{ _('Watch_Items') }}</strong>
+             </td>
+             <td>
+                {% if logic.watch_item|length == 0 %}-{% else %}{{ logic.watch_item}} {% endif %}
+             </td>
+         </tr>
+         <tr>
+             <td>
+                <strong>{{ _('Status') }}:</strong>
+             </td>
+             <td><span style="color: {% if not logic.enabled %}red{% else %}green{% endif %};" class="fa {% if not logic.enabled %}fa-times-circle{% else %}fa-check-circle{% endif %}"></span>
+             {% if not logic.enabled %}{{ _('Nicht aktiv') }}{% else %}{{ _('Aktiv') }}{% endif %}
+             </td>
+         </tr>
+     </table>
+
+ </div>
+{% endblock %}
+

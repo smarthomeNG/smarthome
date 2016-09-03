@@ -23,7 +23,7 @@ import logging
 import os.path
 import csv
 
-logger = logging.getLogger('')
+logger = logging.getLogger(__name__)
 
 
 class Scenes():

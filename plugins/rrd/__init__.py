@@ -131,7 +131,7 @@ class RRD():
         if step is not None:
             query.extend(['--resolution', step])
         try:
-            meta, name, data = rrdtool.fetch(query)
+            meta, name, data = rrdtool.fetch(*query)
         except Exception as e:
             logger.warning("error reading {0} data: {1}".format(item, e))
             return None
@@ -181,7 +181,7 @@ class RRD():
             else:
                 query.extend(['--end', "now-{}".format(end)])
         try:
-            meta, name, data = rrdtool.fetch(query)
+            meta, name, data = rrdtool.fetch(*query)
         except Exception as e:
             logger.warning("error reading {0} data: {1}".format(item, e))
             return None
@@ -218,7 +218,7 @@ class RRD():
             args.append('RRA:AVERAGE:0.5:{}:1826'.format(int(86400 / rrd['step'])))  # 24h/5y
             args.append('RRA:AVERAGE:0.5:{}:1300'.format(int(604800 / rrd['step'])))  # 7d/25y
         try:
-            rrdtool.create(args)
+            rrdtool.create(*args)
             logger.debug("Creating rrd ({0}) for {1}.".format(rrd['rrdb'], rrd['item']))
         except Exception as e:
             logger.warning("Error creating rrd ({0}) for {1}: {2}".format(rrd['rrdb'], rrd['item'], e))

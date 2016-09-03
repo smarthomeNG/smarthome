@@ -23,9 +23,6 @@ import datetime
 import threading
 import xml.etree.cElementTree
 
-logger = logging.getLogger('')
-
-
 class wettercom():
     _server = 'api.wetter.com'
 
@@ -101,6 +98,7 @@ class wettercom():
             return retval
 
     def __init__(self, smarthome, project, apikey):
+        self.logger = logging.getLogger(__name__)
         self._sh = smarthome
         self._project = project
         self._apikey = apikey

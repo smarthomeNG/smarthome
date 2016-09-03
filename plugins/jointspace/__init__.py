@@ -1,27 +1,30 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
-# Copyright 2014 Serge Wagener                               serge@swa.lu
+# Copyright 2016 Serge Wagener (Foxi352)
 #########################################################################
-#  Jointspace-Plugin for SmartHome.py.    http://mknx.github.io/smarthome/
+#  This file is part of SmartHomeNG
+#  https://github.com/smarthomeNG/smarthome
+#  http://knx-user-forum.de/
 #
-#  This plugin is free software: you can redistribute it and/or modify
+#  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  This plugin is distributed in the hope that it will be useful,
+#  SmartHomeNG is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with this plugin. If not, see <http://www.gnu.org/licenses/>.
+#  along with SmartHomeNG If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
 import logging
 import threading
 
+from lib.model.smartplugin import SmartPlugin
 from time import sleep
 
 import http.client
@@ -30,8 +33,9 @@ import json
 logger = logging.getLogger('Jointspace')
 
 
-class Jointspace():
-
+class Jointspace(SmartPlugin):
+    ALLOW_MULTIINSTANCE = False
+    PLUGIN_VERSION = "1.1.2"
     # Initialize connection to receiver
     def __init__(self, smarthome, host, port=1925, cycle=10):
         logger.info("Jointspace: talking with jointspace running on TV set {0}:{1}".format(host, port))

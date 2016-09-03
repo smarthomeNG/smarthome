@@ -26,6 +26,7 @@ import json
 import logging
 import struct
 import ssl
+import struct
 import threading
 
 import lib.connection
@@ -46,7 +47,7 @@ class JSONEncoder(json.JSONEncoder):
 
 
 class WebSocket(lib.connection.Server):
-
+    
     def __init__(self, smarthome, visu_dir=False, generator_dir=False, ip='0.0.0.0', port=2424, tls='no', smartvisu_dir=False, acl='ro'):
         lib.connection.Server.__init__(self, ip, port)
         self._sh = smarthome
@@ -66,6 +67,17 @@ class WebSocket(lib.connection.Server):
         if generator_dir:  # transition feature
             self.generator_dir = generator_dir
         self.smartvisu_dir = smartvisu_dir
+        logger.warning("")
+        logger.warning("+============================================================================+")
+        logger.warning("! The VISU plugin is deprecated                                              !")
+        logger.warning("! - Please switch to the VISU_WEBSOCKET and VISU_SMARTVISU plugins           !")
+        logger.warning("! - The old VISU plugin will be removed in the upcoming smarthomeNG v1.3     !")
+        logger.warning("!                                                                            !")
+        logger.warning("! Please read:                                                               !")
+        logger.warning("!   https://github.com/smarthomeNG/smarthome/wiki/Visu_Unterstützung_in_v1.2 !")
+        logger.warning("+============================================================================+")
+        logger.warning("")
+
 
     def _smartvisu_pages(self, directory):
         from . import smartvisu
@@ -301,13 +313,21 @@ class WebSocketHandler(lib.connection.Stream):
         elif command == 'ping':
             self.json_send({'cmd': 'pong'})
         elif command == 'logic':
-            if 'name' not in data or 'val' not in data:
+            if 'name' not in data:
                 return
             name = data['name']
-            value = data['val']
             if name in self.logics:
-                logger.info("Client {0} triggerd logic {1} with '{2}'".format(self.addr, name, value))
-                self.logics[name].trigger(by='Visu', value=value, source=self.addr)
+                if 'val' in data:
+                    value = data['val']
+                    logger.info("Client {0} triggerd logic {1} with '{2}'".format(self.addr, name, value))
+                    self.logics[name].trigger(by='Visu', value=value, source=self.addr)
+                if 'enabled' in data:
+                    if data['enabled']:
+                        logger.info("Client {0} enabled logic {1}".format(self.addr, name))
+                        self.logics[name].enable()
+                    else:
+                        logger.info("Client {0} disabled logic {1}".format(self.addr, name))
+                        self.logics[name].disable()
             else:
                 logger.warning("Client {0} requested invalid logic: {1}".format(self.addr, name))
         elif command == 'series':

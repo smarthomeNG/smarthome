@@ -73,8 +73,10 @@ class HTTPHandler(lib.connection.Stream):
                 request = line.split(' ')[1].strip('/')
                 if self.parser(self.source, self.dest, urllib.parse.unquote(request)) is not False:
                     self.send(b'HTTP/1.1 200 OK\r\n\r\n', close=True)
+                    
                 else:
                     self.send(b'HTTP/1.1 400 Bad Request\r\n\r\n', close=True)
+                   
                 break
 
 
@@ -285,7 +287,7 @@ class Network():
     def update_item(self, item, caller=None, source=None, dest=None):
         if 'nw_udp_send' in item.conf:
             addr, __, message = item.conf['nw_udp_send'].partition('=')
-            if message is None:
+            if not message:
                 message = str(item())
             else:
                 message = message.replace('itemvalue', str(item()))

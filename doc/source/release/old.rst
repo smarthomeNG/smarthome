@@ -1,28 +1,3 @@
-+-------------------+
-| title: Overview   |
-+-------------------+
-| layout: default   |
-+-------------------+
-| summary:          |
-+-------------------+
-| uid: index        |
-+-------------------+
-
-SmartHome.py is a modular framework to automate your (smart) home.
-
-See the `install <install>`_ and `config <config>`_ section to start
-your SmartHome.
-
-You would like to support SmartHome.py?
-
-.. raw:: html
-
-   <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-
-.. raw:: html
-
-   </form>
-
 2013-06-13: New Release `0.9 <https://github.com/mknx/smarthome/tags>`_
 -----------------------------------------------------------------------
 

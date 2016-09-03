@@ -48,6 +48,9 @@ last state of right rocker = B
 Mechanical handle example:
 handle_status = STATUS
 
+An Enocean item must specify at minimum an enocean_rx_id (Enocean Identification Number (hex code)) and an enocean_rx_eep (Enocean Equipment Profile). Send items additionally hold an enocean_tx_id_offset.
+
+
 Example item.conf
 =
 <pre>
@@ -85,6 +88,7 @@ Example item.conf
                 enocean_rx_key = D
                 enocean_tx_eep = A5_38_08_03
                 enocean_tx_id_offset = 1
+                ref_level = 80
     [[handle]]
         enocean_rx_id = 01234567
         enocean_rx_eep = F6_10_00
@@ -130,23 +134,46 @@ Example item.conf
             enocean_rocker_sequence = **released within 0.4, pressed within 0.4**
             knx_dpt = 1
             knx_send = 3/0/62
+    [[brightness_sensor]]
+        enocean_rx_id = 01234567
+        enocean_rx_eep = A5_08_01
+        [[[lux]]]
+            type = num
+            enocean_rx_key = BRI
+        [[[movement]]]
+            type = bool
+            enocean_rx_key = MOV
+    [[temperature_sensor]]
+        enocean_rx_id = 01234567
+        enocean_rx_eep = A5_04_02
+        [[[temperature]]]
+            type = num
+            enocean_rx_key = TMP
+        [[[humidity]]]
+            type = num
+            enocean_rx_key = HUM
+        [[[power_status]]]
+            type = num
+            enocean_rx_key = ENG
 </pre>
 
 Add new listening enocean devices
 =
 
 You have to know about the EnOcean RORG of your device (please search the internet or ask the vendor). Further the RORG must be declared in the plugin. The following EEPs are supported:
-
+A complete list of available EEPs is documented under http://www.enocean-alliance.org/eep/
 * A5_02_01 - A5_02_0B    Temperature Sensors (40°C overall range, various starting offsets, 1/6°C resolution)
 * A5_02_10 - A5_02_1B    Temperature Sensors (80°C overall range, various starting offsets, 1/3°C resolution)
 * A5_02_20    High Precision Temperature Sensor (ranges -10*C to +41.2°C, 1/20°C resolution)
 * A5_02_30    High Precision Temperature Sensor (ranges -40*C to +62.3°C, 1/10°C resolution)
+* A5_04_02    Energy (optional), humidity and temperature sensor
+* A5_08_01    Brightness and movement sensor
 * A5_11_04    Dimmer status feedback
 * A5_12_01    Power Measurement
 * D5_00_01    Door/Window Contact, e.g. Eltako FTK, FTKB
 * F6_02_01/F6_02_02    2-Button-Rocker
 * F6_02_03    2-Button-Rocker, Status feedback from manual buttons on different actors, e.g. Eltako FT55, FSUD-230, FSVA-230V or Gira switches.
-* F6_10_00    Mechanical Handle
+* F6_10_00    Mechanical Handle (value: 0(closed), 1(open), 2(tilted)
 
 Send commands: Tx EEPs
 =

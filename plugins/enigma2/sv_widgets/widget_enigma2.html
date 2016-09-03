@@ -1,0 +1,377 @@
+/**
+ * Enigma2 ConfigurationInfo Widget
+ * 
+ * @param       unique id for this widget
+ * @param       the gad/item for the receiver model
+ * @param       the gad/item for the webinterface version
+ * @param       the gad/item for the enigma version (firmware)
+ * @param       the gad/item for the image version (firmware)
+ * @param       the gad/item for dhcp (LAN config)
+ * @param       the gad/item for the ip address (LAN config)
+ * @param       the gad/item for the gateway adress (LAN config)
+ * @param       the gad/item for the network mask (LAN config)
+ * @param       the gad/item for the MAC adress (LAN config)
+ *
+ */
+
+{% macro config_info(id, gad_model, gad_webif, gad_enigma, gad_image, gad_dhcp, gad_ip, gad_gw, gad_mask, gad_mac) %}
+	{% import "basic.html" as basic %}
+	{% set uid = uid(page, id) %}
+
+	<div id="{{ uid }}">
+		<table width=90%> 
+			{% if gad_model or gad_webif %} <tr><td align=left style="padding-left: 15px;">Type / WebIf:</td> <td align=right> {{ basic.value(id~'model', gad_model) }} / v{{ basic.value(id~'webif', gad_webif) }}</td></tr>{% endif %}
+			{% if gad_dhcp or gad_ip or gad_gw or gad_mask %}<tr><td align=left style="padding-left: 15px;"><strong>LAN Config</strong></td> <td></td></tr>{% endif %}
+			{% if gad_dhcp or gad_ip %}<tr><td align=left style="padding-left: 30px;">DHCP / IP:</td> <td align=right> {{ basic.value(id~'dhcp', gad_dhcp) }} / {{ basic.value(id~'ip', gad_ip) }}</td></tr>{% endif %}
+			{% if gad_gw or gad_mask %}<tr><td align=left style="padding-left: 30px;">GW/Mask:</td> <td align=right> {{ basic.value(id~'gw', gad_gw) }} / {{ basic.value(id~'mask', gad_mask) }}</td></tr>{% endif %}
+			{% if gad_mac %}   <tr><td align=left style="padding-left: 30px;">MAC:</td> <td align=right> {{ basic.value(id~'mac', gad_mac) }}</td></tr>{% endif %}
+			{% if gad_enigma or gad_image %}<tr><td align=left style="padding-left: 15px;"><strong>Firmware</strong></td> <td></td></tr>{% endif %}
+			{% if gad_enigma %}<tr><td colspan="2" align=left style="padding-left: 30px;"> {{ basic.value(id~'enigma', gad_enigma) }}</td></tr>{% endif %}
+			{% if gad_image %} <tr><td colspan="2" align=left style="padding-left: 30px;"> {{ basic.value(id~'image', gad_image) }}</td></tr>{% endif %}
+		</table>
+
+	</div>
+
+{% endmacro %}
+
+
+/**
+ * Enigma2 ConfigurationInfo Widget (for standardconfiguration)
+ *
+ * This widget can be used, if the items for the enigma2 box are defined  
+ * following the naming conventions as defined in the README of the plugin
+ * 
+ * @param       unique id for this widget 
+ * @param       the gad/item for the receiver (parent item of the enigma2 item definition tree)
+ *
+ */
+
+{% macro config_info2(id, gad_box) %}
+	{% import "basic.html" as basic %}
+	{% set uid = uid(page, id) %}
+
+	<div id="{{ uid }}">
+		<table width=90%> 
+			<tr><td align=left style="padding-left: 15px;">Type / WebIf:</td> <td align=right> {{ basic.value(id~'2model', gad_box~'.e2model') }} / v{{ basic.value(id~'2webif', gad_box~'.e2webifversion') }}</td></tr>
+			<tr><td align=left style="padding-left: 15px;"><strong>LAN Config</strong></td></tr>
+			<tr><td align=left style="padding-left: 30px;">DHCP / IP:</td> <td align=right> {{ basic.value(id~'2dhcp', gad_box~'.e2dhcp') }} / {{ basic.value(id~'2ip', gad_box~'.e2ip') }}</td></tr>
+			<tr><td align=left style="padding-left: 30px;">GW/Mask:</td> <td align=right> {{ basic.value(id~'2gw', gad_box~'.e2gateway') }} / {{ basic.value(id~'2mask', gad_box~'.e2netmask') }}</td></tr>
+			<tr><td align=left style="padding-left: 30px;">MAC:</td> <td align=right> {{ basic.value(id~'2mac', gad_box~'.e2mac') }}</td></tr>
+			<tr><td align=left style="padding-left: 15px;"><strong>Firmware</strong></td></tr>
+			<tr><td colspan="2" align=left style="padding-left: 30px;">{{ basic.value(id~'2enigma', gad_box~'.e2enigmaversion') }}</td></tr>
+			<tr><td colspan="2" align=left style="padding-left: 30px;"> {{ basic.value(id~'2image', gad_box~'.e2imageversion') }}</td></tr>
+		</table>
+	</div>
+
+{% endmacro %}
+
+
+/**
+ * Enigma2 StatusInfo Widget
+ * 
+ * @param       unique id for this widget
+ * @param       the gad/item for standby status
+ * @param       the gad/item for servicename
+ * @param       the gad/item for event title
+ * @param       the gad/item for event description
+ * @param       the gad/item for video width
+ * @param       the gad/item for video height
+ * @param       the gad/item for audio pid
+ *
+ */
+
+{% macro status_info(id, gad_standby, gad_servicename, gad_eventtitle, gad_eventdesc, gad_vwidth, gad_vheight, gad_vpid, gad_apid) %}
+	{% import "basic.html" as basic %}
+	{% set uid = uid(page, id) %}
+
+	<div id="{{ uid }}">
+		<table width=90%> 
+			{% if gad_servicename %} <tr><td align=left style="padding-left: 15px;">Sender:</td> <td align=right> {{ basic.value(id~'servicename', gad_servicename) }} </td></tr>{% endif %}
+			{% if gad_eventtitle or gad_eventdesc %} <tr><td align=left style="padding-left: 15px;"><strong>Sendung</strong></td></tr>{% endif %}
+			{% if gad_eventtitle %} <tr><td colspan="2" align=left style="padding-left: 30px;"> {{ basic.value(id~'eventtitle', gad_eventtitle) }} </td></tr>{% endif %}
+			{% if gad_eventdesc %} <tr><td colspan="2" align=left style="padding-left: 30px;"> {{ basic.value(id~'eventdesc', gad_eventdesc) }} </td></tr>{% endif %}
+			{% if gad_vwidth or gad_vheight or gad_apid %}<tr><td><br></td></tr>{% endif %}
+			{% if gad_vwidth or gad_vheight %}<tr><td align=left style="padding-left: 30px;">Auflösung:</td> <td align=right> {{ basic.value(id~'vwidth', gad_vwidth) }} x {{ basic.value(id~'vheight', gad_vheight) }}</td></tr>{% endif %}
+			{% if gad_apid %} <tr><td align=left style="padding-left: 30px;">Video-/Audio-Pid:</td> <td align=right> {{ basic.value(id~'vpid', gad_vpid) }} / {{ basic.value(id~'apid', gad_apid) }} </td></tr>{% endif %}
+			{% if gad_standby %} <tr><td align=left style="padding-left: 30px;">Standby:</td> <td align=right> {{ basic.value(id~'standby', gad_standby) }} </td></tr>{% endif %}
+		</table>
+
+	</div>
+
+{% endmacro %}
+
+
+/**
+ * Enigma2 StatusInfo Widget (for standardconfiguration)
+ *
+ * This widget can be used, if the items for the enigma2 box are defined  
+ * following the naming conventions as defined in the README of the plugin
+ * 
+ * @param       unique id for this widget 
+ * @param       the gad/item for the receiver (parent item of the enigma2 item definition tree)
+ *
+ */
+
+{% macro status_info2(id, gad_box) %}
+	{% import "basic.html" as basic %}
+	{% set uid = uid(page, id) %}
+
+	<div id="{{ uid }}">
+		<table width=90%> 
+			<tr><td align=left style="padding-left: 15px;">Sender:</td> <td align=right> {{ basic.value(id~'2servicename', gad_box~'.current.servicename') }} </td></tr>
+			<tr><td align=left style="padding-left: 15px;"><strong>Sendung</strong></td></tr>
+			<tr><td colspan="2" align=left style="padding-left: 30px;"> {{ basic.value(id~'2eventtitle', gad_box~'.current.eventtitle') }} </td></tr>
+			<tr><td colspan="2" align=left style="padding-left: 30px;"> {{ basic.value(id~'2eventdesc', gad_box~'.current.eventdescription') }} </td></tr>
+			<tr><td><br></td></tr>
+			<tr><td align=left style="padding-left: 30px;">Auflösung:</td> <td align=right> {{ basic.value(id~'2vwidth', gad_box~'.current.e2videowidth') }} x {{ basic.value(id~'2vheight', gad_box~'.current.e2videoheight') }}</td></tr>
+			<tr><td align=left style="padding-left: 30px;">Video-/Audio-Pid:</td> <td align=right>{{ basic.value(id~'2vpid', gad_box~'.e2vpid') }} / {{ basic.value(id~'2apid', gad_box~'.e2apid') }} </td></tr>
+			<tr><td align=left style="padding-left: 30px;">Standby:</td> <td align=right> {{ basic.value(id~'2standby', gad_box~'.e2instandby') }} </td></tr>
+		</table>
+
+	</div>
+
+{% endmacro %}
+
+
+/**
+ * Enigma2 Remote Widget
+ * 
+ * @param       unique id for this widget
+ * @param       the gad/item for the receiver (parent item of the enigma2 item definition tree)
+ *
+ */
+
+{% macro remote2(id, gad_boxremote, gad_size, alternative) %}
+	{% import "basic.html" as basic %}
+	{% set uid = uid(page, id) %}
+	
+	<div id="{{ uid }}">
+		<table width="100%">
+			<tr>
+				<td align="middle" width="70%">
+					<span data-role="controlgroup" data-type="horizontal">
+						{{ basic.button(id~'.VolDOWN', gad_boxremote~'.VolDOWN', ' Leiser ', 'minus', '', gad_size) }}
+						{{ basic.button(id~'.MUTE', gad_boxremote~'.MUTE', ' Mute ', icon0~'audio_volume_mute.png', '', gad_size) }}
+						{{ basic.button(id~'.VolUP', gad_boxremote~'.VolUP', ' Lauter ', 'plus', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+						<span data-role="controlgroup" data-type="horizontal">
+						&nbsp;{{ basic.button(id~'.POWER', gad_boxremote~'.POWER', 'Power', icon0~'control_standby.png', '', gad_size) }}
+						</span>
+					</span>
+				</td>
+			</tr>
+			 <tr>											 
+			  <td align="middle" width="70%">
+				<span data-role="controlgroup" data-type="horizontal">
+					 {{ basic.button(id~'.REWIND', gad_boxremote~'.REWIND', 'Rewind', icon0~'audio_rew.png', '', gad_size) }}
+					 {{ basic.button(id~'.STOP', gad_boxremote~'.STOP', ' Stop ', icon0~'audio_stop.png', '', gad_size) }}
+					 {{ basic.button(id~'.PLAY', gad_boxremote~'.PLAY', ' Play ', icon0~'audio_play.png', '', gad_size) }}
+					 {{ basic.button(id~'.PAUSE', gad_boxremote~'.PAUSE', ' Pause ', icon0~'audio_pause.png', '', gad_size) }}
+					 {{ basic.button(id~'.FF', gad_boxremote~'.FF', 'Forward', icon0~'audio_ff.png', '', gad_size) }} 
+				</span>												   
+			  </td>
+		  </tr>											
+		</table>
+
+		<table width="100%">
+			<tr>
+				<td align="middle" width="70%">
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.1', gad_boxremote~'.KEY_1', '1', 'grid', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.2', gad_boxremote~'.KEY_2', '2', 'grid', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.3', gad_boxremote~'.KEY_3', '3', 'grid', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.4', gad_boxremote~'.KEY_4', '4', 'grid', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.5', gad_boxremote~'.KEY_5', '5', 'grid', '', gad_size) }}
+					</span>
+				</td>
+			</tr>
+		</table>
+
+		<table width="100%">
+			<tr>
+				<td align="middle" width="70%">
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.6', gad_boxremote~'.KEY_6', '6', 'grid', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.7', gad_boxremote~'.KEY_7', '7', 'grid', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.8', gad_boxremote~'.KEY_8', '8', 'grid', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.9', gad_boxremote~'.KEY_9', '9', 'grid', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.0', gad_boxremote~'.KEY_0', 'O', 'grid', '', gad_size) }}
+					</span>
+				</td>
+			</tr>
+		</table>
+
+{% if alternative %}
+		<table width="100%">
+			<tr>
+				<td align="middle" width="70%">
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.TEXT', gad_boxremote~'.TEXT', 'Text', icon0~'audio_playlist.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.AUDIO', gad_boxremote~'.AUDIO', 'Audio', icon0~'audio_sound.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.SUBTITLE', gad_boxremote~'.SUBTITLE', 'Subtitle', 'home', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.VIDEO', gad_boxremote~'.VIDEO', 'Video', icon0~'it_camera.png', '', gad_size) }}
+					</span>
+				</td>
+			</tr>
+			<tr><td><br></td></tr>
+			<tr>
+				<td align="middle" width="70%">
+					<span data-role="controlgroup" data-type="horizontal">
+					 {{ basic.button(id~'.GREEN', gad_boxremote~'.GREEN', ' Green ', 'widgets/sh_widgets/control_centr_arrow_up_left_green_fill.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.UpTV', gad_boxremote~'.UP', 'rauf', icon0~'control_centr_arrow_up.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					 {{ basic.button(id~'.YELLOW', gad_boxremote~'.YELLOW', ' Yellow ', 'widgets/sh_widgets/control_centr_arrow_up_right_yellow_fill.png', '', gad_size) }}
+					</span>
+				</td>
+			</tr>
+		</table>
+{% else %}
+		<table width="100%">
+			<tr>
+				<td align="middle" width="70%">
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.MENU', gad_boxremote~'.MENU', 'Menu', 'home', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.TEXT', gad_boxremote~'.TEXT', 'Text', icon0~'audio_playlist.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.INFO', gad_boxremote~'.INFO', 'Info', 'info', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.EPG', gad_boxremote~'.EPG', 'EPG', icon0~'audio_playlist.png', '', gad_size) }}
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td align="middle" width="70%">
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.AUDIO', gad_boxremote~'.AUDIO', 'Audio', icon0~'audio_sound.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.UpTV', gad_boxremote~'.UP', 'rauf', icon0~'control_centr_arrow_up.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.VIDEO', gad_boxremote~'.VIDEO', 'Video', icon0~'it_camera.png', '', gad_size) }}
+					</span>
+				</td>
+			</tr>
+		</table>
+{% endif %}
+
+		<table width="100%">
+			<tr>
+				<td align="middle" width="70%">
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.Left', gad_boxremote~'.LEFT', 'links', icon0~'control_centr_arrow_left.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.OK', gad_boxremote~'.OK', 'OK', 'check', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.RIGHT', gad_boxremote~'.RIGHT', 'rechts', icon0~'control_centr_arrow_right.png', '', gad_size) }}
+					</span>
+				</td>
+			</tr>
+		</table>
+		
+{% if alternative %}
+		<table width="100%">
+			<tr>
+				<td align="middle" width="70%">
+					<span data-role="controlgroup" data-type="horizontal">
+					 {{ basic.button(id~'.RED', gad_boxremote~'.RED', 'Red', 'widgets/sh_widgets/control_centr_arrow_down_left_red_fill.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.DOWN', gad_boxremote~'.DOWN', 'runter', icon0~'control_centr_arrow_down.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					 {{ basic.button(id~'.BLUE', gad_boxremote~'.BLUE', ' Blue ', 'widgets/sh_widgets/control_centr_arrow_down_right_blue_fill.png', '', gad_size) }}
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td align="middle" width="70%">
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.MENU', gad_boxremote~'.MENU', 'Menu', 'home', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.INFO', gad_boxremote~'.INFO', 'Info', 'info', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.EPG', gad_boxremote~'.EPG', 'EPG', icon0~'audio_playlist.png', '', gad_size) }}
+					</span>								   
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.EXIT', gad_boxremote~'.EXIT', 'Exit', 'delete', '', gad_size) }}
+					</span>
+				</td>
+			</tr>
+		</table>
+{% else %}
+		<table width="100%">
+			<tr>
+				<td align="middle" width="70%">
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.SUBTITLE', gad_boxremote~'.SUBTITLE', 'Subtitle', 'home', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.DOWN', gad_boxremote~'.DOWN', 'runter', icon0~'control_centr_arrow_down.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					{{ basic.button(id~'.EXIT', gad_boxremote~'.EXIT', 'Exit', 'delete', '', gad_size) }}
+					</span>
+				</td>
+			</tr>
+		</table>
+
+		<table width="100%">
+			 <tr>											 
+			  <td align="middle" width="70%">
+				<span data-role="controlgroup" data-type="horizontal">
+					<span data-role="controlgroup" data-type="horizontal">
+					 {{ basic.button(id~'.RED', gad_boxremote~'.RED', 'Red', 'widgets/sh_widgets/circle_red.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					 {{ basic.button(id~'.GREEN', gad_boxremote~'.GREEN', ' Green ', 'widgets/sh_widgets/circle_green2.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					 {{ basic.button(id~'.YELLOW', gad_boxremote~'.YELLOW', ' Yellow ', 'widgets/sh_widgets/circle_yellow.png', '', gad_size) }}
+					</span>
+					<span data-role="controlgroup" data-type="horizontal">
+					 {{ basic.button(id~'.BLUE', gad_boxremote~'.BLUE', ' Blue ', 'widgets/sh_widgets/circle_blue.png', '', gad_size) }}
+					</span>
+				</span>
+			  </td>
+		  </tr>											
+		</table>
+{% endif %}
+
+	</div>
+	
+{% endmacro %}

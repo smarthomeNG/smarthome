@@ -32,10 +32,27 @@ logger = logging.getLogger('')
 class iCal():
     DAYS = ("MO", "TU", "WE", "TH", "FR", "SA", "SU")
     FREQ = ("YEARLY", "MONTHLY", "WEEKLY", "DAILY", "HOURLY", "MINUTELY", "SECONDLY")
-    PROPERTIES = ("SUMMARY", "DESCRIPTION", "LOCATION", "CATEGORIES")
+    PROPERTIES = ("SUMMARY", "DESCRIPTION", "LOCATION", "CATEGORIES", "CLASS")
 
-    def __init__(self, smarthome):
+    def __init__(self, smarthome, cycle=3600, calendars = []):
         self._sh = smarthome
+        self._items = []
+        self._icals = {}
+        self._ical_aliases = {}
+
+        for calendar in calendars:
+            if ':' in calendar and 'http' != calendar[:4]:
+                name, sep, cal = calendar.partition(':')
+                logger.info('iCal: Registering calendar {0} ({1})'.format(name, cal))
+                self._ical_aliases[name] = cal
+                calendar = cal
+            else:
+                logger.info('iCal: Registering calendar {0}'.format(calendar))
+
+            self._icals[calendar] = self._read_events(calendar)
+
+        smarthome.scheduler.add('iCalUpdate', self._update_items, cron='* * * *', prio=5)
+        smarthome.scheduler.add('iCalRefresh', self._update_calendars, cycle=int(cycle), prio=5)
 
     def run(self):
         self.alive = True
@@ -44,7 +61,16 @@ class iCal():
         self.alive = False
 
     def parse_item(self, item):
-        pass
+        if 'ical_calendar' in item.conf:
+            uri = item.conf['ical_calendar']
+
+            if uri in self._ical_aliases:
+                uri = self._ical_aliases[uri]
+
+            if uri not in self._icals:
+                self._icals[uri] = self._read_events(uri)
+
+            self._items.append(item)
 
     def parse_logic(self, logic):
         pass
@@ -53,24 +79,54 @@ class iCal():
         pass
 
     def __call__(self, ics, delta=1, offset=0, username=None, password=None, timeout=2):
-        if ics.startswith('http'):
-            ical = self._sh.tools.fetch_url(ics, username=username, password=password, timeout=timeout)
-            if ical is False:
-                return {}
-            ical = ical.decode()
-        else:
-            try:
-                with open(ics, 'r') as f:
-                    ical = f.read()
-            except IOError as e:
-                logger.error('Could not open ics file {0}: {1}'.format(ics, e))
-                return {}
+        if ics in self._ical_aliases:
+            logger.debug('iCal retrieve events by alias {0} -> {1}'.format(ics, self._ical_aliases[ics]))
+            return self._filter_events(self._icals[self._ical_aliases[ics]], delta, offset)
+
+        if ics in self._icals:
+            logger.debug('iCal retrieve cached events {0}'.format(ics))
+            return self._filter_events(self._icals[ics], delta, offset)
+
+        logger.debug('iCal retrieve events {0}'.format(ics))
+        return self._filter_events(self._read_events(ics, username=username, password=password, timeout=timeout), delta, offset)
+
+    def _update_items(self):
+        if len(self._items):
+            now = self._sh.now()
+
+            events = {}
+            for calendar in self._icals:
+                events[calendar] = self._filter_events(self._icals[calendar], 0, 0)
+
+            for item in self._items:
+                calendar = item.conf['ical_calendar']
+
+                if calendar in self._ical_aliases:
+                    calendar = self._ical_aliases[calendar]
+
+                val = False
+                for date in events[calendar]:
+                    for event in events[calendar][date]:
+                        if event['Start'] <= now <= event['End'] or (event['Start'] == event['End'] and event['Start'] <= now <= event['End'].replace(second=59, microsecond=999)):
+                            val = True
+                            break
+
+                item(val)
+
+    def _update_calendars(self):
+        for uri in self._icals:
+            self._icals[uri] = self._read_events(uri)
+            logger.debug('iCal: Updated calendar {0}'.format(uri))
+
+        if len(self._icals):
+            self._update_items()
+
+    def _filter_events(self, events, delta=1, offset=0):
         now = self._sh.now()
         offset = offset - 1  # start at 23:59:59 the day before
         delta += 1  # extend delta for negetiv offset
         start = now.replace(hour=23, minute=59, second=59, microsecond=0) + datetime.timedelta(days=offset)
         end = start + datetime.timedelta(days=delta)
-        events = self._parse_ical(ical, ics)
         revents = {}
         for event in events:
             event = events[event]
@@ -102,6 +158,22 @@ class iCal():
                         revents[date].append(revent)
         return revents
 
+    def _read_events(self, ics, username=None, password=None, timeout=2):
+        if ics.startswith('http'):
+            ical = self._sh.tools.fetch_url(ics, username=username, password=password, timeout=timeout)
+            if ical is False:
+                return {}
+            ical = ical.decode()
+        else:
+            try:
+                with open(ics, 'r') as f:
+                    ical = f.read()
+            except IOError as e:
+                logger.error('Could not open ics file {0}: {1}'.format(ics, e))
+                return {}
+
+        return self._parse_ical(ical, ics)
+
     def _parse_date(self, val, dtzinfo, par=''):
         if par.startswith('TZID='):
             tmp, par, timezone = par.partition('=')
@@ -117,9 +189,15 @@ class iCal():
         return dt
 
     def _parse_ical(self, ical, ics):
+        #skip = False
         events = {}
         tzinfo = self._sh.tzinfo()
+        ical = ical.replace('\n', '')
         for line in ical.splitlines():
+            #if line == 'BEGIN:VTIMEZONE':
+            #    skip = True
+            #elif line == 'END:VTIMEZONE':
+            #    skip = False
             if line == 'BEGIN:VEVENT':
                 event = {'EXDATES': []}
             elif line == 'END:VEVENT':
@@ -133,7 +211,9 @@ class iCal():
                     logger.warning("iCal: problem parsing {0} no DTSTART for UID: {1}".format(ics, event['UID']))
                     continue
                 if 'DTEND' not in event:
-                    logger.warning("iCal: problem parsing {0} no DTEND for UID: {1}".format(ics, event['UID']))
+                    logger.warning("iCal: Warning in parsing {0} no DTEND for UID: {1}. Setting DTEND from DTSTART".format(ics, event['UID']))
+                    #Set end to start time:
+                    event['DTEND'] = event['DTEND']
                     continue
                 if 'RRULE' in event:
                     event['RRULE'] = self._parse_rrule(event, tzinfo)
@@ -153,7 +233,7 @@ class iCal():
                 key = key.upper()
                 if key == 'TZID':
                     tzinfo = dateutil.tz.gettz(val)
-                elif key in ['UID', 'SUMMARY', 'SEQUENCE', 'RRULE']:
+                elif key in ['UID', 'SUMMARY', 'SEQUENCE', 'RRULE', 'CLASS']:
                     event[key] = val  # noqa
                 elif key in ['DTSTART', 'DTEND', 'EXDATE', 'RECURRENCE-ID']:
                     try:
@@ -175,6 +255,7 @@ class iCal():
         if 'FREQ' not in rrule:
             return
         freq = self.FREQ.index(rrule['FREQ'])
+        #logger.debug("iCal: Frequency: {0}".format(freq))
         del(rrule['FREQ'])
         if 'DTSTART' not in rrule:
             rrule['DTSTART'] = event['DTSTART']

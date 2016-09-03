@@ -1,15 +1,13 @@
 # KNX
 
+Info
+=============
+This plugin send and receive messages to and from knx bus.
+
+
 Requirements
-============
-This plugin needs a running eibd.
-
-Installing eibd
----------------
-I'm using the vanilla eibd from Martins repository.
-<pre>$ sudo add-apt-repository ppa:mkoegler/bcusdk
-$ sudo apt-get install eibd-clients eibd-server libeibclient-dev</pre>
-
+=============
+This plugin needs a running eibd or knxd.
 
 Configuration
 =============
@@ -27,12 +25,14 @@ plugin.conf
    time_ga = 1/1/1 # default none
    date_ga = 1/1/2 # default none
 #   busmonitor = False
+#   readonly = False
 </pre>
 
 This plugins is looking by default for the eibd on 127.0.0.1 port 6720. You could change this in your plugin.conf.
 If you specify a `send_time` intervall and a `time_ga` and/or `date_ga` the plugin sends the time/date every cycle seconds on the bus.
 
 If you set `busmonitor` to True, every KNX packet will be logged.
+If you set `readonly` to True, the plugin only read the knx bus and send no group message to the bus.
 
 items.conf
 --------------
