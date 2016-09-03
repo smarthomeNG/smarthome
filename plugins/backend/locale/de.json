@@ -57,6 +57,8 @@
 	"installierte Version": "installierte Version",
 	"Neuste Version": "Neuste Version",
 	"Keine Antwort von PyPI": "Keine Antwort von PyPI",
+	"PyPI nicht erreichbar": "PyPI nicht erreichbar",
+	"PyPI Prüfung deaktiviert": "PyPI Prüfung deaktiviert",
 	"Dienst": "Dienst",
 	"Status": "Status",
 	"Aktion": "Aktion",
@@ -87,6 +89,8 @@
 	"Aktiv": "Aktiv",
 	"Visu Client": "Visu Client",
 	"Port": "Port",
+	"Client Software": "Client Software",
+	"Browser": "Browser",
 	"No active clients": "Keine aktiven Clients",
 	"Die eingegebenen Daten sind kein numerischer Wert": "Die eingegebenen Daten sind kein numerischer Wert",
 	"Filter": "Filter",
@@ -100,6 +104,9 @@
 	"Level": "Level",
 	"filters": "Filter",
 	"handlers": "Handler",
+	"Logging": "Logging",
+	"Passwort anzeigen": "Passwort anzeigen",
+	"SmartHomeNG Version": "SmartHomeNG Version",
 
 	"_items": {
 		"path": "Pfad",
@@ -126,7 +133,7 @@
 		"Link": "Link",
 		"Name": "Name",
 		"disclosure_title": "Offenlegung von Open Source Software Komponenten des SmartHomeNG BackendServer Plugins",
-		"Verwendete Open Source Software Komponente": "Verwendete Open Source Software Komponenten",
+		"Verwendete Open Source Software Komponenten": "Verwendete Open Source Software Komponenten",
 		"Icons/Bilder": "Icons/Bilder",
 		"Alle Icons und Bilder kommen von": "Alle Icons und Bilder kommen von "
 	},
@@ -142,9 +149,12 @@
 		"knxd socket beenden": "knxd socket beenden",
 		"Filter anwenden": "Filter anwenden",
 		"Cacheprüfung": "Cacheprüfung",
+		"Passwort-Hash erzeugen": "Passwort-Hash erzeugen",
 		"Englisch": "English",
 		"Deutsch": "Deutsch",
-		"Französisch": "French"
+		"Französisch": "French",
+		"Deaktivieren": "Deaktivieren",
+		"Aktivieren": "Aktivieren"
 	},
 
 	"_menu": {

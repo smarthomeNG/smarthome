@@ -10,11 +10,14 @@
 		<table class="table table-striped table-hover">
 			<thead>
 				<tr>
-					<th>{{ _('Logik') }}</th>
-					<th>{{ _('nächste Ausführung') }}</th>
+					<th style="width: 30px;"></th>
+					<th style="width:350px;">{{ _('Logik') }}</th>
+					<th style="width: 200px;">{{ _('nächste Ausführung') }}</th>
+					<th>{{ _('Cycle') }}</th>
+					<th>{{ _('Watch_Items') }}</th>
 					<th>{{ _('Dateiname') }}</th>
 					{% if updates %}
-						<th>{{ _('Aktionen') }}</th>
+						<th style="width:260px;">{{ _('Aktionen') }}</th>
 					{% endif %}
 				</tr>
 			</thead>
@@ -23,48 +26,66 @@
 					{% for logic in smarthome.return_logics()|sort %}
 						{% if is_userlogic(smarthome, logic) %}
 						<tr>
-							<form name="input" action="logics.html" method="POST" enctype="multipart/form-data"> 
-							<td><input style="border:none; background-color:transparent; width:100%" name="logic" readonly="true" value="{{ logic }}" type="text"></td>
+							<td><span style="color: {% if not smarthome.return_logic(logic).enabled %}red{% else %}green{% endif %};" class="fa {% if not smarthome.return_logic(logic).enabled %}fa-times-circle{% else %}fa-check-circle{% endif %}"></span></td>
+							<form name="input" action="logics.html" method="POST" enctype="multipart/form-data">
+							<td>
+								<input style="border:none; background-color:transparent; width:100%" name="logic" readonly="true" value="{{ logic }}" type="text"></td>
 							{% if smarthome.scheduler.return_next(logic) %}
-								<td>{{ smarthome.scheduler.return_next(logic).strftime('%Y-%m-%d %H:%M:%S%z') }}</td>
+								<td>{% if not smarthome.return_logic(logic).enabled %}<span style="color:#bbb;">{% endif %}{{ smarthome.scheduler.return_next(logic).strftime('%Y-%m-%d %H:%M:%S%z') }}{% if not smarthome.return_logic(logic).enabled %}</span>{% endif %}</td>
 							{% else %}
 								<td></td>
 							{% endif %}
-							<td><a href="/logics_view.html?file_path={{ smarthome.return_logic(logic).filename }}">{{ get_basename(smarthome.return_logic(logic).filename) }}</a></th>
+							<td>{% if smarthome.return_logic(logic).cycle == None %}-{% else %}{{ smarthome.return_logic(logic).cycle}} {% endif %}</td>
+							<td {% if smarthome.return_logic(logic).watch_item|length > 0 %}onClick="$('#{{ logic }}_additional').toggle();" style="cursor: pointer;"{% endif %}>
+								{% if smarthome.return_logic(logic).watch_item|length == 0 %}-{% else %}{% if not smarthome.return_logic(logic).enabled %}<span style="color:#bbb;">{% endif %}{{ smarthome.return_logic(logic).watch_item|length}}{% if not smarthome.return_logic(logic).enabled %}</span>{% endif %} <span class="fa fa-arrow-circle-down" {% if not smarthome.return_logic(logic).enabled %}style="color: #ddd;"{% endif %}></span>{% endif %}
+							</td>
+							<td><a href="/logics_view.html?file_path={{ smarthome.return_logic(logic).filename }}&logic={{ logic }}">{{ get_basename(smarthome.return_logic(logic).filename) }}</a></th>
 							{% if updates %}
 								<td>
-								<input name="trigger" value="{{ _('Auslösen','button') }}" type="submit" class="btn btn-default btn-xs">
+								<input {% if not smarthome.return_logic(logic).enabled %}disabled="true"{% endif %} name="trigger" value="{{ _('Auslösen','button') }}" type="submit" class="btn btn-default btn-xs">
 								<input name="reload" value="{{ _('Neu Laden','button') }}" type="submit" class="btn btn-default btn-xs">
-								</form>
+								<input name="enable" value="{% if smarthome.return_logic(logic).enabled %}{{ _('Deaktivieren','button') }}{% else %}{{ _('Aktivieren','button') }}{% endif %}" type="submit" class="btn btn-default btn-xs">
 								</td>
 							{% endif %}
+							</form>
+						</tr>
+						<tr id="{{ logic }}_additional" style="display: none; cursor: pointer;" onClick="$('#{{ logic }}_additional').toggle();">
+							<td colspan="{% if updates %}7{% else %}6{% endif %}">{{ smarthome.return_logic(logic).watch_item }}</td>
 						</tr>
 						{% endif %}
 					{% endfor %}
 
-					<tr><th colspan="4">{{ _('Systemlogiken') }}</th><tr>
+					<tr><th colspan="{% if updates %}7{% else %}6{% endif %}">{{ _('Systemlogiken') }}</th><tr>
 					{% for logic in smarthome.return_logics()|sort %}
 						{% if not is_userlogic(smarthome, logic) %}
 						<tr>
-							<form name="input" action="logics.html" method="POST" enctype="multipart/form-data"> 
+							<td><span style="color: {% if not smarthome.return_logic(logic).enabled %}red{% else %}green{% endif %};" class="fa {% if not smarthome.return_logic(logic).enabled %}fa-times-circle{% else %}fa-check-circle{% endif %}"></span></td>
+							<form name="input" action="logics.html" method="POST" enctype="multipart/form-data">
 							<td><input style="border:none; background-color:transparent; width:100%" name="logic" readonly="true" value="{{ logic }}" type="text"></td>
 							{% if smarthome.scheduler.return_next(logic) %}
 								<td>{{ smarthome.scheduler.return_next(logic).strftime('%Y-%m-%d %H:%M:%S%z') }}</td>
 							{% else %}
 								<td></td>
 							{% endif %}
+							<td>{% if smarthome.return_logic(logic).cycle == None %}-{% else %}{{ smarthome.return_logic(logic).cycle}} {% endif %}</td>
+							<td {% if smarthome.return_logic(logic).watch_item|length > 0 %}onClick="$('#{{ logic }}_additional').toggle();" style="cursor: pointer;"{% endif %}>
+								{% if smarthome.return_logic(logic).watch_item|length == 0 %}-{% else %}{{ smarthome.return_logic(logic).watch_item|length}} {% endif %}
+							</td>
 							<td><a href="/logics_view.html?file_path={{ smarthome.return_logic(logic).filename }}">{{ get_basename(smarthome.return_logic(logic).filename) }}</a></th>
 							{% if updates %}
 								 {% if (1==2) %}
 									<td>
 									<input name="trigger" value="Auslösen" type="submit" class="btn btn-default btn-xs">
 									<input name="reload" value="Reload" type="submit" class="btn btn-default btn-xs">
-									</form>
 									</td>
 								{% else %}
 									<td></td>
 								{% endif %}
 							{% endif %}
+							</form>
+						</tr>
+						<tr id="{{ logic }}_additional" style="display: none; cursor: pointer;" onClick="$('#{{ logic }}_additional').toggle();">
+							<td colspan="{% if updates %}7{% else %}6{% endif %}">{{ smarthome.return_logic(logic).watch_item }}</td>
 						</tr>
 						{% endif %}
 					{% endfor %}

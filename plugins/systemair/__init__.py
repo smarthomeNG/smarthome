@@ -232,11 +232,11 @@ class Systemair():
                 start_register_net += 1
 
             # get coils
-            for coild_addr, val in self._update_coil.items():
-                value = self.instrument.read_bit(coild_addr-1, functioncode=2)
+            for coil_addr, val in self._update_coil.items():
+                value = self.instrument.read_bit(coil_addr-1, functioncode=2)
                 if value is not None:
-                    for item in self._update_coil[coild_addr]['items']:
-                        item(value, 'systemair_value_from_bus', "Coil {}".format(coild_addr))
+                    for item in self._update_coil[coil_addr]['items']:
+                        item(value, 'systemair_value_from_bus', "Coil {}".format(coil_addr))
 
         except Exception as err:
             logger.error(err)
@@ -276,7 +276,7 @@ class Systemair():
         if 'systemair_coiladdr' in item.conf:
             modbus_coiladdr = int(item.conf['systemair_coiladdr'])
             logger.debug("systemair_value_from_bus: {0} connected to coil register {1:#04x}".format(item, modbus_coiladdr))
-            if not modbus_coiladdr in self._update:
+            if not modbus_coiladdr in self._update_coil:
                 self._update_coil[modbus_coiladdr] = {'items': [item], 'logics': []}
             else:
                 if not item in self._update_coil[modbus_coiladdr]['items']:

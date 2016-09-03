@@ -38,24 +38,37 @@ class DataLog():
         self._sh = smarthome
         self.path = path
 
-        if type(filepatterns) is list:
+        newfilepatterns = {}
+        if isinstance(filepatterns, str):
+            filepatterns = [filepatterns]
+        if isinstance(filepatterns, list):
             for pattern in filepatterns:
                 key, value = pattern.split(':')
-                self.filepatterns[key] = value
+                newfilepatterns[key] = value
+        elif isinstance(filepatterns, dict):
+            newfilepatterns = filepatterns
         else:
-            self.filepatterns = filepatterns
+            raise Exception("Type of argument filepatterns unknown: {}".format(type(filepatterns)))
 
-        if type(logpatterns) is list:
-            newlogpatterns = {}
+        newlogpatterns = {}
+        if isinstance(logpatterns, str):
+            logpatterns = [logpatterns]
+        if isinstance(logpatterns, list):
             for pattern in logpatterns:
                 key, value = pattern.split(':')
                 newlogpatterns[key] = value
-            logpatterns = newlogpatterns
+        elif isinstance(logpatterns, dict):
+            newlogpatterns = logpatterns
+        else:
+            raise Exception("Type of argument logpatterns unknown: {}".format(type(logpatterns)))
 
-        for log in self.filepatterns:
-            ext = self.filepatterns[log].split('.')[-1]
-            if ext in logpatterns:
+        for log in newfilepatterns:
+            ext = newfilepatterns[log].split('.')[-1]
+            if ext in newlogpatterns:
+                self.filepatterns[log] = newfilepatterns[log]
                 self.logpatterns[log] = logpatterns[ext]
+            else:
+                logger.warn('DataLog: Ignoring log "{}", log pattern missing!'.format(log))
 
         self.cycle = int(cycle)
         self._items = {}

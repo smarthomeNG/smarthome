@@ -51,7 +51,9 @@ class Logics():
             # plugin hook
             for plugin in self._sh._plugins:
                 if hasattr(plugin, 'parse_logic'):
-                    plugin.parse_logic(logic)
+                    update = plugin.parse_logic(logic)
+                    if update:
+                        logic.add_method_trigger(update)
             # item hook
             if hasattr(logic, 'watch_item'):
                 if isinstance(logic.watch_item, str):
@@ -86,6 +88,7 @@ class Logic():
     def __init__(self, smarthome, name, attributes):
         self._sh = smarthome
         self.name = name
+        self.enabled = True if 'enabled' not in attributes else bool(attributes['enabled'])
         self.crontab = None
         self.cycle = None
         self.prio = 3
@@ -95,6 +98,7 @@ class Logic():
             vars(self)[attribute] = attributes[attribute]
         self.generate_bytecode()
         self.prio = int(self.prio)
+        self.__methods_to_trigger = []
 
     def id(self):
         return self.name
@@ -103,10 +107,18 @@ class Logic():
         return self.name
 
     def __call__(self, caller='Logic', source=None, value=None, dest=None, dt=None):
-        self._sh.scheduler.trigger(self.name, self, prio=self.prio, by=caller, source=source, dest=dest, value=value, dt=dt)
+        if self.enabled:
+            self._sh.scheduler.trigger(self.name, self, prio=self.prio, by=caller, source=source, dest=dest, value=value, dt=dt)
+
+    def enable(self):
+        self.enabled =True
+
+    def disable(self):
+        self.enabled = False
 
     def trigger(self, by='Logic', source=None, value=None, dest=None, dt=None):
-        self._sh.scheduler.trigger(self.name, self, prio=self.prio, by=by, source=source, dest=dest, value=value, dt=dt)
+        if self.enabled:
+            self._sh.scheduler.trigger(self.name, self, prio=self.prio, by=by, source=source, dest=dest, value=value, dt=dt)
 
     def generate_bytecode(self):
         if hasattr(self, 'filename'):
@@ -121,3 +133,10 @@ class Logic():
                 logger.exception("Exception: {}".format(e))
         else:
             logger.warning("{}: No filename specified => ignoring.".format(self.name))
+
+    def add_method_trigger(self, method):
+        self.__methods_to_trigger.append(method)
+
+    def get_method_triggers(self):
+        return self.__methods_to_trigger
+

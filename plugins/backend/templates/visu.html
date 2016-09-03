@@ -16,7 +16,7 @@
 						<th width="50px">{{ _('Port') }}</th>
 						{% if visu_plugin_build > '2' %}
 							<th width="50px">{{ _('Client Software') }}</th>
-							<th width="50px">{{ _('Version') }}</th>
+							<th width="50px">{{ _('Browser') }}</th>
 							<th  width="50px">{{ _('') }}</th>
 						{% else %}
 							<th  width="50px"></th>
@@ -35,8 +35,8 @@
 							<td>{{ client.name }}</td>
 							<td>{{ client.ip }}</td>
 							<td>{{ client.port }}</td>
-							<td>{{ client.sw }}</td>
-							<td>{{ client.swversion }}</td>
+							<td>{{ client.sw }} {{ client.swversion }}</td>
+							<td>{{ client.browser }} {{ client.browserversion }}</td>
 							<td>{{ client.hostname }}</td>
 							<td></td>
 						</tr>

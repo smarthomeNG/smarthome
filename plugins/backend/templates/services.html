@@ -141,6 +141,15 @@
 					<div id="cache_check" style="margin-top: 5px; width: 900px;"></div>
 				</td>
 			</tr>
+			<tr>
+				<td><img src="/static/img/password.svg" alt="Icon password" width="48" height="48"></td>
+				<td colspan="2" style="padding-top:15px;">
+					<input type="text" style="..." id="plaintext" size="20" maxlength="50"/><input type="password" style="..." id="plainpass" size="20" maxlength="50"/>
+					<span class="btn btn-default" onclick="createHash()">{{ _('Passwort-Hash erzeugen','button') }}</span><br/>
+					<input type="checkbox" style="..." id="showtext"  onclick="togglePlainFields();"> {{ _('Passwort anzeigen') }}
+					<div id="hash_value" style="margin-top: 5px; width: 900px;"></div>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 </div>
@@ -156,5 +165,35 @@ function checkCache() {
 		$('#cache_check').html(temp);
 	});
 }
+
+function createHash() {
+	$.ajax({
+		url: '/create_hash_json.html',
+		type: 'GET',
+		data: { plaintext: $('#showtext')[0].checked ? plaintext.val() : plainpass.val()} ,
+		contentType: 'application/json; charset=utf-8',
+		success: function (response) {
+			$('#hash_value').html(JSON.parse(response));
+		},
+		error: function () {
+			//your error code
+		}
+	});
+}
+
+function togglePlainFields() {
+	plaintext = $('#plaintext')
+	plainpass = $('#plainpass')
+	if ($('#showtext')[0].checked) {
+		plaintext.val(plainpass.val());
+		plainpass.hide();
+		plaintext.show();
+	} else {
+		plainpass.val(plaintext.val());
+		plaintext.hide();
+		plainpass.show();
+	}
+}
+togglePlainFields();
 </script>
 {% endblock %}

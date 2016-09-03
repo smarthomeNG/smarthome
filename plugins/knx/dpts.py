@@ -223,7 +223,7 @@ def de13(payload):
 
 def en14(value):
     ret = bytearray([0])
-    ret.extend(struct.pack('>f', int(value)))
+    ret.extend(struct.pack('>f', value))
     return ret
 
 

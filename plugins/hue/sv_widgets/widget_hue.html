@@ -1,0 +1,120 @@
+/**
+ * Hue Widget
+ * (c) 2015 Michael Würtenberger
+ * 
+ * @param       unique id for this widget
+ * @param       the gad/item for the power (optional)
+ * @param       the gad/item for the volume (optional)
+ * @param       the gad/item for the mute (optional)
+ * @param       the gad/item for the song title (optional)
+ * @param       the gad/item to set surround mode (optional)
+ * @param       the gad/item to set input (optional)
+ *
+ */
+{% macro control(id,g_power,g_reach,g_r,g_g,g_b,g_alert,g_effect,g_bri,g_sat,g_hue) %}
+{% import "basic.html" as basic %}
+
+<table height="90%" width="90%" align="center">
+	<tr>
+		<td width="15%" align="center">
+			{{basic.dual(id~'power',g_power)}}
+		</td>
+		<td width="15%" align="center">
+			{{basic.symbol(id~'reachon',g_reach,'',icon1~'it_wifi.png','1')}}
+			{{basic.symbol(id~'reachoff',g_reach,'',icon0~'it_wifi.png','0')}}
+		</td>
+		<td width="15%" align="center">
+			{{basic.rgb(id~'rgb',g_r,g_g,g_b,0,255,'',8)}}
+		</td>
+		<td width="25%" align="center">
+			Alert:{{basic.dual(id~'alert',g_alert,icon1~'audio_pause.png', icon1~'audio_play.png', 'lselect','none')}}
+		</td>
+		<td width="25%" align="center">
+			Effect:{{basic.dual(id~'effect',g_effect,icon1~'audio_pause.png', icon1~'audio_play.png', 'colorloop',	'none')}}
+		</td>
+	</tr>
+</table>
+<table height="90%" width="90%" align="center">
+	<tr>
+		<td width="15%" align="left">
+		Helligkeit
+		</td>
+		<td width="85%">
+			{{basic.slider(id~'bri',g_bri,0,255,5)}}
+		</td>
+	</tr>
+	<tr>
+		<td width="15%" align="left">
+			Sättigung
+		</td>
+		<td width="85%">
+			{{basic.slider(id~'sat',g_sat,0,255,5)}}
+		</td>
+	</tr>
+	<tr>
+		<td width="15%" align="left">
+			Farbe
+		</td>
+		<td width="85%">
+			{{basic.slider(id~'hue',g_hue,0,65535,500)}}
+		</td>
+	</tr>
+</table>
+{% endmacro %}
+
+/**
+ * Hue Widget
+ * (c) 2015 Michael Würtenberger
+ * 
+ * @param       unique id for this widget
+ * @param       the gad/item for the power (optional)
+ * @param       the gad/item for the volume (optional)
+ * @param       the gad/item for the mute (optional)
+ * @param       the gad/item for the song title (optional)
+ * @param       the gad/item to set surround mode (optional)
+ * @param       the gad/item to set input (optional)
+ *
+ */
+{% macro control_group(id,g_power,g_alert,g_effect,g_bri,g_sat,g_hue) %}
+{% import "basic.html" as basic %}
+
+<table height="90%" width="90%" align="center">
+	<tr>
+		<td width="15%" align="center">
+			{{basic.dual(id~'power',g_power)}}
+		</td>
+		<td width="25%" align="center">
+			Alert:{{basic.dual(id~'alert',g_alert,icon1~'audio_pause.png', icon1~'audio_play.png', 'lselect','none')}}
+		</td>
+		<td width="25%" align="center">
+			Effect:{{basic.dual(id~'effect',g_effect,icon1~'audio_pause.png', icon1~'audio_play.png', 'colorloop',	'none')}}
+		</td>
+	</tr>
+</table>
+<table height="90%" width="90%" align="center">
+	<tr>
+		<td width="15%" align="left">
+		Helligkeit
+		</td>
+		<td width="85%">
+			{{basic.slider(id~'bri',g_bri,0,255,5)}}
+		</td>
+	</tr>
+	<tr>
+		<td width="15%" align="left">
+			Sättigung
+		</td>
+		<td width="85%">
+			{{basic.slider(id~'sat',g_sat,0,255,5)}}
+		</td>
+	</tr>
+	<tr>
+		<td width="15%" align="left">
+			Farbe
+		</td>
+		<td width="85%">
+			{{basic.slider(id~'hue',g_hue,0,65535,500)}}
+		</td>
+	</tr>
+</table>
+{% endmacro %}

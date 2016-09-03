@@ -52,7 +52,6 @@ import traceback
 #####################################################################
 BASE = '/'.join(os.path.realpath(__file__).split('/')[:-2])
 sys.path.insert(0, BASE)
-sys.path.insert(1, BASE + '/lib/3rd')
 
 #####################################################################
 # Import 3rd Party Modules
@@ -78,7 +77,7 @@ import lib.orb
 # Globals
 #####################################################################
 MODE = 'default'
-VERSION = '1.1.'
+VERSION = '1.3.'
 TZ = gettz('UTC')
 try:
     os.chdir(BASE)
@@ -208,7 +207,7 @@ class SmartHome():
                 self.logger.warning("Problem parsing timezone: {}. Using UTC.".format(self._tz))
             del(self._tz, tzinfo)
 
-        self.logger.info("Start SmartHome.py {0}".format(VERSION))
+        self.logger.warning("--------------------   Init smarthomeNG {0}   --------------------".format(VERSION))
         self.logger.debug("Python {0}".format(sys.version.split()[0]))
         self.logger.debug("DB-APIs {0}".format(", ".join(["%s" % key for key in self._dbapis.keys()])))
         self._starttime = datetime.datetime.now()
@@ -243,7 +242,6 @@ class SmartHome():
         elif MODE == 'quiet':
             logging.getLogger().setLevel(logging.WARNING)        
 #       log_file.doRollover()
-        self.logger.warning("--------------------   Init SmartHomeNG {0}   --------------------".format(VERSION))
 
     def initMemLog(self):
         self.log = lib.log.Log(self, 'env.core.log', ['time', 'thread', 'level', 'message'], maxlen=self._log_buffer)
@@ -414,7 +412,11 @@ class SmartHome():
         regex, __, attr = regex.partition(':')
         regex = regex.replace('.', '\.').replace('*', '.*') + '$'
         regex = re.compile(regex)
-        if attr != '':
+        attr, __, val = attr.partition('[')
+        val = val.rstrip(']')
+        if attr != '' and val != '':
+            return [self.__item_dict[item] for item in self.__items if regex.match(item) and attr in self.__item_dict[item].conf and ((type(self.__item_dict[item].conf[attr]) in [list,dict] and val in self.__item_dict[item].conf[attr]) or (val == self.__item_dict[item].conf[attr]))]
+        elif attr != '':
             return [self.__item_dict[item] for item in self.__items if regex.match(item) and attr in self.__item_dict[item].conf]
         else:
             return [self.__item_dict[item] for item in self.__items if regex.match(item)]

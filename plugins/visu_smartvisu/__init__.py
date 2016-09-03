@@ -40,7 +40,7 @@ import sys
 #########################################################################
 
 class SmartVisu(SmartPlugin):
-    PLUGIN_VERSION="1.1.0"
+    PLUGIN_VERSION="1.3.1"
     ALLOW_MULTIINSTANCE = False
 
 
@@ -84,6 +84,22 @@ class SmartVisu(SmartPlugin):
 
     def stop(self):
         self.alive = False
+
+
+    def parse_item(self, item):
+        # Relative path support (release 1.3 and up)
+        item.expand_relativepathes('sv_widget', "'", "'")
+        item.expand_relativepathes('sv_widget2', "'", "'")
+        item.expand_relativepathes('sv_nav_aside', "'", "'")
+        item.expand_relativepathes('sv_nav_aside2', "'", "'")
+
+
+    def parse_logic(self, logic):
+        pass
+
+
+    def update_item(self, item, caller=None, source=None, dest=None):
+        pass
 
 
 #########################################################################
@@ -196,7 +212,7 @@ class SmartVisuGenerator:
             else:
                 img = ''
             if isinstance(item.conf['sv_widget'], list):
-                self.logger.warning("room: sv_widget")
+                self.logger.warning("room: sv_widget: IsList")
                 for widget in item.conf['sv_widget']:
                     widgets += self.parse_tpl(widgetblocktemplate, [('{{ visu_name }}', str(item)), ('{{ visu_img }}', img), ('{{ visu_widget }}', widget), ('item.name', str(item)), ("'item", "'" + item.id())])
             else:

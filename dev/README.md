@@ -7,7 +7,7 @@ For an git introduction to git see: [http://gitimmersion.com/](http://gitimmersi
 
 It you want to publish your plugin, get an [github account](https://github.com/users) as soon as possible.
 
-### Usefull commands
+### Useful commands
    * __list changes__ since the release with the tag VERSIONTAG: `git log --pretty=format:"%s" <VERSIONTAG>..HEAD`
    * __undo commit__ with the id XXXIDXXX: `git reset --hard XXXIDXXX && git push origin develop --force`
    * __copy commit__ to current branch: `git cherry-pick <commit>`
@@ -41,7 +41,7 @@ You should only use Python =< 3.2 methods. If not make it clear in the documenta
 Your code should conform to [pep 8](http://www.python.org/dev/peps/pep-0008/). (I'm ignoring "E501 line too long".)
 
 ## Start Coding
-   * __copy__ the skeleton directory: `cp -r plugins/skeleton plugins/myplugin`
+   * __copy__ the sample plugin directory: `cp -r dev/sample_plugin plugins/myplugin`
    * __edit__ the main file: `vi plugins/myplugin/__init__.py`
 
 ### Tools

@@ -7,6 +7,7 @@
 #########################################################################
 
 import re
+import hashlib
 IP_REGEX = re.compile(r"""
         ^
         (?:
@@ -118,4 +119,49 @@ class Utils(object):
             raise Exception('Invalid value for boolean conversion: ' + value)
         return bool(value)
 
+    @staticmethod
+    def create_hash(plaintext):
+        """
+        Create hash (currently sha512) for given plaintext value
+        :param plaintext: plaintext
+        :return: hash of plaintext, lowercase letters
+        """
+        hashfunc = hashlib.sha512()
+        hashfunc.update(plaintext.encode())
+        return "".join(format(b, "02x") for b in hashfunc.digest())
 
+    @staticmethod
+    def is_hash(value):
+        """
+        Check if value is a valid hash (currently sha512) value
+        :param value: value to check
+        :return: bool True = given value can be a sha512 hash, False = given value can not be a sha512 hash
+        """
+
+        # a valid sha512 hash is a 128 charcter long string value
+        if value is None or not isinstance(value, str) or len(value) != 128:
+            return False
+
+        # and its a hexedecimal value
+        try:
+            int(value, 16)
+            return True
+        except ValueError:
+            return False
+
+    @staticmethod
+    def check_hashed_password(pwd_to_check, hashed_pwd):
+        """
+        Check if given plaintext password matches the hashed password
+        An empty password is always rejected
+        :param pwd_to_check: plaintext password to check
+        :param hashed_pwd: hashed password
+        :return: bool True: password matches, False: password does not match
+        """
+        if pwd_to_check is None or pwd_to_check == '':
+            # No password given -> return "not matching"
+            return False
+
+        # todo: check pwd_to_check for minimum length?
+
+        return Utils.create_hash(pwd_to_check) == hashed_pwd.lower()

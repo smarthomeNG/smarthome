@@ -351,7 +351,13 @@ class Scheduler(threading.Thread):
             logic = obj  # noqa
             sh = self._sh  # noqa
             try:
-                exec(obj.bytecode)
+                if logic.enabled:
+                    exec(obj.bytecode)
+                for method in logic.get_method_triggers():
+                    try:
+                        method(logic, by, source, dest)
+                    except Exception as e:
+                        logger.exception("Logic: Trigger {} for {} failed: {}".format(method, logic.name, e))
             except SystemExit:
                 # ignore exit() call from logic.
                 pass

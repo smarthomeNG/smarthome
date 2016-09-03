@@ -182,7 +182,10 @@ class Item():
         #############################################################
         for attr, value in config.items():
             if not isinstance(value, dict):
-                if attr in ['cycle', 'eval', 'name', 'type', 'value']:
+                if attr in ['cycle', 'name', 'type', 'value']:
+                    setattr(self, '_' + attr, value)
+                elif attr in ['eval']:
+                    value = self.get_stringwithabsolutepathes(value, 'sh.', '(', 'eval')
                     setattr(self, '_' + attr, value)
                 elif attr in ['cache', 'enforce_updates']:  # cast to bool
                     try:
@@ -190,10 +193,17 @@ class Item():
                     except:
                         logger.warning("Item '{0}': problem parsing '{1}'.".format(self._path, attr))
                         continue
-                elif attr in ['crontab', 'eval_trigger']:  # cast to list
+                elif attr in ['crontab']:  # cast to list
                     if isinstance(value, str):
                         value = [value, ]
                     setattr(self, '_' + attr, value)
+                elif attr in ['eval_trigger']:  # cast to list
+                    if isinstance(value, str):
+                        value = [value, ]
+                    expandedvalue = []
+                    for path in value:
+                        expandedvalue.append(self.get_absolutepath(path, 'eval_trigger'))
+                    setattr(self, '_' + attr, expandedvalue)
                 elif attr == 'autotimer':
                     time, __, value = value.partition('=')
                     if value is not None:
@@ -239,8 +249,9 @@ class Item():
         #############################################################
         __defaults = {'num': 0, 'str': '', 'bool': False, 'list': [], 'dict': {}, 'foo': None, 'scene': 0}
         if self._type is None:
-            logger.debug("Item {}: no type specified.".format(self._path))
-            return
+#            logger.debug("Item {}: no type specified.".format(self._path))
+#            return
+            self._type = 'foo'	# MSinn
         if self._type not in __defaults:
             logger.error("Item {}: type '{}' unknown. Please use one of: {}.".format(self._path, self._type, ', '.join(list(__defaults.keys()))))
             raise AttributeError
@@ -276,6 +287,91 @@ class Item():
                 update = plugin.parse_item(self)
                 if update:
                     self.add_method_trigger(update)
+
+
+    def expand_relativepathes(self, attr, begintag, endtag):
+        """
+        converts a configuration attribute containing relative item pathes
+        to absolute pathes
+        
+        The begintag and the endtag remain in the result string!
+
+        :param attr: Name of the attribute
+        :param begintag: string that signals the beginning of a relative path is following
+        :param endtag: string that signals the end of a relative path
+        """
+        if attr in self.conf:
+            if (begintag != '') and (endtag != ''):
+                self.conf[attr] = self.get_stringwithabsolutepathes(self.conf[attr], begintag, endtag, attr)
+            elif (begintag == '') and (endtag == ''):
+                self.conf[attr] = self.get_absolutepath(self.conf[attr], attr)
+        return
+        
+
+    def get_stringwithabsolutepathes(self, evalstr, begintag, endtag, attribute=''):
+        """
+        converts a string containing relative item pathes
+        to a string with absolute item pathes
+        
+        The begintag and the endtag remain in the result string!
+
+        :param evalstr: string with the statement that may contain relative item pathes
+        :param begintag: string that signals the beginning of a relative path is following
+        :param endtag: string that signals the end of a relative path
+        :param attribute: string with the name of the item's attribute, which contains the relative path
+        :return: string with the statement containing absolute item pathes
+        """
+        if evalstr.find(begintag+'.') == -1:
+            return evalstr
+
+#        logger.warning("{}.get_stringwithabsolutepathes('{}'): begintag = '{}', endtag = '{}'".format(self._path, evalstr, begintag, endtag))
+        pref = ''
+        rest = evalstr
+        while (rest.find(begintag+'.') != -1):
+            pref += rest[:rest.find(begintag+'.')+len(begintag)]
+            rest = rest[rest.find(begintag+'.')+len(begintag):]
+            rel = rest[:rest.find(endtag)]
+            rest = rest[rest.find(endtag):]
+            pref += self.get_absolutepath(rel, attribute)
+            
+        pref += rest
+#        logger.warning("{}.get_stringwithabsolutepathes(): result = '{}'".format(self._path, pref))
+        return pref
+
+
+    def get_absolutepath(self, relativepath, attribute=''):
+        """
+        Builds an absolute item path relative to the current item
+
+        :param relativepath: string with the relative item path
+        :param attribute: string with the name of the item's attribute, which contains the relative path
+        :return: string with the absolute item path
+        """
+        if (len(relativepath) == 0) or ((len(relativepath) > 0)  and (relativepath[0] != '.')):
+            return relativepath
+        relpath = relativepath.rstrip()
+        rootpath = self._path
+
+        while (len(relpath) > 0)  and (relpath[0] == '.'):
+            relpath = relpath[1:]
+            if (len(relpath) > 0)  and (relpath[0] == '.'):
+                if rootpath.rfind('.') == -1:
+                    if rootpath == '':
+                        relpath = ''
+                        logger.error("{}.get_absolutepath(): Relative path trying to access above root level on attribute '{}'".format(self._path, attribute))
+                    else:
+                        rootpath = ''
+                else:
+                    rootpath = rootpath[:rootpath.rfind('.')]
+
+        if relpath != '':
+            if rootpath != '':
+                rootpath += '.' + relpath
+            else:
+                rootpath = relpath
+        logger.info("{}.get_absolutepath('{}'): Result = '{}' (for attribute '{}')".format(self._path, relativepath, rootpath, attribute))
+        return rootpath
+    
 
     def __call__(self, value=None, caller='Logic', source=None, dest=None):
         if value is None or self._type is None:
@@ -374,6 +470,7 @@ class Item():
                 self._change_logger("Item {} = {} via {} {} {}".format(self._path, value, caller, source, dest))
         self._lock.release()
         if _changed or self._enforce_updates or self._type == 'scene':
+#            self.__prev_update = self.__last_update #Multiclick
             self.__last_update = self._sh.now()
             for method in self.__methods_to_trigger:
                 try:
@@ -444,6 +541,11 @@ class Item():
 
     def last_update(self):
         return self.__last_update
+
+    #Multiclick
+#    def prev_update_age(self):
+#        delta = self.__last_update - self.__prev_update
+#        return delta.total_seconds()
 
     def prev_age(self):
         delta = self.__last_change - self.__prev_change

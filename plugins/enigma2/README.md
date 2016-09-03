@@ -173,6 +173,11 @@ If cycle time is reduced, please carefully watch your device and your sh.log. In
                 enigma2_data_type@vusolo2 = e2servicereference
                 enigma2_page@vusolo2 = subservices
                 visu_acl = rw
+            [[[[servicestream]]]]
+                type = str
+                visu_acl = rw
+                eval = '<a href="http://'+sh.vusolo2._enigma2_device._host+':'+sh.vusolo2._enigma2_device._port+'/web/stream.m3u?ref='+sh.enigma2.vusolo2.current.servicereference()+'"><img class="ui-corner-all" id="mjpgImage" style="width:95%" alt="Processing..." src="http://'+sh.vusolo2._enigma2_device._host+':'+sh.vusolo2._enigma2_device._port+'/grab?format=png&r=720&'+sh.enigma2.vusolo2.current.servicereference()+'"></a>'
+                eval_trigger = init | enigma2.vusolo2.current.servicereference
         [[[services]]]
             [[[[DasErste_HD]]]]
                 type = bool
@@ -184,7 +189,7 @@ If cycle time is reduced, please carefully watch your device and your sh.log. In
                 sref@vusolo2 = 1:0:19:2B66:3F3:1:C00000:0:0:0:
                 enforce_updates = true
                 visu_acl = rw
-            [[[[3SAT]]]]
+            [[[[DREI_SAT]]]]
                 type = bool
                 sref@vusolo2 = 1:0:19:2B8E:3F2:1:C00000:0:0:0:
                 enforce_updates = true
@@ -365,52 +370,52 @@ If cycle time is reduced, please carefully watch your device and your sh.log. In
                 visu_acl = rw
                 enigma2_remote_command_id@vusolo2 = 412
                 enforce_updates = true
-            [[[[0]]]]
+            [[[[KEY_0]]]]
                 type = bool
                 visu_acl = rw
                 enigma2_remote_command_id@vusolo2 = 11
                 enforce_updates = true
-            [[[[1]]]]
+            [[[[KEY_1]]]]
                 type = bool
                 visu_acl = rw
                 enigma2_remote_command_id@vusolo2 = 2
                 enforce_updates = true
-            [[[[2]]]]
+            [[[[KEY_2]]]]
                 type = bool
                 visu_acl = rw
                 enigma2_remote_command_id@vusolo2 = 3
                 enforce_updates = true
-            [[[[3]]]]
+            [[[[KEY_3]]]]
                 type = bool
                 visu_acl = rw
                 enigma2_remote_command_id@vusolo2 = 4
                 enforce_updates = true
-            [[[[4]]]]
+            [[[[KEY_4]]]]
                 type = bool
                 visu_acl = rw
                 enigma2_remote_command_id@vusolo2 = 5
                 enforce_updates = true
-            [[[[5]]]]
+            [[[[KEY_5]]]]
                 type = bool
                 visu_acl = rw
                 enigma2_remote_command_id@vusolo2 = 6
                 enforce_updates = true
-            [[[[6]]]]
+            [[[[KEY_6]]]]
                 type = bool
                 visu_acl = rw
                 enigma2_remote_command_id@vusolo2 = 7
                 enforce_updates = true
-            [[[[7]]]]
+            [[[[KEY_7]]]]
                 type = bool
                 visu_acl = rw
                 enigma2_remote_command_id@vusolo2 = 8
                 enforce_updates = true
-            [[[[8]]]]
+            [[[[KEY_8]]]]
                 type = bool
                 visu_acl = rw
                 enigma2_remote_command_id@vusolo2 = 9
                 enforce_updates = true
-            [[[[9]]]]
+            [[[[KEY_9]]]]
                 type = bool
                 visu_acl = rw
                 enigma2_remote_command_id@vusolo2 = 10

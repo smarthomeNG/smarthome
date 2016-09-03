@@ -69,7 +69,7 @@ class WebSocket(lib.connection.Server):
         self.smartvisu_dir = smartvisu_dir
         logger.warning("")
         logger.warning("+============================================================================+")
-        logger.warning("! The VISU plugin is depricated                                              !")
+        logger.warning("! The VISU plugin is deprecated                                              !")
         logger.warning("! - Please switch to the VISU_WEBSOCKET and VISU_SMARTVISU plugins           !")
         logger.warning("! - The old VISU plugin will be removed in the upcoming smarthomeNG v1.3     !")
         logger.warning("!                                                                            !")
@@ -313,13 +313,21 @@ class WebSocketHandler(lib.connection.Stream):
         elif command == 'ping':
             self.json_send({'cmd': 'pong'})
         elif command == 'logic':
-            if 'name' not in data or 'val' not in data:
+            if 'name' not in data:
                 return
             name = data['name']
-            value = data['val']
             if name in self.logics:
-                logger.info("Client {0} triggerd logic {1} with '{2}'".format(self.addr, name, value))
-                self.logics[name].trigger(by='Visu', value=value, source=self.addr)
+                if 'val' in data:
+                    value = data['val']
+                    logger.info("Client {0} triggerd logic {1} with '{2}'".format(self.addr, name, value))
+                    self.logics[name].trigger(by='Visu', value=value, source=self.addr)
+                if 'enabled' in data:
+                    if data['enabled']:
+                        logger.info("Client {0} enabled logic {1}".format(self.addr, name))
+                        self.logics[name].enable()
+                    else:
+                        logger.info("Client {0} disabled logic {1}".format(self.addr, name))
+                        self.logics[name].disable()
             else:
                 logger.warning("Client {0} requested invalid logic: {1}".format(self.addr, name))
         elif command == 'series':
