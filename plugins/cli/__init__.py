@@ -672,7 +672,7 @@ class CLICommands:
                 if parameter:
                     loghandler.setLevel(num_level)
                 else:
-                    handler.push("{} - {}\n".format(type(loghandler).__name__, logging.getLevelName(getattr(loghandlers, "level"))))
+                    handler.push("{} - {}\n".format(type(loghandler).__name__, logging.getLevelName(getattr(loghandler, "level"))))
 
     # noinspection PyUnusedLocal
     def _cli_ld(self, handler, parameter, source):
