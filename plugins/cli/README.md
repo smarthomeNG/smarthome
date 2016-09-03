@@ -36,6 +36,7 @@ command | function
 <code>la</code> | list all items (with values)
 <code>ld [log]</code> | log dump of (memory) log
 <code>lo</code> | list all logics and next execution time
+<code>log [lvl]</code> | shows or set the current log level
 <code>ls</code> | list the first level items
 <code>ls [item]</code> | list item and every child item (with values)
 <code>lt</code> | list current thread names
