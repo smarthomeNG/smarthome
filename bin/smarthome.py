@@ -2,8 +2,10 @@
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
 # Copyright 2011-2014 Marcus Popp                          marcus@popp.mx
+# Copyright 2016-     Christian Strassburg            c.strassburg@gmx.de
 #########################################################################
-#  This file is part of SmartHome.py.    http://mknx.github.io/smarthome/
+#  This file is part of SmartHome.py.
+#  https://github.com/smarthomeNG/smarthome
 #
 #  SmartHome.py is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -36,6 +38,8 @@ import gc
 import locale
 import logging
 import logging.handlers
+import logging.config
+import yaml
 import os
 import re
 import signal
@@ -43,14 +47,11 @@ import subprocess
 import threading
 import time
 import traceback
-
 #####################################################################
 # Base
 #####################################################################
-logger = logging.getLogger('')
 BASE = '/'.join(os.path.realpath(__file__).split('/')[:-2])
 sys.path.insert(0, BASE)
-sys.path.insert(1, BASE + '/lib/3rd')
 
 #####################################################################
 # Import 3rd Party Modules
@@ -76,8 +77,7 @@ import lib.orb
 # Globals
 #####################################################################
 MODE = 'default'
-LOGLEVEL = logging.INFO
-VERSION = '1.1.'
+VERSION = '1.3.'
 TZ = gettz('UTC')
 try:
     os.chdir(BASE)
@@ -114,7 +114,8 @@ class SmartHome():
     _logic_conf = BASE + '/etc/logic.conf'
     _logic_dir = BASE + '/logics/'
     _cache_dir = BASE + '/var/cache/'
-    _logfile = BASE + '/var/log/smarthome.log'
+    _log_config = BASE + '/etc/logging.yaml'
+    _pidfile = BASE + '/var/run/smarthome.pid'
     _log_buffer = 50
     __logs = {}
     __event_listeners = {}
@@ -124,9 +125,9 @@ class SmartHome():
     __children = []
     __item_dict = {}
     _utctz = TZ
+    logger = logging.getLogger(__name__)
 
     def __init__(self, smarthome_conf=BASE + '/etc/smarthome.conf'):
-
         # set default timezone to UTC
         global TZ
         self.tz = 'UTC'
@@ -138,69 +139,32 @@ class SmartHome():
         self.version = VERSION
         self.connections = []
 
-        #############################################################
-        # logfile write test
-        #############################################################
-        os.umask(0o002)
-        try:
-            with open(self._logfile, 'a') as f:
-                f.write("Init SmartHome.py {0}\n".format(VERSION))
-        except IOError as e:
-            print("Error creating logfile {}: {}".format(self._logfile, e))
-
-        #############################################################
-        # Fork
-        #############################################################
+        # Fork process and write pidfile
         if MODE == 'default':
-            lib.daemon.daemonize()
+            lib.daemon.daemonize(self._pidfile)
 
         #############################################################
         # Signal Handling
-        #############################################################
         signal.signal(signal.SIGHUP, self.reload_logics)
         signal.signal(signal.SIGINT, self.stop)
         signal.signal(signal.SIGTERM, self.stop)
 
-        #############################################################
-        # Logging
-        #############################################################
-        _logdate = "%Y-%m-%d %H:%M:%S"
-        _logformat = "%(asctime)s %(levelname)-8s %(threadName)-12s %(message)s"
-        if LOGLEVEL == logging.DEBUG:
-            _logdate = None
-            _logformat = "%(asctime)s %(levelname)-8s %(threadName)-12s %(message)s -- %(filename)s:%(funcName)s:%(lineno)d"
-        logging.basicConfig(level=LOGLEVEL, format=_logformat, datefmt=_logdate)
-        if MODE == 'interactive':  # remove default stream handler
-            logger.removeHandler(logger.handlers[0])
-        # adding logfile
-        try:
-            formatter = logging.Formatter(_logformat, _logdate)
-            log_file = logging.handlers.TimedRotatingFileHandler(self._logfile, when='midnight', backupCount=7)
-            log_file.setLevel(LOGLEVEL)
-            log_file.setFormatter(formatter)
-            if LOGLEVEL == logging.DEBUG:  # clean log
-                log_file.doRollover()
-            _logdate = None
-            logging.getLogger('').addHandler(log_file)
-        except IOError as e:
-            print("Error creating logfile {}: {}".format(self._logfile, e))
-
+        # setup logging
+        self.initLogging()
+   
         #############################################################
         # Check Time
-        #############################################################
         while datetime.date.today().isoformat() < '2014-03-16':  # XXX update date
             time.sleep(5)
             print("Waiting for updated time.")
-            logger.info("Waiting for updated time.")
+            self.logger.info("Waiting for updated time.")
 
         #############################################################
         # Catching Exceptions
-        #############################################################
         sys.excepthook = self._excepthook
 
         #############################################################
         # Reading smarthome.conf
-        #############################################################
         try:
             config = lib.config.parse(smarthome_conf)
             for attr in config:
@@ -208,26 +172,14 @@ class SmartHome():
                     vars(self)['_' + attr] = config[attr]
             del(config)  # clean up
         except Exception as e:
-            logger.warning("Problem reading smarthome.conf: {0}".format(e))
+            self.logger.warning("Problem reading smarthome.conf: {0}".format(e))
 
         #############################################################
         # Setting debug level and adding memory handler
-        #############################################################
-        if hasattr(self, '_loglevel'):
-            try:
-                logger.setLevel(self._loglevel.upper())
-                log_file.setLevel(self._loglevel.upper())
-            except Exception as e:
-                logger.error("Problem setting loglevel to {0}: {1}".format(self._loglevel.upper(), e))
-        self.log = lib.log.Log(self, 'env.core.log', ['time', 'thread', 'level', 'message'], maxlen=self._log_buffer)
-        log_mem = LogHandler(self.log)
-        log_mem.setLevel(logging.WARNING)
-        log_mem.setFormatter(formatter)
-        logging.getLogger('').addHandler(log_mem)
+        self.initMemLog()
 
         #############################################################
         # Setting (local) tz if set in smarthome.conf
-        #############################################################
         if hasattr(self, '_tz'):
             tzinfo = gettz(self._tz)
             if tzinfo is not None:
@@ -236,33 +188,53 @@ class SmartHome():
                 os.environ['TZ'] = self.tz
                 self._tzinfo = TZ
             else:
-                logger.warning("Problem parsing timezone: {}. Using UTC.".format(self._tz))
+                self.logger.warning("Problem parsing timezone: {}. Using UTC.".format(self._tz))
             del(self._tz, tzinfo)
 
-        logger.info("Start SmartHome.py {0}".format(VERSION))
-        logger.debug("Python {0}".format(sys.version.split()[0]))
+        self.logger.warning("--------------------   Init smarthomeNG {0}   --------------------".format(VERSION))
+        self.logger.debug("Python {0}".format(sys.version.split()[0]))
         self._starttime = datetime.datetime.now()
 
         #############################################################
         # Link Tools
-        #############################################################
         self.tools = lib.tools.Tools()
 
         #############################################################
         # Link Sun and Moon
-        #############################################################
         self.sun = False
         self.moon = False
         if lib.orb.ephem is None:
-            logger.warning("Could not find/use ephem!")
+            self.logger.warning("Could not find/use ephem!")
         elif not hasattr(self, '_lon') and hasattr(self, '_lat'):
-            logger.warning('No latitude/longitude specified => you could not use the sun and moon object.')
+            self.logger.warning('No latitude/longitude specified => you could not use the sun and moon object.')
         else:
             if not hasattr(self, '_elev'):
                 self._elev = None
             self.sun = lib.orb.Orb('sun', self._lon, self._lat, self._elev)
             self.moon = lib.orb.Orb('moon', self._lon, self._lat, self._elev)
 
+    def initLogging(self):
+        fo = open(self._log_config, 'r') 
+        doc = yaml.load(fo)
+        logging.config.dictConfig(doc)
+        fo.close()
+        if MODE == 'interactive':  # remove default stream handler
+            logging.getLogger().disabled = True
+        elif MODE == 'debug':
+            logging.getLogger().setLevel(logging.DEBUG)        
+        elif MODE == 'quiet':
+            logging.getLogger().setLevel(logging.WARNING)        
+#       log_file.doRollover()
+
+    def initMemLog(self):
+        self.log = lib.log.Log(self, 'env.core.log', ['time', 'thread', 'level', 'message'], maxlen=self._log_buffer)
+        _logdate = "%Y-%m-%d %H:%M:%S"
+        _logformat = "%(asctime)s %(levelname)-8s %(threadName)-12s %(message)s"
+        formatter = logging.Formatter(_logformat, _logdate)
+        log_mem = LogHandler(self.log)
+        log_mem.setLevel(logging.WARNING)
+        log_mem.setFormatter(formatter)
+        logging.getLogger('').addHandler(log_mem)
     #################################################################
     # Process Methods
     #################################################################
@@ -285,26 +257,26 @@ class SmartHome():
         #############################################################
         # Init Plugins
         #############################################################
-        logger.info("Init Plugins")
+        self.logger.info("Init Plugins")
         self._plugins = lib.plugin.Plugins(self, configfile=self._plugin_conf)
 
         #############################################################
         # Init Items
         #############################################################
-        logger.info("Init Items")
+        self.logger.info("Init Items")
         item_conf = None
         for item_file in sorted(os.listdir(self._env_dir)):
             if item_file.endswith('.conf'):
                 try:
                     item_conf = lib.config.parse(self._env_dir + item_file, item_conf)
                 except Exception as e:
-                    logger.exception("Problem reading {0}: {1}".format(item_file, e))
+                    self.logger.exception("Problem reading {0}: {1}".format(item_file, e))
         for item_file in sorted(os.listdir(self._items_dir)):
             if item_file.endswith('.conf'):
                 try:
                     item_conf = lib.config.parse(self._items_dir + item_file, item_conf)
                 except Exception as e:
-                    logger.exception("Problem reading {0}: {1}".format(item_file, e))
+                    self.logger.exception("Problem reading {0}: {1}".format(item_file, e))
                     continue
         for attr, value in item_conf.items():
             if isinstance(value, dict):
@@ -312,7 +284,7 @@ class SmartHome():
                 try:
                     child = lib.item.Item(self, self, child_path, value)
                 except Exception as e:
-                    logger.error("Item {}: problem creating: ()".format(child_path, e))
+                    self.logger.error("Item {}: problem creating: ()".format(child_path, e))
                 else:
                     vars(self)[attr] = child
                     self.add_item(child_path, child)
@@ -323,7 +295,7 @@ class SmartHome():
         for item in self.return_items():
             item._init_run()
         self.item_count = len(self.__items)
-        logger.info("Items: {}".format(self.item_count))
+        self.logger.info("Items: {}".format(self.item_count))
 
         #############################################################
         # Init Logics
@@ -357,11 +329,11 @@ class SmartHome():
             try:
                 self.connections.poll()
             except Exception as e:
-                logger.exception("Connection polling failed: {}".format(e))
+                self.logger.exception("Connection polling failed: {}".format(e))
 
     def stop(self, signum=None, frame=None):
         self.alive = False
-        logger.info("Number of Threads: {0}".format(threading.activeCount()))
+        self.logger.info("Number of Threads: {0}".format(threading.activeCount()))
         for item in self.__items:
             self.__item_dict[item]._fading = False
         try:
@@ -383,9 +355,11 @@ class SmartHome():
                 pass
         if threading.active_count() > 1:
             for thread in threading.enumerate():
-                logger.info("Thread: {}, still alive".format(thread.name))
+                self.logger.info("Thread: {}, still alive".format(thread.name))
         else:
-            logger.info("SmartHome.py stopped")
+            self.logger.info("SmartHome.py stopped")
+        if MODE == 'default':
+            os.remove(self._pidfile)
         logging.shutdown()
         exit()
 
@@ -413,7 +387,11 @@ class SmartHome():
         regex, __, attr = regex.partition(':')
         regex = regex.replace('.', '\.').replace('*', '.*') + '$'
         regex = re.compile(regex)
-        if attr != '':
+        attr, __, val = attr.partition('[')
+        val = val.rstrip(']')
+        if attr != '' and val != '':
+            return [self.__item_dict[item] for item in self.__items if regex.match(item) and attr in self.__item_dict[item].conf and ((type(self.__item_dict[item].conf[attr]) in [list,dict] and val in self.__item_dict[item].conf[attr]) or (val == self.__item_dict[item].conf[attr]))]
+        elif attr != '':
             return [self.__item_dict[item] for item in self.__items if regex.match(item) and attr in self.__item_dict[item].conf]
         else:
             return [self.__item_dict[item] for item in self.__items if regex.match(item)]
@@ -506,15 +484,15 @@ class SmartHome():
     def _maintenance(self):
         self._garbage_collection()
         references = sum(self._object_refcount().values())
-        logger.debug("Object references: {}".format(references))
+        self.logger.debug("Object references: {}".format(references))
 
     def _excepthook(self, typ, value, tb):
         mytb = "".join(traceback.format_tb(tb))
-        logger.error("Unhandled exception: {1}\n{0}\n{2}".format(typ, value, mytb))
+        self.logger.error("Unhandled exception: {1}\n{0}\n{2}".format(typ, value, mytb))
 
     def _garbage_collection(self):
         c = gc.collect()
-        logger.debug("Garbage collector: collected {0} objects.".format(c))
+        self.logger.debug("Garbage collector: collected {0} objects.".format(c))
 
     def string2bool(self, string):
         if isinstance(string, bool):
@@ -536,9 +514,12 @@ class SmartHome():
         objects = {}
         for module in list(sys.modules.values()):
             for sym in dir(module):
-                obj = getattr(module, sym)
-                if isinstance(obj, type):
-                    objects[obj] = sys.getrefcount(obj)
+                try:
+                    obj = getattr(module, sym)
+                    if isinstance(obj, type):
+                        objects[obj] = sys.getrefcount(obj)
+                except:
+                    pass
         return objects
 
 
@@ -565,18 +546,17 @@ if __name__ == '__main__':
     # argument handling
     argparser = argparse.ArgumentParser()
     arggroup = argparser.add_mutually_exclusive_group()
-    arggroup.add_argument('-v', '--verbose', help='verbose (debug output) logging to the logfile', action='store_true')
+    arggroup.add_argument('-v', '--verbose', help='DEPRECATED use logging.config (verbose (debug output) logging to the logfile)', action='store_true')
     arggroup.add_argument('-d', '--debug', help='stay in the foreground with verbose output', action='store_true')
     arggroup.add_argument('-i', '--interactive', help='open an interactive shell with tab completion and with verbose logging to the logfile', action='store_true')
     arggroup.add_argument('-l', '--logics', help='reload all logics', action='store_true')
     arggroup.add_argument('-s', '--stop', help='stop SmartHome.py', action='store_true')
-    arggroup.add_argument('-q', '--quiet', help='reduce logging to the logfile', action='store_true')
+    arggroup.add_argument('-q', '--quiet', help='DEPRECATED use logging config (reduce logging to the logfile)', action='store_true')
     arggroup.add_argument('-V', '--version', help='show SmartHome.py version', action='store_true')
     arggroup.add_argument('--start', help='start SmartHome.py and detach from console (default)', default=True, action='store_true')
     args = argparser.parse_args()
 
     if args.interactive:
-        LOGLEVEL = logging.DEBUG
         MODE = 'interactive'
         import code
         import rlcompleter  # noqa
@@ -606,12 +586,11 @@ if __name__ == '__main__':
         lib.daemon.kill(__file__)
         exit(0)
     elif args.debug:
-        LOGLEVEL = logging.DEBUG
         MODE = 'debug'
     elif args.quiet:
-        LOGLEVEL = logging.WARNING
+        pass
     elif args.verbose:
-        LOGLEVEL = logging.DEBUG
+        pass
 
     # check for pid file
     pid = lib.daemon.get_pid(__file__)

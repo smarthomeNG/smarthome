@@ -1,0 +1,49 @@
+ <!DOCTYPE html>
+{% extends "base.html" %}
+{% import "navbar.html" as nav with context %}
+{% block navbar %}
+    {{ nav }}
+{% endblock navbar %}
+
+{% block content %}
+<div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>{{ _('Scheduler') }}</th>
+                    <th>{{ _('nächste Ausführung') }}</th>
+                    <th>{{ _('Cycle') }}</th>
+                    <th>{{ _('Crontab') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if smarthome %}
+                    {% for entry in smarthome.scheduler._scheduler|sort  %}
+                    <tr>
+                        <td>{{ entry }}</td>
+                        {% if smarthome.scheduler._scheduler[entry]['next'] %}
+                            <td>{{ smarthome.scheduler._scheduler[entry]['next'].strftime('%Y-%m-%d %H:%M:%S%z') }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if smarthome.scheduler._scheduler[entry]['cycle'] %}
+                            <td>{{ smarthome.scheduler._scheduler[entry]['cycle'] | e }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if smarthome.scheduler._scheduler[entry]['cron'] %}
+                            <td>{{ smarthome.scheduler._scheduler[entry]['cron'] | e }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>{{ _('no data available') }}</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -27,8 +27,6 @@ import re
 import socket
 import threading
 import json
-import urllib
-from urllib.parse import urlparse
 import fcntl
 import struct
 import requests
@@ -266,6 +264,16 @@ class Sonos():
                                 break
                         cmd = self._command.bass(uid, value, group_command)
 
+                if command == 'balance':
+                    if isinstance(value, int):
+                        group_item_name = '{}.group_command'.format(item._name)
+                        group_command = 0
+                        for child in item.return_children():
+                            if child._name.lower() == group_item_name.lower():
+                                group_command = child()
+                                break
+                        cmd = self._command.balance(uid, value, group_command)
+
                 if command == 'treble':
                     if isinstance(value, int):
                         group_item_name = '{}.group_command'.format(item._name)
@@ -419,6 +427,22 @@ class Sonos():
                         logger.error(err)
                     return
 
+                if command == 'wifi_state':
+                    if isinstance(value, bool):
+                        persistent_item_name = '{}.persistent'.format(item._name)
+                        persistent = 0
+                        for child in item.return_children():
+                            if child._name.lower() == persistent_item_name.lower():
+                                if value != 0 and persistent == 1:
+                                    logger.warning("command wifi_state: persistent parameter with value '1' will"
+                                                   "only affect wifi_state with value '1' (the wifi interface will"
+                                                   "remain deactivated after reboot). Ignoring 'persistent' "
+                                                   "parameter.")
+                                else:
+                                    persistent = child()
+                                break
+                        cmd = self._command.wifi_state(uid, value, persistent)
+
                 if cmd:
                     self._send_cmd(cmd)
                     return
@@ -473,8 +497,14 @@ class Sonos():
     def get_favorite_radiostations(self, start_item=0, max_items=50):
         return self._send_cmd_response(SonosCommand.favradio(start_item, max_items))
 
+    def refresh_media_library(self, display_option='none'):
+        return self._send_cmd(SonosCommand.refresh_media_library(display_option))
+
     def version(self):
-        return "v1.3\t2015-01-18"
+        return "v1.7\t2016-01-04"
+
+    def discover(self):
+        return self._send_cmd(SonosCommand.discover())
 
 
 class SonosSpeaker():
@@ -482,6 +512,9 @@ class SonosSpeaker():
         self.uid = []
         self.ip = []
         self.model = []
+        self.model_number = []
+        self.display_version = []
+        self.household_id = []
         self.zone_name = []
         self.zone_icon = []
         self.is_coordinator = []
@@ -514,8 +547,10 @@ class SonosSpeaker():
         self.playmode = []
         self.alarms = []
         self.tts_local_mode = []
+        self.wifi_state = []
+        self.balance = []
 
-class SonosCommand():
+class SonosCommand:
 
     @staticmethod
     def subscribe(ip, port):
@@ -573,6 +608,17 @@ class SonosCommand():
             'parameter': {
                 'uid': '{uid}'.format(uid=uid),
                 'mute': int(value),
+                'group_command': int(group_command)
+            }
+        }
+
+    @staticmethod
+    def balance(uid, value, group_command=0):
+        return {
+            'command': 'set_balance',
+            'parameter': {
+                'uid': '{uid}'.format(uid=uid),
+                'balance': int(value),
                 'group_command': int(group_command)
             }
         }
@@ -798,6 +844,16 @@ class SonosCommand():
             }
         }
 
+    @staticmethod
+    def wifi_state(uid, wifi_state, persistent):
+        return {
+            'command': 'set_wifi_state',
+            'parameter': {
+                'uid': uid.lower(),
+                'wifi_state': wifi_state,
+                'persistent': persistent
+            }
+        }
 
     @staticmethod
     def favradio(start_item, max_items):
@@ -818,6 +874,24 @@ class SonosCommand():
                 'max_items': max_items
             }
         }
+
+    @staticmethod
+    def refresh_media_library(display_option):
+        display_option = display_option.lower()
+        if display_option not in ['none', 'itunes', 'wmp']:
+            logger.warning("refresh_media_library: invalid 'display_option' value '{val}'. Value has to be 'none', "
+                           "'itunes' or 'wmp'. Using default value 'none'.".format(val=display_option))
+            display_option = 'none'
+        return {
+            'command': 'refresh_media_library',
+            'parameter': {
+                'display_option': display_option.upper()
+            }
+        }
+
+    @staticmethod
+    def discover():
+        return {'command': 'discover', }
 
 
 #######################################################################

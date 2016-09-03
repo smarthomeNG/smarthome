@@ -226,7 +226,7 @@ class ComfoAir():
             if 'comfoair_read' in item.conf and 'comfoair_read_afterwrite' in item.conf:
                 readcommandname = item.conf['comfoair_read']
                 readafterwrite = item.conf['comfoair_read_afterwrite']
-                self.log_info('Attempting read after write for item {}, command {}, delay {}'.format(item, readcommandname, readafterwrite))
+                self.log_debug('Attempting read after write for item {}, command {}, delay {}'.format(item, readcommandname, readafterwrite))
                 if readcommandname is not None and readafterwrite is not None:
                     aw = float(readafterwrite)
                     time.sleep(aw)
@@ -246,7 +246,7 @@ class ComfoAir():
                     for triggername in trigger:
                         triggername = triggername.strip()
                         if triggername is not None and readafterwrite is not None:
-                            self.log_info('Triggering command {} after write for item {}'.format(triggername, item))
+                            self.log_debug('Triggering command {} after write for item {}'.format(triggername, item))
                             time.sleep(tdelay)
                             self.send_command(triggername)
 
@@ -258,7 +258,7 @@ class ComfoAir():
             # Is the command already due?
             if entry['nexttime'] <= currenttime:
                 commandname = self.commandname_by_commandcode(commandcode)
-                self.log_info('Triggering cyclic read command: {}'.format(commandname))
+                self.log_debug('Triggering cyclic read command: {}'.format(commandname))
                 self.send_command(commandname)
                 entry['nexttime'] = currenttime + entry['cycle']
         
@@ -303,7 +303,7 @@ class ComfoAir():
                 packet.extend(self.encode_specialchars(valuebytes))
             packet.extend(self.int2bytes(checksum, 1))
             packet.extend(self.int2bytes(self._controlset['PacketEnd'], 2))
-            self.log_info('Preparing command {} with value {} (transformed to value byte \'{}\') to be sent.'.format(commandname, value, self.bytes2hexstring(valuebytes)))
+            self.log_debug('Preparing command {} with value {} (transformed to value byte \'{}\') to be sent.'.format(commandname, value, self.bytes2hexstring(valuebytes)))
             
             # Use a lock to allow only one sender at a time
             self._lock.acquire()
@@ -313,7 +313,7 @@ class ComfoAir():
             
             try:
                 self.send_bytes(packet)
-                self.log_info('Successfully sent packet: {}'.format(self.bytes2hexstring(packet)))
+                self.log_debug('Successfully sent packet: {}'.format(self.bytes2hexstring(packet)))
             except Exception as e:
                 raise Exception('Exception while sending: {}'.format(e))
             
@@ -327,7 +327,7 @@ class ComfoAir():
                         bytestoreceive = firstpartlen - len(packet)
                         self.log_debug('Trying to receive {} bytes for the first part of the response.'.format(bytestoreceive))
                         chunk = self.read_bytes(bytestoreceive)
-                        self.log_info('Received {} bytes chunk of response part 1: {}'.format(len(chunk), self.bytes2hexstring(chunk)))
+                        self.log_debug('Received {} bytes chunk of response part 1: {}'.format(len(chunk), self.bytes2hexstring(chunk)))
                         if len(chunk)  == 0:
                             raise Exception('Received 0 bytes chunk - ignoring packet!')
                         
@@ -350,13 +350,13 @@ class ComfoAir():
                         # In case of doubled special characters, the packet can be longer (try one byte more at a time)
                         if len(packet) >= packetlen and packet[-2:] != self._packetend:
                             packetlen = len(packet) + 1
-                            self.log_info('Extended packet length because of encoded characters.'.format(self.bytes2hexstring(chunk)))
+                            self.log_debug('Extended packet length because of encoded characters.'.format(self.bytes2hexstring(chunk)))
                         
                         # Receive next chunk
                         bytestoreceive = packetlen - len(packet)
                         self.log_debug('Trying to receive {} bytes for the second part of the response.'.format(bytestoreceive))
                         chunk = self.read_bytes(bytestoreceive)
-                        self.log_info('Received {} bytes chunk of response part 2: {}'.format(len(chunk), self.bytes2hexstring(chunk)))
+                        self.log_debug('Received {} bytes chunk of response part 2: {}'.format(len(chunk), self.bytes2hexstring(chunk)))
                         packet.extend(chunk)
                         if len(chunk)  == 0:
                             raise Exception('Received 0 bytes chunk - ignoring packet!')
@@ -381,7 +381,7 @@ class ComfoAir():
 
     def parse_response(self, response):
         #resph = self.bytes2int(response)
-        self.log_info('Successfully received response: {}'.format(self.bytes2hexstring(response)))
+        self.log_debug('Successfully received response: {}'.format(self.bytes2hexstring(response)))
 
         # A telegram looks like this: start sequence (2 bytes), command (2 bytes), data length (1 byte), data, checksum (1 byte), end sequence (2 bytes, already cut away)
         commandcodebytes = response[2:4]

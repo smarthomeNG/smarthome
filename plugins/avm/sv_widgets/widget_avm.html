@@ -1,0 +1,107 @@
+/**
+ * Fritzbox CallMonitor Widget
+ * 
+ * @param       unique id for this widget
+ * @param       the gad/item for the call event (incoming or outgoing event)
+ * @param       the gad/item for the last caller or called person (name or number)
+ * @param       the gad/item for the last calls (incoming or outgoing) date
+ * @param       the gad/item for the calls (incoming or outgoing) duration
+ *
+ */
+{% macro callmonitor_small(id, txt, gad_event, gad_last_caller, gad_last_call_date, gad_duration) %}
+    {% import "basic.html" as basic %}
+    {% set uid = uid(page, id) %}
+    {{ txt|e }}:<br/>
+    <div id="{{ uid }}">        
+        <div style="float:left; margin-right: 5px;">
+        {{ basic.symbol(id~'ring', gad_event, '', icon1~'phone_ring.png', 'ring') }}
+        {{ basic.symbol(id~'call', gad_event, '', icon1~'phone_call_out.png', 'call') }}
+        {{ basic.symbol(id~'connect', gad_event, '', icon1~'phone_call.png', 'connect') }}        				
+        {{ basic.symbol(id~'disconnect', gad_event, '', 'icons/ws/phone_call_end.svg', 'disconnect') }}	
+        </div>
+        {{ basic.symbol(id~'phone_status.fritz.call_incoming_0', gad_incoming_call, '', 'icons/ws/phone_missed_in.svg', 0) }}
+        {{ basic.symbol(id~'phone_status.fritz.call_incoming_1', gad_incoming_call, '', 'icons/gn/phone_call_in.png') }}
+        {{ basic.value(id~'phone_status.fritz.last_caller', gad_last_caller)}}, 
+        {{ basic.value(id~'phone_status.fritz.last_call_date', gad_last_call_date)}}<br/>          
+        Dauer: {{ basic.value(id~'gad_duration', gad_duration)}} Sekunden
+    </div>
+{% endmacro %}
+
+/**
+* Fritzbox Wifi-Control
+*
+* @param unique id for this widget
+* @param a gad/item for the name of the FritzDevice
+* @param a gad/item for the wlan 24 ghz
+* @param a gad/item for the wlan 5 ghz (optional)
+* @param a gad/item for wlan guest (optional)
+* @param a gad/item fpr remaining guest time (optional)
+*
+*/
+{% macro wifi(id, gad_name, gad_wlan24, gad_wlan5, gad_wlanguest, gad_guesttime) %}
+    {% import "basic.html" as basic %}
+    {% set uid = uid(page, id) %}
+
+    <div>
+            {% if gad_name %}WLAN ({{ basic.value(id~'name', gad_name) }}):<br/>{% endif %}
+        <table style="text-align:left" width="100%">
+                    {% if gad_wlan24 %}<tr><td>2.4 GHz:&nbsp;</td><td>{{ basic.flip(id~'wlan24', gad_wlan24) }}</td></tr>{% endif %}
+                    {% if gad_wlan5 %}<tr><td>5.0 GHz:&nbsp;</td><td>{{ basic.flip(id~'wlan5', gad_wlan5) }}</td></tr>{% endif %}
+                    {% if gad_wlanguest %}<tr><td>Gast {% if gad_guesttime %}({{ basic.value(id~'guesttime', gad_guesttime) }}min):&nbsp;{% endif %}</td>
+                    <td>{{ basic.flip(id~'wlanguest', gad_wlanguest) }}</td></tr>{% endif %}
+        </table>
+    </div>
+{% endmacro %}
+
+/**
+ * Fritzbox Systeminfo Widget
+ * 
+ * @param       unique id for this widget
+ * @param       the gad/item for the uptime of the fritzdevice (not the wan uptime!)
+ * @param       the gad/item for the firmware of the fritzdevice
+ * @param       the gad/item for the hardware version of the fritzdevice
+ * @param       the gad/item for the serial number of the fritzdevice
+ */
+{% macro system_info(id, gad_uptime, gad_firmware, gad_hardware_version, gad_serial_number) %}
+    {% import "basic.html" as basic %}
+    {% set uid = uid(page, id) %}
+    <div id="{{ uid }}">        
+        {% if gad_uptime %}Uptime: {{ basic.formula(id~'uptime', gad_uptime, 'float', 'VAR / 3600') }} hours<br/>{% endif %}
+        {% if gad_firmware %}Firmware: {{ basic.value(id~'firmware', gad_firmware) }}<br/>{% endif %}
+        {% if gad_hardware_version %}Gerätetyp: {{ basic.value(id~'hardware_version', gad_hardware_version) }}<br/>{% endif %}
+        {% if gad_serial_number %}Seriennummer: {{ basic.value(id~'serial_number', gad_serial_number) }}{% endif %}
+    </div>
+{% endmacro %}
+
+/**
+ * Fritzbox WAN-info Widget
+ * 
+ * @param       unique id for this widget
+ * @param       the gad/item for the internet ip
+ * @param       the gad/item for the wan (internet) uptime
+ * @param       the gad/item for the connection status
+ * @param       the gad/item for the last connection error
+ * @param       the gad/item for the total sent packets
+ * @param       the gad/item for the total received packets
+ * @param       the gad/item for the total sent bytes
+ * @param       the gad/item for the total received bytes
+ * @param       the gad/item for the upstream rate
+ * @param       the gad/item for the downstream rate
+ *
+ */
+{% macro wan_info(id, gad_ip, gad_uptime, gad_connection_status, gad_connection_error, gad_total_packets_sent, gad_total_packets_received, gad_total_bytes_sent, gad_total_bytes_received, gad_upstream, gad_downstream) %}
+    {% import "basic.html" as basic %}
+    {% set uid = uid(page, id) %}
+    <div id="{{ uid }}">        
+        {% if gad_ip %}Internet-IP: {{ basic.value(id~'ip', gad_ip) }}<br/> {% endif %}
+        {% if gad_uptime %}WAN-Uptime: {{ basic.formula(id~'wan_uptime', gad_uptime, 'float', 'VAR / 3600') }} hours<br/>{% endif %}
+        {% if gad_connection_status %}Verbindungsstatus: {{ basic.value(id~'connection_status', gad_connection_status) }}<br/>{% endif %}
+        {% if gad_connection_error %}Letzter Fehler: {{ basic.value(id~'wan_connection_error', gad_connection_error) }}<br/>{% endif %}
+        {% if gad_total_packets_sent %}Gesendete Pakete: {{ basic.value(id~'total_packets_sent', gad_total_packets_sent) }}<br/>{% endif %}
+        {% if gad_total_packets_received %}Empfangene Pakete: {{ basic.value(id~'total_packets_rcv', gad_total_packets_received) }}<br/>{% endif %}
+        {% if gad_total_bytes_sent %}Gesendetes Bytes: {{ basic.formula(id~'total_bytes_sent', gad_total_bytes_sent, 'float', 'VAR / (1024*1024)') }} mb<br/>{% endif %}
+        {% if gad_total_bytes_received %}Empfangene Bytes: {{ basic.formula(id~'total_bytes_received', gad_total_bytes_received, 'float', 'VAR / (1024*1024)') }} mb<br/>{% endif %}
+        {% if gad_upstream %}Upstream: {{ basic.formula(id~'upstream', gad_upstream, 'float', 'VAR / (1000)') }} mbit<br/>{% endif %}
+        {% if gad_downstream %}Downstream: {{ basic.formula(id~'downstream', gad_downstream, 'float', 'VAR / (1000)') }} mbit{% endif %}
+    </div>
+{% endmacro %}

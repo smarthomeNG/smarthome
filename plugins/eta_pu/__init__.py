@@ -25,16 +25,16 @@ import logging
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
+from lib.model.smartplugin import SmartPlugin
 
 __ETA_PU__ = 'eta_pu'
 __ETA_ERROR__ = 'eta_pu_error'
 __ETA_URI__ = 'eta_pu_uri'
 __ETA_TYPE__ = 'eta_pu_type'
 
-logger = logging.getLogger(__ETA_PU__)
-
 class EtaValue():
     def __init__(self, xml_item):
+        self.logger = logging.getLogger(__name__)
         self.value = xml_item.text
         self.str_value = xml_item.attrib['strValue']
         self.unit = xml_item.attrib['unit']
@@ -57,7 +57,7 @@ class EtaValue():
         except:
             value = self.valueFromString(str_value)
             if value is None:
-                logger.error("unhandled strValue {0} for {1}".format(str_value, uri))
+                self.logger.error("unhandled strValue {0} for {1}".format(str_value, uri))
                 return None
         data = value * self.scale_factor + self.adv_text_offset
         return data
@@ -67,6 +67,7 @@ Little helper for PUT, DELETE, POST and GET request
 class Request():
     def __init__(self, address, port):
         self.address = address
+        self.logger = logging.getLogger(__name__)
         self.port = port
         self.timeout = 2
 
@@ -95,8 +96,8 @@ class Request():
             f = urllib.request.urlopen(request, data)
             if f.status in (http.client.OK, http.client.CREATED):
                 return f.read().decode('utf-8')
-                logger.warning("request failed: {0}: ".format(url))
-                # logger.debug("{0} response: {1} {2}".format(req_type, f.status, f.reason))
+                self.logger.warning("request failed: {0}: ".format(url))
+                # self.logger.debug("{0} response: {1} {2}".format(req_type, f.status, f.reason))
             return None
         elif 'PUT' == req_type:
             conn.request(req_type, purl, body=value, headers=hdrs)
@@ -107,8 +108,8 @@ class Request():
         # success status: 201/Created for PUT request, else 200/Ok
         if resp.status in (http.client.OK, http.client.CREATED):
             return resp.read()
-        logger.warning("request failed for: {0}: ".format(url))
-        # logger.debug("{0} response: {1} {2}".format(req_type, resp.status, resp.reason))
+        self.logger.warning("request failed for: {0}: ".format(url))
+        # self.logger.debug("{0} response: {1} {2}".format(req_type, resp.status, resp.reason))
         return None
 
     def send(self, req_type, path, uri='', value=''):
@@ -120,11 +121,15 @@ class Request():
 '''
 The ETA_PU plugin class.
 '''
-class ETA_PU():
+class ETA_PU(SmartPlugin):
+
+    ALLOW_MULTIINSTANCE = False
+    PLUGIN_VERSION = "1.1.1"
 
     def __init__(self, smarthome, address, port, setpath, setname):
         self._sh = smarthome
         self._cycle = 30
+        self.logger = logging.getLogger(__name__)
         self._uri = dict()
         self._error = None
         self._objects = dict()
@@ -145,7 +150,7 @@ class ETA_PU():
             self.add_set(self._setname)
             self.fill_set(self._setname)
         except:
-            logger.error('Failed to rebuild.. ETA offline?')
+            self.logger.error('Failed to rebuild.. ETA offline?')
  
     '''
     add the list of URIs to an existing varset
@@ -156,7 +161,7 @@ class ETA_PU():
             rc = 'OK'
             if None is self._request.send('PUT', path):
                 rc = 'FAILED'
-            logger.info('adding to ETA var_set {0}: {1}'.format(path, rc))
+            self.logger.info('adding to ETA var_set {0}: {1}'.format(path, rc))
 
     def stop(self):
         self.alive = False
@@ -168,7 +173,7 @@ class ETA_PU():
         rc = 'OK'
         if None is self._request.send('DELETE', '{0}/{1}'.format(self._setpath, name)):
             rc = 'FAILED'
-        logger.info("deleting ETA var_set {0}: {1}".format(name, rc))
+        self.logger.info("deleting ETA var_set {0}: {1}".format(name, rc))
 
     '''
     add an empty uri-set
@@ -177,7 +182,7 @@ class ETA_PU():
         rc = 'OK'
         if None is self._request.send('PUT', '{0}/{1}'.format(self._setpath, name)):
             rc = 'FAILED'
-        logger.info("adding gew var_set {0}: {1}".format(name, rc))
+        self.logger.info("adding gew var_set {0}: {1}".format(name, rc))
 
     '''
     read uri from parent item
@@ -185,7 +190,7 @@ class ETA_PU():
     def _get_uri(self, item):
         parent_item = item.return_parent()
         if parent_item is None:
-            logger.error("skipping item: no parent with 'eta_pu_uri' found")
+            self.logger.error("skipping item: no parent with 'eta_pu_uri' found")
             return None
         if False == (__ETA_URI__ in parent_item.conf):
             return self._get_uri(parent_item)
@@ -229,11 +234,11 @@ class ETA_PU():
         if caller == __ETA_PU__:
             return
         if item.conf[__ETA_TYPE__] == 'calc':
-            # logger.debug('Write to ETA_PU...{} {} {}'.format(caller,source,dest))
+            # self.logger.debug('Write to ETA_PU...{} {} {}'.format(caller,source,dest))
             uri = self._get_uri(item)
             if uri:
                 data = self._objects[uri].get_data(uri,item())
-                logger.debug('write to ETA_PU: {}'.format(data))
+                self.logger.debug('write to ETA_PU: {}'.format(data))
                 self._request.send('POST', '/user/var/', uri, data)
 
     '''
@@ -245,7 +250,7 @@ class ETA_PU():
         try:
                 return ET.fromstring(xml)
         except:
-                logger.error('can not parse response from ETA')
+                self.logger.error('can not parse response from ETA')
         return None
 
     '''
@@ -263,15 +268,15 @@ class ETA_PU():
             for uri in self._uri.keys():
                 element = response.find(".//*[@uri='%s']" % uri)
                 if element is None:
-                     logger.error('element not found: {}'.format(uri))
+                     self.logger.error('element not found: {}'.format(uri))
                      continue
                 # store parameters needed when update_var_item is called
                 self._objects[uri] = EtaValue(element)
-                logger.debug('looking for {} in respones'.format(uri))
+                self.logger.debug('looking for {} in respones'.format(uri))
                 for item in self._uri[uri]:
-                    logger.debug('update item {}'.format(uri))
+                    self.logger.debug('update item {}'.format(uri))
                     # update item value
-                    # logger.debug(str(item.conf))
+                    # self.logger.debug(str(item.conf))
                     if item.conf[__ETA_TYPE__] == 'calc':
                         value = int(element.text) / int(element.attrib['scaleFactor'])- int(element.attrib['advTextOffset'])
                     else:
@@ -280,7 +285,7 @@ class ETA_PU():
                         value = value.replace(',', '.')
                     item(value, caller=__ETA_PU__)
         except:
-            logger.error('Update var failed, trying to rebuild varset...')
+            self.logger.error('Update var failed, trying to rebuild varset...')
             self.rebuild_set()
 
     '''
@@ -294,13 +299,13 @@ class ETA_PU():
         text = ''
         for errors in response:
             for fub in errors:
-                # logger.info("Suche Fehlermeldung in Subsys: {}".format(fub.attrib['name']))
+                # self.logger.info("Suche Fehlermeldung in Subsys: {}".format(fub.attrib['name']))
                 for error in fub:
                     # concatenate error strings
                     text = '{0}{1} {2} {3} {4}\n'.format(
                             text, error.attrib['time'], error.attrib['priority'],
                             error.attrib['msg'], error.text)
-            logger.info("Error Message from ETA: {}".format(text))
+            self.logger.info("Error Message from ETA: {}".format(text))
         # update the item
         if self._error is not None:
             self._error(text, caller=__ETA_PU__)
@@ -309,7 +314,7 @@ class ETA_PU():
         #for fub in self._errors.keys():
         #    # find element with that fub_URI
         #    element = response.find(".//*[@uri='%s']" % fub)
-        #    logger.debug('looking for {} in respones'.format(fub))
+        #    self.logger.debug('looking for {} in respones'.format(fub))
         #    if element is None:
         #        return
         #    # extract errors
@@ -319,7 +324,7 @@ class ETA_PU():
         #        text = '{0}{1} {2} {3} {4}\n'.format(
         #                text, error.attrib['time'], error.attrib['priority'],
         #                error.attrib['msg'], error.text)
-        #    logger.info("Fehlermeldung: {}".format(text))
+        #    self.logger.info("Fehlermeldung: {}".format(text))
         #    # update the item
         #    self._errors[fub](text, caller=__ETA_PU__)
 

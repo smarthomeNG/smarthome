@@ -1,0 +1,17 @@
+sudo: false
+language: python
+python:
+    - "3.4"
+install:
+    - pip install tox-travis "virtualenv<14.0.0"
+
+script:
+    - tox
+
+# List all environments configured in tox.ini to test them all using
+# Travis CI!
+env:
+    - TOXENV=py32
+    - TOXENV=py33
+    - TOXENV=py34
+    - TOXENV=py35

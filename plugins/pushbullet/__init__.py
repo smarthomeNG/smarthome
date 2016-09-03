@@ -34,6 +34,7 @@ class Pushbullet(object):
     _upload_apiurl = "https://api.pushbullet.com/v2/upload-request"
 
     def __init__(self, smarthome, apikey=None, deviceid=None, debug=False):
+        logging.getLogger("requests").setLevel(logging.WARNING)
         self._apikey = apikey
         self._deviceid = deviceid
         self._sh = smarthome
@@ -45,43 +46,58 @@ class Pushbullet(object):
     def stop(self):
         pass
 
+    def delete(self, pushid, apikey=None):
+        if apikey is None:
+            apikey = self._apikey
+
+        try:
+            response = requests.delete(self._apiurl + "/" + pushid, headers={"User-Agent": "SmartHome.py", "Content-Type": "application/json"}, auth=(apikey,""))
+            if self._is_response_ok(response):
+                return response.json()
+
+            logger.error("Could not delete Pushbullet notification. Error: {0}".format(response.text))
+        except Exception as exception:
+            logger.error("Could not delete Pushbullet notification. Error: {0}".format(exception))
+
+        return False
+
     def note(self, title, body, deviceid=None, apikey=None):
-        self._push(data={"type": "note", "title": title, "body": body}, deviceid=deviceid, apikey=apikey)
+        return self._push(data={"type": "note", "title": title, "body": body}, deviceid=deviceid, apikey=apikey)
 
     def link(self, title, url, deviceid=None, apikey=None, body=None):
-        self._push(data={"type": "link", "title": title, "url": url, "body": body}, deviceid=deviceid, apikey=apikey)
+        return self._push(data={"type": "link", "title": title, "url": url, "body": body}, deviceid=deviceid, apikey=apikey)
 
     def address(self, name, address, deviceid=None, apikey=None):
-        self._push(data={"type": "address", "name": name, "address": address}, deviceid=deviceid, apikey=apikey)
+        return self._push(data={"type": "address", "name": name, "address": address}, deviceid=deviceid, apikey=apikey)
 
     def list(self, title, items, deviceid=None, apikey=None):
-        self._push(data={"type": "list", "title": title, "items": items}, deviceid=deviceid, apikey=apikey)
+        return self._push(data={"type": "list", "title": title, "items": items}, deviceid=deviceid, apikey=apikey)
 
     def file(self, filepath, deviceid=None, apikey=None, body=None):
         if os.path.exists(filepath) == False:
             logger.error("Trying to push non existing file: {0}".format(filepath))
-            return
+            return False
 
-        self._upload_and_push_file(filepath, body, deviceid, apikey)
+        return self._upload_and_push_file(filepath, body, deviceid, apikey)
 
     def _upload_and_push_file(self, filepath, body=None, deviceid=None, apikey=None):
         try:
             headers = {"User-Agent": "SmartHome.py", "Content-Type": "application/json"}
 
-            if apikey == None:
+            if apikey is None:
                 apikey = self._apikey
 
             upload_request_response = requests.post(self._upload_apiurl, data=json.dumps({"file_name": os.path.basename(filepath), "file_type": magic.from_file(filepath, mime=True).decode("UTF-8")}), headers=headers, auth=(apikey,""))
 
-            if self._is_response_ok(upload_request_response) == True:
+            if self._is_response_ok(upload_request_response):
                 data = upload_request_response.json()
                 upload_response = requests.post(data["upload_url"], data=data["data"], headers={"User-Agent": "SmartHome.py"}, files={"file": open(filepath, "rb")})
 
-                if self._is_response_ok(upload_response) == True:
-                    if body == None:
+                if self._is_response_ok(upload_response):
+                    if body is None:
                         body = ""
 
-                    self._push(data={"type": "file", "file_name": data["file_name"], "file_type": data["file_type"], "file_url": data["file_url"], "body": body}, deviceid=deviceid, apikey=apikey)
+                    return self._push(data={"type": "file", "file_name": data["file_name"], "file_type": data["file_type"], "file_url": data["file_url"], "body": body}, deviceid=deviceid, apikey=apikey)
                 else:
                     logger.error("Error while uploading file: {0}".format(upload_response.text))
             else:
@@ -89,28 +105,35 @@ class Pushbullet(object):
         except Exception as exception:
             logger.error("Could not send file to Pushbullet notification. Error: {0}".format(exception))
 
+        return False
+
     def _push(self, data, deviceid=None, apikey=None):
-        if apikey == None:
+        if apikey is None:
             apikey = self._apikey
 
-        if deviceid == None:
+        if deviceid is None:
             deviceid = self._deviceid
-            
+
         if re.match(r"^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$", deviceid):
-        	data["email"] = deviceid
+            data["email"] = deviceid
         else:
-        	data["device_iden"] = deviceid
+            data["device_iden"] = deviceid
 
         try:
             response = requests.post(self._apiurl, data=json.dumps(data), headers={"User-Agent": "SmartHome.py", "Content-Type": "application/json"}, auth=(apikey,""))
-            if self._is_response_ok(response) == False:
-                logger.error("Could not send Pushbullet notification. Error: {0}".format(response.text))
+            if self._is_response_ok(response):
+                return response.json()
+
+            logger.error("Could not send Pushbullet notification. Error: {0}".format(response.text))
         except Exception as exception:
             logger.error("Could not send Pushbullet notification. Error: {0}".format(exception))
+
+        return False
 
     def _is_response_ok(self, response):
         if response.status_code == 200 or response.status_code == 204:
             logger.debug("Pushbullet returns: Notification submitted.")
+
             return True
         elif response.status_code == 400:
             logger.warning("Pushbullet returns: Bad Request - Often missing a required parameter.")
@@ -127,7 +150,7 @@ class Pushbullet(object):
         else:
             logger.error("Pushbullet returns unknown HTTP status code = {0}".format(response.status_code))
 
-        if self._debug == True:
+        if self._debug:
             logger.warning("Response was: {}".format(response.text))
 
         return False

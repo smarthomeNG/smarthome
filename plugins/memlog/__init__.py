@@ -25,7 +25,6 @@ import datetime
 import time
 import lib.log
 
-logger = logging.getLogger('')
 
 
 class MemLog():
@@ -33,6 +32,7 @@ class MemLog():
     _items = {}
 
     def __init__(self, smarthome, name, mapping = ['time', 'thread', 'level', 'message'], items = [], maxlen = 50):
+        logger = logging.getLogger(__name__)
         self._sh = smarthome
         self.name = name
         self._log = lib.log.Log(smarthome, name, mapping, maxlen)

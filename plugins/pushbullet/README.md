@@ -11,7 +11,13 @@
 ---
 ## What's new?
   
-__2014-08_26__:
+__2015-11-17__:
+
+* Added "delete" function
+* Changed any push function to return the pushbullet service result object 
+* Changed Logging to "warning" 
+
+__2014-08-26__:
 
 * Added support for eMail-Addresses as deviceId
 * Updated README.md with instructions "How to get your deviceId"  
@@ -130,4 +136,17 @@ Send a file to your device.
 <pre>
 #send smarthome log file to default device
 sh.pushbullet.file("/usr/local/smarthome/var/log/smarthome.log", body="Take a look at this log-file")
+</pre>
+---
+### sh.pushbullet.delete(pushid)
+Delete the push with the given id.  
+  
+#### Parameters:  
+* pushid: id of of the push to delete
+  
+#### Example
+<pre>
+#send a push and delete it afterwards
+result = sh.pushbullet.note("Note to myself.", "Call my mother.")
+sh.pushbullet.delete(result['iden'])
 </pre>
