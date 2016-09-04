@@ -650,7 +650,7 @@ class CLICommands:
                 handler.push("  {} = {}\n".format(key, task[key]))
             handler.push("}\n")
 
-    def _cli_loglevel(self, handler, parameter):
+    def _cli_loglevel(self, handler, parameter, source):
         """
         CLI command "log" - Show or set current log level
         :param handler: CLIHandler instance
