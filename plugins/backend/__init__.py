@@ -229,71 +229,9 @@ def translate(txt, block=''):
             tr = txt
     return html_escape(tr)
     
-    
-class Backend:
-    env = Environment(loader=FileSystemLoader(os.path.dirname(os.path.abspath(__file__))+'/templates'))
-    env.globals['get_basename'] = get_basename
-    env.globals['is_userlogic'] = is_userlogic
-    env.globals['_'] = translate
-    
-    def __init__(self, backendserver=None, updates_allowed=True, language='', developer_mode=False):
-        self.logger = logging.getLogger(__name__)
-        self._bs = backendserver
-        self._sh = backendserver._sh
-        self.language = language
-        self.updates_allowed = updates_allowed
-        self.developer_mode = developer_mode
 
-        self._sh_dir = self._sh.base_dir
-        self.visu_plugin = None
-        self.visu_plugin_version = '1.0.0'
-
-    def find_visu_plugin(self):
-        """
-        look for the configured instance of the visu protocol plugin.
-        """
-        if self.visu_plugin is not None:
-            return
-            
-        for p in self._sh._plugins:
-            if p.__class__.__name__ == "WebSocket":
-                self.visu_plugin = p
-        if self.visu_plugin is not None:
-            try:
-                self.visu_plugin_version = self.visu_plugin.get_version()
-            except:
-                self.visu_plugin_version = '1.0.0'
-            self.visu_plugin_build = self.visu_plugin_version[4:]
-            if self.visu_plugin_build < '2':
-                self.visu_plugin = None
-                self.logger.warning("Backend: visu protocol plugin v{0} is too old to support BackendServer, please update".format(self.visu_plugin_version))
-
-    def html_escape(self, str):
-        return html_escape(str)
-
-    @cherrypy.expose
-    def index(self):
-        self.find_visu_plugin()
-
-        tmpl = self.env.get_template('main.html')
-        return tmpl.render( visu_plugin=(self.visu_plugin is not None))
-
-    @cherrypy.expose
-    def main_html(self):
-        self.find_visu_plugin()
-
-        tmpl = self.env.get_template('main.html')
-        return tmpl.render( visu_plugin=(self.visu_plugin is not None))
-
-    @cherrypy.expose
-    def reload_translation_html(self, lang=''):
-        if lang != '':
-            load_translation(lang)
-        else:
-            load_translation(translation_lang)
-        return self.index()
-
-    @cherrypy.expose
+class BackendSystem:
+	@cherrypy.expose
     def system_html(self):
         self.find_visu_plugin()
         now = datetime.datetime.now().strftime('%d.%m.%Y %H:%M')
@@ -355,6 +293,18 @@ class Backend:
         returns a list with the installed python packages and its versions
         """
         self.find_visu_plugin()
+        
+        # check if pypi service is reachable
+        pypi_available = True
+        try:
+            import socket
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(5)
+            sock.connect(('pypi.python.org',443))
+            sock.close()
+        except:
+            pypi_available = False
+        
         import pip
         import xmlrpc
         installed_packages = pip.get_installed_distributions()
@@ -364,18 +314,58 @@ class Backend:
             package = {}
             package['key'] = dist.key
             package['version_installed'] = dist.version
-            try:
-                available = pypi.package_releases(dist.project_name)
+            if pypi_available:
                 try:
-                    package['version_available'] = available[0]
+                    available = pypi.package_releases(dist.project_name)
+                    try:
+                        package['version_available'] = available[0]
+                    except:
+                        package['version_available'] = '-'
                 except:
-                    package['version_available'] = '-'
-            except:
-                package['version_available'] = [translate('Keine Antwort von PyPI')]
+                    package['version_available'] = [translate('Keine Antwort von PyPI')]
+            else:
+                package['version_available'] = translate('PyPI nicht erreichbar')
             packages.append(package)
 
         sorted_packages = sorted([(i['key'], i['version_installed'], i['version_available']) for i in packages])
         return sorted_packages
+        
+
+    @cherrypy.expose
+    def threads_html(self):
+        """
+        display a list of all threads
+        """
+        self.find_visu_plugin()
+        
+        threads = []
+        for t in threading.enumerate():
+            thread = dict()
+            thread['sort'] = str(t.name).lower()
+            thread['name'] = t.name
+            thread['id'] = t.ident
+            thread['alive'] = t.is_alive()
+            threads.append(thread)
+        threads_sorted = sorted(threads, key=lambda k: k['sort']) 
+        threads_count = len(threads_sorted)
+            
+        tmpl = self.env.get_template('threads.html')
+        return tmpl.render( smarthome = self._sh, threads=threads_sorted, threads_count=threads_count, visu_plugin=(self.visu_plugin is not None))
+
+
+    @cherrypy.expose
+    def logging_html(self):
+        """
+        display a list of all loggers
+        """
+        self.find_visu_plugin()
+        
+        loggerDict = logging.Logger.manager.loggerDict
+        loggerDict_sorted = sorted(loggerDict)
+        
+        tmpl = self.env.get_template('logging.html')
+        return tmpl.render( smarthome = self._sh, loggerDict_sorted=loggerDict_sorted, logging=logging, visu_plugin=(self.visu_plugin is not None))
+
 
     @cherrypy.expose
     def services_html(self):
@@ -403,16 +393,6 @@ class Backend:
 
         tmpl = self.env.get_template('services.html')
         return tmpl.render(knxd_service=knxd_service, smarthome_service=smarthome_service, knxd_socket=knxd_socket, sql_plugin=sql_plugin, visu_plugin=(self.visu_plugin is not None), lang=translation_lang, develop=self.developer_mode, knxdeamon=knxdeamon)
-
-    @cherrypy.expose
-    def disclosure_html(self):
-        """
-        display disclosure
-        """
-        self.find_visu_plugin()
-
-        tmpl = self.env.get_template('disclosure.html')
-        return tmpl.render(smarthome=self._sh, visu_plugin=(self.visu_plugin is not None))
 
     @cherrypy.expose
     def db_dump_html(self):
@@ -460,21 +440,8 @@ class Backend:
         return tmpl.render(smarthome=self._sh, current_page=int(page), pages=num_pages, log_lines=log_lines, text_filter=text_filter,
                            log_level_filter=log_level_filter, visu_plugin=(self.visu_plugin is not None))
 
-    @cherrypy.expose
-    def logics_view_html(self, file_path):
-        """
-        returns the smarthomeNG logfile as view
-        """
-        self.find_visu_plugin()
-
-        fobj = open(file_path)
-        file_lines = []
-        for line in fobj:
-            file_lines.append(self.html_escape(line))
-        fobj.close()
-        tmpl = self.env.get_template('logics_view.html')
-        return tmpl.render(smarthome=self._sh, logic_lines=file_lines, file_path=file_path, visu_plugin=(self.visu_plugin is not None))
-
+    
+class BackendItems:
     @cherrypy.expose
     def items_html(self):
         """
@@ -528,18 +495,7 @@ class Backend:
 
         return json.dumps(not_item_related_cache_files)
 
-    @cherrypy.expose
-    def item_change_value_html(self, item_path, value):
-        """
-        returns a list of items as json structure
-        """
-        item_data = []
-        item = self._sh.return_item(item_path)
-        if self.updates_allowed:
-            item(value, caller='Backend')
-        return
-
-    def disp_str(self, val):
+	    def disp_str(self, val):
         s = str(val)
         if s == 'False':
             s = '-'
@@ -685,6 +641,50 @@ class Backend:
 
         return item_data
 
+
+    @cherrypy.expose
+    def item_change_value_html(self, item_path, value):
+        """
+        returns a list of items as json structure
+        """
+        item_data = []
+        item = self._sh.return_item(item_path)
+        if self.updates_allowed:
+            item(value, caller='Backend')
+        return
+
+
+class BackendLogics:
+    @cherrypy.expose
+    def logics_view_html(self, file_path):
+        """
+        returns the smarthomeNG logfile as view
+        """
+        self.find_visu_plugin()
+
+        fobj = open(file_path)
+        file_lines = []
+        for line in fobj:
+            file_lines.append(self.html_escape(line))
+        fobj.close()
+        tmpl = self.env.get_template('logics_view.html')
+        return tmpl.render(smarthome=self._sh, logic_lines=file_lines, file_path=file_path, visu_plugin=(self.visu_plugin is not None))
+
+    @cherrypy.expose
+    def logics_edit_html(self, file_path):
+        """
+        returns the smarthomeNG ...
+        """
+        self.find_visu_plugin()
+
+        fobj = open(file_path)
+        file_lines = []
+        for line in fobj:
+            file_lines.append(self.html_escape(line))
+        fobj.close()
+        tmpl = self.env.get_template('logics_edit.html')
+        return tmpl.render(smarthome=self._sh, logic_lines=file_lines, file_path=file_path, visu_plugin=(self.visu_plugin is not None))
+
     @cherrypy.expose
     def logics_html(self, logic=None, trigger=None, reload=None):
         """
@@ -719,6 +719,101 @@ class Backend:
         tmpl = self.env.get_template('logics.html')
         return tmpl.render( smarthome = self._sh, updates = self.updates_allowed, visu_plugin=(self.visu_plugin is not None))
 
+
+class BackendBlocklyLogics:
+	"""
+	Google Blockly for Logics
+	"""
+	
+	def activateBlocklyLogic(self):
+		from lib.logic import Logic
+
+		logger.info("Blockly Logics aktivieren...")
+
+		prio = 3
+
+		blockly_logics = {}
+
+		code = self._blockly_python
+
+		bytecode = compile(code, '<string>', 'exec')
+
+		s=[]
+		for name in sh.scheduler:
+    		if name.startswith('blockly_runner'):
+        		logger.info('Blockly Logics: remove '+ name)
+        		s.append(name)
+		for name in s:
+    		sh.scheduler.remove(name)
+
+		for line in code.splitlines():
+    		if line and line.startswith('#?#'):
+        		id, __, trigger = line[3:].partition(':')
+        		by, __, val = trigger.partition('=')
+        		logger.info('Blockly Logics: {} => {} :: {}'.format(id, by, val))
+        		logic = Logic(sh, 'blockly_runner_' + id, {'bytecode' : bytecode,})
+        		by = by.strip()
+        		val = val.strip()
+        		if by == 'cycle':
+            		sh.scheduler.add('blockly_runner_' +id, logic, prio=prio, cron=None, cycle=val)
+            		logger.info('Blockly Logics: cycles     => '+ val)
+        		elif by == 'crontab':
+            		sh.scheduler.add('blockly_runner_' +id, logic, prio=prio, cron=val, cycle=None)
+            		logger.info('Blockly Logics: crontabs   => '+ val)
+        		elif by == 'watchitem':
+            		logic.watch_item = val
+            		item = sh.return_item(val)
+            		item.add_logic_trigger(logic)
+            		logger.info('Blockly Logics: watchitems => '+ val)
+
+    def _DynToolbox(self, sh):
+        xml = '<category name="Trigger"> \n'
+        xml += '\
+            <block type="sh_trigger_item"> \n \
+                <field name="TRIG_ITEM"></field>\n \
+                <field name="ITEMLIST"></field>\n \
+            </block> \n\
+            <block type="sh_trigger_cycle"></block> \n\
+            <block type="sh_trigger_sun"></block> \n\
+            <block type="sh_trigger_daily"></block> \n\
+        </category>\n'
+        
+		item_tree_xml = self._build_item_block_tree(self._sh.getChildren())
+        xml += '  <category name="SmartHome Items">\n'
+        xml += '      <block type="sh_item_get"></block> \n'
+        xml += '      <block type="sh_item_set"></block> \n'
+        xml += '      <block type="sh_item_hasattr"></block> \n'
+        xml += '      <block type="sh_item_attr"></block> \n'
+        xml += item_tree_xml 
+        xml += '\n  </category>\n'
+        
+        return xml
+        
+        
+    def _build_item_block_tree(sellf, nodes):
+    	for item in nodes:
+    		if item.conf['type'] and item.conf['type'] in ['bool', 'num', 'str']
+    			xml = ' <block type="sh_item_obj">\n \
+                    		<value name="VALUE">{0}</value>\n \
+                    		<value name="TYPE">{1}</value>\n \
+                  		</block>\n'.format(item.name, item.conf['type'])
+                  
+    		xml += '<category name="{0}">\n'.format(str(item.name))
+    		xml += _build_item_block_tree(sellf, item.getChildren() )
+    	return xml
+    		
+    @cherrypy.expose
+    def logics_blockly_html(self):
+        """
+        returns the smarthomeNG ...
+        """
+        self.find_visu_plugin()
+        
+        tmpl = self.env.get_template('logics_blockly.html')
+        return tmpl.render(smarthome=self._sh, dyn_sh_toolbox=self._DynToolbox(self._sh), visu_plugin=(self.visu_plugin is not None))
+
+
+class BackendScheduler:
     @cherrypy.expose
     def schedules_html(self):
         """
@@ -729,6 +824,8 @@ class Backend:
         tmpl = self.env.get_template('schedules.html')
         return tmpl.render( smarthome = self._sh, visu_plugin=(self.visu_plugin is not None))
 
+        
+class BackendPlugins:
     @cherrypy.expose
     def plugins_html(self):
         """
@@ -760,46 +857,89 @@ class Backend:
 
         tmpl = self.env.get_template('plugins.html')
         return tmpl.render( smarthome = self._sh, plugins=plugins_sorted, visu_plugin=(self.visu_plugin is not None))
+	
+
+class Backend(BackendSystem, BackendLogics, BackendItems, BackendBlocklyLogics, BackendScheduler, BackendPlugins):
+              	
+    env = Environment(loader=FileSystemLoader(os.path.dirname(os.path.abspath(__file__))+'/templates'))
+    env.globals['get_basename'] = get_basename
+    env.globals['is_userlogic'] = is_userlogic
+    env.globals['_'] = translate
+    
+    def __init__(self, backendserver=None, updates_allowed=True, language='', developer_mode=False):
+        self.logger = logging.getLogger(__name__)
+        self._bs = backendserver
+        self._sh = backendserver._sh
+        self.language = language
+        self.updates_allowed = updates_allowed
+        self.developer_mode = developer_mode
+
+        self._sh_dir = self._sh.base_dir
+        self.visu_plugin = None
+        self.visu_plugin_version = '1.0.0'
         
+        self._blockly_python = ''
+        self._blockly_xml = ''
         
+
+    def find_visu_plugin(self):
+        """
+        look for the configured instance of the visu protocol plugin.
+        """
+        if self.visu_plugin is not None:
+            return
+            
+        for p in self._sh._plugins:
+            if p.__class__.__name__ == "WebSocket":
+                self.visu_plugin = p
+        if self.visu_plugin is not None:
+            try:
+                self.visu_plugin_version = self.visu_plugin.get_version()
+            except:
+                self.visu_plugin_version = '1.0.0'
+            self.visu_plugin_build = self.visu_plugin_version[4:]
+            if self.visu_plugin_build < '2':
+                self.visu_plugin = None
+                self.logger.warning("Backend: visu protocol plugin v{0} is too old to support BackendServer, please update".format(self.visu_plugin_version))
+
+    def html_escape(self, str):
+        return html_escape(str)
+
+    @cherrypy.expose
+    def index(self):
+        self.find_visu_plugin()
+
+        tmpl = self.env.get_template('main.html')
+        return tmpl.render( visu_plugin=(self.visu_plugin is not None))
+
+    @cherrypy.expose
+    def main_html(self):
+        self.find_visu_plugin()
+
+        tmpl = self.env.get_template('main.html')
+        return tmpl.render( visu_plugin=(self.visu_plugin is not None))
+
+
+    @cherrypy.expose
+    def reload_translation_html(self, lang=''):
+        if lang != '':
+            load_translation(lang)
+        else:
+            load_translation(translation_lang)
+        return self.index()
+
+
+    @cherrypy.expose
+    def disclosure_html(self):
+        """
+        display disclosure
+        """
+        self.find_visu_plugin()
+
+        tmpl = self.env.get_template('disclosure.html')
+        return tmpl.render(smarthome=self._sh, visu_plugin=(self.visu_plugin is not None))
        
         
-    @cherrypy.expose
-    def threads_html(self):
-        """
-        display a list of all threads
-        """
-        self.find_visu_plugin()
-        
-        threads = []
-        for t in threading.enumerate():
-            thread = dict()
-            thread['sort'] = str(t.name).lower()
-            thread['name'] = t.name
-            thread['id'] = t.ident
-            thread['alive'] = t.is_alive()
-            threads.append(thread)
-        threads_sorted = sorted(threads, key=lambda k: k['sort']) 
-        threads_count = len(threads_sorted)
-            
-        tmpl = self.env.get_template('threads.html')
-        return tmpl.render( smarthome = self._sh, threads=threads_sorted, threads_count=threads_count, visu_plugin=(self.visu_plugin is not None))
-
-
-    @cherrypy.expose
-    def logging_html(self):
-        """
-        display a list of all loggers
-        """
-        self.find_visu_plugin()
-        
-        loggerDict = logging.Logger.manager.loggerDict
-        loggerDict_sorted = sorted(loggerDict)
-        
-        tmpl = self.env.get_template('logging.html')
-        return tmpl.render( smarthome = self._sh, loggerDict_sorted=loggerDict_sorted, logging=logging, visu_plugin=(self.visu_plugin is not None))
-
-
     @cherrypy.expose
     def visu_html(self):
         """
@@ -850,6 +990,8 @@ class Backend:
                                 stdout, stdout=subprocess.PIPE)
         print(rbt2.communicate()[0])
         return redirect('/services.html')
+
+
 
 #if __name__ == "__main__":
 #    server = BackendServer( None, port=8080, ip='0.0.0.0')

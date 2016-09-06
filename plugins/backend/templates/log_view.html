@@ -27,11 +27,13 @@
                 <option {% if log_level_filter=="CRITICAL" %}selected{% endif %} value="CRITICAL">CRITICAL</option>
             </select>
         </div>
-        <span class="btn btn-default" style="float:left; margin-left: 10px;" onclick="location.href='/log_view.html?text_filter='+$('#text_filter').val()+'&log_level_filter='+$('#log_level_filter').val()">{{ _('Filter anwenden','button') }}</span>
+        <button type="button" class="btn btn-default" style="float:left; margin-left: 10px;" onclick="location.href='/log_view.html?text_filter='+$('#text_filter').val()+'&log_level_filter='+$('#log_level_filter').val()">{{ _('Filter anwenden','button') }}</button>
+        <button type="button" class="btn btn-default" style="float:left; margin-left: 10px;" onclick="location.href='/log_view.html?text_filter='+$('#text_filter').val()+'&log_level_filter='+$('#log_level_filter').val()+'&page={{ current_page }}'"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default" style="float:left; margin-left: 10px;" onclick="document.getElementById('log_print').scrollTop = 9999999;"><i class="fa fa-arrow-circle-down" aria-hidden="true"></i></button>
     </div>
     <br style="clear:both;"/>
     <div class="container" style="width: 90%;">
-<pre class="prettyprint linenums{% if current_page > 1 %}:{{ (current_page-1) * 1000 +1}}{% endif %}" style="max-height: 600px;">
+<pre id="log_print" class="prettyprint linenums{% if current_page > 1 %}:{{ (current_page-1) * 1000 +1}}{% endif %}" style="max-height: 600px;">
 {% if log_lines %}{% for line in log_lines %}{{ line }}
 {% endfor %}{% else %}{{ _('no data available') }}{% endif %}</pre></div>
 <div class="container" style="width: 90%;">

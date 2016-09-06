@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 {% extends "base.html" %}
 {% import "navbar.html" as nav with context %}
 {% block navbar %}
@@ -15,8 +15,15 @@
     <h3>SmarthomeNG {{ _('Logik') }}:</h3>
         {{ file_path }}<br/><br/>
     </div>
-    <div class="container"><pre class="prettyprint lang-py linenums" style="max-height: 700px;">{% if logic_lines %}
-{% for line in logic_lines %}{{ line }}
-{% endfor %}{% else %}{{ _('no data available') }}{% endif %}</pre></div>
+    {% if logic_lines %}
+    <div class="container"><textarea id="code"  name="code" rows="25" class="prettyprint lang-py linenums" style="max-height: 700px;">{% for line in logic_lines %}{{ line }}
+{% endfor %}
+    </textarea></div> 
+    <script>
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+          lineNumbers: true,
+          mode: "python"
+          });
+    </script>
+    {% endif %}
 {% endblock %}
-
