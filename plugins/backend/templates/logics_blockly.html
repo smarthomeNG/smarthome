@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% import "navbar.html" as nav with context %}
+{% block navbar %}
+	{{ nav }}
+{% endblock navbar %}
+
+{% block content %}
+
+ {% include "logics_blockly_toolbox.html" %}
+
+
+  <table width="100%" height="100%">
+    <tr>
+      <td>
+        <h1><a href="https://developers.google.com/blockly/">Blockly</a>&rlm; &gt; Logics Editor&rlm;
+        </h1>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan=1>
+        <table width="100%">
+          <tr id="tabRow" height="1em">
+            <td id="tab_blocks" class="tabon">Blocks</td>
+            <td class="tabmin">&nbsp;</td>
+            <td id="tab_python" class="taboff">Python</td>
+            <td class="tabmin">&nbsp;</td>
+            <td id="tab_xml" class="taboff">XML</td>
+            <td class="tabmax">
+		<form name="input" action="logics_blockly.html" method="POST" enctype="multipart/form-data">
+      <button onclick="function() {$.ajax({'url': '/logics_blockly_start'})}" class="btn btn-default btn-xs">Activate</button>
+      <button onclick="function() {$.ajax({'url': '/logics_blockly_stop'})}" class="btn btn-default btn-xs">Stop</button>
+      <button onclick="Code.saveBlocks()" class="btn btn-default btn-xs">Save Blocks</button>
+      <button onclick="Code.restoreBlocks()" class="btn btn-default btn-xs">Undo All</button>
+      <button onclick="Code.discardBlocks()" class="btn btn-default btn-xs">Clear</button>
+      <input name="close" value="{{ _('Close','button') }}" type="submit" class="btn btn-default btn-xs">
+		</form>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td height="99%" colspan=1 id="content_area">
+      </td>
+    </tr>
+  </table>
+  <div id="content_blocks" class="content"></div>
+  <pre id="content_python" class="content"></pre>
+  <textarea id="content_xml" class="content" wrap="off"></textarea>
+
+<!-- BLOCKLY Script Editor -->
+<link rel="stylesheet" href="../static/blockly/demos/code/style.css">
+
+<!-- BLOCKLY Script Editor -->
+<script src="../static/blockly/blockly_compressed.js"></script>
+<script src="../static/blockly/blocks_compressed.js"></script>
+<script src="../static/blockly/python_compressed.js"></script>
+<script src="../static/blockly/msg/js/de.js"></script>
+<script src="../static/blockly/msg/js/en.js"></script>
+
+<script type="text/javascript" src="../static/shblocks/sh_items.js"></script>
+<script type="text/javascript" src="../static/shblocks/sh_trigger.js"></script>
+<script type="text/javascript" src="../static/shblocks/sh_logic.js"></script>
+<script type="text/javascript" src="../static/shblocks/sh_notify.js"></script>
+<script type="text/javascript" src="../static/shblocks/sh_tools.js"></script>
+<script type="text/javascript" src="../static/shblocks/sh_time.js"></script>
+
+<script src="../static/js/logics_blockly_code.js"></script>
+
+{% endblock %}
