@@ -5,6 +5,7 @@
 #                 Christian Strassburg            c.strassburg@gmx.de
 #                 René Frieß                      rene.friess@gmail.com
 #                 Martin Sinn                     m.sinn@gmx.de
+#                 Dirk Wallmeier                  dirk@wallmeier.info
 #########################################################################
 #  Backend plugin for SmartHomeNG
 #
