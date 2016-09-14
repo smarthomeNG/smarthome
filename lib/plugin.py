@@ -43,23 +43,47 @@ class Plugins():
             logger.critical(e)
             return
 
+        instances = {}
         for plugin in _conf:
+            classname = _conf[plugin]['class_name']
+            classpath = _conf[plugin]['class_path']
+            classident = classpath + '.' + classname
+
+            instance = 'default'
+            if 'instance' in _conf[plugin]:
+                instance = _conf[plugin]['instance'].strip()
+
+            if classident not in instances:
+                instances[classident] = { plugin : instance }
+            else:
+                instances[classident][plugin] = instance
+
+        for plugin in _conf:
+            classname = _conf[plugin]['class_name']
+            classpath = _conf[plugin]['class_path']
+            classident = classpath + '.' + classname
+
             args = {}
-            logger.debug("Plugin: {0}".format(plugin))
+            logger.debug("Plugin: {0} ({1})".format(plugin, classident))
             for arg in _conf[plugin]:
                 if arg != 'class_name' and arg != 'class_path' and arg != 'instance':
                     value = _conf[plugin][arg]
                     if isinstance(value, str):
                         value = "'{0}'".format(value)
                     args[arg] = value
-            classname = _conf[plugin]['class_name']
-            classpath = _conf[plugin]['class_path']
-            
-            instance = ''
-            if 'instance' in _conf[plugin]:
-                instance = _conf[plugin]['instance'].strip()
-                if instance == 'default': 
-                    instance = ''
+
+            names = instances[classident]
+            if len(names) == 1:
+                instance = names[plugin]
+
+            elif names[plugin] == 'default':
+                logger.info("Instance {0} not allowed for plugin {1} - using {2}".format(names[plugin], classident, plugin))
+                instance = plugin
+
+            elif names[plugin] in [n for p, n in names.items() if p != plugin]:
+                logger.warn("Instance {0} already used for plugin {1} - using {2}".format(names[plugin], classident, plugin))
+                instance = plugin
+
             try:
                 plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance)
                 self._threads.append(plugin_thread)
@@ -104,7 +128,7 @@ class PluginWrapper(threading.Thread):
         exec("self.plugin = {0}.{1}.__new__({0}.{1})".format(classpath, classname))
         setattr(smarthome, self.name, self.plugin)
         if isinstance(self.get_implementation(), SmartPlugin):
-            if instance != '':
+            if instance != 'default':
                 logger.debug("set plugin {0} instance to {1}".format(name, instance ))
                 self.get_implementation().set_instance_name(instance)
             self.get_implementation().set_sh(smarthome)
