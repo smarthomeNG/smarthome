@@ -73,16 +73,15 @@ class Plugins():
                     args[arg] = value
 
             names = instances[classident]
-            if len(names) == 1:
-                instance = names[plugin]
+            instance = names[plugin]
+            if instance in [n for p, n in names.items() if p != plugin]:
+                if instance == 'default':
+                    logger.info("Instance {0} not allowed for plugin {1} - using {2}".format(names[plugin], classident, plugin))
+                    instance = plugin
 
-            elif names[plugin] == 'default':
-                logger.info("Instance {0} not allowed for plugin {1} - using {2}".format(names[plugin], classident, plugin))
-                instance = plugin
-
-            elif names[plugin] in [n for p, n in names.items() if p != plugin]:
-                logger.warn("Instance {0} already used for plugin {1} - using {2}".format(names[plugin], classident, plugin))
-                instance = plugin
+                elif instance in [n for p, n in names.items() if p != plugin]:
+                    logger.warn("Instance {0} already used for plugin {1} - using {2}".format(names[plugin], classident, plugin))
+                    instance = plugin
 
             try:
                 plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance)
