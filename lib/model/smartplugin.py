@@ -59,27 +59,34 @@ class SmartPlugin(SmartObject, Utils):
         else:
            return "%s@%s"%(attr, self.__instance)
 
+    def __get_iattr_conf(self, conf, attr):
+        """
+            returns item attribute name including instance if required and found
+            in conf
+
+            :rtype: str
+        """
+        __attr = self.__get_iattr(attr)
+        if __attr in conf:
+            return __attr
+        elif "%s@*"%attr in conf:
+            return "%s@*"%attr
+        return None
+
     def has_iattr(self, conf, attr):
         """
             checks item conf for an attribute
             :rtype: Boolean 
         """
-        if self.__get_iattr(attr) in conf or "%s@*"%attr in conf:
-            return True
-        return False
+        __attr = self.__get_iattr_conf(conf, attr)
+        return __attr is not None
     
     def get_iattr_value(self, conf, attr):
         """
             returns value for an attribute from item config
         """
-        __value = None
-        __attr = self.__get_iattr(attr)
-        if __attr in conf:
-            __value = conf[__attr] 
-        elif "%s@*"%attr in conf:
-            __value = conf["%s@*"%attr]
-        return __value
-
+        __attr = self.__get_iattr_conf(conf, attr)
+        return None if __attr is None else conf[__attr]
     
     def __new__(cls, *args, **kargs):
         if not hasattr(cls,'PLUGIN_VERSION'):
