@@ -78,9 +78,6 @@ class Plugins():
                 logger.info("Using instance name {0} ({1} used multiple times for {2})".format(plugin, names[plugin], classident))
                 instance = plugin
 
-            elif instance == 'default' and len(instances[classident]) > 1:
-                instance = plugin
-
             try:
                 plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance)
                 self._threads.append(plugin_thread)
