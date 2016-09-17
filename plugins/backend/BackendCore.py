@@ -279,11 +279,13 @@ class Backend:
                            log_level_filter=log_level_filter, visu_plugin=(self.visu_plugin is not None))
 
     @cherrypy.expose
-    def logics_view_html(self, file_path, logic):
+    def logics_view_html(self, file_path, logic, trigger=None, reload=None, enable=None, save=None, logics_code=None):
         """
         returns the smarthomeNG logfile as view
         """
         self.find_visu_plugin()
+
+        self.process_logics_action(logic, trigger, reload, enable, save, logics_code)
 
         mylogic = self._sh.return_logic(logic)
 
@@ -516,51 +518,14 @@ class Backend:
 
         return item_data
 
+
     @cherrypy.expose
-    def logics_html(self, logic=None, trigger=None, reload=None, enable=None):
+    def logics_html(self, logic=None, trigger=None, reload=None, enable=None, save=None):
         """
         display a list of all known logics
         """
         self.find_visu_plugin()
-
-        self.logger.debug("Backend: logics_html: trigger = '{0}', reload = '{1}'".format(trigger, reload))
-        if enable is not None:
-            self.logger.debug("Backend: logics_html: Enable/Disable logic = '{0}'".format(logic))
-            if self.updates_allowed:
-                if logic in self._sh.return_logics():
-                    mylogic = self._sh.return_logic(logic)
-                    if mylogic.enabled:
-                        mylogic.disable()
-                    else:
-                        mylogic.enable()
-                else:
-                    self.logger.warning("Backend: Logic '{0}' not found".format(logic))
-            else:
-                self.logger.warning(
-                    "Backend: Logic enabling/disabling is not allowed. (Change 'updates_allowed' in plugin.conf")
-
-        if trigger is not None:
-            self.logger.debug("Backend: logics_html: Trigger logic = '{0}'".format(logic))
-            if self.updates_allowed:
-                if logic in self._sh.return_logics():
-                    self._sh.trigger(logic, by='Backend')
-                else:
-                    self.logger.warning("Backend: Logic '{0}' not found".format(logic))
-            else:
-                self.logger.warning("Backend: Logic triggering is not allowed. (Change 'updates_allowed' in plugin.conf")
-
-        if reload is not None:
-            self.logger.debug("Backend: logics_html: Reload logic = '{0}'".format(logic))
-            if self.updates_allowed:
-                if logic in self._sh.return_logics():
-                    mylogic = self._sh.return_logic(logic)
-                    self.logger.info("Backend: logics_html: Reload logic='{0}', filename = '{1}'".format(logic, os.path.basename(mylogic.filename)))
-                    mylogic.generate_bytecode()
-                    self._sh.trigger(logic, by='Backend', value="Init")
-                else:
-                    self.logger.warning("Backend: Logic '{0}' not found".format(logic))
-            else:
-                self.logger.warning("Backend: Logic reloads are not allowed. (Change 'updates_allowed' in plugin.conf")
+        self.process_logics_action(logic, trigger, reload, enable, save)
 
         tmpl = self.env.get_template('logics.html')
         return tmpl.render( smarthome = self._sh, updates = self.updates_allowed, visu_plugin=(self.visu_plugin is not None))
@@ -709,3 +674,61 @@ class Backend:
             return True
         except ValueError:
             return False
+
+    def process_logics_action(self, logic=None, trigger=None, reload=None, enable=None, save=None, logics_code=None):
+        self.logger.debug(
+            "Backend: logics_html: trigger = '{0}', reload = '{1}', enable='{2}', save='{3}'".format(trigger, reload, enable, save))
+        if enable is not None:
+            self.logger.debug("Backend: logics[_view]_html: Enable/Disable logic = '{0}'".format(logic))
+            if self.updates_allowed:
+                if logic in self._sh.return_logics():
+                    mylogic = self._sh.return_logic(logic)
+                    if mylogic.enabled:
+                        mylogic.disable()
+                    else:
+                        mylogic.enable()
+                else:
+                    self.logger.warning("Backend: Logic '{0}' not found".format(logic))
+            else:
+                self.logger.warning(
+                    "Backend: Logic enabling/disabling is not allowed. (Change 'updates_allowed' in plugin.conf")
+
+        if trigger is not None:
+            self.logger.debug("Backend: logics[_view]_html: Trigger logic = '{0}'".format(logic))
+            if self.updates_allowed:
+                if logic in self._sh.return_logics():
+                    self._sh.trigger(logic, by='Backend')
+                else:
+                    self.logger.warning("Backend: Logic '{0}' not found".format(logic))
+            else:
+                self.logger.warning(
+                    "Backend: Logic triggering is not allowed. (Change 'updates_allowed' in plugin.conf")
+
+        if save is not None:
+            self.logger.debug("Backend: logics_view_html: Save logic = '{0}'".format(logic))
+
+            if self.updates_allowed:
+                if logic in self._sh.return_logics():
+                    mylogic = self._sh.return_logic(logic)
+
+            f = open(mylogic.filename, 'w')
+            f.write(logics_code)
+            f.close()
+            reload = True
+
+        if reload is not None:
+            self.logger.debug("Backend: logics[_view]_html: Reload logic = '{0}'".format(logic))
+            if self.updates_allowed:
+                if logic in self._sh.return_logics():
+                    mylogic = self._sh.return_logic(logic)
+                    self.logger.info("Backend: logics_html: Reload logic='{0}', filename = '{1}'".format(logic,
+                                                                                                         os.path.basename(
+                                                                                                             mylogic.filename)))
+                    mylogic.generate_bytecode()
+                    self._sh.trigger(logic, by='Backend', value="Init")
+                else:
+                    self.logger.warning("Backend: Logic '{0}' not found".format(logic))
+            else:
+                self.logger.warning("Backend: Logic reloads are not allowed. (Change 'updates_allowed' in plugin.conf")
+
+        return

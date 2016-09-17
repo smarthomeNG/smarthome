@@ -17,8 +17,6 @@ cherrypy.server.unsubscribe()
 local = cherrypy.lib.httputil.Host('127.0.0.1', 50000, "")
 remote = cherrypy.lib.httputil.Host('127.0.0.1', 50001, "")
 
-__all__ = ['BaseCherryPyTestCase']
-
 class BaseCherryPyTestCase(unittest.TestCase):
     def request(self, path='/', method='GET', app_path='', scheme='http',
                 proto='HTTP/1.1', data=None, headers=None, **kwargs):

@@ -161,7 +161,9 @@
 		"Schließen": "Fermer",
 		"Änderungen verwerfen" : "Annuler modifications",
 		"Blöcke speichern" : "Enregistrer les blocs",
-		"Beenden" : "Terminer"
+		"Beenden" : "Terminer",
+		"Speichern" : "Sauvegarder",
+		"Speichern_und_Neu_Laden" : "Sauvegarder et Recharger"
 	},
 
 	"_menu": {
