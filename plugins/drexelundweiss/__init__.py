@@ -24,14 +24,15 @@ import threading
 import serial
 import os.path
 import time
-
+import string
+import re
 
 logger = logging.getLogger('')
 
 
 class DuW():
 
-    def __init__(self, smarthome, tty, LU_ID=130, WP_ID=140, Busmonitor=0):
+    def __init__(self, smarthome, tty, LU_ID=130, WP_ID=140, Busmonitor=0, device=0, retrylimit=100):
         self._sh = smarthome
         self._LU_ID = LU_ID
         self._WP_ID = WP_ID
@@ -42,6 +43,8 @@ class DuW():
         self.WPcmdl = {}
         self.devl = {}
         self._is_connected = False
+        self._device = int(device)
+        self._retrylimit = int(retrylimit)
         self._lock = threading.Lock()
         self.busmonitor = Busmonitor
         self._pollservice = False
@@ -89,13 +92,44 @@ class DuW():
         if self._cmd:
             self._load_cmd()
 
+    def _convertresponse(self,antwort,teil):
+        antwort = antwort.decode()
+        allow = string.digits + ' '
+        antwort = re.sub('[^%s]' % allow, '', antwort)
+        liste = antwort.splitlines()
+        try:
+            antwort = liste[0].split()
+        except:
+            antwort = str("-1")
+        if type(antwort) is list and len(antwort) >= 2:
+            #logger.debug("DuW Ergebnis ist Liste: {0}".format(antwort))
+            if teil == 'id':
+                antwort = str(antwort[0])
+            elif teil == 'register':
+                try:
+                    antwort = str(antwort[1])
+                except:
+                    antwort = '-1'
+            elif teil == 'data':
+                try:
+                    antwort = str(antwort[2])
+                except:
+                    antwort = '-1'
+        else:
+            #logger.debug("DuW Antwort ist Einzelwert: {0}".format(antwort))
+            antwort = str(antwort)
+        allow = string.digits
+        antwort = re.sub('[^%s]' % allow, '', antwort)
+        logger.debug("DuW Antwort: {1} = {0}".format(antwort, teil))
+        return int(antwort)
+
     def _get_device_type(self):
             self.alive = True
             if self._is_connected:
                 (data, done) = self._read_register('LU\n', 5000, 1, 0)
                 if done:
                     if data in self.devl:
-                        logger.debug("DuW: device: " +
+                        logger.info("DuW: device: " +
                                      self.devl[data]['device'])
                         if os.path.isfile(self.devl[data]['cmdpath']):
                             self._cmd = self.devl[data]['cmdpath']
@@ -108,10 +142,14 @@ class DuW():
                         logger.error("DuW: device not supported: " + str(data))
                         self._cmd = False
                 else:
-                    logger.error("DuW: Error reading device type!")
-                    self._cmd = False
+                    logger.error("DuW: Error reading device type! Trying to activate configured device")
+                    if os.path.isfile(self.devl[self._device]['cmdpath']):
+                            self._cmd = self.devl[self._device]['cmdpath']
+                            logger.info("DuW: device: {0}".format(self.devl[self._device]['device']))
+                    #self._cmd = False
             else:
                 self._cmd = False
+                logger.error("DuW: Keine Vrbindung")
             self.alive = False
 
     def _send_DW(self, data, pcb):
@@ -131,7 +169,7 @@ class DuW():
         try:
             self._port.write((str(device_ID) + " " + data + "\r\n").encode())
         except Exception as e:
-            logger.exception("Drexel: {0}".format(e))
+            logger.exception("Drexel sendDW: {0}".format(e))
         finally:
             self._lock.release()
 
@@ -170,7 +208,7 @@ class DuW():
                         else:
                             logger.debug("DuW: Error in Commandfile: " + line)
                 except Exception as e:
-                    logger.exception("Drexel: {0}".format(e))
+                    logger.exception("Drexel loadCMD: {0}".format(e))
                 finally:
                     self._lock.release()
         finally:
@@ -233,17 +271,17 @@ class DuW():
                         response += self._port.read()
                         if (len(response) != 0):
                             if (response[-1] == 0x20 and dw_id == 0):
-                                dw_id = int(response)
+                                dw_id = self._convertresponse(response,'id')
                                 #logger.debug("Drexel dw_id: "+(str(dw_id)))
                                 response = bytes()
 
                             elif (response[-1] == 0x20 and dw_id != 0 and dw_register == 0):
-                                dw_register = int(response)
+                                dw_register = self._convertresponse(response,'register')
                                 #logger.debug("Drexel dw_register: "+(str(dw_register)))
                                 response = bytes()
 
                             elif (response[-1] == 0x0a):
-                                dw_data = int(response)
+                                dw_data = self._convertresponse(response,'data')
                                 #logger.debug("Drexel dw_data: "+(str(dw_data)))
 
                                 if (self.busmonitor):
@@ -316,14 +354,14 @@ class DuW():
                             dw_data = 0
                             logger.debug("DuW read timeout: ")
                     except Exception as e:
-                        logger.exception("Drexel: {0}".format(e))
+                        logger.exception("Drexel Polling: {0}".format(e))
                     finally:
                         self._lock.release()
                 time.sleep(0.1)
             # exit poll service
             self._pollservice = False
         except Exception as e:
-            logger.exception("Drexel: {0}".format(e))
+            logger.exception("Drexel nicht alive: {0}".format(e))
 
     def stop(self):
         self.alive = False
@@ -357,39 +395,48 @@ class DuW():
         dw_id = 0
         dw_register = 0
         dw_data = 0
+        retries = 0
         if not self._lock.acquire(timeout=2):
             return
         try:
             while self.alive:
                 response += self._port.read()
-                if len(response) != 0:
+                allow = string.digits
+                test = re.sub('[^%s]' % allow, '', str(response.decode()))
+                if len(test) != 0:
                     if (response[-1] == 0x20 and dw_id == 0):
-                        dw_id = int(response)
-                     # logger.debug("Drexel dw_id: "+str(dw_id))
+                        dw_id = self._convertresponse(response,'id')
+                        #logger.debug("Drexel Reading dw_id: "+str(dw_id))
                         response = bytes()
 
                     elif response[-1] == 0x20 and dw_id != 0 and dw_register == 0:
-                        dw_register = int(response)
-                     # logger.debug("Drexel dw_register: "+str(dw_register))
+                        dw_register = self._convertresponse(response,'register')
+                        #logger.debug("Drexel Reading dw_register: "+str(dw_register))
                         response = bytes()
 
                     elif response[-1] == 0x0a:
-                        dw_data = int(response)
-                     # logger.debug("Drexel dw_data: "+str(dw_data))
+                        dw_data = self._convertresponse(response,'data')
+                        #logger.debug("Drexel Reading dw_data: "+str(dw_data))
                         break
                         response = bytes()
                 else:
-                    logger.debug("Drexel read timeout: ")
-                    break
+                    retries += 1
+                    logger.info("Drexel read timeout: {0}. Retries: {1}".format(response, retries))
+                    if retries >= self._retrylimit:
+                       break
                 time.sleep(0.1)
         except Exception as e:
-            logger.warning("Drexel: {0}".format(e))
+            logger.warning("Drexel Reading: {0}".format(e))
         finally:
             self._lock.release()
 
         if(dw_id == device_ID and (dw_register - 1) == register):
-            #logger.debug("Drexel: Read {1} on Register: {0}".format(register,dw_data))
-            return (((dw_data / divisor) / (10 ** komma)), 1)
+            logger.debug("Drexel: Read {1} on Register: {0}".format(register,dw_data))
+            try:
+                return (((dw_data / divisor) / (10 ** komma)), 1)
+            except:
+                logger.debug("Division durch Null Problem")
+                return (((dw_data / 1) / (10 ** 1)), 1)
         else:
             logger.error("DuW read errror Device ID: " + str(dw_id)
                          + " register: " + str(dw_register - 1))
