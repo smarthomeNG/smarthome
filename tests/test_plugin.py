@@ -88,6 +88,8 @@ class TestConfig(unittest.TestCase):
 		self.assertIsNone(wolplug.plugin.get_iattr_value(config_mock, "key3"))
 		config_mock = {'key3@bind2' : 'value4'}
 		self.assertIsNone(wolplug.plugin.get_iattr_value(config_mock, "key3"))
+		config_mock = {'key3@wol' : 'value5'}
+		self.assertEqual(wolplug.plugin.get_iattr_value(config_mock, "key3"), "value5")
 
 	def test_plugin_instance_set_get_iattr_value(self):
 		wolplug = self.plugins.get_plugin("wol_ww")

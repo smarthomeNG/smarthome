@@ -125,6 +125,7 @@ class PluginWrapper(threading.Thread):
             if instance != 'default':
                 logger.debug("set plugin {0} instance to {1}".format(name, instance ))
                 self.get_implementation().set_instance_name(instance)
+            self.get_implementation().set_name(name)
             self.get_implementation().set_sh(smarthome)
 
         exec("self.args = inspect.getargspec({0}.{1}.__init__)[0][1:]".format(classpath, classname))
