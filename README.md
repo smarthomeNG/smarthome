@@ -1,7 +1,7 @@
 
 
 # SmartHomeNG
-[![Build Status on TravisCI](https://travis-ci.org/ohinckel/smarthome.svg?branch=travis-ci)](https://travis-ci.org/ohinckel/smarthome)
+[![Build Status on TravisCI](https://travis-ci.org/smarthomeNG/smarthome.svg?branch=develop)](https://travis-ci.org/smarthomeNG/smarthome)
 [![Join the chat at https://gitter.im/smarthomeNG/smarthome](https://badges.gitter.im/smarthomeNG/smarthome.svg)](https://gitter.im/smarthomeNG/smarthome?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This file contains basic information about the basic directories of SmartHomeNG.

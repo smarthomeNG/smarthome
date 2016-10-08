@@ -29,10 +29,13 @@ import struct
 import socket
 import errno
 
-logger = logging.getLogger('')
+from lib.model.smartplugin import SmartPlugin
 
+class Sml(SmartPlugin):
 
-class Sml():
+    ALLOW_MULTIINSTANCE = True
+    PLUGIN_VERSION = '1.0.0'
+
     _units = {  # Blue book @ http://www.dlms.com/documentation/overviewexcerptsofthedlmsuacolouredbooks/index.html
        1 : 'a',    2 : 'mo',    3 : 'wk',  4 : 'd',    5 : 'h',     6 : 'min.',  7 : 's',     8 : '°',     9 : '°C',    10 : 'currency',
       11 : 'm',   12 : 'm/s',  13 : 'm³', 14 : 'm³',  15 : 'm³/h', 16 : 'm³/h', 17 : 'm³/d', 18 : 'm³/d', 19 : 'l',     20 : 'kg',
@@ -67,7 +70,7 @@ class Sml():
         elif device == "raw":
             self._prepare = self._prepareRaw
         else:
-            logger.warning("Device type \"{}\" not supported - defaulting to \"raw\"".format(device))
+            self.logger.warning("Device type \"{}\" not supported - defaulting to \"raw\"".format(device))
             self._prepare = self._prepareRaw
 
         smarthome.connections.monitor(self)
@@ -81,14 +84,15 @@ class Sml():
         self.disconnect()
 
     def parse_item(self, item):
-        if 'sml_obis' in item.conf:
-            obis = item.conf['sml_obis']
-            prop = item.conf['sml_prop'] if 'sml_prop' in item.conf else 'valueReal'
+        if self.has_iattr(item.conf, 'sml_obis'):
+            obis = self.get_iattr_value(item.conf, 'sml_obis')
+            prop = self.get_iattr_value(item.conf, 'sml_prop') if self.has_iattr(item.conf, 'sml_prop') else 'valueReal'
             if obis not in self._items:
                 self._items[obis] = {}
             if prop not in self._items[obis]:
                 self._items[obis][prop] = []
             self._items[obis][prop].append(item)
+            self.logger.debug('attach {} {} {}'.format(item.id(), obis, prop))
             return self.update_item
         return None
 
@@ -114,11 +118,11 @@ class Sml():
                 self._sock.connect((self.host, self.port))
                 self._sock.setblocking(False)
         except Exception as e:
-            logger.error('Sml: Could not connect to {}: {}'.format(self._target, e))
+            self.logger.error('Sml: Could not connect to {}: {}'.format(self._target, e))
             self._lock.release()
             return
         else:
-            logger.info('Sml: Connected to {}'.format(self._target))
+            self.logger.info('Sml: Connected to {}'.format(self._target))
             self.connected = True
             self._lock.release()
 
@@ -133,7 +137,7 @@ class Sml():
                     self._sock = None
             except:
                 pass
-            logger.info('Sml: Disconnected!')
+            self.logger.info('Sml: Disconnected!')
             self.connected = False
             self._target = None
 
@@ -171,7 +175,7 @@ class Sml():
                     values = self._parse(self._prepare(data))
 
                     for obis in values:
-                        logger.debug('Entry {}'.format(values[obis]))
+                        self.logger.debug('Entry {}'.format(values[obis]))
 
                         if obis in self._items:
                             for prop in self._items[obis]:
@@ -179,7 +183,7 @@ class Sml():
                                     item(values[obis][prop], 'Sml')
 
                 except Exception as e:
-                    logger.error('Reading data from {0} failed: {1} - reconnecting!'.format(self._target, e))
+                    self.logger.error('Reading data from {0} failed: {1} - reconnecting!'.format(self._target, e))
 
                     self.disconnect()
                     time.sleep(1)
@@ -187,11 +191,11 @@ class Sml():
 
                     retry = retry - 1
                     if retry == 0:
-                        logger.warn('Trying to read data in next cycle due to connection errors!')
+                        self.logger.warn('Trying to read data in next cycle due to connection errors!')
 
 
             cycletime = time.time() - start
-            logger.debug("cycle takes {0} seconds".format(cycletime))
+            self.logger.debug("cycle takes {0} seconds".format(cycletime))
 
     def _parse(self, data):
         # Search SML List Entry sequences like:
@@ -201,7 +205,7 @@ class Sml():
         # Details see http://wiki.volkszaehler.org/software/sml
         values = {}
         packetsize = 7
-        logger.debug('Data:{}'.format(''.join(' {:02x}'.format(x) for x in data)))
+        self.logger.debug('Data:{}'.format(''.join(' {:02x}'.format(x) for x in data)))
         self._dataoffset = 0
         while self._dataoffset < len(data)-packetsize:
 
@@ -228,7 +232,7 @@ class Sml():
                     values[entry['obis']] = entry
                 except Exception as e:
                     if self._dataoffset < len(data) - 1:
-                        logger.warning('Can not parse entity at position {}, byte {}: {}:{}...'.format(self._dataoffset, self._dataoffset - packetstart, e, ''.join(' {:02x}'.format(x) for x in data[packetstart:packetstart+64])))
+                        self.logger.warning('Can not parse entity at position {}, byte {}: {}:{}...'.format(self._dataoffset, self._dataoffset - packetstart, e, ''.join(' {:02x}'.format(x) for x in data[packetstart:packetstart+64])))
                         self._dataoffset = packetstart + packetsize - 1
             else:
                 self._dataoffset += 1
@@ -285,7 +289,7 @@ class Sml():
             return result
 
         else:
-            logger.warning('Skipping unkown field {}'.format(hex(tlf)))
+            self.logger.warning('Skipping unkown field {}'.format(hex(tlf)))
 
         self._dataoffset += len
 

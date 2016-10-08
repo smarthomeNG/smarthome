@@ -6,6 +6,9 @@
 {% endblock navbar %}
 
 {% block content %}
+ <script src="/static/codemirror-5.18.2/lib/codemirror.js"></script>
+<link rel="stylesheet" href="/static/codemirror-5.18.2/lib/codemirror.css">
+<script src="/static/codemirror-5.18.2/mode/python/python.js"></script>
     <style>
     li.L0, li.L1, li.L2, li.L3,
     li.L5, li.L6, li.L7, li.L8
@@ -14,25 +17,57 @@
 	<div class="container" style="width: 90%;">
     <h3>SmartHomeNG {{ _('Logik') }}: {{ logic }}</h3>
         <strong>{{ _('Dateiname') }}:</strong> {{ file_path }}
-        {% if smarthome.scheduler.return_next(logic.name) %}
-        <br/><strong>{{ _('nächste Ausführung') }}:</strong> {% if not logic.enabled %}<span style="color:#bbb;">{% endif %}{{ smarthome.scheduler.return_next(logic.name).strftime('%Y-%m-%d %H:%M:%S%z') }}{% if not logic.enabled %}</span>{% endif %}
-        {% endif %}
         <br/><br/>
     </div>
-    <div class="container"><pre class="prettyprint lang-py linenums" style="max-height: 700px;">{% if logic_lines %}
-{% for line in logic_lines %}{{ line }}
-{% endfor %}{% else %}{{ _('no data available') }}{% endif %}</pre></div>
+    <div class="container">
+        <div style="margin-bottom: 5px;">
+        {% if updates %}
+        <form name="input" action="logics_view.html" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="logic" readonly="true" value="{{ logic }}" type="text">
+            <input type="hidden" name="file_path" readonly="true" value="{{ file_path }}" type="text"/>
+            <input {% if not logic.enabled %}disabled="true"{% endif %} name="trigger" value="{{ _('Auslösen','button') }}" type="submit" class="btn btn-default btn-xs">
+            <input name="enable" value="{% if logic.enabled %}{{ _('Deaktivieren','button') }}{% else %}{{ _('Aktivieren','button') }}{% endif %}" type="submit" class="btn btn-default btn-xs">
+            &nbsp;|&nbsp;
+            <input name="save" value="{{ _('Speichern_und_Neu_Laden','button') }}" type="submit" class="btn btn-default btn-xs">
+        {% endif %}
+        </div>
+        <div style="border: 1px solid #ccc; margin-bottom: 10px;">
+        {% if logic_lines %}
+        <textarea id="logics_code" name="logics_code">{% if logic_lines %}{% for line in logic_lines %}{{ line }}
+{% endfor %}{% endif %}</textarea>
+        {% if updates %}</form>{% endif %}
+         <script>
+         var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("logics_code"), {
+           lineNumbers: true,
+           mode: "python"
+         });
+         </script>
+        {% else %}{{ _('no data available') }}{% endif %}
+        </div>
+    </div>
  <div class="container">
      <table class="table table-bordered table-hover table-striped">
+         {% if smarthome.scheduler.return_next(logic.name) %}
          <tr>
              <td style="width:150px;">
+               <strong>{{ _('nächste Ausführung') }}</strong>
+             </td>
+             <td>
+                {% if not logic.enabled %}<span style="color:#bbb;">{% endif %}
+                {{ smarthome.scheduler.return_next(logic.name).strftime('%Y-%m-%d %H:%M:%S%z') }}
+                {% if not logic.enabled %}</span>{% endif %}
+             </td>
+         </tr>
+         {% endif %}
+         <tr>
+             <td style="width:190px;">
                 <strong>{{ _('Cycle') }}</strong>
              </td>
              <td>
                 {% if logic.cycle == None %}-{% else %}{{ logic.cycle}} {% endif %}
              </td>
          </tr>
-          <tr>
+         <tr>
              <td>
                <strong>{{ _('Watch_Items') }}</strong>
              </td>

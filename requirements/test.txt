@@ -8,4 +8,5 @@ betamax==0.5.1
 pydocstyle>=1.0.0
 virtualenv<14.0.0;python_version=='3.2'
 coverage<4.0.0;python_version=='3.2'
-
+beautifulsoup4>=4.1.0
+jinja2==2.6;python_version=='3.2'

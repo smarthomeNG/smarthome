@@ -36,13 +36,13 @@ from sqlalchemy import create_engine, __version__, Column, BigInteger, Integer, 
 from sqlalchemy.sql import func as sqlfunc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.serializer import dumps, loads
-from sqlalchemy.orm import sessionmaker, class_mapper
+from sqlalchemy.orm import sessionmaker, class_mapper, scoped_session
 from sqlalchemy.pool import StaticPool
 
 
 class Database(SmartPlugin):
     ALLOW_MULTIINSTANCE = False
-    PLUGIN_VERSION = "1.1.2"
+    PLUGIN_VERSION = "1.1.3"
     _buffer_time = 60 * 1000
 
     # Declare classes to store data
@@ -105,7 +105,8 @@ class Database(SmartPlugin):
         try:
             # db = create_engine(self._uri, poolclass=StaticPool)
             db = create_engine(self._uri, pool_recycle=14400)
-            Session = sessionmaker(bind=db)
+            session_factory = sessionmaker(bind=db, autoflush=True, autocommit=False)
+            Session = scoped_session(session_factory)
             self.session = Session()
             self.connected = True
             # For debugging purposes, disable in production version. Prints out all DB sql queries.
@@ -137,16 +138,28 @@ class Database(SmartPlugin):
             for item in db_items:
                 if item._item not in current_items:
                     self.logger.info("Database: deleting value entries for {}".format(item._item))
-                    self.session.query(self.ItemStore).filter(self.ItemStore._item == item._item).delete()
-                    self.session.commit()
+                    self._fdb_lock.acquire()
+                    try:
+                        self.session.query(self.ItemStore).filter(self.ItemStore._item == item._item).delete()
+                        self.session.commit()
+                    except:
+                        self.logger.error("Database: error while deleting orphans from num table")
+                        self.session.rollback()
+                    self._fdb_lock.release()
         # Clear orphans from cache table
         db_items = self.session.query(self.ItemCache).group_by(self.ItemCache._item).all()
         if db_items:
             for item in db_items:
                 if item._item not in current_items:
                     self.logger.info("Database: deleting cache entries for {}".format(item._item))
-                    self.session.query(self.ItemCache).filter(self.ItemCache._item == item._item).delete()
-                    self.session.commit()
+                    self._fdb_lock.acquire()
+                    try:
+                        self.session.query(self.ItemCache).filter(self.ItemCache._item == item._item).delete()
+                        self.session.commit()
+                    except:
+                        self.logger.error("Database: error while deleting orphans from cache table")
+                        self.session.rollback()
+                    self._fdb_lock.release()
 
     def serialize(self, model):
         """Transforms a model into a dictionary which can be dumped to JSON."""
@@ -185,9 +198,15 @@ class Database(SmartPlugin):
         rename / move item including history and cache
         """
         self.logger.info("Database: renaming {0} to {1}".format(old, new))
-        self.session.query(self.ItemStore).filter(self.ItemStore._item == old).update({self.ItemStore._item: new})
-        self.session.query(self.ItemCache).filter(self.ItemCache._item == old).update({self.ItemCache._item: new})
-        self.session.commit()
+        self._fdb_lock.acquire()
+        try:
+            self.session.query(self.ItemStore).filter(self.ItemStore._item == old).update({self.ItemStore._item: new})
+            self.session.query(self.ItemCache).filter(self.ItemCache._item == old).update({self.ItemCache._item: new})
+            self.session.commit()
+        except:
+            self.logger.error("Database: error while renaming item")
+            self.session.rollback()
+        self._fdb_lock.release()
 
     def parse_item(self, item):
         if 'database' in item.conf:
@@ -199,26 +218,35 @@ class Database(SmartPlugin):
                 self.logger.warning("Database: only 'num' and 'bool' currently supported. Item: {} ".format(item.id()))
                 return
             # If item exists in cache load last value, if not create it
-            start = time.time()  # REMOVE
+            #start = time.time()  # REMOVE
+            self._fdb_lock.acquire()
             cache = self.session.query(self.ItemCache).filter_by(_item=item.id()).first()
-            self.logger.debug('1 - Execution time: ' + str((time.time() - start) * 1000) + ' milliseconds')  # REMOVE
+            self._fdb_lock.release()
+            # self.logger.debug('1 - Execution time: ' + str((time.time() - start) * 1000) + ' milliseconds')  # REMOVE
             if cache is None:
                 self.logger.debug("Database: Items {0} does not exist in cache, creating it".format(item.id()))
                 last_change = self._timestamp(self._sh.now())
                 item._database_last = last_change
                 newItem = self.ItemCache(_item=item.id(), _start=last_change, _value=float(item()))
-                self.session.add(newItem)
-                self.session.commit()
+                self._fdb_lock.acquire()
+                try:
+                    self.session.add(newItem)
+                    self.session.commit()
+                except:
+                    self.logger.error("Database: error while deleting orphans from cache table")
+                    self.session.rollback()
+                self._fdb_lock.release()
             else:
                 self.logger.debug("Database: Loading last value for item {0} from cache".format(item.id()))
                 last_change = cache._start
                 value = cache._value
                 item._database_last = last_change
                 last_change = self._datetime(last_change)
-                self.logger.debug('2 - Execution time: ' + str((time.time() - start) * 1000) + ' milliseconds')  # REMOVE
+                # self.logger.debug('2 - Execution time: ' + str((time.time() - start) * 1000) + ' milliseconds')  # REMOVE
+                self._fdb_lock.acquire()
                 storedItem = self.session.query(self.ItemStore).filter_by(_item=item.id()).order_by(self.ItemStore._start.desc()).first()
-
-                self.logger.debug('3 - Execution time: ' + str((time.time() - start) * 1000) + ' milliseconds')  # REMOVE
+                self._fdb_lock.release()
+                # self.logger.debug('3 - Execution time: ' + str((time.time() - start) * 1000) + ' milliseconds')  # REMOVE
                 if storedItem is not None:
                     prev_change = self._datetime(storedItem._start)
                     item.set(value, 'Database', prev_change=prev_change, last_change=last_change)
@@ -226,7 +254,7 @@ class Database(SmartPlugin):
             item.series = functools.partial(self._series, item=item.id())
             item.db = functools.partial(self._single, item=item.id())
             end = time.time()  # REMOVE
-            self.logger.debug('Execution time: ' + str((end - start) * 1000) + ' milliseconds')  # REMOVE
+            # self.logger.debug('Execution time: ' + str((end - start) * 1000) + ' milliseconds')  # REMOVE
             return self.update_item
         else:
             return None
@@ -255,13 +283,29 @@ class Database(SmartPlugin):
         _dur = _end - _start
         _avg = float(item.prev_value())
         _on = int(bool(_avg))
-        self._buffer[item].append((_start, _dur, _avg, _on))
+        self.logger.debug("Database: update_item - {} updated {} -> start:{} end:{} dur:{} avg:{} on:{}".format(caller, item, _start, _end, _dur, _avg, _on)) 
+        if (_start, _dur, _avg, _on) not in self._buffer[item] and _end > item._database_last:
+            self._buffer[item].append((_start, _dur, _avg, _on))
+        else:
+            self.logger.debug("Database: update_item - caller:{} item:{} - No need to add item to buffer".format(caller, item))
         if _end - item._database_last > self._buffer_time:
+            self.logger.debug("Database: update_item - Calling _insert item:{} end:{} last:{} diff:{} > buffer_time:{}".format(item, _end, item._database_last, _end - item._database_last, self._buffer_time))
             self._insert(item)
         if not self._fdb_lock.acquire(timeout=2):
+            self.logger.error("Database: update_item - Unable to acquire database lock (1)")
             return
         # update cache with current value
-        itemForUpdate = self.session.query(self.ItemCache).filter_by(_item=item.id()).first()
+        try:
+            itemForUpdate = self.session.query(self.ItemCache).filter_by(_item=item.id()).first()
+        except Exception as e:
+            self.logger.debug("Database: Error getting item to update from cache {}: {}".format(item.id(), e))
+            itemForUpdate = None
+        finally:
+            self._fdb_lock.release()
+
+        if not self._fdb_lock.acquire(timeout=2):
+            self.logger.error("Database: update_item - Unable to acquire database lock (2)")
+            return
         if itemForUpdate is not None:
             try:
                 itemForUpdate._start = _end
@@ -303,11 +347,11 @@ class Database(SmartPlugin):
         tlen = len(tuples)
         self._buffer[item] = self._buffer[item][tlen:]
         item._database_last = self._timestamp(item.last_change())
+        self.logger.debug("Database: _insert - item: {} tlen: {} tuples: {}".format(item, tlen, tuples));
         try:
             if tlen == 1:
                 _start, _dur, _avg, _on = tuples[0]
-                insert = (_start, item.id(), _dur, _avg, _avg, _avg, _on)
-                newItem = self.ItemStore(_start=_start, _item=item.id(), _dur=_dur, _avg=_avg, _min=_avg, _max=_avg, _on=_on / _dur)
+                newItem = self.ItemStore(_start=_start, _item=item.id(), _dur=_dur, _avg=_avg, _min=_avg, _max=_avg, _on=_on)
             elif tlen > 1:
                 _vals = []
                 _dur = 0
@@ -319,18 +363,23 @@ class Database(SmartPlugin):
                     _avg += __dur * __avg
                     _on += __dur * __on
                     _dur += __dur
-                insert = (_start, item.id(), _dur, _avg / _dur, min(_vals), max(_vals), _on / _dur)
+                self.logger.debug("Database: _insert - Start:{} Item:{} Dur:{} Avg:{} Min:{} Max:{} On:{}".format(_start, item.id(), _dur, _avg, min(_vals), max(_vals), _on))
                 newItem = self.ItemStore(_start=_start, _item=item.id(), _dur=_dur, _avg=_avg / _dur, _min=min(_vals), _max=max(_vals), _on=_on / _dur)
             else:  # no tuples
+                self._fdb_lock.release()
                 return
             self.session.add(newItem)
             self.session.commit()
         except Exception as e:
-            self.logger.warning("Database: problem updating {}: {}".format(item.id(), e))
-        finally:
-            self._fdb_lock.release()
+            self.logger.warning("Database: _insert - problem updating {}: {}".format(item.id(), e))
+            try:
+                self.session.rollback()
+            except Exception as e:
+                self.logger.warning("Database: _insert - Error rolling back transaction for {}: {}".format(item.id(), e))
+        self._fdb_lock.release()
 
     def _series(self, func, start, end='now', count=100, ratio=1, update=False, step=None, sid=None, item=None):
+        self.logger.debug("Database: Start series with '{0}' function".format(func))
         init = not update
         if sid is None:
             sid = item + '|' + func + '|' + start + '|' + end + '|' + str(count)
@@ -345,10 +394,13 @@ class Database(SmartPlugin):
         reply['params'] = {'update': True, 'item': item, 'func': func, 'start': iend, 'end': end, 'step': step, 'sid': sid}
         reply['update'] = self._sh.now() + datetime.timedelta(seconds=int(step / 1000))
         if not self._fdb_lock.acquire(timeout=2):
+            self.logger.error("Database: Unable to acquire database lock")
+            return
+        if not self.connected:
+            self._fdb_lock.release()
+            self.logger.error("Database: _series - Database is  not connected")
             return
         try:
-            if not self.connected:
-                return
             if func == 'avg':
                 items = self.session.query(sqlfunc.min(self.ItemStore._start), sqlfunc.round(sqlfunc.sum(self.ItemStore._avg * self.ItemStore._dur) / sqlfunc.sum(self.ItemStore._dur), 2)) \
                     .filter(self.ItemStore._item == item) \
@@ -380,17 +432,20 @@ class Database(SmartPlugin):
                     .order_by(self.ItemStore._start.asc()) \
                     .all()
             else:
+                self.logger.error("Database: Function {0} not implemented".format(func))
                 raise NotImplementedError
         except Exception as e:
-            self.logger.error("Database: Error {0}".format(e))
-            reply = None
-            return reply
+            self.logger.error("Database: _seriea - Error {0}".format(e))
+            return None
         finally:
+            self.logger.debug("Database: Releasing lock")
             self._fdb_lock.release()
 
         _item = self._sh.return_item(item)
         if self._buffer[_item] != [] and end == 'now':
-            self._insert(_item)
+            self.logger.debug("Database: _series - item:{} synching existing buffer to database".format(item))
+            self._insert(_item)  
+        self.logger.debug("Database: _series - Preparing return for visu")
         if items:
             if istart > items[0][0]:
                 items[0] = (istart, items[0][1])
@@ -409,11 +464,15 @@ class Database(SmartPlugin):
                 items.append((iend, value))
         if items:
             reply['series'] = items
+        self.logger.debug("Database: End series with '{0}' function".format(func))
         return reply
 
     def _single(self, func, start, end='now', item=None):
         istart = self._get_timestamp(start)
         iend = self._get_timestamp(end)
+        if not self._fdb_lock.acquire(timeout=2):
+            self.logger.error("Database: _single - Unable to acquire database lock")
+            return
         if func == 'avg':
             items = self.session.query(sqlfunc.round(sqlfunc.sum(self.ItemStore._avg * self.ItemStore._dur) / sqlfunc.sum(self.ItemStore._dur), 2)) \
                 .filter(self.ItemStore._item == item) \
@@ -441,6 +500,7 @@ class Database(SmartPlugin):
         else:
             self.logger.warning("Database: Unknown export function: {0}".format(func))
             return
+        self._fdb_lock.release()
         _item = self._sh.return_item(item)
         if self._buffer[_item] != [] and end == 'now':
             self._insert(_item)

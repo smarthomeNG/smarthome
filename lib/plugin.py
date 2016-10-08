@@ -57,7 +57,7 @@ class Plugins():
             
             instance = ''
             if 'instance' in _conf[plugin]:
-                instance = _conf[plugin]['instance'].strip().lower()
+                instance = _conf[plugin]['instance'].strip()
                 if instance == 'default': 
                     instance = ''
             try:

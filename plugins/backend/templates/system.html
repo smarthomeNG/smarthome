@@ -10,79 +10,77 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th></th>
+                    <th style="width: 100px;"></th>
                     <th>{{ _('Eigenschaft') }}</th>
                     <th>{{ _('Status') }}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><img src="/static/img/terminal-server.svg" width="48" height="48"></td>
-                    <td>Host:</td>
-                    <td>{{ node }}</td>
+                    <td><img src="/static/img/terminal-server.svg" style="width: 36px; height: 36px; margin-left: 40px;"></td>
+                    <td style="vertical-align: middle;">Host:</td>
+                    <td style="vertical-align: middle;">{{ node }}</td>
                 </tr>
                 <tr>
-                    <td><img src="/static/img/NIC.svg" width="48" height="48"></td>
-                    <td>{{ _('IP') }} (v4)</td>
-                    <td>{{ ip }}</td>
+                    <td><img src="/static/img/NIC.svg" style="width: 36px; height: 36px; margin-left: 40px;"></td>
+                    <td style="vertical-align: middle;">{{ _('IP') }} (v4)</td>
+                    <td style="vertical-align: middle;">{{ ip }}</td>
                 </tr>
                 <tr>
-                    <td><img src="/static/img/tux_hdd.svg" width="48" height="48"></td>
-                    <td>{{ _('Betriebssystem') }}:</td>
-                    <td>{{ system }}<br/>
-                    {{ vers }}</td>
+                    <td><img src="/static/img/tux_hdd.svg" style="width: 36px; height: 36px; margin-left: 40px;"></td>
+                    <td style="vertical-align: middle;">{{ _('Betriebssystem') }}:</td>
+                    <td style="vertical-align: middle;">{{ system }} {{ vers }}</td>
                 </tr>
                 <tr>
-                    <td><img src="/static/img/cpu.svg" width="48" height="48"></td>
-                    <td>{{ _('Architektur') }}:</td>
-                    <td>{{ arch }}</td>
+                    <td><img src="/static/img/cpu.svg" style="width: 36px; height: 36px; margin-left: 40px;"></td>
+                    <td style="vertical-align: middle;">{{ _('Architektur') }}:</td>
+                    <td style="vertical-align: middle;">{{ arch }}</td>
                 </tr>
                 <tr>
-                    <td><img src="/static/img/user.svg" width="48" height="48"></td>
-                    <td>{{ _('Benutzer') }}:</td>
-                    <td>{{ user }}</td>
+                    <td><img src="/static/img/user.svg" style="width: 36px; height: 36px; margin-left: 40px;"></td>
+                    <td style="vertical-align: middle;">{{ _('Benutzer') }}:</td>
+                    <td style="vertical-align: middle;">{{ user }}</td>
                 </tr>
                 <tr>
-                    <td><img src="/static/img/hd.svg" width="48" height="48"></td>
-                    <td>{{ _('Freier Speicher') }}:</td>
-                    <td>{{ (freespace)|round|int }} MByte</td>
+                    <td><img src="/static/img/hd.svg" style="width: 36px; height: 36px; margin-left: 40px;"></td>
+                    <td style="vertical-align: middle;">{{ _('Freier Speicher') }}:</td>
+                    <td style="vertical-align: middle;">{{ (freespace)|round|int }} MByte</td>
                 </tr>
                 <tr>
-                    <td><img src="/static/img/clock.svg" width="48" height="48"></td>
-                    <td>{{ _('Datum') }} / {{ _('Zeit') }}:</td>
-                    <td>{{ now }}</td>
+                    <td><img src="/static/img/clock.svg" style="width: 36px; height: 36px; margin-left: 40px;"></td>
+                    <td style="vertical-align: middle;">{{ _('Datum') }} / {{ _('Zeit') }}:</td>
+                    <td style="vertical-align: middle;">{{ now }}</td>
                 </tr>
                 <tr>
-                    <td><img src="/static/img/preferences.svg" width="48" height="48"></td>
-                    <td>{{ _('Betriebszeit') }} (Host):</td>
-                    <td>{{ uptime }}</td>
+                    <td><img src="/static/img/preferences.svg" style="width: 36px; height: 36px; margin-left: 40px;"></td>
+                    <td style="vertical-align: middle;">{{ _('Betriebszeit') }} (Host):</td>
+                    <td style="vertical-align: middle;">{{ uptime }}</td>
                 </tr>
                 <tr>
-                    <td><img src="/static/img/logo_small_76x76.png" width="48" height="48"></td>
-                    <td>{{ _('Betriebszeit') }} (SmartHomeNG):</td>
-                    <td>{{ sh_uptime }}</td>
+                    <td><img src="/static/img/logo_small_76x76.png" style="width: 36px; height: 36px; margin-left: 40px;"></td>
+                    <td style="vertical-align: middle;">{{ _('Betriebszeit') }} (SmartHomeNG):</td>
+                    <td style="vertical-align: middle;">{{ sh_uptime }}</td>
                 </tr>
                 <tr>
-                    <td><img src="/static/img/python.png" width="48" height="48"></td>
-                    <td>{{ _('Python Version') }}:</td>
-                    <td>{{ pyversion }}</td>
+                    <td><img src="/static/img/python.png" style="width: 36px; height: 36px; margin-left: 40px;"></td>
+                    <td style="vertical-align: middle;">{{ _('Python Version') }}:</td>
+                    <td style="vertical-align: middle;">{{ pyversion }}</td>
                 </tr>
             <tr>
-                    <td><img src="/static/img/logo_small_76x76.png" width="48" height="48"></td>
-                    <td>{{ _('SmartHomeNG Version') }}:</td>
-                    <td>{{ sh_vers }}</td>
+                    <td><img src="/static/img/logo_small_76x76.png" style="width: 36px; height: 36px; margin-left: 40px;"></td>
+                    <td style="vertical-align: middle;">{{ _('SmartHomeNG Version') }}:</td>
+                    <td style="vertical-align: middle;">{{ sh_vers }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
-    
+<hr />    
     
 <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th></th>
-                    <th>Python Package</th>
+                    <th style="padding-left: 50px;">Python Package</th>
                     <th>{{ _('installierte Version') }}</th>
                     <th>{{ _('Neuste Version') }} (PyPI)</th>
                 </tr>
@@ -90,10 +88,9 @@
             <tbody>
                 {% for pack in python_packages|sort %}
                 <tr>
-                    <td></td>
-                    <td>{{ pack[0] }}</td>
-                    <td>{% if pack[1] != pack[2] %}<span style="font-weight:bold; color: red;">{% else %}<span style="font-weight:bold; color: green;">{% endif %}{{ pack[1] }}<span></td>
-                    <td>{{ pack[2] }}</td>
+                    <td style="padding-left: 50px;">{{ pack[0] }}</td>
+                    <td>{% if pack[1] != pack[2] and pack[2] != "-" %}<span style="font-weight:bold; color: red;">{% else %}<span style="font-weight:bold; color: green;">{% endif %}{{ pack[1] }}</span></td>
+                    <td>{% if pack[2] == "-" %}<span style="font-weight:bold; color: red;">{% endif %}{{ pack[2] }}{% if pack[2] == "-" %}</span>{% endif %}</td>
                 </tr>
                 {% endfor %}
             </tbody>

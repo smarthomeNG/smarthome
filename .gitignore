@@ -6,7 +6,6 @@
 /doc/build
 /doc/sphinx_bootstrap_theme
 
-
 # Unittest and coverage reports
 .cache
 .coverage

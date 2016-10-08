@@ -60,7 +60,7 @@
 	"Neuste Version": "Dernière version",
 	"Keine Antwort von PyPI": "Pas de réponse de PyPI",
 	"PyPI nicht erreichbar": "PyPI non accessible",
-	"PyPI Prüfung deaktiviert": "Check PyPI désactivé",
+	"PyPI Prüfung deaktiviert": "Vérification PyPI désactivée",
 	"Dienst": "Service",
 	"Status": "Etat",
 	"Aktion": "Action",
@@ -90,8 +90,8 @@
 	"Aktiv": "Active",
 	"Visu Client": "Client Visu",
 	"Port": "Port",
-	"Client Software": "Software du Client",
-	"Browser": "Browser",
+	"Client Software": "Logiciel client",
+	"Browser": "Navigateur",
 	"No active clients": "Pas de clients actifs",
 	"Die eingegebenen Daten sind kein numerischer Wert": "Les valeurs entrées ne sont pas numériques",
 	"Filter": "Filtre",
@@ -108,6 +108,7 @@
 	"Logging": "Journalisation",
 	"Passwort anzeigen": "Afficher mot de passe",
 	"SmartHomeNG Version": "Version de SmartHomeNG",
+	"Watch_Items": "Objets surveillés",
 
 	"_items": {
 		"path": "Chemin",
@@ -155,7 +156,14 @@
 		"Deutsch": "Allemand",
 		"Französisch": "Français",
 		"Deaktivieren": "Désactiver",
-		"Aktivieren": "Activer"
+		"Aktivieren": "Activer",
+		"Leeren" : "Vider",
+		"Schließen": "Fermer",
+		"Änderungen verwerfen" : "Annuler modifications",
+		"Blöcke speichern" : "Enregistrer les blocs",
+		"Beenden" : "Terminer",
+		"Speichern" : "Sauvegarder",
+		"Speichern_und_Neu_Laden" : "Sauvegarder et Recharger"
 	},
 
 	"_menu": {
@@ -163,6 +171,7 @@
 		"Dienste": "Services",
 		"Items": "Objets",
 		"Logiken": "Logiques",
+		"Blockly-Logiken-Editor": "Blockly - Editeur de Logiques",
 		"Scheduler": "Planificateur",
 		"Plugins": "Extensions",
 		"Threads": "Tâches",
