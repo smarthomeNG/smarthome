@@ -282,7 +282,11 @@ class SQL(SmartPlugin):
             self._fdb_lock.release()
 
     def _maintain(self):
-        for item in self._buffer:
+        if not self._fdb_lock.acquire(timeout=2):
+            return
+        items = list(self._buffer.keys())
+        self._fdb_lock.release()
+        for item in items:
             if self._buffer[item] != []:
                 self._insert(item)
         self._pack()
