@@ -1,7 +1,7 @@
 # Phillips HUE
 
 ###New development of Hue plugin for use in smarthome.py (C) Michael Würtenberger 2014, 2015, 2016
-version 1.83 developNG
+version 1.84 developNG
 Development Repo and examples for smartvisu widget under https://github.com/mworion/hue.git
 
 ## Supported Hardware
