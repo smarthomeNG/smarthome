@@ -3,7 +3,7 @@
 #
 #  Copyright (C) 2014,2015,2016 Michael Würtenberger
 #
-#  Version 1.83 developNG
+#  Version 1.84 developNG
 #
 #  Erstanlage mit ersten Tests
 #  Basiert auf den Ueberlegungen des verhandenen Hue Plugins.
@@ -43,9 +43,9 @@ class HUE():
         # parameter zu übergabe aus der konfiguration pulgin.conf
         self._sh = smarthome
         # parmeter übernehmen, aufteilen und leerzeichen herausnehmen
-        self._hue_ip = [hue_ip]
-        self._hue_user = [hue_user]
-        self._hue_port = [hue_port]
+        self._hue_ip = hue_ip
+        self._hue_user = hue_user
+        self._hue_port = hue_port
         # verabreitung der parameter aus der plugin.conf
         self._numberHueBridges = len(self._hue_ip)
         if len(self._hue_port) != self._numberHueBridges or len(self._hue_user) != self._numberHueBridges:
