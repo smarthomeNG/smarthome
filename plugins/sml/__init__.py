@@ -22,6 +22,7 @@
 
 import logging
 import time
+import socket
 import re
 import serial
 import threading

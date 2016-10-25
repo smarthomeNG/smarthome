@@ -80,6 +80,18 @@ class Plugins():
         for plugin in self._plugins:
             yield plugin
 
+    def get_plugin(self, name):
+        for thread in self._threads:
+            if thread.name == name:
+               return thread.plugin
+        return None
+
+    def get_plugin_ident(self, plugin):
+        for thread in self._threads:
+            if thread.plugin == plugin:
+               return thread.ident
+        return None
+
     def start(self):
         logger.info('Start Plugins')
         for plugin in self._threads:
