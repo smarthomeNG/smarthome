@@ -240,7 +240,6 @@ is a writeable register.
         type = num
         systemair_coiladdr = 12817
 
-
         
 ### Workarounds
  
@@ -253,4 +252,4 @@ is a writeable register.
  
  ```self.handle_local_echo = True```
  
- to active th echo mode.
+ to active the echo mode.
