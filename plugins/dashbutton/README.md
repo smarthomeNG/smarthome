@@ -34,16 +34,16 @@ Change the python path to your python version.
 
 ### Item attributes
 
- **dashbutton_mac**
+ **dashbutton_mac**  
  The mac address of the dash button. You can add as many mac addresses you want (and the same mac address for 
  different items) to your items, but only one per item. (the next version you can add multiple mac address to the item)  
  
- **dashbutton_mode**
+ **dashbutton_mode**  
  The value can be 'flip' or 'value. If 'flip' mode is chosen, the item type has to be 'bool' and the attribute
  'dashbutton_value' will be ignored. If the configured button was pressed in this mode, the current item value is 
  flipped. (0->1 or 1->0) 
  
- **dashbutton_value**
+ **dashbutton_value**  
  If 'dashbutton_mode' is set to 'value', the attribute 'dashbutton_value' has to be set.
  
 ### Examples
@@ -60,7 +60,7 @@ Change the python path to your python version.
             dashbutton_mac = "cc:66:de:dd:55:11"
             dashbutton_mode = 'flip'
             
-  **'value' mode
+  **'value'** mode
 
     [Room]
         [[Dining_Room]]
