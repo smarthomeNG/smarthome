@@ -252,4 +252,4 @@ is a writeable register.
  
  ```self.handle_local_echo = True```
  
- to active the echo mode.
+ to activate the echo mode.
