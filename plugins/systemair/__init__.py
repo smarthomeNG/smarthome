@@ -43,6 +43,7 @@ class Systemair():
         self.mod_write_repeat = 20  # if port is already open, e.g on auto-update,
                                     # repeat mod_write attempt x times a 1 seconds
         self._lockmb = threading.Lock()    # modbus serial port lock
+        self.init_serial_connection(self.serialport, self.slave_address)
 
     def init_serial_connection(self, serialport, slave_address):
         try:
@@ -60,7 +61,6 @@ class Systemair():
             # check for working /dev/ttyXXX
             if not self.init_serial_connection(self.serialport, self.slave_address):
                 return
-
             # read all fan registers
             # System air documentation: FAN values starts with 101, but thats incorrect: register starts with 100
 
