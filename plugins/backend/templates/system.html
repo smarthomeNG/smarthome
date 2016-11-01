@@ -80,9 +80,10 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th style="padding-left: 50px;">Python Package</th>
-                    <th>{{ _('installierte Version') }}</th>
-                    <th>{{ _('Neuste Version') }} (PyPI)</th>
+                    <th style="width: 15%; padding-left: 50px;">Python Package</th>
+                    <th style="width: 15%;">{{ _('installierte Version') }}</th>
+                    <th style="width: 55%;">{{ _('Anforderungen') }}</th>
+                    <th style="width: 15%;">{{ _('Neuste Version') }} (PyPI)</th>
                 </tr>
             </thead>
             <tbody>
@@ -90,6 +91,7 @@
                 <tr>
                     <td style="padding-left: 50px;">{{ pack[0] }}</td>
                     <td>{% if pack[1] != pack[2] and pack[2] != "-" %}<span style="font-weight:bold; color: red;">{% else %}<span style="font-weight:bold; color: green;">{% endif %}{{ pack[1] }}</span></td>
+                    <td>{{ requirements[pack[0]] }}</td>
                     <td>{% if pack[2] == "-" %}<span style="font-weight:bold; color: red;">{% endif %}{{ pack[2] }}{% if pack[2] == "-" %}</span>{% endif %}</td>
                 </tr>
                 {% endfor %}

@@ -114,3 +114,17 @@ def create_hash(plaintext):
     hashfunc = hashlib.sha512()
     hashfunc.update(plaintext.encode())
     return hashfunc.digest().hex()
+
+def parse_requirements(file_path):
+    fobj = open(file_path)
+    req_dict = {}
+    for line in fobj:
+        if len(line) > 0 and '#' not in line:
+            if ">" in line:
+                req_dict[line[0:line.find(">")].lower().strip()] = line[line.find(">"):len(line)].lower().strip()
+            elif "<" in line:
+                req_dict[line[0:line.find("<")].lower().strip()] = line[line.find("<"):len(line)].lower().strip()
+            elif "=" in line:
+                req_dict[line[0:line.find("=")].lower().strip()] = line[line.find("="):len(line)].lower().strip()
+    fobj.close()
+    return req_dict
