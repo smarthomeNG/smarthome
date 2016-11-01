@@ -1020,7 +1020,7 @@ class AVM(SmartPlugin):
         :param phone_name: full phone identifier, could be e.g. '\*\*610' for an internal device
         """
         url = self._build_url("/upnp/control/x_voip")
-        action = 'X_AVM-DE_DialNumber'
+        action = 'X_AVM-DE_DialSetConfig'
         headers = self._header.copy()
         headers['SOAPACTION'] = "%s#%s" % (self._urn_map['X_VoIP'], action)
         soap_data = self._assemble_soap_data(action, self._urn_map['X_VoIP'],
