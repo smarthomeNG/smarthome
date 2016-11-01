@@ -65,7 +65,7 @@ Change the python and/or the path to the tcpdump binary to your needs.
             knx_send = 1/1/1
             knx_listen = 1/1/1
             knx_init = 1/1/3
-            dashbutton_mac = "cc:66:de:dd:55:11 | xx:xx:xx:xx:xx:01 | xx:xx:xx:xx:xx:02"
+            dashbutton_mac = cc:66:de:dd:55:11 | xx:xx:xx:xx:xx:01 | xx:xx:xx:xx:xx:02
             dashbutton_mode = 'flip'
             
   **'value' mode**
@@ -78,6 +78,6 @@ Change the python and/or the path to the tcpdump binary to your needs.
             knx_send = 1/2/1
             knx_listen = 1/2/1
             knx_init = 1/2/3
-            dashbutton_mac = "cc:66:de:dd:55:11"
+            dashbutton_mac = cc:66:de:dd:55:11
             dashbutton_mode = 'value'
             dashbutton_value = 30
