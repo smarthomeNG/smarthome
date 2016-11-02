@@ -1,1 +1,1 @@
-scapy>=2.0
+scapy-python3>=0.18
