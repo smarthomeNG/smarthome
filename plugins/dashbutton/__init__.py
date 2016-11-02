@@ -30,7 +30,7 @@ class Dashbutton(SmartPlugin):
         sniff(prn=self.dispatch, store=0, count=0, filter="udp", lfilter=lambda d: d.src in self._dashbuttons.keys())
 
     def stop(self):
-        self._scapy_thread.join()
+        self._scapy_thread.join(1)
         self.alive = False
 
     def parse_item(self, item):
