@@ -30,7 +30,7 @@ class Dashbutton(SmartPlugin):
         sniff(prn=self.dispatch, store=0, count=0, filter="udp", lfilter=lambda d: d.src in self._dashbuttons.keys())
 
     def stop(self):
-        self._scapy_thread.join()
+        self._scapy_thread.join(1)
         self.alive = False
 
     def parse_item(self, item):
@@ -38,16 +38,17 @@ class Dashbutton(SmartPlugin):
 
             mac_addresses = self.get_iattr_value(item.conf, 'dashbutton_mac')
             # if separated by |, mac_address is a list, otherwise a string (if only one mac address)
-            if isinstance(mac_addresses, str):
-                mac_addresses = [mac_addresses]
 
+            if isinstance(mac_addresses, str):
+                mac_addresses = mac_addresses.split('|')
             # lower all elements
             mac_addresses = [element.lower() for element in mac_addresses]
             # remove duplicates
             mac_addresses = list(set(mac_addresses))
 
             for mac_address in mac_addresses:
-                mac_address = mac_address.strip()
+                # prevention from some strange miss behavior by sh.py if "mac1:mac2" as a string with ampersands was set
+                mac_address = mac_address.strip().strip('\'').strip('\"')
 
                 if not self.is_mac(mac_address):
                     self._logger.error('MAC address {mac} is not valid'.format(mac=mac_address))

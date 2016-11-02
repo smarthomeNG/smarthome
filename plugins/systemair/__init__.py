@@ -182,7 +182,6 @@ class Systemair():
                             logger.error("Modbus: Exception when updating {} {}".format(item, e))
                 start_register_defrosting_vtr += 1
 
-
             # digital input register / 9 register
             start_register_digital = 701
             digital_registers = self.instrument.read_registers(start_register_digital-1, 9, functioncode=3)
