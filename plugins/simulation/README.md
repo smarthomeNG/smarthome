@@ -17,7 +17,7 @@ plugin.conf
 [simulation]
    class_name = Simulation
    class_path = plugins.simulation
-   data_file = /usr/smarthome/var/db/simulation.txt
+   data_file = /usr/local/smarthome/var/db/simulation.txt
 ```
 `data_file`: This is the file where all recorded events are stored.
 
