@@ -43,30 +43,41 @@ Change the python and/or the path to the tcpdump binary to your needs.
 
 ### Item attributes
 
- **dashbutton_mac**  
+ **dashbutton_mac**     [required]
  The mac address of the dash button. You can add as many mac addresses you want to your item, separated by '|'.  
  
- **dashbutton_mode**  
+ **dashbutton_mode**    [required]
  The value can be 'flip' or 'value. If 'flip' mode is chosen, the item type has to be 'bool' and the attribute
  'dashbutton_value' will be ignored. If the configured button was pressed in this mode, the current item value is 
  flipped. (0->1 or 1->0) 
  
- **dashbutton_value**  
- If 'dashbutton_mode' is set to 'value', the attribute 'dashbutton_value' has to be set.
+ **dashbutton_value**   [optional]
+ If 'dashbutton_mode' is set to 'value', the attribute 'dashbutton_value' has to be set. It can be a single value or
+ a list af values. If the attribute value is a list, the values will be processed in the given order. After the last
+ element of the list is reached, the next button press triggers the first element of the list.
+ If a item value is changed by another action than a button press and the new item value is not in the configured list,
+ the next dashbutton press triggers the first element.
+ 
+ **dashbutton_reset**   [optional]
+ It is possible to configure a reset timer (in seconds). If there is no item value change after the configured time in 
+ seconds (neither a button press nor another action), the first element of the list is taken when the item is triggered 
+ the next time. This attribute will be ignored, if no list is passed to the attribute 'dashbutton_value'.
  
 ### Examples
  
- **'flip mode'**
+ **'flip' mode**
  
     [Room]
         [[Dining_Room]]
-            name = "Light DiningRoom"knx_dpt = 1
+            name = "Light DiningRoom"
             type = bool
+            knx_dpt = 1
             knx_send = 1/1/1
             knx_listen = 1/1/1
             knx_init = 1/1/3
             dashbutton_mac = cc:66:de:dd:55:11 | xx:xx:xx:xx:xx:01 | xx:xx:xx:xx:xx:02
             dashbutton_mode = 'flip'
+         
             
   **'value' mode**
 
@@ -80,4 +91,5 @@ Change the python and/or the path to the tcpdump binary to your needs.
             knx_init = 1/2/3
             dashbutton_mac = cc:66:de:dd:55:11
             dashbutton_mode = 'value'
-            dashbutton_value = 30
+            dashbutton_value = 30|10|20|0
+            dashbutton_reser = 240
