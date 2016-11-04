@@ -44,22 +44,22 @@ Change the python and/or the path to the tcpdump binary to your needs.
 ### Item attributes
 
  **dashbutton_mac**     [required]
- The mac address of the dash button. You can add as many mac addresses you want to your item, separated by '|'.  
+    The mac address of the dash button. You can add as many mac addresses you want to your item, separated by '|'.  
  
  **dashbutton_mode**    [required]
- The value can be 'flip' or 'value. If 'flip' mode is chosen, the item type has to be 'bool' and the attribute
+    The value can be 'flip' or 'value. If 'flip' mode is chosen, the item type has to be 'bool' and the attribute
  'dashbutton_value' will be ignored. If the configured button was pressed in this mode, the current item value is 
  flipped. (0->1 or 1->0) 
  
  **dashbutton_value**   [optional]
- If 'dashbutton_mode' is set to 'value', the attribute 'dashbutton_value' has to be set. It can be a single value or
+    If 'dashbutton_mode' is set to 'value', the attribute 'dashbutton_value' has to be set. It can be a single value or
  a list af values. If the attribute value is a list, the values will be processed in the given order. After the last
  element of the list is reached, the next button press triggers the first element of the list.
  If a item value is changed by another action than a button press and the new item value is not in the configured list,
  the next dashbutton press triggers the first element.
  
  **dashbutton_reset**   [optional]
- It is possible to configure a reset timer (in seconds). If there is no item value change after the configured time in 
+    It is possible to configure a reset timer (in seconds). If there is no item value change after the configured time in 
  seconds (neither a button press nor another action), the first element of the list is taken when the item is triggered 
  the next time. This attribute will be ignored, if no list is passed to the attribute 'dashbutton_value'.
  
