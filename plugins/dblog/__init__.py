@@ -268,7 +268,7 @@ class DbLog():
         iend = self._parse_ts(end)
         if step is None:
             if count != 0:
-                step = int((iend - istart) / count)
+                step = int((iend - istart) / int(count))
             else:
                 step = iend - istart
         reply = {'cmd': 'series', 'series': None, 'sid': sid}
