@@ -1031,13 +1031,12 @@ class AVM(SmartPlugin):
             return
 
         xml = minidom.parseString(response.content)
-        tag_content = xml.getElementsByTagName('NewX_AVM-DE_PhoneName')
-        if len(tag_content > 0):
-            if tag_content[0].firstChild.data is not None:
-                phone_name = tag_content[0].firstChild.data
-                return phone_name
 
-        self.logger.error("No call origin available")
+        phone_name = self._get_value_from_xml_node(xml, 'NewX_AVM-DE_PhoneName')
+        if phone_name is not None:
+            return phone_name
+
+        self.logger.error("No call origin available.")
         return
 
     def get_phone_name(self, index = 1):
@@ -1067,11 +1066,10 @@ class AVM(SmartPlugin):
             return
 
         xml = minidom.parseString(response.content)
-        tag_content = xml.getElementsByTagName('NewX_AVM-DE_PhoneName')
-        if len(tag_content) > 0:
-            if tag_content[0].firstChild.data is not None:
-                phone_name = tag_content[0].firstChild.data
-                return phone_name
+
+        phone_name = self._get_value_from_xml_node(xml, 'NewX_AVM-DE_PhoneName')
+        if phone_name is not None:
+            return phone_name
 
         self.logger.error("No phone name available at provided index %s." % index)
         return
