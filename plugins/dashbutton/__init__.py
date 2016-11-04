@@ -12,7 +12,7 @@ start_time = time.time()
 
 
 class Dashbutton(SmartPlugin):
-    PLUGIN_VERSION = "1.3.0.1"
+    PLUGIN_VERSION = "1.3.0.2"
     ALLOW_MULTIINSTANCE = False
 
     def __init__(self, sh, *args, **kwargs):
