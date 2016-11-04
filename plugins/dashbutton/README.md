@@ -91,5 +91,17 @@ Change the python and/or the path to the tcpdump binary to your needs.
             knx_init = 1/2/3
             dashbutton_mac = cc:66:de:dd:55:11
             dashbutton_mode = 'value'
+            dashbutton_value = 30
+            
+    [Room]
+        [[Kitchen]]
+            name = "Light Dimm Kitchen"
+            type = num
+            knx_dpt = 5
+            knx_send = 1/2/1
+            knx_listen = 1/2/1
+            knx_init = 1/2/3
+            dashbutton_mac = dd:11:12:55:55:22 | cc:66:de:dd:55:11
+            dashbutton_mode = 'value'
             dashbutton_value = 30|10|20|0
-            dashbutton_reser = 240
+            dashbutton_reset = 240
