@@ -88,6 +88,7 @@ class Dashbutton(SmartPlugin):
                     # set the current timestamp
                     self._dashbuttons[mac_address][i] = \
                         self._dashbuttons[mac_address][i]._replace(threshold=Dashbutton.elapsed_seconds())
+
                     # check item for dash_button mode
                     item = self._dashbuttons[mac_address][i].item
                     if not self.has_iattr(item.conf, 'dashbutton_mode'):
@@ -114,7 +115,36 @@ class Dashbutton(SmartPlugin):
                             self._logger.error("{item}: dashbutton attribute 'dashbutton_value' has to be set for mode "
                                                "'value'!".format(item=item))
                             continue
-                        item(self.get_iattr_value(item.conf, 'dashbutton_value'))
+
+                        dash_values = self.get_iattr_value(item.conf, 'dashbutton_value')
+
+                        # dashbutton_value could be str or list
+                        if isinstance(dash_values, str):
+                            dash_values = dash_values.split('|')
+
+                        reset = False
+
+                        if self.has_iattr(item.conf, 'dashbutton_reset'):
+                            try:
+                                reset_time = int(self.get_iattr_value(item.conf, 'dashbutton_reset'))
+                                delta = (self._sh.now() - item.last_update()).total_seconds()
+                                if reset_time <= delta:
+                                    reset = True
+                                    self._logger.debug("reset timer activated for item {item}".format(item=item))
+                            except:
+                                self._logger.warning("Atrribute 'dashbutton_reset' has to be "
+                                                     "an int value. Ignoring value.")
+                        # check whether the prev item value was configured in dashbutton_value or not
+                        prev_item_value = str(item())
+
+                        if prev_item_value in dash_values:
+                            index = dash_values.index(prev_item_value)
+                            if len(dash_values) != index + 1 and not reset:
+                                item(dash_values[index+1])
+                            else:
+                                item(dash_values[0])
+                        else:
+                            item(dash_values[0])
                 break
 
     # returns the elapsed seconds since the start of the program
