@@ -1016,6 +1016,7 @@ class AVM(SmartPlugin):
         Gets the phone name, currently set as call_origin.
 
         Uses: http://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/x_voipSCPD.pdf
+        :return: String phone name
         """
         url = self._build_url("/upnp/control/x_voip")
         action = 'X_AVM-DE_DialGetConfig'
@@ -1046,6 +1047,7 @@ class AVM(SmartPlugin):
         Uses: http://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/x_voipSCPD.pdf
 
         :param index: Parameter is an INT, starting from 1. In case an index does not exist, an error is logged.
+        :return: String phone name
         """
         if not self.is_int(index):
             self.logger.error("Index parameter \"%s\" is no INT." % index)
