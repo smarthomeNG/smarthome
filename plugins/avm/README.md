@@ -493,7 +493,7 @@ phone_name = sh.fb1.get_phone_name(1)
 </pre>
 CURL for this function:
 <pre>
-curl --anyauth -u <user>:<password> "https://fritz.box:49443/upnp/control/x_voip" -H "Content-Type: text/xml; charset="utf-8"" -H "SoapAction:urn:dslforum-org:service:X_VoIP:1#X_AVM-DE_GetPhonePort" -d "<?xml version='1.0' encoding='utf-8'?><s:Envelope s:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/' xmlns:s='http://schemas.xmlsoap.org/soap/envelope/'><s:Body><u:X_AVM-DE_GetPhonePort xmlns:u='urn:dslforum-org:service:X_VoIP:1'><s:NewIndex>1</s:NewIndex></u:X_AVM-DE_GetPhonePort></s:Body></s:Envelope>" -s -k
+curl --anyauth -u user:password "https://fritz.box:49443/upnp/control/x_voip" -H "Content-Type: text/xml; charset="utf-8"" -H "SoapAction:urn:dslforum-org:service:X_VoIP:1#X_AVM-DE_GetPhonePort" -d "<?xml version='1.0' encoding='utf-8'?><s:Envelope s:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/' xmlns:s='http://schemas.xmlsoap.org/soap/envelope/'><s:Body><u:X_AVM-DE_GetPhonePort xmlns:u='urn:dslforum-org:service:X_VoIP:1'><s:NewIndex>1</s:NewIndex></u:X_AVM-DE_GetPhonePort></s:Body></s:Envelope>" -s -k
 </pre>
 
 ##get_call_origin
@@ -503,7 +503,7 @@ phone_name = sh.fritzbox_7490.get_call_origin()
 </pre>
 CURL for this function:
 <pre>
-curl --anyauth -u <user>:<password> "https://fritz.box:49443/upnp/control/x_voip" -H "Content-Type: text/xml; charset="utf-8"" -H "SoapAction:urn:dslforum-org:service:X_VoIP:1#X_AVM-DE_DialGetConfig" -d "<?xml version='1.0' encoding='utf-8'?><s:Envelope s:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/' xmlns:s='http://schemas.xmlsoap.org/soap/envelope/'><s:Body><u:X_AVM-DE_DialGetConfig xmlns:u='urn:dslforum-org:service:X_VoIP:1' /></s:Body></s:Envelope>" -s -k
+curl --anyauth -u user:password "https://fritz.box:49443/upnp/control/x_voip" -H "Content-Type: text/xml; charset="utf-8"" -H "SoapAction:urn:dslforum-org:service:X_VoIP:1#X_AVM-DE_DialGetConfig" -d "<?xml version='1.0' encoding='utf-8'?><s:Envelope s:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/' xmlns:s='http://schemas.xmlsoap.org/soap/envelope/'><s:Body><u:X_AVM-DE_DialGetConfig xmlns:u='urn:dslforum-org:service:X_VoIP:1' /></s:Body></s:Envelope>" -s -k
 </pre>
 
 ## set_call_origin(phone_name)
