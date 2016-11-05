@@ -29,7 +29,7 @@
  ```
  Change the python and/or the path to the tcpdump binary to your needs. If you're using the pre-configured 
  [Smarthome-NG image from Onkelandy](https://knx-user-forum.de/forum/supportforen/smarthome-py/979095-smarthomeng-image-file#post979095)
- the correct command command should be
+ the correct command should be
  
  ```shell
  sudo setcap cap_net_raw=eip /usr/local/bin/python3.5 
