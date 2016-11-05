@@ -31,7 +31,7 @@ logger = logging.getLogger('')
 class Database():
 
     # Supported formatting styles
-    _styles = ('qmark', 'format', 'numeric')
+    _styles = ('qmark', 'format', 'numeric', 'pyformat')
 
     def __init__(self, name, dbapi, connect):
         self._name = name
@@ -130,13 +130,14 @@ class Database():
         return self._conn.cursor()
 
     def execute(self, stmt, params=(), cur=None):
+        args = self._parameters(params)
         stmt = self._format(stmt)
         if cur == None:
             c = self.cursor()
-            result = c.execute(stmt, params)
+            result = c.execute(stmt, args)
             c.close()
         else:
-            result = cur.execute(stmt, params)
+            result = cur.execute(stmt, args)
         return result
 
     def verify(self, retry=5):
@@ -185,6 +186,16 @@ class Database():
             result = cur.fetchall()
         return result
 
+    def _parameters(self, params):
+        if self._style == 'qmark':
+            return list(params)
+        elif self._style == 'format':
+            return list(params)
+        elif self._style == 'numeric':
+            return list(params)
+        elif self._style == 'pyformat':
+            return {'arg' + str(i) : params[i] for i in range(0, len(list(params)))}
+
     def _format(self, stmt):
         if self._style == 'qmark':
             return stmt
@@ -194,6 +205,12 @@ class Database():
             cnt = 1
             while '?' in stmt:
                 stmt = stmt.replace('?', ':' + str(cnt), 1)
+                cnt = cnt + 1
+            return stmt
+        elif self._style == 'pyformat':
+            cnt = 0
+            while '?' in stmt:
+                stmt = stmt.replace('?', '%(arg' + str(cnt) + ')s', 1)
                 cnt = cnt + 1
             return stmt
 
