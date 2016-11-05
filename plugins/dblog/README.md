@@ -38,10 +38,19 @@ The `log` table contains the following columns:
 
 If you want to log to a given database system you need to install the right
 Python DB API 2 implementation of the database and register them by adding it
-to the `smarthome.conf` configuration file.
+to the `smarthome.conf` configuration file. For example using SQLite and a
+MySQL driver you may add the following (requires PyMySQL module):
+
+<pre>
+db = sqlite:sqlite3 | mysql:pymysql
+</pre>
 
 After this you can use them by referencing the alias name of the database
-registration.
+registration. In the example above the alias is "sqlite" or "mysql".
+
+**Important**: This plugin supports the following drivers use one of the
+following format (or parameter) styles: qmark, format, numeric and pyformat.
+Make sure the installed module supports one of this!
 
 # Configuration
 
