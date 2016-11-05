@@ -52,6 +52,12 @@ registration. In the example above the alias is "sqlite" or "mysql".
 following format (or parameter) styles: qmark, format, numeric and pyformat.
 Make sure the installed module supports one of this!
 
+Tested drivers (other may work too):
+   * SQLite
+      * Standard [driver](https://docs.python.org/3/library/sqlite3.html#module-sqlite3) from Python
+   * MySQL
+      * [PyMySQL](http://pymysql.readthedocs.io/)
+
 # Configuration
 
 ## plugin.conf
