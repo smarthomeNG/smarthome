@@ -25,12 +25,13 @@ import functools
 import time
 import threading
 import lib.db
-from urllib.parse import urlparse, parse_qs
 
-logger = logging.getLogger('')
+from lib.model.smartplugin import SmartPlugin
 
 
-class DbLog():
+class DbLog(SmartPlugin):
+    ALLOW_MULTIINSTANCE = True
+    PLUGIN_VERSION = '1.3.0'
 
     # SQL queries: {item} = item table name, {log} = log table name
     # time, item_id, val_str, val_num, val_bool, changed
@@ -59,7 +60,7 @@ class DbLog():
         smarthome.scheduler.add('DbLog dump ' + name + ("" if prefix == "" else " [" + prefix + "]"), self._dump, cycle=self._dump_cycle, prio=5)
 
     def parse_item(self, item):
-        if 'dblog' in item.conf and item.conf['dblog'] == self._name:
+        if self.has_iattr(item.conf, 'dblog') and self.get_iattr_value(item.conf, 'dblog') == self._name:
             self._buffer[item] = []
             item.series = functools.partial(self._series, item=item.id())
             item.db = functools.partial(self._single, item=item.id())
@@ -77,7 +78,7 @@ class DbLog():
         self._db.close()
 
     def update_item(self, item, caller=None, source=None, dest=None):
-        acl = 'rw' if 'dblog_acl' not in item.conf else item.conf['dblog_acl']
+        acl = 'rw' if not self.has_iattr(item.conf, 'dblog_acl') else self.get_iattr_value(item.conf, 'dblog_acl')
         if acl is 'rw':
             start = self._timestamp(item.prev_change())
             end = self._timestamp(item.last_change())
@@ -179,10 +180,10 @@ class DbLog():
 
     def _dump(self, finalize=False, items=None):
         if self._dump_lock.acquire(timeout=60) == False:
-            logger.warning('Skipping dump, since other dump running!')
+            self.logger.warning('Skipping dump, since other dump running!')
             return
 
-        logger.debug('Starting dump')
+        self.logger.debug('Starting dump')
 
         if items == None:
             self._buffer_lock.acquire()
@@ -199,7 +200,7 @@ class DbLog():
 
                 # Test connectivity
                 if self._db.verify(5) == 0:
-                    logger.error("DbLog: Connection not recovered, skipping dump");
+                    self.logger.error("DbLog: Connection not recovered, skipping dump");
                     self._dump_lock.release()
                     return
 
@@ -212,9 +213,9 @@ class DbLog():
                         self._buffer[item] = tuples
                     self._buffer_lock.release()
                     if finalize:
-                        logger.error("DbLog: can't dump {} items due to fail to acquire lock!".format(len(self._buffer)))
+                        self.logger.error("DbLog: can't dump {} items due to fail to acquire lock!".format(len(self._buffer)))
                     else:
-                        logger.error("DbLog: can't dump {} items due to fail to acquire lock - will try on next dump".format(len(self._buffer)))
+                        self.logger.error("DbLog: can't dump {} items due to fail to acquire lock - will try on next dump".format(len(self._buffer)))
                     self._dump_lock.release()
                     return
 
@@ -240,7 +241,7 @@ class DbLog():
                     id = self.id(item, cur=cur)
 
                     # Dump tuples
-                    logger.debug('Dumping {}/{} with {} values'.format(item.id(), id, len(tuples)))
+                    self.logger.debug('Dumping {}/{} with {} values'.format(item.id(), id, len(tuples)))
 
                     for t in tuples:
                         if len(self.readLog(id, t[0], cur)):
@@ -254,10 +255,10 @@ class DbLog():
 
                     self._db.commit()
                 except Exception as e:
-                    logger.warning("DbLog: problem updating {}: {}".format(item.id(), e))
+                    self.logger.warning("DbLog: problem updating {}: {}".format(item.id(), e))
                     self._db.rollback()
                 self._db.release()
-        logger.debug('Dump completed')
+        self.logger.debug('Dump completed')
         self._dump_lock.release()
 
     def _series(self, func, start, end='now', count=100, ratio=1, update=False, step=None, sid=None, item=None):
@@ -321,7 +322,7 @@ class DbLog():
         elif func == 'on':
             query = "SELECT ROUND(SUM(val_bool * duration) / SUM(duration), 2)" + where
         else:
-            logger.warning("Unknown export function: {0}".format(func))
+            self.logger.warning("Unknown export function: {0}".format(func))
             return
         _item = self._sh.return_item(item)
         if self._buffer[_item] != []:
@@ -333,10 +334,10 @@ class DbLog():
 
     def _fetch(self, query, item, params):
         if self._db.verify(5) == 0:
-            logger.error("DbLog: Connection not recovered")
+            self.logger.error("DbLog: Connection not recovered")
             return None
         if not self._db.lock(300):
-            logger.error("DbLog: can't fetch data due to fail to acquire lock")
+            self.logger.error("DbLog: can't fetch data due to fail to acquire lock")
             return None
         tuples = None
         try:
@@ -345,9 +346,9 @@ class DbLog():
                 params = [id[0] if p == '<id>' else p for p in params]
                 tuples = self._db.fetchall(query, tuple(params))
         except Exception as e:
-            logger.warning("DbLog: Error fetching data for {}: {}".format(item, e))
+            self.logger.warning("DbLog: Error fetching data for {}: {}".format(item, e))
         self._db.release()
-        logger.debug("Fetch {} (args {}): {}".format(query, params, tuples))
+        self.logger.debug("Fetch {} (args {}): {}".format(query, params, tuples))
         return None if tuples is None else list(tuples)
 
     def _parse_ts(self, frame):
@@ -375,7 +376,7 @@ class DbLog():
         try:
             ts = ts - int(float(frame) * fac)
         except:
-            logger.warning("DbLog: Unknown time frame '{0}'".format(frame))
+            self.logger.warning("DbLog: Unknown time frame '{0}'".format(frame))
         return ts
 
     def _timestamp(self, dt):
