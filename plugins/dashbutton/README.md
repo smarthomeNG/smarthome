@@ -11,24 +11,30 @@
 
 ### 1. Install scapy
 
-```shell
-sudo pip3 install scapy-python3
-```
+ ```shell
+ sudo pip3 install scapy-python3
+ ```
 
 ### 2. Install tcpdump
 
-```shell
-sudo apt-get install tcpdump
-```
+ ```shell
+ sudo apt-get install tcpdump
+ ```
 
 ### 3. Give unprivileged user access to sniff packets
 
-```shell
-setcap cap_net_raw=eip /usr/bin/python3.4
-setcap cap_net_raw=eip /usr/sbin/tcpdump
-```
-Change the python and/or the path to the tcpdump binary to your needs.
-
+ ```shell
+ sudo setcap cap_net_raw=eip /usr/bin/python3.4
+ sudo setcap cap_net_raw=eip /usr/sbin/tcpdump
+ ```
+ Change the python and/or the path to the tcpdump binary to your needs. If you're using the pre-configured 
+ [Smarthome-NG image from Onkelandy](https://knx-user-forum.de/forum/supportforen/smarthome-py/979095-smarthomeng-image-file#post979095)
+ the correct command command should be
+ 
+ ```shell
+ sudo setcap cap_net_raw=eip /usr/local/bin/python3.5 
+ ```
+ 
 
 ## Item setup
 
@@ -74,7 +80,6 @@ Change the python and/or the path to the tcpdump binary to your needs.
             knx_dpt = 1
             knx_send = 1/1/1
             knx_listen = 1/1/1
-            knx_init = 1/1/3
             dashbutton_mac = cc:66:de:dd:55:11 | xx:xx:xx:xx:xx:01 | xx:xx:xx:xx:xx:02
             dashbutton_mode = 'flip'
          
@@ -88,7 +93,6 @@ Change the python and/or the path to the tcpdump binary to your needs.
             knx_dpt = 5
             knx_send = 1/2/1
             knx_listen = 1/2/1
-            knx_init = 1/2/3
             dashbutton_mac = cc:66:de:dd:55:11
             dashbutton_mode = 'value'
             dashbutton_value = 30
@@ -100,7 +104,6 @@ Change the python and/or the path to the tcpdump binary to your needs.
             knx_dpt = 5
             knx_send = 1/2/1
             knx_listen = 1/2/1
-            knx_init = 1/2/3
             dashbutton_mac = dd:11:12:55:55:22 | cc:66:de:dd:55:11
             dashbutton_mode = 'value'
             dashbutton_value = 30|10|20|0
