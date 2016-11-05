@@ -263,7 +263,7 @@ class DbLog():
     def _series(self, func, start, end='now', count=100, ratio=1, update=False, step=None, sid=None, item=None):
         init = not update
         if sid is None:
-            sid = item + '|' + func + '|' + start + '|' + end
+            sid = item + '|' + func + '|' + start + '|' + end  + '|' + str(count)
         istart = self._parse_ts(start)
         iend = self._parse_ts(end)
         if step is None:
