@@ -340,9 +340,10 @@ class DbLog():
             return None
         tuples = None
         try:
-            id = self._db.fetchone(self._prepare("SELECT id FROM item where name = ?"), (item,))
-            params = [id[0] if p == '<id>' else p for p in params]
-            tuples = self._db.fetchall(query, tuple(params))
+            id = self.id(item, create=False)
+            if id is not None:
+                params = [id[0] if p == '<id>' else p for p in params]
+                tuples = self._db.fetchall(query, tuple(params))
         except Exception as e:
             logger.warning("DbLog: Error fetching data for {}: {}".format(item, e))
         self._db.release()
