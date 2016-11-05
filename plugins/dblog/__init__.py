@@ -35,12 +35,12 @@ class DbLog():
     # SQL queries: {item} = item table name, {log} = log table name
     # time, item_id, val_str, val_num, val_bool, changed
     _setup = {
-      '1' : "CREATE TABLE {log} (time BIGINT, item_id INTEGER, duration BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN, changed BIGINT);",
-      '2' : "CREATE TABLE {item} (id INTEGER, name varchar(255), time BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN, changed BIGINT);",
-      '3' : "CREATE UNIQUE INDEX {log}_{item}_id_time ON {log} (item_id, time);",
-      '4' : "CREATE INDEX {log}_{item}_id_changed ON {log} (item_id, changed);",
-      '5' : "CREATE UNIQUE INDEX {item}_id ON {item} (id);",
-      '6' : "CREATE INDEX {item}_name ON {item} (name);"
+      '1' : ["CREATE TABLE {log} (time BIGINT, item_id INTEGER, duration BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN, changed BIGINT);", "DROP TABLE {log}"],
+      '2' : ["CREATE TABLE {item} (id INTEGER, name varchar(255), time BIGINT, val_str TEXT, val_num REAL, val_bool BOOLEAN, changed BIGINT);", "DROP TABLE {item}"],
+      '3' : ["CREATE UNIQUE INDEX {log}_{item}_id_time ON {log} (item_id, time);", "DROP INDEX {log}_{item}_id_time"],
+      '4' : ["CREATE INDEX {log}_{item}_id_changed ON {log} (item_id, changed);", "DROP INDEX {log}_{item}_id_changed"],
+      '5' : ["CREATE UNIQUE INDEX {item}_id ON {item} (id);", "DROP INDEX {item}_id;"],
+      '6' : ["CREATE INDEX {item}_name ON {item} (name);", "DROP INDEX {item}_name;"]
     }
 
     def __init__(self, smarthome, db, connect, name= "default", prefix="", cycle=60):
@@ -54,7 +54,7 @@ class DbLog():
 
         self._db = lib.db.Database(("" if prefix == "" else prefix.capitalize() + "_") + "DbLog", self._sh.dbapi(db), connect)
         self._db.connect()
-        self._db.setup({i: self._prepare(query) for i, query in self._setup.items()})
+        self._db.setup({i: [self._prepare(query[0]), self._prepare(query[1])] for i, query in self._setup.items()})
 
         smarthome.scheduler.add('DbLog dump ' + name + ("" if prefix == "" else " [" + prefix + "]"), self._dump, cycle=self._dump_cycle, prio=5)
 

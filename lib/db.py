@@ -96,7 +96,7 @@ class Database():
         try:
             version, = self.fetchone("SELECT MAX(version) FROM " + version_table + ";", cur=cur)
         except Exception as e:
-            self.execute("CREATE TABLE " + version_table + "(version NUMERIC, updated BIGINT)", cur=cur)
+            self.execute("CREATE TABLE " + version_table + "(version NUMERIC, updated BIGINT, rollout TEXT, rollback TEXT)", cur=cur)
             version, = self.fetchone("SELECT MAX(version) FROM " + version_table + ";", cur=cur)
         if version == None:
             version = 0
@@ -104,11 +104,11 @@ class Database():
         for v in sorted(queries.keys()):
             if float(v) > version:
                 logger.info("Database [{}]: Upgrading to version {}".format(self._name, v))
-                self.execute(queries[v], cur=cur)
+                self.execute(queries[v][0], cur=cur)
 
                 dt = datetime.datetime.utcnow()
                 ts = int(time.mktime(dt.timetuple()) * 1000 + dt.microsecond / 1000)
-                self.execute("INSERT INTO " + version_table + "(version, updated) VALUES(?, ?);", (v, ts), cur)
+                self.execute("INSERT INTO " + version_table + "(version, updated, rollout, rollback) VALUES(?, ?, ?, ?);", (v, ts, queries[v][0], queries[v][1]), cur)
 
         self.commit()
         cur.close()
