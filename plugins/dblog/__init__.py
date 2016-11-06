@@ -30,8 +30,8 @@ import lib.db
 
 from lib.model.smartplugin import SmartPlugin
 
-
 class DbLog(SmartPlugin):
+
     ALLOW_MULTIINSTANCE = True
     PLUGIN_VERSION = '1.3.0'
 
@@ -46,10 +46,10 @@ class DbLog(SmartPlugin):
       '6' : ["CREATE INDEX {item}_name ON {item} (name);", "DROP INDEX {item}_name;"]
     }
 
-    def __init__(self, smarthome, db, connect, name= "default", prefix="", cycle=60):
+    def __init__(self, smarthome, db, connect, prefix="", cycle=60):
         self._sh = smarthome
         self._dump_cycle = int(cycle)
-        self._name = name
+        self._name = self.get_instance_name()
         self._tables = {table: table if prefix == "" else prefix + "_" + table for table in ["log", "item"]}
         self._buffer = {}
         self._buffer_lock = threading.Lock()
@@ -59,10 +59,10 @@ class DbLog(SmartPlugin):
         self._db.connect()
         self._db.setup({i: [self._prepare(query[0]), self._prepare(query[1])] for i, query in self._setup.items()})
 
-        smarthome.scheduler.add('DbLog dump ' + name + ("" if prefix == "" else " [" + prefix + "]"), self._dump, cycle=self._dump_cycle, prio=5)
+        smarthome.scheduler.add('DbLog dump ' + self._name + ("" if prefix == "" else " [" + prefix + "]"), self._dump, cycle=self._dump_cycle, prio=5)
 
     def parse_item(self, item):
-        if self.has_iattr(item.conf, 'dblog') and self.get_iattr_value(item.conf, 'dblog') == self._name:
+        if self.has_iattr(item.conf, 'dblog'):
             self._buffer[item] = []
             item.series = functools.partial(self._series, item=item.id())
             item.db = functools.partial(self._single, item=item.id())
