@@ -110,7 +110,7 @@ class DbLog(SmartPlugin):
 
     def readItem(self, id, cur=None):
         params = [id]
-        return self._db.fetchone(self._prepare("SELECT * from {item} WHERE id = ?;"), tuple(params), cur)
+        return self._db.fetchone(self._prepare("SELECT id, name, time, val_str, val_num, val_bool, changed from {item} WHERE id = ?;"), tuple(params), cur)
 
     def insertLog(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
         params = [time, id, duration]
@@ -128,7 +128,7 @@ class DbLog(SmartPlugin):
 
     def readLog(self, id, time, cur = None):
         params = [id, time]
-        return self._db.fetchall(self._prepare("SELECT * FROM {log} WHERE item_id = ? AND time = ?;"), tuple(params), cur)
+        return self._db.fetchall(self._prepare("SELECT time, item_id, duration, val_str, val_num, val_bool, changed FROM {log} WHERE item_id = ? AND time = ?;"), tuple(params), cur)
 
     def deleteLog(self, id, time = None, time_start = None, time_end = None, changed = None, changed_start = None, changed_end = None, cur = None):
         params = [id]
