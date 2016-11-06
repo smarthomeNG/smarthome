@@ -312,7 +312,7 @@ class DbLog(SmartPlugin):
         _item = self._sh.return_item(item)
         if self._buffer[_item] != []:
             self._dump(items=[_item])
-        tuples = self._fetch(query, item, ['<id>', '<id>', istart, iend, '<id>', istart, step])
+        tuples = self._fetch(query, _item, ['<id>', '<id>', istart, iend, '<id>', istart, step])
         if tuples:
             if istart > tuples[0][0]:
                 tuples[0] = (istart, tuples[0][1])
@@ -350,7 +350,7 @@ class DbLog(SmartPlugin):
         _item = self._sh.return_item(item)
         if self._buffer[_item] != []:
             self._dump(items=[_item])
-        tuples = self._fetch(query, item, ['<id>', '<id>', start, end, '<id>', start])
+        tuples = self._fetch(query, _item, ['<id>', '<id>', start, end, '<id>', start])
         if tuples is None:
             return
         return tuples[0][0]
@@ -365,9 +365,8 @@ class DbLog(SmartPlugin):
         tuples = None
         try:
             id = self.id(item, create=False)
-            if id is not None:
-                params = [id[0] if p == '<id>' else p for p in params]
-                tuples = self._db.fetchall(query, tuple(params))
+            params = [id if p == '<id>' else p for p in params]
+            tuples = self._db.fetchall(query, tuple(params))
         except Exception as e:
             self.logger.warning("DbLog: Error fetching data for {}: {}".format(item, e))
         self._db.release()
