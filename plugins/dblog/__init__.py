@@ -67,6 +67,19 @@ class DbLog(SmartPlugin):
             item.series = functools.partial(self._series, item=item.id())
             item.db = functools.partial(self._single, item=item.id())
             item.dblog = self
+
+            cur = self._db.cursor()
+            id = self.id(item, create=False, cur=cur)
+            cache = None if id is None else self.readItem(id, cur=cur)
+            if cache is not None:
+                last_change = cache[2]
+                value = self._item_value_tuple_rev(item.type(), cache[3:6])
+                last_change = self._datetime(last_change)
+                prev_change = self._db.fetchone(self._prepare('SELECT time from {log} WHERE item_id = ? ORDER BY time DESC LIMIT 1'), (id,))
+                if prev_change is not None:
+                    prev_change = self._datetime(prev_change[0])
+                    item.set(value, 'DbLog', prev_change=prev_change, last_change=last_change)
+            cur.close()
             return self.update_item
         else:
             return None
@@ -173,6 +186,14 @@ class DbLog(SmartPlugin):
            val_bool = None
 
         return [val_str, val_num, val_bool]
+
+    def _item_value_tuple_rev(self, item_type, item_val_tuple):
+        if item_type == 'num':
+           return float(item_val_tuple[1])
+        elif item_type == 'bool':
+           return bool(item_val_tuple[2])
+        else:
+           return str(item_val_tuple[0])
 
     def _datetime(self, ts):
         return datetime.datetime.fromtimestamp(ts / 1000, self._sh.tzinfo())
