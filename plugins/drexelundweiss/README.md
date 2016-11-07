@@ -20,8 +20,8 @@ The plugin detects the connected device type automatically:
    * aerosmart mono
    * aerosmart xls
    * termosmart sc
-   * X²
-   * X² Plus
+   * X2
+   * X2 Plus
 
 
 Configuration
@@ -37,10 +37,14 @@ plugin.conf
 #   Busmonitor = 1
 #   LU_ID = 130
 #   WP_ID = 140
+#   device = 14
+#   retrylimit = 100
 </pre>
 
 You have to adapt the tty to your local environment and change LU_ID and WP_ID if not D&W default is used.
 Busmonitor mode will output all activity on Service Interface to smarthome.py log if started in debug mode, default is Busmonitor off.
+Define a device number (see plugin code for correct numbers) in case the initialztation process wasn't successful (read timeout, etc.)
+Define a limit on how often the plugin should try to connect and read the data. Set to 0 if the plugin should not retry at all.
 
 items.conf
 --------------
