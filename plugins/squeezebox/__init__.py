@@ -20,6 +20,7 @@
 #########################################################################
 
 import logging
+from lib.model.smartplugin import SmartPlugin
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -28,8 +29,9 @@ import re
 
 logger = logging.getLogger('Squeezebox')
 
-
-class Squeezebox(lib.connection.Client):
+class Squeezebox(SmartPlugin,lib.connection.Client):
+    ALLOW_MULTIINSTANCE = False
+    PLUGIN_VERSION = "1.2.0"
 
     def __init__(self, smarthome, host='127.0.0.1', port=9090):
         lib.connection.Client.__init__(self, host, port, monitor=True)
@@ -46,20 +48,23 @@ class Squeezebox(lib.connection.Client):
         if '<playerid>' in item.conf[attr]:
             # try to get from parent object
             parent_item = item.return_parent()
+            grandparent_item = parent_item.return_parent()
             if (parent_item is not None) and ('squeezebox_playerid' in parent_item.conf) and self._check_mac(parent_item.conf['squeezebox_playerid']):
                 item.conf[attr] = item.conf[attr].replace('<playerid>', parent_item.conf['squeezebox_playerid'])
+            elif (grandparent_item is not None) and ('squeezebox_playerid' in grandparent_item.conf) and self._check_mac(grandparent_item.conf['squeezebox_playerid']):
+                item.conf[attr] = item.conf[attr].replace('<playerid>', grandparent_item.conf['squeezebox_playerid'])
             else:
-                logger.warning("squeezebox: could not resolve playerid for {0} from parent item {1}".format(item, parent_item))
+                self.logger.warning("squeezebox: could not resolve playerid for {0} from parent item {1} or grandparent item {2}".format(item, parent_item, grandparent_item))
                 return None
         return item.conf[attr]
 
     def parse_item(self, item):
-        if 'squeezebox_recv' in item.conf:
+        if self.has_iattr(item.conf, 'squeezebox_recv'):
             cmd = self._resolv_full_cmd(item, 'squeezebox_recv')
             if (cmd is None):
                 return None
 
-            logger.debug("squeezebox: {0} receives updates by \"{1}\"".format(item, cmd))
+            self.logger.debug("squeezebox: {0} receives updates by \"{1}\"".format(item, cmd))
             if not cmd in self._val:
                 self._val[cmd] = {'items': [item], 'logics': []}
             else:
@@ -71,7 +76,7 @@ class Squeezebox(lib.connection.Client):
                 if (cmd is None):
                     return None
 
-                logger.debug("squeezebox: {0} is initialized by \"{1}\"".format(item, cmd))
+                self.logger.debug("squeezebox: {0} is initialized by \"{1}\"".format(item, cmd))
                 if not cmd in self._val:
                     self._val[cmd] = {'items': [item], 'logics': []}
                 else:
@@ -81,33 +86,33 @@ class Squeezebox(lib.connection.Client):
             if not cmd in self._init_cmds:
                 self._init_cmds.append(cmd)
 
-        if 'squeezebox_send' in item.conf:
+        if self.has_iattr(item.conf, 'squeezebox_send'):
             cmd = self._resolv_full_cmd(item, 'squeezebox_send')
             if (cmd is None):
                 return None
-            logger.debug("squeezebox: {0} is send to \"{1}\"".format(item, cmd))
+            self.logger.debug("squeezebox: {0} is send to \"{1}\"".format(item, cmd))
             return self.update_item
         else:
             return None
 
     def parse_logic(self, logic):
-        if 'squeezebox_playerid' in logic.conf:
-            playerid = logic.conf['squeezebox_playerid'];
+        if self.has_iattr(logic.conf, 'squeezebox_playerid'):
+            playerid = self.get_iattr_value(logic.conf, 'squeezebox_playerid')            
             if not self._check_mac(playerid):
-                logger.warning("squeezebox: invalid playerid for {0}".format(logic.name))
+                self.logger.warning("squeezebox: invalid playerid for {0}".format(logic.name))
                 return None
         else:
             playerid = 'playerid_not_set'
-        if 'squeezebox_recv' in logic.conf:
-            cmds = logic.conf['squeezebox_recv']
+        if self.has_iattr(logic.conf, 'squeezebox_recv'):
+            cmds = self.get_iattr_value(logic.conf, 'squeezebox_recv') 
             if isinstance(cmds, str):
                 cmds = [cmds, ]
             for cmd in cmds:
                 cmd = cmd.replace('<playerid>', playerid)
                 if not self._check_mac(cmd.split(maxsplit=1)[0]):
-                    logger.warning("squeezebox: no valid playerid in \"{}\"".format(cmd))
+                    self.logger.warning("squeezebox: no valid playerid in \"{}\"".format(cmd))
                     continue
-                logger.debug("squeezebox: {} will be triggered by \"{}\"".format(logic.name, cmd))
+                self.logger.debug("squeezebox: {} will be triggered by \"{}\"".format(logic.name, cmd))
                 if not cmd in self._val:
                     self._val[cmd] = {'items': [], 'logics': [logic]}
                 else:
@@ -145,29 +150,22 @@ class Squeezebox(lib.connection.Client):
                        for cmd_str in cmd))
 
     def _send(self, cmd):
-        logger.debug("squeezebox: Sending request: {0}".format(cmd))
+        self.logger.debug("squeezebox: Sending request: {0}".format(cmd))
         self.send(bytes(cmd + '\r\n', 'utf-8'))
 
     def found_terminator(self, response):
-        # logger.debug("squeezebox: #####################################")
-        # print(type(response))
-        # print(response.decode('iso-8859-1').encode('utf-8').decode('unicode-escape'))
-        # print(urllib.parse.unquote(response.decode('iso-8859-1')))
-        # print(urllib.parse.unquote(response.decode('unicode-escape')))
-        #response = response.decode('iso-8859-1')
-        # print(type(response))
-        #logger.debug("squeezebox: Raw: {0}".format(response))
+        #self.logger.debug("squeezebox: Raw: {0}".format(response))
         data = [urllib.parse.unquote(data_str)
                 for data_str in response.decode().split()]
-        logger.debug("squeezebox: Got: {0}".format(data))
+        self.logger.debug("squeezebox: Got: {0}".format(data))
 
         try:
             if (data[0].lower() == 'listen'):
                 value = int(data[1])
                 if (value == 1):
-                    logger.info("squeezebox: Listen-mode enabled")
+                    self.logger.info("squeezebox: Listen-mode enabled")
                 else:
-                    logger.info("squeezebox: Listen-mode disabled")
+                    self.logger.info("squeezebox: Listen-mode disabled")
 
             if self._check_mac(data[0]):
                 if (data[1] == 'play'):
@@ -209,6 +207,14 @@ class Squeezebox(lib.connection.Client):
                     if (data[2] == 'jump') and (len(data) == 4):
                         self._update_items_with_data(
                             [data[0], 'playlist index', data[3]])
+                    elif (data[2] == 'stop'):
+                        self._update_items_with_data([data[0], 'play', '0'])
+                        self._update_items_with_data([data[0], 'stop', '1'])
+                        self._update_items_with_data([data[0], 'pause', '0'])
+                    elif (data[2] == 'play'):
+                        self._update_items_with_data([data[0], 'play', '1'])
+                        self._update_items_with_data([data[0], 'stop', '0'])
+                        self._update_items_with_data([data[0], 'pause', '0'])
                     elif (data[2] == 'newsong'):
                         if (len(data) >= 4):
                             self._update_items_with_data(
@@ -234,9 +240,9 @@ class Squeezebox(lib.connection.Client):
                 return
             self._update_items_with_data(data)
         except Exception as e:
-            logger.error(
+            self.logger.error(
                 "squeezebox: exception while parsing \'{0}\'".format(data))
-            logger.error("squeezebox: exception: {}".format(e))
+            self.logger.error("squeezebox: exception: {}".format(e))
 
     def _update_items_with_data(self, data):
         cmd = ' '.join(data_str for data_str in data[:-1])
@@ -254,13 +260,21 @@ class Squeezebox(lib.connection.Client):
         self._send('listen 1')
         if self._init_cmds != []:
             if self.connected:
-                logger.debug('squeezebox: init read')
+                self.logger.debug('squeezebox: init read')
                 for cmd in self._init_cmds:
                     self._send(cmd + ' ?')
 
     def run(self):
         self.alive = True
+        self.logger.debug("run method called")
 
     def stop(self):
         self.alive = False
+        self.logger.debug("stop method called")
         self.close()
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG, format='%(relativeCreated)6d %(threadName)s %(message)s')
+    # todo
+    # change PluginClassName appropriately
+    PluginClassName(Squeezebox).run()
