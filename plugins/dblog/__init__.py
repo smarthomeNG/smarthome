@@ -175,15 +175,15 @@ class DbLog(SmartPlugin):
         if item_type == 'num':
            val_str = None
            val_num = float(item_val)
-           val_bool = None
+           val_bool = int(bool(item_val))
         elif item_type == 'bool':
            val_str = None
            val_num = None
-           val_bool = bool(item_val)
+           val_bool = int(bool(item_val))
         else:
            val_str = str(item_val)
            val_num = None
-           val_bool = None
+           val_bool = int(bool(item_val))
 
         return [val_str, val_num, val_bool]
 
