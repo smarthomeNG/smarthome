@@ -76,7 +76,7 @@ class DbLog(SmartPlugin):
                 value = self._item_value_tuple_rev(item.type(), cache[3:6])
                 last_change = self._datetime(last_change)
                 prev_change = self._db.fetchone(self._prepare('SELECT time from {log} WHERE item_id = ? ORDER BY time DESC LIMIT 1'), (id,))
-                if prev_change is not None:
+                if value is not None and prev_change is not None:
                     prev_change = self._datetime(prev_change[0])
                     item.set(value, 'DbLog', prev_change=prev_change, last_change=last_change)
             cur.close()
@@ -189,11 +189,11 @@ class DbLog(SmartPlugin):
 
     def _item_value_tuple_rev(self, item_type, item_val_tuple):
         if item_type == 'num':
-           return float(item_val_tuple[1])
+           return None if item_val_tuple[1] is None else float(item_val_tuple[1])
         elif item_type == 'bool':
-           return bool(item_val_tuple[2])
+           return None if item_val_tuple[2] is None else bool(int(item_val_tuple[2]))
         else:
-           return str(item_val_tuple[0])
+           return None if item_val_tuple[0] is None else str(item_val_tuple[0])
 
     def _datetime(self, ts):
         return datetime.datetime.fromtimestamp(ts / 1000, self._sh.tzinfo())
