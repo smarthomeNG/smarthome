@@ -76,9 +76,11 @@ class Plugins():
                     if p.get_instance_name() == instance:
                         for t in self._threads:
                             if t.plugin == p:
-                                prev_plugin = t.name
-                                break
-                        logger.warning("Plugin '{}' uses same class '{}' and instance '{}' as plugin '{}'".format(plugin, p.__class__.__name__, 'default' if instance == '' else instance, prev_plugin))
+                                if t.plugin.__class__.__name__ == classname:
+                                    prev_plugin = t.plugin.__class__.__name__
+                                    logger.warning("Plugin '{}' uses same class '{}' and instance '{}' as plugin '{}'".format(plugin, p.__class__.__name__, 'default' if instance == '' else instance, prev_plugin))
+                                    break
+
                 elif hasattr(p, '_name'):
                     if p._name == classname:
                         # if already a plugin uses this class, we need to check for instance only if plugin is a smartplugin
