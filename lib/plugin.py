@@ -69,25 +69,20 @@ class Plugins():
                 if instance == 'default': 
                     instance = ''
 
-            # issue a warning if there is already a plugin that has the same classname
-            # and does not have another instance
+            # give a warning if either a classic plugin uses the same class twice
+            # or if a SmartPlugin uses the same class and instance twice (due to a copy & paste error)
             for p in self._plugins:
                 if isinstance(p, SmartPlugin):
                     if p.get_instance_name() == instance:
                         for t in self._threads:
                             if t.plugin == p:
                                 if t.plugin.__class__.__name__ == classname:
-                                    prev_plugin = t.plugin.__class__.__name__
+                                    prev_plugin = t._name
                                     logger.warning("Plugin '{}' uses same class '{}' and instance '{}' as plugin '{}'".format(plugin, p.__class__.__name__, 'default' if instance == '' else instance, prev_plugin))
                                     break
 
-                elif hasattr(p, '_name'):
-                    if p._name == classname:
-                        # if already a plugin uses this class, we need to check for instance only if plugin is a smartplugin
-                        # otherwise
-                       logger.warning("Multiple classic plugin instances of class '{}' detected".format(classname))
-                else:
-                    logger.error("Plugin '{}' does not have a name!".format(p))
+                elif p.__class__.__name__ == classname:
+                    logger.warning("Multiple classic plugin instances of class '{}' detected".format(classname))
 
             try:
                 plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance)
