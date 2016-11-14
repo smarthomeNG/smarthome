@@ -31,7 +31,7 @@ import fcntl
 import struct
 import requests
 
-EXPECTED_BROKER_VERSION = "0.8.1"
+EXPECTED_BROKER_VERSION = "0.8.2"
 logger = logging.getLogger('')
 sonos_speaker = {}
 
@@ -503,7 +503,7 @@ class Sonos():
         return self._send_cmd(SonosCommand.refresh_media_library(display_option))
 
     def version(self):
-        return "v0.8.1\t2016-11-14"
+        return "v0.8.2\t2016-11-14"
 
     def discover(self):
         return self._send_cmd(SonosCommand.discover())
@@ -956,4 +956,3 @@ def get_lan_ip_fallback():
     except Exception as err:
         logger.critical(err)
         return None
-

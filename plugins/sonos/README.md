@@ -3,10 +3,14 @@ Smarthome.py framework (https://github.com/mknx/smarthome).
 
 ##Release
 
+v0.8.2  (2016-11-14)
+
+    -- change expected Sonos Broker version to 0.8.2
+ 
 v0.8.1  (2016-11-14)
 
     -- switching versioning to the current Sonos Broker version
-    -- change exepcted Sonos Broker version to 0.8.1
+    -- change expected Sonos Broker version to 0.8.1
     
 v1.8    (2016-11-11)
     
