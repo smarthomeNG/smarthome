@@ -24,6 +24,7 @@ import minimalmodbus
 from serial import SerialException
 import serial
 import threading
+from ctypes import c_short
 
 logger = logging.getLogger('Systemair')
 
@@ -84,7 +85,7 @@ class Systemair():
                 if start_register_heater in self._update:
                     for item in self._update[start_register_heater]['items']:
                         try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_heater))
+                            item(c_short(register).value, 'systemair_value_from_bus', "Reg {}".format(start_register_heater))
                         except Exception as e:
                             logger.error("Modbus: Exception when updating {} {}".format(item, e))
                 start_register_heater += 1
