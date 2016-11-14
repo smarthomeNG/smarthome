@@ -3,7 +3,12 @@ Smarthome.py framework (https://github.com/mknx/smarthome).
 
 ##Release
 
-v1.8  (2016-11-11)
+v0.8.1  (2016-11-14)
+
+    -- switching versioning to the current Sonos Broker version
+    -- change exepcted Sonos Broker version to 0.8.1
+    
+v1.8    (2016-11-11)
     
     -- ATTENTION: commands 'get_playlist' and 'set_playlist' removed  and replaced by 'sonos_playlists' and
        'load_sonos_playlist'

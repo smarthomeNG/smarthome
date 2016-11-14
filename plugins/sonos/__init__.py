@@ -31,7 +31,7 @@ import fcntl
 import struct
 import requests
 
-EXPECTED_BROKER_VERSION = 0.8
+EXPECTED_BROKER_VERSION = "0.8.1"
 logger = logging.getLogger('')
 sonos_speaker = {}
 
@@ -107,7 +107,7 @@ class Sonos():
         broker_version = self._send_cmd(SonosCommand.sonos_broker_version())
         logger.debug("Sonos broker version: {version}".format(version=broker_version))
         try:
-            if EXPECTED_BROKER_VERSION != float(broker_version):
+            if EXPECTED_BROKER_VERSION != broker_version:
                 logger.warning("This plugin is desgined to work with Sonos Broker version {version}. "
                                "Your plugin version is probably out-of-date or too new. "
                                "Please update your plugin and/or the Sonos Broker Server".format(
@@ -503,7 +503,7 @@ class Sonos():
         return self._send_cmd(SonosCommand.refresh_media_library(display_option))
 
     def version(self):
-        return "v1.8\t2016-11-11"
+        return "v0.8.1\t2016-11-14"
 
     def discover(self):
         return self._send_cmd(SonosCommand.discover())
