@@ -76,7 +76,7 @@ class TestDb(unittest.TestCase):
 
     def test_release_not_locked(self):
         db = self.db()
-        with self.assertRaisesRegex(RuntimeError, 'release unlocked lock'):
+        with self.assertRaisesRegex(Exception, 'release unlocked lock'):
 	        db.release()
 
     def test_commit(self):
