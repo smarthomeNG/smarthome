@@ -24,6 +24,7 @@ import logging
 import os
 import pickle
 import threading
+import math
 
 logger = logging.getLogger(__name__)
 
@@ -412,7 +413,7 @@ class Item():
 
     def add_method_trigger(self, method):
         self.__methods_to_trigger.append(method)
-    
+
     def remove_method_trigger(self, method):
         self.__methods_to_trigger.remove(method)
 
