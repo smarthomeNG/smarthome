@@ -53,7 +53,7 @@ class Database():
     # Supported formatting styles
     _styles = ('qmark', 'format', 'numeric', 'pyformat')
 
-    def __init__(self, name, dbapi, connect):
+    def __init__(self, name, dbapi, connect, format='pyformat'):
         """Create a new database instance
 
         The 'name' parameter identifies the name for the database access.
@@ -70,8 +70,12 @@ class Database():
         """
         self._name = name
         self._dbapi = dbapi
+        self._format_input = format
         self._connected = False
         self._conn = None
+
+        if self._format_input not in self._styles:
+            raise Exception("Database [{}]: SQL format style {} not supported (only {})".format(self._name, self._format_input, self._styles))
 
         self._params = {}
         if type(connect) is str:
@@ -91,9 +95,9 @@ class Database():
         elif type(connect) is dict:
             self._params = connect
 
-        self._style = self._dbapi.paramstyle
-        if self._style not in self._styles:
-            raise Exception("Database [{}]: Format style {} not supported (only {})".format(self._name, self._style, self._styles))
+        self._format_output = self._dbapi.paramstyle
+        if self._format_output not in self._styles:
+            raise Exception("Database [{}]: DB-API driver format style {} not supported (only {})".format(self._name, self._format_output, self._styles))
 
         self._fdb_lock = threading.Lock()
 
@@ -108,7 +112,7 @@ class Database():
         finally:
             self.release()
         self._connected = True
-        logger.info("Database [{}]: Connected with {} using \"{}\" style".format(self._name, self._conn, self._style))
+        logger.info("Database [{}]: Connected with {} using \"{}\" style".format(self._name, self._conn, self._format_output))
 
     def close(self):
         """Closes the database connection"""
@@ -282,32 +286,72 @@ class Database():
 
     def _parameters(self, params):
         """Internal helper method to convert the parameter list"""
-        if self._style == 'qmark':
-            return list(params)
-        elif self._style == 'format':
-            return list(params)
-        elif self._style == 'numeric':
-            return list(params)
-        elif self._style == 'pyformat':
-            return {'arg' + str(i) : params[i] for i in range(0, len(list(params)))}
+
+        if isinstance(params, dict):
+            param_list = list(params.values())
+            param_dict = params
+        else:
+            param_list = list(params)
+            param_dict = {'arg' + str(1+i) : params[i] for i in range(0, len(list(params)))}
+
+        if self._format_output == 'qmark':
+            return param_list
+        elif self._format_output == 'format':
+            return param_list
+        elif self._format_output == 'numeric':
+            return param_list
+        elif self._format_output == 'pyformat':
+            return param_dict
 
     def _format(self, stmt):
         """Internal helper method to convert the statement"""
-        if self._style == 'qmark':
-            return stmt
-        elif self._style == 'format':
-            return stmt.replace('?', '%s')
-        elif self._style == 'numeric':
-            cnt = 1
-            while '?' in stmt:
-                stmt = stmt.replace('?', ':' + str(cnt), 1)
-                cnt = cnt + 1
-            return stmt
-        elif self._style == 'pyformat':
-            cnt = 0
-            while '?' in stmt:
-                stmt = stmt.replace('?', '%(arg' + str(cnt) + ')s', 1)
-                cnt = cnt + 1
-            return stmt
 
+        stmts = {}
+        if self._format_input == 'qmark':
+            stmts['qmark'] = stmt
+            stmts['format'] = self._format_replace(stmt, '?', '%s')
+            stmts['numeric'] = self._format_numbered(stmt, '?', ':{0}')
+            stmts['pyformat'] = self._format_numbered(stmt, '?', '%(arg{0})s')
+
+        elif self._format_input == 'format':
+            format_token = re.compile('%[\w\d]+')
+            stmts['qmark'] = self._format_numbered(stmt, format_token, '?')
+            stmts['format'] = stmt
+            stmts['numeric'] = self._format_numbered(stmt, format_token, ':{0}')
+            stmts['pyformat'] = self._format_numbered(stmt, format_token, '%(arg{0})s')
+
+        elif self._format_input == 'numeric':
+            format_token = re.compile(':(\d+)')
+            stmts['qmark'] = self._format_numbered(stmt, format_token, '?')
+            stmts['format'] = self._format_numbered(stmt, format_token, '%s')
+            stmts['numeric'] = stmt
+            stmts['pyformat'] = self._format_numbered(stmt, format_token, '%(arg{1})s')
+
+        elif self._format_input == 'pyformat':
+            format_token = re.compile('%\([\w\d]+\)\w+')
+            stmts['qmark'] = self._format_numbered(stmt, format_token, '?')
+            stmts['format'] = self._format_numbered(stmt, format_token, '%s')
+            stmts['numeric'] = self._format_numbered(stmt, format_token, ':{0}')
+            stmts['pyformat'] = stmt
+
+        return stmts[self._format_output]
+
+    def _format_replace(self, stmt, search, replace):
+        return stmt.replace(search, replace)
+
+    def _format_numbered(self, stmt, search, replace, cnt=1):
+        if isinstance(search, str):
+            while search in stmt:
+                stmt = stmt.replace(search, replace.format(cnt), 1)
+                cnt = cnt + 1
+        else:
+            match = True
+            while match is not None:
+                match = search.search(stmt)
+                if match is not None:
+                    args = [cnt]
+                    args.extend(match.groups())
+                    stmt = stmt.replace(match.group(0), replace.format(*args), 1)
+                    cnt = cnt + 1
+        return stmt
 

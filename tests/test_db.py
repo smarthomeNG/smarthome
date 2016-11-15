@@ -1,0 +1,281 @@
+
+import common
+import unittest
+import sqlite3
+import threading
+import lib.db
+
+class TestDb(unittest.TestCase):
+
+    def api(self, paramstyle='qmark'):
+        return MockDbApi(paramstyle)
+
+    def db(self, connect='', paramstyle='qmark', format_input='qmark'):
+        return lib.db.Database('test', self.api(paramstyle=paramstyle), connect, format_input)
+
+    def execute(self, sql, args, format_input='qmark', paramstyle='pyformat'):
+        db = self.db(paramstyle=paramstyle, format_input=format_input)
+        db.connect()
+        db.execute(sql, args)
+        return db._conn.cursor_return.execute_kwargs[0]
+
+    def test_paramstyle_supported(self):
+        self.db(paramstyle='qmark')
+        self.db(paramstyle='format')
+        self.db(paramstyle='numeric')
+        self.db(paramstyle='pyformat')
+
+    def test_paramstyle_not_supported(self):
+        with self.assertRaisesRegex(Exception, 'driver format style .* not supported'):
+            self.db(paramstyle='wrongformat')
+
+    def test_connect(self):
+        db = self.db(connect='host:server | user:username | password:secret')
+        db.connect()
+        args = db._dbapi.connect_kwargs
+        self.assertTrue('host' in args)
+        self.assertEquals('server', args['host'])
+        self.assertTrue('user' in args)
+        self.assertEquals('username', args['user'])
+        self.assertTrue('password' in args)
+        self.assertEquals('secret', args['password'])
+
+    def test_connect_set_connected(self):
+        db = self.db()
+        self.assertFalse(db.connected())
+
+        db.connect()
+        self.assertTrue(db.connected())
+
+    def test_close(self):
+        db = self.db()
+        db.connect()
+        conn = db._conn
+        db.close()
+        self.assertTrue(conn.close_kwargs is not None)
+
+    def test_close_set_connected(self):
+        db = self.db()
+        db.connect()
+        db.close()
+        self.assertFalse(db.connected())
+
+    def test_lock(self):
+        db = self.db()
+        self.assertTrue(db.lock())
+
+    def test_lock_already_locked(self):
+        db = self.db()
+        db.lock()
+        self.assertFalse(db.lock(0))
+
+    def test_release(self):
+        db = self.db()
+        db.lock()
+        db.release()
+
+    def test_release_not_locked(self):
+        db = self.db()
+        with self.assertRaisesRegex(RuntimeError, 'release unlocked lock'):
+	        db.release()
+
+    def test_commit(self):
+        db = self.db()
+        db.connect()
+        db.commit()
+        self.assertTrue(db._conn.commit_kwargs is not None)
+
+    def test_rollback(self):
+        db = self.db()
+        db.connect()
+        db.rollback()
+        self.assertTrue(db._conn.rollback_kwargs is not None)
+
+    def test_cursor(self):
+        db = self.db()
+        db.connect()
+        self.assertTrue(db.cursor() is not None)
+        self.assertTrue(db._conn.cursor_kwargs is not None)
+
+    def test_setup(self):
+        db = self.db()
+        db.connect()
+        db.setup({
+          1 : ['ROLLOUT 1', 'ROLLBACK 1'],
+          2 : ['ROLLOUT 2', 'ROLLBACK 2']
+        })
+
+        # Statement 0: SELECT version
+        self.assertEquals("ROLLOUT 1", db._conn.cursor_return.execute_kwargs[1][0])
+        # Statement 2: INSERT version
+        self.assertEquals("ROLLOUT 2", db._conn.cursor_return.execute_kwargs[3][0])
+        # Statement 4: INSERT version
+
+    def test_execute_internal_cursor(self):
+        db = self.db()
+        db.connect()
+        db.execute("select 1")
+        self.assertEquals("select 1", db._conn.cursor_return.execute_kwargs[0][0])
+
+    def test_execute_custom_cursor(self):
+        db = self.db()
+        db.connect()
+        cur = db.cursor()
+        db.execute("select 1", cur=cur)
+        self.assertEquals("select 1", cur.execute_kwargs[0][0])
+
+    def test_verify(self):
+        db = self.db()
+        db.connect()
+        db.verify()
+        self.assertEquals("SELECT 1", db._conn.cursor_return.execute_kwargs[0][0])
+
+    def test_fetchone(self):
+        db = self.db()
+        db.connect()
+        db.fetchone("SELECT 1")
+
+    def test_fetchall(self):
+        db = self.db()
+        db.connect()
+        db.fetchall("SELECT 1")
+
+    def test_execute_qmark2qmark(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', (1,'test'), 'qmark', 'qmark')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', args[0])
+        self.assertEqual([1, 'test'], args[1])
+
+    def test_execute_qmark2format(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', (1,'test'), 'qmark', 'format')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = %s AND Name = %s', args[0])
+        self.assertEqual([1, 'test'], args[1])
+
+    def test_execute_qmark2numeric(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', (1,'test'), 'qmark', 'numeric')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', args[0])
+        self.assertEqual([1, 'test'], args[1])
+
+    def test_execute_qmark2pyformat(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', (1,'test'), 'qmark', 'pyformat')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = %(arg1)s AND Name = %(arg2)s', args[0])
+        self.assertEqual({'arg1':1, 'arg2':'test'}, args[1])
+
+    def test_execute_format2qmark(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = %d AND Name = %s', (1,'test'), 'format', 'qmark')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', args[0])
+        self.assertEqual([1, 'test'], args[1])
+
+    def test_execute_format2format(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = %d AND Name = %s', (1,'test'), 'format', 'format')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = %d AND Name = %s', args[0])
+        self.assertEqual([1, 'test'], args[1])
+
+    def test_execute_format2numeric(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = %d AND Name = %s', (1,'test'), 'format', 'numeric')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', args[0])
+        self.assertEqual([1, 'test'], args[1])
+
+    def test_execute_format2pyformat(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = %d AND Name = %s', (1,'test'), 'format', 'pyformat')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = %(arg1)s AND Name = %(arg2)s', args[0])
+        self.assertEqual({'arg1':1, 'arg2':'test'}, args[1])
+
+    def test_execute_numeric2qmark(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', (1,'test'), 'numeric', 'qmark')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', args[0])
+        self.assertEqual([1, 'test'], args[1])
+
+    def test_execute_numeric2format(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', (1,'test'), 'numeric', 'format')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = %s AND Name = %s', args[0])
+        self.assertEqual([1, 'test'], args[1])
+
+    def test_execute_numeric2numeric(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', (1,'test'), 'numeric', 'numeric')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', args[0])
+        self.assertEqual([1, 'test'], args[1])
+
+    def test_execute_numeric2pyformat(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', (1,'test'), 'numeric', 'pyformat')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = %(arg1)s AND Name = %(arg2)s', args[0])
+        self.assertEqual({'arg1':1, 'arg2':'test'}, args[1])
+
+    def test_execute_pyformat2qmark(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s', (1,'test'), 'pyformat', 'qmark')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', args[0])
+        self.assertEqual([1, 'test'], args[1])
+
+    def test_execute_pyformat2format(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s', (1,'test'), 'pyformat', 'format')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = %s AND Name = %s', args[0])
+        self.assertEqual([1, 'test'], args[1])
+
+    def test_execute_pyformat2numeric(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s', (1,'test'), 'pyformat', 'numeric')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', args[0])
+        self.assertEqual([1, 'test'], args[1])
+
+    def test_execute_pyformat2pyformat(self):
+        args = self.execute('SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s', (1,'test'), 'pyformat', 'pyformat')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s', args[0])
+        self.assertEqual({'arg1':1, 'arg2':'test'}, args[1])
+
+
+class MockDbApi():
+
+    def __init__(self, paramstyle):
+        self.paramstyle = paramstyle
+        self.connected_kwargs = None
+
+    def connect(self, **kwargs):
+        self.connect_kwargs = kwargs if kwargs is not None else True
+        return MockDbApiConnection()
+
+
+class MockDbApiConnection():
+
+    def __init__(self):
+        self.close_kwargs = None
+        self.commit_kwargs = None
+        self.rollback_kwargs = None
+        self.cursor_kwargs = None
+        self.cursor_return = None
+
+    def close(self, **kwargs):
+        self.close_kwargs = kwargs if kwargs is not None else True
+
+    def commit(self, **kwargs):
+        self.commit_kwargs = kwargs if kwargs is not None else True
+
+    def rollback(self, **kwargs):
+        self.rollback_kwargs = kwargs if kwargs is not None else True
+
+    def cursor(self, **kwargs):
+        self.cursor_kwargs = kwargs if kwargs is not None else True
+        self.cursor_return = MockDbApiCursor()
+        return self.cursor_return
+
+
+class MockDbApiCursor():
+
+    def __init__(self):
+        self.execute_kwargs = []
+        self.close_kwargs = None
+
+    def execute(self, *kwargs):
+        self.execute_kwargs.append(kwargs if kwargs is not None else True)
+        return {}
+
+    def close(self, **kwargs):
+        self.close_kwargs = kwargs if kwargs is not None else True
+
+    def fetchone(self, **kwargs):
+        return [0]
+
+    def fetchall(self, **kwargs):
+        return [[0]]
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
+
