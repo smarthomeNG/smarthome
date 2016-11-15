@@ -119,37 +119,31 @@ is a writeable register.
         # read
         type = num
         systemair_regaddr = 208
-        eval = value / 10 #to get Celsius
         
     [[Temperatursensor_1]]
         # read
         type = num
         systemair_regaddr = 214
-        eval = value / 10 #to get Celsius
 
     [[Temperatursensor_2]]
         # read
         type = num
         systemair_regaddr = 215
-        eval = value / 10 #to get Celsius
 
     [[Temperatursensor_3]]
         # read
         type = num
         systemair_regaddr = 216
-        eval = value / 10 #to get Celsius
 
     [[Temperatursensor_4]]
         # read
         type = num
         systemair_regaddr = 217
-        eval = value / 10 #to get Celsius
 
     [[Temperatursensor_5]]
         # read
         type = num
         systemair_regaddr = 218
-        eval = value / 10 #to get Celsius
 
     [[Wochenprogramm_Aktiv]]
         # read
