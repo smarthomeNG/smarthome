@@ -55,7 +55,7 @@ class DbLog(SmartPlugin):
         self._buffer_lock = threading.Lock()
         self._dump_lock = threading.Lock()
 
-        self._db = lib.db.Database(("" if prefix == "" else prefix.capitalize() + "_") + "DbLog", self._sh.dbapi(db), connect)
+        self._db = lib.db.Database(("" if prefix == "" else prefix.capitalize() + "_") + "DbLog", self._sh.dbapi(db), connect, 'qmark')
         self._db.connect()
         self._db.setup({i: [self._prepare(query[0]), self._prepare(query[1])] for i, query in self._setup.items()})
 
