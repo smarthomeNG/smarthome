@@ -45,6 +45,7 @@ class Systemair():
                                     # repeat mod_write attempt x times a 1 seconds
         self._lockmb = threading.Lock()    # modbus serial port lock
         self.init_serial_connection(self.serialport, self.slave_address)
+        self._temperature_scaled_regs = range(209, 218+1)
 
     def init_serial_connection(self, serialport, slave_address):
         try:
@@ -83,9 +84,11 @@ class Systemair():
             heater_registers = self.instrument.read_registers(start_register_heater-1, 21, functioncode=3)
             for register in heater_registers:
                 if start_register_heater in self._update:
+                    if start_register_heater in self._temperature_scaled_regs:
+                        register = c_short(register).value / 10
                     for item in self._update[start_register_heater]['items']:
                         try:
-                            item(c_short(register).value, 'systemair_value_from_bus', "Reg {}".format(start_register_heater))
+                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_heater))
                         except Exception as e:
                             logger.error("Modbus: Exception when updating {} {}".format(item, e))
                 start_register_heater += 1
