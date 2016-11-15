@@ -67,6 +67,9 @@ class Database():
         which supports key/value pairs separated by '|'. These named
         parameters will be used as 'connect()' parameters of the DB-API driver
         implementation.
+
+        The 'pyformat' parameter can be used to specify a different type
+        of formatting (see DB-API spec) which defaults to 'pyformat'.
         """
         self._name = name
         self._dbapi = dbapi
