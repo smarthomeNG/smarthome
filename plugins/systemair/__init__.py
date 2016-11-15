@@ -45,7 +45,7 @@ class Systemair():
                                     # repeat mod_write attempt x times a 1 seconds
         self._lockmb = threading.Lock()    # modbus serial port lock
         self.init_serial_connection(self.serialport, self.slave_address)
-        self._temperature_scaled_regs = range(209, 218+1)
+        self._temperature_scaled_regs = range(208, 218+1)
 
     def init_serial_connection(self, serialport, slave_address):
         try:
