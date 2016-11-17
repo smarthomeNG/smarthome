@@ -5,7 +5,7 @@ import sqlite3
 import threading
 import lib.db
 
-class TestDb(unittest.TestCase):
+class TestDbBase:
 
     def api(self, paramstyle='qmark'):
         return MockDbApi(paramstyle)
@@ -13,11 +13,8 @@ class TestDb(unittest.TestCase):
     def db(self, connect='', paramstyle='qmark', format_input='qmark'):
         return lib.db.Database('test', self.api(paramstyle=paramstyle), connect, format_input)
 
-    def execute(self, sql, args, format_input='qmark', paramstyle='pyformat'):
-        db = self.db(paramstyle=paramstyle, format_input=format_input)
-        db.connect()
-        db.execute(sql, args)
-        return db._conn.cursor_return.execute_kwargs[0]
+
+class TestDbTests(unittest.TestCase, TestDbBase):
 
     def test_paramstyle_supported(self):
         self.db(paramstyle='qmark')
@@ -140,85 +137,61 @@ class TestDb(unittest.TestCase):
         db.connect()
         db.fetchall("SELECT 1")
 
-    def test_execute_qmark2qmark(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', (1,'test'), 'qmark', 'qmark')
+
+class DbQueryBaseTests(TestDbBase):
+
+    format = None
+    query = None
+
+    def execute(self, sql, args, format_input='qmark', paramstyle='pyformat'):
+        db = self.db(paramstyle=paramstyle, format_input=format_input)
+        db.connect()
+        db.execute(sql, args)
+        return db._conn.cursor_return.execute_kwargs[0]
+
+    def test_execute_qmark(self):
+        args = self.execute(self.query, (1,'test'), self.format, 'qmark')
         self.assertEqual('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', args[0])
         self.assertEqual([1, 'test'], args[1])
 
-    def test_execute_qmark2format(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', (1,'test'), 'qmark', 'format')
+    def test_execute_format(self):
+        args = self.execute(self.query, (1,'test'), self.format, 'format')
         self.assertEqual('SELECT * FROM TABLE WHERE ID = %s AND Name = %s', args[0])
         self.assertEqual([1, 'test'], args[1])
 
-    def test_execute_qmark2numeric(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', (1,'test'), 'qmark', 'numeric')
+    def test_execute_numeric(self):
+        args = self.execute(self.query, (1,'test'), self.format, 'numeric')
         self.assertEqual('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', args[0])
         self.assertEqual([1, 'test'], args[1])
 
-    def test_execute_qmark2pyformat(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', (1,'test'), 'qmark', 'pyformat')
+    def test_execute_pyformat(self):
+        args = self.execute(self.query, (1,'test'), self.format, 'pyformat')
         self.assertEqual('SELECT * FROM TABLE WHERE ID = %(arg1)s AND Name = %(arg2)s', args[0])
         self.assertEqual({'arg1':1, 'arg2':'test'}, args[1])
 
-    def test_execute_format2qmark(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = %d AND Name = %s', (1,'test'), 'format', 'qmark')
-        self.assertEqual('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', args[0])
-        self.assertEqual([1, 'test'], args[1])
 
-    def test_execute_format2format(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = %d AND Name = %s', (1,'test'), 'format', 'format')
-        self.assertEqual('SELECT * FROM TABLE WHERE ID = %d AND Name = %s', args[0])
-        self.assertEqual([1, 'test'], args[1])
+class TestDbQueryQmark(unittest.TestCase, DbQueryBaseTests):
 
-    def test_execute_format2numeric(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = %d AND Name = %s', (1,'test'), 'format', 'numeric')
-        self.assertEqual('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', args[0])
-        self.assertEqual([1, 'test'], args[1])
+    format = 'qmark'
+    query = 'SELECT * FROM TABLE WHERE ID = ? AND Name = ?'
 
-    def test_execute_format2pyformat(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = %d AND Name = %s', (1,'test'), 'format', 'pyformat')
-        self.assertEqual('SELECT * FROM TABLE WHERE ID = %(arg1)s AND Name = %(arg2)s', args[0])
-        self.assertEqual({'arg1':1, 'arg2':'test'}, args[1])
 
-    def test_execute_numeric2qmark(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', (1,'test'), 'numeric', 'qmark')
-        self.assertEqual('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', args[0])
-        self.assertEqual([1, 'test'], args[1])
+class TestDbQueryFormat(unittest.TestCase, DbQueryBaseTests):
 
-    def test_execute_numeric2format(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', (1,'test'), 'numeric', 'format')
-        self.assertEqual('SELECT * FROM TABLE WHERE ID = %s AND Name = %s', args[0])
-        self.assertEqual([1, 'test'], args[1])
+    format = 'format'
+    query = 'SELECT * FROM TABLE WHERE ID = %s AND Name = %s'
 
-    def test_execute_numeric2numeric(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', (1,'test'), 'numeric', 'numeric')
-        self.assertEqual('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', args[0])
-        self.assertEqual([1, 'test'], args[1])
 
-    def test_execute_numeric2pyformat(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', (1,'test'), 'numeric', 'pyformat')
-        self.assertEqual('SELECT * FROM TABLE WHERE ID = %(arg1)s AND Name = %(arg2)s', args[0])
-        self.assertEqual({'arg1':1, 'arg2':'test'}, args[1])
+class TestDbQueryNumeric(unittest.TestCase, DbQueryBaseTests):
 
-    def test_execute_pyformat2qmark(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s', (1,'test'), 'pyformat', 'qmark')
-        self.assertEqual('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', args[0])
-        self.assertEqual([1, 'test'], args[1])
+    format = 'numeric'
+    query = 'SELECT * FROM TABLE WHERE ID = :1 AND Name = :2'
 
-    def test_execute_pyformat2format(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s', (1,'test'), 'pyformat', 'format')
-        self.assertEqual('SELECT * FROM TABLE WHERE ID = %s AND Name = %s', args[0])
-        self.assertEqual([1, 'test'], args[1])
 
-    def test_execute_pyformat2numeric(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s', (1,'test'), 'pyformat', 'numeric')
-        self.assertEqual('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', args[0])
-        self.assertEqual([1, 'test'], args[1])
+class TestDbQueryPyformat(unittest.TestCase, DbQueryBaseTests):
 
-    def test_execute_pyformat2pyformat(self):
-        args = self.execute('SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s', (1,'test'), 'pyformat', 'pyformat')
-        self.assertEqual('SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s', args[0])
-        self.assertEqual({'arg1':1, 'arg2':'test'}, args[1])
+    format = 'pyformat'
+    query = 'SELECT * FROM TABLE WHERE ID = %(arg1)s AND Name = %(arg2)s'
 
 
 class MockDbApi():
