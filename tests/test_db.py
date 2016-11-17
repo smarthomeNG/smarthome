@@ -169,29 +169,37 @@ class DbQueryBaseTests(TestDbBase):
         self.assertEqual('SELECT * FROM TABLE WHERE ID = %(arg1)s AND Name = %(arg2)s', args[0])
         self.assertEqual({'arg1':1, 'arg2':'test'}, args[1])
 
+    def test_execute_keep_formatters(self):
+        args = self.execute(self.query, (1,'test'), self.format, self.format)
+        self.assertEqual(self.query, args[0])
+
 
 class TestDbQueryQmark(unittest.TestCase, DbQueryBaseTests):
 
     format = 'qmark'
     query = 'SELECT * FROM TABLE WHERE ID = ? AND Name = ?'
+    query_formatter = 'SELECT * FROM TABLE WHERE ID = ? AND Name = ?'
 
 
 class TestDbQueryFormat(unittest.TestCase, DbQueryBaseTests):
 
     format = 'format'
     query = 'SELECT * FROM TABLE WHERE ID = %s AND Name = %s'
+    query_formatter = 'SELECT * FROM TABLE WHERE ID = %d AND Name = %s'
 
 
 class TestDbQueryNumeric(unittest.TestCase, DbQueryBaseTests):
 
     format = 'numeric'
     query = 'SELECT * FROM TABLE WHERE ID = :1 AND Name = :2'
+    query_formatter = 'SELECT * FROM TABLE WHERE ID = :1 AND Name = :2'
 
 
 class TestDbQueryPyformat(unittest.TestCase, DbQueryBaseTests):
 
     format = 'pyformat'
     query = 'SELECT * FROM TABLE WHERE ID = %(arg1)s AND Name = %(arg2)s'
+    query_format = 'SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s'
 
 
 class MockDbApi():
