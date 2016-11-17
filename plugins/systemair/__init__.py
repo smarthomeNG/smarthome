@@ -33,7 +33,6 @@ class Systemair():
         self._sh = smarthome
         self.instrument = None
         self.slave_address = int(slave_address)
-        self._update = {}
         self._update_coil = {}
         self.serialport = serialport
         self.slave_address = slave_address
@@ -45,7 +44,21 @@ class Systemair():
                                     # repeat mod_write attempt x times a 1 seconds
         self._lockmb = threading.Lock()    # modbus serial port lock
         self.init_serial_connection(self.serialport, self.slave_address)
-        self._temperature_scaled_regs = range(208, 218+1)
+        self._reg_sets = [{'name':'fan',	'range':range(101, 138+1)},
+                          {'name':'heater',	'range':range(201, 221+1), 'scaled_signed':range(208, 218+1)},
+                          {'name':'damper',	'range':range(301, 301+1)},
+                          {'name':'rotor',	'range':range(351, 352+1)},
+                          {'name':'week',	'range':range(401, 459+1)},
+                          {'name':'system',	'range':range(501, 507+1)},
+                          {'name':'clock',	'range':range(551, 557+1)},
+                          {'name':'filter',	'range':range(601, 602+1)},
+                          {'name':'VTC_defr',	'range':range(651, 654+1)},
+                          {'name':'VTR_defr',	'range':range(671, 672+1)},
+                          {'name':'dig_in',	'range':range(701, 709+1)},
+                          {'name':'PCU_PB',	'range':range(751, 751+1)},
+                          {'name':'alarms',	'range':range(801, 802+1)},
+                          {'name':'demand',	'range':range(851, 859+1)},
+                          {'name':'wireless',	'range':range(901, 1020+1)},]
 
     def init_serial_connection(self, serialport, slave_address):
         try:
@@ -66,182 +79,28 @@ class Systemair():
             # read all fan registers
             # System air documentation: FAN values starts with 101, but thats incorrect: register starts with 100
 
-            # Luefter / 38 Register
-            start_register_fan = 101
-            fan_registers = self.instrument.read_registers(start_register_fan-1, 38, functioncode=3)
+            for reg_set in self._reg_sets:
+                if 'range_used' in reg_set:
+                    read_regs = dict(zip(reg_set['range_used'], self.instrument.read_registers(
+                                                                reg_set['range_used'].start -1,
+                                                                reg_set['range_used'].stop - reg_set['range_used'].start,
+                                                                functioncode = 3)))
+                    if 'scaled_signed' in reg_set:
+                        for scaled_reg in reg_set['scaled_signed']:
+                            read_regs[scaled_reg] = c_short(read_regs[scaled_reg]).value / 10
 
-            for register in fan_registers:
-                if start_register_fan in self._update:
-                    for item in self._update[start_register_fan]['items']:
-                        try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_fan))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_fan += 1
-
-            # Heater / 21 Register
-            start_register_heater = 201
-            heater_registers = self.instrument.read_registers(start_register_heater-1, 21, functioncode=3)
-            for register in heater_registers:
-                if start_register_heater in self._update:
-                    if start_register_heater in self._temperature_scaled_regs:
-                        register = c_short(register).value / 10
-                    for item in self._update[start_register_heater]['items']:
-                        try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_heater))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_heater += 1
-
-            # damper register | 1 register
-            start_register_damper = 301
-            damper_registers = self.instrument.read_registers(start_register_damper-1, 1, functioncode=3)
-            for register in damper_registers:
-                if start_register_damper in self._update:
-                    for item in self._update[start_register_damper]['items']:
-                        try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_damper))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_damper += 1
-
-            # rotor register | 2 register
-            start_register_rotor = 351
-            rotor_registers = self.instrument.read_registers(start_register_rotor-1, 2, functioncode=3)
-            for register in rotor_registers:
-                if start_register_rotor in self._update:
-                    for item in self._update[start_register_rotor]['items']:
-                        try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_rotor))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_rotor += 1
-
-            # week programm egister | 59 register
-            start_register_week = 401
-            week_registers = self.instrument.read_registers(start_register_week-1, 59, functioncode=3)
-            for register in week_registers:
-                if start_register_week in self._update:
-                    for item in self._update[start_register_week]['items']:
-                        try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_week))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_week += 1
-
-            # system register / 7 register
-            start_register_system = 501
-            system_registers = self.instrument.read_registers(start_register_system-1, 7, functioncode=3)
-            for register in system_registers:
-                if start_register_system in self._update:
-                    for item in self._update[start_register_system]['items']:
-                        try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_system))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_system += 1
-
-            # clock register / 7 register
-            start_register_clock = 551
-            clock_registers = self.instrument.read_registers(start_register_clock-1, 7, functioncode=3)
-            for register in clock_registers:
-                if start_register_clock in self._update:
-                    for item in self._update[start_register_clock]['items']:
-                        try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_clock))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_clock += 1
-
-            # filter register / 2 register
-            start_register_filter = 601
-            filter_registers = self.instrument.read_registers(start_register_filter-1, 2, functioncode=3)
-            for register in filter_registers:
-                if start_register_filter in self._update:
-                    for item in self._update[start_register_filter]['items']:
-                        try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_filter))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_filter += 1
-
-            # defrosting register for VTC / 4 register
-            start_register_defrosting = 651
-            defrosting_registers = self.instrument.read_registers(start_register_defrosting-1, 4, functioncode=3)
-            for register in defrosting_registers:
-                if start_register_defrosting in self._update:
-                    for item in self._update[start_register_defrosting]['items']:
-                        try:
-                            item(register, 'Systemair', "Reg {}".format(start_register_defrosting))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_defrosting += 1
-
-            # defrosting register for VR/VTR / 2 register
-            start_register_defrosting_vtr = 671
-            defrosting_registers_vtr = self.instrument.read_registers(start_register_defrosting_vtr-1, 2, functioncode=3)
-            for register in defrosting_registers_vtr:
-                if start_register_defrosting_vtr in self._update:
-                    for item in self._update[start_register_defrosting_vtr]['items']:
-                        try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_defrosting_vtr))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_defrosting_vtr += 1
-
-            # digital input register / 9 register
-            start_register_digital = 701
-            digital_registers = self.instrument.read_registers(start_register_digital-1, 9, functioncode=3)
-            for register in digital_registers:
-                if start_register_digital in self._update:
-                    for item in self._update[start_register_digital]['items']:
-                        try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_digital))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_digital += 1
-
-            # pcu / 1 Register
-            start_register_pcb = 751
-            pcb_registers = self.instrument.read_registers(start_register_pcb-1, 9, functioncode=3)
-            for register in pcb_registers:
-                if start_register_pcb in self._update:
-                    for item in self._update[start_register_pcb]['items']:
-                        try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_pcb))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_pcb += 1
-
-            # demand control / 1 Register
-            start_register_dem = 851
-            dem_registers = self.instrument.read_registers(start_register_dem-1, 9, functioncode=3)
-            for register in dem_registers:
-                if start_register_dem in self._update:
-                    for item in self._update[start_register_dem]['items']:
-                        try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_dem))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_dem += 1
-
-            # wireless network register
-            start_register_net = 901
-            net_registers = self.instrument.read_registers(start_register_net-1, 119, functioncode=3)
-            for register in net_registers:
-                if start_register_net in self._update:
-                    for item in self._update[start_register_net]['items']:
-                        try:
-                            item(register, 'systemair_value_from_bus', "Reg {}".format(start_register_net))
-                        except Exception as e:
-                            logger.error("Modbus: Exception when updating {} {}".format(item, e))
-                start_register_net += 1
+                    for reg in reg_set['regs_used']:
+                        for item in reg_set['regs_used'][reg]:
+                            try:
+                                item(read_regs[reg], 'systemair_value_from_bus', "Reg {}".format(reg))
+                            except Exception as e:
+                                logger.error("Modbus: Exception when updating {} {}".format(item, e))
 
             # get coils
-            for coil_addr, val in self._update_coil.items():
+            for coil_addr in self._update_coil:
                 value = self.instrument.read_bit(coil_addr-1, functioncode=2)
                 if value is not None:
-                    for item in self._update_coil[coil_addr]['items']:
+                    for item in self._update_coil[coil_addr]:
                         item(value, 'systemair_value_from_bus', "Coil {}".format(coil_addr))
 
         except Exception as err:
@@ -273,22 +132,32 @@ class Systemair():
         if 'systemair_regaddr' in item.conf:
             modbus_regaddr = int(item.conf['systemair_regaddr'])
             logger.debug("systemair_value_from_bus: {0} connected to register {1:#04x}".format(item, modbus_regaddr))
-            if not modbus_regaddr in self._update:
-                self._update[modbus_regaddr] = {'items': [item], 'logics': []}
-            else:
-                if not item in self._update[modbus_regaddr]['items']:
-                    self._update[modbus_regaddr]['items'].append(item)
-            # we need a small list here to make it easier to find our items if update_item is triggered
-            self.my_reg_items.append(item) 
+            self.my_reg_items.append(item)
+            for reg_set in self._reg_sets:
+                if modbus_regaddr in reg_set['range']:
+
+                    if not 'regs_used' in reg_set:
+                        reg_set['regs_used'] = dict()
+                    if not modbus_regaddr in reg_set['regs_used']:
+                        reg_set['regs_used'][modbus_regaddr] = set()
+                    reg_set['regs_used'][modbus_regaddr].add(item)
+
+                    if 'range_used' in reg_set:
+                        reg_set['range_used'] = range(min(reg_set['range_used'].start, modbus_regaddr), max(reg_set['range_used'].stop, modbus_regaddr + 1))
+                    else:
+                        reg_set['range_used'] = range(modbus_regaddr, modbus_regaddr + 1)
+                    logger.debug("systemair: adding reg {} to reg_set {} {}".format(modbus_regaddr, reg_set['name'], reg_set['range_used']))
+                    logger.debug("systemair: regs used: {}".format(reg_set['regs_used']))
+                    break
 
         if 'systemair_coiladdr' in item.conf:
             modbus_coiladdr = int(item.conf['systemair_coiladdr'])
             logger.debug("systemair_value_from_bus: {0} connected to coil register {1:#04x}".format(item, modbus_coiladdr))
             if not modbus_coiladdr in self._update_coil:
-                self._update_coil[modbus_coiladdr] = {'items': [item], 'logics': []}
-            else:
-                if not item in self._update_coil[modbus_coiladdr]['items']:
-                    self._update_coil[modbus_coiladdr]['items'].append(item)
+                self._update_coil[modbus_coiladdr] = set()
+
+            self._update_coil[modbus_coiladdr].add(item)
+
         return self.update_item
 
     def _write_register_value(self, item, repeat_count=0):
