@@ -142,6 +142,7 @@ class DbQueryBaseTests(TestDbBase):
 
     format = None
     query = None
+    args = (1, 'test')
 
     def execute(self, sql, args, format_input='qmark', paramstyle='pyformat'):
         db = self.db(paramstyle=paramstyle, format_input=format_input)
@@ -150,28 +151,56 @@ class DbQueryBaseTests(TestDbBase):
         return db._conn.cursor_return.execute_kwargs[0]
 
     def test_execute_qmark(self):
-        args = self.execute(self.query, (1,'test'), self.format, 'qmark')
+        args = self.execute(self.query, self.args, self.format, 'qmark')
         self.assertEqual('SELECT * FROM TABLE WHERE ID = ? AND Name = ?', args[0])
         self.assertEqual([1, 'test'], args[1])
 
     def test_execute_format(self):
-        args = self.execute(self.query, (1,'test'), self.format, 'format')
+        args = self.execute(self.query, self.args, self.format, 'format')
         self.assertEqual('SELECT * FROM TABLE WHERE ID = %s AND Name = %s', args[0])
         self.assertEqual([1, 'test'], args[1])
 
     def test_execute_numeric(self):
-        args = self.execute(self.query, (1,'test'), self.format, 'numeric')
+        args = self.execute(self.query, self.args, self.format, 'numeric')
         self.assertEqual('SELECT * FROM TABLE WHERE ID = :1 AND Name = :2', args[0])
         self.assertEqual([1, 'test'], args[1])
 
     def test_execute_pyformat(self):
-        args = self.execute(self.query, (1,'test'), self.format, 'pyformat')
+        args = self.execute(self.query, self.args, self.format, 'pyformat')
         self.assertEqual('SELECT * FROM TABLE WHERE ID = %(arg1)s AND Name = %(arg2)s', args[0])
         self.assertEqual({'arg1':1, 'arg2':'test'}, args[1])
 
-    def test_execute_keep_formatters(self):
-        args = self.execute(self.query, (1,'test'), self.format, self.format)
-        self.assertEqual(self.query, args[0])
+    def test_execute_same_format_input_is_output(self):
+        args = self.execute(self.query_formatter, self.args, self.format, self.format)
+        self.assertEqual(self.query_formatter, args[0])
+
+    def _assert_argument_reuse(self, args, output_format):
+        if self.format == output_format:
+          args_list = list(self.args)
+          args_dict = self.args
+        else:
+          args_list = self.expect_args_argsreuse_list
+          args_dict = self.expect_args_argsreuse_dict
+        if type(args[1]) == list:
+          self.assertEqual(args_list, args[1])
+        else:
+          self.assertEqual(args_dict, args[1])
+
+    def test_execute_argument_reuse_qmark(self):
+        args = self.execute(self.query_argsreuse, self.args, self.format, 'qmark')
+        self._assert_argument_reuse(args, 'qmark')
+
+    def test_execute_argument_reuse_format(self):
+        args = self.execute(self.query_argsreuse, self.args, self.format, 'format')
+        self._assert_argument_reuse(args, 'format')
+
+    def test_execute_argument_reuse_numeric(self):
+        args = self.execute(self.query_argsreuse, self.args, self.format, 'numeric')
+        self._assert_argument_reuse(args, 'numeric')
+
+    def test_execute_argument_reuse_pyformat(self):
+        args = self.execute(self.query_argsreuse, self.args, self.format, 'pyformat')
+        self._assert_argument_reuse(args, 'pyformat')
 
 
 class TestDbQueryQmark(unittest.TestCase, DbQueryBaseTests):
@@ -179,6 +208,9 @@ class TestDbQueryQmark(unittest.TestCase, DbQueryBaseTests):
     format = 'qmark'
     query = 'SELECT * FROM TABLE WHERE ID = ? AND Name = ?'
     query_formatter = 'SELECT * FROM TABLE WHERE ID = ? AND Name = ?'
+    query_argsreuse = 'SELECT * FROM TABLE WHERE ID = ? AND Name = ?'
+    expect_args_argsreuse_list = [1, 'test']
+    expect_args_argsreuse_dict = {'arg1' : 1, 'arg2' : 'test'}
 
 
 class TestDbQueryFormat(unittest.TestCase, DbQueryBaseTests):
@@ -186,6 +218,9 @@ class TestDbQueryFormat(unittest.TestCase, DbQueryBaseTests):
     format = 'format'
     query = 'SELECT * FROM TABLE WHERE ID = %s AND Name = %s'
     query_formatter = 'SELECT * FROM TABLE WHERE ID = %d AND Name = %s'
+    query_argsreuse = 'SELECT * FROM TABLE WHERE ID = %s AND Name = %s'
+    expect_args_argsreuse_list = [1, 'test']
+    expect_args_argsreuse_dict = {'arg1' : 1, 'arg2' : 'test'}
 
 
 class TestDbQueryNumeric(unittest.TestCase, DbQueryBaseTests):
@@ -193,13 +228,20 @@ class TestDbQueryNumeric(unittest.TestCase, DbQueryBaseTests):
     format = 'numeric'
     query = 'SELECT * FROM TABLE WHERE ID = :1 AND Name = :2'
     query_formatter = 'SELECT * FROM TABLE WHERE ID = :1 AND Name = :2'
+    query_argsreuse = 'SELECT * FROM TABLE WHERE ID = :2 AND Name = :2'
+    expect_args_argsreuse_list = ['test', 'test']
+    expect_args_argsreuse_dict = {'arg2' : 'test'}
 
 
 class TestDbQueryPyformat(unittest.TestCase, DbQueryBaseTests):
 
     format = 'pyformat'
+    args = {'arg1' : 1, 'arg2' : 'test'}
     query = 'SELECT * FROM TABLE WHERE ID = %(arg1)s AND Name = %(arg2)s'
-    query_format = 'SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s'
+    query_formatter = 'SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s'
+    query_argsreuse = 'SELECT * FROM TABLE WHERE ID = %(arg2)d AND Name = %(arg2)s'
+    expect_args_argsreuse_list = ['test', 'test']
+    expect_args_argsreuse_dict = {'arg1' : 1, 'arg2' : 'test'}
 
 
 class MockDbApi():

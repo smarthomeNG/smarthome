@@ -53,6 +53,40 @@ class Database():
     # Supported formatting styles
     _styles = ('qmark', 'format', 'numeric', 'pyformat')
 
+    # Supported formatting translations
+    _translations = {
+      'qmark' : {
+        'qmark'    : {},
+        'format'   : {'input_token' : '?', 'output_token' : '%s'},
+        'numeric'  : {'input_token' : '?', 'output_token' : ':{0}'},
+        'pyformat' : {'input_token' : '?', 'output_token' : '%(arg{0})s', 'output_name' : 'arg{0}'}
+      },
+      'format' : {
+        'qmark'    : {'input_token' : re.compile('%[\w\d]+'), 'output_token' : '?'},
+        'format'   : {},
+        'numeric'  : {'input_token' : re.compile('%[\w\d]+'), 'output_token' : ':{0}'},
+        'pyformat' : {'input_token' : re.compile('%[\w\d]+'), 'output_token' : '%(arg{0})s', 'output_name' : 'arg{0}'}
+      },
+      'numeric' : {
+        'qmark'    : {'input_token' : re.compile(':(\d+)'), 'output_token' : '?', 'input_name' : '{1}'},
+        'format'   : {'input_token' : re.compile(':(\d+)'), 'output_token' : '%s', 'input_name' : '{1}'},
+        'numeric'  : {},
+        'pyformat' : {'input_token' : re.compile(':(\d+)'), 'output_token' : '%(arg{1})s', 'output_name' : 'arg{1}'}
+      },
+      'pyformat' : {
+        'qmark'    : {'input_token' : re.compile('%\(([\w\d]+)\)\w+'), 'output_token' : '?', 'input_name' : '{1}'},
+        'format'   : {'input_token' : re.compile('%\(([\w\d]+)\)\w+'), 'output_token' : '%s', 'input_name' : '{1}'},
+        'numeric'  : {'input_token' : re.compile('%\(([\w\d]+)\)\w+'), 'output_token' : ':{0}', 'input_name' : '{1}'},
+        'pyformat' : {}
+      },
+    }
+    _translation_param_types = {
+      'qmark'    : list,
+      'format'   : list,
+      'numeric'  : list,
+      'pyformat' : dict
+    }
+
     def __init__(self, name, dbapi, connect, format='pyformat'):
         """Create a new database instance
 
@@ -101,6 +135,9 @@ class Database():
         self._format_output = self._dbapi.paramstyle
         if self._format_output not in self._styles:
             raise Exception("Database [{}]: DB-API driver format style {} not supported (only {})".format(self._name, self._format_output, self._styles))
+
+        self._translation = self._translations[self._format_input][self._format_output]
+        self._translation_param_type = self._translation_param_types[self._format_output]
 
         self._fdb_lock = threading.Lock()
 
@@ -210,8 +247,7 @@ class Database():
         'cur' parameter. If omitted a new cursor will be aqcuire for this
         statement and released afterwards.
         """
-        args = self._parameters(params)
-        stmt = self._format(stmt)
+        stmt, args = self._prepare(stmt, params)
         if cur == None:
             c = self.cursor()
             result = c.execute(stmt, args)
@@ -287,74 +323,45 @@ class Database():
             result = cur.fetchall()
         return result
 
-    def _parameters(self, params):
-        """Internal helper method to convert the parameter list"""
+    def _prepare(self, stmt, params):
+        """Internal helper method to convert the statement and parameter list"""
 
         if isinstance(params, dict):
-            param_list = list(params.values())
             param_dict = params
         else:
-            param_list = list(params)
-            param_dict = {'arg' + str(1+i) : params[i] for i in range(0, len(list(params)))}
+            param_dict = {str(key+1): value for key, value in enumerate(params)}
 
-        if self._format_output == 'qmark':
-            return param_list
-        elif self._format_output == 'format':
-            return param_list
-        elif self._format_output == 'numeric':
-            return param_list
-        elif self._format_output == 'pyformat':
-            return param_dict
+        stmt_result, param_result = self._translate(stmt, param_dict, **self._translation)
 
-    def _format(self, stmt):
-        """Internal helper method to convert the statement"""
+        if self._translation_param_type is list:
+            return (stmt_result, [param_result[name] for name in sorted(param_result)])
+        elif self._translation_param_type is dict:
+            return (stmt_result, param_result)
 
-        stmts = {}
-        if self._format_input == 'qmark':
-            stmts['qmark'] = stmt
-            stmts['format'] = self._format_replace(stmt, '?', '%s')
-            stmts['numeric'] = self._format_numbered(stmt, '?', ':{0}')
-            stmts['pyformat'] = self._format_numbered(stmt, '?', '%(arg{0})s')
+    def _translate(self, stmt, params, input_token=None, output_token=None, input_name='{0}', output_name='{0}'):
+        """Internal helper method to convert the statement from input format to output format"""
 
-        elif self._format_input == 'format':
-            format_token = re.compile('%[\w\d]+')
-            stmts['qmark'] = self._format_numbered(stmt, format_token, '?')
-            stmts['format'] = stmt
-            stmts['numeric'] = self._format_numbered(stmt, format_token, ':{0}')
-            stmts['pyformat'] = self._format_numbered(stmt, format_token, '%(arg{0})s')
+        if input_token is None or output_token is None:
+            return (stmt, params)
 
-        elif self._format_input == 'numeric':
-            format_token = re.compile(':(\d+)')
-            stmts['qmark'] = self._format_numbered(stmt, format_token, '?')
-            stmts['format'] = self._format_numbered(stmt, format_token, '%s')
-            stmts['numeric'] = stmt
-            stmts['pyformat'] = self._format_numbered(stmt, format_token, '%(arg{1})s')
-
-        elif self._format_input == 'pyformat':
-            format_token = re.compile('%\([\w\d]+\)\w+')
-            stmts['qmark'] = self._format_numbered(stmt, format_token, '?')
-            stmts['format'] = self._format_numbered(stmt, format_token, '%s')
-            stmts['numeric'] = self._format_numbered(stmt, format_token, ':{0}')
-            stmts['pyformat'] = stmt
-
-        return stmts[self._format_output]
-
-    def _format_replace(self, stmt, search, replace):
-        return stmt.replace(search, replace)
-
-    def _format_numbered(self, stmt, search, replace, cnt=1):
-        if isinstance(search, str):
-            while search in stmt:
-                stmt = stmt.replace(search, replace.format(cnt), 1)
+        cnt = 1
+        param_result = {}
+        if isinstance(input_token, str):
+            while input_token in stmt:
+                stmt = stmt.replace(input_token, output_token.format(cnt), 1)
+                args = [cnt]
+                param_result[output_name.format(*args)] = params[input_name.format(*args)]
                 cnt = cnt + 1
         else:
             match = True
             while match is not None:
-                match = search.search(stmt)
+                match = input_token.search(stmt)
                 if match is not None:
                     args = [cnt]
                     args.extend(match.groups())
-                    stmt = stmt.replace(match.group(0), replace.format(*args), 1)
+                    stmt = stmt.replace(match.group(0), output_token.format(*args), 1)
+                    param_result[output_name.format(*args)] = params[input_name.format(*args)]
                     cnt = cnt + 1
-        return stmt
+
+        return (stmt,  param_result)
 
