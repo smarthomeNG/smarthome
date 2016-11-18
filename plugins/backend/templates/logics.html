@@ -74,6 +74,9 @@
 								<td></td>
 							{% endif %}
 							<td>{% if smarthome.return_logic(logic).cycle == None %}-{% else %}{{ smarthome.return_logic(logic).cycle}} {% endif %}</td>
+							<td>
+								{% if smarthome.return_logic(logic).crontab == None %}-{% else %}{{ smarthome.return_logic(logic).crontab}} {% endif %}
+							</td>
 							<td {% if smarthome.return_logic(logic).watch_item|length > 0 %}onClick="$('#{{ logic }}_additional').toggle();" style="cursor: pointer;"{% endif %}>
 								{% if smarthome.return_logic(logic).watch_item|length == 0 %}-{% else %}{{ smarthome.return_logic(logic).watch_item|length}} {% endif %}
 							</td>
