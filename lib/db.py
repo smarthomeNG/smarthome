@@ -247,14 +247,23 @@ class Database():
         'cur' parameter. If omitted a new cursor will be aqcuire for this
         statement and released afterwards.
         """
-        stmt, args = self._prepare(stmt, params)
-        if cur == None:
-            c = self.cursor()
-            result = c.execute(stmt, args)
-            c.close()
-        else:
-            result = cur.execute(stmt, args)
-        return result
+        try:
+            stmt, args = self._prepare(stmt, params)
+        except Exception as e:
+            logger.error("Can not prepare query: {} (args {}): {}".format(stmt, params, e))
+            raise
+
+        try:
+            if cur == None:
+                c = self.cursor()
+                result = c.execute(stmt, args)
+                c.close()
+            else:
+                result = cur.execute(stmt, args)
+            return result
+        except Exception as e:
+            logger.error("Can not execute query: {} (args {}): {}".format(stmt, args, e))
+            raise
 
     def verify(self, retry=5):
         """Verifies the connection status and reconnets if required
