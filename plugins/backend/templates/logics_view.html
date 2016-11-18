@@ -68,6 +68,14 @@
              </td>
          </tr>
          <tr>
+             <td style="width:190px;">
+                <strong>{{ _('Crontab') }}</strong>
+             </td>
+             <td>
+                {% if logic.crontab == None %}-{% else %}{{ logic.crontab}} {% endif %}
+             </td>
+         </tr>
+         <tr>
              <td>
                <strong>{{ _('Watch_Items') }}</strong>
              </td>
