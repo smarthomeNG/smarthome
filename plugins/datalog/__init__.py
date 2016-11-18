@@ -23,9 +23,6 @@ import logging
 import time
 import threading
 
-logger = logging.getLogger('')
-
-
 class DataLog():
     filepatterns = {}
     logpatterns = {}
@@ -37,6 +34,7 @@ class DataLog():
     def __init__(self, smarthome, path="var/log/data", filepatterns={ "default" : "{log}-{year}-{month}-{day}.csv" }, logpatterns={ "csv" : "{time};{item};{value}\n" }, cycle=10):
         self._sh = smarthome
         self.path = path
+        self.logger = logging.getLogger(__name__)
 
         newfilepatterns = {}
         if isinstance(filepatterns, str):
@@ -68,16 +66,16 @@ class DataLog():
                 self.filepatterns[log] = newfilepatterns[log]
                 self.logpatterns[log] = logpatterns[ext]
             else:
-                logger.warn('DataLog: Ignoring log "{}", log pattern missing!'.format(log))
+                self.logger.warn('DataLog: Ignoring log "{}", log pattern missing!'.format(log))
 
         self.cycle = int(cycle)
         self._items = {}
         self._buffer = {}
         self._buffer_lock = threading.Lock()
-        
-        logger.info('DataLog: Initialized, logging to "{}"'.format(self.path))
+
+        self.logger.info('DataLog: Initialized, logging to "{}"'.format(self.path))
         for log in self.filepatterns:
-            logger.info('DataLog: Registered log "{}", file="{}", format="{}"'.format(log, self.filepatterns[log], self.logpatterns[log]))
+            self.logger.info('DataLog: Registered log "{}", file="{}", format="{}"'.format(log, self.filepatterns[log], self.logpatterns[log]))
 
     def run(self):
         self.alive = True
@@ -97,7 +95,7 @@ class DataLog():
             found = False
             for log in logs:
                 if log not in self.filepatterns:
-                    logger.debug('Unknown log "{}" for item {}'.format(log, item.id()))
+                    self.logger.debug('Unknown log "{}" for item {}'.format(log, item.id()))
                     return None
 
                 if log not in self._buffer:
@@ -133,7 +131,7 @@ class DataLog():
 
         for log in self._buffer:
             self._buffer_lock.acquire()
-            logger.debug('Dumping log "{}" with {} entries ...'.format(log, len(self._buffer[log])))
+            self.logger.debug('Dumping log "{}" with {} entries ...'.format(log, len(self._buffer[log])))
             entries = self._buffer[log]
             self._buffer[log] = []
             self._buffer_lock.release()
@@ -153,10 +151,9 @@ class DataLog():
                         handles[filename].write(logpattern.format(**data))
 
                 except Exception as e:
-                    logger.error('Error while writing to {}: {}'.format(filename, e))
+                    self.logger.error('Error while writing to {}: {}'.format(filename, e))
 
         for filename in handles:
             handles[filename].close()
 
-        logger.debug('Dump done!')
-
+            self.logger.debug('Dump done!')
