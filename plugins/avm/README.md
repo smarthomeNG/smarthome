@@ -488,6 +488,7 @@ are parsed as child items. In the example below there is a comment in the respec
 
 ## get_phone_name
 Get the phone name at a specific index. The returend value can be used as phone_name for set_call_origin. Parameter is an INT, starting from 1. In case an index does not exist, an error is logged.
+The used function X_AVM-DE_GetPhonePort() does not deliver analog connections like FON 1 and FON 2 (BUG in AVM Software).
 <pre>
 phone_name = sh.fb1.get_phone_name(1)
 </pre>
@@ -508,7 +509,8 @@ curl --anyauth -u user:password "https://fritz.box:49443/upnp/control/x_voip" -H
 
 ## set_call_origin(phone_name)
 Sets the origin of a call. E.g. a DECT phone. Typically set before using "start_call".
-You can also set the origin on your FritzDevice via "Telefonie -> Anrufe -> Wählhilfe verwenden -> Verbindung mit dem Telefon"
+You can also set the origin on your FritzDevice via "Telefonie -> Anrufe -> Wählhilfe verwenden -> Verbindung mit dem Telefon".
+The used function X_AVM-DE_SetDialConfig() does not allow the configuration of analog connections (BUG in AVM Software).
 <pre>
 sh.fb1.set_call_origin("<phone_name>")
 </pre>
