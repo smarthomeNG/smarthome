@@ -48,6 +48,21 @@ class Database():
     'lock()' - acquire the database lock (prevent simultaneous reads/writes)
     'release()' - release the database lock
     'verify()' - check database connection and reconnect if required
+
+    The SQL statments executed may have placeholders and parameters which
+    are passed to the execution methods listed above. The following DB-API
+    driver implementations are supported:
+    - qmark: Specify placeholders as "?" and parameters as list
+    - format: Specify placeholders as "%s" and parameters as list
+    - numeric: Specify placeholders as ":1" and parameters as list
+    - pyformat: Specify placeholders as "%(arg)s" and parameters as dict
+
+    Further you can choose a different formatting style in your code when
+    using this class. Specify one of the formatting listed above or use
+    the default - which is pyformat.
+
+    In case the driver implementation uses a different formatting it
+    will be converted transparently!
     """
 
     # Supported formatting styles
@@ -237,11 +252,11 @@ class Database():
         """Execute the given statement
 
         This will execute the statement specified in the 'stmt' parameter
-        which may contain '?' for parameter placeholders.
+        which may contain parameter placeholders (depending on selected
+        formatting style given in constructor).
 
-        The parameters can be specified as tuple in the 'params' parameters
-        where the first '?' in statement will be replaced by first value from
-        the parameter tuple.
+        The parameters can be specified in 'params' parameter as list or
+        dict depending on selected formatting style.
 
         If already aqcuired a cursor you can use this cursor by using the
         'cur' parameter. If omitted a new cursor will be aqcuire for this
