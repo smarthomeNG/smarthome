@@ -56,12 +56,12 @@
 							</form>
 						</tr>
 						<tr id="{{ logic }}_additional" style="display: none; cursor: pointer;" onClick="$('#{{ logic }}_additional').toggle();">
-							<td colspan="{% if updates %}7{% else %}6{% endif %}">{{ smarthome.return_logic(logic).watch_item }}</td>
+							<td colspan="{% if updates %}8{% else %}7{% endif %}">{{ smarthome.return_logic(logic).watch_item }}</td>
 						</tr>
 						{% endif %}
 					{% endfor %}
 
-					<tr><th colspan="{% if updates %}7{% else %}6{% endif %}">{{ _('Systemlogiken') }}</th><tr>
+					<tr><th colspan="{% if updates %}8{% else %}7{% endif %}">{{ _('Systemlogiken') }}</th><tr>
 					{% for logic in smarthome.return_logics()|sort %}
 						{% if not is_userlogic(smarthome, logic) %}
 						<tr>
@@ -91,7 +91,7 @@
 							</form>
 						</tr>
 						<tr id="{{ logic }}_additional" style="display: none; cursor: pointer;" onClick="$('#{{ logic }}_additional').toggle();">
-							<td colspan="{% if updates %}7{% else %}6{% endif %}">{{ smarthome.return_logic(logic).watch_item }}</td>
+							<td colspan="{% if updates %}8{% else %}7{% endif %}">{{ smarthome.return_logic(logic).watch_item }}</td>
 						</tr>
 						{% endif %}
 					{% endfor %}
