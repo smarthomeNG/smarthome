@@ -55,7 +55,7 @@ class DbLog(SmartPlugin):
         self._buffer_lock = threading.Lock()
         self._dump_lock = threading.Lock()
 
-        self._db = lib.db.Database(("" if prefix == "" else prefix.capitalize() + "_") + "DbLog", self._sh.dbapi(db), connect, 'qmark')
+        self._db = lib.db.Database(("" if prefix == "" else prefix.capitalize() + "_") + "DbLog", self._sh.dbapi(db), connect)
         self._db.connect()
         self._db.setup({i: [self._prepare(query[0]), self._prepare(query[1])] for i, query in self._setup.items()})
 
@@ -75,7 +75,7 @@ class DbLog(SmartPlugin):
                 last_change = cache[2]
                 value = self._item_value_tuple_rev(item.type(), cache[3:6])
                 last_change = self._datetime(last_change)
-                prev_change = self._db.fetchone(self._prepare('SELECT time from {log} WHERE item_id = ? ORDER BY time DESC LIMIT 1'), (id,))
+                prev_change = self._db.fetchone(self._prepare('SELECT time from {log} WHERE item_id = %(id)d ORDER BY time DESC LIMIT 1'), {'id':id})
                 if value is not None and prev_change is not None:
                     prev_change = self._datetime(prev_change[0])
                     item.set(value, 'DbLog', prev_change=prev_change, last_change=last_change)
@@ -101,7 +101,7 @@ class DbLog(SmartPlugin):
             self._buffer[item].append((start, end - start, item.prev_value()))
 
     def id(self, item, create=True, cur=None):
-        id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = ?;"), (item.id(),), cur)
+        id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = %(name)s;"), {'name':item.id()}, cur)
 
         if id == None and create == True:
             id = [self.insertItem(item.id(), cur)]
@@ -109,64 +109,52 @@ class DbLog(SmartPlugin):
         return None if id == None else id[0]
 
     def insertItem(self, name, cur=None):
-        id = self._db.fetchone(self._prepare("SELECT MAX(id) FROM {item};"), tuple(), cur)
-        self._db.execute(self._prepare("INSERT INTO {item}(id, name) VALUES(?,?);"), (1 if id[0] == None else id[0]+1, name), cur)
-        id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = ?;"), (name,), cur)
+        id = self._db.fetchone(self._prepare("SELECT MAX(id) FROM {item};"), {}, cur)
+        self._db.execute(self._prepare("INSERT INTO {item}(id, name) VALUES(%(id)d,%(names));"), {'id':1 if id[0] == None else id[0]+1, 'name':name}, cur)
+        id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = %(name)s;"), {'name':name}, cur)
         return id[0]
 
     def updateItem(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
-        params = [time]
-        params.extend(self._item_value_tuple(it, val))
-        params.append(changed)
-        params.append(id)
-        self._db.execute(self._prepare("UPDATE {item} SET time = ?, val_str = ?, val_num = ?, val_bool = ?, changed = ? WHERE id = ?;"), tuple(params), cur)
+        params = {'id':id, 'time':time, 'changed':changed}
+        params.update(self._item_value_tuple(it, val))
+        self._db.execute(self._prepare("UPDATE {item} SET time = %(time)d, val_str = %(val_str)s, val_num = %(val_num)d, val_bool = %(val_bool)d, changed = %(changed)d WHERE id = %(id)d;"), params, cur)
 
     def readItem(self, id, cur=None):
-        params = [id]
-        return self._db.fetchone(self._prepare("SELECT id, name, time, val_str, val_num, val_bool, changed from {item} WHERE id = ?;"), tuple(params), cur)
+        params = {'id':id}
+        return self._db.fetchone(self._prepare("SELECT id, name, time, val_str, val_num, val_bool, changed from {item} WHERE id = %(id)d;"), params, cur)
 
     def insertLog(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
-        params = [time, id, duration]
-        params.extend(self._item_value_tuple(it, val))
-        params.append(changed)
-        self._db.execute(self._prepare("INSERT INTO {log} VALUES (?,?,?,?,?,?,?);"), tuple(params), cur)
+        params = {'id':id, 'time':time, 'changed':changed, 'duration':duration}
+        params.update(self._item_value_tuple(it, val))
+        self._db.execute(self._prepare("INSERT INTO {log}(item_id, time, val_str, val_num, val_bool, duration, changed) VALUES (%(id)d,%(time)d,%(val_str)s,%(val_num)d,%(val_bool)d,%(duration)d,%(changed)d);"), params, cur)
 
     def updateLog(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
-        params = [duration]
-        params.extend(self._item_value_tuple(it, val))
-        params.append(changed)
-        params.append(id)
-        params.append(time)
-        self._db.execute(self._prepare("UPDATE {log} SET duration = ?, val_str = ?, val_num = ?, val_bool = ?, changed = ? WHERE item_id = ? AND time = ?;"), tuple(params), cur)
+        params = {'id':id, 'time':time, 'changed':changed, 'duration':duration}
+        params.update(self._item_value_tuple(it, val))
+        self._db.execute(self._prepare("UPDATE {log} SET duration = %(duration)d, val_str = %(val_str)s, val_num = %(val_num)d, val_bool = %(val_bool)d, changed = %(changed)d WHERE item_id = %(id)d AND time = %(time)d;"), params, cur)
 
     def readLog(self, id, time, cur = None):
-        params = [id, time]
-        return self._db.fetchall(self._prepare("SELECT time, item_id, duration, val_str, val_num, val_bool, changed FROM {log} WHERE item_id = ? AND time = ?;"), tuple(params), cur)
+        params = {'id':id, 'time':time}
+        return self._db.fetchall(self._prepare("SELECT time, item_id, duration, val_str, val_num, val_bool, changed FROM {log} WHERE item_id = %(id)d AND time = %(time)d;"), params, cur)
 
     def deleteLog(self, id, time = None, time_start = None, time_end = None, changed = None, changed_start = None, changed_end = None, cur = None):
-        params = [id]
-        params.append(time)
-        params.append(1 if time          == None else 0)
-        params.append(time_start)
-        params.append(1 if time_start    == None else 0)
-        params.append(time_end)
-        params.append(1 if time_end      == None else 0)
-        params.append(changed)
-        params.append(1 if changed       == None else 0)
-        params.append(changed_start)
-        params.append(1 if changed_start == None else 0)
-        params.append(changed_end)
-        params.append(1 if changed_end   == None else 0)
+        params = {'id':id,}
+        params.update({'time'          : time,          'time_flag'          : 1 if time          == None else 0})
+        params.update({'time_start'    : time_start,    'time_start_flag'    : 1 if time_start    == None else 0})
+        params.update({'time_end'      : time_end,      'time_end_flag'      : 1 if time_end      == None else 0})
+        params.update({'changed'       : changed,       'changed_flag'       : 1 if changed       == None else 0})
+        params.update({'changed_start' : changed_start, 'changed_start_flag' : 1 if changed_start == None else 0})
+        params.update({'changed_end'   : changed_end,   'changed_end_flag'   : 1 if changed_end   == None else 0})
 
         self._db.execute(self._prepare(
             "DELETE FROM {log} WHERE "
-            "  (item_id = ?         ) AND "
-            "  (time    = ? OR 1 = ?) AND "
-            "  (time    > ? OR 1 = ?) AND "
-            "  (time    < ? OR 1 = ?) AND "
-            "  (changed = ? OR 1 = ?) AND "
-            "  (changed > ? OR 1 = ?) AND "
-            "  (changed < ? OR 1 = ?);    "), tuple(params), cur)
+            "  (item_id = %(id)d                                         ) AND "
+            "  (time    = %(time)d          OR 1 = %(time_flag)d         ) AND "
+            "  (time    > %(time_start)d    OR 1 = %(time_start_flag)d   ) AND "
+            "  (time    < %(time_end)d      OR 1 = %(time_end_flag)d     ) AND "
+            "  (changed = %(changed)d       OR 1 = %(changed_flag)d      ) AND "
+            "  (changed > %(changed_start)d OR 1 = %(changed_start_flag)d) AND "
+            "  (changed < %(changed_end)d   OR 1 = %(changed_end_flag)d  );    "), params, cur)
 
     def db(self):
         return self._db
@@ -185,7 +173,7 @@ class DbLog(SmartPlugin):
            val_num = None
            val_bool = int(bool(item_val))
 
-        return [val_str, val_num, val_bool]
+        return {'val_str':val_str, 'val_num':val_num, 'val_bool':val_bool}
 
     def _item_value_tuple_rev(self, item_type, item_val_tuple):
         if item_type == 'num':
@@ -298,7 +286,7 @@ class DbLog(SmartPlugin):
         reply = {'cmd': 'series', 'series': None, 'sid': sid}
         reply['params'] = {'update': True, 'item': item, 'func': func, 'start': iend, 'end': end, 'step': step, 'sid': sid}
         reply['update'] = self._sh.now() + datetime.timedelta(seconds=int(step / 1000))
-        where = self._prepare(" FROM {log} WHERE item_id = ? AND time > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = ? AND time < ?) AND time <= ? AND time + duration > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = ? AND time < ?) GROUP BY ROUND(time / ?)")
+        where = self._prepare(" FROM {log} WHERE item_id = %(id)d AND time > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = %(id)d AND time < %(time_start)d) AND time <= %(time_end)d AND time + duration > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = %(id)d AND time < %(time_end)d) GROUP BY ROUND(time / %(step)d)")
         if func == 'avg':
             query = "SELECT MIN(time), ROUND(AVG(val_num * duration) / AVG(duration), 2)" + where + " ORDER BY time ASC"
         elif func == 'min':
@@ -312,7 +300,7 @@ class DbLog(SmartPlugin):
         _item = self._sh.return_item(item)
         if self._buffer[_item] != []:
             self._dump(items=[_item])
-        tuples = self._fetch(query, _item, ['<id>', '<id>', istart, iend, '<id>', istart, step])
+        tuples = self._fetch(query, _item, {'id':'<id>', 'time_start':istart, 'time_end':iend, 'step':step})
         if tuples:
             if istart > tuples[0][0]:
                 tuples[0] = (istart, tuples[0][1])
@@ -335,7 +323,7 @@ class DbLog(SmartPlugin):
     def _single(self, func, start, end='now', item=None):
         start = self._parse_ts(start)
         end = self._parse_ts(end)
-        where = self._prepare(" FROM {log} WHERE item_id = ? AND time > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = ? AND time < ?) AND time <= ? AND time + duration > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = ? AND time < ?)")
+        where = self._prepare(" FROM {log} WHERE item_id = %(id)d AND time > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = %(id)d AND time < %(time_start)s) AND time <= %(time_end)d AND time + duration > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = %(id)d AND time < %(time_end)d)")
         if func == 'avg':
             query = "SELECT ROUND(AVG(val_num * duration) / AVG(duration), 2)" + where
         elif func == 'min':
@@ -350,7 +338,7 @@ class DbLog(SmartPlugin):
         _item = self._sh.return_item(item)
         if self._buffer[_item] != []:
             self._dump(items=[_item])
-        tuples = self._fetch(query, _item, ['<id>', '<id>', start, end, '<id>', start])
+        tuples = self._fetch(query, _item, {'id':'<id>', 'time_start':start, 'time_end':end})
         if tuples is None:
             return
         return tuples[0][0]
@@ -365,8 +353,8 @@ class DbLog(SmartPlugin):
         tuples = None
         try:
             id = self.id(item, create=False)
-            params = [id if p == '<id>' else p for p in params]
-            tuples = self._db.fetchall(query, tuple(params))
+            params = {n:id if params[n] == '<id>' else params[n] for n in params}
+            tuples = self._db.fetchall(query, params)
         except Exception as e:
             self.logger.warning("DbLog: Error fetching data for {}: {}".format(item, e))
         self._db.release()
