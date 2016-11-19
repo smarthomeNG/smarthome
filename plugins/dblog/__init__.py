@@ -239,6 +239,7 @@ class DbLog(SmartPlugin):
                     self._dump_lock.release()
                     return
 
+                cur = None
                 try:
                     changed = self._timestamp(self._sh.now())
 
@@ -272,11 +273,15 @@ class DbLog(SmartPlugin):
                     self.updateItem(id, _update[0], None, _update[1], item.type(), _update[2], cur)
 
                     cur.close()
+                    cur = None
 
                     self._db.commit()
                 except Exception as e:
                     self.logger.warning("DbLog: problem updating {}: {}".format(item.id(), e))
                     self._db.rollback()
+                finally:
+                    if cur is not None:
+                        cur.close()
                 self._db.release()
         self.logger.debug('Dump completed')
         self._dump_lock.release()
