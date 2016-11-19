@@ -50,12 +50,13 @@ class Database():
     'release()' - release the database lock
     'verify()' - check database connection and reconnect if required
 
-    The SQL statments executed may have placeholders and parameters which
+    The SQL statements executed may have placeholders and parameters which
     are passed to the execution methods listed above. The following DB-API
     driver implementations are supported:
     - qmark: Specify placeholders as "?" and parameters as list
     - format: Specify placeholders as "%s" and parameters as list
     - numeric: Specify placeholders as ":1" and parameters as list
+    - named: Specify placeholders as ":name" and parameters as dict
     - pyformat: Specify placeholders as "%(arg)s" and parameters as dict
 
     Further you can choose a different formatting style in your code when
@@ -67,32 +68,50 @@ class Database():
     """
 
     # Supported formatting styles
-    _styles = ('qmark', 'format', 'numeric', 'pyformat')
+    _styles = ('qmark', 'format', 'numeric', 'named', 'pyformat')
 
-    # Supported formatting translations
+    # Supported formatting translations:
+    # - input_token: The token in source query to replace with output token
+    # - output_token: The token to use in output query
+    # - input_name: The name of parameter lookup in input parameter list
+    # - output_name: The name of parameter to put in output parameter list
+    # You can use placeholders in the output_token, input_name and output_name:
+    # - {0}: Number of parameter (counting from 1 for first parameter)
+    # - {1}: First match of input_token regex (use 2 for second, 3 for third, etc)
     _translations = {
       'qmark' : {
         'qmark'    : {},
         'format'   : {'input_token' : '?', 'output_token' : '%s'},
         'numeric'  : {'input_token' : '?', 'output_token' : ':{0}'},
+        'named'    : {'input_token' : '?', 'output_token' : ':arg{0}', 'output_name' : 'arg{0}'},
         'pyformat' : {'input_token' : '?', 'output_token' : '%(arg{0})s', 'output_name' : 'arg{0}'}
       },
       'format' : {
         'qmark'    : {'input_token' : re.compile('%[\w\d]+'), 'output_token' : '?'},
         'format'   : {},
         'numeric'  : {'input_token' : re.compile('%[\w\d]+'), 'output_token' : ':{0}'},
+        'named'    : {'input_token' : re.compile('%[\w\d]+'), 'output_token' : ':arg{0}', 'output_name' : 'arg{0}'},
         'pyformat' : {'input_token' : re.compile('%[\w\d]+'), 'output_token' : '%(arg{0})s', 'output_name' : 'arg{0}'}
       },
       'numeric' : {
         'qmark'    : {'input_token' : re.compile(':(\d+)'), 'output_token' : '?', 'input_name' : '{1}'},
         'format'   : {'input_token' : re.compile(':(\d+)'), 'output_token' : '%s', 'input_name' : '{1}'},
         'numeric'  : {},
+        'named'    : {'input_token' : re.compile(':(\d+)'), 'output_token' : ':arg{1}', 'input_name' : '{1}', 'output_name' : 'arg{1}'},
         'pyformat' : {'input_token' : re.compile(':(\d+)'), 'output_token' : '%(arg{1})s', 'output_name' : 'arg{1}'}
+      },
+      'named' : {
+        'qmark'    : {'input_token' : re.compile(':([\w\d]+)'), 'output_token' : '?', 'input_name' : '{1}'},
+        'format'   : {'input_token' : re.compile(':([\w\d]+)'), 'output_token' : '%s', 'input_name' : '{1}'},
+        'numeric'  : {'input_token' : re.compile(':([\w\d]+)'), 'output_token' : ':{0}', 'input_name' : '{1}'},
+        'named'    : {},
+        'pyformat' : {'input_token' : re.compile(':([\w\d]+)'), 'output_token' : '%({1})s', 'input_name' : '{1}', 'output_name' : '{1}'}
       },
       'pyformat' : {
         'qmark'    : {'input_token' : re.compile('%\(([\w\d]+)\)\w+'), 'output_token' : '?', 'input_name' : '{1}'},
         'format'   : {'input_token' : re.compile('%\(([\w\d]+)\)\w+'), 'output_token' : '%s', 'input_name' : '{1}'},
         'numeric'  : {'input_token' : re.compile('%\(([\w\d]+)\)\w+'), 'output_token' : ':{0}', 'input_name' : '{1}'},
+        'named'    : {'input_token' : re.compile('%\(([\w\d]+)\)\w+'), 'output_token' : ':{1}', 'input_name' : '{1}', 'output_name' : '{1}'},
         'pyformat' : {}
       },
     }
@@ -100,6 +119,7 @@ class Database():
       'qmark'    : list,
       'format'   : list,
       'numeric'  : list,
+      'named'    : dict,
       'pyformat' : dict
     }
 
@@ -195,7 +215,7 @@ class Database():
         table (which will also be created by this method if it does not exist
         already).
 
-        To setup the database you need to specify the required SQL statments
+        To setup the database you need to specify the required SQL statements
         (e.g. 'CREATE TABLE', 'CREATE INDEX' etc.) in the 'queries' parameter.
         This will be a dictionary where the keys are simple version numbers
         and values are a two-item list for a rollout and rollback statement.

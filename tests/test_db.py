@@ -184,7 +184,7 @@ class DbQueryBaseTests(TestDbBase):
         if type(args[1]) == list:
           self.assertEqual(args_list, args[1])
         else:
-          self.assertEqual(args_dict, args[1])
+          self.assertEqual(args_dict, dict(args[1]))
 
     def test_execute_argument_reuse_qmark(self):
         args = self.execute(self.query_argsreuse, self.args, self.format, 'qmark')
@@ -197,6 +197,10 @@ class DbQueryBaseTests(TestDbBase):
     def test_execute_argument_reuse_numeric(self):
         args = self.execute(self.query_argsreuse, self.args, self.format, 'numeric')
         self._assert_argument_reuse(args, 'numeric')
+
+    def test_execute_argument_reuse_named(self):
+        args = self.execute(self.query_argsreuse, self.args, self.format, 'named')
+        self._assert_argument_reuse(args, 'named')
 
     def test_execute_argument_reuse_pyformat(self):
         args = self.execute(self.query_argsreuse, self.args, self.format, 'pyformat')
@@ -233,6 +237,17 @@ class TestDbQueryNumeric(unittest.TestCase, DbQueryBaseTests):
     expect_args_argsreuse_dict = {'arg2' : 'test'}
 
 
+class TestDbQueryNamed(unittest.TestCase, DbQueryBaseTests):
+
+    format = 'named'
+    args = {'arg1' : 1, 'arg2' : 'test'}
+    query = 'SELECT * FROM TABLE WHERE ID = :arg1 AND Name = :arg2'
+    query_formatter = 'SELECT * FROM TABLE WHERE ID = :arg1 AND Name = :arg2'
+    query_argsreuse = 'SELECT * FROM TABLE WHERE ID = :arg2 AND Name = :arg2'
+    expect_args_argsreuse_list = ['test', 'test']
+    expect_args_argsreuse_dict = {'arg2' : 'test'}
+
+
 class TestDbQueryPyformat(unittest.TestCase, DbQueryBaseTests):
 
     format = 'pyformat'
@@ -241,7 +256,7 @@ class TestDbQueryPyformat(unittest.TestCase, DbQueryBaseTests):
     query_formatter = 'SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s'
     query_argsreuse = 'SELECT * FROM TABLE WHERE ID = %(arg2)d AND Name = %(arg2)s'
     expect_args_argsreuse_list = ['test', 'test']
-    expect_args_argsreuse_dict = {'arg1' : 1, 'arg2' : 'test'}
+    expect_args_argsreuse_dict = {'arg2' : 'test'}
 
 
 class MockDbApi():
