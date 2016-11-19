@@ -258,6 +258,13 @@ class TestDbQueryPyformat(unittest.TestCase, DbQueryBaseTests):
     expect_args_argsreuse_list = ['test', 'test']
     expect_args_argsreuse_dict = {'arg2' : 'test'}
 
+    def test_execute_format_always_uses_strings(self):
+        """Converting pyformat to format should always use %s
+		See also: https://github.com/smarthomeNG/smarthome/pull/131/commits/bcaa491f91251e2129fa40958bad09cc623d9732
+        """
+        args = self.execute('SELECT * FROM TABLE WHERE ID = %(arg1)d AND Name = %(arg2)s', self.args, self.format, 'format')
+        self.assertEqual('SELECT * FROM TABLE WHERE ID = %s AND Name = %s', args[0])
+
 
 class MockDbApi():
 
