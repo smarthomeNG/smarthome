@@ -364,7 +364,8 @@ class Database():
             param_dict = params
         else:
             param_dict = collections.OrderedDict()
-            param_dict.update({str(key+1): value for key, value in enumerate(params)})
+            for key, value in enumerate(params):
+                param_dict[str(key+1)] = value
 
         if formatting is None:
             translation = self._translation
