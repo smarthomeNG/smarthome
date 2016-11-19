@@ -101,7 +101,7 @@ class DbLog(SmartPlugin):
             self._buffer[item].append((start, end - start, item.prev_value()))
 
     def id(self, item, create=True, cur=None):
-        id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = %(name)s;"), {'name':item.id()}, cur)
+        id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = %(name)s;"), {'name':item.id()}, cur=cur)
 
         if id == None and create == True:
             id = [self.insertItem(item.id(), cur)]
@@ -109,52 +109,61 @@ class DbLog(SmartPlugin):
         return None if id == None else id[0]
 
     def insertItem(self, name, cur=None):
-        id = self._db.fetchone(self._prepare("SELECT MAX(id) FROM {item};"), {}, cur)
-        self._db.execute(self._prepare("INSERT INTO {item}(id, name) VALUES(%(id)d,%(names));"), {'id':1 if id[0] == None else id[0]+1, 'name':name}, cur)
-        id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = %(name)s;"), {'name':name}, cur)
+        id = self._db.fetchone(self._prepare("SELECT MAX(id) FROM {item};"), {}, cur=cur)
+        self._db.execute(self._prepare("INSERT INTO {item}(id, name) VALUES(%(id)d,%(name)s);"), {'id':1 if id[0] == None else id[0]+1, 'name':name}, cur=cur)
+        id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = %(name)s;"), {'name':name}, cur=cur)
         return id[0]
 
     def updateItem(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
         params = {'id':id, 'time':time, 'changed':changed}
         params.update(self._item_value_tuple(it, val))
-        self._db.execute(self._prepare("UPDATE {item} SET time = %(time)d, val_str = %(val_str)s, val_num = %(val_num)d, val_bool = %(val_bool)d, changed = %(changed)d WHERE id = %(id)d;"), params, cur)
+        self._db.execute(self._prepare("UPDATE {item} SET time = %(time)d, val_str = %(val_str)s, val_num = %(val_num)d, val_bool = %(val_bool)d, changed = %(changed)d WHERE id = %(id)d;"), params, cur=cur)
 
     def readItem(self, id, cur=None):
         params = {'id':id}
-        return self._db.fetchone(self._prepare("SELECT id, name, time, val_str, val_num, val_bool, changed from {item} WHERE id = %(id)d;"), params, cur)
+        return self._db.fetchone(self._prepare("SELECT id, name, time, val_str, val_num, val_bool, changed from {item} WHERE id = %(id)d;"), params, cur=cur)
 
     def insertLog(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
         params = {'id':id, 'time':time, 'changed':changed, 'duration':duration}
         params.update(self._item_value_tuple(it, val))
-        self._db.execute(self._prepare("INSERT INTO {log}(item_id, time, val_str, val_num, val_bool, duration, changed) VALUES (%(id)d,%(time)d,%(val_str)s,%(val_num)d,%(val_bool)d,%(duration)d,%(changed)d);"), params, cur)
+        self._db.execute(self._prepare("INSERT INTO {log}(item_id, time, val_str, val_num, val_bool, duration, changed) VALUES (%(id)d,%(time)d,%(val_str)s,%(val_num)d,%(val_bool)d,%(duration)d,%(changed)d);"), params, cur=cur)
 
     def updateLog(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
         params = {'id':id, 'time':time, 'changed':changed, 'duration':duration}
         params.update(self._item_value_tuple(it, val))
-        self._db.execute(self._prepare("UPDATE {log} SET duration = %(duration)d, val_str = %(val_str)s, val_num = %(val_num)d, val_bool = %(val_bool)d, changed = %(changed)d WHERE item_id = %(id)d AND time = %(time)d;"), params, cur)
+        self._db.execute(self._prepare("UPDATE {log} SET duration = %(duration)d, val_str = %(val_str)s, val_num = %(val_num)d, val_bool = %(val_bool)d, changed = %(changed)d WHERE item_id = %(id)d AND time = %(time)d;"), params, cur=cur)
 
     def readLog(self, id, time, cur = None):
         params = {'id':id, 'time':time}
-        return self._db.fetchall(self._prepare("SELECT time, item_id, duration, val_str, val_num, val_bool, changed FROM {log} WHERE item_id = %(id)d AND time = %(time)d;"), params, cur)
+        return self._db.fetchall(self._prepare("SELECT time, item_id, duration, val_str, val_num, val_bool, changed FROM {log} WHERE item_id = %(id)d AND time = %(time)d;"), params, cur=cur)
+
+    def readLogs(self, id, time = None, time_start = None, time_end = None, changed = None, changed_start = None, changed_end = None, cur = None):
+        condition, params = self._slice_condition(id, time=time, time_start=time_start, time_end=time_end, changed=changed, changed_start=changed_start, changed_end=changed_end)
+        self._db.execute(self._prepare("SELECT time, item_id, duration, val_str, val_num, val_bool, changed FROM {log} WHERE " + condition), params, cur=cur)
 
     def deleteLog(self, id, time = None, time_start = None, time_end = None, changed = None, changed_start = None, changed_end = None, cur = None):
-        params = {'id':id,}
-        params.update({'time'          : time,          'time_flag'          : 1 if time          == None else 0})
-        params.update({'time_start'    : time_start,    'time_start_flag'    : 1 if time_start    == None else 0})
-        params.update({'time_end'      : time_end,      'time_end_flag'      : 1 if time_end      == None else 0})
-        params.update({'changed'       : changed,       'changed_flag'       : 1 if changed       == None else 0})
-        params.update({'changed_start' : changed_start, 'changed_start_flag' : 1 if changed_start == None else 0})
-        params.update({'changed_end'   : changed_end,   'changed_end_flag'   : 1 if changed_end   == None else 0})
+        condition, params = self._slice_condition(id, time=time, time_start=time_start, time_end=time_end, changed=changed, changed_start=changed_start, changed_end=changed_end)
+        self._db.execute(self._prepare("DELETE FROM {log} WHERE " + condition), params, cur=cur)
 
-        self._db.execute(self._prepare(
-            "DELETE FROM {log} WHERE "
-            "  (item_id = %(id)d                                         ) AND "
-            "  (time    = %(time)d          OR 1 = %(time_flag)d         ) AND "
-            "  (time    > %(time_start)d    OR 1 = %(time_start_flag)d   ) AND "
-            "  (time    < %(time_end)d      OR 1 = %(time_end_flag)d     ) AND "
-            "  (changed = %(changed)d       OR 1 = %(changed_flag)d      ) AND "
-            "  (changed > %(changed_start)d OR 1 = %(changed_start_flag)d) AND "
-            "  (changed < %(changed_end)d   OR 1 = %(changed_end_flag)d  );    "), params, cur)
+    def _slice_condition(self, id, time = None, time_start = None, time_end = None, changed = None, changed_start = None, changed_end = None):
+        params = {
+          'id'            : id,
+          'time'          : time,          'time_flag'          : 1 if time          == None else 0,
+          'time_start'    : time_start,    'time_start_flag'    : 1 if time_start    == None else 0,
+          'time_end'      : time_end,      'time_end_flag'      : 1 if time_end      == None else 0,
+          'changed'       : changed,       'changed_flag'       : 1 if changed       == None else 0,
+          'changed_start' : changed_start, 'changed_start_flag' : 1 if changed_start == None else 0,
+          'changed_end'   : changed_end,   'changed_end_flag'   : 1 if changed_end   == None else 0
+        }
+
+        condition = "(item_id = %(id)d                                         ) AND " + \
+                    "(time    = %(time)d          OR 1 = %(time_flag)d         ) AND " + \
+                    "(time    > %(time_start)d    OR 1 = %(time_start_flag)d   ) AND " + \
+                    "(time    < %(time_end)d      OR 1 = %(time_end_flag)d     ) AND " + \
+                    "(changed = %(changed)d       OR 1 = %(changed_flag)d      ) AND " + \
+                    "(changed > %(changed_start)d OR 1 = %(changed_start_flag)d) AND " + \
+                    "(changed < %(changed_end)d   OR 1 = %(changed_end_flag)d  );    "
+        return (condition, params)
 
     def db(self):
         return self._db
