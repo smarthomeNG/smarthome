@@ -25,6 +25,7 @@ import logging
 import datetime
 import time
 import threading
+import collections
 import re
 
 logger = logging.getLogger('')
@@ -102,7 +103,7 @@ class Database():
       'pyformat' : dict
     }
 
-    def __init__(self, name, dbapi, connect, format='pyformat'):
+    def __init__(self, name, dbapi, connect, formatting='pyformat'):
         """Create a new database instance
 
         The 'name' parameter identifies the name for the database access.
@@ -117,12 +118,12 @@ class Database():
         parameters will be used as 'connect()' parameters of the DB-API driver
         implementation.
 
-        The 'pyformat' parameter can be used to specify a different type
+        The 'formatting' parameter can be used to specify a different type
         of formatting (see DB-API spec) which defaults to 'pyformat'.
         """
         self._name = name
         self._dbapi = dbapi
-        self._format_input = format
+        self._format_input = formatting
         self._connected = False
         self._conn = None
 
@@ -222,7 +223,7 @@ class Database():
 
                 dt = datetime.datetime.utcnow()
                 ts = int(time.mktime(dt.timetuple()) * 1000 + dt.microsecond / 1000)
-                self.execute("INSERT INTO " + version_table + "(version, updated, rollout, rollback) VALUES(?, ?, ?, ?);", (v, ts, queries[v][0], queries[v][1]), cur)
+                self.execute("INSERT INTO " + version_table + "(version, updated, rollout, rollback) VALUES(?, ?, ?, ?);", (v, ts, queries[v][0], queries[v][1]), formatting='qmark', cur=cur)
 
         self.commit()
         cur.close()
@@ -248,7 +249,7 @@ class Database():
         """Create a new cursor for executing statements"""
         return self._conn.cursor()
 
-    def execute(self, stmt, params=(), cur=None):
+    def execute(self, stmt, params=(), formatting=None, cur=None):
         """Execute the given statement
 
         This will execute the statement specified in the 'stmt' parameter
@@ -258,27 +259,36 @@ class Database():
         The parameters can be specified in 'params' parameter as list or
         dict depending on selected formatting style.
 
+        To overwrite the global formatting style given in constructor, the
+        parameter 'formatting' can be used to change the style for the
+        given statement.
+
         If already aqcuired a cursor you can use this cursor by using the
         'cur' parameter. If omitted a new cursor will be aqcuire for this
         statement and released afterwards.
         """
         try:
-            stmt, args = self._prepare(stmt, params)
+            stmt, args = self._prepare(stmt, params, formatting)
         except Exception as e:
             logger.error("Can not prepare query: {} (args {}): {}".format(stmt, params, e))
             raise
 
+        c = None
         try:
             if cur == None:
                 c = self.cursor()
                 result = c.execute(stmt, args)
                 c.close()
+                c = None
             else:
                 result = cur.execute(stmt, args)
             return result
         except Exception as e:
             logger.error("Can not execute query: {} (args {}): {}".format(stmt, args, e))
             raise
+        finally:
+            if c is not None:
+                c.close()
 
     def verify(self, retry=5):
         """Verifies the connection status and reconnets if required
@@ -314,7 +324,7 @@ class Database():
 
         return retry
 
-    def fetchone(self, stmt, params=(), cur=None):
+    def fetchone(self, stmt, params=(), formatting=None, cur=None):
         """Execute given statement and fetch one row from result
 
         This method can be used in case you only want to fetch one row from
@@ -323,15 +333,15 @@ class Database():
         """
         if cur == None:
             c = self.cursor()
-            self.execute(stmt, params, c)
+            self.execute(stmt, params, formatting=formatting, cur=c)
             result = c.fetchone()
             c.close()
         else:
-            self.execute(stmt, params, cur)
+            self.execute(stmt, params, formatting=formatting, cur=cur)
             result = cur.fetchone()
         return result
 
-    def fetchall(self, stmt, params=(), cur=None):
+    def fetchall(self, stmt, params=(), formatting=None, cur=None):
         """Execute given statement and fetch all rows from result
 
         This method can be used to fetch all rows from the result. It accepts
@@ -339,15 +349,15 @@ class Database():
         """
         if cur == None:
             c = self.cursor()
-            self.execute(stmt, params, c)
+            self.execute(stmt, params, formatting=formatting, cur=c)
             result = c.fetchall()
             c.close()
         else:
-            self.execute(stmt, params, cur)
+            self.execute(stmt, params, formatting=formatting, cur=cur)
             result = cur.fetchall()
         return result
 
-    def _prepare(self, stmt, params):
+    def _prepare(self, stmt, params, formatting=None):
         """Internal helper method to convert the statement and parameter list"""
 
         if isinstance(params, dict):
@@ -355,11 +365,18 @@ class Database():
         else:
             param_dict = {str(key+1): value for key, value in enumerate(params)}
 
-        stmt_result, param_result = self._translate(stmt, param_dict, **self._translation)
+        if formatting is None:
+            translation = self._translation
+            translation_param_type = self._translation_param_type
+        else:
+            translation = self._translations[formatting][self._format_output]
+            translation_param_type = self._translation_param_types[formatting]
 
-        if self._translation_param_type is list:
-            return (stmt_result, [param_result[name] for name in sorted(param_result)])
-        elif self._translation_param_type is dict:
+        stmt_result, param_result = self._translate(stmt, param_dict, **translation)
+
+        if translation_param_type is list:
+            return (stmt_result, [param_result[name] for name in param_result])
+        elif translation_param_type is dict:
             return (stmt_result, param_result)
 
     def _translate(self, stmt, params, input_token=None, output_token=None, input_name='{0}', output_name='{0}'):
@@ -369,7 +386,7 @@ class Database():
             return (stmt, params)
 
         cnt = 1
-        param_result = {}
+        param_result = collections.OrderedDict()
         if isinstance(input_token, str):
             while input_token in stmt:
                 stmt = stmt.replace(input_token, output_token.format(cnt), 1)
