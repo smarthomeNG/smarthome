@@ -106,13 +106,13 @@ class DbLog(SmartPlugin):
         if id == None and create == True:
             id = [self.insertItem(item.id(), cur)]
 
-        return None if id == None else id[0]
+        return None if id == None else int(id[0])
 
     def insertItem(self, name, cur=None):
         id = self._db.fetchone(self._prepare("SELECT MAX(id) FROM {item};"), {}, cur=cur)
         self._db.execute(self._prepare("INSERT INTO {item}(id, name) VALUES(%(id)d,%(name)s);"), {'id':1 if id[0] == None else id[0]+1, 'name':name}, cur=cur)
         id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = %(name)s;"), {'name':name}, cur=cur)
-        return id[0]
+        return int(id[0])
 
     def updateItem(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
         params = {'id':id, 'time':time, 'changed':changed}
