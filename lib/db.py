@@ -369,16 +369,14 @@ class Database():
 
         if formatting is None:
             translation = self._translation
-            translation_param_type = self._translation_param_type
         else:
             translation = self._translations[formatting][self._format_output]
-            translation_param_type = self._translation_param_types[formatting]
 
         stmt_result, param_result = self._translate(stmt, param_dict, **translation)
 
-        if translation_param_type is list:
+        if self._translation_param_type is list:
             return (stmt_result, [param_result[name] for name in param_result])
-        elif translation_param_type is dict:
+        elif self._translation_param_type is dict:
             return (stmt_result, param_result)
 
     def _translate(self, stmt, params, input_token=None, output_token=None, input_name='{0}', output_name='{0}'):
