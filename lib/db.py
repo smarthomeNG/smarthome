@@ -61,7 +61,7 @@ class Database():
 
     Further you can choose a different formatting style in your code when
     using this class. Specify one of the formatting listed above or use
-    the default - which is pyformat.
+    the default - which is named.
 
     In case the driver implementation uses a different formatting it
     will be converted transparently!
@@ -123,7 +123,7 @@ class Database():
       'pyformat' : dict
     }
 
-    def __init__(self, name, dbapi, connect, formatting='pyformat'):
+    def __init__(self, name, dbapi, connect, formatting='named'):
         """Create a new database instance
 
         The 'name' parameter identifies the name for the database access.
