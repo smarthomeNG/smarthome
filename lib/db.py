@@ -394,15 +394,12 @@ class Database():
                 param_result[output_name.format(*args)] = params[input_name.format(*args)]
                 cnt = cnt + 1
         else:
-            match = True
-            while match is not None:
-                match = input_token.search(stmt)
-                if match is not None:
-                    args = [cnt]
-                    args.extend(match.groups())
-                    stmt = stmt.replace(match.group(0), output_token.format(*args), 1)
-                    param_result[output_name.format(*args)] = params[input_name.format(*args)]
-                    cnt = cnt + 1
+            for match in input_token.finditer(stmt):
+                args = [cnt]
+                args.extend(match.groups())
+                stmt = stmt.replace(match.group(0), output_token.format(*args), 1)
+                param_result[output_name.format(*args)] = params[input_name.format(*args)]
+                cnt = cnt + 1
 
         return (stmt,  param_result)
 
