@@ -12,7 +12,7 @@ start_time = time.time()
 
 
 class Dashbutton(SmartPlugin):
-    PLUGIN_VERSION = "1.3.0.2"
+    PLUGIN_VERSION = "1.3.0.3"
     ALLOW_MULTIINSTANCE = False
 
     def __init__(self, sh, *args, **kwargs):
@@ -66,86 +66,87 @@ class Dashbutton(SmartPlugin):
         pass
 
     def dispatch(self, pkt):
-        options = pkt[DHCP].options
-        for option in options:
-            if isinstance(option, tuple) and 'requested_addr' in option:
-                mac_address = pkt[Ether].src.lower()
-                if not mac_address:
-                    break
-                if mac_address not in self._dashbuttons:
-                    break
+        if pkt.haslayer(DHCP):
+            options = pkt[DHCP].options
+            for option in options:
+                if isinstance(option, tuple) and 'requested_addr' in option:
+                    mac_address = pkt[Ether].src.lower()
+                    if not mac_address:
+                        break
+                    if mac_address not in self._dashbuttons:
+                        break
 
-                for i in range(len(self._dashbuttons[mac_address])):
-                    # sometimes the dashbutton triggers the push twice
-                    # store last-push-timestamp to prevent the "double push"
-                    delta = Dashbutton.elapsed_seconds() - self._dashbuttons[mac_address][i].threshold
-                    self._logger.debug(self._dashbuttons[mac_address][i])
-                    if delta < 1:
-                        self._logger.debug("Threshold not reached, ignoring last push from {mac}".format(
-                            mac=mac_address))
-                        continue
-
-                    # set the current timestamp
-                    self._dashbuttons[mac_address][i] = \
-                        self._dashbuttons[mac_address][i]._replace(threshold=Dashbutton.elapsed_seconds())
-
-                    # check item for dash_button mode
-                    item = self._dashbuttons[mac_address][i].item
-                    if not self.has_iattr(item.conf, 'dashbutton_mode'):
-                        self._logger.warning("{item}: Dashbutton mode missing!".format(item=item))
-                        continue
-                    mode = self.get_iattr_value(item.conf, 'dashbutton_mode').lower().strip()
-
-                    # check for valid mode
-                    if mode not in ['value', 'flip']:
-                        self._logger.warning("{item}: unknown mode {mode}!".format(mode=mode, item=item))
-                        continue
-
-                    # check that 'flip' mode is only set for bool item
-                    if mode == 'flip':
-                        if item.type().lower() != 'bool':
-                            self._logger.error("{item}: dashbutton mode 'flip' only valid for item type 'bool'!".
-                                               format(item=item))
-                            continue
-                        item(not item(), 'dashbutton')
-                        continue
-
-                    if mode == 'value':
-                        if not self.has_iattr(item.conf, 'dashbutton_value'):
-                            self._logger.error("{item}: dashbutton attribute 'dashbutton_value' has to be set for mode "
-                                               "'value'!".format(item=item))
+                    for i in range(len(self._dashbuttons[mac_address])):
+                        # sometimes the dashbutton triggers the push twice
+                        # store last-push-timestamp to prevent the "double push"
+                        delta = Dashbutton.elapsed_seconds() - self._dashbuttons[mac_address][i].threshold
+                        self._logger.debug(self._dashbuttons[mac_address][i])
+                        if delta < 1:
+                            self._logger.debug("Threshold not reached, ignoring last push from {mac}".format(
+                                mac=mac_address))
                             continue
 
-                        dash_values = self.get_iattr_value(item.conf, 'dashbutton_value')
+                        # set the current timestamp
+                        self._dashbuttons[mac_address][i] = \
+                            self._dashbuttons[mac_address][i]._replace(threshold=Dashbutton.elapsed_seconds())
 
-                        # dashbutton_value could be str or list
-                        if isinstance(dash_values, str):
-                            dash_values = dash_values.split('|')
+                        # check item for dash_button mode
+                        item = self._dashbuttons[mac_address][i].item
+                        if not self.has_iattr(item.conf, 'dashbutton_mode'):
+                            self._logger.warning("{item}: Dashbutton mode missing!".format(item=item))
+                            continue
+                        mode = self.get_iattr_value(item.conf, 'dashbutton_mode').lower().strip()
 
-                        reset = False
+                        # check for valid mode
+                        if mode not in ['value', 'flip']:
+                            self._logger.warning("{item}: unknown mode {mode}!".format(mode=mode, item=item))
+                            continue
 
-                        if self.has_iattr(item.conf, 'dashbutton_reset'):
-                            try:
-                                reset_time = int(self.get_iattr_value(item.conf, 'dashbutton_reset'))
-                                delta = (self._sh.now() - item.last_update()).total_seconds()
-                                if reset_time <= delta:
-                                    reset = True
-                                    self._logger.debug("reset timer activated for item {item}".format(item=item))
-                            except:
-                                self._logger.warning("Atrribute 'dashbutton_reset' has to be "
-                                                     "an int value. Ignoring value.")
-                        # check whether the prev item value was configured in dashbutton_value or not
-                        prev_item_value = str(item())
+                        # check that 'flip' mode is only set for bool item
+                        if mode == 'flip':
+                            if item.type().lower() != 'bool':
+                                self._logger.error("{item}: dashbutton mode 'flip' only valid for item type 'bool'!".
+                                                   format(item=item))
+                                continue
+                            item(not item(), 'dashbutton')
+                            continue
 
-                        if prev_item_value in dash_values:
-                            index = dash_values.index(prev_item_value)
-                            if len(dash_values) != index + 1 and not reset:
-                                item(dash_values[index+1])
+                        if mode == 'value':
+                            if not self.has_iattr(item.conf, 'dashbutton_value'):
+                                self._logger.error("{item}: dashbutton attribute 'dashbutton_value' has to be set for mode "
+                                                   "'value'!".format(item=item))
+                                continue
+
+                            dash_values = self.get_iattr_value(item.conf, 'dashbutton_value')
+
+                            # dashbutton_value could be str or list
+                            if isinstance(dash_values, str):
+                                dash_values = dash_values.split('|')
+
+                            reset = False
+
+                            if self.has_iattr(item.conf, 'dashbutton_reset'):
+                                try:
+                                    reset_time = int(self.get_iattr_value(item.conf, 'dashbutton_reset'))
+                                    delta = (self._sh.now() - item.last_update()).total_seconds()
+                                    if reset_time <= delta:
+                                        reset = True
+                                        self._logger.debug("reset timer activated for item {item}".format(item=item))
+                                except:
+                                    self._logger.warning("Atrribute 'dashbutton_reset' has to be "
+                                                         "an int value. Ignoring value.")
+                            # check whether the prev item value was configured in dashbutton_value or not
+                            prev_item_value = str(item())
+
+                            if prev_item_value in dash_values:
+                                index = dash_values.index(prev_item_value)
+                                if len(dash_values) != index + 1 and not reset:
+                                    item(dash_values[index+1])
+                                else:
+                                    item(dash_values[0])
                             else:
                                 item(dash_values[0])
-                        else:
-                            item(dash_values[0])
-                break
+                    break
 
     # returns the elapsed seconds since the start of the program
     @staticmethod
