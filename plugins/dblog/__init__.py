@@ -300,7 +300,7 @@ class DbLog(SmartPlugin):
         reply = {'cmd': 'series', 'series': None, 'sid': sid}
         reply['params'] = {'update': True, 'item': item, 'func': func, 'start': iend, 'end': end, 'step': step, 'sid': sid}
         reply['update'] = self._sh.now() + datetime.timedelta(seconds=int(step / 1000))
-        where = self._prepare(" FROM {log} WHERE item_id = :id AND time > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = :id AND time < :time_start) AND time <= :time_end AND time + duration > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = :id AND time < :time_start) GROUP BY ROUND(time / :step)")
+        where = self._series_single_condition() + " GROUP BY ROUND(time / :step)"
         if func == 'avg':
             query = "SELECT MIN(time), ROUND(AVG(val_num * duration) / AVG(duration), 2)" + where + " ORDER BY time ASC"
         elif func == 'min':
@@ -337,7 +337,7 @@ class DbLog(SmartPlugin):
     def _single(self, func, start, end='now', item=None):
         start = self._parse_ts(start)
         end = self._parse_ts(end)
-        where = self._prepare(" FROM {log} WHERE item_id = :id AND time > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = :id AND time < :time_start) AND time <= :time_end AND time + duration > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = :id AND time < :time_start)")
+        where = self._series_single_condition()
         if func == 'avg':
             query = "SELECT ROUND(AVG(val_num * duration) / AVG(duration), 2)" + where
         elif func == 'min':
@@ -356,6 +356,14 @@ class DbLog(SmartPlugin):
         if tuples is None:
             return
         return tuples[0][0]
+
+    def _series_single_condition(self):
+        return self._prepare(
+            "FROM {log} WHERE "
+            "item_id = :id AND "
+            "time > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = :id AND time < :time_start) AND "
+            "time <= :time_end AND "
+            "time + duration > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = :id AND time < :time_start)")
 
     def _fetch(self, query, item, params):
         if self._db.verify(5) == 0:
