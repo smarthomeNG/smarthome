@@ -156,7 +156,7 @@ class DbLog(SmartPlugin):
           'changed_end'   : changed_end,   'changed_end_flag'   : 1 if changed_end   == None else 0
         }
 
-        condition = "(item_id = :id                                         ) AND " + \
+        condition = "(item_id = :id                                      ) AND " + \
                     "(time    = :time          OR 1 = :time_flag         ) AND " + \
                     "(time    > :time_start    OR 1 = :time_start_flag   ) AND " + \
                     "(time    < :time_end      OR 1 = :time_end_flag     ) AND " + \
