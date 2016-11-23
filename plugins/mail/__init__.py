@@ -103,12 +103,19 @@ class IMAP():
                 logic = False
             if logic:
                 logic.trigger('IMAP', fo, mail, dest=to)
-                rsp, data = imap.uid('copy', uid, 'Trash')
-                if rsp == 'OK':
-                    typ, data = imap.uid('store', uid, '+FLAGS', '(\Deleted)')
-                    logger.debug("Moving mail to trash. {0} => {1}: {2}".format(fo, to, subject))
+                if self._host.lower() == 'imap.gmail.com':
+                    typ, data = imap.uid('store', uid, '+X-GM-LABELS', '\\Trash')
+                    if typ == 'OK':
+                        logger.debug("Moving mail to trash. {0} => {1}: {2}".format(fo, to, subject))
+                    else:
+                        logger.warning("Could not move mail to trash. {0} => {1}: {2}".format(fo, to, subject))
                 else:
-                    logger.warning("Could not move mail to trash. {0} => {1}: {2}".format(fo, to, subject))
+                    rsp, data = imap.uid('copy', uid, 'Trash')
+                    if rsp == 'OK':
+                        typ, data = imap.uid('store', uid, '+FLAGS', '(\Deleted)')
+                        logger.debug("Moving mail to trash. {0} => {1}: {2}".format(fo, to, subject))
+                    else:
+                        logger.warning("Could not move mail to trash. {0} => {1}: {2}".format(fo, to, subject))
             else:
                 logger.info("Ignoring mail. {0} => {1}: {2}".format(fo, to, subject))
         imap.close()
