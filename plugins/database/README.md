@@ -1,4 +1,4 @@
-# DbLog
+# Database
 
 Use this plugin to store the log of item values into a database. It supports
 different databases which provides a [Python DB API 2](http://www.python.org/dev/peps/pep-0249/)
@@ -64,9 +64,9 @@ Tested drivers (other may work too):
 ## plugin.conf
 
 <pre>
-[dblog]
-    class_name = DbLog
-    class_path = plugins.dblog
+[database]
+    class_name = Database
+    class_path = plugins.database
     db = sqlite
     connect = database:/path/to/log.db | check_same_thread:0
     #prefix = log
@@ -88,19 +88,19 @@ The following attributes can be used in the plugin configuration:
 The plugin supports the types `str`, `num` and `bool` which can be logged
 into the database.
 
-### dblog
+### database
 This attribute enables the database logging when set (just use value `yes`).
 
 <pre>
 [some]
     [[item]]
         type = num
-        dblog = yes
-        #dblog_acl = rw
+        database = yes
+        #database_acl = rw
 </pre>
 
-### dblog_acl
-Specifies if the dblog plugin should be used for read only or read and write values (which is
+### database_acl
+Specifies if the Database plugin should be used for read only or read and write values (which is
 the default). Sometimes you only want to use the database to read values from and just ignore
 changes on the items and do not populate them to the database. Useful if you generate the
 database data by external modules, but want still able to change the items to reflect the
@@ -151,37 +151,37 @@ sh.outside.temperature.series('min', '1d', count=10)  # returns 10 minimum value
 sh.outside.temperature.series('avg', '2w', '1w')  # returns the average values of the week before last week
 </pre>
 
-## sh.item.dblog
-This property returns the associated `dblog` plugin instance. See the list of method below
+## sh.item.dbplugin
+This property returns the associated `database` plugin instance. See the list of method below
 to know what you can do with this instance.
 
 e.g.
 <pre>
-dblog = sh.outside.temperature.dblog         # get associated dblog instance
+dbplugin = sh.outside.temperature.dbplugin   # get associated database plugin instance
 </pre>
 
-## dblog.id(item)
+## dbplugin.id(item)
 This method returns the ID in the database for the given item.
 
 e.g.
 <pre>
-dblog = sh.outside.temperature.dblog         # get associated dblog instance
-dblog.id(sh.outside.temperature)             # returns the ID for the given item
+dbplugin = sh.outside.temperature.dbplugin   # get associated database plugin instance
+dbplugin.id(sh.outside.temperature)          # returns the ID for the given item
 </pre>
 
-## dblog.db()
+## dbplugin.db()
 This method will return the associated database connection object. This can
 be used to execute native query, but you should use the plugin methods below.
 The database connection object can be used for locking.
 
 <pre>
-dblog = sh.outside.temperature.dblog         # get associated dblog instance
-dblog.db().lock()                            # lock the connection for processing
+dbplugin = sh.outside.temperature.dbplugin   # get associated database plugin instance
+dbplugin.db().lock()                         # lock the connection for processing
 ... do something
-dblog.db().release()                         # release lock again after processing
+dbplugin.db().release()                      # release lock again after processing
 </pre>
 
-### dblog.insertLog(id, time, duration=0, val=None, it=None, changed=None, cur=None)
+### dbplugin.insertLog(id, time, duration=0, val=None, it=None, changed=None, cur=None)
 This method will insert a new log entry for the given item with the following
 data (in the `log` database table):
 * `id` - the item ID to insert an item for
@@ -192,16 +192,16 @@ data (in the `log` database table):
 * `changed` - the timestamp (in microseconds) when the change was created
 * `cur` - specifies an existing cursor
 
-### dblog.updateLog(id, time, duration=0, val=None, it=None, changed=None, cur=None)
+### dbplugin.updateLog(id, time, duration=0, val=None, it=None, changed=None, cur=None)
 This method will update an existing log entry (in the `log` database table)
 identified by item id and time. See `insertLog()` method for the details of the
 parameters.
 
-### dblog.readLog(id, time, cur = None)
+### dbplugin.readLog(id, time, cur = None)
 This method will read existing log data for given item and time.
 
-### dblog.deleteLog(id, time = None, time_start = None, time_end = None, changed = None, changed_start = None, changed_end = None, cur = None)
-This method will delete the given items identified by the given parameters. If
+### dbplugin.readLogs(id, time = None, time_start = None, time_end = None, changed = None, changed_start = None, changed_end = None, cur = None)
+This method will read existing log data for given item and parameters. If
 you omit the parameters it will completely ignored.
 
 * `id` - the item ID to delete items for
@@ -213,35 +213,45 @@ you omit the parameters it will completely ignored.
 
 e.g.
 <pre>
-dblog.deleteLog(1)            # delete ALL log entries for item 1
-dblog.deleteLog(1, 12345)     # delete log entry for item 1 and timestamp 12345
+dbplugin.readLogs(1)             # read ALL log entries for item 1
+dbplugin.readLogs(1, 12345)      # read log entry for item 1 and timestamp 12345
 </pre>
 
-### dblog.insertItem(name, cur=None)
+### dbplugin.deleteLog(id, time = None, time_start = None, time_end = None, changed = None, changed_start = None, changed_end = None, cur = None)
+This method will delete the given items identified by the given parameters. The
+parameters have the same meaning as described in `readLogs()` method.
+
+e.g.
+<pre>
+dbplugin.deleteLog(1)            # delete ALL log entries for item 1
+dbplugin.deleteLog(1, 12345)     # delete log entry for item 1 and timestamp 12345
+</pre>
+
+### dbplugin.insertItem(name, cur=None)
 This method will insert a new item entry with the given name/id and return the ID
 of the newly inserted item.
 
 e.g.
 <pre>
-id = dblog.insertItem("some.test.item")   # insert new item
+id = dbplugin.insertItem("some.test.item")   # insert new item
 </pre>
 
-### dblog.updateItem(id, time, duration=0, val=None, it=None, changed=None, cur=None)
+### dbplugin.updateItem(id, time, duration=0, val=None, it=None, changed=None, cur=None)
 This method will register the given value as the last/current value of the
 item (in the `item` database table).
 
 e.g.
 <pre>
-dblog.updateItem(id, 12345, 0, 100)       # update item value in database for timestamp 12345, duration 0, value 100
+dbplugin.updateItem(id, 12345, 0, 100)       # update item value in database for timestamp 12345, duration 0, value 100
 </pre>
 
 
-### dblog.readItem(id, cur=None)
+### dbplugin.readItem(id, cur=None)
 This method will read the item data including all fields.
 
 e.g.
 <pre>
-data = dblog.readItem(id)            # read all fields of item which contains the last item status
+data = dbplugin.readItem(id)                 # read all fields of item which contains the last item status
 </pre>
 
 

@@ -223,7 +223,7 @@ class Database():
         E.g.::
            db.setup({1:['CREATE TABLE xyz (...)', 'DROP TABLE xyz'], 2:[...]})
 
-        For an extended example take a look into the 'dblog' plugin.
+        For an extended example take a look into the 'database' plugin.
         """
         self.lock()
         cur = self.cursor()

@@ -30,7 +30,7 @@ import lib.db
 
 from lib.model.smartplugin import SmartPlugin
 
-class DbLog(SmartPlugin):
+class Database(SmartPlugin):
 
     ALLOW_MULTIINSTANCE = True
     PLUGIN_VERSION = '1.3.0'
@@ -55,18 +55,18 @@ class DbLog(SmartPlugin):
         self._buffer_lock = threading.Lock()
         self._dump_lock = threading.Lock()
 
-        self._db = lib.db.Database(("" if prefix == "" else prefix.capitalize() + "_") + "DbLog", self._sh.dbapi(db), connect)
+        self._db = lib.db.Database(("" if prefix == "" else prefix.capitalize() + "_") + "Database", self._sh.dbapi(db), connect)
         self._db.connect()
         self._db.setup({i: [self._prepare(query[0]), self._prepare(query[1])] for i, query in self._setup.items()})
 
-        smarthome.scheduler.add('DbLog dump ' + self._name + ("" if prefix == "" else " [" + prefix + "]"), self._dump, cycle=self._dump_cycle, prio=5)
+        smarthome.scheduler.add('Database dump ' + self._name + ("" if prefix == "" else " [" + prefix + "]"), self._dump, cycle=self._dump_cycle, prio=5)
 
     def parse_item(self, item):
-        if self.has_iattr(item.conf, 'dblog'):
+        if self.has_iattr(item.conf, 'Database'):
             self._buffer[item] = []
             item.series = functools.partial(self._series, item=item.id())
             item.db = functools.partial(self._single, item=item.id())
-            item.dblog = self
+            item.dbplugin = self
 
             cur = self._db.cursor()
             id = self.id(item, create=False, cur=cur)
@@ -78,7 +78,7 @@ class DbLog(SmartPlugin):
                 prev_change = self._db.fetchone(self._prepare('SELECT time from {log} WHERE item_id = :id ORDER BY time DESC LIMIT 1'), {'id':id})
                 if value is not None and prev_change is not None:
                     prev_change = self._datetime(prev_change[0])
-                    item.set(value, 'DbLog', prev_change=prev_change, last_change=last_change)
+                    item.set(value, 'Database', prev_change=prev_change, last_change=last_change)
             cur.close()
             return self.update_item
         else:
@@ -93,7 +93,7 @@ class DbLog(SmartPlugin):
         self._db.close()
 
     def update_item(self, item, caller=None, source=None, dest=None):
-        acl = 'rw' if not self.has_iattr(item.conf, 'dblog_acl') else self.get_iattr_value(item.conf, 'dblog_acl')
+        acl = 'rw' if not self.has_iattr(item.conf, 'database_acl') else self.get_iattr_value(item.conf, 'database_acl')
         if acl is 'rw':
             start = self._timestamp(item.prev_change())
             end = self._timestamp(item.last_change())
@@ -220,7 +220,7 @@ class DbLog(SmartPlugin):
 
                 # Test connectivity
                 if self._db.verify(5) == 0:
-                    self.logger.error("DbLog: Connection not recovered, skipping dump");
+                    self.logger.error("Database: Connection not recovered, skipping dump");
                     self._dump_lock.release()
                     return
 
@@ -233,9 +233,9 @@ class DbLog(SmartPlugin):
                         self._buffer[item] = tuples
                     self._buffer_lock.release()
                     if finalize:
-                        self.logger.error("DbLog: can't dump {} items due to fail to acquire lock!".format(len(self._buffer)))
+                        self.logger.error("Database: can't dump {} items due to fail to acquire lock!".format(len(self._buffer)))
                     else:
-                        self.logger.error("DbLog: can't dump {} items due to fail to acquire lock - will try on next dump".format(len(self._buffer)))
+                        self.logger.error("Database: can't dump {} items due to fail to acquire lock - will try on next dump".format(len(self._buffer)))
                     self._dump_lock.release()
                     return
 
@@ -277,7 +277,7 @@ class DbLog(SmartPlugin):
 
                     self._db.commit()
                 except Exception as e:
-                    self.logger.warning("DbLog: problem updating {}: {}".format(item.id(), e))
+                    self.logger.warning("Database: problem updating {}: {}".format(item.id(), e))
                     self._db.rollback()
                 finally:
                     if cur is not None:
@@ -367,10 +367,10 @@ class DbLog(SmartPlugin):
 
     def _fetch(self, query, item, params):
         if self._db.verify(5) == 0:
-            self.logger.error("DbLog: Connection not recovered")
+            self.logger.error("Database: Connection not recovered")
             return None
         if not self._db.lock(300):
-            self.logger.error("DbLog: can't fetch data due to fail to acquire lock")
+            self.logger.error("Database: Can't fetch data due to fail to acquire lock")
             return None
         tuples = None
         try:
@@ -378,7 +378,7 @@ class DbLog(SmartPlugin):
             params = {n:id if params[n] == '<id>' else params[n] for n in params}
             tuples = self._db.fetchall(query, params)
         except Exception as e:
-            self.logger.warning("DbLog: Error fetching data for {}: {}".format(item, e))
+            self.logger.warning("Database: Error fetching data for {}: {}".format(item, e))
         self._db.release()
         self.logger.debug("Fetch {} (args {}): {}".format(query, params, tuples))
         return None if tuples is None else list(tuples)
@@ -408,7 +408,7 @@ class DbLog(SmartPlugin):
         try:
             ts = ts - int(float(frame) * fac)
         except:
-            self.logger.warning("DbLog: Unknown time frame '{0}'".format(frame))
+            self.logger.warning("Database: Unknown time frame '{0}'".format(frame))
         return ts
 
     def _timestamp(self, dt):
