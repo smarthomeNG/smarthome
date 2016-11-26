@@ -31,16 +31,17 @@ import fcntl
 import struct
 import requests
 
+EXPECTED_BROKER_VERSION = "0.9"
 logger = logging.getLogger('')
 sonos_speaker = {}
 
 
 class UDPDispatcher(lib.connection.Server):
-    def __init__(self, ip, port):
+    def __init__(self, ip, port, sh):
         lib.connection.Server.__init__(self, ip, port, proto='UDP')
         self.dest = 'udp:' + ip + ':{port}'.format(port=port)
         logger.debug('starting udp listener with {url}'.format(url=self.dest))
-
+        self._sh = sh
         self.connect()
 
     def handle_connection(self):
@@ -82,6 +83,7 @@ class Sonos():
             logger.critical("Could not fetch internal ip address. Set it manually!")
             self.alive = False
             return
+
         logger.info("using local ip address {ip}".format(ip=self._lan_ip))
 
         # check broker variable
@@ -100,6 +102,20 @@ class Sonos():
         if not self._broker_url.startswith('http://'):
             self._broker_url = "http://{url}".format(url=self._broker_url)
 
+        # version check against Sonos Broker
+
+        broker_version = self._send_cmd(SonosCommand.sonos_broker_version())
+        logger.debug("Sonos broker version: {version}".format(version=broker_version))
+        try:
+            if EXPECTED_BROKER_VERSION != broker_version:
+                logger.warning("This plugin is desgined to work with Sonos Broker version {version}. "
+                               "Your plugin version is probably out-of-date or too new. "
+                               "Please update your plugin and/or the Sonos Broker Server".format(
+                    version=EXPECTED_BROKER_VERSION))
+        except Exception:
+            logger.warning("Unknown Sonos broker version string '{version_string}.'".
+                         format(version_string=broker_version))
+
         # ini vars
         self._listen_host = listen_host
         self._listen_port = listen_port
@@ -112,10 +128,11 @@ class Sonos():
         self._sh.scheduler.add('sonos-update', self._subscribe, cycle=refresh)
 
         # start UDP listener
-        UDPDispatcher(self._listen_host, self._listen_port)
+        UDPDispatcher(self._listen_host, self._listen_port, smarthome)
 
     def run(self):
         self.alive = True
+        self._subscribe()
 
     def _subscribe(self):
         """
@@ -311,6 +328,9 @@ class Sonos():
                 if command == 'play_uri':
                     cmd = self._command.play_uri(uid, value)
 
+                if command == 'play_tunein':
+                    cmd = self._command.play_tunein(uid, value)
+
                 if command == 'play_snippet':
                     volume_item_name = '{}.volume'.format(item._name)
                     group_item_name = '{}.group_command'.format(item._name)
@@ -352,6 +372,18 @@ class Sonos():
                     cmd = self._command.play_tts(uid, value, language, volume, group_command, force_stream_mode,
                                                  fade_in)
 
+                if command == 'load_sonos_playlist':
+                    clear_item_name = '{}.clear_queue'.format(item._name)
+                    play_item_name = '{}.play_after_insert'.format(item._name)
+                    clear_queue = 0
+                    play_after_insert = 0
+                    for child in item.return_children():
+                        if child._name.lower() == clear_item_name.lower():
+                            clear_queue = child()
+                        if child._name.lower() == play_item_name.lower():
+                            play_after_insert = child()
+                    cmd = self._command.load_sonos_playlist(uid, value, play_after_insert, clear_queue)
+
                 if command == 'seek':
                     if not re.match(r'^[0-9][0-9]?:[0-9][0-9]:[0-9][0-9]$', value):
                         logger.warning('invalid timestamp for sonos seek command, use HH:MM:SS format')
@@ -389,43 +421,9 @@ class Sonos():
                             break
                     cmd = self._command.volume_down(uid, group_command)
 
-                if command == 'get_playlist':
-                    cmd = self._command.get_playlist(uid)
-                    data = self._send_cmd(cmd)
-
-                    if data:
-                        try:
-                            with open(item(), 'w') as f:
-                                f.write(data)
-                                logger.info("Playlist saved to {file}".format(file=item()))
-                        except Exception as err:
-                            logger.error("Could not save playlist to {file}".format(file=item()))
-                            logger.error(err)
-                    else:
-                        logger.warning("No playlist returned")
-                    return
-
-                if command == 'set_playlist':
-
-                    play_item_name = '{}.play_after_insert'.format(item._name)
-                    play_after_insert = 0
-                    for child in item.return_children():
-                        if child._name.lower() == play_item_name.lower():
-                            play_after_insert = child()
-                            break
-
-                    if not os.path.isfile(item()):
-                        logger.warning("File {file} not found".format(file=item()))
-                        return
-                    try:
-                        with open(item(), 'r') as f:
-                            playlist = f.read()
-                            cmd = self._command.set_playlist(uid, playlist, play_after_insert)
-                            self._send_cmd(cmd)
-                    except Exception as err:
-                        logger.error("Could not open playlist {file}".format(file=item()))
-                        logger.error(err)
-                    return
+                if command == 'clear_queue':
+                    if value in ['y', '1', 'Y', 1, 'yes']:
+                        cmd = self._command.clear_queue(uid)
 
                 if command == 'wifi_state':
                     if isinstance(value, bool):
@@ -494,6 +492,10 @@ class Sonos():
 
         logger.debug("Sending request: {0}".format(cmd))
 
+    def load_sonos_playlist(self, uid, sonos_playlist, play_after_insert=0, clear_queue=0):
+        return self._send_cmd(SonosCommand.load_sonos_playlist(uid, sonos_playlist, play_after_insert,
+                                                                        clear_queue))
+
     def get_favorite_radiostations(self, start_item=0, max_items=50):
         return self._send_cmd_response(SonosCommand.favradio(start_item, max_items))
 
@@ -501,7 +503,7 @@ class Sonos():
         return self._send_cmd(SonosCommand.refresh_media_library(display_option))
 
     def version(self):
-        return "v1.7\t2016-01-04"
+        return "v0.9\t2016-11-20"
 
     def discover(self):
         return self._send_cmd(SonosCommand.discover())
@@ -523,6 +525,7 @@ class SonosSpeaker():
         self.hardware_version = []
         self.mac_address = []
         self.playlist_position = []
+        self.playlist_total_tracks = []
         self.volume = []
         self.mute = []
         self.led = []
@@ -535,6 +538,7 @@ class SonosSpeaker():
         self.track_duration = []
         self.track_position = []
         self.track_album_art = []
+        self.track_album = []
         self.track_uri = []
         self.radio_station = []
         self.radio_show = []
@@ -549,6 +553,7 @@ class SonosSpeaker():
         self.tts_local_mode = []
         self.wifi_state = []
         self.balance = []
+        self.sonos_playlists = []
 
 class SonosCommand:
 
@@ -745,6 +750,16 @@ class SonosCommand:
         }
 
     @staticmethod
+    def play_tunein(uid, station_name):
+        return {
+            'command': 'play_tunein',
+            'parameter': {
+                'uid': uid.lower(),
+                'station_name': station_name
+            }
+        }
+
+    @staticmethod
     def play_snippet(uid, uri, volume, group_command, fade_in):
         return {
             'command': 'play_snippet',
@@ -825,23 +840,12 @@ class SonosCommand:
         }
 
     @staticmethod
-    def get_playlist(uid):
+    def sonos_playlists(uid):
         return {
-            'command': 'get_playlist',
+            'command': 'sonos_playlists',
             'parameter': {
                 'uid': uid.lower(),
                 }
-        }
-
-    @staticmethod
-    def set_playlist(uid, playlist, play_after_insert=0):
-        return {
-            'command': 'set_playlist',
-            'parameter': {
-                'uid': uid.lower(),
-                'playlist': playlist,
-                'play_after_insert': play_after_insert
-            }
         }
 
     @staticmethod
@@ -853,6 +857,24 @@ class SonosCommand:
                 'wifi_state': wifi_state,
                 'persistent': persistent
             }
+        }
+
+    @staticmethod
+    def load_sonos_playlist(uid, sonos_playlist, play_after_insert, clear_queue):
+        return {
+            'command': 'load_sonos_playlist',
+            'parameter': {
+                'uid': uid.lower(),
+                'sonos_playlist': sonos_playlist,
+                'play_after_insert': play_after_insert,
+                'clear_queue': clear_queue
+            }
+        }
+
+    @staticmethod
+    def sonos_broker_version():
+        return {
+            'command': 'sonos_broker_version'
         }
 
     @staticmethod
@@ -891,7 +913,16 @@ class SonosCommand:
 
     @staticmethod
     def discover():
-        return {'command': 'discover', }
+        return {'command': 'discover'}
+
+    @staticmethod
+    def clear_queue(uid):
+        return {
+            'command': 'clear_queue',
+            'parameter': {
+                'uid': uid.lower()
+            }
+        }
 
 
 #######################################################################

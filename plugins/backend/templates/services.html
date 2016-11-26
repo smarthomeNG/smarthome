@@ -138,7 +138,7 @@
 				<td><img src="/static/img/cache.svg" alt="Icon cache" width="48" height="48"></td>
 				<td colspan="2" style="padding-top:15px;">
 					<span class="btn btn-default" onclick="checkCache()">{{ _('Cacheprüfung','button') }}</span>
-					<div id="cache_check" style="margin-top: 5px; width: 900px;"></div>
+					<div id="cache_check" style="margin-top: 5px; width: 1000px;"></div>
 				</td>
 			</tr>
 			<tr>
@@ -156,14 +156,23 @@
 <script type="text/javascript" language="javascript">
 function checkCache() {
 	$.getJSON("/cache_check_json.html", function(result) {
-		var temp = '<div class="table-responsive">{{ _('Dateien ohne zugehöriges Item im /var/cache Verzeichnis') }}: '+result.length+'<table class="table table-striped" style="border: 1px solid #ccc;">';
-		temp = temp+'<thead><tr><th style="width: 550px;">{{ _('Dateiname') }}</th><th>{{ _('Letzte Modifikation') }}</th><th>{{ _('Erstellungsdatum') }}</th></td></thead><tbody>';
+		var temp = '<div class="table-responsive">{{ _('Dateien ohne zugehöriges Item im /var/cache Verzeichnis') }}: '+result.length;
+		temp = temp + '<table class="table table-striped" style="border: 1px solid #ccc;">';
+		temp = temp + '<thead><tr><th style="width: 550px;">{{ _('Dateiname') }}</th><th>{{ _('Letzte Modifikation') }}</th><th>{{ _('Erstellungsdatum') }}</th><th>{{ _('Aktionen') }}</th></td></thead><tbody>';
 		$.each(result, function(index, element) {
-			temp = temp + '<tr><td>'+element.filename+'</td><td>'+element.last_modified+'</td><td>'+element.created+'</td></tr>';
+			temp = temp + '<tr><td>'+element.filename+'</td><td>'+element.last_modified+'</td><td>'+element.created+'</td>';
+			temp = temp + '<td><input name="delete" value="{{ _('Löschen','button') }}" type="submit" class="btn btn-default btn-xs" onClick="deleteFromCache(\''+element.filename+'\');">';
 		});
 		temp = temp + '</tbody></table></div>';
 		$('#cache_check').html(temp);
 	});
+}
+
+function deleteFromCache(filename) {
+	var result = $.ajax( "/cache_file_delete.html?filename="+filename )
+	  .done(function() {
+		checkCache();
+	  })
 }
 
 function createHash() {

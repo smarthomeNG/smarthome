@@ -1,0 +1,33 @@
+
+item1:
+    type: bool
+    key1: value1
+    key2: value2
+    key3@bind: value3
+    wol_mac@bind: aa:22:33:44:55:66
+    key1_quotes: value1
+    key2_quotes: value2
+
+item2:
+    type: bool
+    wol_mac: 11:22:33:44:55:66
+
+item3:
+
+    item3a:
+        type: bool
+
+    item3b:
+        type: bool
+
+        item3b1:
+            type: bool
+            wol_mac: 11:22:33:44:55:66
+
+            item3b1a:
+                type: bool
+                key1: value1
+                wol_mac@*: aa:22:33:44:55:66
+                key2: value2
+                key3@bind: value3
+                key1_quotes: value1

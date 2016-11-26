@@ -22,8 +22,181 @@
 
 import logging
 import collections
+import os
+import lib.shyaml as shyaml
 
 logger = logging.getLogger(__name__)
+
+valid_item_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'
+valid_attr_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_@*'
+digits = '0123456789'
+reserved = ['set', 'get']
+
+def parse_basename(basename, configtype=''):
+    '''
+    Load and parse a single configuration and merge it to the configuration tree
+    The configuration is only specified by the basename.
+    At the moment it looks for a .yaml file or a .conf file
+    .yaml files take preference
+    
+    :param basename: Name of the configuration
+    :param configtype: Optional string with config type (only used for log output)
+    :return: The resulting merged OrderedDict tree
+    '''
+    config = parse(basename+'.yaml')
+    if config == {}:
+        config = parse(basename+'.conf')
+    if config == {}:
+        logger.critical("No file '{}.*' found with {} configuration".format(basename, configtype))
+    return config
+        
+
+def parse_itemsdir(itemsdir, item_conf):
+    '''
+    Load and parse item configurations and merge it to the configuration tree
+    The configuration is only specified by the name of the directory.
+    At the moment it looks for .yaml files and a .conf files
+    Both filetypes are read, even if they have the same basename
+    
+    :param itemsdir: Name of folder containing the configuration files
+    :param item_conf: Optional OrderedDict tree, into which the configuration should be merged
+    :return: The resulting merged OrderedDict tree
+    '''
+    for item_file in sorted(os.listdir(itemsdir)):
+        if item_file.endswith('.conf') or item_file.endswith('.yaml'):
+            try:
+                item_conf = parse(itemsdir + item_file, item_conf)
+            except Exception as e:
+                logger.exception("Problem reading {0}: {1}".format(item_file, e))
+                continue
+    return item_conf
+
+
+def parse(filename, config=None):
+    '''
+    Load and parse a configuration file and merge it to the configuration tree
+    Depending on the extension of the filename, the apropriate parser is called
+    
+    :param filename: Name of the configuration file
+    :param config: Optional OrderedDict tree, into which the configuration should be merged
+    :return: The resulting merged OrderedDict tree
+    '''
+    if filename.endswith('.yaml') and os.path.isfile(filename):
+         return parse_yaml(filename, config)
+    elif filename.endswith('.conf') and os.path.isfile(filename):
+        return parse_conf(filename, config)
+    return {}
+
+
+# --------------------------------------------------------------------------------------
+
+def remove_keys(ydata, func, level=0):
+    '''
+    Removes given keys from a dict or OrderedDict structure
+
+    :param ydata: configuration (sub)tree to work on
+    :param func: the function to call to check for removal
+    :param level: optional subtree level (used for recursion)
+    '''
+    level_keys = list(ydata.keys())
+    for key in level_keys:
+        if type(ydata[key]).__name__ in ['dict','OrderedDict']:
+            remove_keys(ydata[key], func, level+1)
+        else:
+            if func(str(key)):
+                ydata.pop(key)
+
+
+def remove_comments(ydata):
+    '''
+    Removes comments from a dict or OrderedDict structure
+
+    :param ydata: configuration (sub)tree to work on
+    '''
+    remove_keys(ydata, lambda k: k.startswith('comment'))
+
+
+def remove_digits(ydata):
+    '''
+    Removes digit keys from a dict or OrderedDict structure
+
+    :param ydata: configuration (sub)tree to work on
+    '''
+    remove_keys(ydata, lambda k: k[0] in digits)
+
+
+def remove_reserved(ydata):
+    '''
+    Removes reserved keywords from a dict or OrderedDict structure
+
+    :param ydata: configuration (sub)tree to work on
+    '''
+    remove_keys(ydata, lambda k: k in reserved)
+
+
+def remove_invalid(ydata):
+    '''
+    Removes invalid chars in item from a dict or OrderedDict structure
+
+    :param ydata: configuration (sub)tree to work on
+    '''
+    valid_chars = valid_item_chars + valid_attr_chars
+    remove_keys(ydata, lambda k: True if True in [True for i in range(len(k)) if k[i] not in valid_chars] else False)
+
+
+def merge(source, destination):
+    '''
+    Merges an OrderedDict Tree into another one
+    
+    Run me with nosetests --with-doctest file.py
+
+    >>> a = { 'first' : { 'all_rows' : { 'pass' : 'dog', 'number' : '1' } } }
+    >>> b = { 'first' : { 'all_rows' : { 'fail' : 'cat', 'number' : '5' } } }
+    >>> merge(b, a) == { 'first' : { 'all_rows' : { 'pass' : 'dog', 'fail' : 'cat', 'number' : '5' } } }
+    True
+    
+    
+    :param source: OrderedDict tree to be merged into another one
+    :param destination: OrderedDict tree, into which the other OrderedDict tree is merged
+    :return: The resulting merged OrderedDict tree
+    '''
+    for key, value in source.items():
+        if isinstance(value, collections.OrderedDict):
+            # get node or create one
+            node = destination.setdefault(key, collections.OrderedDict())
+            merge(value, node)
+        else:
+            if type(value).__name__ == 'list':
+                destination[key] = value
+            else:
+                # convert to string and remove newlines from multiline attributes
+                destination[key] = str(value).replace('\n','')
+
+    return destination
+    
+    
+def parse_yaml(filename, config=None):
+    '''
+    Load and parse a yaml configuration file and merge it to the configuration tree
+
+    :param filename: Name of the configuration file
+    :param config: Optional OrderedDict tree, into which the configuration should be merged
+    :return: The resulting merged OrderedDict tree
+    '''
+    if config is None:
+        config = collections.OrderedDict()
+
+    items = shyaml.yaml_load(filename, ordered=True)
+    remove_comments(items)
+    remove_digits(items)
+    remove_reserved(items)
+    remove_invalid(items)
+    
+    config = merge(items, config)
+    return config
+    
+
+# --------------------------------------------------------------------------------------
 
 
 def strip_quotes(string):
@@ -36,12 +209,10 @@ def strip_quotes(string):
     return string
 
 
-def parse(filename, config=None):
+def parse_conf(filename, config=None):
     """
-    this functions parses a file with a given filename for config entries
-    
-    :param filename: the filename of the file that provides the configuration entries
-    :param config: already existing config information, should be an ordered dict
+    Load and parse a configuration file which is in the old .conf format of smarthome.py
+    and merge it to the configuration tree
     
     The config file should stick to the following setup:
     [firstlevel]
@@ -63,10 +234,11 @@ def parse(filename, config=None):
     
     Valid characters for the items are a-z and A-Z plus any digit and underscore as second or further characters.
     Valid characters for the attributes are the same as for an item plus @ and *
+
+    :param filename: Name of the configuration file
+    :param config: Optional OrderedDict tree, into which the configuration should be merged
+    :return: The resulting merged OrderedDict tree
     """
-    valid_item_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'
-    valid_attr_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_@*'
-    digits = '0123456789'
     valid_set = set(valid_attr_chars)
     if config is None:
         config = collections.OrderedDict()
@@ -112,7 +284,7 @@ def parse(filename, config=None):
                 elif name[0] in digits:
                     logger.error("Problem parsing '{}': item starts with digit '{}' in line {}: {}".format(filename, name[0], linenu, line))
                     return config
-                elif name in ['set', 'get']:
+                elif name in reserved:
                     logger.error("Problem parsing '{}': item using reserved word set/get in line {}: {}".format(filename, linenu, line))
                     return config
                     
@@ -150,8 +322,3 @@ def parse(filename, config=None):
                     item[attr] = strip_quotes(value)
         return config
 
-
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    conf = parse('dev.conf')
-    print(conf)

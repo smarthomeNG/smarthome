@@ -27,11 +27,10 @@ import xmlrpc
 import xmlrpc.server
 import xmlrpc.client
 
-logger = logging.getLogger(__name__)
-
 class Homematic():
 
     def __init__(self, smarthome, host='0.0.0.0', port='2001'):
+        self.logger = logging.getLogger(__name__)
         self.sh = smarthome
         self.host = host
         self.port = port
@@ -51,26 +50,26 @@ class Homematic():
                     value = 1 - float(result)
                     hm_devices(int(255 * float(value)))
                 except Exception as e:
-                    logger.error("Could not connect to Homematic Device: " + hm_devices.conf['hm_address'])
+                    self.logger.error("Could not connect to Homematic Device: " + hm_devices.conf['hm_address'])
             elif hm_devices.conf['hm_type'] == 'switch':
                 try:
                     result = self.server.getValue(hm_devices.conf['hm_address'] + ':1', 'STATE')
                     hm_devices(bool(result))
                 except Exception as e:
-                    logger.error("Could not connect to Homematic Device: " + hm_devices.conf['hm_address'])
+                    self.logger.error("Could not connect to Homematic Device: " + hm_devices.conf['hm_address'])
             elif hm_devices.conf['hm_type'] == '2ch_switch':
                 try:
                     result = self.server.getValue(hm_devices.conf['hm_address'] + ':' + hm_devices.conf['hm_channel'], 'STATE')
                     hm_devices(bool(result))
                 except Exception as e:
-                    logger.error("Could not connect to Homematic Device: " + hm_devices.conf['hm_address'])
+                    self.logger.error("Could not connect to Homematic Device: " + hm_devices.conf['hm_address'])
 
     def stop(self):
         self.alive = False
 
     def parse_item(self, item):
         if 'hm_address' in item.conf:
-            logger.debug("parse item: {0}".format(item))
+            self.logger.debug("parse item: {0}".format(item))
             return self.update_item
         else:
             return None
@@ -81,10 +80,10 @@ class Homematic():
                 new_value = float(item()) / 255
                 conv_value = 1 - float(new_value)
                 try:
-                    result = self.server.setValue(item.conf['hm_address'] + ':1', 'LEVEL', str(conv_value)) 
-                    logger.debug('Homematic: Rollo auf ' + str(conv_value))
+                    result = self.server.setValue(item.conf['hm_address'] + ':1', 'LEVEL', str(conv_value))
+                    self.logger.debug('Homematic: Rollo auf ' + str(conv_value))
                 except Exception as e:
-                    logger.error("Could not connect to Homematic Device: ".format(e))
+                    self.logger.error("Could not connect to Homematic Device: ".format(e))
             elif item.conf['hm_type'] == 'stop':
                 item(0)
                 try:
@@ -95,9 +94,9 @@ class Homematic():
                             if shutter_items.conf['hm_address'] == item.conf['hm_address']:
                                 akt_value = 1 - float(result2)
                                 shutter_items(int(255 * float(akt_value)))
-                    logger.debug('Homematic: Rollo stop...')
+                    self.logger.debug('Homematic: Rollo stop...')
                 except Exception as e:
-                    logger.error("Could not connect to Homematic Device: ".format(e))
+                    self.logger.error("Could not connect to Homematic Device: ".format(e))
             elif item.conf['hm_type'] == 'move':
                 direction = item()
                 item(2)
@@ -105,13 +104,13 @@ class Homematic():
                     try:
                         result = self.server.setValue(item.conf['hm_address'] + ':1', 'LEVEL', '1')
                     except Exception as e:
-                        logger.error("Could not connect to Homematic Device: ".format(e))
+                        self.logger.error("Could not connect to Homematic Device: ".format(e))
                 elif direction == 1:
                     try:
                         result = self.server.setValue(item.conf['hm_address'] + ':1', 'LEVEL', '0') 
                         result2 = self.server.getValue(item.conf['hm_address'] + ':1', 'LEVEL')
                     except Exception as e:
-                        logger.error("Could not connect to Homematic Device: ".format(e))
+                        self.logger.error("Could not connect to Homematic Device: ".format(e))
                     for shutter_items in self.sh.find_items('hm_type'):
                         if shutter_items.conf['hm_type'] == 'pos':
                             if shutter_items.conf['hm_address'] == item.conf['hm_address']:
@@ -121,12 +120,12 @@ class Homematic():
                 try:
                     result = self.server.setValue(item.conf['hm_address'] + ':1', 'STATE', item())
                 except Exception as e:
-                    logger.error("Could not connect to Homematic Device: ".format(e))
+                    self.logger.error("Could not connect to Homematic Device: ".format(e))
             elif item.conf['hm_type'] == '2ch_switch':
                 try:
                     result = self.server.setValue(item.conf['hm_address'] + ':' + item.conf['hm_channel'], 'STATE', item()) 
                 except Exception as e:
-                    logger.error("Could not connect to Homematic Device: ".format(e))
+                    self.logger.error("Could not connect to Homematic Device: ".format(e))
                     
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)

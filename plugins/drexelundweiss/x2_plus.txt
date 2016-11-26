@@ -1,4 +1,4 @@
-﻿<Register>;<Description>;<min>;<max>;<divisor>;<comma>;<access>;<pcb>
+<Register>;<Description>;<min>;<max>;<divisor>;<comma>;<access>;<pcb>
 5328;Absenkung der Luefterstufe1;30;70;1;0;R/W;LU
 1066;Aktive Luefterstufe;0;4;1;0;R;LU
 1218;Anforderung: Beschattung;0;1;1;0;R;LU

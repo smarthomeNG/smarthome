@@ -14,6 +14,7 @@
 					<th style="width:350px;">{{ _('Logik') }}</th>
 					<th style="width: 200px;">{{ _('nächste Ausführung') }}</th>
 					<th>{{ _('Cycle') }}</th>
+					<th>{{ _('Crontab') }}</th>
 					<th>{{ _('Watch_Items') }}</th>
 					<th>{{ _('Dateiname') }}</th>
 					{% if updates %}
@@ -35,7 +36,12 @@
 							{% else %}
 								<td></td>
 							{% endif %}
-							<td>{% if smarthome.return_logic(logic).cycle == None %}-{% else %}{{ smarthome.return_logic(logic).cycle}} {% endif %}</td>
+							<td>
+								{% if smarthome.return_logic(logic).cycle == None %}-{% else %}{{ smarthome.return_logic(logic).cycle}} {% endif %}
+							</td>
+							<td>
+								{% if smarthome.return_logic(logic).crontab == None %}-{% else %}{{ smarthome.return_logic(logic).crontab}} {% endif %}
+							</td>
 							<td {% if smarthome.return_logic(logic).watch_item|length > 0 %}onClick="$('#{{ logic }}_additional').toggle();" style="cursor: pointer;"{% endif %}>
 								{% if smarthome.return_logic(logic).watch_item|length == 0 %}-{% else %}{% if not smarthome.return_logic(logic).enabled %}<span style="color:#bbb;">{% endif %}{{ smarthome.return_logic(logic).watch_item|length}}{% if not smarthome.return_logic(logic).enabled %}</span>{% endif %} <span class="fa fa-arrow-circle-down" {% if not smarthome.return_logic(logic).enabled %}style="color: #ddd;"{% endif %}></span>{% endif %}
 							</td>
@@ -50,12 +56,12 @@
 							</form>
 						</tr>
 						<tr id="{{ logic }}_additional" style="display: none; cursor: pointer;" onClick="$('#{{ logic }}_additional').toggle();">
-							<td colspan="{% if updates %}7{% else %}6{% endif %}">{{ smarthome.return_logic(logic).watch_item }}</td>
+							<td colspan="{% if updates %}8{% else %}7{% endif %}">{{ smarthome.return_logic(logic).watch_item }}</td>
 						</tr>
 						{% endif %}
 					{% endfor %}
 
-					<tr><th colspan="{% if updates %}7{% else %}6{% endif %}">{{ _('Systemlogiken') }}</th><tr>
+					<tr><th colspan="{% if updates %}8{% else %}7{% endif %}">{{ _('Systemlogiken') }}</th><tr>
 					{% for logic in smarthome.return_logics()|sort %}
 						{% if not is_userlogic(smarthome, logic) %}
 						<tr>
@@ -68,6 +74,9 @@
 								<td></td>
 							{% endif %}
 							<td>{% if smarthome.return_logic(logic).cycle == None %}-{% else %}{{ smarthome.return_logic(logic).cycle}} {% endif %}</td>
+							<td>
+								{% if smarthome.return_logic(logic).crontab == None %}-{% else %}{{ smarthome.return_logic(logic).crontab}} {% endif %}
+							</td>
 							<td {% if smarthome.return_logic(logic).watch_item|length > 0 %}onClick="$('#{{ logic }}_additional').toggle();" style="cursor: pointer;"{% endif %}>
 								{% if smarthome.return_logic(logic).watch_item|length == 0 %}-{% else %}{{ smarthome.return_logic(logic).watch_item|length}} {% endif %}
 							</td>
@@ -75,8 +84,8 @@
 							{% if updates %}
 								 {% if (1==2) %}
 									<td>
-									<input name="trigger" value="Auslösen" type="submit" class="btn btn-default btn-xs">
-									<input name="reload" value="Reload" type="submit" class="btn btn-default btn-xs">
+									<input name="trigger" value="{{ _('Auslösen','button') }}" type="submit" class="btn btn-default btn-xs">
+									<input name="reload" value="{{ _('Neu Laden','button') }}" type="submit" class="btn btn-default btn-xs">
 									</td>
 								{% else %}
 									<td></td>
@@ -85,7 +94,7 @@
 							</form>
 						</tr>
 						<tr id="{{ logic }}_additional" style="display: none; cursor: pointer;" onClick="$('#{{ logic }}_additional').toggle();">
-							<td colspan="{% if updates %}7{% else %}6{% endif %}">{{ smarthome.return_logic(logic).watch_item }}</td>
+							<td colspan="{% if updates %}8{% else %}7{% endif %}">{{ smarthome.return_logic(logic).watch_item }}</td>
 						</tr>
 						{% endif %}
 					{% endfor %}

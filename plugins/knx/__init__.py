@@ -241,6 +241,10 @@ class KNX(lib.connection.Client):
             if dpt not in dpts.decode:
                 self.logger.warning("KNX[{0}]: Ignoring {1} unknown dpt: {2}".format(self.instance, item, dpt))
                 return None
+        elif 'knx_status' in item.conf or 'knx_send' in item.conf or 'knx_reply' in item.conf or 'knx_listen' in item.conf or 'knx_init' in item.conf or 'knx_cache' in item.conf:
+            self.logger.warning(
+                "KNX[{0}]: Ignoring {1}: please add knx_dpt.".format(self.instance, item))
+            return None
         else:
             return None
 
