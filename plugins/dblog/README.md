@@ -8,9 +8,10 @@ which is already bundled with Python or MySQL by using a
 
 Before you can use any of the database implementation please make sure to
 register them in the common configuration file `smarthome.conf`. Details
-see [configuration page](http://mknx.github.io/smarthome/config.html).
+see [configuration page](http://mknx.github.io/smarthome/config.html). Further
+details see also the requirements section.
 
-It will create the following tables:
+The plugin will create the following database structure:
 
   * Table `item` - the item table contains all items and thier last known value
   * Table `log` - the history log of the item values
@@ -22,7 +23,7 @@ The `item` table contains the following columns:
   * Column `time` - the unix timestamp in microseconds of last change
   * Column `val_str` - the string value if type is `str`
   * Column `val_num` - the number value if type is `num`
-  * Column `val_bool` - the boolean value if type is `bool`
+  * Column `val_bool` - the boolean value if type is `bool` or `num`
   * Column `changed` - the unix timestamp in microseconds of record change
 
 The `log` table contains the following columns:
@@ -31,7 +32,7 @@ The `log` table contains the following columns:
   * Column `item_id` - the reference to the unique ID in `item` table
   * Column `val_str` - the string value if type is `str`
   * Column `val_num` - the number value if type is `num`
-  * Column `val_bool` - the boolean value if type is `bool`
+  * Column `val_bool` - the boolean value if type is `bool` or `num`
   * Column `changed` - the unix timestamp in microseconds of record change
 
 # Requirements
@@ -39,7 +40,7 @@ The `log` table contains the following columns:
 If you want to log to a given database system you need to install the right
 Python DB API 2 implementation of the database and register them by adding it
 to the `smarthome.conf` configuration file. For example using SQLite and a
-MySQL driver you may add the following (requires PyMySQL module):
+MySQL driver you may add the following (requires PyMySQL module installed):
 
 <pre>
 db = sqlite:sqlite3 | mysql:pymysql
@@ -48,8 +49,8 @@ db = sqlite:sqlite3 | mysql:pymysql
 After this you can use them by referencing the alias name of the database
 registration. In the example above the alias is "sqlite" or "mysql".
 
-**Important**: This plugin supports the following drivers use one of the
-following format (or parameter) styles: qmark, format, numeric and pyformat.
+**Important**: This plugin supports drivers using one of the following
+format (or parameter) styles: qmark, format, numeric and pyformat.
 Make sure the installed module supports one of this!
 
 Tested drivers (other may work too):
