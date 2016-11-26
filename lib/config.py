@@ -106,12 +106,14 @@ def parse(filename, config=None):
                 name = line.strip("[]")
                 name = strip_quotes(name)
                 
-                if len(name) > 0:
-                    if name[0] in digits:
-                        logger.error("Problem parsing '{}': item starts with digit '{}' in line {}: {}".format(filename, name[0], linenu, line))
-                        return config
-                else:
+                if len(name) == 0:
                     logger.error("Problem parsing '{}' tried to use an empty item name in line {}: {}".format(filename, linenu, line))
+                    return config
+                elif name[0] in digits:
+                    logger.error("Problem parsing '{}': item starts with digit '{}' in line {}: {}".format(filename, name[0], linenu, line))
+                    return config
+                elif name in ['set', 'get']:
+                    logger.error("Problem parsing '{}': item using reserved word set/get in line {}: {}".format(filename, linenu, line))
                     return config
                     
                 if level == 1:

@@ -472,7 +472,7 @@ class Backend:
                 if self._sh.scheduler._scheduler[entry]['cycle']:
                     cycle = self._sh.scheduler._scheduler[entry]['cycle']
                 if self._sh.scheduler._scheduler[entry]['cron']:
-                    crontab = self._sh.scheduler._scheduler[entry]['cron']
+                    crontab = html.escape(str(self._sh.scheduler._scheduler[entry]['cron']))
                 break
 
         changed_by = item.changed_by()
