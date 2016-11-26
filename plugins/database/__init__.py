@@ -63,7 +63,7 @@ class Database(SmartPlugin):
         smarthome.scheduler.add('Database dump ' + self._name + ("" if prefix == "" else " [" + prefix + "]"), self._dump, cycle=self._dump_cycle, prio=5)
 
     def parse_item(self, item):
-        if self.has_iattr(item.conf, 'Database'):
+        if self.has_iattr(item.conf, 'database'):
             self._buffer[item] = []
             item.series = functools.partial(self._series, item=item.id())
             item.db = functools.partial(self._single, item=item.id())
