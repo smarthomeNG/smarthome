@@ -546,10 +546,8 @@ class Enigma2(SmartPlugin):
             # self.logger.debug(element_xml[0].firstChild.data)
             if item.type() == 'bool':
                 if not element_xml[0].firstChild is None:
-                    if element_xml[0].firstChild.data == 'true' or element_xml[0].firstChild.data == 'True':
-                        item(1)
-                    else:
-                        item(0)
+                    boolVal = self.to_bool(element_xml[0].firstChild.data.rstrip().lstrip())
+                    item(boolVal)
             elif item.type() == 'num':
                 if not element_xml[0].firstChild is None:
                     if self.is_int(element_xml[0].firstChild.data):

@@ -107,11 +107,12 @@ class LogHandler(logging.StreamHandler):
 class SmartHome():
 
     base_dir = BASE
-    _plugin_conf = BASE + '/etc/plugin.conf'
+    _plugin_conf_basename = BASE + '/etc/plugin'
+    _plugin_conf = ''	# is filled by plugin.py while reading the configuration file, needed by Backend plugin
     _env_dir = BASE + '/lib/env/'
-    _env_logic_conf = _env_dir + 'logic_conf'
+    _env_logic_conf_basename = _env_dir + 'logic'
     _items_dir = BASE + '/items/'
-    _logic_conf = BASE + '/etc/logic.conf'
+    _logic_conf_basename = BASE + '/etc/logic'
     _logic_dir = BASE + '/logics/'
     _cache_dir = BASE + '/var/cache/'
     _log_config = BASE + '/etc/logging.yaml'
@@ -127,7 +128,7 @@ class SmartHome():
     _utctz = TZ
     logger = logging.getLogger(__name__)
 
-    def __init__(self, smarthome_conf=BASE + '/etc/smarthome.conf'):
+    def __init__(self, smarthome_conf_basename=BASE + '/etc/smarthome'):
         # set default timezone to UTC
         global TZ
         self.tz = 'UTC'
@@ -165,14 +166,12 @@ class SmartHome():
 
         #############################################################
         # Reading smarthome.conf
-        try:
-            config = lib.config.parse(smarthome_conf)
+        config = lib.config.parse_basename(smarthome_conf_basename, configtype='SmartHomeNG')
+        if config != {}:
             for attr in config:
                 if not isinstance(config[attr], dict):  # ignore sub items
                     vars(self)['_' + attr] = config[attr]
             del(config)  # clean up
-        except Exception as e:
-            self.logger.warning("Problem reading smarthome.conf: {0}".format(e))
 
         #############################################################
         # Setting debug level and adding memory handler
@@ -191,7 +190,7 @@ class SmartHome():
                 self.logger.warning("Problem parsing timezone: {}. Using UTC.".format(self._tz))
             del(self._tz, tzinfo)
 
-        self.logger.warning("--------------------   Init smarthomeNG {0}   --------------------".format(VERSION))
+        self.logger.warning("--------------------   Init SmartHomeNG {0}   --------------------".format(VERSION))
         self.logger.debug("Python {0}".format(sys.version.split()[0]))
         self._starttime = datetime.datetime.now()
 
@@ -258,26 +257,28 @@ class SmartHome():
         # Init Plugins
         #############################################################
         self.logger.info("Init Plugins")
-        self._plugins = lib.plugin.Plugins(self, configfile=self._plugin_conf)
+        self._plugins = lib.plugin.Plugins(self, configfile=self._plugin_conf_basename)
 
         #############################################################
         # Init Items
         #############################################################
         self.logger.info("Init Items")
         item_conf = None
-        for item_file in sorted(os.listdir(self._env_dir)):
-            if item_file.endswith('.conf'):
-                try:
-                    item_conf = lib.config.parse(self._env_dir + item_file, item_conf)
-                except Exception as e:
-                    self.logger.exception("Problem reading {0}: {1}".format(item_file, e))
-        for item_file in sorted(os.listdir(self._items_dir)):
-            if item_file.endswith('.conf'):
-                try:
-                    item_conf = lib.config.parse(self._items_dir + item_file, item_conf)
-                except Exception as e:
-                    self.logger.exception("Problem reading {0}: {1}".format(item_file, e))
-                    continue
+#        for item_file in sorted(os.listdir(self._env_dir)):
+#            if item_file.endswith('.conf') or item_file.endswith('.yaml'):
+#                try:
+#                    item_conf = lib.config.parse(self._env_dir + item_file, item_conf)
+#                except Exception as e:
+#                    self.logger.exception("Problem reading {0}: {1}".format(item_file, e))
+        item_conf = lib.config.parse_itemsdir(self._env_dir, item_conf)
+        item_conf = lib.config.parse_itemsdir(self._items_dir, item_conf)
+#        for item_file in sorted(os.listdir(self._items_dir)):
+#            if item_file.endswith('.conf') or item_file.endswith('.yaml'):
+#                try:
+#                    item_conf = lib.config.parse(self._items_dir + item_file, item_conf)
+#                except Exception as e:
+#                    self.logger.exception("Problem reading {0}: {1}".format(item_file, e))
+#                    continue
         for attr, value in item_conf.items():
             if isinstance(value, dict):
                 child_path = attr
@@ -300,7 +301,7 @@ class SmartHome():
         #############################################################
         # Init Logics
         #############################################################
-        self._logics = lib.logic.Logics(self, self._logic_conf, self._env_logic_conf)
+        self._logics = lib.logic.Logics(self, self._logic_conf_basename, self._env_logic_conf_basename)
 
         #############################################################
         # Init Scenes

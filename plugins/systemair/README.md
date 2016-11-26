@@ -1,6 +1,6 @@
 # Systemair
 
-# Requirements
+## Requirements
 
  1. One of the following Systemair residential air units:
     
@@ -56,20 +56,20 @@
  https://www.systemair.com/globalassets/documentation/40903.pdf
 
 
-# Configuration
+## Configuration
 
 
-## plugin.conf
+### plugin.conf
 
     [Systemair]
-        class_name = systemair 
+        class_name = Systemair 
         class_path = plugins.systemair
         serialport = /dev/ttyUSB0 # serial port of modbus device
         # slave_address = 1 # default: 1
         # update_cycle = 30 # default: 30sec
 
 
-## items.conf
+### items.conf
 
 The example below contains not all possible modbus register. Many of these values are not necessary for daily use. 
 To get all possible register open the 'systemair.conf' in the plugin folder. Every item marked with 'mod_write = true' 
@@ -119,37 +119,31 @@ is a writeable register.
         # read
         type = num
         systemair_regaddr = 208
-        eval = value / 10 #to get Celsius
         
     [[Temperatursensor_1]]
         # read
         type = num
         systemair_regaddr = 214
-        eval = value / 10 #to get Celsius
 
     [[Temperatursensor_2]]
         # read
         type = num
         systemair_regaddr = 215
-        eval = value / 10 #to get Celsius
 
     [[Temperatursensor_3]]
         # read
         type = num
         systemair_regaddr = 216
-        eval = value / 10 #to get Celsius
 
     [[Temperatursensor_4]]
         # read
         type = num
         systemair_regaddr = 217
-        eval = value / 10 #to get Celsius
 
     [[Temperatursensor_5]]
         # read
         type = num
         systemair_regaddr = 218
-        eval = value / 10 #to get Celsius
 
     [[Wochenprogramm_Aktiv]]
         # read
@@ -240,13 +234,16 @@ is a writeable register.
         type = num
         systemair_coiladdr = 12817
 
-
         
-## logic.conf
-
-no logics
-
-## Methodes
-
-no methods
-
+### Workarounds
+ 
+ If you get an error like ```Modbus systemair 'ascii' codec can't encode character '\xcf' in position 99: ordinal not
+ in range(128)``` or similar, you can edit the minimalmodbus.py and replace 
+ 
+ ```self.handle_local_echo = False```
+  
+ with
+ 
+ ```self.handle_local_echo = True```
+ 
+ to activate the echo mode.

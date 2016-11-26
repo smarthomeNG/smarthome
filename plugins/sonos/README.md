@@ -3,88 +3,42 @@ Smarthome.py framework (https://github.com/mknx/smarthome).
 
 ##Release
 
-  v1.61 2016-01-03
-        
-    --  bug: discover function call now working
-    --  command "balance" added; documentation updated 
+v0.9  (2016-11-20)
     
-  v1.6  2015-12-23
-    
-    -- function 'discover' added to perform a manual scan for new Sonos speaker
-  
-  v1.5  2015-10-30
-  
-    -- property 'display_version' added
-    -- property 'model_number' added
-    -- property 'household_id' added (a unique identifier for all players in a household)
+    -- added missing 'track_album' property
+    -- add new property 'playlist_total_tracks'
+    -- change expected Sonos Broker version to 0.9
 
-  v1.4  2015-04-11
-  
-    -- added "wifi_state" command (only Sonos Broker >= v0.6)
-    -- added refresh_media_library function (only Sonos Broker >= v0.6)
-    
-  v1.3  2015-01-18
+v0.8.2  (2016-11-14)
 
-    --  added "get_playlist" and "set_playlist" commmands
-        It is now possible to store the playlist for later use.
-    --  added "is_coordinator" property
-    --  added "tts_local_mode" property
-    --  added a fallback method to retrieve the local ip address
-    --  only working with Sonos Broker version v0.5
+    -- change expected Sonos Broker version to 0.8.2
+ 
+v0.8.1  (2016-11-14)
 
-  v1.2  2014-11-09
-  
-    --  added force_stream_mode option to play_tts command (see broker documentation)
-    --  added 'fade_in' parameter to play_snippet and play_tts command
-        -- the volume for the resumed track fades in
-
-  v1.1  2014-09-23
-
-    --  changed commands to JSON requests to implement the new command interface introduced in Broker v0.3 
-    --  added group_command parameter to following items (update your sonos.conf !!!):
-        -   mute, led, volume, volume_up, volume_down, play_tts, play_snippet, max_volume, bass, 
-            treble, loudness
-        -   play_tts, play_snippet: the group parameter only affects the 'volume'-sub-parameter
-    --  broker_url parameter was not checked properly for invalid values 
+    -- switching versioning to the current Sonos Broker version
+    -- change expected Sonos Broker version to 0.8.1
     
+v1.8    (2016-11-11)
     
-  v1.0  2014-07-08
-    
-    --  parameter 'broker_url' in plugin configuration now optional
-        -   if value is not set, the current system ip and the default broker port (12900) will be assumed
-        -   manually add  this parameter, if the sonos broker is not running on the same system
-    --  added optional parameter 'refresh' to plugin configuration (edit /usr/smarthome/etc/plugin.conf)
-        -   this parameter specifies, how often the broker is requested for sonos status updates 
-            (default: 120s)
-        -   Normally, all changes to the speakers will be triggered automatically to the plugin.
-    --  bug: if a sonos speaker was reported by the broker but was not declared in sonos.conf, an error 
-        occured
-    
-  
-  v0.9    2014-06-15
-    
-    --  changed values play, pause, stop, led back to normal values (no toggle values). 
-        It makes logics easier to write.
-    --  new commands:
-        -   bass [read/write]: sets the bass for a speaker (value between -10 and 10)
-        -   treble [read/write]: sets the treble value for a speaker (value between -10 and 10)
-        -   loudness [read/write]: sets the loudness compensation for a speaker (value 0|1)
-        -   playmode [read/write] sets the playmode for a sonos speaker 
-            values: 'normal', 'shuffle_norepeat', 'shuffle', 'repeat_all'
-    
-    
-  v0.8.1  2014-06-07
-    
-    --  bugfixes in some command processing
+    -- ATTENTION: commands 'get_playlist' and 'set_playlist' removed  and replaced by 'sonos_playlists' and
+       'load_sonos_playlist'
+    --command "load_sonos_playlist" with parameter added. The commands loads a Sonos playlist by its name.
+        -- optional parameters: play_after_insert, clear_queue
+    -- command "play_tunein" added
+        -- 'play_tunein' expects a radio station name. The name will be searched within TuneIn and the 
+            first match is played. To make sure the correct radio station is played provide the full radio 
+            station showing in the Sonos app.
+    -- 'clear_queue' command added. The command clears the current queue.
+    -- version check against Sonos Broker to identify an out-dated plugin or Broker
     
 
 ## Requirements:
 
-  sonos_broker server v0.3
+  sonos_broker server v0.8.3
   (https://github.com/pfischi/shSonos)
 
-  smarthome.py
-  (https://github.com/mknx/smarthome)
+  SmarthomeNG 
+  (https://github.com/smarthomeNG/smarthome)
 
 
 ## Integration in Smarthome.py
@@ -198,6 +152,10 @@ Edit file with this sample of mine:
         [[track_title]]
             type = str
             sonos_recv = track_title
+        
+        [[track_album]]
+            type = str
+            sonos_recv = track_album
     
         [[track_duration]]
             type = str
@@ -226,6 +184,10 @@ Edit file with this sample of mine:
             type = num
             sonos_recv = playlist_position
             visu_acl = rw
+
+        [[playlist_total_tracks]]
+            type = num
+            sonos_recv = playlist_total_tracks
     
         [[streamtype]]
             type = str
@@ -236,13 +198,20 @@ Edit file with this sample of mine:
             type = str
             enforce_updates = True
             sonos_send = play_uri
-            visu_acl = rw
     
+        [[play_tunein]]
+            # 'play_tunein' expects a radio station name
+            # The name will be searched within TuneIn and the first match is played.
+            # To make sure the correct radio station is played provide the full radio station 
+            # showing in the Sonos app.
+            type = str
+            enforce_updates = True
+            sonos_send = play_tunein
+            
         [[play_snippet]]
             type = str
             enforce_updates = True
             sonos_send = play_snippet
-            visu_acl = rw
     
             [[[volume]]]
                 type = num
@@ -440,23 +409,24 @@ Edit file with this sample of mine:
             type = bool
             sonos_recv = tts_local_mode
         
-        [[get_playlist]]
-           type = str  # the give item value represents the local file path
-                    # where to save the playlist
-            sonos_send = get_playlist
+        [[sonos_playlists]]
+            type = str  
+            sonos_send = sonos_playlists
             enforce_updates = True
 
-        [[set_playlist]]
-            type = str  # the give item value represents the file path where
-                        # the playlist is stored (previously saved with
-                        # 'get_playlist')
-            sonos_send = set_playlist
+        [[load_sonos_playlist]]
+            type = str
+            sonos_send = load_sonos_playlist
             enforce_updates = True
 
             [[[play_after_insert]]]
                 type = bool
-                value = 0
-
+                value = 1
+            
+            [[[clear_queue]]]
+                type = bool
+                value = 1
+        
         [[balance]]
             type = num
             visu_acl = rw
@@ -466,6 +436,21 @@ Edit file with this sample of mine:
             [[[group_command]]]
                 type = bool
                 value = 0
+        
+        [[wifi_state]]
+            type = bool
+            visu_acl = rw
+            sonos_recv = wifi_state
+            sonos_send = wifi_state
+
+            [[[persistent]]]
+                type = bool
+                value = 0
+            
+        [[clear_queue]]    
+            type = bool
+            enforce_updates = True
+            sonos_send = clear_queue
         
         
  This sonos.conf file implements most of the commands to interact with the Sonos Broker. Please follow the detailed
@@ -494,6 +479,7 @@ Edit file with this sample of mine:
     next
     previous
     play_uri
+    play_tunein
     play_snippet ('group_command' parameter only affects the snippet volume)
     play_tts ('group_command' parameter only affects the snippet volume)
     partymode
@@ -526,7 +512,7 @@ get_favorite_radiostations(<start_item>, <max_items>)
 
     Parameter max_items can only be used, if start_item is set (positional argument)
 
-    It's a good idea to check to see if the total number of favorites is greater than the amount you
+    It's a good idea to check to see if the total number of favorites is greater than the amount of
     requested ('max_items'), if it is, use `start` to page through and  get the entire list of favorites.
 
     Response:

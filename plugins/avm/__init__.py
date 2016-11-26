@@ -1011,6 +1011,71 @@ class AVM(SmartPlugin):
             self.logger.error("Exception when sending POST request: %s" % str(e))
             return
 
+    def get_call_origin(self):
+        """
+        Gets the phone name, currently set as call_origin.
+
+        Uses: http://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/x_voipSCPD.pdf
+        :return: String phone name
+        """
+        url = self._build_url("/upnp/control/x_voip")
+        action = 'X_AVM-DE_DialGetConfig'
+        headers = self._header.copy()
+        headers['SOAPACTION'] = "%s#%s" % (self._urn_map['X_VoIP'], action)
+        soap_data = self._assemble_soap_data(action, self._urn_map['X_VoIP'])
+        try:
+            response = self._session.post(url, data=soap_data, timeout=self._timeout, headers=headers,
+                               auth=HTTPDigestAuth(self._fritz_device.get_user(), self._fritz_device.get_password()),
+                               verify=self._verify)
+        except Exception as e:
+            self.logger.error("Exception when sending POST request: %s" % str(e))
+            return
+
+        xml = minidom.parseString(response.content)
+
+        phone_name = self._get_value_from_xml_node(xml, 'NewX_AVM-DE_PhoneName')
+        if phone_name is not None:
+            return phone_name
+
+        self.logger.error("No call origin available.")
+        return
+
+    def get_phone_name(self, index = 1):
+        """
+        Get the phone name at a specific index. The returend value can be used as phone_name for set_call_origin.
+
+        Uses: http://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/x_voipSCPD.pdf
+
+        :param index: Parameter is an INT, starting from 1. In case an index does not exist, an error is logged.
+        :return: String phone name
+        """
+        if not self.is_int(index):
+            self.logger.error("Index parameter \"%s\" is no INT." % index)
+            return
+
+        url = self._build_url("/upnp/control/x_voip")
+        action = 'X_AVM-DE_GetPhonePort'
+        headers = self._header.copy()
+        headers['SOAPACTION'] = "%s#%s" % (self._urn_map['X_VoIP'], action)
+        soap_data = self._assemble_soap_data(action, self._urn_map['X_VoIP'],
+                                             {'NewIndex': index})
+        try:
+            response = self._session.post(url, data=soap_data, timeout=self._timeout, headers=headers,
+                               auth=HTTPDigestAuth(self._fritz_device.get_user(), self._fritz_device.get_password()),
+                               verify=self._verify)
+        except Exception as e:
+            self.logger.error("Exception when sending POST request: %s" % str(e))
+            return
+
+        xml = minidom.parseString(response.content)
+
+        phone_name = self._get_value_from_xml_node(xml, 'NewX_AVM-DE_PhoneName')
+        if phone_name is not None:
+            return phone_name
+
+        self.logger.error("No phone name available at provided index %s." % index)
+        return
+
     def set_call_origin(self, phone_name):
         """
         Sets the call origin, e.g. before running 'start_call'
@@ -1020,7 +1085,7 @@ class AVM(SmartPlugin):
         :param phone_name: full phone identifier, could be e.g. '\*\*610' for an internal device
         """
         url = self._build_url("/upnp/control/x_voip")
-        action = 'X_AVM-DE_DialNumber'
+        action = 'X_AVM-DE_DialSetConfig'
         headers = self._header.copy()
         headers['SOAPACTION'] = "%s#%s" % (self._urn_map['X_VoIP'], action)
         soap_data = self._assemble_soap_data(action, self._urn_map['X_VoIP'],

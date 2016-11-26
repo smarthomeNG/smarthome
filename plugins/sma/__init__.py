@@ -180,11 +180,10 @@ name_to_id = {'STATUS': 0x214801,
               'SW_VERSION': 0x823401,
              }
 
-logger = logging.getLogger('SMA')
-
 class SMA():
 
     def __init__(self, smarthome, bt_addr, password="0000", update_cycle="60", allowed_timedelta="10"):
+        self.logger = logging.getLogger(__name__)
         self._sh = smarthome
         self._update_cycle = int(update_cycle)
         self._fields = {}
@@ -222,7 +221,7 @@ class SMA():
                 for item in self._fields['LAST_UPDATE']['items']:
                     item(self._inv_last_read_str, 'SMA', self._inv_serial)
         except Exception as e:
-            logger.error("sma: error while updating values - {}".format(e))
+            self.logger.error("sma: error while updating values - {}".format(e))
         self._cmd_lock.release()
 
     def run(self):
@@ -234,7 +233,7 @@ class SMA():
             self._plugin_active = self._plugin_active_item()
         # "or self._is_connected" ensures the connection will be closed before terminating
         while (self.alive or self._is_connected):
-            #logger.warning("sma: state self._is_connected = {} / self._plugin_active = {} / self.alive = {}".format(self._is_connected, self._plugin_active, self.alive))
+            #self.logger.warning("sma: state self._is_connected = {} / self._plugin_active = {} / self.alive = {}".format(self._is_connected, self._plugin_active, self.alive))
 
             # connect to inverter if active but not connected
             if (self._plugin_active and not self._is_connected):
@@ -242,7 +241,7 @@ class SMA():
                 try:
                     self._btsocket = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
                     self._btsocket.connect((self._inv_bt_addr, 1))
-                    logger.info("sma: via bluetooth connected to {}".format(self._inv_bt_addr))
+                    self.logger.info("sma: via bluetooth connected to {}".format(self._inv_bt_addr))
                     self._send_count = 0
                     self._inv_connect()
                     self._inv_login()
@@ -257,7 +256,7 @@ class SMA():
                             item(self._inv_serial, 'SMA', self._inv_serial)
                     self._is_connected = True
                 except Exception as e:
-                    logger.error("sma: establishing connection to inverter failed - {}".format(e))
+                    self.logger.error("sma: establishing connection to inverter failed - {}".format(e))
                     # wait for 30sec and try to reconnect
                     time.sleep(30)
                     continue
@@ -272,16 +271,16 @@ class SMA():
                             host_localtime = int(time.time())
                             inv_localtime = int.from_bytes(msg[45:49], byteorder='little')
                             diff = inv_localtime - host_localtime
-                            logger.info("sma: inverter timestamp = {}s / host timestamp = {}s / diff = {}s".format(inv_localtime, host_localtime, diff))
+                            self.logger.info("sma: inverter timestamp = {}s / host timestamp = {}s / diff = {}s".format(inv_localtime, host_localtime, diff))
                             if (abs(diff) > self._allowed_timedelta) and not (inv_localtime == 0):
                                 self._inv_set_time()
                                 msg = self._recv_smanet2_msg()
                                 if msg is None:
-                                    logger.debug("sma: could not get reply while setting inverter time\n")
+                                    self.logger.debug("sma: could not get reply while setting inverter time\n")
                                 else:
-                                    logger.debug("sma: reply while setting inverter time - len={} data=[{}]\n".format(len(msg), ', '.join(['0x%02x' % b for b in msg[41:]])))
+                                    self.logger.debug("sma: reply while setting inverter time - len={} data=[{}]\n".format(len(msg), ', '.join(['0x%02x' % b for b in msg[41:]])))
                 except Exception as e:
-                    logger.error("sma: adjusting inverter time failed - {}".format(e))
+                    self.logger.error("sma: adjusting inverter time failed - {}".format(e))
                     return
                 self._sh.scheduler.add('SMA', self._update_values, prio=5, cycle=self._update_cycle)
 
@@ -291,15 +290,15 @@ class SMA():
                 try:
                     self._sh.scheduler.remove('SMA')
                 except Exception as e:
-                    logger.error("sma: removing sma.update from scheduler failed - {}".format(e))
+                    self.logger.error("sma: removing sma.update from scheduler failed - {}".format(e))
                 else:
-                    logger.debug("sma: sma.update removed from scheduler")
+                    self.logger.debug("sma: sma.update removed from scheduler")
                 try:
                     self._btsocket.close()
                 except Exception as e:
-                    logger.error("sma: closing connection to inverter failed - {}".format(e))
+                    self.logger.error("sma: closing connection to inverter failed - {}".format(e))
                 else:
-                    logger.info("sma: connection to inverter closed")
+                    self.logger.info("sma: connection to inverter closed")
                 # set to False under all circumstances to force shutdown
                 self._is_connected = False
                 self._cmd_lock.release()
@@ -311,7 +310,7 @@ class SMA():
                 if not self.alive:
                     break
                 if (msg is None):
-                    #logger.debug("sma: no msg...")
+                    #self.logger.debug("sma: no msg...")
                     continue
                 if (len(msg) >= 60):
                     i = 41
@@ -322,20 +321,20 @@ class SMA():
                             cls = full_id & 0x0000FF
                             dataType = msg[i + 3]
                             if lri not in lris:
-                                logger.info("sma: unknown lri={:#06x} / cls={:#02x} / dataType={:#02x} - trying to continue".format(lri, cls, dataType))
+                                self.logger.info("sma: unknown lri={:#06x} / cls={:#02x} / dataType={:#02x} - trying to continue".format(lri, cls, dataType))
                                 if ((dataType == 0x00) or (dataType == 0x40)):
                                    i += 28
                                 elif ((dataType == 0x08) or (dataType == 0x10)):
                                    i += 40
                                 else:
-                                    logger.error("sma: rx - unknown datatype {:#02x}".format(dataType))
+                                    self.logger.error("sma: rx - unknown datatype {:#02x}".format(dataType))
                                     raise
                                 continue
                             else:
                                 timestamp_utc = int.from_bytes(msg[i + 4:i + 8], byteorder='little')
                                 value = eval(lri_evals[lris[lri][0]], dict(msg=msg,i=i,attribute_to_text=attribute_to_text))
                                 i += lris[lri][1]
-                                logger.debug("sma: lri={:#06x} / cls={:#02x} / timestamp={} / value={}".format(lri, cls, timestamp_utc, value))
+                                self.logger.debug("sma: lri={:#06x} / cls={:#02x} / timestamp={} / value={}".format(lri, cls, timestamp_utc, value))
                                 if full_id in self._fields:
                                     for item in self._fields[full_id]['items']:
                                         item(value, 'SMA', self._inv_serial, '{:#06x}'.format(full_id))
@@ -343,18 +342,18 @@ class SMA():
                                 if (timestamp_utc > self._inv_last_read_timestamp_utc):
                                     self._inv_last_read_timestamp_utc = timestamp_utc
                     except Exception as e:
-                        logger.error("sma: rx: exception - {}".format(e))
-                        logger.error("sma: rx - exception when parsing msg - len={} data=[{}]\n".format(len(msg), ', '.join(['0x%02x' % b for b in msg])))
+                        self.logger.error("sma: rx: exception - {}".format(e))
+                        self.logger.error("sma: rx - exception when parsing msg - len={} data=[{}]\n".format(len(msg), ', '.join(['0x%02x' % b for b in msg])))
                         continue
                 elif (len(msg) == 44):
                     start_id = int.from_bytes(msg[33:36], byteorder='little')
                     end_id = int.from_bytes(msg[37:40], byteorder='little')
-                    logger.info("sma: inverters returns \"no new data\" in id range from {:#06x} to {:#06x}".format(start_id, end_id))
+                    self.logger.info("sma: inverters returns \"no new data\" in id range from {:#06x} to {:#06x}".format(start_id, end_id))
                 else:
-                    logger.warning("sma: rx - unknown/malformed response!")
-                    logger.warning("sma: rx - len={} data=[{}]\n".format(len(msg), ', '.join(['0x%02x' % b for b in msg])))
+                    self.logger.warning("sma: rx - unknown/malformed response!")
+                    self.logger.warning("sma: rx - len={} data=[{}]\n".format(len(msg), ', '.join(['0x%02x' % b for b in msg])))
                     seq_num = int.from_bytes(msg[27:29], byteorder='little')
-                    logger.warning("sma: sma2-seq={} / sma2-data=[{}]\n".format(seq_num, ' '.join(['0x%02x' % b for b in msg[29:]])))
+                    self.logger.warning("sma: sma2-seq={} / sma2-data=[{}]\n".format(seq_num, ' '.join(['0x%02x' % b for b in msg[29:]])))
                 self._reply_lock.acquire()
                 self._reply_lock.notifyAll()
                 self._reply_lock.release()
@@ -367,7 +366,7 @@ class SMA():
 
     def _update_plugin_active(self, item, caller=None, source=None, dest=None):
         self._plugin_active = item()
-        logger.debug("sma: {} set plugin_active to {}".format(item, self._plugin_active))
+        self.logger.debug("sma: {} set plugin_active to {}".format(item, self._plugin_active))
 
     def parse_item(self, item):
         if 'sma' in item.conf:
@@ -376,9 +375,9 @@ class SMA():
                 field_id = name_to_id[field_name]
                 lri = (field_id & 0xFFFF00)
                 if lri not in lris:
-                    logger.error("sma: {} connected to field {} requires unsupported lri {:#06x}".format(item, field_name, lri))
+                    self.logger.error("sma: {} connected to field {} requires unsupported lri {:#06x}".format(item, field_name, lri))
                     return None
-                logger.debug("sma: {} connected to field {} ({:#06x})".format(item, field_name, field_id))
+                self.logger.debug("sma: {} connected to field {} ({:#06x})".format(item, field_name, field_id))
                 if not field_id in self._fields:
                     self._fields[field_id] = {'items': [item], 'logics': []}
                 else:
@@ -390,7 +389,7 @@ class SMA():
                 self._plugin_active_item = item
                 return self._update_plugin_active
             else:
-                logger.debug("sma: {0} connected to field {1})".format(item, field_name))
+                self.logger.debug("sma: {0} connected to field {1})".format(item, field_name))
                 if not field_name in self._fields:
                     self._fields[field_name] = {'items': [item], 'logics': []}
                 else:
@@ -411,11 +410,11 @@ class SMA():
                     msg.pop(0)
             # get level 1 length and validate
             if ((msg[1] ^ msg[2] ^ msg[3]) != 0x7E):
-                logger.warning("sma: rx: length fields invalid")
+                self.logger.warning("sma: rx: length fields invalid")
                 return None
             length = int.from_bytes(msg[1:3], byteorder='little')
             if (length < 18):
-                logger.warning("sma: rx: length to small: {}".format(length))
+                self.logger.warning("sma: rx: length to small: {}".format(length))
                 return None
             # get remaining bytes
             while (len(msg) < length):
@@ -424,18 +423,18 @@ class SMA():
                 msg += self._btsocket.recv(length - len(msg))
             # check src and dst addr and check
             if (msg[4:10] != self._inv_bt_addr_le):
-                logger.warning("sma: rx: unknown src addr")
+                self.logger.warning("sma: rx: unknown src addr")
                 return None
             if (msg[10:16] != self._own_bt_addr_le) and (msg[10:16] != ZERO_ADDR) and (msg[10:16] != BCAST_ADDR):
-                logger.warning("sma: rx: wrong dst addr")
+                self.logger.warning("sma: rx: wrong dst addr")
                 return None
 
         except socket.timeout:
             if not no_timeout_warning:
-                logger.warning("sma: rx: timeout exception - could not receive msg within {}s".format(timeout))
+                self.logger.warning("sma: rx: timeout exception - could not receive msg within {}s".format(timeout))
             msg = None
         except Exception as e:
-            logger.error("sma: rx: exception - {}".format(e))
+            self.logger.error("sma: rx: exception - {}".format(e))
             msg = None
         return msg
 
@@ -447,7 +446,7 @@ class SMA():
         while self.alive:
             retries -= 1
             if (retries == 0):
-                logger.warning("sma: recv smanet2 msg - retries used up!")
+                self.logger.warning("sma: recv smanet2 msg - retries used up!")
                 return []
             smanet1_msg = self._recv_smanet1_msg(no_timeout_warning=no_timeout_warning)
             if smanet1_msg is None:
@@ -463,8 +462,8 @@ class SMA():
             return None
 
         if (smanet2_msg[0:5] != SMANET2_HDR):
-            logger.warning("sma: no SMANET2 msg")
-            logger.warning("sma: recv: len={} / data=[{}]".format(len(smanet2_msg), ' '.join(['0x%02x' % b for b in smanet2_msg])))
+            self.logger.warning("sma: no SMANET2 msg")
+            self.logger.warning("sma: recv: len={} / data=[{}]".format(len(smanet2_msg), ' '.join(['0x%02x' % b for b in smanet2_msg])))
             return None
 
         # remove escape characters
@@ -479,8 +478,8 @@ class SMA():
 
         crc = self._calc_crc16(smanet2_msg[1:-3])
         if (crc != int.from_bytes(smanet2_msg[-3:-1], byteorder='little')):
-            logger.warning("sma: crc: crc16 error - {:04x}".format(crc))
-            logger.warning("sma: crc: len={} / data=[{}]".format(len(smanet2_msg), ' '.join(['0x%02x' % b for b in smanet2_msg])))
+            self.logger.warning("sma: crc: crc16 error - {:04x}".format(crc))
+            self.logger.warning("sma: crc: len={} / data=[{}]".format(len(smanet2_msg), ' '.join(['0x%02x' % b for b in smanet2_msg])))
             return None
         return smanet2_msg
 
@@ -489,7 +488,7 @@ class SMA():
         while self.alive:
             retries -= 1
             if (retries == 0):
-                logger.warning("sma: recv msg with cmdcode - retries used up!")
+                self.logger.warning("sma: recv msg with cmdcode - retries used up!")
                 return None
             msg = self._recv_smanet1_msg()
             # get cmdcode
@@ -550,7 +549,7 @@ class SMA():
 
         # extract own bluetooth addr
         self._own_bt_addr_le = msg[26:32]
-        logger.info("sma: own bluetooth address: {}".format(':'.join(['%02x' % b for b in self._own_bt_addr_le[::-1]])))
+        self.logger.info("sma: own bluetooth address: {}".format(':'.join(['%02x' % b for b in self._own_bt_addr_le[::-1]])))
 
         # first SMA net2 msg
         retries = 10
@@ -573,7 +572,7 @@ class SMA():
                 break
 
         if (retries == 0):
-            logger.warning("sma: connect - retries used up!")
+            self.logger.warning("sma: connect - retries used up!")
             return
 
         # second SMA net2 msg
@@ -618,12 +617,12 @@ class SMA():
                 break
 
         if (retries == 0):
-            logger.warning("sma: login - retries used up!")
+            self.logger.warning("sma: login - retries used up!")
             return
 
         # extract serial
         self._inv_serial = int.from_bytes(msg[17:21], byteorder='little')
-        logger.info("sma: inverter serial = {}".format(self._inv_serial))
+        self.logger.info("sma: inverter serial = {}".format(self._inv_serial))
 
     def _inv_get_bt_signal_strength(self):
         cmdcode = 0x0003
@@ -646,7 +645,7 @@ class SMA():
         msg += SMANET2_HDR + bytes([0x09, 0xA0]) + BCAST_ADDR + bytes([0x00, 0x00]) + self._inv_bt_addr_le + bytes([0x00] + [0x00] + [0, 0, 0, 0]) + (self._send_count | 0x8000).to_bytes(2, byteorder='little')
         msg += request_set[0].to_bytes(4, byteorder='little') + request_set[1].to_bytes(4, byteorder='little') + request_set[2].to_bytes(4, byteorder='little')
         # send msg to inverter
-        #logger.debug("sma: requesting {:#06x}-{:#06x}...".format(request_set[1], request_set[2]))
+        #self.logger.debug("sma: requesting {:#06x}-{:#06x}...".format(request_set[1], request_set[2]))
         self._send_msg(msg)
 
     def _inv_set_time(self):
