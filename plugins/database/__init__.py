@@ -48,6 +48,7 @@ class Database(SmartPlugin):
 
     def __init__(self, smarthome, db, connect, prefix="", cycle=60):
         self._sh = smarthome
+        self.logger = logging.getLogger(__name__)
         self._dump_cycle = int(cycle)
         self._name = self.get_instance_name()
         self._tables = {table: table if prefix == "" else prefix + "_" + table for table in ["log", "item"]}
