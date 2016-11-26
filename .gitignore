@@ -6,9 +6,6 @@
 /doc/build
 /doc/sphinx_bootstrap_theme
 
-/plugins/backend/static/blockly
-/plugins/backend/static/codemirror
-
 # Unittest and coverage reports
 .cache
 .coverage

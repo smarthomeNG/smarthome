@@ -75,9 +75,31 @@ Simple item logging:
 
 ## logic.conf
 
-No logic configuration implemented.
+### memlog
 
-# Methodes
+Configures that a message should be logged whenever the logic was triggered. It logs a
+default message which can be overwritten by the `memlog_message` attribute.
+
+### memlog_message
+
+Defines the message to be logged. It configures a string which may contain placeholders
+which got replaced by using the `format()` function.
+
+The following placeholders or object can be used in the message string:
+* logic - the logic object, e.g. logic.name for the logic's name
+* plugin - the memlog plugin instance object
+* by - the string containing the origin of logic trigger
+* source - the source
+* dest - thedestination
+
+The logic and plugin should always be available, the rest depends on the logic invocation/trigger.
+
+Example:
+<pre>
+  memlog_message = The logic {logic.name} was triggered!
+</pre>
+
+# Methods
 
 The `memlog()` method name is the plugin name which is used in the plugin configuration.
 If you use another name, you need to use this name as method name too.

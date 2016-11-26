@@ -51,7 +51,10 @@ class MemLog():
             return None
 
     def parse_logic(self, logic):
-        pass
+        if 'memlog' in logic.conf:
+            return self.trigger_logic
+        else:
+            return None
 
     def __call__(self, param1=None, param2=None):
         if type(param1) == list and type(param2) == type(None):
@@ -72,6 +75,14 @@ class MemLog():
                         logvalues.append(self._sh.return_item(item)())
 
                 self.log(logvalues, 'INFO')
+
+    def trigger_logic(self, logic, by=None, source=None, dest=None):
+        if self.name == logic.conf['memlog']:
+            if 'memlog_message' in logic.conf:
+                msg = logic.conf['memlog_message']
+            else:
+                msg = "Logic {} triggered"
+            self.log([msg.format(**{'plugin' : self, 'logic' : logic, 'by' : by, 'source' : source, 'dest' : dest})]) 
 
     def log(self, logvalues, level = 'INFO'):
         if len(logvalues):

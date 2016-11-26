@@ -71,7 +71,7 @@
 							<td {% if smarthome.return_logic(logic).watch_item|length > 0 %}onClick="$('#{{ logic }}_additional').toggle();" style="cursor: pointer;"{% endif %}>
 								{% if smarthome.return_logic(logic).watch_item|length == 0 %}-{% else %}{{ smarthome.return_logic(logic).watch_item|length}} {% endif %}
 							</td>
-							<td><a href="/logics_view.html?file_path={{ smarthome.return_logic(logic).filename }}&logic={{ logic }}">{{ get_basename(smarthome.return_logic(logic).filename) }}</a></th>
+							<td>{{ get_basename(smarthome.return_logic(logic).filename) }}</th>
 							{% if updates %}
 								 {% if (1==2) %}
 									<td>

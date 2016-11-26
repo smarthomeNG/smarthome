@@ -49,6 +49,9 @@ def is_userlogic(sh, logic):
 translation_dict = {}
 translation_lang = ''
 
+def get_translation_lang():
+    global translation_lang
+    return translation_lang
 
 def load_translation(language):
     global translation_dict    # Needed to modify global copy of translation_dict
@@ -105,3 +108,23 @@ def translate(txt, block=''):
             logger.warning("Backend: Language '{0}': Translation for '{1}' is missing".format(translation_lang, txt))
             tr = txt
     return html_escape(tr)
+
+def create_hash(plaintext):
+    import hashlib
+    hashfunc = hashlib.sha512()
+    hashfunc.update(plaintext.encode())
+    return hashfunc.digest().hex()
+
+def parse_requirements(file_path):
+    fobj = open(file_path)
+    req_dict = {}
+    for line in fobj:
+        if len(line) > 0 and '#' not in line:
+            if ">" in line:
+                req_dict[line[0:line.find(">")].lower().strip()] = line[line.find(">"):len(line)].lower().strip()
+            elif "<" in line:
+                req_dict[line[0:line.find("<")].lower().strip()] = line[line.find("<"):len(line)].lower().strip()
+            elif "=" in line:
+                req_dict[line[0:line.find("=")].lower().strip()] = line[line.find("="):len(line)].lower().strip()
+    fobj.close()
+    return req_dict

@@ -79,7 +79,7 @@ class Backend:
         if lang != '':
             load_translation(lang)
         else:
-            load_translation(translation_lang)
+            load_translation(get_translation_lang())
         return self.index()
 
     @cherrypy.expose
@@ -93,6 +93,30 @@ class Backend:
         arch = platform.machine()
         user = pwd.getpwuid(os.geteuid()).pw_name  # os.getlogin()
         python_packages = self.getpackages()
+
+        req_dict = {}
+        req_dict_base = parse_requirements("%s/requirements/base.txt" % self._sh_dir)
+
+        # parse plugins and look for requirements
+        _conf = lib.config.parse(self._sh._plugin_conf)
+
+        plugin_names = []
+        for plugin in _conf:
+            plugin_name = _conf[plugin]['class_path'].strip()
+            if not plugin_name in plugin_names: #only unique plugin names, e.g. if multiinstance is used
+                plugin_names.append(plugin_name)
+
+        req_dict = req_dict_base.copy()
+        for plugin_name in plugin_names:
+            file_path = "%s/requirements/%s.txt" % (self._sh_dir, plugin_name)
+            if os.path.isfile(file_path):
+                plugin_dict = parse_requirements(file_path)
+                for key in plugin_dict:
+                    if key not in req_dict:
+                        req_dict[key] = plugin_dict[key] + ' ('+plugin_name.replace('plugins.','')+')'
+                    else:
+                        req_dict[key] = req_dict[key] + ', ' + plugin_dict[key] + ' ('+plugin_name.replace('plugins.','')+')'
+
 
         ip = self._bs.get_local_ip_address()
 
@@ -117,7 +141,7 @@ class Backend:
         tmpl = self.env.get_template('system.html')
         return tmpl.render(now=now, system=system, sh_vers=self._sh.env.core.version(), vers=vers, node=node, arch=arch, user=user,
                                 freespace=freespace, uptime=uptime, sh_uptime=sh_uptime, pyversion=pyversion,
-                                ip=ip, python_packages=python_packages, visu_plugin=(self.visu_plugin is not None))
+                                ip=ip, python_packages=python_packages, requirements=req_dict, visu_plugin=(self.visu_plugin is not None))
 
     def get_process_info(self, command):
         """
@@ -212,7 +236,7 @@ class Backend:
 
         tmpl = self.env.get_template('services.html')
         return tmpl.render(knxd_service=knxd_service, smarthome_service=smarthome_service, knxd_socket=knxd_socket,
-                           sql_plugin=sql_plugin, visu_plugin=(self.visu_plugin is not None), lang=translation_lang,
+                           sql_plugin=sql_plugin, visu_plugin=(self.visu_plugin is not None), lang=get_translation_lang(),
                            develop=self.developer_mode, knxdeamon=knxdeamon)
 
     @cherrypy.expose
@@ -279,11 +303,13 @@ class Backend:
                            log_level_filter=log_level_filter, visu_plugin=(self.visu_plugin is not None))
 
     @cherrypy.expose
-    def logics_view_html(self, file_path, logic):
+    def logics_view_html(self, file_path, logic, trigger=None, reload=None, enable=None, save=None, logics_code=None):
         """
         returns the smarthomeNG logfile as view
         """
         self.find_visu_plugin()
+
+        self.process_logics_action(logic, trigger, reload, enable, save, logics_code)
 
         mylogic = self._sh.return_logic(logic)
 
@@ -350,7 +376,7 @@ class Backend:
 
     @cherrypy.expose
     def create_hash_json_html(self, plaintext):
-        return json.dumps(Utils.create_hash(plaintext))
+        return json.dumps(create_hash(plaintext))
 
     @cherrypy.expose
     def item_change_value_html(self, item_path, value):
@@ -432,6 +458,9 @@ class Backend:
             prev_value = item.prev_value()
             value = item._value
 
+        if isinstance(prev_value, datetime.datetime):
+            prev_value = str(prev_value)
+
         if 'str' in item.type():
             value = html.escape(value)
             prev_value = html.escape(prev_value)
@@ -449,6 +478,7 @@ class Backend:
         changed_by = item.changed_by()
         if changed_by[-5:] == ':None':
             changed_by = changed_by[:-5]
+
         if item.prev_age() < 0:
             prev_age = ''
         else:
@@ -516,51 +546,14 @@ class Backend:
 
         return item_data
 
+
     @cherrypy.expose
-    def logics_html(self, logic=None, trigger=None, reload=None, enable=None):
+    def logics_html(self, logic=None, trigger=None, reload=None, enable=None, save=None):
         """
         display a list of all known logics
         """
         self.find_visu_plugin()
-
-        self.logger.debug("Backend: logics_html: trigger = '{0}', reload = '{1}'".format(trigger, reload))
-        if enable is not None:
-            self.logger.debug("Backend: logics_html: Enable/Disable logic = '{0}'".format(logic))
-            if self.updates_allowed:
-                if logic in self._sh.return_logics():
-                    mylogic = self._sh.return_logic(logic)
-                    if mylogic.enabled:
-                        mylogic.disable()
-                    else:
-                        mylogic.enable()
-                else:
-                    self.logger.warning("Backend: Logic '{0}' not found".format(logic))
-            else:
-                self.logger.warning(
-                    "Backend: Logic enabling/disabling is not allowed. (Change 'updates_allowed' in plugin.conf")
-
-        if trigger is not None:
-            self.logger.debug("Backend: logics_html: Trigger logic = '{0}'".format(logic))
-            if self.updates_allowed:
-                if logic in self._sh.return_logics():
-                    self._sh.trigger(logic, by='Backend')
-                else:
-                    self.logger.warning("Backend: Logic '{0}' not found".format(logic))
-            else:
-                self.logger.warning("Backend: Logic triggering is not allowed. (Change 'updates_allowed' in plugin.conf")
-
-        if reload is not None:
-            self.logger.debug("Backend: logics_html: Reload logic = '{0}'".format(logic))
-            if self.updates_allowed:
-                if logic in self._sh.return_logics():
-                    mylogic = self._sh.return_logic(logic)
-                    self.logger.info("Backend: logics_html: Reload logic='{0}', filename = '{1}'".format(logic, os.path.basename(mylogic.filename)))
-                    mylogic.generate_bytecode()
-                    self._sh.trigger(logic, by='Backend', value="Init")
-                else:
-                    self.logger.warning("Backend: Logic '{0}' not found".format(logic))
-            else:
-                self.logger.warning("Backend: Logic reloads are not allowed. (Change 'updates_allowed' in plugin.conf")
+        self.process_logics_action(logic, trigger, reload, enable, save)
 
         tmpl = self.env.get_template('logics.html')
         return tmpl.render( smarthome = self._sh, updates = self.updates_allowed, visu_plugin=(self.visu_plugin is not None))
@@ -709,3 +702,61 @@ class Backend:
             return True
         except ValueError:
             return False
+
+    def process_logics_action(self, logic=None, trigger=None, reload=None, enable=None, save=None, logics_code=None):
+        self.logger.debug(
+            "Backend: logics_html: trigger = '{0}', reload = '{1}', enable='{2}', save='{3}'".format(trigger, reload, enable, save))
+        if enable is not None:
+            self.logger.debug("Backend: logics[_view]_html: Enable/Disable logic = '{0}'".format(logic))
+            if self.updates_allowed:
+                if logic in self._sh.return_logics():
+                    mylogic = self._sh.return_logic(logic)
+                    if mylogic.enabled:
+                        mylogic.disable()
+                    else:
+                        mylogic.enable()
+                else:
+                    self.logger.warning("Backend: Logic '{0}' not found".format(logic))
+            else:
+                self.logger.warning(
+                    "Backend: Logic enabling/disabling is not allowed. (Change 'updates_allowed' in plugin.conf")
+
+        if trigger is not None:
+            self.logger.debug("Backend: logics[_view]_html: Trigger logic = '{0}'".format(logic))
+            if self.updates_allowed:
+                if logic in self._sh.return_logics():
+                    self._sh.trigger(logic, by='Backend')
+                else:
+                    self.logger.warning("Backend: Logic '{0}' not found".format(logic))
+            else:
+                self.logger.warning(
+                    "Backend: Logic triggering is not allowed. (Change 'updates_allowed' in plugin.conf")
+
+        if save is not None:
+            self.logger.debug("Backend: logics_view_html: Save logic = '{0}'".format(logic))
+
+            if self.updates_allowed:
+                if logic in self._sh.return_logics():
+                    mylogic = self._sh.return_logic(logic)
+
+            f = open(mylogic.filename, 'w')
+            f.write(logics_code)
+            f.close()
+            reload = True
+
+        if reload is not None:
+            self.logger.debug("Backend: logics[_view]_html: Reload logic = '{0}'".format(logic))
+            if self.updates_allowed:
+                if logic in self._sh.return_logics():
+                    mylogic = self._sh.return_logic(logic)
+                    self.logger.info("Backend: logics_html: Reload logic='{0}', filename = '{1}'".format(logic,
+                                                                                                         os.path.basename(
+                                                                                                             mylogic.filename)))
+                    mylogic.generate_bytecode()
+                    self._sh.trigger(logic, by='Backend', value="Init")
+                else:
+                    self.logger.warning("Backend: Logic '{0}' not found".format(logic))
+            else:
+                self.logger.warning("Backend: Logic reloads are not allowed. (Change 'updates_allowed' in plugin.conf")
+
+        return

@@ -200,10 +200,10 @@ Code.importPrettify = function() {
   //<script src="../prettify.js"></script>
   var link = document.createElement('link');
   link.setAttribute('rel', 'stylesheet');
-  link.setAttribute('href', '../static/blockly/demos/prettify.css');
+  link.setAttribute('href', '../static/js/google-prettify/prettify.css');
   document.head.appendChild(link);
   var script = document.createElement('script');
-  script.setAttribute('src', '../static/blockly/demos/prettify.js');
+  script.setAttribute('src', '../static/js/google-prettify/prettify.js');
   document.head.appendChild(script);
 };
 
