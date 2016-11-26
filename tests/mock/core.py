@@ -1,7 +1,9 @@
 
 import datetime
 
+import lib.item
 import lib.plugin
+import lib.config
 import lib.connection
 
 from lib.model.smartplugin import SmartPlugin
