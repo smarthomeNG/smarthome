@@ -2,26 +2,39 @@
 
 This plugin uses the D&W USB service interface for connection, so you don't need the additional modbusadapter. Be careful not to configure wrong parameters, otherwise the function of your device may be damaged. The D&W warranty is not including this case of damage!
 
+Changelog
+============
+
+1.3.0:
+* Ignore wrong device info and use backup device id (set correct number for your DuW device from list below)
+* Retry reading lines to prevent wrong data (set value in conf file)
+* Catch division by zero errors
+* expanded config file for x2 plus. See http://filter.drexel-weiss.at/HP/Upload/Dateien/900.6667_00_TI_Modbus_Parameter_V4.01_DE.pdf for further parameters
+* Plugin is smart so you can use seperate logging level in logging.yaml
+* Fixed some code
+* Added example config file in plugins folder
+
+
 Supported Devices
 ============
 
 The plugin detects the connected device type automatically:
 
-   * aerosilent bianco
-   * aerosilent business
-   * aerosilent centro
-   * aerosilent micro
-   * aerosilent primus
-   * aerosilent stratos
-   * aerosilent topo
-   * aerosmart l
-   * aerosmart m
-   * aerosmart s
-   * aerosmart mono
-   * aerosmart xls
-   * termosmart sc
-   * X²
-   * X² Plus
+   * aerosilent bianco: 13
+   * aerosilent business: 15
+   * aerosilent centro: 8
+   * aerosilent micro: 3
+   * aerosilent primus: 1
+   * aerosilent stratos: 17
+   * aerosilent topo: 2
+   * aerosmart l: 6
+   * aerosmart m: 5
+   * aerosmart s: 4
+   * aerosmart mono: 11
+   * aerosmart xls: 7
+   * termosmart sc: 9
+   * XÂ²: 10
+   * XÂ² Plus: 14
 
 
 Configuration
@@ -37,6 +50,8 @@ plugin.conf
 #   Busmonitor = 1
 #   LU_ID = 130
 #   WP_ID = 140
+#   device = 14 # x2 plus as standard device
+#   retrylimit = 100 # number of retries to get answer right
 </pre>
 
 You have to adapt the tty to your local environment and change LU_ID and WP_ID if not D&W default is used.
@@ -64,6 +79,7 @@ Values are calculated automatically regarding the register depending divisor and
         sv_widget = {{ basic.slider('item', 'item', 0, 5, 1) }}
 </pre>
 
+Find a full conf file example in plugin folder
 
 Functions
 =========

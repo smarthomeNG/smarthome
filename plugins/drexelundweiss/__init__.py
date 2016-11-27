@@ -27,12 +27,12 @@ import os.path
 import time
 import string
 import re
+from lib.model.smartplugin import SmartPlugin
 
-logger = logging.getLogger('')
-
-
-class DuW():
-
+class DuW(SmartPlugin):
+    ALLOW_MULTIINSTANCE = False
+    PLUGIN_VERSION = "1.3.0"
+    
     def __init__(self, smarthome, tty, LU_ID=130, WP_ID=140, Busmonitor=0, device=0, retrylimit=100):
         self._sh = smarthome
         self._LU_ID = LU_ID
@@ -49,6 +49,7 @@ class DuW():
         self._lock = threading.Lock()
         self.busmonitor = Busmonitor
         self._pollservice = False
+        self.logger = logging.getLogger(__name__) 
 
         self.devl[1] = {'device': 'aerosilent primus', 'cmdpath':
                         smarthome.base_dir + '/plugins/drexelundweiss/aerosilent_primus.txt'}
@@ -84,7 +85,7 @@ class DuW():
         try:
             self._port = serial.Serial(tty, 115200, timeout=5)
         except:
-            logger.error("DuW: could not open {}.".format(tty))
+            self.logger.error("DuW: could not open {}.".format(tty))
             return
         else:
             self._is_connected = True
@@ -95,7 +96,7 @@ class DuW():
 
     def _convertresponse(self,antwort,teil):
         antwort = antwort.decode()
-        #logger.debug("DuW: Antwort: {}".format(antwort))
+        #self.logger.debug("DuW: Antwort: {}".format(antwort))
         allow = string.digits + ' '
         antwort = re.sub('[^%s]' % allow, '', antwort)
         liste = antwort.splitlines()
@@ -104,7 +105,6 @@ class DuW():
         except:
             antwort = str("-1")
         if type(antwort) is list and len(antwort) >= 2:
-            #logger.debug("DuW: Ergebnis ist Liste: {0}".format(antwort))
             if teil == 'id':
                 antwort = str(antwort[0])
             elif teil == 'register':
@@ -118,11 +118,10 @@ class DuW():
                 except:
                     antwort = '-1'
         else:
-            #logger.debug("DuW: Antwort ist Einzelwert: {0}".format(antwort))
             antwort = str(antwort)
         allow = string.digits
         antwort = re.sub('[^%s]' % allow, '', antwort)
-        logger.debug("DuW: Response: {1} = {0}".format(antwort, teil))
+        #self.logger.debug("DuW: Response: {1} = {0}".format(antwort, teil))
         return int(antwort)
 
     def _get_device_type(self):
@@ -131,27 +130,27 @@ class DuW():
             (data, done) = self._read_register('LU\n', 5000, 1, 0)
             if done:
                 if data in self.devl:
-                    logger.info("DuW: device: {}".format(self.devl[data]['device']))
+                    self.logger.info("DuW: device: {}".format(self.devl[data]['device']))
                     if os.path.isfile(self.devl[data]['cmdpath']):
                         self._cmd = self.devl[data]['cmdpath']
-                        logger.debug("DuW: Self Command:{}".format(self._cmd))
+                        self.logger.debug("DuW: Command File:{}".format(self._cmd))
                     else:
-                        logger.error(
+                        self.logger.error(
                             "DuW: no command file found at {}".format(self.devl[data]['cmdpath']))
                         self._cmd = False
 
                 else:
-                    logger.error("DuW: device not supported: {}".format(data))
+                    self.logger.error("DuW: device not supported: {}".format(data))
                     self._cmd = False
             else:
-                logger.error("DuW: Error reading device type! Trying to activate configured device")
+                self.logger.error("DuW: Error reading device type! Trying to activate configured device")
                 if os.path.isfile(self.devl[self._device]['cmdpath']):
                         self._cmd = self.devl[self._device]['cmdpath']
-                        logger.info("DuW: device: {0}".format(self.devl[self._device]['device']))
+                        self.logger.info("DuW: device: {0}".format(self.devl[self._device]['device']))
                 #self._cmd = False
         else:
             self._cmd = False
-            logger.error("DuW: no connection")
+            self.logger.error("DuW: no connection")
         self.alive = False
 
     def _send_DW(self, data, pcb):
@@ -163,16 +162,15 @@ class DuW():
         elif(pcb == 'WP\n'):
             device_ID = self._WP_ID
         else:
-            logger.error("DuW: wrong pcb description")
+            self.logger.error("DuW: wrong pcb description")
             return
 
         if not self._lock.acquire(timeout=2):
             return
         try:
-            #self._port.write((str(device_ID) + " " + data + "\r\n").encode())
             self._port.write("{0} {1}\r\n".format(device_ID,data).encode())
         except Exception as e:
-            logger.exception("DuW: Problem sending {0}".format(e))
+            self.logger.exception("DuW: Problem sending {0}".format(e))
         finally:
             self._lock.release()
 
@@ -189,13 +187,13 @@ class DuW():
             else:
                 return False
         else:
-            logger.error("DuW: wrong pcb description")
+            self.logger.error("DuW: wrong pcb description")
             return
 
     def _load_cmd(self):
-        logger.debug("DuW: Opening command file")
+        self.logger.debug("DuW: Opening command file")
         f = open(self._cmd, "r")
-        logger.debug("DuW: Opened command file")
+        self.logger.debug("DuW: Opened command file")
         try:
             for line in f:
                 if not self._lock.acquire(timeout=2):
@@ -211,22 +209,23 @@ class DuW():
                         elif row[7] == 'WP\n':
                             self.WPcmdl[int(row[0])] = {'reginfo': row}
                         else:
-                            logger.debug("DuW: Error in Commandfile: " + line)
+                            self.logger.debug("DuW: Error in Commandfile: " + line)
                 except Exception as e:
-                    logger.exception("DuW: problems loading commands: {0}".format(e))
+                    self.logger.exception("DuW: problems loading commands: {0}".format(e))
                 finally:
                     self._lock.release()
         finally:
             f.close()
 
     def run(self):
+        self.logger.debug("run method called")
         if not self._cmd:
             self.alive = False
             try:
                 if self._is_connected:
                     self._port.close()
             except Exception as e:
-                logger.exception(e)
+                self.logger.exception(e)
             return
 
         self.alive = True
@@ -242,7 +241,7 @@ class DuW():
                 if done:
                     item(data, 'DuW', 'init process')
                 else:
-                    logger.debug("DuW: Init LU register failed: {}".format(register))
+                    self.logger.debug("DuW: Init LU register failed: {}".format(register))
 
         # WP register init
         for register in self.WPregl:
@@ -255,7 +254,7 @@ class DuW():
                 if done:
                     item(data, 'DuW', 'init process')
                 else:
-                    logger.debug("DuW: Init WP register failed: {0}".format(register))
+                    self.logger.debug("DuW: Init WP register failed: {0}".format(register))
 
         # poll DuW interface
         dw_id = 0
@@ -290,20 +289,20 @@ class DuW():
                                                 dw_register]['reginfo']
                                             divisor = int(reginfo[4])
                                             komma = int(reginfo[5])
-                                            logger.debug("DuW Busmonitor LU register: {0} {1}: {2}".format(dw_register,reginfo[1],((dw_data / divisor) / (10 ** komma))))
+                                            self.logger.debug("DuW Busmonitor LU register: {0} {1}: {2}".format(dw_register,reginfo[1],((dw_data / divisor) / (10 ** komma))))
                                         else:
-                                            logger.debug("DuW Busmonitor: unknown LU register: {0} {1}".format(dw_register,dw_data))
+                                            self.logger.debug("DuW Busmonitor: unknown LU register: {0} {1}".format(dw_register,dw_data))
                                     elif dw_id == self._WP_ID:
                                         if dw_register in self.WPcmdl:
                                             reginfo = self.WPcmdl[dw_register][
                                                 'reginfo']
                                             divisor = int(reginfo[4])
                                             komma = int(reginfo[5])
-                                            logger.debug("DuW Busmonitor WP register: {0} {1}: {2}".format(dw_register,reginfo[1],((dw_data / divisor) / (10 ** komma))))
+                                            self.logger.debug("DuW Busmonitor WP register: {0} {1}: {2}".format(dw_register,reginfo[1],((dw_data / divisor) / (10 ** komma))))
                                         else:
-                                            logger.debug("DuW Busmonitor: unknown WP register: {0} {1}".format(dw_register,dw_data))
+                                            self.logger.debug("DuW Busmonitor: unknown WP register: {0} {1}".format(dw_register,dw_data))
                                     else:
-                                        logger.debug(
+                                        self.logger.debug(
                                             "DuW Busmonitor: unknown device ID: {}".format(dw_id))
 
                                 if dw_id == self._LU_ID:
@@ -318,7 +317,7 @@ class DuW():
                                                  / (10 ** komma)),
                                                 'DuW', 'Poll')
                                     else:
-                                        logger.debug("DuW: Ignore LU register {}".format(dw_register))
+                                        self.logger.debug("DuW: Ignore LU register {}".format(dw_register))
                                 elif dw_id == self._WP_ID:
                                     if dw_register in self.WPregl:
                                         reginfo = self.WPregl[
@@ -331,9 +330,9 @@ class DuW():
                                                  / (10 ** komma)),
                                                 'DuW', 'Poll')
                                     else:
-                                        logger.debug("DuW: Ignore WP register {}" .format(dw_register))
+                                        self.logger.debug("DuW: Ignore WP register {}" .format(dw_register))
                                 else:
-                                    logger.debug("DuW: unknown device ID: {}".format(dw_id))
+                                    self.logger.debug("DuW: unknown device ID: {}".format(dw_id))
 
                                 dw_id = 0
                                 dw_register = 0
@@ -344,20 +343,20 @@ class DuW():
                             dw_id = 0
                             dw_register = 0
                             dw_data = 0
-                            logger.debug("DuW: Read timeout")
+                            self.logger.debug("DuW: Read timeout")
                     except Exception as e:
-                        logger.exception("DuW: Polling error {0}".format(e))
+                        self.logger.exception("DuW: Polling error {0}".format(e))
                     finally:
                         self._lock.release()
                 time.sleep(0.1)
             # exit poll service
             self._pollservice = False
         except Exception as e:
-            logger.exception("DuW: not alive error, {0}".format(e))
+            self.logger.exception("DuW: not alive error, {0}".format(e))
 
     def stop(self):
         self.alive = False
-        # wait until pollservice closed
+        self.logger.debug("stop method called")
         while self._pollservice == True:
             pass
 
@@ -365,7 +364,7 @@ class DuW():
             if self._is_connected:
                 self._port.close()
         except Exception as e:
-            logger.exception("DuW: Stop Exception, {}".format(e))
+            self.logger.exception("DuW: Stop Exception, {}".format(e))
 
     def write_DW(self, pcb, register, value):
         self._send_DW("{0:d} {1:d}".format(int(register), int(value)), pcb)
@@ -379,7 +378,7 @@ class DuW():
         elif(pcb == 'WP\n'):
             device_ID = self._WP_ID
         else:
-            logger.error("DuW: wrong pcb description")
+            self.logger.error("DuW: wrong pcb description")
 
         self._port.flushInput()
         self.req_DW(pcb, str(register + 1))
@@ -395,6 +394,7 @@ class DuW():
                 response += self._port.read()
                 allow = string.digits
                 test = re.sub('[^%s]' % allow, '', str(response.decode()))
+                #self.logger.debug("DuW:  Response: {0}".format(test))
                 if len(test) != 0:
                     if (response[-1] == 0x20 and dw_id == 0):
                         dw_id = self._convertresponse(response,'id')
@@ -410,31 +410,31 @@ class DuW():
                         response = bytes()
                 else:
                     retries += 1
-                    logger.info("DuW: read timeout: {0}. Retries: {1}".format(response, retries))
+                    self.logger.info("DuW: read timeout: {0}. Retries: {1}".format(response, retries))
                     if retries >= self._retrylimit:
                        break
                 time.sleep(0.1)
         except Exception as e:
-            logger.warning("DuW: Read error: {0}".format(e))
+            self.logger.warning("DuW: Read error: {0}".format(e))
         finally:
             self._lock.release()
 
         if(dw_id == device_ID and (dw_register - 1) == register):
-            logger.debug("DuW:  Read {1} on Register: {0}".format(register,dw_data))
+            self.logger.debug("DuW:  Read {1} on Register: {0}".format(register,dw_data))
             try:
                 return (((dw_data / divisor) / (10 ** komma)), 1)
             except:
-                logger.debug("Division durch Null Problem")
+                self.logger.debug("Division durch Null Problem")
                 return (((dw_data / 1) / (10 ** 1)), 1)
         else:
-            logger.error("DuW: read errror Device ID: {0}, register {1}".format(dw_id,dw_register - 1))
+            self.logger.error("DuW: read errror Device ID: {0}, register {1}".format(dw_id,dw_register - 1))
             return (0, 0)
 
     def parse_item(self, item):
         if not self._cmd:
             return None
-        if 'DuW_LU_register' in item.conf:
-            register = int(item.conf['DuW_LU_register'])
+        if self.has_iattr(item.conf, 'DuW_LU_register'):
+            register = int(self.get_iattr_value(item.conf, 'DuW_LU_register'))
             reginfo = self._get_register_info(register, 'LU\n')
             if reginfo:
                 if not register in self.LUregl:
@@ -446,10 +446,10 @@ class DuW():
 
                 return self.update_item
             else:
-                logger.warning("DuW: LU register: {} not supported by configured device!".format(register))
+                self.logger.warning("DuW: LU register: {} not supported by configured device!".format(register))
                 return None
-        if 'DuW_WP_register' in item.conf:
-            register = int(item.conf['DuW_WP_register'])
+        if self.has_iattr(item.conf, 'DuW_WP_register'):
+            register = int(self.get_iattr_value(item.conf, 'DuW_WP_register'))
             reginfo = self._get_register_info(register, 'WP\n')
             if reginfo:
                 if not register in self.WPregl:
@@ -461,37 +461,43 @@ class DuW():
 
                 return self.update_item
             else:
-                logger.warning("DuW: WP register: {} not supported by configured device!".format(register))
+                self.logger.warning("DuW: WP register: {} not supported by configured device!".format(register))
                 return None
 
     def update_item(self, item, caller=None, source=None, dest=None):
         if caller != 'DuW':
-            if 'DuW_LU_register' in item.conf:
-                register = int(item.conf['DuW_LU_register'])
+            if self.has_iattr(item.conf, 'DuW_LU_register'):
+                register = int(self.get_iattr_value(item.conf, 'DuW_LU_register'))
                 if register in self.LUregl:
                     reginfo = self.LUregl[register]['reginfo']
                     data = item() * int(reginfo[4]) * (10 ** int(reginfo[5]))
                     if (data < int(reginfo[2]) or data > int(reginfo[3])):
-                        logger.error("DuW: value of LU register: {} out of range, changes ignored!".format(register))
+                        self.logger.error("DuW: value of LU register: {} out of range, changes ignored!".format(register))
                         pass
                     else:
                         if reginfo[6] == 'R/W':
-                            logger.debug("DuW: update LU register: {0} {1} with {2}".format(register,reginfo[1],data))
+                            self.logger.debug("DuW: update LU register: {0} {1} with {2}".format(register,reginfo[1],data))
                             self.write_DW(reginfo[7], register, data)
                         else:
-                            logger.warning("DuW: tried to update read only LU register: {}".format(register))
-            if 'DuW_WP_register' in item.conf:
-                register = int(item.conf['DuW_WP_register'])
+                            self.logger.warning("DuW: tried to update read only LU register: {}".format(register))
+            if self.has_iattr(item.conf, 'DuW_WP_register'):
+                register = int(self.get_iattr_value(item.conf, 'DuW_WP_register'))
                 if register in self.WPregl:
                     reginfo = self.WPregl[register]['reginfo']
                     data = item() * int(reginfo[4]) * (10 ** int(reginfo[5]))
                     if (data < int(reginfo[2]) or data > int(reginfo[3])):
-                        logger.error("DuW: value of WP register {} out of range, changes ignored!".format(register))
+                        self.logger.error("DuW: value of WP register {} out of range, changes ignored!".format(register))
                         pass
                     else:
                         if reginfo[6] == 'R/W':
-                            logger.debug("DuW: update WP register: {0} {1} with {2}".format(register,reginfo[1],data))
+                            self.logger.debug("DuW: update WP register: {0} {1} with {2}".format(register,reginfo[1],data))
                             self.write_DW(reginfo[7], register, data)
                         else:
-                            logger.warning(
+                            self.logger.warning(
                                 "DuW: tried to update read only WP register: {}".format(register))
+                                
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG, format='%(relativeCreated)6d %(threadName)s %(message)s')
+    # todo
+    # change PluginClassName appropriately
+    PluginClassName(DuW).run()                          
