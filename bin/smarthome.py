@@ -126,6 +126,7 @@ class SmartHome():
     __children = []
     __item_dict = {}
     _utctz = TZ
+    _dbapis = {}
     logger = logging.getLogger(__name__)
 
     def __init__(self, smarthome_conf_basename=BASE + '/etc/smarthome'):
@@ -174,6 +175,21 @@ class SmartHome():
             del(config)  # clean up
 
         #############################################################
+        # Database APIs
+        #############################################################
+        if hasattr(self, '_db'):
+            if type(self._db) is not list:
+                self._db = [self._db]
+            for db in self._db:
+                name, sep, package = db.partition(':')
+                try:
+                    self._dbapis[name] = __import__(package)
+                except ImportError as e:
+                    self.logger.error("DB-API import failed for \"{}\": {}".format(package, e))
+        if 'sqlite' not in self._dbapis:
+            self._dbapis['sqlite'] = __import__('sqlite3')
+
+        #############################################################
         # Setting debug level and adding memory handler
         self.initMemLog()
 
@@ -192,6 +208,7 @@ class SmartHome():
 
         self.logger.warning("--------------------   Init SmartHomeNG {0}   --------------------".format(VERSION))
         self.logger.debug("Python {0}".format(sys.version.split()[0]))
+        self.logger.debug("DB-APIs {0}".format(", ".join(["%s" % key for key in self._dbapis.keys()])))
         self._starttime = datetime.datetime.now()
 
         #############################################################
@@ -363,6 +380,14 @@ class SmartHome():
             os.remove(self._pidfile)
         logging.shutdown()
         exit()
+
+    #################################################################
+    # DB API
+    #################################################################
+    def dbapi(self, name):
+        if name not in self._dbapis:
+            raise Exception('DB API {} not registered'.format(name))
+        return self._dbapis[name]
 
     #################################################################
     # Item Methods

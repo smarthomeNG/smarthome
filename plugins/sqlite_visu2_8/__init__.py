@@ -20,7 +20,6 @@
 #########################################################################
 
 import logging
-import sqlite3
 import datetime
 import functools
 import time
@@ -58,6 +57,7 @@ class SQL(SmartPlugin):
         self.connected = False
         self._buffer = {}
         self._buffer_lock = threading.Lock()
+        sqlite3 = self._sh.dbapi('sqlite')
         self.logger.debug("SQLite {0}".format(sqlite3.sqlite_version))
         self._fdb_lock = threading.Lock()
         self._fdb_lock.acquire()

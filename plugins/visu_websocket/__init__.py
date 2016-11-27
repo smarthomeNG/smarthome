@@ -24,6 +24,7 @@
 
 import base64
 import datetime
+import decimal
 import hashlib
 import json
 import logging
@@ -576,6 +577,8 @@ class JSONEncoder(json.JSONEncoder):
             return obj.isoformat()
         elif isinstance(obj, datetime.timedelta):
             return int(obj.total_seconds())
+        elif isinstance(obj, decimal.Decimal):
+            return float(obj)
         return json.JSONEncoder.default(self, obj)
 
 
