@@ -80,6 +80,7 @@ The following attributes can be used in the plugin configuration:
      used to invoke the `connect()` function of the DB API 2 implementation
      (for SQLite lookup [here](http://docs.python.org/3.2/library/sqlite3.html#sqlite3.connect),
      other databases depends on implementation)
+     An example connect string for pymysql could be `connect = host:127.0.0.1 | user:db_user | passwd:db_password | db:smarthome`
    * `prefix` - if you want to log into an existing database with other tables
      you can specify a prefix for the plugins' tables
 
