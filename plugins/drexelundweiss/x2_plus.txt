@@ -173,7 +173,7 @@
 5168;Pelletofen vorhanden?;0;1;1;0;R;LU
 5282;Pelletofen: Anlaufverzoegerung;1;60;1;0;R;LU
 5284;Pelletofen: Mindestlaufzeit;1;60;1;0;R;LU
-200;Raum;-28000;100000;100;1;R/W;LU
+200;Raumtemperatur;-28000;100000;100;1;R/W;LU
 5016;Raum-Soll;14000;26000;100;1;R/W;LU
 5338;Raumtemperatur: Beschattung;20000;26000;100;1;R/W;LU
 252;Relaiskontakt: EXT;0;1;1;0;R;LU
@@ -400,7 +400,7 @@
 5178;Solaranlage: Einschaltschwelle Solarpumpe;6000;12000;1000;0;R/W;WP
 5176;Solaranlage: Maximale Ladetemperatur;50000;80000;1000;0;R/W;WP
 5306;Solare Raumheizung vorhanden?;0;1;1;0;R;WP
-216;Sole;-28000;100000;100;1;R;WP
+216;Temperatur Sole;-28000;100000;100;1;R;WP
 5496;Sollwert-Erhoehung Funktion HEIZUNG+;300;2000;100;1;R/W;WP
 1314;Status Waermepumpe;0;12;1;0;R;WP
 1316;Status Waermepumpe Restzeit;0;3600;1;0;R;WP
@@ -437,3 +437,15 @@
 1044;Waermepumpe;0;1;1;0;R;WP
 5494;Zeitspanne Funktion HEIZUNG+;180;14400;60;0;R/W;WP
 5436;Zentralgeraet Adresse;100;999999;1;0;R;WP
+4500;Energieverbrauch: Kompressor;0;2000000000;10;2;R;WP
+4502;Energieverbrauch: Heizung;0;2000000000;10;2;R;WP
+4504;Energieverbrauch: Warmwasser;0;2000000000;10;2;R;WP
+4506;Energieverbrauch: Luft;0;2000000000;10;2;R;WP
+4000;Leistung: Kompressor;0;2000000000;100;1;R;WP
+4002;Leistung: Heizung;0;2000000000;100;1;R;WP
+4004;Leistung: Warmwasser;0;2000000000;100;1;R;WP
+4006;Leistung: Luft;0;2000000000;100;1;R;WP
+1184;Drehzahl Zuluft;0;3500;1;0;R;LU
+1186;Drehzahl Abluft;0;3500;1;0;R;LU
+1082;Soll-Volumen Zuluft;0;350;1;0;R;LU
+1084;Soll-Volumen Abluft;0;350;1;0;R;LU
