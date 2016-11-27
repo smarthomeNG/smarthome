@@ -8,8 +8,8 @@ which is already bundled with Python or MySQL by using a
 
 Before you can use any of the database implementation please make sure to
 register them in the common configuration file `smarthome.conf`. Details
-see [configuration page](https://github.com/smarthomeNG/smarthome/wiki/Configuration). Further
-details see also the requirements section below.
+see [configuration page](https://github.com/smarthomeNG/smarthome/wiki/Configuration#smarthomeconf). Further
+details see also the [requirements section](https://github.com/smarthomeNG/smarthome/tree/develop/plugins/database#requirements) below.
 
 The plugin will create the following database structure:
 
