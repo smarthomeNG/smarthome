@@ -1,4 +1,4 @@
-import alexa from actions
+import alexa from alexa.actions
 
 @alexa('turnOn', 'TurnOnRequest', 'TurnOnConfirmation')
 def turn_on(self, payload):
