@@ -7,21 +7,25 @@ class AlexaDevice(object):
         self.description = ''
         self.action_items = {}
 
-    @staticmethod
-    def create_id_from_name(name):
+    @classmethod
+    def create_id_from_name(cls, name):
         return re.sub('[a-z0-9]', '-', name.strip().lower())
 
-    def add_action(self, name, item):
-        if name in self.actions:
-            self.action_items[name].append(item)
+    def add_action(self, action_name, item):
+        if action_name in self.actions:
+            self.action_items[action_name].append(item)
         else:
-            self.action_items[name] = [item]
-
-    def supports_action(self, name):
-        return name in self.action_items
+            self.action_items[action_name] = [item]
 
     def supported_actions():
         return self.action_items.keys()
 
-    def get_items_for_action(self, action_name):
-        return self.action_items[name]
+    def supports_action(self, action_name):
+        return action_name in self.action_items
+
+    def backed_items(self):
+        item_set = { item for item in self.action_items.itervalues() }
+        return list(item_set)
+
+    def items_for_action(self, action_name):
+        return self.action_items[action_name] if action_name in self.action_items else []

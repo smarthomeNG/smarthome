@@ -1,112 +1,80 @@
-# https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference#skill-adapter-directives
+import os
+import imp
 import functools
 import uuid
+
+#
+#   https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference
+#
+
+__all__ = ['actions_turn', 'actions_temp', 'actions_percentage']
+action_func_registry = []
+
+# action-func decorator
+def alexa(action_name, directive_type, response_type):
+    def store_metadata(func):
+        print('@alexa', action_name, directive_type, response_type)
+        func.alexa_action_name = action_name
+        func.alexa_directive_type = directive_type
+        func.alexa_response_type = response_type
+        action_func_registry.append( func )
+        return func
+    return store_metadata
 
 class AlexaActions(object):
     def __init__(self, sh, logger):
         self.sh = sh
         self.logger = logger
-        self.methods_by_action_name = {}
-        self.methods_by_request_type = {}
-        self.response_types_by_method = {}
 
-    @staticmethod
-    def register(func):
+        self.actions = {}
+        self.actions_by_directive = {}
 
+        for func in action_func_registry:
+            self.logger.debug("initializing action {}".format(func.alexa_action_name))
+            action = AlexaAction(self.sh, self.logger, self.devices, func, func.alexa_action_name, func.alexa_directive_type, func.alexa_response_type)
+            self.actions[action.name] = action
+            self.actions_by_directive[action.directive_type] = action
 
     def by_name(self, name):
-        try:
-            return getattr(self, self.methods_by_action_name[name])
-        except (AttributeError):
-            return None
+        return self.actions[name] if name in self.actions else None
 
-    def by_request_type(self, request_type):
-        try:
-            return getattr(self, self.methods_by_request_type[request_type])
-        except (AttributeError):
-            return None
+    def by_directive(self, directive_type):
+        return self.actions_by_directive[directive_type] if directive_type in self.actions_by_directive else None
 
-    # https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference#error-messages
-    def create_response(self, response_type, payload = {}):
-        return {
-            "header": {
-                "namespace": "Alexa.ConnectedHome.Control",
-                "name": response_type,
-                "payloadVersion": "2",
-                "messageId": uuid.uuid4()
-            },
-            "payload": payload
+class AlexaAction(object):
+    def __init__(self, sh, logger, devices, func, action_name, directive_type, response_type):
+        self.sh = sh
+        self.logger = logger
+        self.devices = devices
+        self.func =  func
+        self.name = action_name
+        self.directive_type = directive_type
+        self.response_type = response_type
+
+    def __call__(self, payload):
+        return self.func(self, payload)
+
+    def items(device_id):
+        device = self.devices.get(device_id)
+        return device.items_for_action( self.name ) if device else []
+
+    def header(self, name=None):
+        return 'header': {
+            'messageId': uuid.uuid4()
+            'name': name if name else self.response_type,
+            'namespace': 'Alexa.ConnectedHome.Control',
+            'payloadVersion': '2',
         }
 
-def alexa(action_name, request_type, response_type):
-    def apply_metadata(func):
-        func.alexa_action = action_name
-        func.alexa_request = request_type
-        func.alexa_response = response_type
-        AlexaActions.register(func)
-        return func
-    return apply_metadata
+    def respond(self, payload={}):
+        return {
+            'header': self.header(),
+            'payload': payload
+        }
 
-# -------------------------------------------------------------------------
-# supported alexa actions/directives, exactly as defined here:
-# https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference#skill-adapter-directives
-
-@alexa('setTargetTemperature', 'SetTargetTemperatureRequest', 'SetTargetTemperatureConfirmation')
-def setTargetTemp(payload, get_items_by_device_id, logger):
-
-    targetTemp = float( payload['targetTemperature']['value'] )
-
-    for item in get_items_by_device_id( payload['appliance']['applianceId'] ):
-        item( targetTemp )
-
-    return {
-
-    }
-
-     {
-         "payload":{
-             "targetTemperature":{
-                 "value":25.0
-             },
-         "temperatureMode":{
-             "value":"AUTO"
-         },
-         "previousState":{
-             "targetTemperature":{
-                 "value":21.0
-              },
-             "mode":{
-                 "value":"AUTO"
-             }
-           }
-         }
-     }
-
-
-@alexa('incrementTargetTemperature', 'TurnOffRequest', 'TurnOffConfirmation')
-def incrTargetTemp(payload, get_items_by_device_id, respond, logger):
-    pass
-
-@alexa('decrementTargetTemperature', 'TurnOffRequest', 'TurnOffConfirmation')
-def decrTargetTemp(payload, get_items_by_device_id, respond, logger):
-    pass
-
-@alexa('setPercentage', 'TurnOffRequest', 'TurnOffConfirmation')
-def setPercent(payload, get_items_by_device_id, respond, logger):
-    pass
-
-@alexa('incrementPercentage', 'TurnOffRequest', 'TurnOffConfirmation')
-def incrPercent(payload, get_items_by_device_id, respond, logger):
-    pass
-
-@alexa('decrementPercentage', 'TurnOffRequest', 'TurnOffConfirmation')
-def decrPercent(payload, get_items_by_device_id, respond, logger):
-    pass
-
-@alexa('turnOff', 'TurnOffRequest', 'TurnOffConfirmation')
-def turnOff(payload, get_items_by_device_id, respond, logger):
-    pass
-
-@alexa('turnOn', 'TurnOnRequest', 'TurnOffConfirmation')
-def turnOn(payload, get_items_by_device_id, respond, logger):
-    pass
+# https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference#error-messages
+    def error(self, error_type, payload={}):
+        return {
+            'header': self.header(error_type),
+            'payload': payload
+        }
