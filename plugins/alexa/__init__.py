@@ -29,9 +29,9 @@ from .device import AlexaDevice
 from .actions import AlexaActions
 from .service import AlexaService
 
-import .actions_turn
-import .actions_temperature
-import .actions_percentage
+from . import actions_turn
+from . import actions_temperature
+from . import actions_percentage
 
 class Alexa(SmartPlugin):
     PLUGIN_VERSION = "1.0.0"
