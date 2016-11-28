@@ -54,10 +54,10 @@ class Alexa(SmartPlugin):
     def parse_item(self, item):
         # item's supported alexa-actions, space-separated
         if 'alexa_actions' in item.conf:
-            action_names = map(str.strip, item.conf['alexa_actions'].split(' '))
+            action_names = list( map(str.strip, item.conf['alexa_actions'].split(' ')) )
             self.logger.debug("Alexa: {}-actions = {}".format(item.id(), action_names))
             for action_name in action_names:
-                if self.actions.by_name(action_name) is None:
+                if action_name and self.actions.by_name(action_name) is None:
                     self.logger.error("Alexa: invalid alexa action '{}' specified in item {}, ignoring item".format(action_name, item.id()))
                     return None
         else:
@@ -91,12 +91,11 @@ class Alexa(SmartPlugin):
         for action_name in action_names:
             self.logger.debug("Alexa: adding action {} of item {} to device {}".format(action_name, item.id(), device_id))
             device.add_action(action_name, item)
+        self.logger.info("Alexa: item {} supports actions {} as device {}".format(item.id(), device.supported_actions(), device_id))
 
         # item's optional friendly description for alexa
         if 'alexa_description' in item.conf:
             device.set_description( item.conf['alexa_description'].strip() )
-
-        self.logger.info("Alexa: item {} supports actions {} as device {}".format(item.id(), action_names, device_id))
         return None
 
     def _update_values(self):
