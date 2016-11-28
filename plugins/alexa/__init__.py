@@ -24,9 +24,8 @@ import socket
 import json
 from lib.model.smartplugin import SmartPlugin
 
-from .devices import AlexaDevices
-from .device import AlexaDevice
-from .actions import AlexaActions
+from .device import AlexaDevices, AlexaDevice
+from .action import AlexaActions
 from .service import AlexaService
 
 from . import actions_turn

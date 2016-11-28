@@ -1,5 +1,21 @@
 import re
 
+class AlexaDevices(object):
+    def __init__(self):
+        self.devices = {}
+
+    def exists(self, id):
+        return id in self.devices
+
+    def get(self, id):
+        return self.devices[id]
+
+    def put(self, device):
+        self.devices[device.id] = device
+
+    def all(self):
+        return self.devices.values()
+
 class AlexaDevice(object):
     def __init__(self, id, name):
         self.id = id
@@ -24,7 +40,7 @@ class AlexaDevice(object):
         return action_name in self.action_items
 
     def backed_items(self):
-        item_set = { item for item in self.action_items.itervalues() }
+        item_set = { item for item in self.action_items.values() }
         return list(item_set)
 
     def items_for_action(self, action_name):

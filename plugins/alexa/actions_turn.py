@@ -1,4 +1,4 @@
-from .actions import alexa
+from .action import alexa
 
 @alexa('turnOn', 'TurnOnRequest', 'TurnOnConfirmation')
 def turn_on(self, payload):
@@ -15,5 +15,5 @@ def turn_off(self, payload):
 
     for item in items:
         item( False )
-    
+
     return self.respond()
