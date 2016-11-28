@@ -94,7 +94,7 @@ class AlexaService(object):
                 'applianceId': device.id,
                 'friendlyDescription': device.description,
                 'friendlyName': device.name,
-                'isReachable': true,
+                'isReachable': True,
                 'manufacturerName': 'smarthomeNG.alexa',
                 'modelName': 'smarthomeNG.alexa-device',
                 'version': self.version
