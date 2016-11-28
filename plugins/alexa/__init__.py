@@ -55,10 +55,10 @@ class Alexa(SmartPlugin):
         self.alive = False
 
     def parse_item(self, item):
-
         # item's supported alexa-actions, space-separated
         if 'alexa_actions' in item.conf:
             action_names = map(str.strip, item.conf['alexa_actions'].split(' '))
+            self.logger.debug("{}-actions = {}".format(item.id(), action_names))
             for action_name in action_names:
                 if self.actions.by_name(action_name) is None:
                     self.logger.error("invalid alexa action '{}' specified in item {}, ignoring item".format(action_name, item.id()))
@@ -69,19 +69,19 @@ class Alexa(SmartPlugin):
         # item's friendly name for alexa, fallback to normal item.name
         if 'alexa_name' in item.conf:
             name = item.conf['alexa_name']
-        elif actions:
+        elif actions and name in item.conf and item.conf['name']:
             name = item.conf['name']
-            if name:
-                self.logger.warn("no `alexa_name` specified for item {}, fallback to `name` '{}'".format(item.id(), name))
-            else:
-                self.logger.error("neither `alexa_name` nor `name` specified for item {}, ignoring item".format(item.id()))
-                return None
+        else:
+            self.logger.error("neither `alexa_name` nor `name` specified for item {}, ignoring item".format(item.id()))
+            return None
+        self.logger.debug("{}-name = {}".format(item.id(), name))
 
         # optional explicit device-identifier (instead of deducing it from above alexa-name)
         if 'alexa_device' in item.conf:
             device_id = item.conf['alexa_device']
         else:
             device_id = AlexaDevice.create_id_from_name(name)
+        self.logger.debug("{}-device = {}".format(item.id(), device_id))
 
         # create device if not yet existing
         if not self.devices.exists(device_id):
