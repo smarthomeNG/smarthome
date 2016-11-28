@@ -15,7 +15,7 @@ class AlexaService(object):
         self.devices = devices
         self.actions = actions
 
-        self.logger.info("Alexa service setup at {}:{}".format(host, port))
+        self.logger.info("Alexa: service setup at {}:{}".format(host, port))
         cherrypy.config.update({
             'server.socket_host': host,
             'server.socket_port': port,
@@ -47,15 +47,15 @@ class AlexaService(object):
 
     def start(self):
         cherrypy.engine.start()
-        self.logger.info("Alexa service started")
+        self.logger.info("Alexa: service started")
 
     def stop(self):
         cherrypy.engine.exit()
-        self.logger.info("Alexa service stopped")
+        self.logger.info("Alexa: service stopped")
 
     def handle_system(self, header, payload):
         request_type = header['name']
-        self.logger.debug("Alexa system-directive '{}' received".format(request_type))
+        self.logger.debug("Alexa: system-directive '{}' received".format(request_type))
 
         if request_type == 'HealthCheckRequest':
             return self.confirm_health(payload)
@@ -64,7 +64,7 @@ class AlexaService(object):
 
     def confirm_health(self, payload):
         requested_on = payload['initiationTimestamp']
-        self.logger.debug("Confirming health as requested on {}".format(requested_on))
+        self.logger.debug("Alexa: confirming health as requested on {}".format(requested_on))
         return {
             'header': self.header('HealthCheckResponse', 'Alexa.ConnectedHome.System'),
             'payload': {
@@ -75,7 +75,7 @@ class AlexaService(object):
 
     def handle_discovery(self, header, payload):
         directive = header['name']
-        self.logger.debug("Alexa discovery-directive '{}' received".format(directive))
+        self.logger.debug("Alexa: discovery-directive '{}' received".format(directive))
 
         if directive == 'DiscoverAppliancesRequest':
             return self.discover_appliances()
@@ -109,7 +109,7 @@ class AlexaService(object):
 
     def handle_control(self, header, payload):
         directive = header['name']
-        self.logger.debug("Alexa control-directive '{}' received".format(directive))
+        self.logger.debug("Alexa: control-directive '{}' received".format(directive))
 
         action = self.actions.for_directive(directive)
         if action:
@@ -117,13 +117,13 @@ class AlexaService(object):
                 return action(payload)
 
             except Exception as e:
-                self.logger.error("execution of control-directive '{}' failed: {}".format(request_type, e))
+                self.logger.error("Alexa: execution of control-directive '{}' failed: {}".format(request_type, e))
                 return {
                     'header': self.header('DriverInternalError', 'Alexa.ConnectedHome.Control'),
                     'payload': {}
                 }
         else:
-            self.logger.error("no action implemented for directive '{}'".format(directive))
+            self.logger.error("Alexa: no action implemented for directive '{}'".format(directive))
             return {
                 'header': self.header('UnexpectedInformationReceivedError', 'Alexa.ConnectedHome.Control'),
                 'payload': {}
