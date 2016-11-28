@@ -89,7 +89,7 @@ class AlexaService(object):
             discovered.append({
                 'actions': device.supported_actions(),
                 'additionalApplianceDetails': {
-                    'extraDetail{}'.format(idx+1) : item.id() for idx, item in enumerate(device.backed_items())
+                    'item{}'.format(idx+1) : item.id() for idx, item in enumerate(device.backed_items())
                 },
                 'applianceId': device.id,
                 'friendlyDescription': device.description,
