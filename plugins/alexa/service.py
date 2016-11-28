@@ -66,7 +66,7 @@ class AlexaService(object):
         requested_on = payload['initiationTimestamp']
         self.logger.debug("Confirming health as requested on {}".format(requested_on))
         return {
-            self.header('HealthCheckResponse', 'Alexa.ConnectedHome.System'),
+            'header': self.header('HealthCheckResponse', 'Alexa.ConnectedHome.System'),
             'payload': {
                 'description': 'The system is currently healthy',
                 'isHealthy': True
@@ -101,7 +101,7 @@ class AlexaService(object):
             })
 
         return {
-            self.header('DiscoverAppliancesResponse', 'Alexa.ConnectedHome.Discovery'),
+            'header': self.header('DiscoverAppliancesResponse', 'Alexa.ConnectedHome.Discovery'),
             'payload': {
                 'discoveredAppliances': discovered
             }
@@ -119,22 +119,20 @@ class AlexaService(object):
             except Exception as e:
                 self.logger.error("execution of control-directive '{}' failed: {}".format(request_type, e))
                 return {
-                    self.header('DriverInternalError', 'Alexa.ConnectedHome.Control'),
+                    'header': self.header('DriverInternalError', 'Alexa.ConnectedHome.Control'),
                     'payload': {}
                 }
         else:
             self.logger.error("no action implemented for directive '{}'".format(directive))
             return {
-                self.header('UnexpectedInformationReceivedError', 'Alexa.ConnectedHome.Control'),
+                'header': self.header('UnexpectedInformationReceivedError', 'Alexa.ConnectedHome.Control'),
                 'payload': {}
             }
 
     def header(self, name, namespace):
         return {
-            'header': {
-                'messageId': uuid.uuid4().hex,
-                'name': name,
-                'namespace': namespace,
-                'payloadVersion': '2'
-            }
+            'messageId': uuid.uuid4().hex,
+            'name': name,
+            'namespace': namespace,
+            'payloadVersion': '2'
         }

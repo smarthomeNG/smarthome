@@ -60,23 +60,21 @@ class AlexaAction(object):
 
     def header(self, name=None):
         return {
-            'header': {
-                'messageId': uuid.uuid4().hex,
-                'name': name if name else self.response_type,
-                'namespace': 'Alexa.ConnectedHome.Control',
-                'payloadVersion': '2',
-            }
+            'messageId': uuid.uuid4().hex,
+            'name': name if name else self.response_type,
+            'namespace': 'Alexa.ConnectedHome.Control',
+            'payloadVersion': '2'
         }
 
     def respond(self, payload={}):
         return {
-            self.header(),
+            'header': self.header(),
             'payload': payload
         }
 
 # https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference#error-messages
     def error(self, error_type, payload={}):
         return {
-            self.header(error_type),
+            'header': self.header(error_type),
             'payload': payload
         }
