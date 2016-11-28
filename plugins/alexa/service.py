@@ -53,7 +53,7 @@ class AlexaService(object):
         cherrypy.engine.exit()
         self.logger.info("Alexa service stopped")
 
-    def handle_system(header, payload):
+    def handle_system(self, header, payload):
         request_type = header['name']
         self.logger.debug("Alexa system-directive '{}' received".format(request_type))
 
@@ -62,7 +62,7 @@ class AlexaService(object):
         else:
             raise cherrypy.HTTPError("400 Bad Request", "unknown `header.name` '{}'".format(request_type))
 
-    def confirm_health(payload):
+    def confirm_health(self, payload):
         requested_on = payload['initiationTimestamp']
         self.logger.debug("Confirming health as requested on {}".format(requested_on))
         return {
@@ -78,7 +78,7 @@ class AlexaService(object):
             }
         }
 
-    def handle_discovery(header, payload):
+    def handle_discovery(self, header, payload):
         request_type = header['name']
         self.logger.debug("Alexa discovery-directive '{}' received".format(request_type))
 
@@ -88,7 +88,7 @@ class AlexaService(object):
             raise cherrypy.HTTPError("400 Bad Request", "unknown `header.name` '{}'".format(request_type))
 
     # https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference#discovery-messages
-    def discover_appliances():
+    def discover_appliances(self):
         discovered = []
         for device in self.devices.all():
             discovered.append({
@@ -117,7 +117,7 @@ class AlexaService(object):
             }
         }
 
-    def handle_control(header, payload):
+    def handle_control(self, header, payload):
         directive = header['name']
         self.logger.debug("Alexa control-directive '{}' received".format(directive))
 
