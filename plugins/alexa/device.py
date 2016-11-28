@@ -41,7 +41,7 @@ class AlexaDevice(object):
 
     def backed_items(self):
         item_set = { item for item in self.action_items.values() }
-        return list(item_set)
+        return list( item_set )
 
     def items_for_action(self, action_name):
         return self.action_items[action_name] if action_name in self.action_items else []
