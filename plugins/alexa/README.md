@@ -82,3 +82,11 @@ implemented actions:
   alexa_actions = turnOn turnOff
   alexa_description = "The pompous dining room lamp in the west-wing"
 </pre>
+
+## logging.yaml
+loggers:
+  plugins.alexa:
+    level: DEBUG
+root:
+    level: INFO
+    handlers: [file, console]

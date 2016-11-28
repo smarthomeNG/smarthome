@@ -39,8 +39,6 @@ class Alexa(SmartPlugin):
 
     def __init__(self, sh, service_host='0.0.0.0', service_port=9000):
         self.logger = logging.getLogger(__name__)
-        self.logger.info('Init Alexa')
-
         self.sh = sh
         self.devices = AlexaDevices()
         self.actions = AlexaActions(self.sh, self.logger, self.devices)
@@ -58,10 +56,10 @@ class Alexa(SmartPlugin):
         # item's supported alexa-actions, space-separated
         if 'alexa_actions' in item.conf:
             action_names = map(str.strip, item.conf['alexa_actions'].split(' '))
-            self.logger.debug("{}-actions = {}".format(item.id(), action_names))
+            self.logger.debug("Alexa: {}-actions = {}".format(item.id(), action_names))
             for action_name in action_names:
                 if self.actions.by_name(action_name) is None:
-                    self.logger.error("invalid alexa action '{}' specified in item {}, ignoring item".format(action_name, item.id()))
+                    self.logger.error("Alexa: invalid alexa action '{}' specified in item {}, ignoring item".format(action_name, item.id()))
                     return None
         else:
             return None
@@ -71,17 +69,19 @@ class Alexa(SmartPlugin):
             name = item.conf['alexa_name']
         elif actions and name in item.conf and item.conf['name']:
             name = item.conf['name']
-        else:
-            self.logger.error("neither `alexa_name` nor `name` specified for item {}, ignoring item".format(item.id()))
+        elif actions:
+            self.logger.error("Alexa: neither `alexa_name` nor `name` specified for item {}, ignoring item".format(item.id()))
             return None
-        self.logger.debug("{}-name = {}".format(item.id(), name))
+        else:
+            return None
+        self.logger.debug("Alexa: {}-name = {}".format(item.id(), name))
 
         # optional explicit device-identifier (instead of deducing it from above alexa-name)
         if 'alexa_device' in item.conf:
             device_id = item.conf['alexa_device']
         else:
             device_id = AlexaDevice.create_id_from_name(name)
-        self.logger.debug("{}-device = {}".format(item.id(), device_id))
+        self.logger.debug("Alexa: {}-device = {}".format(item.id(), device_id))
 
         # create device if not yet existing
         if not self.devices.exists(device_id):
@@ -96,7 +96,7 @@ class Alexa(SmartPlugin):
         if 'alexa_description' in item.conf:
             device.set_description( item.conf['alexa_description'].strip() )
 
-        self.logger.info("item {} supports actions {} as device {}".format(item.id(), action_names, device_id))
+        self.logger.info("Alexa: item {} supports actions {} as device {}".format(item.id(), action_names, device_id))
         return None
 
     def _update_values(self):
