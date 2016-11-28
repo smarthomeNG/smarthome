@@ -89,6 +89,7 @@ class Alexa(SmartPlugin):
         # register all supported actions of this item with the device
         device = self.devices.get(device_id)
         for action_name in action_names:
+            self.logger.debug("Alexa: adding action {} of item {} to device {}".format(action_name, item.id(), device_id))
             device.add_action(action_name, item)
 
         # item's optional friendly description for alexa

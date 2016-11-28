@@ -14,7 +14,7 @@ class AlexaDevices(object):
         self.devices[device.id] = device
 
     def all(self):
-        return self.devices.values()
+        return list( self.devices.values() )
 
 class AlexaDevice(object):
     def __init__(self, id, name):
@@ -28,7 +28,7 @@ class AlexaDevice(object):
         return re.sub('[a-z0-9]', '-', name.strip().lower())
 
     def add_action(self, action_name, item):
-        if action_name in self.actions:
+        if action_name in self.action_items:
             self.action_items[action_name].append(item)
         else:
             self.action_items[action_name] = [item]
