@@ -17,7 +17,7 @@ class AlexaDevice(object):
         else:
             self.action_items[action_name] = [item]
 
-    def supported_actions():
+    def supported_actions(self):
         return self.action_items.keys()
 
     def supports_action(self, action_name):
