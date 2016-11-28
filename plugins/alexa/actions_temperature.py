@@ -1,4 +1,4 @@
-from .actions import alexa
+from .action import alexa
 import math
 
 TEMP_MIN = 0
