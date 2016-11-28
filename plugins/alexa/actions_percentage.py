@@ -1,4 +1,4 @@
-import alexa from alexa.actions
+from .actions import alexa
 import math
 
 @alexa('setPercentage', 'SetPercentageRequest', 'SetPercentageConfirmation')

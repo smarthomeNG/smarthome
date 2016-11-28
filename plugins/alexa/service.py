@@ -63,15 +63,15 @@ class AlexaService(object):
         requested_on = payload['initiationTimestamp']
         self.logger.debug("Confirming health as requested on {}".format(requested_on))
         return {
-            "header": {
-                "messageId": uuid.uuid4(),
-                "name": "HealthCheckResponse",
-                "namespace": "Alexa.ConnectedHome.System",
-                "payloadVersion": "2"
+            'header': {
+                'messageId': uuid.uuid4(),
+                'name': 'HealthCheckResponse',
+                'namespace': 'Alexa.ConnectedHome.System',
+                'payloadVersion': '2'
             },
-            "payload": {
-                "description": "The system is currently healthy",
-                "isHealthy": True
+            'payload': {
+                'description': 'The system is currently healthy',
+                'isHealthy': True
             }
         }
 
@@ -87,30 +87,30 @@ class AlexaService(object):
     # https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference#discovery-messages
     def discover_appliances():
         discovered = []
-        for (device in self.devices.all()):
+        for device in self.devices.all():
             discovered.append({
-                "actions": device.supported_actions(),
-                "additionalApplianceDetails": {
-                    "extraDetail{}".format(idx+1) : item.id() for idx, item in enumerate(device.backed_items())
+                'actions': device.supported_actions(),
+                'additionalApplianceDetails': {
+                    'extraDetail{}'.format(idx+1) : item.id() for idx, item in enumerate(device.backed_items())
                 },
-                "applianceId": device.id,
-                "friendlyDescription": device.description,
-                "friendlyName": device.name,
-                "isReachable": true,
-                "manufacturerName": "smarthomeNG.Alexa",
-                "modelName": '|'.join( [item.id() for item in device.backed_items()] ),
-                "version": self.version
+                'applianceId': device.id,
+                'friendlyDescription': device.description,
+                'friendlyName': device.name,
+                'isReachable': true,
+                'manufacturerName': 'smarthomeNG.Alexa',
+                'modelName': '|'.join( [item.id() for item in device.backed_items()] ),
+                'version': self.version
             })
 
         return {
-            "header": {
-                "messageId": uuid.uuid4(),
-                "name": "DiscoverAppliancesResponse",
-                "namespace": "Alexa.ConnectedHome.Discovery",
-                "payloadVersion": "2"
+            'header': {
+                'messageId': uuid.uuid4(),
+                'name': 'DiscoverAppliancesResponse',
+                'namespace': 'Alexa.ConnectedHome.Discovery',
+                'payloadVersion': '2'
             },
-            "payload": {
-                "discoveredAppliances": discovered
+            'payload': {
+                'discoveredAppliances': discovered
             }
         }
 
@@ -119,17 +119,29 @@ class AlexaService(object):
         self.logger.debug("Alexa control-directive '{}' received".format(directive))
 
         action = self.actions.for_directive(directive)
-        if action is None:
-            self.logger.error("no action specified for '{}'".format(request_type))
-            return self.actions.create_response('UnexpectedInformationReceivedError')
-
-        try:
-            def get_items_by_device_id(device_id):
-                device = self.devices.get(device_id)
-                return device.get_items_for_action( action.alexa_action )
-
-            return action(payload, get_items_by_device_id)
-
-        except (Exception e):
-            self.logger.error("execution of control-directive '{}' failed: {}".format(request_type, e))
-            return self.actions.create_response('DriverInternalError')
+        if action:
+            try:
+                return action(payload)
+            
+            except Exception as e:
+                self.logger.error("execution of control-directive '{}' failed: {}".format(request_type, e))
+                return {
+                    'header': {
+                        'messageId': uuid.uuid4(),
+                        'name': 'DriverInternalError',
+                        'namespace': 'Alexa.ConnectedHome.Control',
+                        'payloadVersion': '2'
+                    },
+                    'payload': {}
+                }
+        else:
+            self.logger.error("no action implemented for directive '{}'".format(directive))
+            return {
+                'header': {
+                    'messageId': uuid.uuid4(),
+                    'name': 'UnexpectedInformationReceivedError',
+                    'namespace': 'Alexa.ConnectedHome.Control',
+                    'payloadVersion': '2'
+                },
+                'payload': {}
+            }
