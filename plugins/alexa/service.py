@@ -22,7 +22,7 @@ class AlexaService(object):
         })
         #cherrypy.log.screen = True
         cherrypy.log.access_file = None
-        cherrypy.log.error_file = '/tmp/smarthome-alexa-errors.log'
+        #cherrypy.log.error_file = '/tmp/smarthome-alexa-errors.log'
         cherrypy.tree.mount(self, '/')
 
     @cherrypy.expose
@@ -66,12 +66,7 @@ class AlexaService(object):
         requested_on = payload['initiationTimestamp']
         self.logger.debug("Confirming health as requested on {}".format(requested_on))
         return {
-            'header': {
-                'messageId': uuid.uuid4(),
-                'name': 'HealthCheckResponse',
-                'namespace': 'Alexa.ConnectedHome.System',
-                'payloadVersion': '2'
-            },
+            'header': self.header('HealthCheckResponse', 'Alexa.ConnectedHome.System'),
             'payload': {
                 'description': 'The system is currently healthy',
                 'isHealthy': True
@@ -79,10 +74,10 @@ class AlexaService(object):
         }
 
     def handle_discovery(self, header, payload):
-        request_type = header['name']
-        self.logger.debug("Alexa discovery-directive '{}' received".format(request_type))
+        directive = header['name']
+        self.logger.debug("Alexa discovery-directive '{}' received".format(directive))
 
-        if request_type == 'DiscoverAppliancesRequest':
+        if directive == 'DiscoverAppliancesRequest':
             return self.discover_appliances()
         else:
             raise cherrypy.HTTPError("400 Bad Request", "unknown `header.name` '{}'".format(request_type))
@@ -100,18 +95,13 @@ class AlexaService(object):
                 'friendlyDescription': device.description,
                 'friendlyName': device.name,
                 'isReachable': true,
-                'manufacturerName': 'smarthomeNG.Alexa',
-                'modelName': '|'.join( [item.id() for item in device.backed_items()] ),
+                'manufacturerName': 'smarthomeNG.alexa',
+                'modelName': 'smarthomeNG.alexa-device',
                 'version': self.version
             })
 
         return {
-            'header': {
-                'messageId': uuid.uuid4(),
-                'name': 'DiscoverAppliancesResponse',
-                'namespace': 'Alexa.ConnectedHome.Discovery',
-                'payloadVersion': '2'
-            },
+            'header': self.header('DiscoverAppliancesResponse', 'Alexa.ConnectedHome.Discovery'),
             'payload': {
                 'discoveredAppliances': discovered
             }
@@ -129,22 +119,22 @@ class AlexaService(object):
             except Exception as e:
                 self.logger.error("execution of control-directive '{}' failed: {}".format(request_type, e))
                 return {
-                    'header': {
-                        'messageId': uuid.uuid4(),
-                        'name': 'DriverInternalError',
-                        'namespace': 'Alexa.ConnectedHome.Control',
-                        'payloadVersion': '2'
-                    },
+                    'header': self.header('DriverInternalError', 'Alexa.ConnectedHome.Control'),
                     'payload': {}
                 }
         else:
             self.logger.error("no action implemented for directive '{}'".format(directive))
             return {
-                'header': {
-                    'messageId': uuid.uuid4(),
-                    'name': 'UnexpectedInformationReceivedError',
-                    'namespace': 'Alexa.ConnectedHome.Control',
-                    'payloadVersion': '2'
-                },
+                'header': self.header('UnexpectedInformationReceivedError', 'Alexa.ConnectedHome.Control'),
                 'payload': {}
             }
+
+    def header(self, name, namespace):
+        return {
+            'header': {
+                'messageId': uuid.uuid4().hex,
+                'name': name,
+                'namespace': namesace,
+                'payloadVersion': '2'
+            }
+        }
