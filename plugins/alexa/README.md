@@ -3,14 +3,18 @@
 # Intro
 This alexa plugin implements an "skill adapter" for Amazon's Alexa by providing an smarthomeNG-embedded service-endpoint where alexa can send its recognized voice-commands/directives to.
 
+# Alexa Skills Setup
+https://developer.amazon.com/edw/home.html#/skills/list
+
+# AWS Lambda Function Setup
+https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions?display=list
+
 # Requirements
 sudo pip3 install cherrypy
 sudo pip3 install simplejson
 
-- TODO Setup of Alexa at Developer
-- TODO Setup of AWS Lambda
-
-Testing: https://echosim.io/
+# Testing
+https://echosim.io/
 
 # Configuration
 

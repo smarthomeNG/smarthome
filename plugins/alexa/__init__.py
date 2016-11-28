@@ -24,9 +24,14 @@ import socket
 import json
 from lib.model.smartplugin import SmartPlugin
 
+from .devices import AlexaDevices
 from .device import AlexaDevice
+from .actions import AlexaActions
 from .service import AlexaService
-from .actions import *
+
+import .actions_turn
+import .actions_temperature
+import .actions_percentage
 
 class Alexa(SmartPlugin):
     PLUGIN_VERSION = "1.0.0"
@@ -76,7 +81,7 @@ class Alexa(SmartPlugin):
         if 'alexa_device' in item.conf:
             device_id = item.conf['alexa_device']
         else:
-            device_id = Device.create_id_from_name(name)
+            device_id = AlexaDevice.create_id_from_name(name)
 
         # create device if not yet existing
         if not self.devices.exists(device_id):
