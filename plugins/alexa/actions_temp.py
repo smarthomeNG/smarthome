@@ -1,4 +1,4 @@
-import alexa from actions
+import alexa from alexa.actions
 
 TEMP_MIN = 0
 TEMP_MAX = 100

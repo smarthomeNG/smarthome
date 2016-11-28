@@ -24,9 +24,9 @@ import socket
 import json
 from lib.model.smartplugin import SmartPlugin
 
-import device
-import service
-from actions import *
+import alexa.device
+import alexa.service
+from alexa.actions import *
 
 class Alexa(SmartPlugin):
     PLUGIN_VERSION = "1.0.0"
