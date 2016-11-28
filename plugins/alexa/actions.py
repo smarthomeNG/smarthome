@@ -70,13 +70,13 @@ class AlexaAction(object):
 
     def respond(self, payload={}):
         return {
-            'header': self.header(),
+            self.header(),
             'payload': payload
         }
 
 # https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference#error-messages
     def error(self, error_type, payload={}):
         return {
-            'header': self.header(error_type),
+            self.header(error_type),
             'payload': payload
         }
