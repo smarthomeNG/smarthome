@@ -122,7 +122,7 @@ class AlexaService(object):
         if action:
             try:
                 return action(payload)
-            
+
             except Exception as e:
                 self.logger.error("execution of control-directive '{}' failed: {}".format(request_type, e))
                 return {
