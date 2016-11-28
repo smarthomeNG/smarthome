@@ -20,6 +20,9 @@ class AlexaService(object):
             'server.socket_host': host,
             'server.socket_port': port,
         })
+        #cherrypy.log.screen = True
+        cherrypy.log.access_file = None
+        cherrypy.log.error_file = '/tmp/smarthome-alexa-errors.log'
         cherrypy.tree.mount(self, '/')
 
     @cherrypy.expose
@@ -31,13 +34,13 @@ class AlexaService(object):
         payload = req['payload']
 
         if header['namespace'] == 'Alexa.ConnectedHome.System':
-            return handle_system(header, payload)
+            return self.handle_system(header, payload)
 
         elif header['namespace'] == 'Alexa.ConnectedHome.Discovery':
-            return handle_discovery(header, payload)
+            return self.handle_discovery(header, payload)
 
         elif header['namespace'] == 'Alexa.ConnectedHome.Control':
-            return handle_control(header, payload)
+            return self.handle_control(header, payload)
 
         else:
             raise cherrypy.HTTPError("400 Bad Request", "unknown `header.namespace` '{}'".format(header['namespace']))
@@ -55,7 +58,7 @@ class AlexaService(object):
         self.logger.debug("Alexa system-directive '{}' received".format(request_type))
 
         if request_type == 'HealthCheckRequest':
-            return confirm_health(payload)
+            return self.confirm_health(payload)
         else:
             raise cherrypy.HTTPError("400 Bad Request", "unknown `header.name` '{}'".format(request_type))
 
@@ -80,7 +83,7 @@ class AlexaService(object):
         self.logger.debug("Alexa discovery-directive '{}' received".format(request_type))
 
         if request_type == 'DiscoverAppliancesRequest':
-            return discover_appliances()
+            return self.discover_appliances()
         else:
             raise cherrypy.HTTPError("400 Bad Request", "unknown `header.name` '{}'".format(request_type))
 
