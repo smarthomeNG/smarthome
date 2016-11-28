@@ -1,13 +1,12 @@
+#
+#   https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference
+#
+
 import os
 import imp
 import functools
 import uuid
 
-#
-#   https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference
-#
-
-__all__ = ['.actions_turn', '.actions_temperature', '.actions_percentage']
 action_func_registry = []
 
 # action-func decorator
