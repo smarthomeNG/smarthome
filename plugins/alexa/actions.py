@@ -21,9 +21,10 @@ def alexa(action_name, directive_type, response_type):
     return store_metadata
 
 class AlexaActions(object):
-    def __init__(self, sh, logger):
+    def __init__(self, sh, logger, devices):
         self.sh = sh
         self.logger = logger
+        self.devices = devices
 
         self.actions = {}
         self.actions_by_directive = {}
