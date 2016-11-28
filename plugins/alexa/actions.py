@@ -61,7 +61,7 @@ class AlexaAction(object):
     def header(self, name=None):
         return {
             'header': {
-                'messageId': uuid.uuid4(),
+                'messageId': uuid.uuid4().hex,
                 'name': name if name else self.response_type,
                 'namespace': 'Alexa.ConnectedHome.Control',
                 'payloadVersion': '2',
