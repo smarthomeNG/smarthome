@@ -54,7 +54,7 @@ class Alexa(SmartPlugin):
         # item's supported alexa-actions, space-separated
         if 'alexa_actions' in item.conf:
             action_names = map(str.strip, item.conf['alexa_actions'].split(' '))
-            for (action_name in action_names):
+            for action_name in action_names:
                 if self.actions.by_name(action_name) is None:
                     self.logger.error("invalid alexa action '{}' specified in item {}, ignoring item".format(action_name, item.id()))
                     return None
