@@ -34,7 +34,7 @@ class AlexaDevice(object):
             self.action_items[action_name] = [item]
 
     def supported_actions(self):
-        return self.action_items.keys()
+        return list( self.action_items.keys() )
 
     def supports_action(self, action_name):
         return action_name in self.action_items
