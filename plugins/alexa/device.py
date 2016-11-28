@@ -40,7 +40,10 @@ class AlexaDevice(object):
         return action_name in self.action_items
 
     def backed_items(self):
-        item_set = { item for item in self.action_items.values() }
+        item_set = set()
+        for items in self.action_items.values():
+            for item in items:
+                item_set.add( item )
         return list( item_set )
 
     def items_for_action(self, action_name):
