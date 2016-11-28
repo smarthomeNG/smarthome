@@ -25,8 +25,8 @@ import json
 from lib.model.smartplugin import SmartPlugin
 
 import device
-import actions
 import service
+from actions import *
 
 class Alexa(SmartPlugin):
     PLUGIN_VERSION = "1.0.0"
@@ -38,7 +38,7 @@ class Alexa(SmartPlugin):
 
         self.sh = sh
         self.devices = AlexaDevices()
-        self.actions = AlexaActions(self.sh, self.logger)
+        self.actions = AlexaActions(self.sh, self.logger, self.devices)
         self.service = AlexaService(self.sh, self.logger, self.PLUGIN_VERSION, self.devices, self.actions, service_host, service_port)
 
     def run(self):
@@ -51,7 +51,7 @@ class Alexa(SmartPlugin):
 
     def parse_item(self, item):
 
-        # item's supported alexa-actions
+        # item's supported alexa-actions, space-separated
         if 'alexa_actions' in item.conf:
             action_names = map(str.strip, item.conf['alexa_actions'].split(' '))
             for (action_name in action_names):
@@ -67,9 +67,9 @@ class Alexa(SmartPlugin):
         elif actions:
             name = item.conf['name']
             if name:
-                self.logger.warn("no alexa_name specified for item {}, fallback to '{}'".format(item.id(), name))
+                self.logger.warn("no `alexa_name` specified for item {}, fallback to `name` '{}'".format(item.id(), name))
             else:
-                self.logger.error("no alexa_name specified for item {}, skipping item!".format(item.id()))
+                self.logger.error("neither `alexa_name` nor `name` specified for item {}, ignoring item".format(item.id()))
                 return None
 
         # optional explicit device-identifier (instead of deducing it from above alexa-name)
@@ -89,16 +89,10 @@ class Alexa(SmartPlugin):
 
         # item's optional friendly description for alexa
         if 'alexa_description' in item.conf:
-            device.set_description( item.conf['alexa_description'] )
+            device.set_description( item.conf['alexa_description'].strip() )
 
-        self.logger.info("item supports actions {} as device {}".format(action_names, item.id(), device_id))
+        self.logger.info("item {} supports actions {} as device {}".format(item.id(), action_names, device_id))
         return None
 
     def _update_values(self):
         return None
-
-if __name__ == '__main__':
-     logging.basicConfig(level=logging.DEBUG)
-     sh = SmartHomeNG()
-     alexa = Alexa(sh)
-     alexa.run()

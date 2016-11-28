@@ -6,6 +6,7 @@ import simplejson
 import uuid
 
 class AlexaService(object):
+
     def __init__(self, sh, logger, version, devices, actions, host, port):
         self.sh = sh
         self.logger = logger
@@ -31,12 +32,15 @@ class AlexaService(object):
 
         if header['namespace'] == 'Alexa.ConnectedHome.System':
             return handle_system(header, payload)
+
         elif header['namespace'] == 'Alexa.ConnectedHome.Discovery':
             return handle_discovery(header, payload)
+
         elif header['namespace'] == 'Alexa.ConnectedHome.Control':
             return handle_control(header, payload)
+
         else:
-            raise cherrypy.HTTPError("400 Bad Request", "unknown header/namespace '{}'".format(header['namespace']))
+            raise cherrypy.HTTPError("400 Bad Request", "unknown `header.namespace` '{}'".format(header['namespace']))
 
     def start(self):
         cherrypy.engine.start()
@@ -53,10 +57,11 @@ class AlexaService(object):
         if request_type == 'HealthCheckRequest':
             return confirm_health(payload)
         else:
-            raise cherrypy.HTTPError("400 Bad Request", "unknown header.name '{}'".format(request_type))
+            raise cherrypy.HTTPError("400 Bad Request", "unknown `header.name` '{}'".format(request_type))
 
     def confirm_health(payload):
         requested_on = payload['initiationTimestamp']
+        self.logger.debug("Confirming health as requested on {}".format(requested_on))
         return {
             "header": {
                 "messageId": uuid.uuid4(),
@@ -77,8 +82,9 @@ class AlexaService(object):
         if request_type == 'DiscoverAppliancesRequest':
             return discover_appliances()
         else:
-            raise cherrypy.HTTPError("400 Bad Request", "unknown header.name '{}'".format(request_type))
+            raise cherrypy.HTTPError("400 Bad Request", "unknown `header.name` '{}'".format(request_type))
 
+    # https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference#discovery-messages
     def discover_appliances():
         discovered = []
         for (device in self.devices.all()):
@@ -109,10 +115,10 @@ class AlexaService(object):
         }
 
     def handle_control(header, payload):
-        request_type = header['name']
-        self.logger.debug("Alexa control-directive '{}' received".format(request_type))
+        directive = header['name']
+        self.logger.debug("Alexa control-directive '{}' received".format(directive))
 
-        action = self.actions.by_request_type(request_type)
+        action = self.actions.for_directive(directive)
         if action is None:
             self.logger.error("no action specified for '{}'".format(request_type))
             return self.actions.create_response('UnexpectedInformationReceivedError')
