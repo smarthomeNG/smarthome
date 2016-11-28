@@ -134,7 +134,7 @@ class AlexaService(object):
             'header': {
                 'messageId': uuid.uuid4().hex,
                 'name': name,
-                'namespace': namesace,
+                'namespace': namespace,
                 'payloadVersion': '2'
             }
         }
