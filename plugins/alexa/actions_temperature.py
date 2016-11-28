@@ -1,4 +1,5 @@
-import alexa from alexa.actions
+from .actions import alexa
+import math
 
 TEMP_MIN = 0
 TEMP_MAX = 100
@@ -17,8 +18,8 @@ def set_target_temp(self, payload):
     return self.respond({
         'targetTemperature': {
              'value': target_temp
-        }
-        'temperatureMode':{
+        },
+        'temperatureMode': {
             'value':'AUTO'
         },
         'previousState':{
@@ -39,7 +40,7 @@ def incr_target_temp(self, payload):
     delta_temp = float( payload['deltaTemperature']['value'] )
     previous_temp = items[0]() if items else 0
 
-    for item in items
+    for item in items:
         item_now = item()
         item_new_raw = item_now + delta_temp
         item_new = math.min(TEMP_MAX, math.max(TEMP_MIN, item_new_raw))
@@ -50,7 +51,7 @@ def incr_target_temp(self, payload):
     return self.respond({
         'targetTemperature': {
              'value': new_temp
-        }
+        },
         'temperatureMode':{
             'value':'AUTO'
         },
@@ -72,7 +73,7 @@ def decr_target_temp(self, payload):
     delta_temp = float( payload['deltaTemperature']['value'] )
     previous_temp = items[0]() if items else 0
 
-    for item in items
+    for item in items:
         item_now = item()
         item_new_raw = item_now - delta_temp
         item_new = math.min(TEMP_MAX, math.max(TEMP_MIN, item_new_raw))
@@ -83,7 +84,7 @@ def decr_target_temp(self, payload):
     return self.respond({
         'targetTemperature': {
              'value': new_temp
-        }
+        },
         'temperatureMode':{
             'value':'AUTO'
         },

@@ -7,7 +7,7 @@ import uuid
 #   https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference
 #
 
-__all__ = ['actions_turn', 'actions_temp', 'actions_percentage']
+__all__ = ['actions_turn', 'actions_temperature', 'actions_percentage']
 action_func_registry = []
 
 # action-func decorator
@@ -59,11 +59,13 @@ class AlexaAction(object):
         return device.items_for_action( self.name ) if device else []
 
     def header(self, name=None):
-        return 'header': {
-            'messageId': uuid.uuid4()
-            'name': name if name else self.response_type,
-            'namespace': 'Alexa.ConnectedHome.Control',
-            'payloadVersion': '2',
+        return {
+            'header': {
+                'messageId': uuid.uuid4(),
+                'name': name if name else self.response_type,
+                'namespace': 'Alexa.ConnectedHome.Control',
+                'payloadVersion': '2',
+            }
         }
 
     def respond(self, payload={}):
