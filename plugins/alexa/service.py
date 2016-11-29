@@ -43,7 +43,9 @@ class AlexaService(object):
             return self.handle_control(header, payload)
 
         else:
-            raise cherrypy.HTTPError("400 Bad Request", "unknown `header.namespace` '{}'".format(header['namespace']))
+            msg = "unknown `header.namespace` '{}'".format(header['namespace']
+            self.logger.error(msg)
+            raise cherrypy.HTTPError("400 Bad Request", msg))
 
     def start(self):
         cherrypy.engine.start()
@@ -60,7 +62,9 @@ class AlexaService(object):
         if directive == 'HealthCheckRequest':
             return self.confirm_health(payload)
         else:
-            raise cherrypy.HTTPError("400 Bad Request", "unknown `header.name` '{}'".format(directive))
+            msg = "unknown `header.name` '{}'".format(directive)
+            self.logger.error(msg)
+            raise cherrypy.HTTPError("400 Bad Request", msg)
 
     def confirm_health(self, payload):
         requested_on = payload['initiationTimestamp']
@@ -80,7 +84,9 @@ class AlexaService(object):
         if directive == 'DiscoverAppliancesRequest':
             return self.discover_appliances()
         else:
-            raise cherrypy.HTTPError("400 Bad Request", "unknown `header.name` '{}'".format(directive))
+            msg = "unknown `header.name` '{}'".format(directive)
+            self.logger.error(msg)
+            raise cherrypy.HTTPError("400 Bad Request", msg)
 
     # https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference#discovery-messages
     def discover_appliances(self):
@@ -115,14 +121,11 @@ class AlexaService(object):
         if action:
             try:
                 return action(payload)
-
             except Exception as e:
                 self.logger.error("Alexa: execution of control-directive '{}' failed: {}".format(directive, e))
                 return {
                     'header': self.header('DriverInternalError', 'Alexa.ConnectedHome.Control'),
-                    'payload': {
-                        'exception': "{}".format(e)
-                    }
+                    'payload': {}
                 }
         else:
             self.logger.error("Alexa: no action implemented for directive '{}'".format(directive))
