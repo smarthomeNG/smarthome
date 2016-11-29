@@ -51,6 +51,8 @@ If the incoming mail subject matches the value of this key the logic will be tri
 
 ### mail_to
 If the mail is sent to specified address the logic will be triggerd.
+If gmail is used, you can trigger multiple logics with one account - just extend email address with ['+' sign](https://gmail.googleblog.com/2008/03/2-hidden-ways-to-get-more-from-your.html) (eg use `myaccount+logicname@gmail.com` to trigger `logicname`)
+For safety reasons, use only dedicated gmail account with this plugin and filter out messages from unkown senders (eg create filter `from:(-my_trusted_mail@example.com)` with action archive or delete)
 
 ### mail
 A genric flag to trigger the logic on receiving a mail.
