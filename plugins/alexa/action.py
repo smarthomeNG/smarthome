@@ -12,10 +12,10 @@ action_func_registry = []
 # action-func decorator
 def alexa(action_name, directive_type, response_type):
     def store_metadata(func):
-        print('@alexa', action_name, directive_type, response_type)
         func.alexa_action_name = action_name
         func.alexa_directive_type = directive_type
         func.alexa_response_type = response_type
+
         action_func_registry.append( func )
         return func
     return store_metadata
@@ -52,7 +52,7 @@ class AlexaAction(object):
         self.response_type = response_type
 
     def __call__(self, payload):
-        return self.func(payload)
+        return self.func(self, payload)
 
     def items(device_id):
         device = self.devices.get(device_id)
