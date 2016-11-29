@@ -34,7 +34,7 @@ exports.handler = function(event, context, callback) {
 		}
 
 		var dataChunks = [];
-		res.on('data', (chunk) => responseData.push(chunk)).on('end', () => {
+		res.on('data', (chunk) => dataChunks.push(chunk)).on('end', () => {
 			var responseData = Buffer.concat(dataChunks).toString();
 			console.log(`response: ${responseData}`)
 
