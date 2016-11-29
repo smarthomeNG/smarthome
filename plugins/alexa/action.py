@@ -54,7 +54,7 @@ class AlexaAction(object):
     def __call__(self, payload):
         return self.func(self, payload)
 
-    def items(device_id):
+    def items(self, device_id):
         device = self.devices.get(device_id)
         return device.items_for_action(self.name) if device else []
 
