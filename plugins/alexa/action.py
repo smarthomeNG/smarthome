@@ -38,8 +38,8 @@ class AlexaActions(object):
     def by_name(self, name):
         return self.actions[name] if name in self.actions else None
 
-    def by_directive(self, directive_type):
-        return self.actions_by_directive[directive_type] if directive_type in self.actions_by_directive else None
+    def for_directive(self, directive):
+        return self.actions_by_directive[directive] if directive in self.actions_by_directive else None
 
 class AlexaAction(object):
     def __init__(self, sh, logger, devices, func, action_name, directive_type, response_type):
