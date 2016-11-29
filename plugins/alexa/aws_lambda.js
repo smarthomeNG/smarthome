@@ -10,7 +10,7 @@ You need to specify the following environmental variables in the lambda function
 		'user:password'
 */
 exports.handler = function(event, context, callback) {
-	var data = 'json=' + JSON.stringify(event)
+	var data = JSON.stringify(event)
 
 	var options = {
 		hostname: process.env.SMARTHOME_HOST,
@@ -26,21 +26,22 @@ exports.handler = function(event, context, callback) {
 
 	var https = require('https');
 	var req = https.request(options, (res) => {
-		console.log(`request: ${res.statusCode} / ${JSON.stringify(res.headers)}`);
+		console.log(`HTTP ${res.statusCode}`);
 		res.setEncoding('utf8');
-		if (res.statusCode != 200) {
-			callback(`DependentServiceUnavailableError`);
-			return;
-		}
 
-		var dataChunks = [];
-		res.on('data', (chunk) => dataChunks.push(chunk)).on('end', () => {
-			var responseData = Buffer.concat(dataChunks).toString();
+		var responseData = '';
+		res.on('data', (dataChunk) => {
+		    responseData += dataChunk
+		});
+		res.on('end', () => {
 			console.log(`response: ${responseData}`)
-
-			var noError = null;
 			var response = JSON.parse(responseData);
-			callback(noError, response);
+
+			if (res.statusCode == 200) {
+				callback(null, response);
+			} else {
+				callback(`DependentServiceUnavailableError`);
+			}
 		});
 	});
 	req.on('error', (e) => {
