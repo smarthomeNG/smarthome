@@ -46,17 +46,17 @@ class AlexaAction(object):
         self.sh = sh
         self.logger = logger
         self.devices = devices
-        self.func =  func
+        self.func = func
         self.name = action_name
         self.directive_type = directive_type
         self.response_type = response_type
 
     def __call__(self, payload):
-        return self.func(self, payload)
+        return self.func(payload)
 
     def items(device_id):
         device = self.devices.get(device_id)
-        return device.items_for_action( self.name ) if device else []
+        return device.items_for_action(self.name) if device else []
 
     def header(self, name=None):
         return {
