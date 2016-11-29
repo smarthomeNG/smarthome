@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 {% extends "base.html" %}
 {% import "navbar.html" as nav with context %}
 {% block navbar %}
@@ -16,6 +16,27 @@
                     <th>{{ _('filters') }}</th>
                     <th>{{ _('handlers') }}</th>
                 </tr>
+                <tr>
+                    <th>root</th>
+                    <th>{{ logging.root.disabled }}</th>
+                    {% if logging.root.level == 0 %}
+                    <th></th>
+                    {% elif logging.root.level in logging._levelToName %}
+                    <th>{{ logging._levelToName[logging.root.level] }}</th>
+                    {% else %}
+                    <th>{{ logging.root.level }}</th>
+                    {% endif %}
+
+                    <th>{% for f in logging.root.filters %}
+                        {{ f.__class__.__name__ }}{% if not loop.last %},{% endif %}
+                        {% endfor %}
+                    </th>
+                    <th>{% for h in logging.root.handlers %}
+                        {{ h.__class__.__name__ }}{% if not loop.last %},{% endif %}
+                        {% endfor %}
+                    </th>
+                </tr>
+
             </thead>
             <tbody>
                 {% if smarthome %}
@@ -23,9 +44,22 @@
                     <tr>
                         <td>{{ logging.getLogger(l).name }}</td>
                         <td>{{ logging.getLogger(l).disabled }}</td>
+                        {% if logging.getLogger(l).level == 0 %}
+                        <td></td>
+                        {% elif logging.getLogger(l).level in logging._levelToName %}
+                        <td>{{ logging._levelToName[logging.getLogger(l).level] }}</td>
+                        {% else %}
                         <td>{{ logging.getLogger(l).level }}</td>
-                        <td>{{ logging.getLogger(l).filters }}</td>
-                        <td>{{ logging.getLogger(l).handlers }}</td>
+                        {% endif %}
+
+                        <td>{% for f in logging.getLogger(l).filters %}
+                            {{ f.__class__.__name__ }}{% if not loop.last %},{% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{% for h in logging.getLogger(l).handlers %}
+                            {{ h.__class__.__name__ }}{% if not loop.last %},{% endif %}
+                            {% endfor %}
+                        </td>
                     </tr>
                     {% endfor %}
                 {% else %}
