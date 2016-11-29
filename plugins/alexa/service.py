@@ -117,7 +117,7 @@ class AlexaService(object):
                 return action(payload)
 
             except Exception as e:
-                self.logger.error("Alexa: execution of control-directive '{}' failed: {}".format(request_type, e))
+                self.logger.error("Alexa: execution of control-directive '{}' failed: {}".format(directive, e))
                 return {
                     'header': self.header('DriverInternalError', 'Alexa.ConnectedHome.Control'),
                     'payload': {}
