@@ -1,22 +1,33 @@
 # Alexa
 
 # Intro
-This alexa plugin implements an "skill adapter" for Amazon's Alexa by providing an smarthomeNG-embedded service-endpoint where alexa can send its recognized voice-commands/directives to.
-https://developer.amazon.com/alexa/smart-home
-https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/overviews/understanding-the-smart-home-skill-api
+This alexa plugin implements an "skill adapter" for Amazon's Alexa
+by providing an smarthomeNG-embedded service-endpoint
+where alexa can send its recognized voice-commands/directives to.
+
+please RTFM for a basic understanding:
+- https://developer.amazon.com/alexa/smart-home
+- https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/overviews/understanding-the-smart-home-skill-api
 
 # Alexa Skills Setup
-https://developer.amazon.com/edw/home.html#/skills/list
-https://developer.amazon.com/public/community/post/Tx3CX1ETRZZ2NPC/Alexa-Account-Linking-5-Steps-to-Seamlessly-Link-Your-Alexa-Skill-with-Login-wit
+- https://developer.amazon.com/edw/home.html#/skills/list
+- https://developer.amazon.com/public/community/post/Tx3CX1ETRZZ2NPC/Alexa-Account-Linking-5-Steps-to-Seamlessly-Link-Your-Alexa-Skill-with-Login-wit
 
 # AWS Lambda Function Setup
-https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions?display=list
+- logon to https://aws.amazon.com/
+- create a lambda-function in the EU-sector (choose EU-Ireland whenever possible to have Alexa both in english & german)
+- use aws_lambda.js to copy & paste
+- provide the environmental variables as specified in the header of aws_lambda.js
+- https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions?display=list
 
-https://knx-user-forum.de/forum/projektforen/edomi/988179-amazon-echo-lautsprecher-von-amazon-mit-alexa-spracherkennung?p=1011277#post1011277
+# Shortcomings / Pitfalls
+- the python service does not offer ssl or authentication, a reverse-proxy like nginx with both https-termination and http basic authentication is strongly advised and actually required, since the shipped aws_lambda.js will only do https-requests and does http basic auth.
 
 # Requirements
+<pre>
 sudo pip3 install cherrypy
 sudo pip3 install simplejson
+</pre>
 
 # Testing
 https://echosim.io/
@@ -77,6 +88,7 @@ implemented actions:
   alexa_actions = turnOff
 </pre>
 
+<pre>
 [item]
   alexa_name = "Diningroom Lamp"
   alexa_actions = turnOn turnOff
@@ -84,9 +96,11 @@ implemented actions:
 </pre>
 
 ## logging.yaml
+<pre>
 loggers:
   plugins.alexa:
     level: DEBUG
 root:
     level: INFO
     handlers: [file, console]
+</pre>
