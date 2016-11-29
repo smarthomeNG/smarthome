@@ -43,9 +43,9 @@ class AlexaService(object):
             return self.handle_control(header, payload)
 
         else:
-            msg = "unknown `header.namespace` '{}'".format(header['namespace']
+            msg = "unknown `header.namespace` '{}'".format(header['namespace'])
             self.logger.error(msg)
-            raise cherrypy.HTTPError("400 Bad Request", msg))
+            raise cherrypy.HTTPError("400 Bad Request", msg)
 
     def start(self):
         cherrypy.engine.start()
