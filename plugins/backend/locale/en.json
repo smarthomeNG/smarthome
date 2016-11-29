@@ -75,6 +75,7 @@
 	"Auf Deutsch wechseln": "Switch to German",
 	"Auf Englisch wechseln": "Switch to English",
 	"Auf Französisch wechseln": "Switch to French",
+	"Auf Polnisch wechseln": "Switch to Polish",
 	"Nr.": "No.",
 	"Type": "Type",
 	"Plugin": "Plugin",
@@ -156,6 +157,7 @@
 		"Englisch": "English",
 		"Deutsch": "Deutsch",
 		"Französisch": "French",
+		"Polnisch": "Polish",
 		"Deaktivieren": "Disable",
 		"Aktivieren": "Enable",
 		"Leeren" : "Clear",
@@ -164,7 +166,8 @@
 		"Blöcke speichern" : "Save Blocks",
 		"Beenden" : "Stop",
 		"Speichern" : "Save",
-		"Speichern_und_Neu_Laden" : "Save and Reload"
+		"Speichern_und_Neu_Laden" : "Save and Reload",
+		"Löschen" : "Delete"
 	},
 	
 	"_menu": {
