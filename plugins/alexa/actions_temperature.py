@@ -1,5 +1,4 @@
 from .action import alexa
-import math
 
 TEMP_MIN = 0
 TEMP_MAX = 100
@@ -44,7 +43,7 @@ def incr_target_temp(self, payload):
     for item in items:
         item_now = item()
         item_new_raw = item_now + delta_temp
-        item_new = math.min(TEMP_MAX, math.max(TEMP_MIN, item_new_raw))
+        item_new = min(TEMP_MAX, max(TEMP_MIN, item_new_raw))
         self.logger.debug("Alexa: incrementTargetTemperature({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
 
@@ -78,7 +77,7 @@ def decr_target_temp(self, payload):
     for item in items:
         item_now = item()
         item_new_raw = item_now - delta_temp
-        item_new = math.min(TEMP_MAX, math.max(TEMP_MIN, item_new_raw))
+        item_new = min(TEMP_MAX, max(TEMP_MIN, item_new_raw))
         self.logger.debug("Alexa: decrementTargetTemperature({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
 

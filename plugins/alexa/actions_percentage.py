@@ -1,5 +1,4 @@
 from .action import alexa
-import math
 
 @alexa('setPercentage', 'SetPercentageRequest', 'SetPercentageConfirmation')
 def set_percentage(self, payload):
@@ -25,7 +24,7 @@ def incr_percentage(self, payload):
         item_max = 100 # any idea?
         percentage_now = item_now / item_max
         percentage_new_raw = percentage_now * 100 + percentage_delta
-        percentage_new = math.min(100, math.max(0, percentage_new_raw))
+        percentage_new = min(100, max(0, percentage_new_raw))
         item_new = item_max * percentage_new_clamped * 0.01
         self.logger.debug("Alexa: incrementPercentage({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
@@ -42,7 +41,7 @@ def decr_percentage(self, payload):
         item_max = 100 # any idea?
         percentage_now = item_now / item_max
         percentage_new_raw = percentage_now * 100 - percentage_delta
-        percentage_new = math.min(100, math.max(0, percentage_new_raw))
+        percentage_new = min(100, max(0, percentage_new_raw))
         item_new = item_max * percentage_new * 0.01
         self.logger.debug("Alexa: decrementPercentage({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
