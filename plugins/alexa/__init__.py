@@ -34,7 +34,7 @@ from . import actions_temperature
 from . import actions_percentage
 
 class Alexa(SmartPlugin):
-    PLUGIN_VERSION = "1.0.0"
+    PLUGIN_VERSION = "0.5.0"
     ALLOW_MULTIINSTANCE = False
 
     def __init__(self, sh, service_host='0.0.0.0', service_port=9000):
@@ -53,7 +53,12 @@ class Alexa(SmartPlugin):
         self.alive = False
 
     def parse_item(self, item):
-        # item's supported alexa-actions, space-separated
+        # device/appliance
+        device_id = None
+        if 'alexa_device' in item.conf:
+            device_id = item.conf['alexa_device']
+
+        # supported actions/directives
         action_names = None
         if 'alexa_actions' in item.conf:
             action_names = list( map(str.strip, item.conf['alexa_actions'].split(' ')) )
@@ -63,47 +68,47 @@ class Alexa(SmartPlugin):
                     self.logger.error("Alexa: invalid alexa action '{}' specified in item {}, ignoring item".format(action_name, item.id()))
                     return None
 
-        # item's friendly name for alexa, fallback to normal item.name
+        # friendly name
         name = None
+        explicit_name = None
         if 'alexa_name' in item.conf:
             name = item.conf['alexa_name']
+            explicit_name = True
         elif action_names and 'name' in item.conf:
             name = item.conf['name']
+            explicit_name = False
         if name:
             self.logger.debug("Alexa: {}-name = {}".format(item.id(), name))
 
-        # optional explicit device-identifier (instead of deducing it from above alexa-name)
-        device_id = None
-        if 'alexa_device' in item.conf:
-            device_id = item.conf['alexa_device']
-        elif name:
+        # deduce device-id from name
+        if name and not device_id:
             device_id = AlexaDevice.create_id_from_name(name)
 
+        # skip this item if no device could be determined
         if device_id:
             self.logger.debug("Alexa: {}-device = {}".format(item.id(), device_id))
         else:
-            return None
+            return None # skip this item
 
-        # create device if not yet existing
+        # create device if not yet existing, provide initial name if any
         if not self.devices.exists(device_id):
             self.devices.put( AlexaDevice(device_id, name) )
 
-        # get device
         device = self.devices.get(device_id)
 
-        # update/overwrite device-name
-        if name:
+        # update/overwrite name
+        if name and explicit_name:
             device.name = name
 
-        # optional friendly description for alexa
+        # friendly description
         if 'alexa_description' in item.conf:
             device.description = item.conf['alexa_description'].strip()
 
-        # register all supported actions of this item with the device
+        # register item-actions with the device
         if action_names:
             for action_name in action_names:
-                device.add_action(action_name, item)
-            self.logger.info("Alexa: item {} registered with actions {} as device {}".format(item.id(), device.supported_actions(), device_id))
+                device.register(action_name, item)
+            self.logger.info("Alexa: item {} supports actions {} as device {}".format(item.id(), action_names, device_id, device.supported_actions()))
 
         return None
 
