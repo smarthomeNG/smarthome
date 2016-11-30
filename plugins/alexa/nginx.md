@@ -158,7 +158,7 @@ You can create a Sitemap at /var/www/sitemap/index.html to give a nice overview 
 <body>
   <ul>
     <li><a href="https://alexa.YOUR-HOME.TLD/">Alexa</a></li>
-    <li><a href="https://alexa.YOUR-HOME.TLD/">Alexa</a></li>
+    <li><a href="https://ANOTHER-SERVICE.YOUR-HOME.DYNDNS.TLD/">Another Service</a></li>
   </ul>
 </body>
 </html>

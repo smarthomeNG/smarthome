@@ -33,12 +33,14 @@ https://echosim.io/
 # Configuration
 
 ## plugin.conf
+basic configuration
 ```
 [alexa]
     class_name = Alexa
     class_path = plugins.alexa
 ```
 
+you may change host/ip and port of the web-service
 ```
 [alexa]
     class_name = Alexa
@@ -58,12 +60,21 @@ implemented actions:
 - incrementPercentage
 - decrementPercentage
 
+specify supported actions space-separated
 ```
 [item]
   alexa_name = "Diningroom Lamp"
   alexa_actions = turnOn turnOff
 ```
 
+you may omit the `alexa_name`, it will use the item's `name`
+```
+[item]
+  name = "Diningroom Lamp"
+  alexa_actions = turnOn turnOff
+```
+
+you can use multiple items for specific actions using the same alexa-name.
 ```
 [item_only_on]
   alexa_name = "Diningroom Lamp"
@@ -74,6 +85,7 @@ implemented actions:
   alexa_actions = turnOff
 ```
 
+the device-identifier is automatically deduced from the `alexa_name` - but you can specify it explicitly using `alexa_device`
 ```
 [item_only_on]
   alexa_device = custom_device_identifier
@@ -86,6 +98,7 @@ implemented actions:
   alexa_actions = turnOff
 ```
 
+alexa supports "friendly descriptions", you can set it using `alexa_description`
 ```
 [item]
   alexa_name = "Diningroom Lamp"
@@ -94,6 +107,7 @@ implemented actions:
 ```
 
 ## logging.yaml
+you can enable debug logging for the alexa-plugin specifically:
 ```
 loggers:
   plugins.alexa:
