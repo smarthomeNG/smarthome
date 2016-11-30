@@ -89,13 +89,12 @@ class Alexa(SmartPlugin):
         # register all supported actions of this item with the device
         device = self.devices.get(device_id)
         for action_name in action_names:
-            self.logger.debug("Alexa: adding action {} of item {} to device {}".format(action_name, item.id(), device_id))
             device.add_action(action_name, item)
-        self.logger.info("Alexa: item {} supports actions {} as device {}".format(item.id(), device.supported_actions(), device_id))
+        self.logger.info("Alexa: item {} registered with actions {} as device {}".format(item.id(), device.supported_actions(), device_id))
 
         # item's optional friendly description for alexa
         if 'alexa_description' in item.conf:
-            device.set_description( item.conf['alexa_description'].strip() )
+            device.description = item.conf['alexa_description'].strip()
         return None
 
     def _update_values(self):
