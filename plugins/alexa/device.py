@@ -27,7 +27,7 @@ class AlexaDevice(object):
     def create_id_from_name(cls, name):
         return re.sub('[^a-z0-9_-]', '-', name.strip().lower())
 
-    def add_action(self, action_name, item):
+    def register(self, action_name, item):
         if action_name in self.action_items:
             self.action_items[action_name].append(item)
         else:
