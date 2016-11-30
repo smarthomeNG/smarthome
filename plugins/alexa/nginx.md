@@ -10,7 +10,7 @@ Using Nginx you can:
 - very lightweight, minimal memory footprint
 
 # Install (debian)
-sudo apt-get install nginx
+`sudo apt-get install nginx`
 
 # /etc/nginx/nginx.conf
 <pre>
@@ -141,6 +141,27 @@ server {
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 	}
 }
+</pre>
+
+# /etc/nginx/sites-enabled/your-home
+just create a symlink in `/etc/nginx/sites-enabled/` that points to your config:
+`sudo ln -s /etc/nginx/sites-enabled/your-home /etc/nginx/sites-available/your-home`
+
+# Sitemap
+You can create a Sitemap at /var/www/sitemap/index.html to give a nice overview of your services
+<pre>
+<!doctype html>
+<html>
+<head>
+  <title>YOU-HOME</title>
+</head>
+<body>
+  <ul>
+    <li><a href="https://alexa.YOUR-HOME.TLD/">Alexa</a></li>
+    <li><a href="https://alexa.YOUR-HOME.TLD/">Alexa</a></li>
+  </ul>
+</body>
+</html>
 </pre>
 
 # User & Passwords
