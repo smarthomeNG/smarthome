@@ -98,6 +98,8 @@ class Alexa(SmartPlugin):
 
         # update/overwrite name
         if name and (not device.name or name_is_explicit):
+            if device.name and device.name != name:
+                self.logger.warning("Alexa: item {} is changing device-name of {} from '{}' to '{}'".format(item.id(), device_id, device.name, name))
             device.name = name
 
         # friendly description
