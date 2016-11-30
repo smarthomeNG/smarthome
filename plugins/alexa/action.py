@@ -1,10 +1,6 @@
 #
 #   https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference
 #
-
-import os
-import imp
-import functools
 import uuid
 
 action_func_registry = []
