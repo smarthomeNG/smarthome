@@ -70,13 +70,13 @@ class Alexa(SmartPlugin):
 
         # friendly name
         name = None
-        explicit_name = None
+        name_is_explicit = None
         if 'alexa_name' in item.conf:
             name = item.conf['alexa_name']
-            explicit_name = True
+            name_is_explicit = True
         elif action_names and 'name' in item.conf:
             name = item.conf['name']
-            explicit_name = False
+            name_is_explicit = False
         if name:
             self.logger.debug("Alexa: {}-name = {}".format(item.id(), name))
 
@@ -97,7 +97,7 @@ class Alexa(SmartPlugin):
         device = self.devices.get(device_id)
 
         # update/overwrite name
-        if name and explicit_name:
+        if name and (not device.name or name_is_explicit):
             device.name = name
 
         # friendly description
