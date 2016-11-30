@@ -48,12 +48,12 @@ class AlexaService(object):
             raise cherrypy.HTTPError("400 Bad Request", msg)
 
     def start(self):
+        self.logger.info("Alexa: service starting")
         cherrypy.engine.start()
-        self.logger.info("Alexa: service started")
 
     def stop(self):
+        self.logger.info("Alexa: service stopping")
         cherrypy.engine.exit()
-        self.logger.info("Alexa: service stopped")
 
     def handle_system(self, header, payload):
         directive = header['name']
