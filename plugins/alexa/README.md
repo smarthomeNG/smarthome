@@ -1,13 +1,12 @@
 # Alexa
-
-# Intro
 This alexa plugin implements an "skill adapter" for Amazon's Alexa
 by providing an smarthomeNG-embedded service-endpoint
 where alexa can send its recognized voice-commands/directives to.
 
-please RTFM for a basic understanding:
-- https://developer.amazon.com/alexa/smart-home
-- https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/overviews/understanding-the-smart-home-skill-api
+please this for a basic understanding: https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/overviews/understanding-the-smart-home-skill-api
+this plugin provides two features:
+- *AWS lambda skill adapter*  - the shipped `aws_lambda.js` does 1:1 forwarding of alexa requests to ...
+- *device cloud* - service-endpoint provided by smarthomeNG
 
 # Alexa Skills Setup
 - https://developer.amazon.com/edw/home.html#/skills/list
