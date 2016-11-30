@@ -63,47 +63,80 @@ implemented actions:
 specify supported actions space-separated
 ```
 [item]
-  alexa_name = "Diningroom Lamp"
-  alexa_actions = turnOn turnOff
+type = foo
+alexa_name = "Diningroom Lamp"
+alexa_actions = turnOn turnOff
 ```
 
 you may omit the `alexa_name`, it will use the item's `name`
 ```
 [item]
-  name = "Diningroom Lamp"
-  alexa_actions = turnOn turnOff
+type = foo
+name = "Diningroom Lamp"
+alexa_actions = turnOn turnOff
 ```
 
 you can use multiple items for specific actions using the same alexa-name.
 ```
 [item_only_on]
-  alexa_name = "Diningroom Lamp"
-  alexa_actions = turnOn
+type = foo
+alexa_name = "Diningroom Lamp"
+alexa_actions = turnOn
 
 [item_only_off]
-  alexa_name = "Diningroom Lamp"
-  alexa_actions = turnOff
+type = foo
+alexa_name = "Diningroom Lamp"
+alexa_actions = turnOff
 ```
 
 the device-identifier is automatically deduced from the `alexa_name` - but you can specify it explicitly using `alexa_device`
 ```
-[item_only_on]
-  alexa_device = custom_device_identifier
-  alexa_name = "Diningroom Lamp"
-  alexa_actions = turnOn
+[[item_only_on]]
+type = foo
+alexa_name = "Diningroom Lamp"
+alexa_actions = turnOn
 
-[item_only_off]
-  alexa_device = custom_device_identifier
-  alexa_name = "Diningroom Lamp"
-  alexa_actions = turnOff
+[[item_only_off]]
+type = foo
+alexa_name = "Diningroom Lamp"
+alexa_actions = turnOff
 ```
 
 alexa supports "friendly descriptions", you can set it using `alexa_description`
 ```
 [item]
-  alexa_name = "Diningroom Lamp"
-  alexa_actions = turnOn turnOff
-  alexa_description = "The pompous dining room lamp in the west-wing"
+type = foo
+alexa_name = "Diningroom Lamp"
+alexa_actions = turnOn turnOff
+alexa_description = "The pompous dining room lamp in the west-wing"
+```
+
+you can define `alexa_name` & `alexa_description` centrally in one item and reference the device in other items only by using the `alexa_device` (you must always define a type though!)
+```
+[root]
+  [[livingroom_lamps]]
+  type = foo
+  alexa_device = livingroom_lamps
+  alexa_name = "Livingroom"
+  alexa_description = "Couch and Main Livingroom-Lamps"
+
+    [[[couch]]]
+    type = bool
+    alexa_device = livingroom_lamps
+    alexa_actions = "turnOn turnOff"
+    knx_dpt = 1
+		knx_listen = 1/2/1
+    knx_init = 1/2/1
+    knx_send = 1/2/0
+
+    [[[main]]]
+    type = bool
+    alexa_device = livingroom_lamps
+    alexa_actions = "turnOn turnOff"
+    knx_dpt = 1
+		knx_listen = 1/2/11
+    knx_init = 1/2/11
+    knx_send = 1/2/10
 ```
 
 ## logging.yaml
