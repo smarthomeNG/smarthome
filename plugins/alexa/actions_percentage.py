@@ -8,7 +8,7 @@ def set_percentage(self, payload):
     for item in items:
         item_now = item()
         item_max = 100 # any idea?
-        item_new = item_max * new_percentage * 0.01
+        item_new = item_max * (new_percentage / 100)
         self.logger.debug("Alexa: setPercentage({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
 
@@ -23,9 +23,9 @@ def incr_percentage(self, payload):
         item_now = item()
         item_max = 100 # any idea?
         percentage_now = item_now / item_max
-        percentage_new_raw = percentage_now * 100 + percentage_delta
+        percentage_new_raw = (percentage_now * 100) + percentage_delta
         percentage_new = min(100, max(0, percentage_new_raw))
-        item_new = item_max * percentage_new_clamped * 0.01
+        item_new = item_max * (percentage_new / 100)
         self.logger.debug("Alexa: incrementPercentage({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
 
@@ -40,9 +40,9 @@ def decr_percentage(self, payload):
         item_now = item()
         item_max = 100 # any idea?
         percentage_now = item_now / item_max
-        percentage_new_raw = percentage_now * 100 - percentage_delta
+        percentage_new_raw = (percentage_now * 100) - percentage_delta
         percentage_new = min(100, max(0, percentage_new_raw))
-        item_new = item_max * percentage_new * 0.01
+        item_new = item_max * (percentage_new / 100)
         self.logger.debug("Alexa: decrementPercentage({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
 
