@@ -13,7 +13,7 @@ Using Nginx you can:
 `sudo apt-get install nginx`
 
 # /etc/nginx/nginx.conf
-<pre>
+```
 user www-data;
 worker_processes 2;
 pid /run/nginx.pid;
@@ -56,10 +56,10 @@ http {
 	# include /etc/nginx/conf.d/*.conf;
 	include /etc/nginx/sites-enabled/*;
 }
-</pre>
+```
 
 # /etc/nginx/include.d/common
-<pre>
+```
 # letsencrypt shizzle
 ssl_certificate /etc/letsencrypt/live/YOUR-HOME.DYNDNS.TLD/fullchain.pem;
 ssl_certificate_key /etc/letsencrypt/live/YOUR-HOME.DYNDNS.TLD/privkey.pem;
@@ -72,10 +72,10 @@ location /.well-known {
   auth_basic off;
   alias /var/www/.well-known;
 }
-</pre>
+```
 
 # /etc/nginx/sites-available/your-home
-<pre>
+```
 # SSL-Redirect & LetsEncrypt Endpoint
 server {
 	listen 80 default_server;
@@ -141,7 +141,7 @@ server {
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 	}
 }
-</pre>
+```
 
 # /etc/nginx/sites-enabled/your-home
 just create a symlink in `/etc/nginx/sites-enabled/` that points to your config:
@@ -149,7 +149,7 @@ just create a symlink in `/etc/nginx/sites-enabled/` that points to your config:
 
 # Sitemap
 You can create a Sitemap at /var/www/sitemap/index.html to give a nice overview of your services
-<pre>
+```
 <!doctype html>
 <html>
 <head>
@@ -162,7 +162,7 @@ You can create a Sitemap at /var/www/sitemap/index.html to give a nice overview 
   </ul>
 </body>
 </html>
-</pre>
+```
 
 # User & Passwords
 /etc/nginx/htpasswd

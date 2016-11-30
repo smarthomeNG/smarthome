@@ -22,10 +22,10 @@ this plugin provides two features as described here: https://developer.amazon.co
 this plugin/s service does not offer any ssl or authentication!! it is strongly recommended to use a reverse-proxy like nginx with both https-termination and http basic authentication. the shipped `aws_lambda.js` will do HTTPS-calls secured by HTTP Basic Authentication. see `nginx.md` for an example configuration
 
 # Requirements
-<pre>
+```
 sudo pip3 install cherrypy
 sudo pip3 install simplejson
-</pre>
+```
 
 # Testing
 https://echosim.io/
@@ -33,19 +33,19 @@ https://echosim.io/
 # Configuration
 
 ## plugin.conf
-<pre>
+```
 [alexa]
     class_name = Alexa
     class_path = plugins.alexa
-</pre>
+```
 
-<pre>
+```
 [alexa]
     class_name = Alexa
     class_path = plugins.alexa
     service_host = "0.0.0.0"
     service_port = 9000
-</pre>
+```
 
 ## items.conf
 implemented actions:
@@ -58,13 +58,13 @@ implemented actions:
 - incrementPercentage
 - decrementPercentage
 
-<pre>
+```
 [item]
   alexa_name = "Diningroom Lamp"
   alexa_actions = turnOn turnOff
-</pre>
+```
 
-<pre>
+```
 [item_only_on]
   alexa_name = "Diningroom Lamp"
   alexa_actions = turnOn
@@ -72,9 +72,9 @@ implemented actions:
 [item_only_off]
   alexa_name = "Diningroom Lamp"
   alexa_actions = turnOff
-</pre>
+```
 
-<pre>
+```
 [item_only_on]
   alexa_device = custom_device_identifier
   alexa_name = "Diningroom Lamp"
@@ -84,21 +84,21 @@ implemented actions:
   alexa_device = custom_device_identifier
   alexa_name = "Diningroom Lamp"
   alexa_actions = turnOff
-</pre>
+```
 
-<pre>
+```
 [item]
   alexa_name = "Diningroom Lamp"
   alexa_actions = turnOn turnOff
   alexa_description = "The pompous dining room lamp in the west-wing"
-</pre>
+```
 
 ## logging.yaml
-<pre>
+```
 loggers:
   plugins.alexa:
     level: DEBUG
 root:
     level: INFO
     handlers: [file, console]
-</pre>
+```
