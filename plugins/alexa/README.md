@@ -3,10 +3,9 @@ This alexa plugin implements an "skill adapter" for Amazon's Alexa
 by providing an smarthomeNG-embedded service-endpoint
 where alexa can send its recognized voice-commands/directives to.
 
-please this for a basic understanding: https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/overviews/understanding-the-smart-home-skill-api
-this plugin provides two features:
-- *AWS lambda skill adapter*  - the shipped `aws_lambda.js` does 1:1 forwarding of alexa requests to ...
-- *device cloud* - service-endpoint provided by smarthomeNG
+this plugin provides two features as described here: https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/overviews/understanding-the-smart-home-skill-api
+- *AWS lambda skill adapter* - the shipped `aws_lambda.js` does 1:1 forwarding of alexa requests to ...
+- *device cloud* - service-endpoint provided by smarthomeNG, called by the lambda skill adapter
 
 # Alexa Skills Setup
 - https://developer.amazon.com/edw/home.html#/skills/list
@@ -15,12 +14,12 @@ this plugin provides two features:
 # AWS Lambda Function Setup
 - logon to https://aws.amazon.com/
 - create a lambda-function in the EU-sector (choose EU-Ireland whenever possible to have Alexa both in english & german)
-- use aws_lambda.js to copy & paste
+- copy & paste `aws_lambda.js`
 - provide the environmental variables as specified in the header of aws_lambda.js
 - https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions?display=list
 
 # Shortcomings / Pitfalls
-- the python service does not offer ssl or authentication, a reverse-proxy like nginx with both https-termination and http basic authentication is strongly advised and actually required, since the shipped aws_lambda.js will only do https-requests and does http basic auth.
+this plugin/s service does not offer any ssl or authentication!! it is strongly recommended to use a reverse-proxy like nginx with both https-termination and http basic authentication. the shipped `aws_lambda.js` will do HTTPS-calls secured by HTTP Basic Authentication. see `nginx.md` for an example configuration
 
 # Requirements
 <pre>
