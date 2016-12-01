@@ -45,6 +45,7 @@ class Alexa(SmartPlugin):
         self.service = AlexaService(self.sh, self.logger, self.PLUGIN_VERSION, self.devices, self.actions, service_host, service_port)
 
     def run(self):
+        self.validate_devices()
         self.service.start()
         self.alive = True
 
@@ -77,8 +78,6 @@ class Alexa(SmartPlugin):
         elif action_names and 'name' in item.conf:
             name = item.conf['name']
             name_is_explicit = False
-        if name:
-            self.logger.debug("Alexa: {}-name = {}".format(item.id(), name))
 
         # deduce device-id from name
         if name and not device_id:
@@ -90,23 +89,27 @@ class Alexa(SmartPlugin):
         else:
             return None # skip this item
 
-        # create device if not yet existing, provide initial name if any
+        # create device if not yet existing
         if not self.devices.exists(device_id):
-            self.devices.put( AlexaDevice(device_id, name) )
+            self.devices.put( AlexaDevice(device_id) )
 
         device = self.devices.get(device_id)
 
-        # update/overwrite name
+        # friendly name
         if name and (not device.name or name_is_explicit):
+            self.logger.debug("Alexa: {}-name = {}".format(item.id(), name))
+
             if device.name and device.name != name:
                 self.logger.warning("Alexa: item {} is changing device-name of {} from '{}' to '{}'".format(item.id(), device_id, device.name, name))
-            device.set_name( name )
+            device.name = name
 
         # friendly description
         if 'alexa_description' in item.conf:
             descr = item.conf['alexa_description']
             self.logger.debug("Alexa: {}-description = {}".format(item.id(), descr))
-            device.set_description( descr )
+            if device.description and device.description != descr:
+                self.logger.warning("Alexa: item {} is changing device-description of {} from '{}' to '{}'".format(item.id(), device_id, device.description, descr))
+            device.description = descr
 
         # register item-actions with the device
         if action_names:
@@ -114,12 +117,12 @@ class Alexa(SmartPlugin):
                 device.register(action_name, item)
             self.logger.info("Alexa: item {} supports actions {} as device {}".format(item.id(), action_names, device_id, device.supported_actions()))
 
-        if not device.name:
-            self.logger.warning("Alexa: name of device {} not yet set by item {} - do not forget to set `alexa_name`".format(device.id, item.id()))
-        if not device.description:
-            self.logger.warning("Alexa: description of device {} not yet set by item {} - do not forget to set `alexa_description`".format(device.id, item.id()))
-
         return None
 
     def _update_values(self):
         return None
+
+    def validate_devices(self):
+        for device in self.devices.all():
+            if not device.validate(self.logger):
+                raise ValueError("Alexa: invalid device {}".format(device.id))

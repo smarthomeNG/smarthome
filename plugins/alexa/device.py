@@ -15,32 +15,11 @@ class AlexaDevices(object):
         return list( self.devices.values() )
 
 class AlexaDevice(object):
-    def __init__(self, id, name):
-        if not id:
-            raise ValueError("empty identifier for device {}".format(self.id))
-        elif len(id) > 256:
-            raise ValueError("identifier '{}' for device {} too long >256".format(id, self.id))
+    def __init__(self, id):
         self.id = id
         self.action_items = {}
         self.name = None
         self.description = None
-        if name: # allow temporary None name/description
-            self.set_name(name)
-            self.set_description(name) # XXX preset description with name
-
-    def set_name(self, name):
-        if not name:
-            raise ValueError("empty name for device {}".format(self.id))
-        elif len(name) > 128:
-            raise ValueError("name '{}' for device {} too long >128".format(name, self.id))
-        self.name = name
-
-    def set_description(self, descr):
-        if not descr:
-            raise ValueError("empty description for device {}".format(self.id))
-        elif len(descr) > 128:
-            raise ValueError("description '{}' for device {} too long >128".format(descr, self.id))
-        self.description = descr
 
     @classmethod
     def create_id_from_name(cls, name):
@@ -72,3 +51,37 @@ class AlexaDevice(object):
 
     def items_for_action(self, action_name):
         return self.action_items[action_name] if action_name in self.action_items else []
+
+    def validate(self, logger):
+        logger.debug("Alexa: validating device {}".format(self.id))
+
+        if not self.id:
+            msg = "Alexa-Device {}: empty name {}".format(self.id)
+            logger.error(msg)
+            return False
+        elif len(self.id) > 128:
+            msg = "Alexa-Device: {}: identifier '{}' too long >128".format(self.id, self.id)
+            logger.error(msg)
+            return False
+
+        if not self.name:
+            msg = "Alexa-Device {}: empty name {}".format(self.id)
+            logger.error(msg)
+            return False
+        elif len(self.name) > 128:
+            msg = "Alexa-Device: {}: name '{}' too long >128".format(self.id, self.name)
+            logger.error(msg)
+            return False
+
+        if not self.description:
+            logger.warning("Alexa-Device {}: empty description, fallback to name '{}' - please set `alexa_description`".format(self.id, self.name))
+            self.description = self.name
+        elif len(self.description) > 128:
+            msg = "Alexa-Device {}: description '{}' too long >128".format(self.id, self.description)
+            logger.error(msg)
+            return False
+
+        if not self.action_items:
+            logger.warning("Alexa-Device {}: no actions/items registered - please set `alexa_actions`".format(self.id))
+
+        return True
