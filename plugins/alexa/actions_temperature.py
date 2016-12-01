@@ -12,7 +12,7 @@ def set_target_temp(self, payload):
     previous_temp = items[0]() if items else 0
 
     for item in items:
-        self.logger.debug("Alexa: setTargetTemperature({}, {:.1f})".format(item.id(), targetTemp))
+        self.logger.info("Alexa: setTargetTemperature({}, {:.1f})".format(item.id(), targetTemp))
         item( targetTemp )
 
     return self.respond({
@@ -44,7 +44,7 @@ def incr_target_temp(self, payload):
         item_now = item()
         item_new_raw = item_now + delta_temp
         item_new = min(TEMP_MAX, max(TEMP_MIN, item_new_raw))
-        self.logger.debug("Alexa: incrementTargetTemperature({}, {:.1f})".format(item.id(), item_new))
+        self.logger.info("Alexa: incrementTargetTemperature({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
 
     new_temp = items[0]() if items else 0
@@ -78,7 +78,7 @@ def decr_target_temp(self, payload):
         item_now = item()
         item_new_raw = item_now - delta_temp
         item_new = min(TEMP_MAX, max(TEMP_MIN, item_new_raw))
-        self.logger.debug("Alexa: decrementTargetTemperature({}, {:.1f})".format(item.id(), item_new))
+        self.logger.info("Alexa: decrementTargetTemperature({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
 
     new_temp = items[0]() if items else 0
