@@ -1,5 +1,3 @@
-import re
-
 class AlexaDevices(object):
     def __init__(self):
         self.devices = {}
@@ -25,7 +23,12 @@ class AlexaDevice(object):
 
     @classmethod
     def create_id_from_name(cls, name):
-        return re.sub('[^a-z0-9_-]', '-', name.strip().lower())
+        import unicodedata
+        import re
+        name = name.strip()
+        name = unicodedata.normalize('NFKC', name).encode('ascii', 'ignore')
+        name = name.lower()
+        return re.sub('[^a-z0-9_-]', '-', name)
 
     def register(self, action_name, item):
         if action_name in self.action_items:
