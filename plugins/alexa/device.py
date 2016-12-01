@@ -16,21 +16,30 @@ class AlexaDevices(object):
 
 class AlexaDevice(object):
     def __init__(self, id, name):
-        if len(id) > 256:
-            raise ValueError("identifier '{}' of device {} longer than 256 characters!".format(id, self.id))
+        if not id:
+            raise ValueError("empty identifier for device {}".format(self.id))
+        elif len(id) > 256:
+            raise ValueError("identifier '{}' for device {} too long >256".format(id, self.id))
         self.id = id
         self.action_items = {}
-        self.set_name(name)
-        self.set_description(name) # XXX preset description with name
+        self.name = None
+        self.description = None
+        if name: # allow temporary None name/description
+            self.set_name(name)
+            self.set_description(name) # XXX preset description with name
 
     def set_name(self, name):
-        if len(name) > 128:
-            raise ValueError("name '{}' of device {} longer than 128 characters!".format(name, self.id))
+        if not name:
+            raise ValueError("empty name for device {}".format(self.id))
+        elif len(name) > 128:
+            raise ValueError("name '{}' for device {} too long >128".format(name, self.id))
         self.name = name
 
     def set_description(self, descr):
-        if len(descr) > 128:
-            raise ValueError("description '{}' of device {} longer than 128 characters!".format(descr, self.id))
+        if not descr:
+            raise ValueError("empty description for device {}".format(self.id))
+        elif len(descr) > 128:
+            raise ValueError("description '{}' for device {} too long >128".format(descr, self.id))
         self.description = descr
 
     @classmethod
