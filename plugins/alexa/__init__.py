@@ -100,11 +100,11 @@ class Alexa(SmartPlugin):
         if name and (not device.name or name_is_explicit):
             if device.name and device.name != name:
                 self.logger.warning("Alexa: item {} is changing device-name of {} from '{}' to '{}'".format(item.id(), device_id, device.name, name))
-            device.name = name
+            device.set_name( name )
 
         # friendly description
         if 'alexa_description' in item.conf:
-            device.description = item.conf['alexa_description'].strip()
+            device.set_description( item.conf['alexa_description'] )
 
         # register item-actions with the device
         if action_names:
