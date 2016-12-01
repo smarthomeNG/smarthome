@@ -34,20 +34,24 @@ exports.handler = function(event, context, callback) {
 		    responseData += dataChunk
 		});
 		res.on('end', () => {
-			console.log(`response: ${responseData}`)
-			var response = JSON.parse(responseData);
+			console.log('raw response:', responseData)
 
+			var response = JSON.parse(responseData);
 			if (res.statusCode == 200) {
+				console.info('OK', JSON.stringify(response))
 				callback(null, response);
 			} else {
-				callback(`DependentServiceUnavailableError`);
+				console.error('Failed', JSON.stringify(response))
+				callback('DependentServiceUnavailableError');
 			}
 		});
 	});
 	req.on('error', (e) => {
-		console.log(`request failed: ${e.message}`);
+		console.error('request failed', e);
 		callback(e);
 	});
+
+	console.log('requesting', data)
 	req.write(data);
 	req.end();
 }

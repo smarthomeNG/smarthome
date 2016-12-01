@@ -14,7 +14,7 @@ this plugin provides two features as described here: https://developer.amazon.co
 # AWS Lambda Function Setup
 - logon to https://aws.amazon.com/
 - create a lambda-function in the EU-sector (choose EU-Ireland whenever possible to have Alexa both in english & german)
-- copy & paste `aws_lambda.js`
+- copy & paste `aws_lambda.js` as a `Node.js` Lambda
 - provide the environmental variables as specified in the header of aws_lambda.js
 - https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions?display=list
 
