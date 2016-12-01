@@ -92,16 +92,6 @@ class AlexaService(object):
     def discover_appliances(self):
         discovered = []
         for device in self.devices.all():
-            if not device.id:
-                self.logger.error("Alexa: device {} does not have required identifier, please set `alexa_device`, skipping item!".format(device.id))
-                continue
-            if not device.name:
-                self.logger.error("Alexa: device {} does not have required name, please set `alexa_name`, skipping item!".format(device.id))
-                continue
-            if not device.description:
-                self.logger.error("Alexa: device {} does not have required description, please set `alexa_description`, skipping item!".format(device.id))
-                continue
-
             discovered.append({
                 'actions': device.supported_actions(),
                 'additionalApplianceDetails': {
