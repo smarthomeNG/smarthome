@@ -39,12 +39,6 @@ class TestConfig(unittest.TestCase):
 		cliplug = self.plugins.get_plugin("cli")
 		self.assertEqual(cliplug.plugin.get_instance_name(),"")
 
-	def test_plugin_instance_not_set_uses_plugin_name(self):
-		sml0plug = self.plugins.get_plugin("sml0")
-		self.assertEqual(sml0plug.plugin.get_instance_name(),"sml0")
-		sml1plug = self.plugins.get_plugin("sml1")
-		self.assertEqual(sml1plug.plugin.get_instance_name(),"sml1")
-
 	def test_plugin_instance_set(self):
 		cliplug = self.plugins.get_plugin("wol_ww")
 		self.assertEqual(cliplug.plugin.get_instance_name(),"bind")
