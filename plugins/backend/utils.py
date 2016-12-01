@@ -113,7 +113,7 @@ def create_hash(plaintext):
     import hashlib
     hashfunc = hashlib.sha512()
     hashfunc.update(plaintext.encode())
-    return hashfunc.digest().hex()
+    return hashfunc.hexdigest()
 
 def parse_requirements(file_path):
     fobj = open(file_path)

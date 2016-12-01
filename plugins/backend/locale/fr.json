@@ -76,6 +76,7 @@
 	"Übersetzung neu laden": "Recharger traduction",
 	"Auf Deutsch wechseln": "Basculer vers l'allemand",
 	"Auf Englisch wechseln": "Basculer vers l'anglais",
+	"Auf Polnisch wechseln": "Basculer vers l'polonais",
 	"Nr.": "N°",
 	"Type": "Type",
 	"Plugin": "Extension",
@@ -156,6 +157,7 @@
 		"Englisch": "Anglais",
 		"Deutsch": "Allemand",
 		"Französisch": "Français",
+		"Polnisch": "Polonais",
 		"Deaktivieren": "Désactiver",
 		"Aktivieren": "Activer",
 		"Leeren" : "Vider",
@@ -164,7 +166,8 @@
 		"Blöcke speichern" : "Enregistrer les blocs",
 		"Beenden" : "Terminer",
 		"Speichern" : "Sauvegarder",
-		"Speichern_und_Neu_Laden" : "Sauvegarder et Recharger"
+		"Speichern_und_Neu_Laden" : "Sauvegarder et Recharger",
+		"Löschen" : "Supprimer"
 	},
 
 	"_menu": {
