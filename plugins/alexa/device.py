@@ -26,7 +26,7 @@ class AlexaDevice(object):
         import unicodedata
         import re
         name = name.strip()
-        name = str( unicodedata.normalize('NFKC', name).encode('ascii', 'ignore') )
+        name = unicodedata.normalize('NFKD', name).encode('ascii', 'ignore').decode('ascii')
         name = name.lower()
         return re.sub('[^a-z0-9_-]', '-', name)
 
