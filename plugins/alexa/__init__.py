@@ -112,6 +112,11 @@ class Alexa(SmartPlugin):
                 device.register(action_name, item)
             self.logger.info("Alexa: item {} supports actions {} as device {}".format(item.id(), action_names, device_id, device.supported_actions()))
 
+        if not device.name:
+            self.logger.warning("Alexa: name of device {} not yet set by item {} - do not forget to set `alexa_name`".format(device.id, item.id()))
+        if not device.description:
+            self.logger.warning("Alexa: description of device {} not yet set by item {} - do not forget to set `alexa_description`".format(device.id, item.id()))
+
         return None
 
     def _update_values(self):
