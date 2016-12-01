@@ -16,19 +16,32 @@ class AlexaDevices(object):
 
 class AlexaDevice(object):
     def __init__(self, id, name):
+        if len(id) > 256:
+            raise ValueError("identifier '{}' of device {} longer than 256 characters!".format(id, self.id))
         self.id = id
-        self.name = name
-        self.description = ''
         self.action_items = {}
+        self.set_name(name)
+        self.set_description(name) # preset description with name
+
+    def set_name(self, name):
+        if len(name) > 128:
+            raise ValueError("name '{}' of device {} longer than 128 characters!".format(name, self.id))
+        self.name = name
+
+    def set_description(self, descr):
+        if len(descr) > 128:
+            raise ValueError("description '{}' of device {} longer than 128 characters!".format(descr, self.id))
+        self.description = truncate_property_value(descr)
 
     @classmethod
     def create_id_from_name(cls, name):
         import unicodedata
         import re
-        name = name.strip()
-        name = unicodedata.normalize('NFKD', name).encode('ascii', 'ignore').decode('ascii')
-        name = name.lower()
-        return re.sub('[^a-z0-9_-]', '-', name)
+        id = name.strip()
+        id = unicodedata.normalize('NFKD', id).encode('ascii', 'ignore').decode('ascii')
+        id = id.lower()
+        id = re.sub('[^a-z0-9_-]', '-', id)
+        return truncate_property_value(id)
 
     def register(self, action_name, item):
         if action_name in self.action_items:
