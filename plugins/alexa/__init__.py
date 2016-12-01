@@ -34,7 +34,7 @@ from . import actions_temperature
 from . import actions_percentage
 
 class Alexa(SmartPlugin):
-    PLUGIN_VERSION = "0.5.0"
+    PLUGIN_VERSION = "0.7.0"
     ALLOW_MULTIINSTANCE = False
 
     def __init__(self, sh, service_host='0.0.0.0', service_port=9000):
@@ -98,7 +98,6 @@ class Alexa(SmartPlugin):
         # friendly name
         if name and (not device.name or name_is_explicit):
             self.logger.debug("Alexa: {}-name = {}".format(item.id(), name))
-
             if device.name and device.name != name:
                 self.logger.warning("Alexa: item {} is changing device-name of {} from '{}' to '{}'".format(item.id(), device_id, device.name, name))
             device.name = name

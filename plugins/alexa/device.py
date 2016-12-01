@@ -56,7 +56,7 @@ class AlexaDevice(object):
         logger.debug("Alexa: validating device {}".format(self.id))
 
         if not self.id:
-            msg = "Alexa-Device {}: empty name {}".format(self.id)
+            msg = "Alexa-Device {}: empty identifier".format(self.id)
             logger.error(msg)
             return False
         elif len(self.id) > 128:
@@ -65,7 +65,7 @@ class AlexaDevice(object):
             return False
 
         if not self.name:
-            msg = "Alexa-Device {}: empty name {}".format(self.id)
+            msg = "Alexa-Device {}: empty name".format(self.id)
             logger.error(msg)
             return False
         elif len(self.name) > 128:
