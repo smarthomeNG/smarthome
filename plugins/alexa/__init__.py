@@ -104,7 +104,9 @@ class Alexa(SmartPlugin):
 
         # friendly description
         if 'alexa_description' in item.conf:
-            device.set_description( item.conf['alexa_description'] )
+            descr = item.conf['alexa_description']
+            self.logger.debug("Alexa: {}-description = {}".format(item.id(), descr))
+            device.set_description( descr )
 
         # register item-actions with the device
         if action_names:
