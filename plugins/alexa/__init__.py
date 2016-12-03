@@ -19,11 +19,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with SmartHomeNG. If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
-
-import logging
-import socket
-import json
 from lib.model.smartplugin import SmartPlugin
+import logging
 
 from .device import AlexaDevices, AlexaDevice
 from .action import AlexaActions
@@ -34,15 +31,16 @@ from . import actions_temperature
 from . import actions_percentage
 
 class Alexa(SmartPlugin):
-    PLUGIN_VERSION = "0.7.0"
+    PLUGIN_VERSION = "0.8.0"
     ALLOW_MULTIINSTANCE = False
 
-    def __init__(self, sh, service_host='0.0.0.0', service_port=9000):
+    def __init__(self, sh, service_host='', service_port=9000, service_https_certfile=None, service_https_keyfile=None):
         self.logger = logging.getLogger(__name__)
         self.sh = sh
         self.devices = AlexaDevices()
         self.actions = AlexaActions(self.sh, self.logger, self.devices)
-        self.service = AlexaService(self.sh, self.logger, self.PLUGIN_VERSION, self.devices, self.actions, service_host, int(service_port))
+        self.service = AlexaService(self.logger, self.PLUGIN_VERSION, self.devices, self.actions,
+                                    service_host, int(service_port), service_https_certfile, service_https_keyfile)
 
     def run(self):
         self.validate_devices()
@@ -111,7 +109,6 @@ class Alexa(SmartPlugin):
             device.description = descr
 
         # register item-actions with the device
-        if action_names:
             for action_name in action_names:
                 device.register(action_name, item)
             self.logger.info("Alexa: item {} supports actions {} as device {}".format(item.id(), action_names, device_id, device.supported_actions()))
