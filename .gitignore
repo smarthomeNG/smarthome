@@ -22,3 +22,5 @@ nosetests.xml
 ehthumbs.db
 Thumbs.db
 
+# Pycharm settings
+/.idea
