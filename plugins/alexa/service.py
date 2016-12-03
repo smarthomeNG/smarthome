@@ -16,7 +16,7 @@ class AlexaService(object):
         self.logger.info("Alexa: service setup at {}:{}".format(host, port))
 
         handler_factory = lambda *args: AlexaRequestHandler(logger, version, devices, actions, *args)
-        self.server = HTTPServer((self.host, self.port), handler_factory)
+        self.server = HTTPServer((host, port), handler_factory)
 
         if https_certfile: # https://www.piware.de/2011/01/creating-an-https-server-in-python/
             self.logger.info("Alexa: enabling SSL/TLS support with cert-file {} & key-file {}".format(https_certfile, https_keyfile))
