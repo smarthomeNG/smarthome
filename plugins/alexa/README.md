@@ -207,7 +207,7 @@ real-life example:
     alexa_name = "Heizung"
     alexa_description = "Fussbodenheizung im Wohnzimmer"
     alexa_actions = "setTargetTemperature incrementTargetTemperature decrementTargetTemperature"
-    knx_dpt = 5
+    knx_dpt = 9
     knx_listen = 3/2/3
     knx_init = 3/2/3
     knx_send = 3/2/2
