@@ -8,7 +8,6 @@ import uuid
 
 class AlexaService(object):
     def __init__(self, logger, version, devices, actions, host, port, auth=None, https_certfile=None, https_keyfile=None):
-        self.sh = sh
         self.logger = logger
         self.version = version
         self.devices = devices
