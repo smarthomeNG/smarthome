@@ -41,7 +41,7 @@ class AlexaRequestHandler(BaseHTTPRequestHandler):
         self.version = version
         self.devices = devices
         self.actions = actions
-        BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, *args)
+        BaseHTTPRequestHandler.__init__(self, *args)
 
     def do_POST(self):
         # XXX ignore self.path and just respond
