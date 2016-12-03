@@ -25,13 +25,15 @@ class AlexaService(object):
 
     def start(self):
         self.logger.info("Alexa: service starting")
-        self.shutdown = False
-        while not self.shutdown:
-            self.server.handle_request()
+        self.server.serve_forever()
+        #self.shutdown = False
+        #while not self.shutdown:
+        #    self.server.handle_request()
 
     def stop(self):
         self.logger.info("Alexa: service stopping")
-        self.shutdown = True
+        #self.shutdown = True
+        self.server.shutdown()
 
 class AlexaRequestHandler(BaseHTTPRequestHandler):
     def __init__(self, logger, version, devices, actions, *args):
