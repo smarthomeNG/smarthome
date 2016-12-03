@@ -2,7 +2,6 @@
 # https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference
 
 import cherrypy
-import simplejson
 import uuid
 
 class AlexaService(object):
