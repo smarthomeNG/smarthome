@@ -123,9 +123,6 @@ class BackendServer(SmartPlugin):
         self.logger.debug("BackendServer running from '{}'".format(current_dir))
 
         config = {'global': {
-            'server.socket_host': ip,
-            'server.socket_port': self.port,
-            'server.thread_pool': self.threads,
             'engine.autoreload.on': False,
             'tools.staticdir.debug': True,
             'tools.trailing_slash.on': False
@@ -141,21 +138,29 @@ class BackendServer(SmartPlugin):
                 'tools.staticdir.dir': os.path.join(current_dir, 'static')
             }
         }
+        from cherrypy._cpserver import Server
+        self._server = Server()
+        self._server.socket_host = ip
+        self._server.socket_port = int(self.port)
+        self._server.thread_pool = self.threads
+        self._server.subscribe()
+
         self._cherrypy = cherrypy
         self._cherrypy.config.update(config)
         self._cherrypy.tree.mount(Backend(self, self.updates_allowed, language, self.developer_mode, self.pypi_timeout), '/', config = config)
 
     def run(self):
         self.logger.debug("BackendServer: rest run")
-        #server.start()
-        self._cherrypy.engine.start()
+        self._server.start()
+        #self._cherrypy.engine.start()
         self.logger.debug("BackendServer: engine started")
         #cherrypy.engine.block()
         self.alive = True
 
     def stop(self):
         self.logger.debug("BackendServer: shutting down")
-        self._cherrypy.engine.exit()
+        self._server.stop()
+        #self._cherrypy.engine.exit()
         self.logger.debug("BackendServer: engine exited")
         self.alive = False
 
