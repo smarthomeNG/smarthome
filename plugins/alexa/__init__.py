@@ -42,7 +42,7 @@ class Alexa(SmartPlugin):
         self.sh = sh
         self.devices = AlexaDevices()
         self.actions = AlexaActions(self.sh, self.logger, self.devices)
-        self.service = AlexaService(self.sh, self.logger, self.PLUGIN_VERSION, self.devices, self.actions, service_host, service_port)
+        self.service = AlexaService(self.sh, self.logger, self.PLUGIN_VERSION, self.devices, self.actions, service_host, int(service_port))
 
     def run(self):
         self.validate_devices()
