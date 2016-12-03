@@ -46,6 +46,7 @@ class AlexaRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         # XXX ignore self.path and just respond
         try:
+            self.logger.debug("got POST")
             length = int(self.headers.getheader('Content-Length'))
             data = self.rfile.read(length)
             req = json.loads(data)
