@@ -45,8 +45,8 @@ class AlexaRequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         # XXX ignore self.path and just respond
+        self.logger.debug("{} {} {} {}".format(self.request_version, self.command, self.path, self.headers))
         try:
-            self.logger.debug("got POST")
             length = int(self.headers.getheader('Content-Length'))
             data = self.rfile.read(length)
             req = json.loads(data)
@@ -65,9 +65,9 @@ class AlexaRequestHandler(BaseHTTPRequestHandler):
             else:
                 msg = "unknown `header.namespace` '{}'".format(header['namespace'])
                 self.logger.error(msg)
-                self.send_error(400, msg)
+                self.send_error(400, explain=msg)
         except Exception as e:
-            self.send_error(500, str(e))
+            self.send_error(500, explain=str(e))
 
     def respond(self, response):
         json = json.dumps(response).encode('utf-8')
@@ -86,7 +86,7 @@ class AlexaRequestHandler(BaseHTTPRequestHandler):
         else:
             msg = "unknown `header.name` '{}'".format(directive)
             self.logger.error(msg)
-            self.send_error(400, msg)
+            self.send_error(400, explain=msg)
 
     def confirm_health(self, payload):
         requested_on = payload['initiationTimestamp']
@@ -108,7 +108,7 @@ class AlexaRequestHandler(BaseHTTPRequestHandler):
         else:
             msg = "unknown `header.name` '{}'".format(directive)
             self.logger.error(msg)
-            self.send_error(400, msg)
+            self.send_error(400, explain=msg)
 
     # https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference#discovery-messages
     def discover_appliances(self):
