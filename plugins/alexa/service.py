@@ -47,7 +47,7 @@ class AlexaRequestHandler(BaseHTTPRequestHandler):
         # XXX ignore self.path and just respond
         self.logger.debug("{} {} {} {}".format(self.request_version, self.command, self.path, self.headers))
         try:
-            length = int(self.headers.getheader('Content-Length'))
+            length = int(self.headers.get('Content-Length'))
             data = self.rfile.read(length)
             req = json.loads(data)
             header = req['header']
