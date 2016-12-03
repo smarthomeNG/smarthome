@@ -20,7 +20,8 @@ plugin.conf
 
 You need to create a logic that will handle your individual customization of what shoud happen when a GeoFency POST request comes in.
 
-Example:
+Example
+-------
 
 <pre>
 if (by == "geofency"):
