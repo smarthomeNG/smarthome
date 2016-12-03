@@ -157,3 +157,12 @@
 #    host = 192.168.50.250
 #    port = 2001
 
+#[geofency]
+#    class_name = Geofency
+#    class_path = plugins.geofency
+#    port = 2828                            # Which Port to run the Web Server on
+#    logic = geofency                       # Which Logic to call, if a geofency POST request comes in
+#                                           # in the value of that logic trigger, find the value of the geofency call
+#                                           # using json as format is default.
+
+
