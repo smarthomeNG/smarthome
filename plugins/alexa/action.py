@@ -23,7 +23,7 @@ class AlexaActions(object):
 
         for func in action_func_registry:
             logger.debug("Alexa: initializing action {}".format(func.alexa_action_name))
-            action = AlexaAction(self.sh, self.logger, self.devices, func, func.alexa_action_name, func.alexa_directive_type, func.alexa_response_type)
+            action = AlexaAction(sh, logger, devices, func, func.alexa_action_name, func.alexa_directive_type, func.alexa_response_type)
             self.actions[action.name] = action
             self.actions_by_directive[action.directive_type] = action
 
