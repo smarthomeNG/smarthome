@@ -18,7 +18,7 @@ class AlexaService(object):
         self.logger.info("Alexa: service setup at {}:{}".format(host, port))
         cherrypy.config.update({
             'server.socket_host': host,
-            'server.socket_port': port,
+            'server.socket_port': int(port),
         })
         #cherrypy.log.screen = True
         cherrypy.log.access_file = None
