@@ -8,6 +8,7 @@ this plugin provides two features as described here: https://developer.amazon.co
 - *device cloud* - service-endpoint provided by smarthomeNG, called by the lambda skill adapter
 
 # Alexa Skills Setup
+- https://developer.amazon.com/public/community/post/Tx4WG410EHXIYQ/Five-Steps-Before-Developing-a-Smart-Home-Skill
 - https://developer.amazon.com/edw/home.html#/skills/list
 - https://developer.amazon.com/public/community/post/Tx3CX1ETRZZ2NPC/Alexa-Account-Linking-5-Steps-to-Seamlessly-Link-Your-Alexa-Skill-with-Login-wit
 
@@ -65,7 +66,7 @@ specify supported actions space-separated
 [item]
 type = foo
 alexa_name = "Diningroom Lamp"
-alexa_actions = turnOn turnOff
+alexa_actions = "turnOn turnOff"
 ```
 
 you may omit the `alexa_name`, it will use the item's `name`
@@ -73,7 +74,7 @@ you may omit the `alexa_name`, it will use the item's `name`
 [item]
 type = foo
 name = "Diningroom Lamp"
-alexa_actions = turnOn turnOff
+alexa_actions = "turnOn turnOff"
 ```
 
 you can use multiple items for specific actions using the same alexa-name.
@@ -102,12 +103,12 @@ alexa_name = "Diningroom Lamp"
 alexa_actions = turnOff
 ```
 
-alexa supports "friendly descriptions", you can set it using `alexa_description`
+alexa supports "friendly descriptions", officially you MUST set it using `alexa_description`. If not set, the `alexa_name` is used as a fallback.
 ```
 [item]
 type = foo
 alexa_name = "Diningroom Lamp"
-alexa_actions = turnOn turnOff
+alexa_actions = "turnOn turnOff"
 alexa_description = "The pompous dining room lamp in the west-wing"
 ```
 
@@ -137,6 +138,79 @@ you can define `alexa_name` & `alexa_description` centrally in one item and refe
 		knx_listen = 1/2/11
     knx_init = 1/2/11
     knx_send = 1/2/10
+```
+
+real-life example:
+```
+[smarthome]
+  [[ew]]
+    [[[couch]]]
+    type = bool
+    alexa_device = ew_light_couch
+    alexa_name = "Couch"
+    alexa_description = "Couch-Deckenlampe im Wohnzimmer"
+    alexa_actions = "turnOn turnOff"
+    knx_dpt = 1
+		knx_listen = 1/2/1
+    knx_init = 1/2/1
+    knx_send = 1/2/0
+      [[[[dimmen]]]]
+      type = num
+      alexa_device = ew_light_couch
+      alexa_actions = "setPercentage incrementPercentage decrementPercentage"
+      knx_dpt = 5
+      knx_listen = 1/2/5
+      knx_init = 1/2/5
+      knx_send = 1/2/4
+
+    [[[mitte]]]
+    type = bool
+    alexa_device = ew_light_mitte
+    alexa_name = "Kamin"
+    alexa_description = "Mittlere Deckenlampe über dem Kamin im Wohnzimmer"
+    alexa_actions = "turnOn turnOff"
+    knx_dpt = 1
+		knx_listen = 1/2/11
+    knx_init = 1/2/11
+    knx_send = 1/2/10
+      [[[[dimmen]]]]
+      type = num
+      alexa_device = ew_light_mitte
+      alexa_actions = "setPercentage incrementPercentage decrementPercentage"
+      knx_dpt = 5
+      knx_listen = 1/2/15
+      knx_init = 1/2/15
+      knx_send = 1/2/14
+
+    [[[esstisch]]]
+    type = bool
+    alexa_device = ew_light_esstisch
+    alexa_name = "Esstisch"
+    alexa_description = "Esstischlampe im Wohnzimmer"
+    alexa_actions = "turnOn turnOff"
+    knx_dpt = 1
+		knx_listen = 1/2/21
+    knx_init = 1/2/21
+    knx_send = 1/2/20
+      [[[[dimmen]]]]
+      type = num
+      alexa_device = ew_light_esstisch
+      alexa_actions = "setPercentage incrementPercentage decrementPercentage"
+      knx_dpt = 5
+  		knx_listen = 1/2/25
+      knx_init = 1/2/25
+      knx_send = 1/2/24
+
+    [[[heizung]]]
+    type = num
+    alexa_device = ew_temp
+    alexa_name = "Heizung"
+    alexa_description = "Fussbodenheizung im Wohnzimmer"
+    alexa_actions = "setTargetTemperature incrementTargetTemperature decrementTargetTemperature"
+    knx_dpt = 5
+    knx_listen = 3/2/3
+    knx_init = 3/2/3
+    knx_send = 3/2/2
 ```
 
 ## logging.yaml
