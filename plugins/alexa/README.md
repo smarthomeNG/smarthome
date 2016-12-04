@@ -10,7 +10,7 @@ Please use [this thread for support, questions, feedback etc.](https://knx-user-
 
 # Alexa Setup
 - [Five Steps Before Developing a Smart Home Skill](https://developer.amazon.com/public/community/post/Tx4WG410EHXIYQ/Five-Steps-Before-Developing-a-Smart-Home-Skill)
-- [5 Steps to Seamlessly Link Your Alexa Skill with Login with Amazon](https://developer.amazon.com/public/community/post/Tx3CX1ETRZZ2NPC/Alexa-Account-Linking-5-Steps-to-Seamlessly-Link-Your-Alexa-Skill-with-Login-wit))
+- [5 Steps to Seamlessly Link Your Alexa Skill with Login with Amazon](https://developer.amazon.com/public/community/post/Tx3CX1ETRZZ2NPC/Alexa-Account-Linking-5-Steps-to-Seamlessly-Link-Your-Alexa-Skill-with-Login-wit)
 
 ## AWS Lambda
 - create the lambda-function in EU-Ireland (which supports Alexa in both english and german)
@@ -18,7 +18,7 @@ Please use [this thread for support, questions, feedback etc.](https://knx-user-
 - provide the environmental variables as specified in the header of `aws_lambda.js`
 
 # Shortcomings / Pitfalls
-This plugin/s service does not offer any ssl or authentication!! it is strongly recommended to use a reverse-proxy like nginx with both https-termination and http basic authentication. the shipped `aws_lambda.js` will do HTTPS-calls secured by HTTP Basic Authentication. see `nginx.md` for an example configuration
+This plugin/s service *does not offer any ssl or authentication*! It is strongly recommended to use a reverse-proxy in your smarthome to enforce HTTPS and authentication. As of now, the shipped `aws_lambda.js` only supports HTTPS-calls with HTTP Basic Authentication. See the shipped `nginx.md` for an example configuration of the lightweight and very good reverse-proxy Nginx.
 
 # Configuration
 
