@@ -109,8 +109,15 @@ class Alexa(SmartPlugin):
             device.description = descr
 
         # register item-actions with the device
+        if action_names:
+            item_range = None
+            if 'alexa_item_min' in item.conf or 'alexa_item_max' in item.conf:
+                item_min = float(item.conf['alexa_item_min']) if 'alexa_item_min' in item.conf else 0
+                item_max = float(item.conf['alexa_item_max']) if 'alexa_item_max' in item.conf else 100
+                item_range = (item_min, item_max)
+
             for action_name in action_names:
-                device.register(action_name, item)
+                device.register(action_name, item, item_range)
             self.logger.info("Alexa: item {} supports actions {} as device {}".format(item.id(), action_names, device_id, device.supported_actions()))
 
         return None

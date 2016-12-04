@@ -1,14 +1,24 @@
 from .action import alexa
 
+def what_percentage(value, range):
+    min, max = range
+    return ( (value - min) / (max - min) ) * 100
+
+def calc_percentage(percent, range):
+    min, max = range
+    return (max - min) * (percent / 100) + min
+
+def clamp_percentage(percent):
+    return min(100, max(0, percent))
+
 @alexa('setPercentage', 'SetPercentageRequest', 'SetPercentageConfirmation')
 def set_percentage(self, payload):
     items = self.items( payload['appliance']['applianceId'] )
     new_percentage = float( payload['percentageState']['value'] )
 
     for item in items:
-        item_now = item()
-        item_max = 100 # any idea?
-        item_new = item_max * (new_percentage / 100)
+        item_range = self.range(item, (0,100))
+        item_new = calc_percentage(new_percentage, item_range)
         self.logger.info("Alexa: setPercentage({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
 
@@ -20,12 +30,11 @@ def incr_percentage(self, payload):
     percentage_delta = float( payload['deltaPercentage']['value'] )
 
     for item in items:
+        item_range = self.range(item, (0,100))
         item_now = item()
-        item_max = 100 # any idea?
-        percentage_now = item_now / item_max
-        percentage_new_raw = (percentage_now * 100) + percentage_delta
-        percentage_new = min(100, max(0, percentage_new_raw))
-        item_new = item_max * (percentage_new / 100)
+        percentage_now = what_percentage(item_now, item_range)
+        percentage_new = clamp_percentage( percentage_now + percentage_delta )
+        item_new = calc_percentage(percentage_new, item_range)
         self.logger.info("Alexa: incrementPercentage({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
 
@@ -37,12 +46,11 @@ def decr_percentage(self, payload):
     percentage_delta = float( payload['deltaPercentage']['value'] )
 
     for item in items:
+        item_range = self.range(item, (0,100))
         item_now = item()
-        item_max = 100 # any idea?
-        percentage_now = item_now / item_max
-        percentage_new_raw = (percentage_now * 100) - percentage_delta
-        percentage_new = min(100, max(0, percentage_new_raw))
-        item_new = item_max * (percentage_new / 100)
+        percentage_now = what_percentage(item_now, item_range)
+        percentage_new = clamp_percentage( percentage_now - percentage_delta )
+        item_new = calc_percentage(percentage_new, item_range)
         self.logger.info("Alexa: decrementPercentage({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
 
