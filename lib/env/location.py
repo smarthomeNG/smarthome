@@ -52,5 +52,8 @@ if sh.sun:
     else:
         season = 3  # winter
     if float(sh._lat) < 0:
-        season = (season + 2) % 3
+        if season < 2:
+            season += 2
+        else:
+            season -= 2
     sh.env.location.season(season)
