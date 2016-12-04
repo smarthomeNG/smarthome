@@ -20,7 +20,6 @@ class AlexaDevice(object):
         self.name = None
         self.description = None
         self.action_items = {}
-        self.item_ranges = {}
 
     @classmethod
     def create_id_from_name(cls, name):
@@ -31,14 +30,11 @@ class AlexaDevice(object):
         id = id.lower()
         return re.sub('[^a-z0-9_-]', '-', id)
 
-    def register(self, action_name, item, range=None):
+    def register(self, action_name, item):
         if action_name in self.action_items:
             self.action_items[action_name].append(item)
         else:
             self.action_items[action_name] = [item]
-
-        if range:
-            self.item_ranges[item] = range
 
     def supported_actions(self):
         return list( self.action_items.keys() )
