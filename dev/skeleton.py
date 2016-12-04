@@ -31,7 +31,7 @@ class FooClass(SmartPlugin):
         self.logger = logging.getLogger(__name__)
 
     def run(self):
-        logger.debug("run method called")
+        self.logger.debug("run method called")
         self.alive = True
 
     def stop(self):
