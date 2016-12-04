@@ -45,7 +45,8 @@ class AlexaRequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         # XXX ignore self.path and just respond
-        self.logger.debug("{} {} {} {}".format(self.request_version, self.command, self.path, self.headers))
+        import string
+        self.logger.debug("{} {} {} {}".format(self.request_version, self.command, self.path, string.replace(str(self.headers), "\n", ' | '))
         try:
             length = int(self.headers.get('Content-Length'))
             data = self.rfile.read(length).decode('utf-8')
@@ -70,12 +71,12 @@ class AlexaRequestHandler(BaseHTTPRequestHandler):
             self.send_error(500, explain=str(e))
 
     def respond(self, response):
-        json = json.dumps(response).encode('utf-8')
+        data = json.dumps(response).encode('utf-8')
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
-        self.send_header('Content-Length', len(json))
+        self.send_header('Content-Length', len(data))
         self.end_headers()
-        self.wfile.write(json)
+        self.wfile.write(data)
 
     def handle_system(self, header, payload):
         directive = header['name']
