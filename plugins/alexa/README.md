@@ -58,7 +58,7 @@ alexa_name = "Diningroom Lamp"
 alexa_actions = "turnOn turnOff"
 ```
 
-you may omit the `alexa_name`, it will use the item's `name`
+you may omit the `alexa_name`
 ```
 [item]
 type = foo
@@ -79,20 +79,21 @@ alexa_name = "Diningroom Lamp"
 alexa_actions = turnOff
 ```
 
-the device-identifier is automatically deduced from the `alexa_name` - but you can specify it explicitly using `alexa_device`
+the device-identifier is automatically deduced from the `alexa_name` - but you can specify it explicitly using `alexa_device` (please note the [format of the `applianceId`](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/smart-home-skill-api-reference#discovery-messages))
 ```
 [[item_only_on]]
 type = foo
 alexa_name = "Diningroom Lamp"
+alexa_device = diningroom-lamp
 alexa_actions = turnOn
 
 [[item_only_off]]
 type = foo
-alexa_name = "Diningroom Lamp"
+alexa_device = diningroom-lamp
 alexa_actions = turnOff
 ```
 
-alexa supports "friendly descriptions", officially you MUST set it using `alexa_description`. If not set, the `alexa_name` is used as a fallback.
+alexa demands "friendly descriptions", you should set it using `alexa_description`. If not set, the `alexa_name` is used as a fallback.
 ```
 [item]
 type = foo
@@ -101,7 +102,7 @@ alexa_actions = "turnOn turnOff"
 alexa_description = "The pompous dining room lamp in the west-wing"
 ```
 
-you can define `alexa_name` & `alexa_description` centrally in one item and reference the device in other items only by using the `alexa_device` (you must always define a type though!)
+you can define `alexa_name` & `alexa_description` centrally in one item and reference the device in other items just by using the `alexa_device` (you must always define a `type` though!)
 ```
 [root]
   [[livingroom_lamps]]
