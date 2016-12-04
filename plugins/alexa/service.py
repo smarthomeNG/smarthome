@@ -48,7 +48,7 @@ class AlexaRequestHandler(BaseHTTPRequestHandler):
         self.logger.debug("{} {} {} {}".format(self.request_version, self.command, self.path, self.headers))
         try:
             length = int(self.headers.get('Content-Length'))
-            data = self.rfile.read(length)
+            data = self.rfile.read(length).decode('utf-8')
             req = json.loads(data)
             header = req['header']
             payload = req['payload']
