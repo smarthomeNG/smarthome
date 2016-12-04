@@ -51,7 +51,7 @@ class AlexaAction(object):
         return device.items_for_action(self.name) if device else []
 
     def range(self, item, default=None):
-        rng = device.item_range(item)
+        rng = self.device.item_range(item)
         return rng if rng else default
 
     def header(self, name=None):
