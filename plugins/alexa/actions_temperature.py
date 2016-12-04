@@ -1,7 +1,8 @@
 from .action import alexa
 
-TEMP_MIN = 0
-TEMP_MAX = 100
+def clamp_temp(temp, range):
+    _min, _max = range
+    return min(_max, max(_min, temp))
 
 @alexa('setTargetTemperature', 'SetTargetTemperatureRequest', 'SetTargetTemperatureConfirmation')
 def set_target_temp(self, payload):
@@ -12,12 +13,16 @@ def set_target_temp(self, payload):
     previous_temp = items[0]() if items else 0
 
     for item in items:
-        self.logger.info("Alexa: setTargetTemperature({}, {:.1f})".format(item.id(), targetTemp))
-        item( targetTemp )
+        item_range = self.item_range(item, (0,100))
+        item_new = clamp_temp(target_temp, item_range)
+        self.logger.info("Alexa: setTargetTemperature({}, {:.1f})".format(item.id(), item_new))
+        item( item_new )
+
+    new_temp = items[0]() if items else 0
 
     return self.respond({
         'targetTemperature': {
-             'value': target_temp
+             'value': new_temp
         },
         'temperatureMode': {
             'value':'AUTO'
@@ -41,9 +46,9 @@ def incr_target_temp(self, payload):
     previous_temp = items[0]() if items else 0
 
     for item in items:
+        item_range = self.item_range(item, (0,100))
         item_now = item()
-        item_new_raw = item_now + delta_temp
-        item_new = min(TEMP_MAX, max(TEMP_MIN, item_new_raw))
+        item_new = clamp_temp(item_now + delta_temp, item_range)
         self.logger.info("Alexa: incrementTargetTemperature({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
 
@@ -75,9 +80,9 @@ def decr_target_temp(self, payload):
     previous_temp = items[0]() if items else 0
 
     for item in items:
+        item_range = self.item_range(item, (0,100))
         item_now = item()
-        item_new_raw = item_now - delta_temp
-        item_new = min(TEMP_MAX, max(TEMP_MIN, item_new_raw))
+        item_new = clamp_temp(item_now - delta_temp, item_range)
         self.logger.info("Alexa: decrementTargetTemperature({}, {:.1f})".format(item.id(), item_new))
         item( item_new )
 
