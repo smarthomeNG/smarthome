@@ -108,10 +108,11 @@ class Alexa(SmartPlugin):
                 self.logger.warning("Alexa: item {} is changing device-description of {} from '{}' to '{}'".format(item.id(), device_id, device.description, descr))
             device.description = descr
 
-        # augment item with value-range information
-        if 'alexa_item_min' in item.conf or 'alexa_item_max' in item.conf:
-            item_min = float(item.conf['alexa_item_min']) if 'alexa_item_min' in item.conf else 0
-            item_max = float(item.conf['alexa_item_max']) if 'alexa_item_max' in item.conf else 100
+        # value-range
+        if 'alexa_item_range' in item.conf:
+            item_min_raw, item_max_raw = item.conf['alexa_item_range'].split('-')
+            item_min = float( item_min_raw.strip() )
+            item_max = float( item_max_raw.strip() )
             item.alexa_range = (item_min, item_max)
             self.logger.debug("Alexa: {}-range = {}".format(item.id(), item.alexa_range))
 

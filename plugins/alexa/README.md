@@ -102,6 +102,19 @@ alexa_actions = "turnOn turnOff"
 alexa_description = "The pompous dining room lamp in the west-wing"
 ```
 
+you may define the item's value-range which controls the percentage-directives (default: 0-100) and limits the temperature-directives (default: 16-26), use `alexa_item_range` to specify an explicit range (e.g. you should use this when dimming lights via KNX or generally dealing with ranges like DPT=5 which is 1 byte: 0-255):
+```
+[[[[dim]]]]
+type = num
+alexa_device = the_light
+alexa_actions = "setPercentage incrementPercentage decrementPercentage"
+alexa_item_range = 0-255
+knx_dpt = 5
+knx_listen = 1/1/1
+knx_init = 1/1/1
+knx_send = 1/1/0
+````
+
 you can define `alexa_name` & `alexa_description` centrally in one item and reference the device in other items just by using the `alexa_device` (you must always define a `type` though!)
 ```
 [root]
