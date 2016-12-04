@@ -46,7 +46,7 @@ class AlexaRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         # XXX ignore self.path and just respond
         import string
-        self.logger.debug("{} {} {} {}".format(self.request_version, self.command, self.path, string.replace(str(self.headers), "\n", ' | '))
+        self.logger.debug("{} {} {} {}".format(self.request_version, self.command, self.path, string.replace(str(self.headers), "\n", ' | ')))
         try:
             length = int(self.headers.get('Content-Length'))
             data = self.rfile.read(length).decode('utf-8')
