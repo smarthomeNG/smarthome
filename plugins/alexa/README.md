@@ -129,7 +129,7 @@ you can define `alexa_name` & `alexa_description` centrally in one item and refe
     alexa_device = livingroom_lamps
     alexa_actions = "turnOn turnOff"
     knx_dpt = 1
-		knx_listen = 1/2/1
+    knx_listen = 1/2/1
     knx_init = 1/2/1
     knx_send = 1/2/0
 
@@ -154,7 +154,7 @@ real-life example:
     alexa_description = "Couch-Deckenlampe im Wohnzimmer"
     alexa_actions = "turnOn turnOff"
     knx_dpt = 1
-		knx_listen = 1/2/1
+    knx_listen = 1/2/1
     knx_init = 1/2/1
     knx_send = 1/2/0
       [[[[dimmen]]]]
@@ -174,7 +174,7 @@ real-life example:
     alexa_description = "Mittlere Deckenlampe im Wohnzimmer"
     alexa_actions = "turnOn turnOff"
     knx_dpt = 1
-		knx_listen = 1/2/11
+    knx_listen = 1/2/11
     knx_init = 1/2/11
     knx_send = 1/2/10
       [[[[dimmen]]]]
@@ -194,7 +194,7 @@ real-life example:
     alexa_description = "Esstischlampe im Wohnzimmer"
     alexa_actions = "turnOn turnOff"
     knx_dpt = 1
-		knx_listen = 1/2/21
+    knx_listen = 1/2/21
     knx_init = 1/2/21
     knx_send = 1/2/20
       [[[[dimmen]]]]
