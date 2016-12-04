@@ -7,6 +7,8 @@ this plugin provides two features as described here: https://developer.amazon.co
 - *AWS lambda skill adapter* - the shipped `aws_lambda.js` does 1:1 forwarding of alexa requests to ...
 - *device cloud* - service-endpoint provided by smarthomeNG, called by the lambda skill adapter
 
+Please use this thread for support, questions, feedback etc: https://knx-user-forum.de/forum/supportforen/smarthome-py/1021150-amazon-alexa-plugin
+
 # Alexa Skills Setup
 - https://developer.amazon.com/public/community/post/Tx4WG410EHXIYQ/Five-Steps-Before-Developing-a-Smart-Home-Skill
 - https://developer.amazon.com/edw/home.html#/skills/list
