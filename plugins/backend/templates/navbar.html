@@ -16,17 +16,23 @@
 	<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
-				<li><a href="system.html">{{ _('Systeminfo', 'menu') }}</a></li>
-				<li><a href="services.html">{{ _('Dienste', 'menu') }}</a></li>
-				<li><a href="items.html">{{ _('Items', 'menu') }}</a></li>
-				<li><a href="logics.html">{{ _('Logiken', 'menu') }}</a></li>
-				<li><a href="logics_blockly.html">{{ _('Blockly-Logiken-Editor', 'menu') }}</a></li>
-				<li><a href="schedules.html">{{ _('Scheduler', 'menu') }}</a></li>
-				<li><a href="plugins.html">{{ _('Plugins', 'menu') }}</a></li>
-				<li><a href="threads.html">{{ _('Threads', 'menu') }}</a></li>
-				<li><a href="logging.html">{{ _('Logging', 'menu') }}</a></li>
-				{% if visu_plugin %}<li><a href="visu.html">{{ _('Visu', 'menu') }}</a></li>{% endif %}
-				<li><a href="disclosure.html">{{ _('Disclosure', 'menu') }}</a></li>
+				<li class="nav-item"><a href="system.html">{{ _('Systeminfo', 'menu') }}</a></li>
+				<li class="nav-item"><a href="services.html">{{ _('Dienste', 'menu') }}</a></li>
+				<li class="nav-item"><a href="items.html">{{ _('Items', 'menu') }}</a></li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="http://example.com" id="supportedContentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ _('Logiken', 'menu') }}<span class="caret"></span></a>
+				 	<ul class="dropdown-menu" aria-labelledby="supportedContentDropdown">
+						<li><a class="dropdown-item" href="logics.html">{{ _('Übersicht', 'menu') }}</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a class="dropdown-item" href="logics_blockly.html">{{ _('Blockly-Logiken-Editor', 'menu') }}</a></li>
+				 	</ul>
+				</li>
+				<li class="nav-item"><a href="schedules.html">{{ _('Scheduler', 'menu') }}</a></li>
+				<li class="nav-item"><a href="plugins.html">{{ _('Plugins', 'menu') }}</a></li>
+				<li class="nav-item"><a href="threads.html">{{ _('Threads', 'menu') }}</a></li>
+				<li class="nav-item"><a href="logging.html">{{ _('Logging', 'menu') }}</a></li>
+				{% if visu_plugin %}<li class="nav-item"><a href="visu.html">{{ _('Visu', 'menu') }}</a></li>{% endif %}
+				<li class="nav-item"><a href="disclosure.html">{{ _('Disclosure', 'menu') }}</a></li>
 			</ul>
 		</div><!-- /.navbar-collapse -->
 	</div><!-- /.container-fluid -->
