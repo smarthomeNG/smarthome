@@ -161,6 +161,7 @@ real-life example:
       type = num
       alexa_device = ew_light_couch
       alexa_actions = "setPercentage incrementPercentage decrementPercentage"
+      alexa_item_range = 0-255
       knx_dpt = 5
       knx_listen = 1/2/5
       knx_init = 1/2/5
@@ -169,8 +170,8 @@ real-life example:
     [[[mitte]]]
     type = bool
     alexa_device = ew_light_mitte
-    alexa_name = "Kamin"
-    alexa_description = "Mittlere Deckenlampe über dem Kamin im Wohnzimmer"
+    alexa_name = "Mittlere Lampe"
+    alexa_description = "Mittlere Deckenlampe im Wohnzimmer"
     alexa_actions = "turnOn turnOff"
     knx_dpt = 1
 		knx_listen = 1/2/11
@@ -180,6 +181,7 @@ real-life example:
       type = num
       alexa_device = ew_light_mitte
       alexa_actions = "setPercentage incrementPercentage decrementPercentage"
+      alexa_item_range = 0-255
       knx_dpt = 5
       knx_listen = 1/2/15
       knx_init = 1/2/15
@@ -199,6 +201,7 @@ real-life example:
       type = num
       alexa_device = ew_light_esstisch
       alexa_actions = "setPercentage incrementPercentage decrementPercentage"
+      alexa_item_range = 0-255
       knx_dpt = 5
   		knx_listen = 1/2/25
       knx_init = 1/2/25
