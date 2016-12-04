@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
+# todo
+# put your name and email here and delete these two todo lines
 #  Copyright 2016 <AUTHOR>                                        <EMAIL>
 #########################################################################
 #  This file is part of SmartHomeNG.   
 #
-#  Basic Skeleton for new plugins to run with SmartHomeNG version 1.1
+#  Sample plugin for new plugins to run with SmartHomeNG version 1.1
 #  upwards.
 #
 #  SmartHomeNG is free software: you can redistribute it and/or modify
@@ -25,6 +27,10 @@
 
 import logging
 from lib.model.smartplugin import SmartPlugin
+
+#
+# you need to adapt this sample plugin at least everywhere where a todo is found
+#
 
 # todo
 # instead of PluginName you name your plugin
@@ -80,18 +86,31 @@ class PluginClassName(SmartPlugin):
         self.logger.debug("stop method called")
         self.alive = False
 
+
     def parse_item(self, item):
         """
         Default plugin parse_item method. Is called when the plugin is initialized.
-        Selects each item corresponding to its attribute keywords and adds it to an internal array
+        The plugin can, corresponding to its attribute keywords, decide what to do with
+        the item in future, like adding it to an internal array for future reference
 
-        :param item: The item to process.
+        :param item:    The item to process.
+        :return:        If the plugin needs to be informed of an items change you should return a call back function
+                        like the function update_item down below. An example when this is needed is the knx plugin
+                        where parse_item returns the update_item function when the attribute knx_send is found.
+                        This means that when the items value is about to be updated, the call back function is called
+                        with the item, caller, source and dest as arguments and in case of the knx plugin the value
+                        can be sent to the knx with a knx write function within the knx plugin.
+
         """
         # todo 
         # change 'foo_itemtag' into your attribute name
         # you might also check for other attribute names if your plugin supports multiple attributes
         if self.has_iattr(item.conf, 'foo_itemtag'):
             self.logger.debug("parse item: {0}".format(item))
+
+        # todo
+        # if interesting item for sending values:
+        #   return update_item
 
     def parse_logic(self, logic):
         """
