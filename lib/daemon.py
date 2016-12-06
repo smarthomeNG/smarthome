@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 #########################################################################
+#  Copyright 2013 Marcus Popp                              marcus@popp.mx
 # Copyright 2016-     Christian Strassburg            c.strassburg@gmx.de
 #########################################################################
 #  This file is part of SmartHome.py.
