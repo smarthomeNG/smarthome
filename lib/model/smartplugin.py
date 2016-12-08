@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
-# Copyright 2016 Christian Strassburg and René Frieß                        
-# rene.friess@gmail.com, c.strassburg(a)gmx.de
+# Copyright 2016 Christian Strassburg c.strassburg(a)gmx.de
 # 
 #########################################################################
 # Personal and non-commercial use only, redistribution is prohibited.
