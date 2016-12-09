@@ -126,6 +126,11 @@ class Database(SmartPlugin):
         params = {'id':id}
         return self._db.fetchone(self._prepare("SELECT id, name, time, val_str, val_num, val_bool, changed from {item} WHERE id = :id;"), params, cur=cur)
 
+    def deleteItem(self, id, cur=None):
+        params = {'id':id}
+        self.deleteLog(id, cur=cur)
+        self._db.execute(self._prepare("DELETE FROM {item} WHERE id = :id;"), params, cur=cur)
+
     def insertLog(self, id, time, duration=0, val=None, it=None, changed=None, cur=None):
         params = {'id':id, 'time':time, 'changed':changed, 'duration':duration}
         params.update(self._item_value_tuple(it, val))
