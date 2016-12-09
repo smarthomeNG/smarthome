@@ -103,6 +103,14 @@ class Database(SmartPlugin):
 
             self._buffer[item].append((start, end - start, item.prev_value()))
 
+    def cleanup(self):
+        items = [item.id() for item in self._buffer]
+        cur = self._db.cursor()
+        for item in self._db.fetchall(self._prepare("SELECT id, name FROM {item};"), {}, cur=cur):
+            if item[1] not in items:
+                self.deleteItem(item[0], cur=cur)
+        cur.close()
+
     def id(self, item, create=True, cur=None):
         id = self._db.fetchone(self._prepare("SELECT id FROM {item} where name = :name;"), {'name':item.id()}, cur=cur)
 
