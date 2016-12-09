@@ -256,5 +256,23 @@ e.g.
 data = dbplugin.readItem(id)                 # read all fields of item which contains the last item status
 </pre>
 
+### dbplugin.deleteItem(id, cur=None)
+This method will delete the item and its log data.
+
+e.g.
+<pre>
+dbplugin.deleteItem(id)                      # delete the item and log data from database
+</pre>
+
+### dbplugin.cleanup()
+This method will remove all items and logs from database of items which
+are currenlty not configured to be logged to database. Beware of this using
+in a multi-instance setup, since one instance does not know the item of
+the other instance!
+
+e.g.
+<pre>
+dbplugin.cleanup()                           # cleanup database, remove non-database item from database
+</pre>
 
 
