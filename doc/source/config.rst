@@ -147,11 +147,11 @@ SmartHomeNG can be executed with the following options:
      -i, --interactive  open an interactive shell with tab completion and with
                         verbose logging to the logfile
      -l, --logics       reload all logics
-     -s, --stop         stop SmartHome.py
+     -s, --stop         stop SmartHomeNG
      -q, --quiet        DEPRECATED use logging config (reduce logging to the
                         logfile)
-     -V, --version      show SmartHome.py version
-     --start            start SmartHome.py and detach from console (default)
+     -V, --version      show SmartHomeNG version
+     --start            start SmartHomeNG and detach from console (default)
    </code>
    </pre>
 

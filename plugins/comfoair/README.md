@@ -35,7 +35,7 @@ This plugin has no requirements or dependencies.
 ## items.conf
 
 The plugin is completely flexible in which commands you use and when you want the read out which parameters.
-Everything is configured by adding new items in a SmartHome.py item configuration file.
+Everything is configured by adding new items in a SmartHomeNG item configuration file.
 
 The following item attributes are supported: 
 

@@ -15,12 +15,12 @@ plugin.conf
 
 The `path` attribute allows you to specify the of the SQLite database.
 
-If you specify a `dumpfile`, SmartHome.py dumps the database every night into this file.
+If you specify a `dumpfile`, SmartHomeNG dumps the database every night into this file.
 
 items.conf
 --------------
 
-For num and bool items, you could set the attribute: `sqlite`. By this you enable logging of the item values and SmartHome.py set the item to the last know value at start up (equal cache = yes).
+For num and bool items, you could set the attribute: `sqlite`. By this you enable logging of the item values and SmartHomeNG set the item to the last know value at start up (equal cache = yes).
 
 <pre>
 [outside]

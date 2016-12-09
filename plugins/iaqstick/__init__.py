@@ -3,7 +3,7 @@
 #########################################################################
 #  Copyright 2013 Robert Budde                       robert@projekt131.de
 #########################################################################
-#  iAQ-Stick plugin for SmartHome.py.    http://mknx.github.io/smarthome/
+#  iAQ-Stick plugin for SmartHomeNG.    https://github.com/smarthomeNG//
 #
 #  This plugin is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

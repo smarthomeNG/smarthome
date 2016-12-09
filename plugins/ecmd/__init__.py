@@ -3,7 +3,7 @@
 #########################################################################
 # Copyright 2013 Dirk Wallmeier                      dirk@wallmeier.info
 #########################################################################
-#  This file is part of SmartHome.py.    http://mknx.github.io/smarthome/
+#  This file is part of SmartHomeNG.    https://github.com/smarthomeNG//
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

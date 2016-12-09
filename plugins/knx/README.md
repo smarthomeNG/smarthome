@@ -101,11 +101,11 @@ Similar to knx_send but will send updates even for changes vie KNX if the knx_st
 You could specify one or more group addresses to monitor for changes.
 
 ### knx_init
-If you set this attribute, SmartHome.py sends a read request to specified group address at startup and set the value of the item to the response.
+If you set this attribute, SmartHomeNG sends a read request to specified group address at startup and set the value of the item to the response.
 It implies 'knx_listen'.
 
 ### knx_cache
-If you set this attribute, SmartHome.py tries to read the cached value for the group address. If it fails it sends a read request to specified group address at startup and set the value of the item to the response.
+If you set this attribute, SmartHomeNG tries to read the cached value for the group address. If it fails it sends a read request to specified group address at startup and set the value of the item to the response.
 It implies 'knx_listen'.
 
 ### knx_reply
@@ -142,7 +142,7 @@ You could specify the `knx_listen` and `knx_reply` attribute to every logic in y
     knx_dpt = 9
     knx_reply = 1/1/8 | 1/1/8
 </pre>
-If there is a packet directed to the according group address, SmartHome.py would trigger the logic and will pass the payload (via the trigger object) to the logic.
+If there is a packet directed to the according group address, SmartHomeNG would trigger the logic and will pass the payload (via the trigger object) to the logic.
 
 In the context of the KNX plugin the trigger dictionary consists of the following elements:
 

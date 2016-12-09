@@ -54,4 +54,4 @@ Currently there is no logic configuration for this plugin.
 If you have specified a phonebook, you could add or change existing entries by calling this function.
 You to provide the (unique) name and a number. It will replace the number of an existing entry with exactly the same name.
 
-See the [phonebook logic](https://github.com/mknx/smarthome/wiki/Phonebook) for a logic which is using this function.
+See the [phonebook logic](https://github.com/smarthomeNG/smarthome/wiki/Phonebook) for a logic which is using this function.

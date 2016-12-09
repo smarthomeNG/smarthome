@@ -3,7 +3,7 @@
 #########################################################################
 #  Copyright 2013 KNX-User-Forum e.V.           http://knx-user-forum.de/
 #########################################################################
-#  DLMS plugin for SmartHome.py.         http://mknx.github.io/smarthome/
+#  DLMS plugin for SmartHomeNG.         https://github.com/smarthomeNG//
 #
 #  This plugin is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

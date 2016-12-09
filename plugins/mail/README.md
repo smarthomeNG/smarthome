@@ -75,7 +75,7 @@ A mail to `sauna@example.com` will only trigger the logic 'sauna'. Every other m
 # Usage
 If a logic is triggered by this plugin it will set the trigger `source` to the from address and the `value` contains an [email object](http://docs.python.org/2.6/library/email.message.html).
 
-See the [phonebook logic](https://github.com/mknx/smarthome/wiki/Phonebook) for a logic which is triggerd by IMAP.
+See the [phonebook logic](https://github.com/smarthomeNG/smarthome/wiki/Phonebook) for a logic which is triggerd by IMAP.
 
 # Functions
 The SMTP object provides one function (sending) and you access without specifing a method name.

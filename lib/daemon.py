@@ -3,7 +3,7 @@
 # Copyright 2013 Marcus Popp                               marcus@popp.mx
 # Copyright 2016-     Christian Strassburg            c.strassburg@gmx.de
 #########################################################################
-#  This file is part of SmartHome.py.
+#  This file is part of SmartHomeNG.
 #  https://github.com/smarthomeNG/smarthome
 #
 #  SmartHomeNG.py is free software: you can redistribute it and/or modify

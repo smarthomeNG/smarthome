@@ -1,4 +1,4 @@
-2013-06-13: New Release `0.9 <https://github.com/mknx/smarthome/tags>`_
+2013-06-13: New Release `0.9 <https://github.com/smarthomeNG/smarthome/tags>`_
 -----------------------------------------------------------------------
 
 with code contributions and help from: Alexander Rieger, Matthias Lemke
@@ -59,17 +59,17 @@ Bug Fixes
 -  KNX Plugin: fix broken knx\_cache, with support from
    Robert@knx-user-forum
 
-2013-02-11: Big Picture SmartHome.py with KNX, 1-Wire and smartVISU
+2013-02-11: Big Picture SmartHomeNG with KNX, 1-Wire and smartVISU
 -------------------------------------------------------------------
 
 `Martin <http://knx-user-forum.de/members/sipple.html>`_ has created an
-`overview </_static/img/big_picture.pdf>`_ how SmartHome.py interacts
+`overview </_static/img/big_picture.pdf>`_ how SmartHomeNG interacts
 with KNX, 1-Wire and the smartVISU.
 
-2013-02-02: `Release of an Raspberry Pi image with SmartHome.py and smartVISU <https://github.com/mknx/smarthome/wiki/SmartHome.pi>`_
+2013-02-02: `Release of an Raspberry Pi image with SmartHomeNG and smartVISU <https://github.com/smarthomeNG/smarthome/wiki/SmartHome.pi>`_
 -------------------------------------------------------------------------------------------------------------------------------------
 
-2013-01-31 New Release `0.8 <https://github.com/mknx/smarthome/tags>`_
+2013-01-31 New Release `0.8 <https://github.com/smarthomeNG/smarthome/tags>`_
 ----------------------------------------------------------------------
 
 with contributions from: Niko Will and Alexander Rieger. Thank you.
@@ -116,7 +116,7 @@ Features
    -  TITLE header template
    -  adding 'unit' attribute to item.conf
    -  JQuery: 1.8.3, JQuery Mobile 1.2
-   -  Log view SmartHome.py, Asterisk
+   -  Log view SmartHomeNG, Asterisk
 
 Bug Fixes
 ~~~~~~~~~
@@ -129,7 +129,7 @@ Bug Fixes
 -  Onewire plugin: improve error handling
 -  Workaround for urllib2 memory leakage
 
-2012-09-27 New Release `0.7 <https://github.com/mknx/smarthome/tags>`_
+2012-09-27 New Release `0.7 <https://github.com/smarthomeNG/smarthome/tags>`_
 ----------------------------------------------------------------------
 
 Features
@@ -149,7 +149,7 @@ Features
    -  autogenerate visu pages
    -  new input type 'time'
 
--  SmartHome.py:
+-  SmartHomeNG:
 
    -  sh.scheduler.change
    -  directory structure cleanup: logic => logics

@@ -4,21 +4,21 @@
 # Copyright 2011-2014 Marcus Popp                          marcus@popp.mx
 # Copyright 2016-     Christian Strassburg            c.strassburg@gmx.de
 #########################################################################
-#  This file is part of SmartHome.py.
+#  This file is part of SmartHomeNG.
 #  https://github.com/smarthomeNG/smarthome
 #
-#  SmartHome.py is free software: you can redistribute it and/or modify
+#  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  SmartHome.py is distributed in the hope that it will be useful,
+#  SmartHomeNG is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with SmartHome.py. If not, see <http://www.gnu.org/licenses/>.
+#  along with SmartHomeNG. If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
 #####################################################################
@@ -59,7 +59,7 @@ sys.path.insert(0, BASE)
 from dateutil.tz import gettz
 
 #####################################################################
-# Import SmartHome.py Modules
+# Import SmartHomeNG Modules
 #####################################################################
 import lib.config
 import lib.connection
@@ -375,7 +375,7 @@ class SmartHome():
             for thread in threading.enumerate():
                 self.logger.info("Thread: {}, still alive".format(thread.name))
         else:
-            self.logger.info("SmartHome.py stopped")
+            self.logger.info("SmartHomeNG stopped")
         if MODE == 'default':
             os.remove(self._pidfile)
         logging.shutdown()
@@ -576,10 +576,10 @@ if __name__ == '__main__':
     arggroup.add_argument('-d', '--debug', help='stay in the foreground with verbose output', action='store_true')
     arggroup.add_argument('-i', '--interactive', help='open an interactive shell with tab completion and with verbose logging to the logfile', action='store_true')
     arggroup.add_argument('-l', '--logics', help='reload all logics', action='store_true')
-    arggroup.add_argument('-s', '--stop', help='stop SmartHome.py', action='store_true')
+    arggroup.add_argument('-s', '--stop', help='stop SmartHomeNG', action='store_true')
     arggroup.add_argument('-q', '--quiet', help='DEPRECATED use logging config (reduce logging to the logfile)', action='store_true')
-    arggroup.add_argument('-V', '--version', help='show SmartHome.py version', action='store_true')
-    arggroup.add_argument('--start', help='start SmartHome.py and detach from console (default)', default=True, action='store_true')
+    arggroup.add_argument('-V', '--version', help='show SmartHomeNG version', action='store_true')
+    arggroup.add_argument('--start', help='start SmartHomeNG and detach from console (default)', default=True, action='store_true')
     args = argparser.parse_args()
 
     if args.interactive:
@@ -621,10 +621,10 @@ if __name__ == '__main__':
     # check for pid file
     pid = lib.daemon.get_pid(__file__)
     if pid:
-        print("SmartHome.py already running with pid {}".format(pid))
+        print("SmartHomeNG already running with pid {}".format(pid))
         print("Run 'smarthome.py -s' to stop it.")
         exit()
 
-    # Starting SmartHome.py
+    # Starting SmartHomeNG
     sh = SmartHome()
     sh.start()

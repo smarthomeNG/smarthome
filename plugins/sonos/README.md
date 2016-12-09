@@ -1,5 +1,5 @@
 This sub-project is a client implementation fpr the Sonos Broker. It is a plugin for the 
-Smarthome.py framework (https://github.com/mknx/smarthome).
+Smarthome.py framework (https://github.com/smarthomeNG/smarthome).
 
 ##Release
 

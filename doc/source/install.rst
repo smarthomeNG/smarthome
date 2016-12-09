@@ -133,11 +133,11 @@ Structure of the smarthome.py directory, e.g. /usr/local/smarthome/:
 -  examples/: contains some example files for the configaration and the
    visu plugin
 -  items/: should contain one or more item configuration files.
--  lib/: contains the core libraries of SmartHome.py
+-  lib/: contains the core libraries of SmartHomeNG
 -  logics/: should contain the logic scripts
 -  plugins/: contains the available plugins
 -  scenes/: scene files
--  tools/: contains little programms helping to maintain SmartHome.py
+-  tools/: contains little programms helping to maintain SmartHomeNG
 -  var/cache/: contains cached item values
 -  var/db/: contains the SQLite3 Database
 -  var/log/: contains the logfiles
@@ -154,10 +154,10 @@ Plugins
 Every `plugin <plugin.html>`_ has it's own installation section.
 
 
-Running SmartHome.py
+Running SmartHomeNG
 --------------------
 
-Arguments for running SmartHome.py
+Arguments for running SmartHomeNG
 
 .. code-block:: none
 
@@ -167,8 +167,8 @@ Arguments for running SmartHome.py
    -d, --debug stay in the foreground with verbose output
    -i, --interactive open an interactive shell with tab completion and with verbose logging to the logfile
    -l, --logics reload all logics
-   -s, --stop stop SmartHome.py
+   -s, --stop stop SmartHomeNG
    -q, --quiet reduce logging to the logfile
-   -V, --version show SmartHome.py version
-   --start start SmartHome.py and detach from console (default)
+   -V, --version show SmartHomeNG version
+   --start start SmartHomeNG and detach from console (default)
 

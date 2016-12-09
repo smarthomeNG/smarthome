@@ -6,7 +6,7 @@
 #########################################################################
 #  Free for non-commercial use
 #  
-#  Plugin for the software SmartHome.py (NG), which allows to control and read 
+#  Plugin for the software SmartHomeNG (NG), which allows to control and read 
 #  devices such as the FritzBox. 
 #  For all functionality, the TR-064 interface is used.
 #
@@ -19,13 +19,13 @@
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  SmartHome.py is distributed in the hope that it will be useful,
+#  SmartHomeNG is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with SmartHome.py (NG). If not, see <http://www.gnu.org/licenses/>.
+#  along with SmartHomeNG (NG). If not, see <http://www.gnu.org/licenses/>.
 #
 #########################################################################
 

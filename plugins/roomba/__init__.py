@@ -3,7 +3,7 @@
 #########################################################################
 #  Copyright 2013 Mirko Hirsch                        mirko.hirsch@gmx.de
 #########################################################################
-#  Roomba/iRobot plugin for SmartHome.py http://mknx.github.com/smarthome/
+#  Roomba/iRobot plugin for SmartHomeNG https://github.com/smarthomeNG//
 #
 #  This plugin is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

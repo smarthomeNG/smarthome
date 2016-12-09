@@ -15,7 +15,7 @@ items.conf
 --------------
 
 For num and bool items, you could set the attribute: `sqlite`. By this you enable logging of the item values.
-If you set this attribute to `init`, SmartHome.py tries to set the item to the last know value (like cache = yes).
+If you set this attribute to `init`, SmartHomeNG tries to set the item to the last know value (like cache = yes).
 
 <pre>
 [outside]

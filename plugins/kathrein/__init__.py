@@ -4,8 +4,8 @@
 #########################################################################
 # Copyright 2014 Johannes Mayr                         joh.mayr@gmail.com
 #########################################################################
-# Kathrein UFSControl-Plugin for SmartHome.py.   
-#                                        http://mknx.github.io/smarthome/
+# Kathrein UFSControl-Plugin for SmartHomeNG.   
+#                                        https://github.com/smarthomeNG//
 #
 #  This plugin is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

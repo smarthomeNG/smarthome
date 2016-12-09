@@ -5,7 +5,7 @@
 Copyright 2016- Martin Sinn                      m.sinn@gmx.de
 Copyright 2012-2013 Marcus Popp                  marcus@popp.mx
 
-This plugin is part of SmartHome.py.
+This plugin is part of SmartHomeNG.
   
 Visit:  https://github.com/smarthomeNG/
         https://knx-user-forum.de/forum/supportforen/smarthome-py

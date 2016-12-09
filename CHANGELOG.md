@@ -151,7 +151,7 @@ In Developement
       * TITLE header template,
       * adding 'unit' attribute to item.conf
       * JQuery: 1.8.3, JQuery Mobile 1.2
-      * Log view  SmartHome.py, Asterisk
+      * Log view  SmartHomeNG, Asterisk
 
 ## Bug Fixes
    * KNX plugin: knx_init/knx_cache could not work if first connection attempt failed
@@ -172,7 +172,7 @@ In Developement
    * Visu Plugin:
       * autogenerate visu pages
       * new input type 'time'
-    * SmartHome.py:
+    * SmartHomeNG:
        * sh.scheduler.change
        * directory structure cleanup: logic => logics
        * sh.tools.dewpoint(): new function to calculate the dewpoint

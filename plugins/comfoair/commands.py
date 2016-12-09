@@ -2,7 +2,7 @@
 #########################################################################
 # Copyright 2013 Stefan Kals
 #########################################################################
-#  ComfoAir-Plugin for SmartHome.py.  http://mknx.github.com/smarthome/
+#  ComfoAir-Plugin for SmartHomeNG.  https://github.com/smarthomeNG//
 #
 #  This plugin is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

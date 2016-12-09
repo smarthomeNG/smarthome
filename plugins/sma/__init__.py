@@ -9,7 +9,7 @@
 #  This software is based on SBF's "SMAspot"
 #  https://code.google.com/p/sma-spot/
 #
-#  SMA-Plugin for SmartHome.py.   http://mknx.github.com/smarthome/
+#  SMA-Plugin for SmartHomeNG.   https://github.com/smarthomeNG//
 #
 #	License: Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)
 #	http://creativecommons.org/licenses/by-nc-sa/3.0/

@@ -1,5 +1,5 @@
 
-console.log('Init SmartHome.py v' + shVersion)
+console.log('Init SmartHomeNG v' + shVersion)
 shInit("ws://"+ location.host + ":2424/");
 
 // adapt default settings

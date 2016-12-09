@@ -4,7 +4,7 @@
 #  Copyright 2013-2014 Robert Budde                   robert@ing-budde.de
 #  Copyright 2014 Alexander Schwithal                 aschwith
 #########################################################################
-#  Enocean plugin for SmartHome.py.      http://mknx.github.io/smarthome/
+#  Enocean plugin for SmartHomeNG.      https://github.com/smarthomeNG//
 #
 #  This plugin is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

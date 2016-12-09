@@ -3,20 +3,20 @@
 #########################################################################
 #  Copyright 2011 KNX-User-Forum e.V.           http://knx-user-forum.de/
 #########################################################################
-#  This file is part of SmartHome.py.    http://mknx.github.io/smarthome/
+#  This file is part of SmartHomeNG.    https://github.com/smarthomeNG//
 #
-#  SmartHome.py is free software: you can redistribute it and/or modify
+#  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  SmartHome.py is distributed in the hope that it will be useful,
+#  SmartHomeNG is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with SmartHome.py. If not, see <http://www.gnu.org/licenses/>.
+#  along with SmartHomeNG. If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
 import logging
@@ -51,7 +51,7 @@ class Pushbullet(object):
             apikey = self._apikey
 
         try:
-            response = requests.delete(self._apiurl + "/" + pushid, headers={"User-Agent": "SmartHome.py", "Content-Type": "application/json"}, auth=(apikey,""))
+            response = requests.delete(self._apiurl + "/" + pushid, headers={"User-Agent": "SmartHomeNG", "Content-Type": "application/json"}, auth=(apikey,""))
             if self._is_response_ok(response):
                 return response.json()
 
@@ -82,7 +82,7 @@ class Pushbullet(object):
 
     def _upload_and_push_file(self, filepath, body=None, deviceid=None, apikey=None):
         try:
-            headers = {"User-Agent": "SmartHome.py", "Content-Type": "application/json"}
+            headers = {"User-Agent": "SmartHomeNG", "Content-Type": "application/json"}
 
             if apikey is None:
                 apikey = self._apikey
@@ -91,7 +91,7 @@ class Pushbullet(object):
 
             if self._is_response_ok(upload_request_response):
                 data = upload_request_response.json()
-                upload_response = requests.post(data["upload_url"], data=data["data"], headers={"User-Agent": "SmartHome.py"}, files={"file": open(filepath, "rb")})
+                upload_response = requests.post(data["upload_url"], data=data["data"], headers={"User-Agent": "SmartHomeNG"}, files={"file": open(filepath, "rb")})
 
                 if self._is_response_ok(upload_response):
                     if body is None:
@@ -120,7 +120,7 @@ class Pushbullet(object):
             data["device_iden"] = deviceid
 
         try:
-            response = requests.post(self._apiurl, data=json.dumps(data), headers={"User-Agent": "SmartHome.py", "Content-Type": "application/json"}, auth=(apikey,""))
+            response = requests.post(self._apiurl, data=json.dumps(data), headers={"User-Agent": "SmartHomeNG", "Content-Type": "application/json"}, auth=(apikey,""))
             if self._is_response_ok(response):
                 return response.json()
 
