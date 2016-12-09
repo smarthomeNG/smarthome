@@ -2,6 +2,7 @@
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
 # Copyright 2016-     Oliver Hinckel                   github@ollisnet.de
+# Based on ideas of sqlite plugin, provided by Marcus Popp marcus@popp.mx
 #########################################################################
 #  This file is part of SmartHomeNG
 #  https://github.com/smarthomeNG/smarthome
