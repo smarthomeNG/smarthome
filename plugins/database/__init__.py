@@ -6,7 +6,7 @@
 #  This file is part of SmartHomeNG
 #  https://github.com/smarthomeNG/smarthome
 #  http://knx-user-forum.de/
-
+#
 #  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
@@ -292,80 +292,87 @@ class Database(SmartPlugin):
         init = not update
         if sid is None:
             sid = item + '|' + func + '|' + start + '|' + end  + '|' + str(count)
+        queries = {
+            'avg' : 'MIN(time), ROUND(AVG(val_num * duration) / AVG(duration), 2)',
+            'avg.order' : 'ORDER BY time ASC',
+            'min' : 'MIN(time), MIN(val_num)',
+            'max' : 'MIN(time), MAX(val_num)',
+            'on'  : 'MIN(time), ROUND(SUM(val_bool * duration) / SUM(duration), 2)',
+            'on.order' : 'ORDER BY time ASC'
+        }
+        if func not in queries:
+            raise NotImplementedError
+
+        order = None if func+'.order' not in queries else queries[func+'.order']
+        logs = self._fetch_log(item, queries[func], start, end, step=step, count=count, group="GROUP BY ROUND(time / :step)", order=order)
+        tuples = logs['tuples']
+        if tuples:
+            if logs['istart'] > tuples[0][0]:
+                tuples[0] = (logs['istart'], tuples[0][1])
+            if end != 'now':
+                tuples.append((logs['iend'], tuples[-1][1]))
+        else:
+            tuples = []
+        item_change = self._timestamp(logs['item'].last_change())
+        if item_change < logs['iend']:
+            value = float(logs['item']())
+            if item_change < logs['istart']:
+                tuples.append((logs['istart'], value))
+            elif init:
+                tuples.append((item_change, value))
+            if init:
+                tuples.append((logs['iend'], value))
+
+        return {
+            'cmd': 'series', 'series': tuples, 'sid': sid,
+            'params' : {'update': True, 'item': item, 'func': func, 'start': logs['istart'], 'end': end, 'step': logs['step'], 'sid': sid},
+            'update' : self._sh.now() + datetime.timedelta(seconds=int(logs['step'] / 1000))
+        }
+
+    def _single(self, func, start, end='now', item=None):
+        queries = {
+            'avg' : 'ROUND(AVG(val_num * duration) / AVG(duration), 2)',
+            'min' : 'MIN(val_num)',
+            'max' : 'MAX(val_num)',
+            'on'  : 'ROUND(SUM(val_bool * duration) / SUM(duration), 2)'
+        }
+        if func not in queries:
+            self.logger.warning("Unknown export function: {0}".format(func))
+            return
+        logs = self._fetch_log(item, queries[func], start, end)
+        if logs['tuples'] is None:
+            return
+        return logs['tuples'][0][0]
+
+    def _fetch_log(self, item, columns, start, end, step=None, count=100, group='', order=''):
         istart = self._parse_ts(start)
         iend = self._parse_ts(end)
+
         if step is None:
             if count != 0:
                 step = int((iend - istart) / int(count))
             else:
                 step = iend - istart
-        reply = {'cmd': 'series', 'series': None, 'sid': sid}
-        reply['params'] = {'update': True, 'item': item, 'func': func, 'start': iend, 'end': end, 'step': step, 'sid': sid}
-        reply['update'] = self._sh.now() + datetime.timedelta(seconds=int(step / 1000))
-        where = self._series_single_condition() + " GROUP BY ROUND(time / :step)"
-        if func == 'avg':
-            query = "SELECT MIN(time), ROUND(AVG(val_num * duration) / AVG(duration), 2)" + where + " ORDER BY time ASC"
-        elif func == 'min':
-            query = "SELECT MIN(time), MIN(val_num)" + where
-        elif func == 'max':
-            query = "SELECT MIN(time), MAX(val_num)" + where
-        elif func == 'on':
-            query = "SELECT MIN(time), ROUND(SUM(val_bool * duration) / SUM(duration), 2)" + where + " ORDER BY time ASC"
-        else:
-            raise NotImplementedError
+
         _item = self._sh.return_item(item)
         if self._buffer[_item] != []:
             self._dump(items=[_item])
-        tuples = self._fetch(query, _item, {'id':'<id>', 'time_start':istart, 'time_end':iend, 'step':step})
-        if tuples:
-            if istart > tuples[0][0]:
-                tuples[0] = (istart, tuples[0][1])
-            if end != 'now':
-                tuples.append((iend, tuples[-1][1]))
-        else:
-            tuples = []
-        item_change = self._timestamp(_item.last_change())
-        if item_change < iend:
-            value = float(_item())
-            if item_change < istart:
-                tuples.append((istart, value))
-            elif init:
-                tuples.append((item_change, value))
-            if init:
-                tuples.append((iend, value))
-        reply['series'] = tuples
-        return reply
 
-    def _single(self, func, start, end='now', item=None):
-        start = self._parse_ts(start)
-        end = self._parse_ts(end)
-        where = self._series_single_condition()
-        if func == 'avg':
-            query = "SELECT ROUND(AVG(val_num * duration) / AVG(duration), 2)" + where
-        elif func == 'min':
-            query = "SELECT MIN(val_num)" + where
-        elif func == 'max':
-            query = "SELECT MAX(val_num)" + where
-        elif func == 'on':
-            query = "SELECT ROUND(SUM(val_bool * duration) / SUM(duration), 2)" + where
-        else:
-            self.logger.warning("Unknown export function: {0}".format(func))
-            return
-        _item = self._sh.return_item(item)
-        if self._buffer[_item] != []:
-            self._dump(items=[_item])
-        tuples = self._fetch(query, _item, {'id':'<id>', 'time_start':start, 'time_end':end})
-        if tuples is None:
-            return
-        return tuples[0][0]
-
-    def _series_single_condition(self):
-        return self._prepare(
+        query = "SELECT {0} {3} {1} {2}".format(columns, group, order, self._prepare(
             "FROM {log} WHERE "
             "item_id = :id AND "
             "time > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = :id AND time < :time_start) AND "
             "time <= :time_end AND "
-            "time + duration > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = :id AND time < :time_start)")
+            "time + duration > (SELECT COALESCE(MAX(time), 0) FROM {log} WHERE item_id = :id AND time < :time_start)"))
+
+        return {
+            'tuples' : self._fetch(query, _item, {'id':'<id>', 'time_start':istart, 'time_end':iend, 'step':step}),
+            'item'   : _item,
+            'istart' : istart,
+            'iend'   : iend,
+            'step'   : step,
+            'count'  : count
+        }
 
     def _fetch(self, query, item, params):
         if self._db.verify(5) == 0:
