@@ -1,0 +1,11 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="sh_trigger_item" id="id0" x="138" y="63">
+    <value name="TRIG_ITEM">
+      <block type="sh_item_obj" id="id1" editable="false">
+        <field name="N">Unit Test</field>
+        <field name="P">testen.unit.test</field>
+        <field name="T">bool</field>
+      </block>
+    </value>
+  </block>
+</xml>

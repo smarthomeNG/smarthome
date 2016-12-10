@@ -57,6 +57,8 @@
 	"installierte Version": "installed Version",
 	"Neuste Version": "Newest Version",
 	"Keine Antwort von PyPI": "No answer from PyPI",
+	"PyPI nicht erreichbar": "PyPI inaccessible",
+	"PyPI Prüfung deaktiviert": "PyPI check disabled",
 	"Dienst": "Service",
 	"Status": "Status",
 	"Aktion": "Action",
@@ -87,6 +89,8 @@
 	"Aktiv": "Active",
 	"Visu Client": "Visu Client",
 	"Port": "Port",
+	"Client Software": "Client Software",
+	"Browser": "Browser",
 	"No active clients": "No active clients",
 	"Die eingegebenen Daten sind kein numerischer Wert": "Die eingegebenen Daten sind kein numerischer Wert",
 	"Filter": "Filter",
@@ -101,6 +105,10 @@
 	"filters": "Filters",
 	"handlers": "Handlers",
 	"Logging": "Logging",
+	"Passwort anzeigen": "Show Password",
+	"SmartHomeNG Version": "SmartHomeNG Version",
+	"Watch_Items": "Watch_Items",
+	"Anforderungen": "Requirements",
 
 	"_items": {
 		"path": "Pfad",
@@ -144,9 +152,19 @@
 		"knxd socket beenden": "Stop knxd socket",
 		"Filter anwenden": "Apply Filter",
 		"Cacheprüfung": "Cache Check",
+		"Passwort-Hash erzeugen": "Create Password Hash",
 		"Englisch": "English",
 		"Deutsch": "Deutsch",
-		"Französisch": "French"
+		"Französisch": "French",
+		"Deaktivieren": "Disable",
+		"Aktivieren": "Enable",
+		"Leeren" : "Clear",
+		"Schließen": "Close",
+		"Änderungen verwerfen" : "Undo Changes",
+		"Blöcke speichern" : "Save Blocks",
+		"Beenden" : "Stop",
+		"Speichern" : "Save",
+		"Speichern_und_Neu_Laden" : "Save and Reload"
 	},
 	
 	"_menu": {
@@ -154,6 +172,7 @@
 		"Dienste": "Services",
 		"Items": "Items",
 		"Logiken": "Logics",
+		"Blockly-Logiken-Editor": "Blockly Logics Editor",
 		"Scheduler": "Scheduler",
 		"Plugins": "Plugins",
 		"Threads": "Threads",

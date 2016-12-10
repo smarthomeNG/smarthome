@@ -34,8 +34,8 @@ class OperationLog(AbLogger):
     _log = None
     _items = {}
 
-    def __init__(self, smarthome, name, cache=True, logtofile=True, filepattern="{year:04}-{month:02}-{day:02}-{name}.log", 
-                 mapping=['time', 'thread', 'level', 'message'],items=[], maxlen=50):
+    def __init__(self, smarthome, name, cache=True, logtofile=True, filepattern="{year:04}-{month:02}-{day:02}-{name}.log",
+                 mapping=['time', 'thread', 'level', 'message'], items=[], maxlen=50):
         log_directory = "var/log/operationlog/"
         self._sh = smarthome
         self.name = name
@@ -59,8 +59,9 @@ class OperationLog(AbLogger):
         self._cache = True
         self.__myLogger = None
         self._logcache = None
-        self._maxlen = maxlen
+        self._maxlen = int(maxlen)
         self._items = items
+        self._item_conf = {}
         self.__date = None
         self.__fname = None
         info_txt_cache = ", caching active"
@@ -69,7 +70,7 @@ class OperationLog(AbLogger):
             info_txt_cache = ""
         self._logtofile = True
         info_txt_log = "OperationLog {}: logging to file {}{}, keeping {} entries in memory".format(self.name, self.log_directory,
-                                                                                                     self._filepattern, self._maxlen)
+                                                                                                    self._filepattern, int(self._maxlen))
         if isinstance(logtofile, str) and logtofile in ['False', 'false', 'No', 'no']:
             self._logtofile = False
         logger.info(info_txt_log + info_txt_cache)
@@ -85,7 +86,7 @@ class OperationLog(AbLogger):
                 logger.debug("OperationLog {}: read cache: {}".format(self.name, self._logcache))
             except Exception:
                 try:
-                    _cache_write(self._cachefile, self._log.export(self._maxlen))
+                    _cache_write(self._cachefile, self._log.export(int(self._maxlen)))
                     _cache_read(self._cachefile, self._sh._tzinfo)
                     logger.info("OperationLog {}: generated cache file".format(self.name))
                 except Exception as e:
@@ -101,6 +102,15 @@ class OperationLog(AbLogger):
     def run(self):
         if self._logtofile is True:
             self.__myLogger = self.create(self.name)
+        sh = self._sh
+        for item_id in self._item_conf:
+            if 'olog_eval' in self._item_conf[item_id]:
+                for (ind, eval_str) in enumerate(self._item_conf[item_id]['olog_eval']):
+                    try:
+                        eval(eval_str)
+                    except Exception as e:
+                        logger.warning('olog: could not evaluate {} for item: {}, {}'.format(eval_str, item_id, e))
+                        self._item_conf[item_id]['olog_eval'][ind] = "'--'"
         self.alive = True
 
     def stop(self):
@@ -108,6 +118,55 @@ class OperationLog(AbLogger):
 
     def parse_item(self, item):
         if 'olog' in item.conf and item.conf['olog'] == self.name:
+            self._item_conf[item.id()] = {}
+            if 'olog_txt' in item.conf or 'olog_rules' in item.conf:
+                self._item_conf[item.id()]['olog_rules'] = {}
+                self._item_conf[item.id()]['olog_rules']['lowlim'] = None
+                self._item_conf[item.id()]['olog_rules']['highlim'] = None
+                self._item_conf[item.id()]['olog_rules']['*'] = None
+            if 'olog_txt' in item.conf:
+                olog_txt = item.conf['olog_txt']
+                self._item_conf[item.id()]['olog_eval'] = []
+                pos = -1
+                while True:
+                    pos = olog_txt.find('{eval=', pos + 1)
+                    if pos == -1:
+                        break
+                    start = pos + 5
+                    pos = olog_txt.find('}', pos + 1)
+                    if pos == -1:
+                        logger.warning('olog: did not find ending } for eval in item.conf, item {}'.format(item.id()))
+                        break
+                    eval_str = olog_txt[start + 1:pos]
+                    self._item_conf[item.id()]['olog_eval'].append(eval_str)
+                    olog_txt = olog_txt[:start - 4] + olog_txt[pos:]
+                    pos = start
+                self._item_conf[item.id()]['olog_txt'] = olog_txt
+                if len(self._item_conf[item.id()]['olog_eval']) != 0:
+                    logger.info('Item: {}, olog evaluating: {}'.format(item.id(), self._item_conf[item.id()]['olog_eval']))
+            if 'olog_rules' in item.conf:
+                olog_rules = item.conf['olog_rules']
+                if isinstance(olog_rules, str):
+                    olog_rules = [olog_rules, ]
+                for txt in olog_rules:
+                    key_txt, value = txt.split(':')
+                    if key_txt == 'True':
+                        key = True
+                    elif key_txt == 'False':
+                        key = False
+                    else:
+                        try:
+                            if float(key_txt) == int(key_txt):
+                                key = int(key_txt)
+                            else:
+                                key = float(key_txt)
+                        except:
+                            key = key_txt
+                            if key_txt in ['lowlim', 'highlim']:
+                                self._item_conf[item.id()]['olog_rules']["*"] = 'value'
+                    self._item_conf[item.id()]['olog_rules'][key] = value
+                if len(self._item_conf[item.id()]['olog_rules']) != 0:
+                    logger.info('Item: {}, olog rules: {}'.format(item.id(), self._item_conf[item.id()]['olog_rules']))
             return self.update_item
         else:
             return None
@@ -124,12 +183,6 @@ class OperationLog(AbLogger):
             self.log([param2], param1)
         elif isinstance(param1, type(None)) and isinstance(param2, type(None)):
             return self._log
-
-        if self._cache is True:
-            try:
-                _cache_write(self._cachefile, self._log.export(self._maxlen))
-            except Exception as e:
-                logger.warning("OperationLog {}: could not update cache {}".format(self._path, e))
 
     def load(self, logentries):
         if len(logentries) != 0:
@@ -150,12 +203,51 @@ class OperationLog(AbLogger):
         if caller != 'OperationLog':
             if item.conf['olog'] == self.name:
                 if len(self._items) == 0:
-                    logvalues = [item.id(), '=', item()]
+                    if item.id() in self._item_conf and 'olog_txt' in self._item_conf[item.id()]:
+                        mvalue = item()
+                        if 'olog_rules' in self._item_conf[item.id()]:
+                            if 'lowlim' in self._item_conf[item.id()]['olog_rules']:
+                                if item.type() == 'num':
+                                    if self._item_conf[item.id()]['olog_rules']['lowlim'] is not None and item() < float(self._item_conf[item.id()]['olog_rules']['lowlim']):
+                                        return
+                                elif item.type() == 'str':
+                                    if self._item_conf[item.id()]['olog_rules']['lowlim'] is not None and item() < str(self._item_conf[item.id()]['olog_rules']['lowlim']):
+                                        return
+                            if 'highlim' in self._item_conf[item.id()]['olog_rules']:
+                                if item.type() == 'num':
+                                    if self._item_conf[item.id()]['olog_rules']['highlim'] is not None and item() >= float(self._item_conf[item.id()]['olog_rules']['highlim']):
+                                        return
+                                elif item.type() == 'str':
+                                    if self._item_conf[item.id()]['olog_rules']['highlim'] is not None and item() >= str(self._item_conf[item.id()]['olog_rules']['highlim']):
+                                        return
+                            try:
+                                mvalue = self._item_conf[item.id()]['olog_rules'][item()]
+                            except KeyError:
+                                mvalue = item()
+                                if self._item_conf[item.id()]['olog_rules']["*"] is None:
+                                    return
+                        sh = self._sh
+                        self._item_conf[item.id()]['olog_eval_res'] = []
+                        for expr in self._item_conf[item.id()]['olog_eval']:
+                            self._item_conf[item.id()]['olog_eval_res'].append(eval(expr))
+                        logtxt = self._item_conf[item.id()]['olog_txt'].format(*self._item_conf[item.id()]['olog_eval_res'],
+                                                                               **{'value': item(),
+                                                                                  'mvalue': mvalue,
+                                                                                  'name': str(item),
+                                                                                  'age': round(item.prev_age(), 2),
+                                                                                  'pname': str(item.return_parent()),
+                                                                                  'id': item.id(),
+                                                                                  'pid': item.return_parent().id(),
+                                                                                  'lowlim': self._item_conf[item.id()]['olog_rules']['lowlim'],
+                                                                                  'highlim': self._item_conf[item.id()]['olog_rules']['highlim']})
+                        logvalues = [logtxt]
+                    else:
+                        logvalues = [item.id(), '=', item()]
                 else:
                     logvalues = []
                     for it in self._items:
                         logvalues.append('{} = {} '.format(str(it), self._sh.return_item(it)()))
-                self.log(logvalues, 'INFO' if not item.conf['olog_level'] else item.conf['olog_level'])
+                self.log(logvalues, 'INFO' if 'olog_level' not in item.conf else item.conf['olog_level'])
 
     def log(self, logvalues, level='INFO'):
         if len(logvalues):
@@ -174,6 +266,12 @@ class OperationLog(AbLogger):
             if self._logtofile is True:
                 self.update_logfilename()
                 self.__myLogger.info('{}: {}', log[2], ''.join(log[3:]))
+
+            if self._cache is True:
+                try:
+                    _cache_write(self._cachefile, self._log.export(int(self._maxlen)))
+                except Exception as e:
+                    logger.warning("OperationLog {}: could not update cache {}".format(self._path, e))
 
 
 #####################################################################

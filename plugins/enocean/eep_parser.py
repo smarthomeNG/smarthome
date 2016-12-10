@@ -100,6 +100,21 @@ class EEP_Parser():
         result['TMP'] = (payload[2] / 250.0 * 40.0)
         return result
 
+    def _parse_eep_A5_04_02(self, payload, status):
+        # Energy (optional), humidity and temperature, for example eltako FBH65TFB, RORG = 0x07
+        result = {}
+        result['ENG'] = 0.47 + (payload[0] * 1.5 / 66)       # voltage of energy buffer in Volts
+        result['HUM'] = (payload[1] / 250.0 * 100)           # relative humidity in percent
+        result['TMP'] = -20.0 + (payload[2] / 250.0 * 40.0)  # temperature in degree Celsius from -20.0 degC- 60degC
+        return result
+
+    def _parse_eep_A5_08_01(self, payload, status):
+        # Brightness and movement sensor, for example eltako FBH65TFB, RORG = 0x07
+        result = {}
+        result['BRI'] = (payload[1] / 255.0 * 2048)          # brightness in lux
+        result['MOV'] = not((payload[3] & 0x02) == 0x02)     # movement
+        return result
+
     def _parse_eep_A5_11_04(self, payload, status):
         #4 Byte communication (4BS) Telegramm, RORG = A5 = ORG = 0x07
         # For example dim status feedback from eltako FSUD-230 actor.
@@ -234,5 +249,5 @@ class EEP_Parser():
         elif (payload[0] == 0xD0):
             results['STATUS'] = 2
         else:
-            logger.error("enocean: error in F6_10_00 handle status")
+            logger.error("enocean: error in F6_10_00 handle status, payload: {0} unknown".format(payload[0]))
         return results

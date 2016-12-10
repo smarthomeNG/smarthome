@@ -1,12 +1,27 @@
 
-import common
-import unittest
+from unittest import TestCase
+
 import lib.config
 
-class TestConfig(unittest.TestCase):
+
+class ConfigBaseTests:
+
+    fmt = None
 
     def config(self, name):
-        return lib.config.parse('resources/' + name + '.conf')
+        return lib.config.parse('resources/config_{}.{}'.format(name, self.fmt))
+
+    def test_read_ignores_starting_digits(self):
+        conf = self.config('digits')
+        self.assertEquals(0, len(conf['digits']))
+
+    def test_read_ignores_set(self):
+        conf = self.config('reserved')
+        self.assertEquals(0, len(conf['reserved']))
+
+    def test_read_ignores_invalidchars(self):
+        conf = self.config('invalidchars')
+        self.assertEquals(0, len(conf['invalidchars']))
 
     def test_read_sections(self):
         conf = self.config('sections')
@@ -37,7 +52,7 @@ class TestConfig(unittest.TestCase):
         self.assertTrue('value2' in conf['section']['list'])
         self.assertTrue('value3' in conf['section']['list'])
 
-    def test_read_lists_spaces(self):
+    def test_confread_lists_spaces(self):
         conf = self.config('lists')
         self.assertIsInstance(conf['section']['list_spaces'], list)
         self.assertTrue('value1' in conf['section']['list_spaces'])
@@ -58,3 +73,45 @@ class TestConfig(unittest.TestCase):
         self.assertTrue('value2' in conf['section']['list_quotes_spaces'])
         self.assertTrue('value3' in conf['section']['list_quotes_spaces'])
 
+    def test_read_structure(self):
+        conf = self.config('structure')
+        self.assertTrue('child1' in conf['parent1'])
+        self.assertTrue('child2' in conf['parent1'])
+        self.assertTrue('child1' in conf['parent2'])
+        self.assertTrue('child2' in conf['parent2'])
+
+    def test_read_structure(self):
+        conf = self.config('structure')
+        self.assertTrue('child1' in conf['parent1'])
+        self.assertTrue('child2' in conf['parent1'])
+        self.assertTrue('child1' in conf['parent2'])
+        self.assertTrue('child2' in conf['parent2'])
+
+
+class TestConfigConf(TestCase, ConfigBaseTests): 
+
+    fmt = 'conf'
+
+    def test_confread_ignores_empty_name(self):
+        conf = self.config('empty')
+        self.assertEquals(0, len(conf['empty']))
+
+    def test_confread_multiline(self):
+        conf = self.config('keyvalues')
+        self.assertEqual(conf['section']['key_multiline'], 'line1line2')
+        self.assertEqual(conf['section']['key_multiline_space'], 'line1 line2')
+        self.assertEqual(conf['section']['key_multiline_quotes'], 'line1line2')
+    
+
+class TestConfigYaml(TestCase, ConfigBaseTests):
+
+    fmt = 'yaml'
+
+    def test_yamlread_multiline(self):
+        conf = self.config('keyvalues')
+        self.assertEqual(conf['section']['key_multiline'], 'line1line2')
+        self.assertEqual(conf['section']['key_multiline_quotes'], 'line1line2')
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

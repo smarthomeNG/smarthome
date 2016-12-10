@@ -23,6 +23,7 @@ from time import sleep
 import minimalmodbus
 from serial import SerialException
 import serial
+import threading
 
 logger = logging.getLogger('Systemair')
 
@@ -41,6 +42,8 @@ class Systemair():
         self.my_reg_items = []
         self.mod_write_repeat = 20  # if port is already open, e.g on auto-update,
                                     # repeat mod_write attempt x times a 1 seconds
+        self._lockmb = threading.Lock()    # modbus serial port lock
+        self.init_serial_connection(self.serialport, self.slave_address)
 
     def init_serial_connection(self, serialport, slave_address):
         try:
@@ -53,11 +56,11 @@ class Systemair():
             return False
 
     def _read_modbus(self):
+        self._lockmb.acquire()
         try:
             # check for working /dev/ttyXXX
             if not self.init_serial_connection(self.serialport, self.slave_address):
                 return
-
             # read all fan registers
             # System air documentation: FAN values starts with 101, but thats incorrect: register starts with 100
 
@@ -182,7 +185,6 @@ class Systemair():
                             logger.error("Modbus: Exception when updating {} {}".format(item, e))
                 start_register_defrosting_vtr += 1
 
-
             # digital input register / 9 register
             start_register_digital = 701
             digital_registers = self.instrument.read_registers(start_register_digital-1, 9, functioncode=3)
@@ -232,15 +234,17 @@ class Systemair():
                 start_register_net += 1
 
             # get coils
-            for coild_addr, val in self._update_coil.items():
-                value = self.instrument.read_bit(coild_addr-1, functioncode=2)
+            for coil_addr, val in self._update_coil.items():
+                value = self.instrument.read_bit(coil_addr-1, functioncode=2)
                 if value is not None:
-                    for item in self._update_coil[coild_addr]['items']:
-                        item(value, 'systemair_value_from_bus', "Coil {}".format(coild_addr))
+                    for item in self._update_coil[coil_addr]['items']:
+                        item(value, 'systemair_value_from_bus', "Coil {}".format(coil_addr))
 
         except Exception as err:
             logger.error(err)
             self.instrument = None
+        finally:
+            self._lockmb.release()
 
     def run(self):
         self.alive = True
@@ -272,11 +276,11 @@ class Systemair():
                     self._update[modbus_regaddr]['items'].append(item)
             # we need a small list here to make it easier to find our items if update_item is triggered
             self.my_reg_items.append(item) 
-            
+
         if 'systemair_coiladdr' in item.conf:
             modbus_coiladdr = int(item.conf['systemair_coiladdr'])
             logger.debug("systemair_value_from_bus: {0} connected to coil register {1:#04x}".format(item, modbus_coiladdr))
-            if not modbus_coiladdr in self._update:
+            if not modbus_coiladdr in self._update_coil:
                 self._update_coil[modbus_coiladdr] = {'items': [item], 'logics': []}
             else:
                 if not item in self._update_coil[modbus_coiladdr]['items']:
@@ -292,7 +296,8 @@ class Systemair():
             # BUG in Systemair docu, register starts with 100, not 101
             reg_addr = int(item.conf['systemair_regaddr']) - 1
             val = int(item())
-            self.instrument.write_register(reg_addr, value=val)
+            with self._lockmb:
+                self.instrument.write_register(reg_addr, value=val)
         except serial.serialutil.SerialException as err:
             if err.args[0].lower() == 'port is already open.':
                 if self.mod_write_repeat < repeat_count:

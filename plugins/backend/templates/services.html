@@ -138,7 +138,16 @@
 				<td><img src="/static/img/cache.svg" alt="Icon cache" width="48" height="48"></td>
 				<td colspan="2" style="padding-top:15px;">
 					<span class="btn btn-default" onclick="checkCache()">{{ _('Cacheprüfung','button') }}</span>
-					<div id="cache_check" style="margin-top: 5px; width: 900px;"></div>
+					<div id="cache_check" style="margin-top: 5px; width: 1000px;"></div>
+				</td>
+			</tr>
+			<tr>
+				<td><img src="/static/img/password.svg" alt="Icon password" width="48" height="48"></td>
+				<td colspan="2" style="padding-top:15px;">
+					<input type="text" style="..." id="plaintext" size="20" maxlength="50"/><input type="password" style="..." id="plainpass" size="20" maxlength="50"/>
+					<span class="btn btn-default" onclick="createHash()">{{ _('Passwort-Hash erzeugen','button') }}</span><br/>
+					<input type="checkbox" style="..." id="showtext"  onclick="togglePlainFields();"> {{ _('Passwort anzeigen') }}
+					<div id="hash_value" style="margin-top: 5px; width: 900px;"></div>
 				</td>
 			</tr>
 		</tbody>
@@ -147,14 +156,53 @@
 <script type="text/javascript" language="javascript">
 function checkCache() {
 	$.getJSON("/cache_check_json.html", function(result) {
-		var temp = '<div class="table-responsive">{{ _('Dateien ohne zugehöriges Item im /var/cache Verzeichnis') }}: '+result.length+'<table class="table table-striped" style="border: 1px solid #ccc;">';
-		temp = temp+'<thead><tr><th style="width: 550px;">{{ _('Dateiname') }}</th><th>{{ _('Letzte Modifikation') }}</th><th>{{ _('Erstellungsdatum') }}</th></td></thead><tbody>';
+		var temp = '<div class="table-responsive">{{ _('Dateien ohne zugehöriges Item im /var/cache Verzeichnis') }}: '+result.length;
+		temp = temp + '<table class="table table-striped" style="border: 1px solid #ccc;">';
+		temp = temp + '<thead><tr><th style="width: 550px;">{{ _('Dateiname') }}</th><th>{{ _('Letzte Modifikation') }}</th><th>{{ _('Erstellungsdatum') }}</th><th>{{ _('Aktionen') }}</th></td></thead><tbody>';
 		$.each(result, function(index, element) {
-			temp = temp + '<tr><td>'+element.filename+'</td><td>'+element.last_modified+'</td><td>'+element.created+'</td></tr>';
+			temp = temp + '<tr><td>'+element.filename+'</td><td>'+element.last_modified+'</td><td>'+element.created+'</td>';
+			temp = temp + '<td><input name="delete" value="{{ _('Löschen','button') }}" type="submit" class="btn btn-default btn-xs" onClick="deleteFromCache(\''+element.filename+'\');">';
 		});
 		temp = temp + '</tbody></table></div>';
 		$('#cache_check').html(temp);
 	});
 }
+
+function deleteFromCache(filename) {
+	var result = $.ajax( "/cache_file_delete.html?filename="+filename )
+	  .done(function() {
+		checkCache();
+	  })
+}
+
+function createHash() {
+	$.ajax({
+		url: '/create_hash_json.html',
+		type: 'GET',
+		data: { plaintext: $('#showtext')[0].checked ? plaintext.val() : plainpass.val()} ,
+		contentType: 'application/json; charset=utf-8',
+		success: function (response) {
+			$('#hash_value').html(JSON.parse(response));
+		},
+		error: function () {
+			//your error code
+		}
+	});
+}
+
+function togglePlainFields() {
+	plaintext = $('#plaintext')
+	plainpass = $('#plainpass')
+	if ($('#showtext')[0].checked) {
+		plaintext.val(plainpass.val());
+		plainpass.hide();
+		plaintext.show();
+	} else {
+		plainpass.val(plaintext.val());
+		plaintext.hide();
+		plainpass.show();
+	}
+}
+togglePlainFields();
 </script>
 {% endblock %}

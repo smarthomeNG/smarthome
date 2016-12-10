@@ -134,6 +134,27 @@ Example item.conf
             enocean_rocker_sequence = **released within 0.4, pressed within 0.4**
             knx_dpt = 1
             knx_send = 3/0/62
+    [[brightness_sensor]]
+        enocean_rx_id = 01234567
+        enocean_rx_eep = A5_08_01
+        [[[lux]]]
+            type = num
+            enocean_rx_key = BRI
+        [[[movement]]]
+            type = bool
+            enocean_rx_key = MOV
+    [[temperature_sensor]]
+        enocean_rx_id = 01234567
+        enocean_rx_eep = A5_04_02
+        [[[temperature]]]
+            type = num
+            enocean_rx_key = TMP
+        [[[humidity]]]
+            type = num
+            enocean_rx_key = HUM
+        [[[power_status]]]
+            type = num
+            enocean_rx_key = ENG
 </pre>
 
 Add new listening enocean devices
@@ -145,6 +166,8 @@ A complete list of available EEPs is documented under http://www.enocean-allianc
 * A5_02_10 - A5_02_1B    Temperature Sensors (80°C overall range, various starting offsets, 1/3°C resolution)
 * A5_02_20    High Precision Temperature Sensor (ranges -10*C to +41.2°C, 1/20°C resolution)
 * A5_02_30    High Precision Temperature Sensor (ranges -40*C to +62.3°C, 1/10°C resolution)
+* A5_04_02    Energy (optional), humidity and temperature sensor
+* A5_08_01    Brightness and movement sensor
 * A5_11_04    Dimmer status feedback
 * A5_12_01    Power Measurement
 * D5_00_01    Door/Window Contact, e.g. Eltako FTK, FTKB

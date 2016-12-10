@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
-# Copyright 2011-2013 Marcus Popp                          marcus@popp.mx
+# Copyright 2011-2013   Marcus Popp                        marcus@popp.mx
+# Copyright 2016-       Martin Sinn                         m.sinn@gmx.de
 #########################################################################
-#  This file is part of SmartHome.py.    http://mknx.github.io/smarthome/
+#  This file is part of SmartHomeNG
 #
-#  SmartHome.py is free software: you can redistribute it and/or modify
+#  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  SmartHome.py is distributed in the hope that it will be useful,
+#  SmartHomeNG is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with SmartHome.py.  If not, see <http://www.gnu.org/licenses/>.
+#  along with SmartHomeNG  If not, see <http://www.gnu.org/licenses/>.
 ##########################################################################
 
 import logging
@@ -51,7 +52,9 @@ class Logics():
             # plugin hook
             for plugin in self._sh._plugins:
                 if hasattr(plugin, 'parse_logic'):
-                    plugin.parse_logic(logic)
+                    update = plugin.parse_logic(logic)
+                    if update:
+                        logic.add_method_trigger(update)
             # item hook
             if hasattr(logic, 'watch_item'):
                 if isinstance(logic.watch_item, str):
@@ -61,15 +64,12 @@ class Logics():
                         item.add_logic_trigger(logic)
 
     def _read_logics(self, filename, directory):
-        logger.debug("Reading Logics from {}".format(filename))
-        try:
-            config = lib.config.parse(filename)
+        logger.debug("Reading Logics from {}.*".format(filename))
+        config = lib.config.parse_basename(filename, configtype='logics')
+        if config != {}:
             for name in config:
                 if 'filename' in config[name]:
                     config[name]['filename'] = directory + config[name]['filename']
-        except Exception as e:
-            logger.critical(e)
-            config = {}
         return config
 
     def __iter__(self):
@@ -86,6 +86,7 @@ class Logic():
     def __init__(self, smarthome, name, attributes):
         self._sh = smarthome
         self.name = name
+        self.enabled = True if 'enabled' not in attributes else bool(attributes['enabled'])
         self.crontab = None
         self.cycle = None
         self.prio = 3
@@ -95,6 +96,7 @@ class Logic():
             vars(self)[attribute] = attributes[attribute]
         self.generate_bytecode()
         self.prio = int(self.prio)
+        self.__methods_to_trigger = []
 
     def id(self):
         return self.name
@@ -103,10 +105,18 @@ class Logic():
         return self.name
 
     def __call__(self, caller='Logic', source=None, value=None, dest=None, dt=None):
-        self._sh.scheduler.trigger(self.name, self, prio=self.prio, by=caller, source=source, dest=dest, value=value, dt=dt)
+        if self.enabled:
+            self._sh.scheduler.trigger(self.name, self, prio=self.prio, by=caller, source=source, dest=dest, value=value, dt=dt)
+
+    def enable(self):
+        self.enabled =True
+
+    def disable(self):
+        self.enabled = False
 
     def trigger(self, by='Logic', source=None, value=None, dest=None, dt=None):
-        self._sh.scheduler.trigger(self.name, self, prio=self.prio, by=by, source=source, dest=dest, value=value, dt=dt)
+        if self.enabled:
+            self._sh.scheduler.trigger(self.name, self, prio=self.prio, by=by, source=source, dest=dest, value=value, dt=dt)
 
     def generate_bytecode(self):
         if hasattr(self, 'filename'):
@@ -121,3 +131,10 @@ class Logic():
                 logger.exception("Exception: {}".format(e))
         else:
             logger.warning("{}: No filename specified => ignoring.".format(self.name))
+
+    def add_method_trigger(self, method):
+        self.__methods_to_trigger.append(method)
+
+    def get_method_triggers(self):
+        return self.__methods_to_trigger
+

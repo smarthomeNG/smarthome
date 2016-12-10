@@ -1,9 +1,12 @@
 
 
-# README.md
-
+# SmartHomeNG
+[![Build Status on TravisCI](https://travis-ci.org/smarthomeNG/smarthome.svg?branch=develop)](https://travis-ci.org/smarthomeNG/smarthome)
 [![Join the chat at https://gitter.im/smarthomeNG/smarthome](https://badges.gitter.im/smarthomeNG/smarthome.svg)](https://gitter.im/smarthomeNG/smarthome?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-This file contains basic information about the basic directories of smarthomeNG
+
+This file contains basic information about the basic directories of SmartHomeNG.
+
+Additional information / documentation can be found in the [SmartHomeNG Wiki](https://github.com/smarthomeNG/smarthome/wiki). The Wiki ist in german for the greatest part.
 
 | directory | description|
 | ---     | :--- |

@@ -10,7 +10,7 @@ class TestConfig(unittest.TestCase):
     def props(self,cls):   
         return [i for i in cls.__dict__.keys() if i[:1] != '_']
     def test_plugins(self):
-        plugins = lib.plugin.Plugins(MockSmartHome(), "resources/plugin.conf")
+        plugins = lib.plugin.Plugins(MockSmartHome(), "resources/plugin")
         self.assertIsNone(plugins.get_plugin("wol1") )
         self.assertIsNotNone(plugins._plugins )
         if 0:
@@ -38,7 +38,7 @@ class TestConfig(unittest.TestCase):
     def test_plugininstance(self):
         sh=MockSmartHome()
         # load pluginsA
-        plugins = lib.plugin.Plugins(sh, "resources/plugin.conf")
+        plugins = lib.plugin.Plugins(sh, "resources/plugin")
         sh._plugins=plugins
         wolplug= plugins.get_plugin("wol")
         self.assertEqual(wolplug.plugin.get_instance_name(),"")
@@ -123,7 +123,7 @@ class TestConfig(unittest.TestCase):
 
     def _test_configsave(self):
         import configparser
-        plugins = lib.plugin.Plugins(MockSmartHome(), "resources/plugin.conf")
+        plugins = lib.plugin.Plugins(MockSmartHome(), "resources/plugin")
         item_conf = None
         item_conf = lib.config.parse("resources/plugin_items.conf", item_conf)
         print(item_conf)

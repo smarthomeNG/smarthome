@@ -57,6 +57,8 @@
 	"installierte Version": "installierte Version",
 	"Neuste Version": "Neuste Version",
 	"Keine Antwort von PyPI": "Keine Antwort von PyPI",
+	"PyPI nicht erreichbar": "PyPI nicht erreichbar",
+	"PyPI Prüfung deaktiviert": "PyPI Prüfung deaktiviert",
 	"Dienst": "Dienst",
 	"Status": "Status",
 	"Aktion": "Aktion",
@@ -87,6 +89,8 @@
 	"Aktiv": "Aktiv",
 	"Visu Client": "Visu Client",
 	"Port": "Port",
+	"Client Software": "Client Software",
+	"Browser": "Browser",
 	"No active clients": "Keine aktiven Clients",
 	"Die eingegebenen Daten sind kein numerischer Wert": "Die eingegebenen Daten sind kein numerischer Wert",
 	"Filter": "Filter",
@@ -101,6 +105,10 @@
 	"filters": "Filter",
 	"handlers": "Handler",
 	"Logging": "Logging",
+	"Passwort anzeigen": "Passwort anzeigen",
+	"SmartHomeNG Version": "SmartHomeNG Version",
+	"Watch_Items": "Watch_Items",
+	"Anforderungen": "Anforderungen",
 
 	"_items": {
 		"path": "Pfad",
@@ -143,9 +151,19 @@
 		"knxd socket beenden": "knxd socket beenden",
 		"Filter anwenden": "Filter anwenden",
 		"Cacheprüfung": "Cacheprüfung",
+		"Passwort-Hash erzeugen": "Passwort-Hash erzeugen",
 		"Englisch": "English",
 		"Deutsch": "Deutsch",
-		"Französisch": "French"
+		"Französisch": "French",
+		"Deaktivieren": "Deaktivieren",
+		"Aktivieren": "Aktivieren",
+		"Leeren" : "Leeren",
+		"Schließen": "Schließen",
+		"Änderungen verwerfen" : "Änderungen verwerfen",
+		"Blöcke speichern" : "Blöcke speichern",
+		"Beenden" : "Beenden",
+		"Speichern" : "Speichern",
+		"Speichern_und_Neu_Laden" : "Speichern und neu laden"
 	},
 
 	"_menu": {
@@ -153,6 +171,7 @@
 		"Dienste": "Dienste",
 		"Items": "Items",
 		"Logiken": "Logiken",
+		"Blockly-Logiken-Editor": "Blockly-Logiken-Editor",
 		"Scheduler": "Scheduler",
 		"Plugins": "Plugins",
 		"Threads": "Threads",
