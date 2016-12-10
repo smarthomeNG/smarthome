@@ -279,6 +279,7 @@ class CLICommands:
         self.add_command('st', self._cli_sl, 'st: list all scheduler tasks by execution time')
         self.add_command('si', self._cli_si, 'si [task]: show details for given task')
         self.add_command('ld', self._cli_ld, 'ld [log]: log dump of (memory) log')
+        self.add_command('log', self._cli_loglevel, 'log: show current log level\nlog lvl: set log level')
         self.add_command('el', self._cli_el, 'el [logic]: enables logic')
         self.add_command('dl', self._cli_dl, 'dl [logic]: disables logic')
 
@@ -648,6 +649,30 @@ class CLICommands:
             for key in task:
                 handler.push("  {} = {}\n".format(key, task[key]))
             handler.push("}\n")
+
+    def _cli_loglevel(self, handler, parameter, source):
+        """
+        CLI command "log" - Show or set current log level
+        :param handler: CLIHandler instance
+        :param parameter: Parameters used to call the command
+        :param source: Source
+        """
+        logger = logging.getLogger('')
+        if parameter:
+            num_level = getattr(logging, parameter.upper(), None)
+            if not isinstance(num_level, int):
+                handler.push("Invalid log level: {}\n".format(parameter))
+                return
+        if parameter:
+            logger.setLevel(num_level)
+        else:
+            handler.push("{} - {}:\n".format(type(logger).__name__, logging.getLevelName(logger.getEffectiveLevel())))
+        for loghandler in logger.handlers:
+            if isinstance(loghandler, logging.FileHandler):
+                if parameter:
+                    loghandler.setLevel(num_level)
+                else:
+                    handler.push("{} - {}\n".format(type(loghandler).__name__, logging.getLevelName(getattr(loghandler, "level"))))
 
     # noinspection PyUnusedLocal
     def _cli_ld(self, handler, parameter, source):
