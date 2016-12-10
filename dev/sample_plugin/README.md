@@ -55,7 +55,7 @@ Please provide an item configuration with every attribute and usefull settings.
 If your plugin support item triggers as well, please describe the attributes like the item attributes.
 
 
-# Methodes
+# Methods
 If your plugin provides methods for logics. List and describe them here...
 
 ## method1(param1, param2)

@@ -42,7 +42,7 @@ class WebSocket(SmartPlugin):
     """
     Main class of the Plugin. Does the plugin specific stuff.
     """
-    PLUGIN_VERSION = "1.1.2"
+    PLUGIN_VERSION = "1.1.3"
     ALLOW_MULTIINSTANCE = False
 
     def my_to_bool(self, value, attr='', default=False):
@@ -122,8 +122,26 @@ class WebSocket(SmartPlugin):
 
     def return_clients(self):
         for client in self.websocket.clients:
-            yield client.addr			# v1.1.2
-#            yield client.addr, client.sw, client.swversion, client.hostname          # v1.1.3
+            infos = {}
+            infos['addr'] = client.addr
+            infos['sw'] = client.sw
+            infos['swversion'] = client.swversion
+            infos['hostname'] = client.hostname
+            infos['browser'] = client.browser
+            infos['browserversion'] = client.browserversion
+            if self.PLUGIN_VERSION == "1.1.2":
+                yield client.addr			# v1.1.2
+            else:
+                # v1.1.3 and up
+                yield infos
+
+#    def return_clients(self):
+#        for client in self.websocket.clients:
+#            if self.PLUGIN_VERSION == "1.1.2":
+#                yield client.addr			# v1.1.2
+#            else:
+#                # v1.1.3 and up
+#                yield client.addr, client.sw, client.swversion, client.hostname, client.browser, client.browserversion
 
 
 #########################################################################
@@ -252,6 +270,8 @@ class websockethandler(lib.connection.Stream):
         self.sw = ''
         self.swversion = ''
         self.hostname = ''
+        self.browser = ''
+        self.browserversion = ''
         
 
     def send_event(self, event, data):
@@ -367,7 +387,7 @@ class websockethandler(lib.connection.Stream):
                         reply = self.items[path]['item'].series(series, start, end, count)
 #                        self.logger.warning("VISU json_parse: send to {0}: {1}".format(self.addr, reply))	# MSinn
                     except Exception as e:
-                        self.logger.exception("Problem fetching series for {0}: {1}".format(path, e))
+                        self.logger.error("Problem fetching series for {0}: {1} - Wrong sqlite plugin?".format(path, e))
                     else:
                         if 'update' in reply:
                             self._series_lock.acquire()
@@ -405,7 +425,9 @@ class websockethandler(lib.connection.Stream):
             self.sw = data.get('sw','')
             self.swversion = data.get('ver','')
             self.hostname = data.get('hostname','')
-#            self.logger.warning("VISU json_parse: received from {0}: {1}".format(self.addr, "{'cmd': 'identity', 'sw': "+self.sw+", 'ver': "+self.swversion+"}"))	# MSinn
+            self.browser = data.get('browser','')
+            self.browserversion = data.get('bver','')
+            self.logger.debug("VISU json_parse: received 'identify' from {0}: {1}".format(self.addr, data))
 
     def parse_header(self, data):
         data = bytes(data)

@@ -173,6 +173,11 @@ If cycle time is reduced, please carefully watch your device and your sh.log. In
                 enigma2_data_type@vusolo2 = e2servicereference
                 enigma2_page@vusolo2 = subservices
                 visu_acl = rw
+            [[[[servicestream]]]]
+                type = str
+                visu_acl = rw
+                eval = '<a href="http://'+sh.vusolo2._enigma2_device._host+':'+sh.vusolo2._enigma2_device._port+'/web/stream.m3u?ref='+sh.enigma2.vusolo2.current.servicereference()+'"><img class="ui-corner-all" id="mjpgImage" style="width:95%" alt="Processing..." src="http://'+sh.vusolo2._enigma2_device._host+':'+sh.vusolo2._enigma2_device._port+'/grab?format=png&r=720&'+sh.enigma2.vusolo2.current.servicereference()+'"></a>'
+                eval_trigger = init | enigma2.vusolo2.current.servicereference
         [[[services]]]
             [[[[DasErste_HD]]]]
                 type = bool

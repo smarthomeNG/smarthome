@@ -6,7 +6,7 @@ import lib.config
 class TestConfig(unittest.TestCase):
 
     def config(self, name):
-        return lib.config.parse('resources/' + name + '.conf')
+        return lib.config.parse('resources/config_' + name + '.conf')
 
     def test_read_sections(self):
         conf = self.config('sections')
@@ -57,4 +57,13 @@ class TestConfig(unittest.TestCase):
         self.assertTrue('value1' in conf['section']['list_quotes_spaces'])
         self.assertTrue('value2' in conf['section']['list_quotes_spaces'])
         self.assertTrue('value3' in conf['section']['list_quotes_spaces'])
+
+    def test_read_multiline(self):
+        conf = self.config('keyvalues')
+        self.assertEqual(conf['section']['key_multiline'], 'line1line2')
+        self.assertEqual(conf['section']['key_multiline_space'], 'line1 line2')
+        self.assertEqual(conf['section']['key_multiline_quotes'], 'line1line2')
+    
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
 

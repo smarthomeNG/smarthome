@@ -57,6 +57,8 @@
 	"installierte Version": "installed Version",
 	"Neuste Version": "Newest Version",
 	"Keine Antwort von PyPI": "No answer from PyPI",
+	"PyPI nicht erreichbar": "PyPI inaccessible",
+	"PyPI Prüfung deaktiviert": "PyPI check disabled",
 	"Dienst": "Service",
 	"Status": "Status",
 	"Aktion": "Action",
@@ -87,6 +89,8 @@
 	"Aktiv": "Active",
 	"Visu Client": "Visu Client",
 	"Port": "Port",
+	"Client Software": "Client Software",
+	"Browser": "Browser",
 	"No active clients": "No active clients",
 	"Die eingegebenen Daten sind kein numerischer Wert": "Die eingegebenen Daten sind kein numerischer Wert",
 	"Filter": "Filter",
@@ -101,6 +105,7 @@
 	"filters": "Filters",
 	"handlers": "Handlers",
 	"Logging": "Logging",
+	"SmartHomeNG Version": "SmartHomeNG Version",
 
 	"_items": {
 		"path": "Pfad",

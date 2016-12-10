@@ -33,6 +33,7 @@
  </div>
  
 <script type="text/javascript" language="javascript">
+
 function getDetailInfo(result) {
     var temp ='';
     $.each(result, function(index, element) {
@@ -123,9 +124,11 @@ function getDetailInfo(result) {
             }
             $.ajax({
                 url: '/item_change_value.html',
-                type: 'GET',
-                data: { item_path: element.path, value: $("#item_value" ).val()} ,
-                contentType: 'application/json; charset=utf-8',
+                type: 'POST',
+                data: {
+                    'item_path': element.path,
+                    'value': $("#item_value").val()
+                },
                 success: function (response) {
                     $( ".fa-refresh" ).trigger( "click" );
                 },

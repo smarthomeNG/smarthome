@@ -20,10 +20,10 @@
 
 	<div id="{{ uid }}">
 		<table width=90%> 
-			{% if gad_model or gad_webif %} <tr><td align=left style="padding-left: 15px;">Modell / Web-IF:</td> <td align=right> {{ basic.value(id~'model', gad_model) }} / v{{ basic.value(id~'webif', gad_webif) }}</td></tr>{% endif %}
+			{% if gad_model or gad_webif %} <tr><td align=left style="padding-left: 15px;">Type / WebIf:</td> <td align=right> {{ basic.value(id~'model', gad_model) }} / v{{ basic.value(id~'webif', gad_webif) }}</td></tr>{% endif %}
 			{% if gad_dhcp or gad_ip or gad_gw or gad_mask %}<tr><td align=left style="padding-left: 15px;"><strong>LAN Config</strong></td> <td></td></tr>{% endif %}
-			{% if gad_dhcp or gad_ip %}<tr><td align=left style="padding-left: 30px;">DHCP / IP Addr.:</td> <td align=right> {{ basic.value(id~'dhcp', gad_dhcp) }} / {{ basic.value(id~'ip', gad_ip) }}</td></tr>{% endif %}
-			{% if gad_gw or gad_mask %}<tr><td align=left style="padding-left: 30px;">GW / Mask:</td> <td align=right> {{ basic.value(id~'gw', gad_gw) }} / {{ basic.value(id~'mask', gad_mask) }}</td></tr>{% endif %}
+			{% if gad_dhcp or gad_ip %}<tr><td align=left style="padding-left: 30px;">DHCP / IP:</td> <td align=right> {{ basic.value(id~'dhcp', gad_dhcp) }} / {{ basic.value(id~'ip', gad_ip) }}</td></tr>{% endif %}
+			{% if gad_gw or gad_mask %}<tr><td align=left style="padding-left: 30px;">GW/Mask:</td> <td align=right> {{ basic.value(id~'gw', gad_gw) }} / {{ basic.value(id~'mask', gad_mask) }}</td></tr>{% endif %}
 			{% if gad_mac %}   <tr><td align=left style="padding-left: 30px;">MAC:</td> <td align=right> {{ basic.value(id~'mac', gad_mac) }}</td></tr>{% endif %}
 			{% if gad_enigma or gad_image %}<tr><td align=left style="padding-left: 15px;"><strong>Firmware</strong></td> <td></td></tr>{% endif %}
 			{% if gad_enigma %}<tr><td colspan="2" align=left style="padding-left: 30px;"> {{ basic.value(id~'enigma', gad_enigma) }}</td></tr>{% endif %}
@@ -52,10 +52,10 @@
 
 	<div id="{{ uid }}">
 		<table width=90%> 
-			<tr><td align=left style="padding-left: 15px;">Modell / Web-IF:</td> <td align=right> {{ basic.value(id~'2model', gad_box~'.e2model') }} / v{{ basic.value(id~'2webif', gad_box~'.e2webifversion') }}</td></tr>
+			<tr><td align=left style="padding-left: 15px;">Type / WebIf:</td> <td align=right> {{ basic.value(id~'2model', gad_box~'.e2model') }} / v{{ basic.value(id~'2webif', gad_box~'.e2webifversion') }}</td></tr>
 			<tr><td align=left style="padding-left: 15px;"><strong>LAN Config</strong></td></tr>
-			<tr><td align=left style="padding-left: 30px;">DHCP / IP Addr.:</td> <td align=right> {{ basic.value(id~'2dhcp', gad_box~'.e2dhcp') }} / {{ basic.value(id~'2ip', gad_box~'.e2ip') }}</td></tr>
-			<tr><td align=left style="padding-left: 30px;">GW / Mask:</td> <td align=right> {{ basic.value(id~'2gw', gad_box~'.e2gateway') }} / {{ basic.value(id~'2mask', gad_box~'.e2netmask') }}</td></tr>
+			<tr><td align=left style="padding-left: 30px;">DHCP / IP:</td> <td align=right> {{ basic.value(id~'2dhcp', gad_box~'.e2dhcp') }} / {{ basic.value(id~'2ip', gad_box~'.e2ip') }}</td></tr>
+			<tr><td align=left style="padding-left: 30px;">GW/Mask:</td> <td align=right> {{ basic.value(id~'2gw', gad_box~'.e2gateway') }} / {{ basic.value(id~'2mask', gad_box~'.e2netmask') }}</td></tr>
 			<tr><td align=left style="padding-left: 30px;">MAC:</td> <td align=right> {{ basic.value(id~'2mac', gad_box~'.e2mac') }}</td></tr>
 			<tr><td align=left style="padding-left: 15px;"><strong>Firmware</strong></td></tr>
 			<tr><td colspan="2" align=left style="padding-left: 30px;">{{ basic.value(id~'2enigma', gad_box~'.e2enigmaversion') }}</td></tr>

@@ -14,9 +14,9 @@ Visit:  https://github.com/smarthomeNG/
 
 This plugin does the smartVISU specific handling. It installs widgets from the plugin directories to smartVISU and it auto-generates pages for smartVISU.
 
-This plugin (**```visu_websocket```**) does not do the communication with the browser. The websocket protocol for the browser communication is implemented in **```visu_websocket```**.
+This plugin (**```visu_smartvisu```**) does not do the communication with the browser. The websocket protocol for the browser communication is implemented in **```visu_websocket```**.
 
-The plugins **```visu_websocket```** and **```visu_websocket```** replace the old visu plugin.
+The plugins **```visu_websocket```** and **```visu_smartvisu```** replace the old visu plugin.
 
 
 # Requirements
@@ -30,7 +30,7 @@ The configuration of the plugin itself is done in the file **`etc/plugin.conf`**
 
 ## plugin.conf
 <pre>
-[visu]
+[smartvisu]
     class_name = SmartVisu
     class_path = plugins.visu_smartvisu
 #    smartvisu_dir = False
@@ -93,11 +93,30 @@ By setting **`sv_img`** you could assign an icon or picture for a page or widget
 
 
 ### sv_nav_aside
-**`sv_nav_aside`** allows the specification of a widget, that is being displayed at the right side of the navigation bar for a room. 
+**`sv_nav_aside`** allows the specification of a widget, that is being displayed at the right side of the navigation bar for a room. (upper line)
+
+Relative item references are supported.
+
+
+### sv_nav_aside2
+**`sv_nav_aside2`** allows the specification of a widget, that is being displayed at the right side of the navigation bar for a room. (lower line)
+
+Relative item references are supported.
 
 
 ### sv_widget
-**`sv_widget`** allows the specification of a widget. You could define multiple widgets by separating them by a comma. The widget(s) is/are shown by being encapsulated in a block of type 2 (Collapsable Block). 
+**`sv_widget`** allows the specification of a widget. You could define multiple widgets. The widget(s) is/are shown by being encapsulated in a block of type 2 (Collapsable Block). 
+
+Relative item references are supported.
+
+
+### sv_widget2
+**`sv_widget2`** allows the specification of a widget for widget blocks with two pages. You could define multiple widgets. The widget(s) is/are shown by being encapsulated in a block of type 2 (Collapsable Block) with multiple pages.
+
+Widget blocks with three pages are not supported yet. 
+
+Relative item references are supported.
+
 
 ### sv_item_type
 **`sv_item_type`** allows items to be displayed on an overview page.

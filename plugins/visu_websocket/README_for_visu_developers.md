@@ -236,3 +236,21 @@ The plugin answers with the protocol version it supports. Additionally it sends 
 	}
 ```
 
+
+## identity
+--> This command is new with **SmartHomeNG 1.3**
+
+With the **`identity`** command a client sends information about itself to SmartHomeNG. The command should be issued right after opening a connection.
+
+The following example shows, what a smartVISU v2.7 running in a Safari Browser would send:
+
+```
+	{
+	 'cmd': 'identity',
+	 'sw': 'smartVISU', 
+	 'ver': 'v2.7', 
+	 'browser': 'Safari', 
+	 'bver': '9'
+	}
+```
+

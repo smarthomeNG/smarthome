@@ -29,6 +29,8 @@
 #       removed rest of state 3 (hold)
 #  0.3  changed most logger.info to logger.debug
 #       Added release version to init message
+#  0.4  Changed logging style
+#       corrected serious bug in compare entry with NextDay
 #
 #x#########################################################################
 
@@ -39,11 +41,11 @@ from lib.model.smartplugin import SmartPlugin
 class Simulation(SmartPlugin):
 
     ALLOW_MULTIINSTANCE = False
-    PLUGIN_VERSION = "1.1.0.3"
+    PLUGIN_VERSION = "1.1.0.4"
 
     def __init__(self, smarthome,data_file):
         self.logger = logging.getLogger(__name__)
-        self.logger.info('Init Simulation release 0.3')
+        self.logger.info('Init Simulation release 0.4')
         self._sh = smarthome
         self._datafile=data_file
         self.lastday=''
@@ -203,7 +205,7 @@ class Simulation(SmartPlugin):
             except:
                 self.logger.error('Skipped unknown item: {}'.format(target))
         entry=self.file.readline()
-        if entry =='NextDay':
+        if entry =='NextDay\n':
             entry=self.file.readline()
         if entry !='':
             day=entry.split(';')[0]
@@ -238,6 +240,8 @@ class Simulation(SmartPlugin):
         while next < now:
             pos=self.file.tell()
             entry=self.file.readline()
+            if entry == 'NextDay\n':
+                entry=self.file.readline()
             if entry != '':
                 time=entry.split(';')[1]
                 hour=int(time.split(':')[0])

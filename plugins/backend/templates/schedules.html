@@ -27,12 +27,12 @@
                             <td></td>
                         {% endif %}
                         {% if smarthome.scheduler._scheduler[entry]['cycle'] %}
-                            <td>{{ smarthome.scheduler._scheduler[entry]['cycle'] }}</td>
+                            <td>{{ smarthome.scheduler._scheduler[entry]['cycle'] | e }}</td>
                         {% else %}
                             <td></td>
                         {% endif %}
                         {% if smarthome.scheduler._scheduler[entry]['cron'] %}
-                            <td>{{ smarthome.scheduler._scheduler[entry]['cron'] }}</td>
+                            <td>{{ smarthome.scheduler._scheduler[entry]['cron'] | e }}</td>
                         {% else %}
                             <td></td>
                         {% endif %}

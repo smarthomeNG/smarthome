@@ -30,6 +30,8 @@ sudo pip3 install jinja2
 </pre>
 And please pay attention that the libs are installed for Python3 and not an older Python 2.7 that is probably installed on your system.
 
+The log level filter in the log file view will only work with "%(asctime)s %(levelname)-8s" in the beginning of the configured format! Dateformat needs to be datefmt: '%Y-%m-%d %H:%M:%S'
+
 ## Running this plugin under Python 3.2
 If you really need to run this plugin under Python 3.2 you may not use the newest version of all packages. The packages **Jinja2** and **MarkupSafe** have dropped support for Python 3.2. Make sure to install the following older versions into your Phython3.2 environment, as newer versions are not compatible with Python 3.2 any more:
 
@@ -58,6 +60,7 @@ To support visualization, the visu_websocket plugin has to be used. It has to be
 	#password = very_secure_password
 	#language = en
 	#developer_mode = on
+	#pypi_timeout = 5
 </pre>
 
 ### ip
@@ -87,3 +90,6 @@ You can specify a language to use for the plugin. Besides the standard language 
 
 ### developer_mode (optional)
 You may specify develper_mode = on, if you are developiing within the backend plugin. At the moment, the only thing that changes is an additional button **``relaod translation``** on the services page
+
+### pypi_timeout (optional)
+Timeout for PyPI accessibility check (seconds). PyPI is queried on page "Systeminfo" to compare installed python module versions with current versions if accessible. If you receive the message "PyPI inaccessible" on systems with internet access you may increase the value. On systems where PyPI can not be reached (no/restricted internet access) you may set the timeout to 0 which disables the PyPI queries.
