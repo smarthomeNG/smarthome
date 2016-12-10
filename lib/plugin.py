@@ -51,38 +51,40 @@ class Plugins():
         if _conf == {}:
             return
             
+        instances = {}
         for plugin in _conf:
+            classname = _conf[plugin]['class_name']
+            classpath = _conf[plugin]['class_path']
+            classident = classpath + '.' + classname
+
+            instance = 'default'
+            if 'instance' in _conf[plugin]:
+                instance = _conf[plugin]['instance'].strip()
+
+            if classident not in instances:
+                instances[classident] = { plugin : instance }
+            else:
+                instances[classident][plugin] = instance
+
+        for plugin in _conf:
+            classname = _conf[plugin]['class_name']
+            classpath = _conf[plugin]['class_path']
+            classident = classpath + '.' + classname
+
             args = {}
-            logger.debug("Plugin: {0}".format(plugin))
+            logger.debug("Plugin: {0} ({1})".format(plugin, classident))
             for arg in _conf[plugin]:
                 if arg != 'class_name' and arg != 'class_path' and arg != 'instance':
                     value = _conf[plugin][arg]
                     if isinstance(value, str):
                         value = "'{0}'".format(value)
                     args[arg] = value
-            classname = _conf[plugin]['class_name']
-            classpath = _conf[plugin]['class_path']
-            
-            instance = ''
-            if 'instance' in _conf[plugin]:
-                instance = _conf[plugin]['instance'].strip()
-                if instance == 'default': 
-                    instance = ''
 
-            # give a warning if either a classic plugin uses the same class twice
-            # or if a SmartPlugin uses the same class and instance twice (due to a copy & paste error)
-            for p in self._plugins:
-                if isinstance(p, SmartPlugin):
-                    if p.get_instance_name() == instance:
-                        for t in self._threads:
-                            if t.plugin == p:
-                                if t.plugin.__class__.__name__ == classname:
-                                    prev_plugin = t._name
-                                    logger.warning("Plugin '{}' uses same class '{}' and instance '{}' as plugin '{}'".format(plugin, p.__class__.__name__, 'default' if instance == '' else instance, prev_plugin))
-                                    break
-
-                elif p.__class__.__name__ == classname:
-                    logger.warning("Multiple classic plugin instances of class '{}' detected".format(classname))
+            names = instances[classident]
+            instance = names[plugin]
+            if instance in [n for p, n in names.items() if p != plugin]:
+                logger.info("Using instance name {0} ({1} used multiple times for {2})".format(plugin, names[plugin], classident))
+                instance = plugin
 
             try:
                 plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance)
@@ -128,9 +130,10 @@ class PluginWrapper(threading.Thread):
         exec("self.plugin = {0}.{1}.__new__({0}.{1})".format(classpath, classname))
         setattr(smarthome, self.name, self.plugin)
         if isinstance(self.get_implementation(), SmartPlugin):
-            if instance != '':
+            if instance != 'default':
                 logger.debug("set plugin {0} instance to {1}".format(name, instance ))
                 self.get_implementation().set_instance_name(instance)
+            self.get_implementation().set_name(name)
             self.get_implementation().set_sh(smarthome)
 
         exec("self.args = inspect.getargspec({0}.{1}.__init__)[0][1:]".format(classpath, classname))
