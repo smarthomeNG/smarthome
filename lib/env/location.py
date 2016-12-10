@@ -40,3 +40,20 @@ if sh.sun:
     day = sh.sun.rise(-6).day != sh.sun.set(-6).day
     sh.env.location.day(day)
     sh.env.location.night(not day)
+
+    # calculate the season
+    md = time.month * 100 + time.day
+    if ((md > 320) and (md < 621)):
+        season = 0  # spring
+    elif ((md > 620) and (md < 923)):
+        season = 1  # summer
+    elif ((md > 922) and (md < 1223)):
+        season = 2  # fall
+    else:
+        season = 3  # winter
+    if float(sh._lat) < 0:
+        if season < 2:
+            season += 2
+        else:
+            season -= 2
+    sh.env.location.season(season)
