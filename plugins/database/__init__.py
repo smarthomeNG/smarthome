@@ -317,7 +317,7 @@ class Database(SmartPlugin):
         if func not in queries:
             raise NotImplementedError
 
-        order = None if func+'.order' not in queries else queries[func+'.order']
+        order = '' if func+'.order' not in queries else queries[func+'.order']
         logs = self._fetch_log(item, queries[func], start, end, step=step, count=count, group="GROUP BY ROUND(time / :step)", order=order)
         tuples = logs['tuples']
         if tuples:
