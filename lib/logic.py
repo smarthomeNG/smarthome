@@ -126,10 +126,14 @@ class Logic():
                 return
             try:
                 code = open(self.filename, encoding='UTF-8').read()
-                code = code.lstrip('\ufeff')  # remove BOM
-                self.bytecode = compile(code, self.filename, 'exec')
-            except Exception as e:
-                logger.exception("Exception: {}".format(e))
+            except UnicodeDecodeError as e:
+                logger.error("{}: logic file ({}) is not in UTF-8 format, please check character encoding at position {}! => ignoring logic".format(self.name, self.filename, e.start))
+            else:
+                try:
+                    code = code.lstrip('\ufeff')  # remove BOM
+                    self.bytecode = compile(code, self.filename, 'exec')
+                except Exception as e:
+                    logger.exception("Exception: {}".format(e))
         else:
             logger.warning("{}: No filename specified => ignoring.".format(self.name))
 

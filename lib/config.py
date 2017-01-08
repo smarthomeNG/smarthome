@@ -66,6 +66,9 @@ def parse_itemsdir(itemsdir, item_conf):
         if item_file.endswith(CONF_FILE) or item_file.endswith(YAML_FILE):
             try:
                 item_conf = parse(itemsdir + item_file, item_conf)
+            except UnicodeDecodeError as e:
+                logger.error("item file ({}) is not in UTF-8 format, please check character encoding at position {}! => ignoring config".format(item_file, e.start))
+                continue
             except Exception as e:
                 logger.exception("Problem reading {0}: {1}".format(item_file, e))
                 continue
