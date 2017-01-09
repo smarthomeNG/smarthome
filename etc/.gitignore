@@ -3,3 +3,7 @@
 # except .gitignore
 !.gitignore
 #!logging.yaml
+# except yaml default-files
+!smarthome.yaml.default
+!plugin.yaml.default
+!logging.yaml.default
