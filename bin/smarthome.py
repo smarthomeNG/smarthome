@@ -47,12 +47,13 @@ import subprocess
 import threading
 import time
 import traceback
+import psutil
 #####################################################################
 # Base
 #####################################################################
 BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
 sys.path.insert(0, BASE)
-
+PIDFILE= os.path.join(BASE,'var','run','smarthome.pid')
 #####################################################################
 # Import 3rd Party Modules
 #####################################################################
@@ -124,7 +125,6 @@ class SmartHome():
     _logic_dir = os.path.join(base_dir , 'logics'+os.path.sep)
     _cache_dir = os.path.join(_var_dir ,'cache'+os.path.sep)
     _log_config = os.path.join(_etc_dir,'logging.yaml')
-    _pidfile = os.path.join(_var_dir,'run','smarthome.pid')
 
     _log_buffer = 50
     __logs = {}
@@ -152,7 +152,7 @@ class SmartHome():
 
         # Fork process and write pidfile
         if MODE == 'default':
-            lib.daemon.daemonize(self._pidfile)
+            lib.daemon.daemonize(PIDFILE)
 
         #############################################################
         # Signal Handling
@@ -385,8 +385,8 @@ class SmartHome():
                 self.logger.info("Thread: {}, still alive".format(thread.name))
         else:
             self.logger.info("SmartHomeNG stopped")
-        if MODE == 'default':
-            os.remove(self._pidfile)
+        lib.daemon.remove_pidfile(PIDFILE)
+
         logging.shutdown()
         exit()
 
@@ -561,7 +561,7 @@ class SmartHome():
 #####################################################################
 
 def reload_logics():
-    pid = lib.daemon.get_pid(__file__)
+    pid = lib.daemon.read_pidfile(PIDFILE)
     if pid:
         os.kill(pid, signal.SIGHUP)
 
@@ -616,7 +616,7 @@ if __name__ == '__main__':
         print("{0}".format(VERSION))
         exit(0)
     elif args.stop:
-        lib.daemon.kill(__file__)
+        lib.daemon.kill(PIDFILE)
         exit(0)
     elif args.debug:
         MODE = 'debug'
@@ -626,12 +626,12 @@ if __name__ == '__main__':
         pass
 
     # check for pid file
-    pid = lib.daemon.get_pid(__file__)
-    if pid:
-        print("SmartHomeNG already running with pid {}".format(pid))
+    if lib.daemon.check_sh_is_running(PIDFILE):
+        print("SmartHomeNG already running with pid {}".format(lib.daemon.read_pidfile(PIDFILE)))
         print("Run 'smarthome.py -s' to stop it.")
         exit()
-
+    if MODE == 'debug':
+        lib.daemon.write_pidfile(psutil.Process().pid, PIDFILE)
     # Starting SmartHomeNG
     sh = SmartHome()
     sh.start()

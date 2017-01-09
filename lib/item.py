@@ -28,6 +28,7 @@ import os
 import pickle
 import threading
 import math
+import json
 
 from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_CACHE, KEY_CYCLE, KEY_CRONTAB, KEY_EVAL,
                            KEY_EVAL_TRIGGER, KEY_NAME,KEY_TYPE, KEY_VALUE, PLUGIN_PARSE_ITEM,
@@ -806,3 +807,29 @@ class Item():
 
     def type(self):
         return self._type
+
+    def get_children_path(self):
+        return [item._path
+                for item in self.__children]
+
+    def jsonvars(self):
+        """
+        Translation method from object members to json
+        :return: Key / Value pairs from object members
+        """
+        return { "id": self._path,
+                 "name": self._name,
+                 "value" : self._value,
+                 "type": self._type,
+                 "attributes": self.conf,
+                 "children": self.get_children_path() }
+# alternative method to get all class members
+#    @staticmethod
+#    def get_members(instance):
+#        return {k: v
+#                for k, v in vars(instance).items()
+#                if str(k) in ["_value", "conf"] }
+#                #if not str(k).startswith('_')}
+
+    def to_json(self):
+       return json.dumps(self.jsonvars(), sort_keys=True, indent=2)

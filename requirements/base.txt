@@ -2,3 +2,4 @@ ephem>=3.7
 python-dateutil>=2.5.3
 pyyaml==3.11
 astral==1.0
+psutil

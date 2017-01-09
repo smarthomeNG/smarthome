@@ -40,7 +40,8 @@ pyyaml==3.11
 # odlinfo
 # pushbullet
 # tankerkoenig
-requests>=2.9.1
+requests>=2.9.1;python_version>'3.2'
+requests==2.5.1;python_version=='3.2'
 
 # dashbutton
 scapy-python3 >= 0.18

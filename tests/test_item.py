@@ -237,6 +237,35 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(it._autotimer[3], 'item_tree.timertests.test_item52.wert')
 
 
+    def testItemCasts(self):
+        pass
+    def testItemJsonDump(self):
+        sh = MockSmartHome()
+
+        # load items
+        item_conf = None
+        item_conf = lib.config.parse(common.BASE + "/tests/resources/item_dumps.yaml", item_conf)
+        for attr, value in item_conf.items():
+            if isinstance(value, dict):
+                child_path = attr
+                try:
+                    child = lib.item.Item(sh, sh, child_path, value)
+                except Exception as e:
+                    self.logger.error("Item {}: problem creating: ()".format(child_path, e))
+                else:
+                    # vars(sh)[attr] = child
+                    sh.add_item(child_path, child)
+                    sh.children.append(child)
+
+      #  if 1: self.dump_items(sh)
+        #print(item_conf)
+        #print(sh.return_item("item1").to_json())
+        #print(sh.return_item("item3.item3b.item3b1").to_json())
+        #print(sh.return_item("item3").to_json())
+        import json
+        self.assertEqual(json.loads(sh.return_item("item3").to_json())['name'], sh.return_item("item3")._name)
+        self.assertEqual(json.loads(sh.return_item("item3").to_json())['id'], sh.return_item("item3")._path)
+
 
 class MockSmartHome():
     

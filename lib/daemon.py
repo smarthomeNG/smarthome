@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 #########################################################################
-# Copyright 2013 Marcus Popp                               marcus@popp.mx
 # Copyright 2016-     Christian Strassburg            c.strassburg@gmx.de
 #########################################################################
 #  This file is part of SmartHomeNG.
@@ -19,12 +18,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with SmartHomeNG.py. If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
-import logging
-import signal
-import time
 import os
 import sys
-
+import psutil
 
 def daemonize(pidfile,stdin='/dev/null', stdout='/dev/null', stderr=None):
     """
@@ -56,8 +52,7 @@ def daemonize(pidfile,stdin='/dev/null', stdout='/dev/null', stderr=None):
         sys.exit(1)
 
     # decouple from parent environment
-    #os.chdir("/") 
-    os.setsid() 
+    os.setsid()
     os.umask(0) 
 
     # do second fork
@@ -66,9 +61,7 @@ def daemonize(pidfile,stdin='/dev/null', stdout='/dev/null', stderr=None):
         if pid > 0:
             # exit from second parent, print eventual PID before
             print ("Daemon PID %d" % pid )
-            fd = open(pidfile, 'w+')
-            fd.write("%s\n" % pid)
-            fd.close()
+            write_pidfile(pid, pidfile)
             sys.exit(0) 
     except OSError as  e: 
         print("fork #2 failed: %d (%s)" % (e.errno, e.strerror) , file=sys.stderr)
@@ -83,39 +76,37 @@ def daemonize(pidfile,stdin='/dev/null', stdout='/dev/null', stderr=None):
     os.close(sys.stderr.fileno())
     os.dup2(si.fileno(), sys.stdin.fileno())
     os.dup2(so.fileno(), sys.stdout.fileno())
-    os.dup2(se.fileno(), sys.stderr.fileno()) 
+    os.dup2(se.fileno(), sys.stderr.fileno())
 
-# TODO: refactoring 
-def get_pid(filename):
-    cpid = str(os.getpid())
-    for pid in os.listdir('/proc'):
-        if pid.isdigit() and pid != cpid:
-            try:
-                with open('/proc/{}/cmdline'.format(pid), 'r') as f:
-                    cmdline = f.readline()
-                    if filename in cmdline:
-                        if cmdline.startswith('python'):
-                            return int(pid)
-            except:
-                pass
+
+def remove_pidfile(pidfile: str):
+    os.remove(pidfile)
+
+
+def write_pidfile(pid: int, pidfile: str):
+    fd = open(pidfile, 'w+')
+    fd.write("%s" % pid)
+    fd.close()
+
+
+def read_pidfile(pidfile: str) -> int:
+    if os.path.isfile(pidfile):
+        fd = open(pidfile,'r')
+        line = fd.readline()
+        return int(line)
     return 0
 
-# TODO: refactoring 
-def kill(filename, wait=10):
-    pid = get_pid(filename)
-    delay = 0.25
-    waited = 0
-    if pid:
-        os.kill(pid, signal.SIGTERM)
-        while waited < wait:
-            try:
-                os.kill(pid, 0)
-            except OSError:
-                os._exit(0)
-            waited += delay
-            time.sleep(delay)
-        try:
-            print("Killing {}".format(os.path.basename(filename)))
-            os.kill(pid, signal.SIGKILL)
-        except OSError:
-            os._exit(0)
+
+def check_sh_is_running(pidfile: str) -> bool:
+    return psutil.pid_exists(read_pidfile(pidfile))
+
+
+def kill(pidfile:str,waittime:int=10):
+    pid = read_pidfile(pidfile)
+    if psutil.pid_exists(pid):
+        p = psutil.Process(pid)
+        if p is not None:
+            p.terminate()
+            p.wait(timeout=waittime)
+            if p.is_running():
+               p.kill()

@@ -1,7 +1,11 @@
 sudo: false
 language: python
 python:
+#    - "3.2"
+    - "3.3"
     - "3.4"
+    - "3.5"
+    - "3.6"
 
 before_install:
     - git submodule update --init --remote --recursive
@@ -11,11 +15,3 @@ install:
 
 script:
     - tox
-
-# List all environments configured in tox.ini to test them all using
-# Travis CI!
-env:
-    - TOXENV=py32
-    - TOXENV=py33
-    - TOXENV=py34
-    - TOXENV=py35

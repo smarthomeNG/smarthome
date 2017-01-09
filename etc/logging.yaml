@@ -1,16 +1,19 @@
 version: 1
 disable_existing_loggers: False
 formatters:
+  busmonitor_format:
+    format: '%(asctime)s;%(message)s;'
+    datefmt: '%Y-%m-%d;%H:%M:%S'
   simple:
     format: '%(asctime)s %(levelname)-8s %(threadName)-12s %(message)s'
     datefmt: '%Y-%m-%d  %H:%M:%S'
   detail:
     format: '%(asctime)s %(levelname)-8s %(module)-12s %(threadName)-12s %(message)s -- %(filename)s:%(funcName)s:%(lineno)d'
     datefmt: '%Y-%m-%d %H:%M:%S'
-#  busmonitor:
-#    format: '%(asctime)s;%(message)s'
-#    datefmt: '%Y-%m-%d %H:%M:%S'
-
+filters:
+  loggerfilter:
+    '()': lib.logutils.Filter
+    name: 'knx_busmonitor'
 handlers:
   console:
     class: logging.StreamHandler
@@ -19,24 +22,27 @@ handlers:
   file:
     class: logging.handlers.TimedRotatingFileHandler
     formatter: simple
+    filters: [loggerfilter]
     when: midnight
     backupCount: 7
     filename: ./var/log/smarthome.log
-#  busmonitor_file:
-#    class: logging.handlers.TimedRotatingFileHandler
-#    formatter: simple
-#    when: midnight
-#    backupCount: 7
-#    filename: ./var/log/knx_busmonitor.log
-
-#loggers:
-#    knx_busmonitor:
+  busmonitor_file:
+    class: logging.handlers.TimedRotatingFileHandler
+    formatter: busmonitor_format
+    when: midnight
+    backupCount: 7
+    filename: ./var/log/knx_busmonitor.log
+loggers:
+    knx_busmonitor:
+       level: INFO
+       handlers: [busmonitor_file ]
+#  plugins.knx:
 #    level: INFO
-#    handlers: [busmonitor_file]
 #  lib.scheduler:
 #    level: DEBUG
 #  plugins.cli:
 #    level: DEBUG
+
 root:
     level: INFO
     handlers: [file, console]

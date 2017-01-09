@@ -2,3 +2,4 @@
 	path = plugins
 	url = https://github.com/smarthomeNG/plugins
 	branch = develop
+	ignore = all

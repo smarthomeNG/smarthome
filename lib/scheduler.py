@@ -32,6 +32,8 @@ import os  # noqa
 import random
 import types  # noqa
 import subprocess  # noqa
+import inspect
+
 from lib.model.smartplugin import SmartPlugin
 
 import dateutil.relativedelta
@@ -178,7 +180,21 @@ class Scheduler(threading.Thread):
             self._triggerq.insert((dt, prio), (name, obj, by, source, dest, value))
 
     def remove(self, name):
+        """
+        remove a scheduler entry with given name. If a call is made from a SmartPlugin with a instance configuration
+          the instance name is added to the name
+        :param name: scheduler entry name to remove
+        :return:
+        """
         self._lock.acquire()
+        stack = inspect.stack()
+        obj = stack[1][0].f_locals["self"]
+        if isinstance(obj, SmartPlugin):
+            iname = obj.get_instance_name()
+            if iname != '':
+                if not str(name).endswith('_'+iname):
+                    name = name + '_' + obj.get_instance_name()
+        logger.debug("remove scheduler entry with name:{0}".format(name))
         if name in self._scheduler:
             del(self._scheduler[name])
         self._lock.release()
