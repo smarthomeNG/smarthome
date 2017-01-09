@@ -32,15 +32,15 @@ import math
 from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_CACHE, KEY_CYCLE, KEY_CRONTAB, KEY_EVAL,
                            KEY_EVAL_TRIGGER, KEY_NAME,KEY_TYPE, KEY_VALUE, PLUGIN_PARSE_ITEM,
                            KEY_AUTOTIMER,KEY_THRESHOLD,
-                           ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST)
+                           KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST)
 
 
-# TODO: Decide, if ATTRIB_COMPAT_DEFAULT should be moved to constants.py
-# TODO: Implement reading global setting for ATTRIB_COMPAT_DEFAULT from smarthome.yaml
-ATTRIB_COMPAT_DEFAULT = ATTRIB_COMPAT_V12
+ATTRIB_COMPAT_DEFAULT_FALLBACK = ATTRIB_COMPAT_V12
+ATTRIB_COMPAT_DEFAULT = ''
 
 
 logger = logging.getLogger(__name__)
+
 
 
 #####################################################################
@@ -255,6 +255,20 @@ class Item():
         else:
             self._change_logger = logger.debug
         #############################################################
+        # Initialize attribute assignment compatibility
+        #############################################################
+        global ATTRIB_COMPAT_DEFAULT
+        if ATTRIB_COMPAT_DEFAULT == '':
+            if hasattr(smarthome, '_'+KEY_ATTRIB_COMPAT):
+                config_attrib = getattr(smarthome,'_'+KEY_ATTRIB_COMPAT)
+                if str(config_attrib) in [ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST]:
+                    logger.info("Global configuration: '{}' = '{}'.".format(KEY_ATTRIB_COMPAT, str(config_attrib)))
+                    ATTRIB_COMPAT_DEFAULT = config_attrib
+                else:
+                    logger.warning("Global configuration: '{}' has invalid value '{}'.".format(KEY_ATTRIB_COMPAT, str(config_attrib)))
+            if ATTRIB_COMPAT_DEFAULT == '':
+                ATTRIB_COMPAT_DEFAULT = ATTRIB_COMPAT_DEFAULT_FALLBACK
+        #############################################################
         # Item Attributes
         #############################################################
         for attr, value in config.items():
@@ -390,17 +404,20 @@ class Item():
         """
         # casting of value, if compat = latest
         if compat == ATTRIB_COMPAT_LATEST:
-            mycast = globals()['_cast_' + self._type]
-            try:
-                value = mycast(value)
-            except:
-                logger.warning("Item {}: Unable to cast '{}' to {}".format(self._path, str(value), self._type, str(mycast)))
-                if isinstance(value, list):
-                    value = []
-                elif isinstance(value, dict):
-                    value = {}
-                else:
-                    value = mycast('')
+            if self._type != None:
+                mycast = globals()['_cast_' + self._type]
+                try:
+                    value = mycast(value)
+                except:
+                    logger.warning("Item {}: Unable to cast '{}' to {}".format(self._path, str(value), self._type, str(mycast)))
+                    if isinstance(value, list):
+                        value = []
+                    elif isinstance(value, dict):
+                        value = {}
+                    else:
+                        value = mycast('')
+            else:
+                logger.warning("Item {}: Unable to cast '{}' to {}".format(self._path, str(value), self._type))
         return value
         
 
