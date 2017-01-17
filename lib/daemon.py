@@ -80,7 +80,8 @@ def daemonize(pidfile,stdin='/dev/null', stdout='/dev/null', stderr=None):
 
 
 def remove_pidfile(pidfile: str):
-    os.remove(pidfile)
+    if os.path.exists(pidfile):
+        os.remove(pidfile)
 
 
 def write_pidfile(pid: int, pidfile: str):

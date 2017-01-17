@@ -153,6 +153,7 @@ class Scheduler(threading.Thread):
         self.alive = False
 
     def trigger(self, name, obj=None, by='Logic', source=None, value=None, dest=None, prio=3, dt=None):
+        name = self.check_caller(name)
         if obj is None:
             if name in self._scheduler:
                 obj = self._scheduler[name]['obj']
@@ -187,17 +188,21 @@ class Scheduler(threading.Thread):
         :return:
         """
         self._lock.acquire()
-        stack = inspect.stack()
-        obj = stack[1][0].f_locals["self"]
-        if isinstance(obj, SmartPlugin):
-            iname = obj.get_instance_name()
-            if iname != '':
-                if not str(name).endswith('_'+iname):
-                    name = name + '_' + obj.get_instance_name()
+        name = self.check_caller(name)
         logger.debug("remove scheduler entry with name:{0}".format(name))
         if name in self._scheduler:
             del(self._scheduler[name])
         self._lock.release()
+
+    def check_caller(self, name):
+        stack = inspect.stack()
+        obj = stack[2][0].f_locals["self"]
+        if isinstance(obj, SmartPlugin):
+            iname = obj.get_instance_name()
+            if iname != '':
+                if not str(name).endswith('_' + iname):
+                    name = name + '_' + obj.get_instance_name()
+        return name
 
     def return_next(self, name):
         if name in self._scheduler:
@@ -261,12 +266,14 @@ class Scheduler(threading.Thread):
         self._lock.release()
 
     def get( self, name):
+        name = self.check_caller()
         if name in self._scheduler:
             return self._scheduler[name]
         else:
             return None
 
     def change(self, name, **kwargs):
+        name = self.check_caller(name)
         if name in self._scheduler:
             for key in kwargs:
                 if key in self._scheduler[name]:

@@ -12,7 +12,7 @@ from tests.backend.cptestcase import BaseCherryPyTestCase
 def setUpModule():
     bs = MockBackendServer()
     sh = bs._sh
-    cherrypy.tree.mount(Root(backendserver=bs), '/')
+    cherrypy.tree.mount(Root(backendserver=bs,developer_mode=True), '/')
     cherrypy.engine.start()
 setup_module = setUpModule
 

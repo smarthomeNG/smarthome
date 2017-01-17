@@ -111,7 +111,6 @@ class TestConfig(unittest.TestCase):
 	def test_plugin_instance_wol(self):
 		wolplug = self.plugins.get_plugin("wol_ww")
 		self.sh.scheduler.add(wolplug.name, wolplug.plugin.update_item, prio=5, cycle=300, offset=2)
-		wolplug.plugin.testprint()
 		wolplug.plugin.wake_on_lan("11:22:33:44:55:66")
 
 	def _test_configsave(self):
