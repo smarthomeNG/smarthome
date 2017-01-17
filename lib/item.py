@@ -410,7 +410,7 @@ class Item():
                 try:
                     value = mycast(value)
                 except:
-                    logger.warning("Item {}: Unable to cast '{}' to {}".format(self._path, str(value), self._type, str(mycast)))
+                    logger.warning("Item {}: Unable to cast '{}' to {}".format(self._path, str(value), self._type))
                     if isinstance(value, list):
                         value = []
                     elif isinstance(value, dict):
