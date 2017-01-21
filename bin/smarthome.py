@@ -39,7 +39,8 @@ import locale
 import logging
 import logging.handlers
 import logging.config
-import yaml
+#import yaml
+import ruamel.yaml as yaml
 import os
 import re
 import signal
