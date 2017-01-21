@@ -22,7 +22,8 @@
 #########################################################################
 
 import logging
-import yaml
+#import yaml
+import ruamel.yaml as yaml
 from collections import OrderedDict
 
 
