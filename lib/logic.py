@@ -93,11 +93,15 @@ class Logic():
         self.prio = 3
         self.last = None
         self.conf = attributes
-        for attribute in attributes:
-            vars(self)[attribute] = attributes[attribute]
-        self.generate_bytecode()
-        self.prio = int(self.prio)
         self.__methods_to_trigger = []
+        if attributes != 'None':
+            for attribute in attributes:
+                vars(self)[attribute] = attributes[attribute]
+            self.prio = int(self.prio)
+            self.generate_bytecode()
+        else:
+            logger.error("Logic {} is not configured correctly (configuration has no attibutes)".format(self.name))
+        
 
     def id(self):
         return self.name
