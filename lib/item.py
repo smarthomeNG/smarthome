@@ -72,6 +72,11 @@ def _cast_bool(value):
             return True
         else:
             raise ValueError
+    elif type(value) in [bytes, bytes]:
+        if value.lower() in [b'0', b'false', b'no', b'off']:
+            return False
+        elif value.lower() in [b'1', b'true', b'yes', b'on']:
+            return True
     else:
         raise TypeError
 
