@@ -463,6 +463,10 @@ class SmartHome():
     #################################################################
     # Plugin Methods
     #################################################################
+    def get_plugins(self):
+        return self._plugins
+
+    # deprecated: use get_plugins()
     def return_plugins(self):
         for plugin in self._plugins:
             yield plugin
@@ -470,13 +474,19 @@ class SmartHome():
     #################################################################
     # Logic Methods
     #################################################################
+    def get_logics(self):
+        return self._logics
+
+    # deprecated: use get_logics().get_logic(name).generate_bytecode()
     def reload_logics(self, signum=None, frame=None):
         for logic in self._logics:
             self._logics[logic].generate_bytecode()
 
+    # deprecated: use get_logics().get_logic(name)
     def return_logic(self, name):
         return self._logics[name]
 
+    # deprecated: use get_logics()
     def return_logics(self):
         for logic in self._logics:
             yield logic
