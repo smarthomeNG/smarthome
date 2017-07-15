@@ -1,13 +1,13 @@
-==================================
-Pre-Release 1.2 - not yet released
-==================================
+============================
+Release 1.2 - May 16th, 2016
+============================
 
 We still have to document the many changes within this upcoming release 1.2. 
 
 New CORE features
 -----------------
 
-* further improved logging (Konfiguration via etc/logging.yaml)
+* further improved logging (Konfiguration via ``etc/logging.yaml``)
 * new env.location Items: 
 
  - env.location.sunrise.azimut.degrees
@@ -27,7 +27,8 @@ New CORE features
 
  - Basic check and conversion of plugin attributes and values for data types by means of Utils.py which is part of the base plugin class now
  - version numbers for SmartPlugins (attribut PLUGIN_VERSION at SmartPlugin is mandatory)
- - Ability of plugins to be running with multiple instances  (instance Attribut in etc/plugin.conf, binding of Items with item@\<instance_name\> (Attribut ALLOW_MULTIINSTANCE=False|True mandatory)
+ - Ability of plugins to be running with multiple instances  (instance Attribut in ``etc/plugin.conf``,
+   binding of Items with ``item@\<instance_name\>`` (Attribut ALLOW_MULTIINSTANCE=False|True mandatory)
 
 * unit tests for functions within the CORE Libs
 
@@ -48,26 +49,21 @@ New Plugins
 
 Removed Plugins
 ---------------
-
+* Whatsapp
 
 Open Issues - Todo
 ==================
 
 * Feiertage Plugin
 * Datenbank-Abstraktions Plugin
-* Python Mindestlevel (geht das Backend-Plugin auf Py3.2 jetzt?)
+* Python Mindestlevel (geht das Backend-Plugin auf Py3.4 jetzt?)
 * Bug in is_ip (Utils)
 * systemd Abhängigkeiten im Backend Plugin
-* Prüfen ob ``object_refcount``rausfliegt (six.py Problem bei der _maintenance Routine)
-* REST
+* Prüfen ob ``object_refcount`` rausfliegt (six.py Problem bei der maintenance Routine)
+* REST API
 
 # Todo für Doku
 * Pluginentwicklung mit SmartPlugin
 * Nutzung der Multiinstanzfähigkeit (Plugin- / Itemanpassungen)
 * Wie konfiguriere ich Logging?
 
-# zu klären, ob Ausbau sinnvoll:
-* env.core.update
-* env.core.upgrade 
-* altes Fritzbox-Plugin
-* Altes VISU Plugin (jetzt ja getrennt - der Wechsel sollte dann aber dokumentiert werden)

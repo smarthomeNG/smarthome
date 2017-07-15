@@ -1,141 +1,162 @@
-======
 Items
-======
+=====
 
 Overview
-========
+--------
 
-The easiest item consists just of a file with the item name:
+Items can be defined with a ``.conf`` file. Starting with SmartHomeNG 1.3 items may also be defined
+within one or more ``.yaml``-files. If there are filenames with the same base name then the ``.yaml`` file
+will be read instead of the ``.conf`` file.
 
-.. raw:: html
+The following still describes the old-fashioned way with a ``.conf`` file. Indentation may be used
+for legibility purposes but is neither necessary nor mandatory.
 
-   <pre># myitem.conf
-       [One]</pre>
-
-
-For any item name only the characters A-Z and a-z should be used. An underscor or a digit may be used within the item name
-An item name like ``[1w_Bus]``, ``[42]`` or ``[_Bus]`` should not be used. (Any Python reserved name also should be avoided)
+For any item name only the characters ``A-Z`` and ``a-z`` should be used.
+An underscore ``_`` or a digit ``0-9`` may be used within the item name but not as a first character.
+Item names like ``[1w_Bus]``, ``[42]`` or ``[_Bus]`` should not be used.
+Any Python reserved names like e.g. ``get`` or ``set`` also should be avoided.
 
 Items can be build up in a hierarchical manner. An item can have children that may have children as well and so on.
-To express the level of an item square parentheses are used. The more the lower in the hierarchy.
-Child item are always accessed with a full path:
+The level of an item is shown by the number of square parentheses used. The more parentheses around the item name,
+the lower in the hierarchy.
 
-.. raw:: html
+.. code-block:: text
+   :caption: myitem.conf
 
-    <pre># myitem.conf
-    [grandfather]
-       [[daddy]]
-          [[[kid]]]
-    </pre>
+   [grandfather]
+      [[daddy]]
+         [[[kid]]]
 
-Here a simple item:
+It is advised to use nested items to build a tree representing your environment:
 
-.. raw:: html
+.. code-block:: text
+   :caption: /usr/local/smarthome/items/living.conf
 
-   <pre># e.g. items/kitchen.conf
-   [kitchen]
-       type = num
-   </pre>
-
-Use nested items to build a tree representing your environment.
-
-.. raw:: html
-
-   <pre># /usr/local/smarthome/items/living.conf
-   [kitchen]
-       [[fridge]]
+   [living]
+       [[light]]
+           type = bool
+           name = Livingroom main light
+       [[tv]]
            type = bool
 
-       [[oven]]
-           type = bool
-
-           [[[L1]]]
+           [[[current]]]
                type = num
-   </pre>
+   [kitchen]
+       [[light]]
+           type = bool
+           name = kitchen table light
+       [[temp]]
+           type = num
+       [[presence]]
+           type = bool
+
+
 
 Item Attributes
 ~~~~~~~~~~~~~~~
 
--  ``type``: for storing values and/or triggering actions you have to
-   specify this attribute. (If you do not specify this attribute the
-   item is only useful for structuring your item tree). Supported
-   types:
-   -  bool: boolean type (on, 1, True or off, 0, False). True or False are
-   internally used. Use e.g. ``if sh.item(): ...``.
-   -  num: any number (integer or float).
-   -  str: regular string or unicode string.
-   -  list: list/array of values. Usefull e.g. for some KNX dpts.
-   -  dict: python dictionary for generic purposes.
-   -  foo: pecial purposes. No validation is done.
-   -  scene: special keyword to support scenes
+Any item can have several attributes. In the above code there is defined the item ``living.light`` and it has the
+attributes ``type`` and ``name``. The following table shows the attributes that will be understood by the core
+of SmartHomeNG.
 
--  ``value``: initial value of that item.
--  ``name``: name which would be the str representation of the item
-   (optional).
--  ``cache``: if set to On, the value of the item will be cached in a
-   local file (in /usr/local/smarthome/var/cache/).
--  ``enforce_updates``: If set to On, every call of the item will
-   trigger depending logics and item evaluations.
--  ``threshold``: specify values to trigger depending logics only if the
-   value transit the threshold. low:high to set a value for the lower
-   and upper threshold, e.g. 21.4:25.0 which triggers the logic if the
-   value exceeds 25.0 or fall below 21.4. Or simply a single value.
--  ``eval`` and ``eval_trigger``: see next section for a description of
-   these attributes.
--  ``crontab`` and ``cycle``: see logic.conf for possible options to set
-   the value of an item at the specified times / cycles.
-- ``autotimer`` see the item function below. e.g. ``autotimer = 10m = 42``
+However plugins may introduce many more attributes that will mostly be specific by the plugin itself.
+
+======================= ================================================================================================
+attribute               description
+======================= ================================================================================================
+``type``                for storing values and/or triggering actions you have to
+                        specify this attribute. (If you do not specify this attribute the
+                        item is only useful for structuring your item tree).
+
+                        **Supported types**:
+
+                        ``bool`` boolean type (on, 1, True or off, 0, False).
+                        True or False are internally used. Use e.g. ``if sh.item(): ...``.
+
+                        ``num``  any number (integer or float).
+
+                        ``str``  regular string or unicode string.
+
+                        ``list``  list/array of values. Useful e.g. for some KNX dpts.
+
+                        ``dict``  python dictionary for generic purposes.
+
+                        ``foo``   special purposes. No validation is done.
+
+                        ``scene`` special keyword to support scenes
+
+``value``               initial value of that item.
+``name``                name which would be the str representation of the item (optional).
+``cache``               if set to On, the value of the item will be cached in a
+                        local file (in /usr/local/smarthome/var/cache/).
+``enforce_updates``     If set to On, every call of the item will trigger depending logics and item evaluations.
+``threshold``           specify values to trigger depending logics only if the value transit the threshold.
+
+                        ``low:high`` to set a value for the lower and upper threshold,
+                        e.g. ``21.4:25.0`` which triggers the logic if the value exceeds 25.0 or fall below 21.4.
+                        Or simply a single value.
+``eval``                if the value of the item is to be changed and this attribute presents a formula then
+                        the new value will be calculated using this formula
+``eval_trigger``        trigger to initiate the evaluation of the formula given with eval
+``crontab``             see logic.conf for possible options to set the value of an item at the specified times / cycles.
+``cycle``               see logic.conf for possible options to set the value of an item at the specified times / cycles.
+``autotimer``           sets the items value after some time delay
+======================= ================================================================================================
+
 
 Scenes
 ^^^^^^
 
-For using scenes a config file into the scenes directory for every
-'scene item' is necessary. The scene config file consists of lines
-with 3 space separated values in the format ItemValue ItemPath\|LogicName
-Value:
+For using scenes a config file into the scenes directory for every scene item is necessary.
+The scene config file consists of lines with 3 space separated values in the format ``ItemValue ItemPath | LogicName
+Value``
 
--  ItemValue: the first column contains the item value to check for the configured action.
--  ItemPath or LogicName: the second column contains an item path, which is set to the given value, or a LogicName, which is triggered
--  Value: in case an ItemPath was specified the item will be set to the given value, in case a LogicName was specified the logic will be run (specify 'run' as value) or stop (specify 'stop' as value).
+======================= ================================================================================================
+Column                  description
+======================= ================================================================================================
+ItemValue:              the first column contains the item value to check for the configured action.
+ItemPath or LogicName:  the second column contains an item path, which is set to the given value,
+                        or a LogicName, which is triggered
+Value:                  in case an ItemPath was specified the item will be set to the given value, in case a
+                        LogicName was specified the logic will be run (specify 'run' as value)
+                        or stop (specify 'stop' as value).
+======================= ================================================================================================
 
-.. raw:: html
+.. code-block:: text
+   :caption: items/example.conf
 
-   <pre># items/example.conf
    [example]
        type = scene
    [otheritem]
        type = num
-   </pre>
 
-   <pre># scenes/example.conf
+.. code-block:: text
+   :caption: scenes/example.conf
+
    0 otheritem 2
    1 otheritem 20
    1 LogicName run
    2 otheritem 55
    3 LogicName stop
-   </pre>
 
 eval
 ^^^^
 
 This attribute is useful for small evaluations and corrections. The
-input value is accesible with ``value``.
+input value is accessible with ``value``.
 
-.. raw:: html
+.. code-block:: text
+   :caption: items/level.conf
 
-   <pre>
-   # items/level.conf
    [level]
        type = num
        eval = value * 2 - 1  # if you call sh.level(3) sh.level will be evaluated and set to 5
-   </pre>
 
 Trigger the evaluation of an item with ``eval_trigger``:
 
-.. raw:: html
+.. code-block:: text
+   :caption: items/room.conf
 
-   <pre>
-   # items/room.conf
    [room]
        [[temp]]
            type = num
@@ -145,27 +166,25 @@ Trigger the evaluation of an item with ``eval_trigger``:
            type = num
            eval = sh.tools.dewpoint(sh.room.temp(), sh.room.hum())
            eval_trigger = room.temp | room.hum  # every change of temp or hum would trigger the evaluation of dew.
-   </pre>
 
-Eval keywords to use with the eval\_trigger:
+Eval keywords to use with the ``eval_trigger``:
 
--  sum: compute the sum of all specified eval\_trigger items.
--  avg: compute the average of all specified eval\_trigger items.
--  and: set the item to True if all of the specified eval\_trigger items
-   are True.
--  or: set the item to True if one of the specified eval\_trigger items
-   is True.
+======= =============================================================================
+``sum`` compute the sum of all specified ``eval_trigger`` items.
+``avg`` compute the average of all specified ``eval_trigger`` items.
+``and`` set the item to True if all of the specified ``eval_trigger`` items are True.
+``or``  set the item to True if one of the specified ``eval_trigger`` items  is True.
+======= =============================================================================
 
-.. raw:: html
+.. code-block:: text
+   :caption:  items/rooms.conf
 
-   <pre>
-   # items/rooms.conf
-   [room_a]
+   [living]
        [[temp]]
            type = num
        [[presence]]
            type = bool
-   [room_b]
+   [kitchen]
        [[temp]]
            type = num
        [[presence]]
@@ -175,87 +194,59 @@ Eval keywords to use with the eval\_trigger:
            type = num
            name = average temperature
            eval = avg
-           eval_trigger = room_a.temp | room_b.temp
+           eval_trigger = living.temp | kitchen.temp
        [[presence]]
            type = bool
            name = movement in on the rooms
            eval = or
-           eval_trigger = room_a.presence | room_b.presence
-   </pre>
+           eval_trigger = living.presence | kitchen.presence
 
-Item Functions
+Item functions
 ~~~~~~~~~~~~~~
 
 Every item provides the following methods:
 
-id()
-^^^^
+================================ ==================================================================================
+function                         description
+================================ ==================================================================================
+``id()``                         Returns the item id (path).
+``return_parent()``              Returns the parent item.
+``return_children()``            Returns the children of an item.
+``autotimer(time, value)``       Set a timer to run at every item change. Specify the time (in seconds),
+                                 or use m to specify minutes.
 
-Returns the item id (path).
+``timer(time, value)``           Same as ``autotimer()``, except that it runs only once.
+``age()``                        Returns the age of the current item value as seconds.
+``prev_age()``                   Returns the previous age of the item value as seconds.
+``last_change()``                Returns a datetime object with the time of the last change.
+``prev_change()``                Returns a datetime object with the time of the next to last change.
+``prev_value()``                 Returns the value of the next to last change.
+``last_update()``                Returns a datetime object with the time of the last update.
+``changed_by()``                 Returns the caller of the latest update.
+``fade(tovalue,step,timedelta)`` Fades the item to a specified value with the defined stepping
+                                 (int or float) and timedelta (int or float in seconds).
 
-return\_parent()
-^^^^^^^^^^^^^^^^
-
-Returns the parent item. ``sh.item.return_parent()``
-
-return\_children()
-^^^^^^^^^^^^^^^^^^
-
-Returns the children of an item.
-``for child in sh.item.return_children(): ...``
-
-
-autotimer(time, value)
-^^^^^^^^^^^^^^^^^^^^^^
-Set a timer to run at every item change. Specify the time (in seconds), or use m to specify minutes. e.g. autotimer('10m', 42) to set the item after 10 minutes to 42.
-If you call autotimer() without a timer or value, the functionality will be disabled.
-
-timer(time, value)
-^^^^^^^^^^^^^^^^^^
-Same as autotimer, excepts it runs only once.
-
-age()
-^^^^^
-
-Returns the age of the current item value as seconds.
-
-prev\_age()
-^^^^^^^^^^^
-
-Returns the previous age of the item value as seconds.
-
-last\_change()
-^^^^^^^^^^^^^^
-
-Returns a datetime object with the time of the last change.
-
-prev\_change()
-^^^^^^^^^^^^^^
-
-Returns a datetime object with the time of the next to last change.
+================================ ==================================================================================
 
 
-prev\_value()
-^^^^^^^^^^^^^^
+Example logic with uses of above functions
+------------------------------------------
 
-Returns the value of the next to last change.
+.. code-block:: python
+   :caption:  logics/sample.py
 
+   # getting the parent of item
+   sh.item.return_parent()
 
-last\_update()
-^^^^^^^^^^^^^^
+   # get all children for item and log them
+   for child in sh.item.return_children():
+      logger.debug( ... )
 
-Returns a datetime object with the time of the last update.
+   # set the item after 10 minutes to 42
+   sh.item.autotimer('10m', 42)``
 
-changed\_by()
-^^^^^^^^^^^^^
+   # disable autotimer for item
+   sh.item.autotimer()
 
-Returns the caller of the latest update.
-
-fade()
-^^^^^^
-
-Fades the item to a specified value with the defined stepping (int or
-float) and timedelta (int or float in seconds). E.g.
-sh.living.light.fade(100, 1, 2.5) will in- or decrement the living room
-light to 100 by a stepping of '1' and a timedelta of '2.5' seconds.
-
+   # will in- or decrement the living room light to 100 by a stepping of ``1`` and a timedelta of ``2.5`` seconds.
+   sh.living.light.fade(100, 1, 2.5)``

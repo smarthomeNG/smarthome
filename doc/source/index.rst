@@ -1,16 +1,28 @@
-======================
- SmartHomeNG
-======================
+:tocdepth: 3
 
-SmartHomeNG is a modular framework for home automation based on a linux and some hardware like Raspberry.PI, a NUC, Beaglebone, etc.
+###########
+SmartHomeNG
+###########
 
-See the `install <install.html>`_ and `config <config.html>`_ section to dive into your smarthome experience.
+SmartHomeNG is a modular framework for home automation that runs on on a linux based hardware like Raspberry PI, an Intel NUC, Beaglebone, etc.
 
-.. include:: release/1_2.rst
+Contents:
 
-.. include:: release/1_1.rst
+.. toctree::
+   :maxdepth: 2
 
-.. include:: release/1_0.rst
+   install
+   config
+   items
+   logics
+   logging
+   allplugins
+   release
 
-.. include:: release/old.rst
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 

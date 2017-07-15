@@ -1,20 +1,17 @@
-=====================
- Logging
-=====================
+Logging
+=======
 
 Configuration 
-=============
-Logging for SmartHomeNG Logging will be configured within `etc/logging.yaml`
-The file is in YAML format.
+-------------
 
-The logging configuration of Python may be obtained at `https://docs.python.org/3/howto/logging.html <https://docs.python.org/3/howto/logging.html>`.
+Logging for SmartHomeNG is configured in ``etc/logging.yaml``. This file is in YAML format.
+The way to configure logging within Python is described `here`_.
 
-Example:
+.. _`here`: https://docs.python.org/3/howto/logging.html
 
-.. raw:: html
+.. code-block:: YAML
+   :caption: Example for `etc/logging.yaml`
 
-   <pre>
-   <code>
    version: 1
    disable_existing_loggers: False
    formatters:
@@ -50,8 +47,6 @@ Example:
    root:
        level: INFO
        handlers: [file, console]
-   </code>
-   </pre>
 
 
 format
@@ -62,24 +57,21 @@ The parameter format describes the appearance of the log entries.
 
 Level
 -----
-DEBUG
-INFO
-WARNING
-ERROR
-CRITICAL
+The logging level can be one of:
+
+- DEBUG
+- INFO
+- WARNING
+- ERROR
+- CRITICAL
 
 Logging of single plugins
 -------------------------
 Within the logging the configuration can be set seperately for single plugins, logics and libs.
 
+Sample for knx plugin::
 
-.. raw:: html
-
-   <pre>
-   <code>
    loggers:
-     plugins.knx:
+       plugins.knx:
        handlers: [file, console]
        level: DEBUG
-   </code>
-   </pre>
