@@ -52,7 +52,7 @@ import psutil
 #####################################################################
 # Base
 #####################################################################
-BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
+BASE = os.path.sep.join(os.path.normpath(__file__).split(os.path.sep)[:-2])
 sys.path.insert(0, BASE)
 PIDFILE= os.path.join(BASE,'var','run','smarthome.pid')
 #####################################################################
