@@ -1,3 +1,5 @@
+-r base.txt
+
 flake8>=2.5.1
 pylint>=1.5.3
 coveralls>=1.1
