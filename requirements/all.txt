@@ -1,85 +1,24 @@
-# !!!           SmartHomeNG          !!!
-# !!!      DON'T EDIT THIS FILE      !!!
-# !!!     THIS FILE IS GENERATED     !!!
-# !!! BY tools/build_requirements.py !!!
+-r base.txt
 
-# mvg_live
-PyMVGLive>=1.1.4
-
-# SmartHomeNG Core
-astral==1.0
-
-# backend
-cherrypy>=8.1.2
-
-# SmartHomeNG Core
-ephem>=3.7
-
-# backend
-jinja2>=2.8
-
-# xiaomi
-miflora >=  0.1.13
-
-# systemair
-minimalmodbus>=0.7
-
-# SmartHomeNG Core
-psutil
-
-# dlms
-# systemair
-pyserial>=3.2.1
-
-# SmartHomeNG Core
-# backend
-# dwd
-python-dateutil>=2.5.3
-
-# pushbullet
-python-magic>=0.4.12
-
-# SmartHomeNG Core
-pyyaml==3.11
-
-# avm
-# enigma2
-# intercom_2n
-# join
-# nuki
-# odlinfo
-# pushbullet
-# sonos
-# tankerkoenig
-# traffic
-requests==2.5.1;python_version=='3.2'
-
-# avm
-# enigma2
-# intercom_2n
-# join
-# nuki
-# odlinfo
-# pushbullet
-# sonos
-# tankerkoenig
-# traffic
-requests>=2.9.1;python_version>'3.2'
-
-# dashbutton
-scapy-python3 >= 0.18
-
-# harmony
-sleekxmpp >= 1.3.1
-
-# telegram
-telepot>=8.3
-
-# telegram
-urllib3>=1.9.1
-
-# smarttv
-websocket-client>=0.44.0
-
-# sonos
-xmltodict>=0.11.0
+-r ../plugins/alexa/requirements.txt
+-r ../plugins/avm/requirements.txt
+-r ../plugins/backend/requirements.txt
+-r ../plugins/backend_shng_1_3/requirements.txt
+-r ../plugins/dashbutton/requirements.txt
+-r ../plugins/dlms/requirements.txt
+-r ../plugins/dwd/requirements.txt
+-r ../plugins/enigma2/requirements.txt
+-r ../plugins/harmony/requirements.txt
+-r ../plugins/intercom_2n/requirements.txt
+-r ../plugins/join/requirements.txt
+-r ../plugins/mvg_live/requirements.txt
+-r ../plugins/nuki/requirements.txt
+-r ../plugins/odlinfo/requirements.txt
+-r ../plugins/pushbullet/requirements.txt
+-r ../plugins/smarttv/requirements.txt
+-r ../plugins/sonos/requirements.txt
+-r ../plugins/systemair/requirements.txt
+-r ../plugins/tankerkoenig/requirements.txt
+-r ../plugins/telegram/requirements.txt
+-r ../plugins/traffic/requirements.txt
+-r ../plugins/xiaomi/requirements.txt
