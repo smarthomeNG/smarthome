@@ -166,7 +166,7 @@ class SamplePlugin(SmartPlugin):
         }
         
         # Register the web interface as a cherrypy app
-        self.mod_http.register_web_if(WebInterface(webif_dir, self), 
+        self.mod_http.register_webif(WebInterface(webif_dir, self), 
                                       self.get_shortname(), 
                                       config, 
                                       self.get_classname(), self.get_instance_name(),
@@ -180,7 +180,7 @@ class SamplePlugin(SmartPlugin):
 # ------------------------------------------
 
 import cherrypy
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 
 class WebInterface:
 
