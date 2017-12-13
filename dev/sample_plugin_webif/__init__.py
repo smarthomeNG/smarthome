@@ -31,7 +31,7 @@ class SamplePlugin(SmartPlugin):
     Main class of the Plugin. Does all plugin specific stuff and provides
     the update functions for the items
     """
-    
+
     PLUGIN_VERSION='1.4.0'
 
 
@@ -42,10 +42,10 @@ class SamplePlugin(SmartPlugin):
         :param sh:  **Deprecated**: The instance of the smarthome object. For SmartHomeNG versions **beyond** 1.3: **Don't use it**! 
         :param *args: **Deprecated**: Old way of passing parameter values. For SmartHomeNG versions **beyond** 1.3: **Don't use it**!
         :param **kwargs:**Deprecated**: Old way of passing parameter values. For SmartHomeNG versions **beyond** 1.3: **Don't use it**!
-        
+
         If you need the sh object at all, use the method self.get_sh() to get it. There should be almost no need for
         a reference to the sh object any more.
-        
+
         The parameters *args and **kwargs are the old way of passing parameters. They are deprecated. They are imlemented
         to support oder plugins. Plugins for SmartHomeNG v1.4 and beyond should use the new way of getting parameter values:
         use the SmartPlugin method get_parameter_value(parameter_name) instead. Anywhere within the Plugin you can get
@@ -56,7 +56,7 @@ class SamplePlugin(SmartPlugin):
 
         # get the parameters for the plugin (as defined in metadata plugin.yaml):
         #   self.param1 = self.get_parameter_value('param1')
-        
+
         # Initialization code goes here
 
         # On initialization error use:
@@ -65,14 +65,14 @@ class SamplePlugin(SmartPlugin):
 
         if not self.init_webinterface():
             self._init_complete = False
-            
+
         return
 
 
     def run(self):
         """
         Run method for the plugin
-        """        
+        """
         self.logger.debug("Plugin '{}': run method called".format(self.get_fullname()))
         self.alive = True
         # if you want to create child threads, do not make them daemon = True!
@@ -125,14 +125,14 @@ class SamplePlugin(SmartPlugin):
         :param source: if given it represents the source
         :param dest: if given it represents the dest
         """
-        # todo 
+        # todo
         # change 'foo_itemtag' into your attribute name
         if item():
             if self.has_iattr(item.conf, 'foo_itemtag'):
                 self.logger.debug("Plugin '{}': update_item ws called with item '{}' from caller '{}', source '{}' and dest '{}'".format(self.get_fullname(), item, caller, source, dest))
             pass
 
-        # PLEASE CHECK CODE HERE. The following was in the old skeleton.py and seems not to be 
+        # PLEASE CHECK CODE HERE. The following was in the old skeleton.py and seems not to be
         # valid any more 
         # # todo here: change 'plugin' to the plugin name
         # if caller != 'plugin':  
@@ -152,7 +152,7 @@ class SamplePlugin(SmartPlugin):
         if self.mod_http == None:
             self.logger.error("Plugin '{}': Not initializing the web interface".format(self.get_shortname()))
             return False
-        
+
         # set application configuration for cherrypy
         webif_dir = self.path_join(self.get_plugin_dir(), 'webif')
         config = {
@@ -164,14 +164,14 @@ class SamplePlugin(SmartPlugin):
                 'tools.staticdir.dir': 'static'
             }
         }
-        
+
         # Register the web interface as a cherrypy app
-        self.mod_http.register_webif(WebInterface(webif_dir, self), 
-                                      self.get_shortname(), 
-                                      config, 
+        self.mod_http.register_webif(WebInterface(webif_dir, self),
+                                      self.get_shortname(),
+                                      config,
                                       self.get_classname(), self.get_instance_name(),
                                       description='')
-                                   
+
         return True
 
 
@@ -188,7 +188,7 @@ class WebInterface:
     def __init__(self, webif_dir, plugin):
         """
         Initialization of instance of class WebInterface
-        
+
         :param webif_dir: directory where the webinterface of the plugin resides
         :param plugin: instance of the plugin
         :type webif_dir: str
@@ -204,9 +204,9 @@ class WebInterface:
     def index(self):
         """
         Build index.html for cherrypy
-        
+
         Render the template and return the html file to be delivered to the browser
-            
+
         :return: contents of the template after beeing rendered 
         """
         tmpl = self.tplenv.get_template('index.html')
