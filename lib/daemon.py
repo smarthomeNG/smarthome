@@ -146,7 +146,7 @@ def check_sh_is_running(pidfile):
     """
     
     pid = read_pidfile(pidfile)
-    return psutil.pid_exists(pid) if pid > 0 else False
+    return psutil.pid_exists(pid) if pid > 0 and pid != os.getpid() else False
 
 
 def kill(pidfile, waittime=15):
