@@ -101,6 +101,8 @@ festgelegt, welche Aktionen ausgelöst werden sollen, wenn der entsprechende Sta
 
 Jede einzelne Aktion ist durch die Keys ``item:`` , ``value:`` und ``learn:`` definiert.
 
+Die Verwendung von Wildcards (*) in den ``item:`` Definitionen ist nicht möglich.
+
 Der Key **item** enthält den Pfad des Items, das verändert verden soll. Der Key **value** enthält 
 den Wert auf den das Item gesetzt werden soll. Anstelle eines festen Wertes, kann hier auch ein 
 **eval** Ausdruck angegeben werden. Der Key **learn** ist optional. Wird er nicht angegeben,
@@ -150,7 +152,7 @@ Im folgenden ist eine Beispiel Szene beschrieben, die als Ergänzung zu einer KN
 Philips Hue Leuchte ansteuert.
 
 .. code-block:: yaml
-   :caption: Beispiel einer Szenen-Definition
+   :caption: Beispiel einer Szenen-Definition (Datei scenes/szenen.wohnung.buero.yaml)
 
    0:
        name: Aus
@@ -189,3 +191,10 @@ Philips Hue Leuchte ansteuert.
         - {item: wohnung.buero.dreieckschrank.sat, value: 230, learn: false}
         - {item: wohnung.buero.dreieckschrank.onoff, value: True, learn: false}
 
+.. code-block:: yaml
+   :caption: Beispiel der Szenen Item-Definition in der items.yaml
+   
+   szenen:
+    wohnung:
+     buero:
+      type: scene
