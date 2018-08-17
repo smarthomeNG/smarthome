@@ -86,8 +86,8 @@ class SamplePlugin(SmartPlugin):
         """        
         self.logger.debug("Plugin '{}': run method called".format(self.get_fullname()))
         # setup scheduler for device poll loop
-        self.scheduler_add(__name__, self.poll_device, cycle=self._cycle)
-        # self.sh.scheduler.add(__name__, self.poll_device, cycle=self._cycle)   # for shNG before v1.4
+        self.scheduler_add('poll_device', self.poll_device, cycle=self._cycle)
+        # self.sh.scheduler.add(__name__+'poll_device', self.poll_device, cycle=self._cycle)   # for shNG before v1.4
 
         self.alive = True
         # if you need to create child threads, do not make them daemon = True!
@@ -147,7 +147,7 @@ class SamplePlugin(SmartPlugin):
         """
         if caller != self.get_shortname():
             # code to execute, only if the item has not been changed by this this plugin:
-            logger.info("Update item: {}, item has been changed outside this plugin".format(item.id()))
+            logger.info("Plugin '{}': Update item: {}, item has been changed outside this plugin".format(self.get_fullname(), item))
 
 
 
@@ -186,12 +186,12 @@ class SamplePlugin(SmartPlugin):
         except:
              self.mod_http = None
         if self.mod_http == None:
-            self.logger.error("Plugin '{}': Not initializing the web interface".format(self.get_shortname()))
+            self.logger.error("Plugin '{}': Not initializing the web interface".format(self.get_fullname()))
             return False
         
         import sys
         if not "SmartPluginWebIf" in list(sys.modules['lib.model.smartplugin'].__dict__):
-            self.logger.warning("Plugin '{}': Web interface needs SmartHomeNG v1.5 and up. Not initializing the web interface".format(self.get_shortname()))
+            self.logger.warning("Plugin '{}': Web interface needs SmartHomeNG v1.5 and up. Not initializing the web interface".format(self.get_fullname()))
             return False
 
         # set application configuration for cherrypy
