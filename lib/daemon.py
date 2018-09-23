@@ -139,9 +139,12 @@ def read_pidfile(pidfile):
     """
     
     if os.path.isfile(pidfile):
-        fd = open(pidfile,'r')
-        line = fd.readline()
-        return int(line)
+        try:
+            fd = open(pidfile,'r')
+            line = fd.readline()
+            return int(line)
+        except:
+            return 0  #happens if pid-file could not be opened or is empty (i.e. disc was full)
     return 0
 
 
