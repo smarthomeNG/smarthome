@@ -107,6 +107,14 @@ class Tools():
         mix = 18.0160 / 28.9660 * rf * sat / (100000 - rf * sat)
         rhov = 100000 / (287.0 * (1 - mix) + 462.0 * mix) / t
         return mix * rhov * 1000
+    
+    def abs2rel(self,t,ah):
+        T=t+273.15
+        ah=ah/1000
+        sat_p=math.exp(77.3450 + 0.0057* T - 7235 / T) / math.pow(T,8.2   )
+        sat_density=0.0022*sat_p/T
+        rel=ah/sat_density*100
+        return rel
 
     def runtime(self):
         return datetime.datetime.now() - self._start
