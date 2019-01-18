@@ -168,7 +168,7 @@ Beispiel muss die Datei den Namen **wohnung.buero.szenen.yaml** tragen.
 
 
 .. code-block:: yaml
-   :caption: wohnung.buero.szenen.yaml: Beispiel einer Szenen-Definition (Datei scenes/szenen.wohnung.buero.yaml)
+   :caption: wohnung.buero.szenen.yaml: Beispiel einer Szenen-Definition (Datei scenes/wohnung.buero.szenen.yaml)
 
    0:
        name: Aus
@@ -207,10 +207,3 @@ Beispiel muss die Datei den Namen **wohnung.buero.szenen.yaml** tragen.
         - {item: wohnung.buero.dreieckschrank.sat, value: 230, learn: false}
         - {item: wohnung.buero.dreieckschrank.onoff, value: True, learn: false}
         
-.. code-block:: yaml
-   :caption: Beispiel der Szenen Item-Definition in der items.yaml
-   
-   szenen:
-       wohnung:
-           buero:
-               type: scene
