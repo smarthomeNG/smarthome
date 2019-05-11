@@ -11,6 +11,6 @@ dummy:
     class_path: tests.resources.module_dummy
 
 #test_metadata:
-##    module_name: 
+##    module_name:
 #    class_name: test_metadata
 #    class_path: tests.resources.test_metadata

@@ -2,7 +2,7 @@
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
 # Copyright 2016-2018   Martin Sinn                         m.sinn@gmx.de
-# Copyright 2016-       Christian Straßburg           c.strassburg@gmx.de
+# Copyright 2016        Christian Straßburg           c.strassburg@gmx.de
 # Copyright 2012-2013   Marcus Popp                        marcus@popp.mx
 #########################################################################
 #  This file is part of SmartHomeNG.
@@ -22,23 +22,58 @@
 #########################################################################
 
 
+"""
+This library implements items in SmartHomeNG.
+
+The main class ``Items`` implements the handling for all items. This class has a  static method to get a handle to the
+instance of the Items class, that is created during initialization of SmartHomeNG. This method implements a way to
+access the API for handling items without having to juggle through the object hirarchy of the running SmartHomeNG.
+
+This API enables plugins and logics to access the details of the items initialized in SmartHomeNG.
+
+Each item is represented by an instance of the class ``Item``.
+
+The methods of the class Items implement the API for items.
+They can be used the following way: To call eg. **get_toplevel_items()**, use the following syntax:
+
+.. code-block:: python
+
+    from lib.item import Items
+    sh_items = Items.get_instance()
+
+    # to access a method (eg. get_toplevel_items()):
+    tl_items = sh_items.get_toplevel_items()
+
+
+:Note: Do not use the functions or variables of the main smarthome object any more. They are deprecated. Use the methods of the class **Items** instead.
+
+:Note: This library is part of the core of SmartHomeNG. Regular plugins should not need to use this API.  It is manily implemented for plugins near to the core like **backend** and the core itself!
+
+"""
+import copy
 import datetime
 import dateutil.parser
+import time     # for calls to time in eval
 import logging
+import collections
 import os
 import re
 import pickle
 import threading
 import math
 import json
+from ast import literal_eval
+import inspect
 
 from lib.plugin import Plugins
+import lib.shyaml as shyaml
 from lib.shtime import Shtime
 
 import lib.utils
 from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_CACHE, KEY_CYCLE, KEY_CRONTAB, KEY_EVAL,
-                           KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_TYPE, KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM,
-                           KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE, KEY_LOG_CHANGE, KEY_THRESHOLD, CACHE_FORMAT, CACHE_JSON, CACHE_PICKLE,
+                           KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_TYPE, KEY_STRUCT,
+                           KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM, KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE,
+                           KEY_LOG_CHANGE, KEY_THRESHOLD, CACHE_FORMAT, CACHE_JSON, CACHE_PICKLE,
                            KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST)
 
 
@@ -55,18 +90,21 @@ _items_instance = None    # Pointer to the initialized instance of the Items cla
 
 class Items():
     """
-    Items loader class. Item-methods from bin/smarthome.py are moved here.
-    
+    Items loader class. (Item-methods from bin/smarthome.py are moved here.)
+
+    - An instance is created during initialization by bin/smarthome.py
+    - There should be only one instance of this class. So: Don't create anther instance
+
     :param smarthome: Instance of the smarthome master-object
-    :param configxxx: Basename of the xxx configuration file
     :type samrthome: object
-    :type configxxx: str
     """
 
-    __items = []
-    __item_dict = {}
+    __items = []                # list with the pathes of all items that are defined
+    __item_dict = {}            # dict with all the items that are defined in the form: {"<item-path>": "<item-object>", ...}
 
-    _children = []         # List of top level items
+    _children = []              # List of top level items
+
+    _struct_definitions = collections.OrderedDict()    # definitions of item structures
 
 
     def __init__(self, smarthome):
@@ -82,12 +120,107 @@ class Items():
         _items_instance = self
 
 
-    def load_itemdefinitions(self, env_dir, items_dir):
-    
+    # ------------------------------------------------------------------------------------
+    #   Following (static) method of the class Items implement the API for Items in shNG
+    # ------------------------------------------------------------------------------------
+
+    @staticmethod
+    def get_instance():
+        """
+        Returns the instance of the Items class, to be used to access the items-api
+
+        Use it the following way to access the api:
+
+        .. code-block:: python
+
+            from lib.item import Items
+            items = Items.get_instance()
+
+            # to access a method (eg. return_items()):
+            items.return_items()
+
+
+        :return: items instance
+        :rtype: object
+        """
+        return _items_instance
+
+
+    def add_struct_definition(self, plugin_name, struct_name, struct):
+        """
+        Add a struct definition
+
+        called when reading in item structs from ../etc/struct.yaml
+        or from lib.plugin when reading in plugin-metadata
+
+        :param plugin_name:
+        :param struct_name:
+        :param struct:
+        :return:
+        """
+        if plugin_name == '':
+            name = struct_name
+        else:
+            name = plugin_name + '.' + struct_name
+
+        logger.info("add_struct_definition: struct '{}' = {}".format(name, struct))
+        self._struct_definitions[name] = struct
+        return
+
+
+    def return_struct_definitions(self):
+        """
+        Return all loaded structure template definitions
+
+        :return:
+        :rtype: dict
+        """
+        return self._struct_definitions
+
+
+    def load_itemdefinitions(self, env_dir, items_dir, etc_dir, plugins_dir):
+        """
+        Load item definitions
+
+        This method is called during initialization of SmartHomeNG to initialize the item tree.
+        For that, it loads the item definitions from **../items** directory through calling the function **parse_itemsdir()**
+        from **lib.config**
+
+        :param env_dir: path to the directory containing the core's environment item definition files
+        :param items_dir: path to the directory containing the user's item definition files
+        :param etc_dir: path to the directory containing the user's configuration files (only used for 'struct' support)
+        :param plugins_dir: path to the directory containing the plugins (only used for 'struct' support)
+        :type env_dir: str
+        :type items_dir: str
+        :type etc_dir: str
+        :type plugins_dir: str
+        """
+
+        # --------------------------------------------------------------------
+        # Read in all struct definitions before reading item definitions
+        #
+        # structs are merged into the item tree in lib.config
+        #
+        # Read in item structs from ../etc/struct.yaml
+        struct_filename = os.path.join(etc_dir, 'struct.yaml')
+        struct_definitions = shyaml.yaml_load(os.path.join(etc_dir, 'struct.yaml'), ordered=True, ignore_notfound=True)
+        if struct_definitions is not None:
+            if isinstance(struct_definitions, collections.OrderedDict):
+                for key in struct_definitions:
+                    self.add_struct_definition('', key, struct_definitions[key])
+            else:
+                logger.error("load_itemdefinitions(): Invalid content in struct.yaml: struct_definitions = '{}'".format(struct_definitions))
+        # for Testing: Save structure of joined item structs
+        logger.warning("load_itemdefinitions(): For testing the joined item structs are saved to {}".format(os.path.join(etc_dir, 'structs_joined.yaml')))
+        shyaml.yaml_save(os.path.join(etc_dir, 'structs_joined.yaml'), self._struct_definitions)
+
+        # --------------------------------------------------------------------
+        # Read in item definitions
+        #
         item_conf = None
         item_conf = lib.config.parse_itemsdir(env_dir, item_conf)
-        item_conf = lib.config.parse_itemsdir(items_dir, item_conf, addfilenames=True)
-        
+        item_conf = lib.config.parse_itemsdir(items_dir, item_conf, addfilenames=True, struct_dict=self._struct_definitions)
+
         for attr, value in item_conf.items():
             if isinstance(value, dict):
                 child_path = attr
@@ -103,55 +236,19 @@ class Items():
                     self._children.append(child)
         del(item_conf)  # clean up
 
+        # --------------------------------------------------------------------
+        # prepare loaded items for run phase of shng
+        #
         for item in self.return_items():
             item._init_prerun()
+        # starting schedulers (for crontab and cycle attributes) moved to the end of the initialization in shng v1.6
+        for item in self.return_items():
+            item._init_start_scheduler()
         for item in self.return_items():
             item._init_run()
+
 #        self.item_count = len(self.__items)
 #        self._sh.item_count = self.item_count()
-
-
-
-    # aus bin/smarthome.py
-#    def __iter__(self):
-#        for child in self.__children:
-#            yield child
-    def get_toplevel_items(self):
-        for child in self._children:
-            yield child
-
-    # aus lib.logic.py
-#    def __iter__(self):
-#        for logic in self._logics:
-#            yield logic
-
-
-    # ------------------------------------------------------------------------------------
-    #   Following (static) methods of the class Items implement the API for Items in shNG
-    # ------------------------------------------------------------------------------------
-
-    @staticmethod
-    def get_instance():
-        """
-        Returns the instance of the Items class, to be used to access the items-api
-        
-        Use it the following way to access the api:
-        
-        .. code-block:: python
-
-            from lib.item import Items
-            items = Items.get_instance()
-            
-            # to access a method (eg. return_items()):
-            items.return_items()
-
-        
-        :return: items instance
-        :rtype: object of None
-        """
-        return _items_instance
-
-
 
 
     def add_item(self, path, item):
@@ -168,6 +265,27 @@ class Items():
         if path not in self.__items:
             self.__items.append(path)
         self.__item_dict[path] = item
+
+    # aus bin/smarthome.py
+    #    def __iter__(self):
+    #        for child in self.__children:
+    #            yield child
+
+    def get_toplevel_items(self):
+        """
+        Returns a list with all items defined at the top level
+
+        :return: items defined at the top level
+        :rtype: list
+        """
+        for child in self._children:
+            yield child
+
+    # aus lib.logic.py
+    #    def __iter__(self):
+    #        for logic in self._logics:
+    #            yield logic
+
 
 
     def return_item(self, string):
@@ -186,8 +304,8 @@ class Items():
 
 
     def return_items(self):
-        """"
-        Function to return a list with all items
+        """
+        Function to return a list with all defined items
 
         :return: List of all items
         :rtype: list
@@ -221,8 +339,49 @@ class Items():
             return [self.__item_dict[item] for item in self.__items if regex.match(item)]
 
 
+    def _attribute_find(self, attr, attr_list):
+        """
+        Find an attribute in an attribute list
+
+        :param attr:
+        :param attr_list:
+        :return:
+
+        examples:
+            attr_list = ['avm_identifier' , 'avm_data_type@willy_tel', 'avm_wlan_index', 'visu_acl']
+
+            attr                          result
+            ---_                          ------
+            'willy_tel'                -> False
+            '@willy_tel'               -> True
+            '@fritz_wz'                -> False
+
+            'avm_data_type@willy_tel'  -> True
+            'avm_data_type@fritz_wz'   -> False
+            'avm_data_type'            -> False
+            'avm_data_type@'           -> True
+
+            'avm_wlan_index'           -> True
+            'avm_wlan_index@'          -> True
+
+            'visu_acl'                 -> True
+            '@visu_acl'                -> False
+
+        """
+        result = False
+        if attr.endswith('@'):
+            result = any(s for s in attr_list if s.startswith(attr))
+            if not result:
+                result = attr[:-1] in attr_list
+        elif attr.startswith('@'):
+            result = any(s for s in attr_list if s.endswith(attr))
+        else:
+            result = attr in attr_list
+        return result
+
+
     def find_items(self, conf):
-        """"
+        """
         Function to find items that match the specified configuration
 
         :param conf: Configuration to look for
@@ -233,7 +392,9 @@ class Items():
         """
 
         for item in self.__items:
-            if conf in self.__item_dict[item].conf:
+            # if conf in self.__item_dict[item].conf:
+            #     yield self.__item_dict[item]
+            if self._attribute_find(conf, self.return_item(item).property.attributes):
                 yield self.__item_dict[item]
 
 
@@ -252,7 +413,9 @@ class Items():
 
         children = []
         for item in parent:
-            if conf in item.conf:
+            # if conf in item.conf:
+            #     children.append(item)
+            if self._attribute_find(conf, item.property.attributes):
                 children.append(item)
             children += self.find_children(item, conf)
         return children
@@ -260,18 +423,22 @@ class Items():
 
     def item_count(self):
         """
-        Return the number of items
+        Return the number of defined items
+
+        :return: number of items
+        :rtype: int
         """
         return len(self.__items)
 
 
     def stop(self, signum=None, frame=None):
         """
-        Stop fading of all items
+        Stop what all items are doing
+
+        At the moment, it stops fading of all items
         """
         for item in self.__items:
             self.__item_dict[item]._fading = False
-
 
 
 
@@ -280,8 +447,20 @@ class Items():
 # Item Class
 #####################################################################
 
+"""
+The class ``Item`` implements the methods and attributes of an item. Each item is represented by an instance of the class ``Item``.
+"""
 
 class Item():
+    """
+    Class from which item objects are created
+
+    The class ``Item`` implements the methods and attributes of an item. Each item is represented by an instance
+    of the class ``Item``. For an item to be valid and usable, it has to be part of the item tree, which is
+    maintained by an object of class ``Items``.
+
+    This class is used by the method ```load_itendefinitions()`` of the **Items** object.
+    """
 
     _itemname_prefix = 'items.'     # prefix for scheduler names
 
@@ -308,14 +487,20 @@ class Item():
         self._cycle = None
         self._enforce_updates = False
         self._eval = None				    # -> KEY_EVAL
+        self._eval_unexpanded = ''
         self._eval_trigger = False
         self._trigger = False
+        self._trigger_unexpanded = []
         self._trigger_condition_raw = []
         self._trigger_condition = None
         self._on_update = None				# -> KEY_ON_UPDATE eval expression
         self._on_change = None				# -> KEY_ON_CHANGE eval expression
         self._on_update_dest_var = None		# -> KEY_ON_UPDATE destination var
         self._on_change_dest_var = None		# -> KEY_ON_CHANGE destination var
+        self._on_update_unexpanded = [] 	# -> KEY_ON_UPDATE eval expression (with unexpanded item references)
+        self._on_change_unexpanded = [] 	# -> KEY_ON_CHANGE eval expression (with unexpanded item references)
+        self._on_update_dest_var_unexp = []	# -> KEY_ON_UPDATE destination var (with unexpanded item reference)
+        self._on_change_dest_var_unexp = []	# -> KEY_ON_CHANGE destination var (with unexpanded item reference)
         self._log_change = None
         self._log_change_logger = None
         self._fading = False
@@ -332,8 +517,14 @@ class Item():
         self._path = path
         self._sh = smarthome
         self._threshold = False
+        self._threshold_data = [0,0,False]
         self._type = None
+        self._struct = None
         self._value = None
+        self.__last_value = None
+        self.__prev_value = None
+
+        self.property = self.Property(self)
         # history
         # TODO: create history Arrays for some values (value, last_change, last_update  (usage: multiklick,...)
         # self.__history = [None, None, None, None, None]
@@ -369,13 +560,14 @@ class Item():
         #############################################################
         for attr, value in config.items():
             if not isinstance(value, dict):
-                if attr in [KEY_CYCLE, KEY_NAME, KEY_TYPE, KEY_VALUE, KEY_INITVALUE]:
+                if attr in [KEY_CYCLE, KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE]:
                     if attr == KEY_INITVALUE:
                         attr = KEY_VALUE
                     setattr(self, '_' + attr, value)
                 elif attr in [KEY_EVAL]:
-                    value = self.get_stringwithabsolutepathes(value, 'sh.', '(', KEY_EVAL)
-                    setattr(self, '_' + attr, value)
+#                     value = self.get_stringwithabsolutepathes(value, 'sh.', '(', KEY_EVAL)
+#                     setattr(self, '_' + attr, value)
+                    self._process_eval(value)
                 elif attr in [KEY_CACHE, KEY_ENFORCE_UPDATES]:  # cast to bool
                     try:
                         setattr(self, '_' + attr, _cast_bool(value))
@@ -387,12 +579,14 @@ class Item():
                         value = [value, ]
                     setattr(self, '_' + attr, value)
                 elif attr in [KEY_EVAL_TRIGGER] or (self._use_conditional_triggers and attr in [KEY_TRIGGER]):  # cast to list
-                    if isinstance(value, str):
-                        value = [value, ]
-                    expandedvalue = []
-                    for path in value:
-                        expandedvalue.append(self.get_absolutepath(path, attr))
-                    self._trigger = expandedvalue
+#                     if isinstance(value, str):
+#                         value = [value, ]
+#                     self._trigger_unexpanded = value
+#                     expandedvalue = []
+#                     for path in value:
+#                         expandedvalue.append(self.get_absolutepath(path, attr))
+#                     self._trigger = expandedvalue
+                    self._process_trigger_list(attr, value)
                 elif (attr in [KEY_CONDITION]) and self._use_conditional_triggers:  # cast to list
                     if isinstance(value, list):
                         cond_list = []
@@ -403,22 +597,29 @@ class Item():
                     else:
                         logger.warning("Item __init__: {}: Invalid trigger_condition specified! Must be a list".format(self._path))
                 elif attr in [KEY_ON_CHANGE, KEY_ON_UPDATE]:
-                    if isinstance(value, str):
-                        value = [ value ]
-                    val_list = []
-                    dest_var_list = []
-                    for val in value:
-                        # seperate destination item (if it exists)
-                        dest_item, val = self._split_destitem_from_value(val)
-                        # expand relative item pathes
-                        dest_item = self.get_absolutepath(dest_item, KEY_ON_CHANGE).strip()
-#                        val = 'sh.'+dest_item+'( '+ self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE) +' )'
-                        val = self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE)
-#                        logger.warning("Item __init__: {}: for attr '{}', dest_item '{}', val '{}'".format(self._path, attr, dest_item, val))
-                        val_list.append(val)
-                        dest_var_list.append(dest_item)
-                    setattr(self, '_' + attr, val_list)
-                    setattr(self, '_' + attr + '_dest_var', dest_var_list)
+#                     if isinstance(value, str):
+#                         value = [ value ]
+#                     val_list = []
+#                     val_list_unexpanded = []
+#                     dest_var_list = []
+#                     dest_var_list_unexp = []
+#                     for val in value:
+#                         # seperate destination item (if it exists)
+#                         dest_item, val = self._split_destitem_from_value(val)
+#                         dest_var_list_unexp.append(dest_item)
+#                         # expand relative item pathes
+#                         dest_item = self.get_absolutepath(dest_item, KEY_ON_CHANGE).strip()
+# #                        val = 'sh.'+dest_item+'( '+ self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE) +' )'
+#                         val_list_unexpanded.append(val)
+#                         val = self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE)
+# #                        logger.warning("Item __init__: {}: for attr '{}', dest_item '{}', val '{}'".format(self._path, attr, dest_item, val))
+#                         val_list.append(val)
+#                         dest_var_list.append(dest_item)
+#                     setattr(self, '_' + attr + '_unexpanded', val_list_unexpanded)
+#                     setattr(self, '_' + attr, val_list)
+#                     setattr(self, '_' + attr + '_dest_var', dest_var_list)
+#                     setattr(self, '_' + attr + '_dest_var_unexp', dest_var_list_unexp)
+                    self._process_on_xx_list(attr, value)
                 elif attr in [KEY_LOG_CHANGE]:
                     if value != '':
                         setattr(self, '_log_change', value)
@@ -446,16 +647,30 @@ class Item():
                     self.__th_crossed = False
                     self.__th_low = float(low.strip())
                     self.__th_high = float(high.strip())
+                    self._threshold_data[0] = self.__th_low
+                    self._threshold_data[1] = self.__th_high
+                    self._threshold_data[2] = self.__th_crossed
                     logger.debug("Item {}: set threshold => low: {} high: {}".format(self._path, self.__th_low, self.__th_high))
                 elif attr == '_filename':
                     # name of file, which defines this item
                     setattr(self, attr, value)
                 else:
-                    # plugin specific attribute
-                    if value == '..':
-                        self.conf[attr] = self._get_attr_from_parent(attr)
-                    elif value == '...':
-                        self.conf[attr] = self._get_attr_from_grandparent(attr)
+                    # the following code is executed for plugin specific attributes:
+                    #
+                    # get value from attribute of other (relative addressed) item
+                    # at te moment only parent and grandparent item are supported
+                    if (type(value) is str) and (value.startswith('..:') or value.startswith('...:')):
+                        fromitem = value.split(':')[0]
+                        fromattr = value.split(':')[1]
+                        if fromattr in ['', '.']:
+                            fromattr = attr
+                        if fromitem == '..':
+                            self.conf[attr] = self._get_attr_from_parent(fromattr)
+                        elif fromitem == '...':
+                            self.conf[attr] = self._get_attr_from_grandparent(fromattr)
+                        else:
+                            self.conf[attr] = value
+                        # logger.warning("Item rel. from (grand)parent: fromitem = {}, fromattr = {}, self.conf[attr] = {}".format(fromitem, fromattr, self.conf[attr]))
                     else:
                         self.conf[attr] = value
         #############################################################
@@ -506,7 +721,8 @@ class Item():
         except:
             logger.error("Item {}: value {} does not match type {}.".format(self._path, self._value, self._type))
             raise
-        self.__prev_value = self._value
+        self.__prev_value = self.__last_value
+        self.__last_value = self._value
         #############################################################
         # Cache write/init
         #############################################################
@@ -516,12 +732,13 @@ class Item():
                 logger.warning("Item {}: Created cache for item: {}".format(self._cache, self._cache))
         #############################################################
         # Crontab/Cycle
+        # Moved to end of initialization in shng v1.6
         #############################################################
-        if self._crontab is not None or self._cycle is not None:
-            cycle = self._cycle
-            if cycle is not None:
-                cycle = self._build_cycledict(cycle)
-            self._sh.scheduler.add(self._itemname_prefix+self._path, self, cron=self._crontab, cycle=cycle)
+        # if self._crontab is not None or self._cycle is not None:
+        #     cycle = self._cycle
+        #     if cycle is not None:
+        #         cycle = self._build_cycledict(cycle)
+        #     self._sh.scheduler.add(self._itemname_prefix+self._path, self, cron=self._crontab, cycle=cycle)
         #############################################################
         # Plugins
         #############################################################
@@ -540,14 +757,14 @@ class Item():
     def _split_destitem_from_value(self, value):
         """
         For on_change and on_update: spit destination item from attribute value
-        
+
         :param value: attribute value
-        
+
         :return: dest_item, value
         :rtype: str, str
         """
         dest_item = ''
-        # Check if assignment operator ('=') exists                   
+        # Check if assignment operator ('=') exists
         if value.find('=') != -1:
             # If delimiter exists, check if equal operator exists
             if value.find('==') != -1:
@@ -565,11 +782,11 @@ class Item():
 
     def _castvalue_to_itemtype(self, value, compat):
         """
-        casts the value to the type of the item, if backward compatibility 
+        casts the value to the type of the item, if backward compatibility
         to version 1.2 (ATTRIB_COMPAT_V12) is not enabled
-        
+
         If backward compatibility is enabled, the value is returned unchanged
-        
+
         :param value: value to be casted
         :param compat: compatibility attribute
         :return: return casted valu3
@@ -591,19 +808,19 @@ class Item():
             else:
                 logger.warning("Item {}: Unable to cast '{}' to {}".format(self._path, str(value), self._type))
         return value
-        
 
-    def _cast_duration(self, time): 
+
+    def _cast_duration(self, time):
         """
         casts a time valuestring (e.g. '5m') to an duration integer
         used for autotimer, timer, cycle
-    
+
         supported formats for time parameter:
         - seconds as integer (45)
         - seconds as a string ('45')
         - seconds as a string, traild by 's' ('45s')
         - minutes as a string, traild by 'm' ('5m'), is converted to seconds (300)
-        
+
         :param time: string containing the duration
         :param itempath: item path as aditional information for logging
         :return: number of seconds as an integer
@@ -626,38 +843,1007 @@ class Item():
             logger.warning("Item {}: _cast_duration ({}) problem: unable to convert to int".format(self._path, time))
             time = False
         return(time)
-    
+
 
     def _build_cycledict(self, value):
         """
         builds a dict for a cycle parameter from a duration_value_string
-        
+
         This dict is to be passed to the scheduler to circumvemt the parameter
         parsing within the scheduler, which can't to casting
 
         :param value: raw attribute string containing duration, value (and compatibility)
-        :return: cycle-dict for a call to scheduler.add 
+        :return: cycle-dict for a call to scheduler.add
         """
         time, value, compat = _split_duration_value_string(value)
         time = self._cast_duration(time)
         value = self._castvalue_to_itemtype(value, compat)
         cycle = {time: value}
         return cycle
-    
+
+
+    """
+    --------------------------------------------------------------------------------------------
+    """
+
+
+    def _build_on_xx_list(self, on_dest_list, on_eval_list):
+        """
+        build on_xx data
+        """
+        on_list = []
+        if on_dest_list is not None:
+            if isinstance(on_dest_list, list):
+                for on_dest, on_eval in zip(on_dest_list, on_eval_list):
+                    if on_dest != '':
+                        on_list.append(on_dest.strip() + ' = ' + on_eval)
+                    else:
+                        on_list.append(on_eval)
+            else:
+                if on_dest_list != '':
+                    on_list.append(on_dest_list + ' = ' + on_eval_list)
+                else:
+                    on_list.append(on_eval_list)
+        return on_list
+
+
+    def _process_eval(self, value):
+
+        if value == '':
+            self._eval_unexpanded = ''
+            self._eval = None
+        else:
+            self._eval_unexpanded = value
+            value = self.get_stringwithabsolutepathes(value, 'sh.', '(', KEY_EVAL)
+            self._eval = value
+
+
+    def _process_trigger_list(self, attr, value):
+
+        if isinstance(value, str):
+            value = [value, ]
+        self._trigger_unexpanded = value
+        expandedvalue = []
+        for path in value:
+            expandedvalue.append(self.get_absolutepath(path, attr))
+        self._trigger = expandedvalue
+
+
+    def _process_on_xx_list(self, attr, value):
+
+        if isinstance(value, str):
+            value = [value]
+        val_list = []
+        val_list_unexpanded = []
+        dest_var_list = []
+        dest_var_list_unexp = []
+        for val in value:
+            # seperate destination item (if it exists)
+            dest_item, val = self._split_destitem_from_value(val)
+            dest_var_list_unexp.append(dest_item)
+            # expand relative item pathes
+            dest_item = self.get_absolutepath(dest_item, KEY_ON_CHANGE).strip()
+            #                        val = 'sh.'+dest_item+'( '+ self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE) +' )'
+            val_list_unexpanded.append(val)
+            val = self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE)
+            #                        logger.warning("Item __init__: {}: for attr '{}', dest_item '{}', val '{}'".format(self._path, attr, dest_item, val))
+            val_list.append(val)
+            dest_var_list.append(dest_item)
+        setattr(self, '_' + attr + '_unexpanded', val_list_unexpanded)
+        setattr(self, '_' + attr, val_list)
+        setattr(self, '_' + attr + '_dest_var', dest_var_list)
+        setattr(self, '_' + attr + '_dest_var_unexp', dest_var_list_unexp)
+        return
+
+
+    """
+    --------------------------------------------------------------------------------------------
+    ---
+    ---  Properties of the item, that can be accessed from outside of the item class
+    ---
+    """
+
+    class Property:
+        """
+        Inner class Property of item class.
+
+        This class encapsulates all properties that are publicly available
+
+        An instance of this class is created in the __init__ method of the item class
+        """
+
+        def __init__(self, parent):
+            self._item = parent
+
+        def _ro_error(self):
+            prop = inspect.stack()[1][3]
+            logger.error("Cannot set readonly property '{}' of item '{}'".format(prop, self._item._path))
+            return
+
+        def _type_error(self, err):
+            prop = inspect.stack()[1][3]
+            logger.error("Cannot set property '{}' of item '{}' to a {} value".format(prop, self._item._path, err))
+            return
+
+        def _cast_warning(self, value):
+            prop = inspect.stack()[1][3]
+            logger.warning("Casting value '{}' to required type before assigning it to property '{}' of item '{}'".format(value, prop, self._item._path))
+            return
+
+        @property
+        def attributes(self):
+            """
+            Read-Only Property: attributes. List of plugin-specific attribute names
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return list(self._item.conf.keys())
+
+
+        @property
+        def defined_in(self):
+            """
+            Read-Only Property: defined_in . The filename in which the item was defined
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._filename
+
+        @defined_in.setter
+        def defined_in(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def enforce_updates(self):
+            """
+            Property: enforce_updates
+
+            Available in SmartHomeNG v1.6 and above
+
+            :param value: enforce_update state of the item
+            :type value: bool
+
+            :return: enforce_update state of the item
+            :rtype: bool
+            """
+            return self._item._enforce_updates
+
+        @enforce_updates.setter
+        def enforce_updates(self, value):
+
+            if isinstance(value, bool):
+                self._item._enforce_updates = value
+                return
+            else:
+                self._type_error('non-boolean')
+                return
+
+
+        @property
+        def eval(self):
+            """
+            Property: eval expression
+
+            Available in SmartHomeNG v1.6 and above
+
+            :param value: eval expression of the item
+            :type value: str
+
+            :return: eval expression of the item
+            :rtype: str
+            """
+            if self._item._eval:
+                return self._item._eval
+            return ''
+
+        @eval.setter
+        def eval(self, value):
+
+            if isinstance(value, str):
+                if value == '':
+                    self._item._eval = None
+                else:
+                    self._item._eval = value
+                return
+            else:
+                self._type_error('non-non-string')
+                return
+
+
+        @property
+        def eval_unexpanded(self):
+            """
+            Property: eval expression
+
+            Available in SmartHomeNG v1.6 and above
+
+            :param value: eval expression of the item
+            :type value: str
+
+            :return: eval expression of the item
+            :rtype: str
+            """
+            if self._item._eval:
+                return self._item._eval
+            return ''
+
+        @eval_unexpanded.setter
+        def eval_unexpanded(self, value):
+
+            if isinstance(value, str):
+                self._item._lock.acquire()
+                self._item._process_eval(value)
+                self._item._lock.release()
+                return
+            else:
+                self._type_error('non-non-string')
+                return
+
+
+        @property
+        def last_change(self):
+            """
+            Read-Only Property: last_change
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_last_change()
+
+        @last_change.setter
+        def last_change(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def last_change_age(self):
+            """
+            Read-Only Property: last_change_age
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_last_change_age()
+
+        @last_change_age.setter
+        def last_change_age(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def last_change_by(self):
+            """
+            Read-Only Property: last_change_by
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_last_change_by()
+
+        @last_change_by.setter
+        def last_change_by(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def last_update(self):
+            """
+            Read-Only Property: last_update
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_last_update()
+
+        @last_update.setter
+        def last_update(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def last_update_age(self):
+            """
+            Read-Only Property: last_update_age
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_last_update_age()
+
+        @last_update_age.setter
+        def last_update_age(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def last_update_by(self):
+            """
+            Read-Only Property: last_update_by
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_last_update_by()
+
+        @last_update_by.setter
+        def last_update_by(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def last_value(self):
+            """
+            Read-Only Property: last_value
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_last_value()
+
+        @last_value.setter
+        def last_value(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def name(self):
+            """
+            Property: name
+
+            Available in SmartHomeNG v1.6 and above
+
+            :param value: name of the item
+            :type value: str
+
+            :return: name of the item
+            :rtype: str
+            """
+            return self._item._name
+
+        @name.setter
+        def name(self, value):
+
+            if not isinstance(value, str):
+                self._cast_warning(value)
+                value = '{}'.format(value)
+            if value == '':
+                self._item._name = self._item._path
+            else:
+                self._item._name = value
+            return
+
+
+        @property
+        def on_change(self):
+            """
+            Read-Only Property: on_update
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of on_update definitions
+            :rtype: str
+            """
+            return self._item._build_on_xx_list(self._item._on_change_dest_var, self._item._on_change)
+
+        @on_change.setter
+        def on_change(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def on_change_unexpanded(self):
+            """
+            Read-Only Property: on_update
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of on_update definitions
+            :rtype: str
+            """
+            return self._item._build_on_xx_list(self._item._on_change_dest_var_unexp, self._item._on_change_unexpanded)
+
+        @on_change_unexpanded.setter
+        def on_change_unexpanded(self, value):
+            if isinstance(value, str):
+                value = [value]
+            if isinstance(value, list):
+                if value == [] or self._checkstrtype(value):
+                    self._item._lock.acquire()
+                    self._item._process_on_xx_list('on_change', value)
+                    self._item._lock.release()
+                else:
+                    self._type_error('list containing non-string')
+                    return
+                return
+            else:
+                self._type_error('non-list')
+                return
+
+        @property
+        def on_update(self):
+            """
+            Read-Only Property: on_update
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of on_update definitions
+            :rtype: str
+            """
+            return self._item._build_on_xx_list(self._item._on_update_dest_var, self._item._on_update)
+
+
+        @on_update.setter
+        def on_update(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def on_update_unexpanded(self):
+            """
+            Read-Only Property: on_update
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of on_update definitions
+            :rtype: str
+            """
+            return self._item._build_on_xx_list(self._item._on_update_dest_var_unexp, self._item._on_update_unexpanded)
+
+
+        @on_update_unexpanded.setter
+        def on_update_unexpanded(self, value):
+            if isinstance(value, str):
+                value = [value]
+            if isinstance(value, list):
+                if value == [] or self._checkstrtype(value):
+                    self._item._lock.acquire()
+                    self._item._process_on_xx_list('on_update', value)
+                    self._item._lock.release()
+                else:
+                    self._type_error('list containing non-string')
+                    return
+                return
+            else:
+                self._type_error('non-list')
+                return
+
+
+        @property
+        def path(self):
+            """
+            Read-Only Property: path
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._path
+
+        @path.setter
+        def path(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def prev_change(self):
+            """
+            Read-Only Property: prev_change
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_prev_change()
+
+        @prev_change.setter
+        def prev_change(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def prev_change_age(self):
+            """
+            Read-Only Property: prev_change_age
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_prev_change_age()
+
+        @prev_change_age.setter
+        def prev_change_age(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def prev_change_by(self):
+            """
+            Read-Only Property: prev_change_by
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_prev_change_by()
+
+        @prev_change_by.setter
+        def prev_change_by(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def prev_update(self):
+            """
+            Read-Only Property: prev_update
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_prev_update()
+
+        @prev_update.setter
+        def prev_update(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def prev_update_age(self):
+            """
+            Read-Only Property: prev_update_age
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_prev_update_age()
+
+        @prev_update_age.setter
+        def prev_update_age(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def prev_update_by(self):
+            """
+            Read-Only Property: prev_update_by
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_prev_update_by()
+
+        @prev_update_by.setter
+        def prev_update_by(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def prev_value(self):
+            """
+            Read-Only Property: prev_value
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: path of the item
+            :rtype: str
+            """
+            return self._item._get_prev_value()
+
+        @last_value.setter
+        def last_value(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def trigger(self):
+            """
+            Property: Triggers of the item
+
+            Available in SmartHomeNG v1.6 and above
+
+            :param value: list of triggers
+            :type value: list
+
+            :return: [] if not defined or a list of triggers
+            :rtype: list of str
+            """
+            if self._item._trigger:
+                return self._item._trigger
+            return []
+
+        def _checkstrtype(self, obj):
+            return bool(obj) and all(isinstance(elem, str) for elem in obj)
+
+        @trigger.setter
+        def trigger(self, value):
+
+            if isinstance(value, list):
+                if value == []:
+                    self._item._trigger = False
+                    self._item._trigger_unexpanded = []
+                else:
+                    if self._checkstrtype(value):
+                        self._item._trigger = value
+                        self._item._trigger_unexpanded = value
+                    else:
+                        self._type_error('list containing non-string')
+                        return
+                return
+            else:
+                self._type_error('non-list')
+                return
+
+
+        @property
+        def trigger_unexpanded(self):
+            """
+            Property: Triggers of the item
+
+            Available in SmartHomeNG v1.6 and above
+
+            :param value: list of triggers
+            :type value: list
+
+            :return: [] if not defined or a list of triggers
+            :rtype: list of str
+            """
+            if self._item._trigger:
+                return self._item._trigger_unexpanded
+            return []
+
+        @trigger_unexpanded.setter
+        def trigger_unexpanded(self, value):
+            if isinstance(value, str):
+                value = [value]
+            if isinstance(value, list):
+                if value == [] or self._checkstrtype(value):
+                    self._item._lock.acquire()
+                    self._item._process_trigger_list('trigger', value)
+                    self._item._lock.release()
+                else:
+                    self._type_error('list containing non-string')
+                    return
+                return
+            else:
+                self._type_error('non-list')
+                return
+
+
+        @property
+        def type(self):
+            """
+            Read-Only Property: type
+
+            Available in SmartHomeNG v1.6 and above
+
+            :return: type of the item
+            :rtype: str
+            """
+            return self._item._type
+
+        @type.setter
+        def type(self, value):
+            self._ro_error()
+            return
+
+
+        @property
+        def value(self):
+            """
+            Property: value
+
+            Available in SmartHomeNG v1.6 and above
+
+            :param value: value of the item
+            :type value: <type of the item>
+
+            :return: value of the item
+            :rtype: <type of the item>
+            """
+            return copy.deepcopy(self._item._value)
+
+        @value.setter
+        def value(self, value):
+
+            self._item.set(value, 'assign property')
+            return
+
+
+    """
+    ---
+    ---  End of Properties class
+    ---
+    --------------------------------------------------------------------------------------------
+    """
+
+    def _get_last_change(self):
+        return self.__last_change
+
+    def _get_last_change_age(self):
+        delta = self.shtime.now() - self.__last_change
+        return delta.total_seconds()
+
+    def _get_last_change_by(self):
+        return self.__changed_by
+
+    def _get_last_update(self):
+        return self.__last_update
+
+    def _get_last_update_by(self):
+        return self.__updated_by
+
+    def _get_last_update_age(self):
+        delta = self.shtime.now() - self.__last_update
+        return delta.total_seconds()
+
+    def _get_last_value(self):
+        return self.__last_value
+
+    def _get_prev_change(self):
+        return self.__prev_change
+
+    def _get_prev_change_age(self):
+        delta = self.__last_change - self.__prev_change
+        if delta.total_seconds() < 0.0001:
+            return 0.0
+        return delta.total_seconds()
+
+    def _get_prev_change_by(self):
+        return 'N/A'
+
+    def _get_prev_update(self):
+        return self.__prev_change
+
+    def _get_prev_update_age(self):
+
+        delta = self.__last_update - self.__prev_update
+        if delta.total_seconds() < 0.0001:
+            return 0.0
+        return delta.total_seconds()
+
+    def _get_prev_update_by(self):
+        return 'N/A'
+
+    def _get_prev_value(self):
+        return self.__prev_value
+
+
+
+    """
+    Following are methods to get attributes of the item
+    """
+
+    def path(self):
+        """
+        Path of the item
+
+        Available only in SmartHomeNG v1.6, not in versions above
+
+        :return: String with the path of the item
+        :rtype: str
+        """
+        return self.property.path
+
+    def id(self):
+        """
+        Old method name - Use item.path() instead of item.id()
+        """
+        return self.property.path
+
+
+    def type(self):
+        """
+        Datatype of the item
+
+        :return: Datatype of the item
+        :rtype: str
+        """
+        return self.property.type
+
+
+    def last_change(self):
+        """
+        Timestamp of last change of item's value
+
+        :return: Timestamp of last change
+        """
+        return self.property.last_change
+
+    def age(self):
+        """
+        Age of the item's actual value. Returns the time in seconds since the last change of the value
+
+        :return: Age of the value
+        :rtype: int
+        """
+        return self.property.last_change_age
+
+
+    def last_update(self):
+        """
+        Timestamp of last update of item's value (not necessarily change)
+
+        :return: Timestamp of last update
+        """
+        return self.property.last_update
+
+    def update_age(self):
+        """
+        Update-age of the item's actual value. Returns the time in seconds since the value has been updated (not necessarily changed)
+
+        :return: Update-age of the value
+        :rtype: int
+        """
+        return self.property.last_update_age
+
+    def prev_change(self):
+        """
+        Timestamp of the previous (next-to-last) change of item's value
+
+        :return: Timestamp of previous change
+        """
+        return self.property.prev_change
+
+    def prev_age(self):
+        """
+        Age of the item's previous value. Returns the time in seconds the item had the the previous value
+
+        :return: Age of the previous value
+        :rtype: int
+        """
+        return self.property.prev_change_age
+
+    def prev_update(self):
+        """
+        Timestamp of previous (next-to-last) update of item's value (not necessarily change)
+
+        :return: Timestamp of previous update
+        """
+        return self.property.prev_update
+
+    def prev_update_age(self):
+        """
+        Update-age of the item's previous value. Returns the time in seconds the previous value existed since it had been updated (not necessarily changed)
+
+        :return: Update-age of the previous value
+        :rtype: int
+        """
+        return self.property.prev_update_age
+
+    def prev_value(self):
+        """
+        Next-to-last value of the item
+
+        :return: Next-to-last value of the item
+        """
+        return self.property.last_value
+
+    def changed_by(self):
+        """
+        Returns an indication, which plugin, logic or event changed the item's value
+
+        :return: Changer of item's value
+        :rtype: str
+        """
+        return self.property.last_change_by
+
+    def updated_by(self):
+        """
+        Returns an indication, which plugin, logic or event updated (not necessarily changed) the item's value
+
+        :return: Updater of item's value
+        :rtype: str
+        """
+        return self.property.last_update_by
+
+
+    """
+    Following are methods to handle relative item pathes
+    """
+
+    def get_absolutepath(self, relativepath, attribute=''):
+        """
+        Builds an absolute item path relative to the current item
+
+        :param relativepath: string with the relative item path
+        :param attribute: string with the name of the item's attribute, which contains the relative path (for log entries)
+
+        :return: string with the absolute item path
+        """
+        if (len(relativepath) == 0) or ((len(relativepath) > 0) and (relativepath[0] != '.')):
+            return relativepath
+        relpath = relativepath.rstrip()
+        rootpath = self._path
+
+        while (len(relpath) > 0) and (relpath[0] == '.'):
+            relpath = relpath[1:]
+            if (len(relpath) > 0) and (relpath[0] == '.'):
+                if rootpath.rfind('.') == -1:
+                    if rootpath == '':
+                        relpath = ''
+                        logger.error(
+                            "{}.get_absolutepath(): Relative path trying to access above root level on attribute '{}'".format(
+                                self._path, attribute))
+                    else:
+                        rootpath = ''
+                else:
+                    rootpath = rootpath[:rootpath.rfind('.')]
+
+        if relpath != '':
+            if rootpath != '':
+                rootpath += '.' + relpath
+            else:
+                rootpath = relpath
+        logger.info(
+            "{}.get_absolutepath('{}'): Result = '{}' (for attribute '{}')".format(self._path, relativepath, rootpath,
+                                                                                   attribute))
+        if rootpath[-5:] == '.self':
+            rootpath = rootpath.replace('.self', '')
+        rootpath = rootpath.replace('.self.', '.')
+        return rootpath
 
     def expand_relativepathes(self, attr, begintag, endtag):
         """
         converts a configuration attribute containing relative item pathes
         to absolute pathes
-        
+
         The item's attribute can be of type str or list (of strings)
-        
+
         The begintag and the endtag remain in the result string!
 
         :param attr: Name of the attribute
         :param begintag: string that signals the beginning of a relative path is following
         :param endtag: string that signals the end of a relative path
-        
+
         """
         if attr in self.conf:
             if isinstance(self.conf[attr], str):
@@ -681,20 +1867,20 @@ class Item():
             else:
                 logger.warning("expand_relativepathes: attr={} can not expand for type(self.conf[attr])={}".format(attr, type(self.conf[attr])))
         return
-        
+
 
     def get_stringwithabsolutepathes(self, evalstr, begintag, endtag, attribute=''):
         """
         converts a string containing relative item pathes
         to a string with absolute item pathes
-        
+
         The begintag and the endtag remain in the result string!
 
         :param evalstr: string with the statement that may contain relative item pathes
         :param begintag: string that signals the beginning of a relative path is following
         :param endtag: string that signals the end of a relative path
         :param attribute: string with the name of the item's attribute, which contains the relative path
-        
+
         :return: string with the statement containing absolute item pathes
         """
         if evalstr.find(begintag+'.') == -1:
@@ -709,48 +1895,10 @@ class Item():
             rel = rest[:rest.find(endtag)]
             rest = rest[rest.find(endtag):]
             pref += self.get_absolutepath(rel, attribute)
-            
+
         pref += rest
 #        logger.warning("{}.get_stringwithabsolutepathes(): result = '{}'".format(self._path, pref))
         return pref
-
-
-    def get_absolutepath(self, relativepath, attribute=''):
-        """
-        Builds an absolute item path relative to the current item
-
-        :param relativepath: string with the relative item path
-        :param attribute: string with the name of the item's attribute, which contains the relative path (for log entries)
-        
-        :return: string with the absolute item path
-        """
-        if (len(relativepath) == 0) or ((len(relativepath) > 0)  and (relativepath[0] != '.')):
-            return relativepath
-        relpath = relativepath.rstrip()
-        rootpath = self._path
-
-        while (len(relpath) > 0)  and (relpath[0] == '.'):
-            relpath = relpath[1:]
-            if (len(relpath) > 0)  and (relpath[0] == '.'):
-                if rootpath.rfind('.') == -1:
-                    if rootpath == '':
-                        relpath = ''
-                        logger.error("{}.get_absolutepath(): Relative path trying to access above root level on attribute '{}'".format(self._path, attribute))
-                    else:
-                        rootpath = ''
-                else:
-                    rootpath = rootpath[:rootpath.rfind('.')]
-
-        if relpath != '':
-            if rootpath != '':
-                rootpath += '.' + relpath
-            else:
-                rootpath = relpath
-        logger.info("{}.get_absolutepath('{}'): Result = '{}' (for attribute '{}')".format(self._path, relativepath, rootpath, attribute))
-        if rootpath[-5:] == '.self':
-            rootpath = rootpath.replace('.self', '')
-        rootpath = rootpath.replace('.self.', '.')
-        return rootpath
 
 
     def _get_attr_from_parent(self, attr):
@@ -761,7 +1909,7 @@ class Item():
         :return: value from attribute of parent item
         """
         pitem = self.return_parent()
-        pattr_value = pitem.conf[attr]
+        pattr_value = pitem.conf.get(attr, '')
         #        logger.warning("_get_attr_from_parent Item {}: for attr '{}'".format(self._path, attr))
         #        logger.warning("_get_attr_from_parent Item {}: for parent '{}', pattr_value '{}'".format(self._path, pitem._path, pattr_value))
         return pattr_value
@@ -776,9 +1924,9 @@ class Item():
         """
         pitem = self.return_parent()
         gpitem = pitem.return_parent()
-        gpattr_value = pitem.conf[attr]
-#        logger.warning("_get_attr_from_parent Item {}: for attr '{}'".format(self._path, attr))
-#        logger.warning("_get_attr_from_parent Item {}: for grandparent '{}', gpattr_value '{}'".format(self._path, gpitem._path, gpattr_value))
+        gpattr_value = pitem.get(attr, '')
+#        logger.warning("_get_attr_from_grandparent Item {}: for attr '{}'".format(self._path, attr))
+#        logger.warning("_get_attr_from_grandparent Item {}: for grandparent '{}', gpattr_value '{}'".format(self._path, gpitem._path, gpattr_value))
         return gpattr_value
 
 
@@ -831,7 +1979,7 @@ class Item():
 
     def __call__(self, value=None, caller='Logic', source=None, dest=None):
         if value is None or self._type is None:
-            return self._value
+            return copy.deepcopy(self._value)
         if self._eval:
             args = {'value': value, 'caller': caller, 'source': source, 'dest': dest}
             self._sh.trigger(name=self._path + '-eval', obj=self.__run_eval, value=args, by=caller, source=source, dest=dest)
@@ -862,12 +2010,14 @@ class Item():
         """
         Build eval expressions from special functions and triggers before first run
 
-        Called from load_itemdefinitions
+        Called from Items.load_itemdefinitions
         """
         if self._trigger:
             # Only if item has an eval_trigger
             _items = []
             for trigger in self._trigger:
+                if _items_instance.match_items(trigger) == [] and self._eval:
+                    logger.warning("item '{}': trigger item '{}' not found for function '{}'".format(self._path, trigger, self._eval))
                 _items.extend(_items_instance.match_items(trigger))
             for item in _items:
                 if item != self:  # prevent loop
@@ -889,11 +2039,32 @@ class Item():
                     self._eval = 'min({0})'.format(','.join(items))
 
 
+    def _init_start_scheduler(self):
+        """
+        Start schedulers of the items which have a crontab or a cycle attribute
+
+        up to version 1.5 of SmartHomeNG the schedulers were started when initializing the item. That
+        could lead to a scheduler to fire a routine, which references an item which is not yet initialized
+        :return:
+        """
+
+        #############################################################
+        # Crontab/Cycle
+        #############################################################
+        if self._crontab is not None or self._cycle is not None:
+            cycle = self._cycle
+            if cycle is not None:
+                cycle = self._build_cycledict(cycle)
+            self._sh.scheduler.add(self._itemname_prefix+self._path, self, cron=self._crontab, cycle=cycle)
+
+        return
+
+
     def _init_run(self):
         """
         Run initial eval to set an initial value for the item
 
-        Called from load_itemdefinitions
+        Called from Items.load_itemdefinitions
         """
         if self._trigger:
             # Only if item has an eval_trigger
@@ -942,6 +2113,13 @@ class Item():
     def _run_on_xxx(self, path, value, on_dest, on_eval, attr='?'):
         """
         common method for __run_on_update and __run_on_change
+
+        :param path: path to this item
+
+        :param attr: Descriptive text for origin of update of item
+        :type: path: str
+
+        :type attr: str
         """
         if self._path == 'wohnung.flur.szenen_helper':
             logger.info("_run_on_xxx: item = {}, value = {}".format(self._path, value))
@@ -967,8 +2145,8 @@ class Item():
             else:
                 logger.debug(" - : '{}' {} not set (cause: eval=None)".format(attr, on_dest))
                 pass
-            
-    
+
+
     def __run_on_update(self, value=None):
         """
         evaluate all 'on_update' entries of the actual item
@@ -991,29 +2169,38 @@ class Item():
                 self._run_on_xxx(self._path, value, on_change_dest, on_change_eval, 'on_change')
 
 
-    def __trigger_logics(self):
+    def __trigger_logics(self, source_details=None):
+        source={'item': self._path, 'details': source_details}
         for logic in self.__logics_to_trigger:
-            logic.trigger('Item', self._path, self._value)
+#            logic.trigger(by='Item', source=self._path, value=self._value)
+            logic.trigger(by='Item', source=source, value=self._value)
+
+    # logic.trigger(by='Logic', source=None, value=None, dest=None, dt=None):
 
     def __update(self, value, caller='Logic', source=None, dest=None):
         try:
             value = self.cast(value)
         except:
             try:
-                logger.warning("Item {}: value {} does not match type {}. Via {} {}".format(self._path, value, self._type, caller, source))
+                logger.warning('Item {}: value "{}" does not match type {}. Via {} {}'.format(self._path, value, self._type, caller, source))
             except:
                 pass
             return
         self._lock.acquire()
         _changed = False
+        self.__prev_update = self.__last_update
+        self.__last_update = self.shtime.now()
         self.__updated_by = "{0}:{1}".format(caller, source)
+        trigger_source_details = self.__updated_by
         if value != self._value:
             _changed = True
-            self.__prev_value = self._value
+            self.__prev_value = self.__last_value
+            self.__last_value = self._value
             self._value = value
             self.__prev_change = self.__last_change
-            self.__last_change = self.shtime.now()
+            self.__last_change = self.__last_update
             self.__changed_by = "{0}:{1}".format(caller, source)
+            trigger_source_details = self.__changed_by
             if caller != "fader":
                 self._fading = False
                 self._lock.notify_all()
@@ -1030,8 +2217,6 @@ class Item():
         # ms: call run_on_update() from here
         self.__run_on_update(value)
         if _changed or self._enforce_updates or self._type == 'scene':
-            self.__prev_update = self.__last_update
-            self.__last_update = self.shtime.now()
             # ms: call run_on_change() from here
             self.__run_on_change(value)
             for method in self.__methods_to_trigger:
@@ -1042,12 +2227,14 @@ class Item():
             if self._threshold and self.__logics_to_trigger:
                 if self.__th_crossed and self._value <= self.__th_low:  # cross lower bound
                     self.__th_crossed = False
-                    self.__trigger_logics()
+                    self._threshold_data[2] = self.__th_crossed
+                    self.__trigger_logics(trigger_source_details)
                 elif not self.__th_crossed and self._value >= self.__th_high:  # cross upper bound
                     self.__th_crossed = True
-                    self.__trigger_logics()
+                    self._threshold_data[2] = self.__th_crossed
+                    self.__trigger_logics(trigger_source_details)
             elif self.__logics_to_trigger:
-                self.__trigger_logics()
+                self.__trigger_logics(trigger_source_details)
             for item in self._items_to_trigger:
                 args = {'value': value, 'source': self._path}
                 self._sh.trigger(name=item.id(), obj=item.__run_eval, value=args, by=caller, source=source, dest=dest)
@@ -1077,12 +2264,25 @@ class Item():
 
 
     def add_logic_trigger(self, logic):
+        """
+        Add a logic trigger to the item
+
+        :param logic:
+        :type logic:
+        :return:
+        """
         self.__logics_to_trigger.append(logic)
 
     def remove_logic_trigger(self, logic):
         self.__logics_to_trigger.remove(logic)
 
     def get_logic_triggers(self):
+        """
+        Returns a list of logics to trigger, if the item gets changed
+
+        :return: Logics to trigger
+        .rtype: list
+        """
         return self.__logics_to_trigger
 
     def add_method_trigger(self, method):
@@ -1092,15 +2292,14 @@ class Item():
         self.__methods_to_trigger.remove(method)
 
     def get_method_triggers(self):
+        """
+        Returns a list of item methods to trigger, if this item gets changed
+
+        :return: methods to trigger
+        .rtype: list
+        """
         return self.__methods_to_trigger
 
-    def age(self):
-        delta = self.shtime.now() - self.__last_change
-        return delta.total_seconds()
-
-    def update_age(self):
-        delta = self.shtime.now() - self.__last_update
-        return delta.total_seconds()
 
     def autotimer(self, time=None, value=None, compat=ATTRIB_COMPAT_V12):
         if time is not None and value is not None:
@@ -1108,41 +2307,9 @@ class Item():
         else:
             self._autotimer = False
 
-    def changed_by(self):
-        return self.__changed_by
-
-    def updated_by(self):
-        return self.__updated_by
-
     def fade(self, dest, step=1, delta=1):
         dest = float(dest)
         self._sh.trigger(self._path, _fadejob, value={'item': self, 'dest': dest, 'step': step, 'delta': delta})
-
-    def id(self):
-        return self._path
-
-    def last_change(self):
-        return self.__last_change
-
-    def last_update(self):
-        return self.__last_update
-
-    def prev_age(self):
-        delta = self.__last_change - self.__prev_change
-        return delta.total_seconds()
-
-    def prev_update_age(self):
-        delta = self.__last_update - self.__prev_update
-        return delta.total_seconds()
-
-    def prev_change(self):
-        return self.__prev_change
-
-    def prev_update(self):
-        return self.__prev_update
-
-    def prev_value(self):
-        return self.__prev_value
 
     def remove_timer(self):
         self._sh.scheduler.remove(self._itemname_prefix+self.id() + '-Timer')
@@ -1189,9 +2356,6 @@ class Item():
         next = self.shtime.now() + datetime.timedelta(seconds=time)
         self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': value, 'caller': caller}, next=next)
 
-    def type(self):
-        return self._type
-
     def get_children_path(self):
         return [item._path
                 for item in self.__children]
@@ -1207,7 +2371,7 @@ class Item():
                  "type": self._type,
                  "attributes": self.conf,
                  "children": self.get_children_path() }
-                 
+
 # alternative method to get all class members
 #    @staticmethod
 #    def get_members(instance):
@@ -1235,10 +2399,9 @@ def _cast_str(value):
 def _cast_list(value):
     if isinstance(value, str):
         try:
-            value = json.loads(value)
-        except Exception as e:
-            value = value.replace("'",'"')
-            value = json.loads(value)
+            value = literal_eval(value)
+        except:
+            pass
     if isinstance(value, list):
         return value
     else:
@@ -1248,10 +2411,9 @@ def _cast_list(value):
 def _cast_dict(value):
     if isinstance(value, str):
         try:
-            value = json.loads(value)
-        except Exception as e:
-            value = value.replace("'",'"')
-            value = json.loads(value)
+            value = literal_eval(value)
+        except:
+            pass
     if isinstance(value, dict):
         return value
     else:
@@ -1318,10 +2480,10 @@ def _cast_num(value):
 # Methods for handling of duration_value strings
 #####################################################################
 
-def _split_duration_value_string(value): 
+def _split_duration_value_string(value):
     """
     splits a duration value string into its thre components
-    
+
     components are:
     - time
     - value
@@ -1343,10 +2505,10 @@ def _split_duration_value_string(value):
     return (time, value, compat)
 
 
-def _join_duration_value_string(time, value, compat=''): 
+def _join_duration_value_string(time, value, compat=''):
     """
     joins a duration value string from its thre components
-    
+
     components are:
     - time
     - value
@@ -1363,14 +2525,16 @@ def _join_duration_value_string(time, value, compat=''):
         if compat != '':
            result = result + ' = ' + compat
     return result
-    
-    
+
+
 #####################################################################
 # Cache Methods
 #####################################################################
 
 def json_serialize(obj):
-    """helper method to convert values to json serializable formats"""
+    """
+    helper method to convert values to json serializable formats
+    """
     import datetime
     if isinstance(obj, datetime.datetime):
         return obj.isoformat()
@@ -1379,7 +2543,9 @@ def json_serialize(obj):
     raise TypeError("Type not serializable")
 
 def json_obj_hook(json_dict):
-    """helper method for json deserialization"""
+    """
+    helper method for json deserialization
+    """
     import dateutil
     for (key, value) in json_dict.items():
         try:

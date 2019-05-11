@@ -59,9 +59,9 @@ first:
             sqlite: 'yes'
             # ow_addr = 28.8DEAAA030000
             # ow_sensor = T
-            sv_widget: "{{ device.rtr('item', 'item.name', 'item', 'item.set', 'item.mode', 'item.night', 'item.frost', 'item.state') }}"
+            sv_widget: "{{ device.rtr('item', 'item.name', 'item', 'item.setpoint', 'item.mode', 'item.night', 'item.frost', 'item.state') }}"
 
-            set:
+            setpoint:
                 type: num
                 value: '20.5'
                 visu_acl: rw
@@ -154,10 +154,10 @@ second:
             type: num
             sqlite: 'yes'
             sv_widget:
-              - "{{ device.rtr('item', 'item.name', 'item', 'item.set', 'item.mode', 'item.night', 'item.frost', 'item.state') }}"
+              - "{{ device.rtr('item', 'item.name', 'item', 'item.setpoint', 'item.mode', 'item.night', 'item.frost', 'item.state') }}"
               - "{{ plot.period('item-plot', 'item', 'avg') }}"
 
-            set:
+            setpoint:
                 type: num
                 visu_acl: rw
                 cache: 'yes'
@@ -221,9 +221,9 @@ second:
             name: Temperature
             type: num
             sqlite: 'yes'
-            sv_widget: "{{ device.rtr('item', 'item.name', 'item', 'item.set', 'item.mode', 'item.night', 'item.frost', 'item.state') }}"
+            sv_widget: "{{ device.rtr('item', 'item.name', 'item', 'item.setpoint', 'item.mode', 'item.night', 'item.frost', 'item.state') }}"
 
-            set:
+            setpoint:
                 type: num
                 visu_acl: rw
                 cache: 'yes'

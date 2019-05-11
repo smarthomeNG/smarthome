@@ -4,11 +4,22 @@
 [![Build Status on TravisCI](https://travis-ci.org/smarthomeNG/smarthome.svg?branch=develop)](https://travis-ci.org/smarthomeNG/smarthome)
 [![Join the chat at https://gitter.im/smarthomeNG/smarthome](https://badges.gitter.im/smarthomeNG/smarthome.svg)](https://gitter.im/smarthomeNG/smarthome?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+SmartHomeNG [1] is a software that serves a basis for home automation. It interconnects multiple devices using plugins to access their specific interfaces.
 This file contains basic information about the basic directories of SmartHomeNG.
 
-Developer documentation (english) can be found on [www.smarthomeNG.de](https://www.smarthomeNG.de)
+Developer documentation ([english](https://www.smarthomeNG.de/dev)) and user documentation ([german](https://www.smarthomeNG.de/user)) can be found on [www.smarthomeNG.de](https://www.smarthomeNG.de)
 
-Additional information / documentation can be found in the [SmartHomeNG Wiki](https://github.com/smarthomeNG/smarthome/wiki). The Wiki ist in german for the greatest part.
+Additional information / documentation can be found in the [SmartHomeNG Wiki](https://github.com/smarthomeNG/smarthome/wiki). The Wiki is written in german for the greatest part.
+
+## Used Tools
+
+| Tool | Description |
+| ---     | :--- |
+| <a href="https://www.jetbrains.com/?from=SmartHomeNG"><img src="https://smarthomeng.de/images/pycharm-logo.png" width="80" height="70"></a> | SmartHomeNG was built using the Pycharm IDE. |
+| <a href="https://www.jetbrains.com/?from=SmartHomeNG"><img src="https://smarthomeng.de/images/webstorm-logo.png" width="70" height="70"></a> | The admin interface of SmartHomeNG was built using the WebStorm IDE. |
+
+
+## Directory Structure
 
 | directory | description|
 | ---     | :--- |

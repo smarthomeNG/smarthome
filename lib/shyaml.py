@@ -76,7 +76,11 @@ def convert_linenumber(s, occ=1):
     else:
         return '*' + s
     lineold = s2[:s2.find(')')]
-    linenew = str(int((int(lineold)+1)/2))
+    try:
+        linenew = str(int((int(lineold)+1)/2))
+    except:
+        logger.warning('Unable to correct line number for yaml-file error. Wrong line number is {}'.format(lineold))
+        linenew = str(lineold)
     lo = 'line '+lineold
     ln = 'line '+linenew
     lo2 = '(line: '+lineold+')'
@@ -309,8 +313,10 @@ def yaml_load_roundtrip(filename):
         return None
 
     y = None
+    if not filename.lower().endswith('.yaml'):
+        filename += YAML_FILE
     try:
-        with open(filename+YAML_FILE, 'r') as stream:
+        with open(filename, 'r') as stream:
             sdata = stream.read()
         sdata = sdata.replace('\n', '\n\n')
         y = yaml.load(sdata, yaml.RoundTripLoader)
@@ -359,11 +365,13 @@ def yaml_save_roundtrip(filename, data, create_backup=False):
     sdata = yaml.dump(data, Dumper=yaml.RoundTripDumper, version=yaml_version, indent=indent_spaces, block_seq_indent=block_seq_indent, width=12288, allow_unicode=True)
     sdata = _format_yaml_dump2( sdata )
     
+    if not filename.lower().endswith('.yaml'):
+        filename += YAML_FILE
     if create_backup:
-        if os.path.isfile(filename+YAML_FILE):
-            shutil.copy2(filename+YAML_FILE, filename+'.bak')
+        if os.path.isfile(filename):
+            shutil.copy2(filename, filename+'.bak')
         
-    with open(filename+YAML_FILE, 'w') as outfile:
+    with open(filename, 'w') as outfile:
         outfile.write( sdata )
 
 

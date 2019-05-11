@@ -54,7 +54,7 @@ Neue Funktionen im CORE
     * Lesen der Item Attribut Definitionen aus der plugin.yaml des Plugins implementiert
 * Module:
 
-  *http:
+  * http:
 
     * Zentrale Basic Auth Konfiguration für alle Webinterfaces von Plugins (incl. Backend)
     * exportiert ein gstatic Verzeichnis, welches zentral Images und Bibliotheken (z.B. bootstrap und jquery) zur Verfügung stellt. -> Default dabei und für Plugins nutzbar: Bootstrap 4 inkl. Datepicker, JQuery 3.3.1, Codemirror 5.39.0, Font Awesome 5.1.0

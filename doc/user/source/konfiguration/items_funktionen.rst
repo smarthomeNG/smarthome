@@ -1,16 +1,52 @@
 .. index:: Items; Funktionen
 .. index:: Funktionen; Items
 
-Funktionen eines Items
-======================
+.. role:: bluesup
+.. role:: redsup
+
+
+Funktionen eines Items :bluesup:`update`
+========================================
+
 
 Jedes definierte Item bietet die folgenden Methoden an, die unter anderem in **eval** Ausdrücken
 genutzt werden können.
 
++--------------------------------+------------------------------------------------------------------------------+
+| **Funktion**                   | **Beschreibung**                                                             |
++================================+==============================================================================+
+| autotimer(time, value, compat) | Setzt einen Timer bei jedem Werte-Wechsel der Items. Angegeben wird die      |
+|                                | Zeit (**time**) die vergehen soll, bis das Item auf den Wert (**value**)     |
+|                                | gesetzt wird. Die Zeitangabe erfolgt in Sekunden. Eine Angabe der Dauer in   |
+|                                | Minuten ist wie in '10m' möglich. Die Bedeutung und Wirkungsweise von        |
+|                                | **compat** bitte auf der Seite                                               |
+|                                | :doc:`autotimer <./items_standard_attribute_autotimer>` nachlesen.           |
++--------------------------------+------------------------------------------------------------------------------+
+| fade(end, step, delta)         | Blendet das Item mit der definierten Schrittweite (int oder float) und       |
+|                                | timedelta (int oder float in Sekunden) auf einen angegebenen Wert auf oder   |
+|                                | ab. So wird z.B.: **sh.living.light.fade(100, 1, 2.5)** das Licht im         |
+|                                | Wohnzimmer mit einer Schrittweite von **1** und einem Zeitdelta von **2,5**  |
+|                                | Sekunden auf **100** herunterregeln.                                         |
++--------------------------------+------------------------------------------------------------------------------+
+| return_children()              | Liefert die Item-Pfade der direkt untergeordneten Items zurück. Aufruf:      |
+|                                | for child in sh.item.return_children(): ...                                  |
++--------------------------------+------------------------------------------------------------------------------+
+| return_parent()                | Liefert den Item-Pfad des übergeordneten Items zurück.                       |
+|                                | Aufruf: sh.item.return_parent()                                              |
++--------------------------------+------------------------------------------------------------------------------+
+| timer(time, value, compat)     | Funktioniert wir **autotimer()**, ausser dass die Aktion nur einmal          |
+|                                | ausgeführt wird. Die Bedeutung und Wirkungsweise von **compat** bitte auf    |
+|                                | der Seite :doc:`autotimer <./items_standard_attribute_autotimer>` nachlesen. |
++--------------------------------+------------------------------------------------------------------------------+
+
+
+
+Weiterhin werden die folgenden Funktionen unterstützt, die jedoch **ab SmartHomeNG v1.6** nicht mehr genutzt werden sollen.
+Bitte stattdessen die entsprechenden in SmartHomeNG v1.6 eingeführten Properties benutzen.
 
 +------------------------+------------------------------------------------------------------------------+
 | **Funktion**           | **Beschreibung**                                                             |
-+------------------------+------------------------------------------------------------------------------+
++========================+==============================================================================+
 | id()                   | Liefert den item-Pfad des Items zurück. Aufruf: sh.item.id()                 |
 +------------------------+------------------------------------------------------------------------------+
 | last_update()          | Liefert ein *datetime* Objekt mit dem Zeitpunkt des letzten Updates des      |
@@ -43,25 +79,4 @@ genutzt werden können.
 +------------------------+------------------------------------------------------------------------------+
 | prev_age()             | Liefert das Alter des vorangegangenen Wertes in Sekunden zurück.             |
 +------------------------+------------------------------------------------------------------------------+
-| return_parent()        | Liefert den Item-Pfad des übergeordneten Items zurück.                       |
-|                        | Aufruf: sh.item.return_parent()                                              |
-+------------------------+------------------------------------------------------------------------------+
-| return_children()      | Liefert die Item-Pfade der direkt untergeordneten Items zurück. Aufruf:      |
-|                        | for child in sh.item.return_children(): ...                                  |
-+------------------------+------------------------------------------------------------------------------+
-| autotimer(time, value) | Setzt einen Timer bei jedem Werte-Wechsel der Items. Angegeben wird die      |
-|                        | Zeit (**time**) die vergehen soll, bis das Item auf den Wert (**value**)     |
-|                        | gesetzt wird. Die Zeitangabe erfolgt in Sekunden. Eine Angabe der Dauer in   |
-|                        | Minuten ist wie in '10m' möglich.                                            |
-+------------------------+------------------------------------------------------------------------------+
-| timer(time, value)     | Funktioniert wir **autotimer()**, ausser dass die Aktion nur einmal          |
-|                        | ausgeführt wird.                                                             |
-+------------------------+------------------------------------------------------------------------------+
-| fade(end, step, delta) | Blendet das Item mit der definierten Schrittweite (int oder float) und       |
-|                        | timedelta (int oder float in Sekunden) auf einen angegebenen Wert auf oder   |
-|                        | ab. So wird z.B.: **sh.living.light.fade(100, 1, 2.5)** das Licht im         |
-|                        | Wohnzimmer mit einer Schrittweite von **1** und einem Zeitdelta von **2,5**  |
-|                        | Sekunden auf **100** herunterregeln.                                         |
-+------------------------+------------------------------------------------------------------------------+
-
 

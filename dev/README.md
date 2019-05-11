@@ -143,4 +143,3 @@ Here are a few tips, if you are working with the commandline client of git:
       * `git config --global user.name "Your Name"`
       * `git config --global user.email you@example.com`
 
-

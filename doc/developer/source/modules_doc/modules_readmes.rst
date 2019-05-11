@@ -6,5 +6,6 @@ READMEs for Modules
    :glob:
    :titlesonly:
 
-   ../modules/dummy/README.md
+
+   ../modules/admin/README.md
    ../modules/http/README.md

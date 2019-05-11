@@ -8,16 +8,16 @@ Die folgenden Informationen sollen bei der Fehlersuche helfen.
 Checkliste für die Fehlersuche
 ==============================
 
-Wenn etwas nach erfolgter Installation nicht funktioniert, kann anhand folgender Punkte geprüft 
-werden, was nicht klappt. Hilfe gibt es auch im `Supportforum im KNX-User-Forum <https://knx-user-forum.de/forum/supportforen/smarthome-py>`_ 
-im KNX-User-Forum. Aber bitte erstmal alles durchdenken und prüfen. Wenn andere Euch weiterhelfen 
+Wenn etwas nach erfolgter Installation nicht funktioniert, kann anhand folgender Punkte geprüft
+werden, was nicht klappt. Hilfe gibt es auch im `Supportforum im KNX-User-Forum <https://knx-user-forum.de/forum/supportforen/smarthome-py>`_
+im KNX-User-Forum. Aber bitte erstmal alles durchdenken und prüfen. Wenn andere Euch weiterhelfen
 sollen, dann müsst ihr Informationen beisteuern:
 
-* Debug Ausgabe anhängen, mindestens bis das Problem ersichtlich geloggt wird. (Dazu SmartHome.py mit 
-  der Option **-d** starten) 
+* Debug Ausgabe anhängen, mindestens bis das Problem ersichtlich geloggt wird. (Dazu SmartHome.py mit
+  der Option **-d** starten)
 * Error und Warnings soweit möglich bereits vorher beseitigen
 * evtl. die etc/plugin.conf und die items mit denen Euer Problem zusammenhängt
-* Wichtig ist auch u.U. die verwendete Hardware (VM oder Raspi 1, 2, 3) das Betriebssystem 
+* Wichtig ist auch u.U. die verwendete Hardware (VM oder Raspi 1, 2, 3) das Betriebssystem
   (Raspbian, Ubuntu x.y, Debian x.y) und ob eibd oder knxd genutzt werden.
 
 Davor bitte einmal durch diese Liste durcharbeiten.
@@ -40,12 +40,12 @@ In der Ausgabe darauf sollte in etwa folgendes zu finden sein:
    20079 pts/2    S+     0:00 grep bin/smarthome
 
 
-Interessant ist die Zeile mit **smarthome.py**. Im Beispiel läuft smarthome.py bereits und zwar 
-im Debug Modus. Sollte diese oder eine ähnliche Zeile nicht auftauchen, dann ist smarthome.py 
-auch nicht gestartet. 
+Interessant ist die Zeile mit **smarthome.py**. Im Beispiel läuft smarthome.py bereits und zwar
+im Debug Modus. Sollte diese oder eine ähnliche Zeile nicht auftauchen, dann ist smarthome.py
+auch nicht gestartet.
 
-Für SmartHomeNG gilt wie beim Highlander:  Es kann nur Einen geben. Daher wird ein Versuch 
-SmartHomeNG mehrfach zu starten immer mit Problemen bei der Bindung an die IP quittiert. Das 
+Für SmartHomeNG gilt wie beim Highlander:  Es kann nur Einen geben. Daher wird ein Versuch
+SmartHomeNG mehrfach zu starten immer mit Problemen bei der Bindung an die IP quittiert. Das
 läßt sich prima im Debuglog sehen:
 
 .. code::
@@ -54,9 +54,9 @@ läßt sich prima im Debuglog sehen:
    <Datum + Uhrzeit> ERROR    Connections  CLI: problem binding 0.0.0.0:2323 (TCP): [Errno 98] Address already in use
 
 
-Wenn Fehler dieser Art gezeigt werden dann ist dies ein klares Indiz dafür, das SmartHomeNG 
-bereits läuft. Um SmartHomeNG also im Debugmodus zu starten, muß die laufende Instanz erst 
-beendet werden. Das geht mit smarthome.py -s oder aber man startet auf der Shell 
+Wenn Fehler dieser Art gezeigt werden dann ist dies ein klares Indiz dafür, das SmartHomeNG
+bereits läuft. Um SmartHomeNG also im Debugmodus zu starten, muß die laufende Instanz erst
+beendet werden. Das geht mit smarthome.py -s oder aber man startet auf der Shell
 
 .. code::
 
@@ -74,7 +74,7 @@ SmartHomeNG im Debugmodus starten
    python3 smarthome.py -d
 
 
-Jetzt sollte eine Menge an Loggingdaten aufgelistet werden. Der Debugmodus ist die Grundlage 
+Jetzt sollte eine Menge an Loggingdaten aufgelistet werden. Der Debugmodus ist die Grundlage
 für weitere Fehlersuche
 
 Zugriff auf den KNX via eibd
@@ -94,11 +94,11 @@ Nun sollte so etwas ähnliches gezeigt werden:
    11045 pts/1    S+     0:00 grep --color=auto eibd
    smarthome@sh13:~$
 
-Im obigen Fall handelt es sich beim laufenden eibd um eine Installation, die auf eine KNX 
-Schnittstelle zugreift. Wichtig ist hier, das die Zeile **/usr/bin/eibd** auftaucht. Wenn 
+Im obigen Fall handelt es sich beim laufenden eibd um eine Installation, die auf eine KNX
+Schnittstelle zugreift. Wichtig ist hier, das die Zeile **/usr/bin/eibd** auftaucht. Wenn
 das der Fall ist, dann läuft der eibd.
 
-Ob der eibd auch schalten kann stellt man fest mit 
+Ob der eibd auch schalten kann stellt man fest mit
 
 .. code::
 
@@ -111,10 +111,10 @@ wobei hier 1/0/170 die Gruppenadresse eines Schaltaktors ist, der mit 1 eingesch
 Zugriff auf den KNX via knxd
 ----------------------------
 
-Hier hängt die weitere Vorgehensweise davon ab auf welchem System der knxd installiert ist. 
-Bei Ubuntu > 15.x oder Debian 8.x ist die Wahrscheinlichkeit recht hoch, das der Start vom 
-systemd übernommen wurde. Sollte es ein älteres System sein, dann kann es auch sein, das ein 
-herkömmliches Startskript verwendet wurde. In diesem Fall ist die Vorgehensweise wie oben unter 
+Hier hängt die weitere Vorgehensweise davon ab auf welchem System der knxd installiert ist.
+Bei Ubuntu > 15.x oder Debian 8.x ist die Wahrscheinlichkeit recht hoch, das der Start vom
+systemd übernommen wurde. Sollte es ein älteres System sein, dann kann es auch sein, das ein
+herkömmliches Startskript verwendet wurde. In diesem Fall ist die Vorgehensweise wie oben unter
 eibd, nur das nun synonym dazu knxd benutzt wird.
 
 Für systemd ist es recht einfach festzustellen ob der knxd läuft:
@@ -161,7 +161,7 @@ Die Ausgabe sieht dann ähnlich aus wie hier:
 
 
 Sollte der knxd.service nicht laufen, so müßt ihr den erstmal in Gang bekommen.
-Wenn das aber geklappt hat, kann die Funktion des knxd getestet werden z. B. mit   
+Wenn das aber geklappt hat, kann die Funktion des knxd getestet werden z. B. mit
 (Gruppenadresse = 1/0/170 für einen Schaltaktor mit 1 oder 0=
 
 .. code::
@@ -169,19 +169,19 @@ Wenn das aber geklappt hat, kann die Funktion des knxd getestet werden z. B. mit
    knxtool groupswrite ip:localhost 1/0/170 1
 
 
-Sollte sich jetzt nichts tun, dann gibt es irgendwo einen Fehler und alles muß noch einmal 
-geprüft werden. Vielleicht ist der Neustart des knxd vergessen oder beim Erstellen des knxd 
+Sollte sich jetzt nichts tun, dann gibt es irgendwo einen Fehler und alles muß noch einmal
+geprüft werden. Vielleicht ist der Neustart des knxd vergessen oder beim Erstellen des knxd
 packages ein Build-Fehler übersehen worden.
 
 
 Kann SmartHomeNG schalten?
 --------------------------
 
-Nun kann geprüft werden, ob sich von SmartHomeNG ein Schaltvorgang auslösen läßt. Dazu muß 
-zwingend das Plugin CLI installiert und konfiguriert sein (ist es bei den existierenden Anleitungen 
+Nun kann geprüft werden, ob sich von SmartHomeNG ein Schaltvorgang auslösen läßt. Dazu muß
+zwingend das Plugin CLI installiert und konfiguriert sein (ist es bei den existierenden Anleitungen
 eigentlich immer)
 
-Dazu wird eine zusätzliche Shell eröffnet (Nein, Windows Telnet funktioniert hier nicht) und 
+Dazu wird eine zusätzliche Shell eröffnet (Nein, Windows Telnet funktioniert hier nicht) und
 darin eingegeben
 
 .. code::
@@ -201,7 +201,7 @@ Nach erfolgreichem Aufbau der Verbindung dann **help** eingeben.
    Connected to smarthome.local.
    Escape character is '^]'.
    SmartHomeNG v1.4.0
-   Enter 'help' for a list of available commands.  
+   Enter 'help' for a list of available commands.
    CLI > help
    h: alias for help
    help [group]: show help for group of commands [item, log, logic, scheduler]
@@ -226,19 +226,19 @@ Nach erfolgreichem Aufbau der Verbindung dann **help** eingeben.
    st: list all scheduler tasks by execution time
    tl: list current thread names
    quit, q: quit the session
-   CLI > 
+   CLI >
 
 
-Am einfachsten, die Befehle werden mal ausprobiert, z.B. **ls** um die First Level Items aufzulisten, 
-dann **ls item** um ein bestimmten item abzufragen und schließlich **update item = 1** für z.B. einen 
+Am einfachsten, die Befehle werden mal ausprobiert, z.B. **ls** um die First Level Items aufzulisten,
+dann **ls item** um ein bestimmten item abzufragen und schließlich **update item = 1** für z.B. einen
 Schaltaktor einer Lampe um das Licht anzuschalten.
 
 Wenn es bis hierher geklappt hat, dann ist das Grundsystem funktional.
 
-Kontakt mit SmartVISU 
+Kontakt mit SmartVISU
 ---------------------
 
-Es ist wichtig für die Fehlersuche SmartHomeNG im Debugmodus zu starten. So kann bequem verfolgt 
+Es ist wichtig für die Fehlersuche SmartHomeNG im Debugmodus zu starten. So kann bequem verfolgt
 werden, was passiert, wenn z.B. auf der Visu ein Button geklickt wird.
 
 Die häufigsten Fehler sind:
@@ -256,7 +256,7 @@ Die häufigsten Fehler sind:
 +-----------------------------------------+--------------------------------------------------------------------+-------------------------------------------------+
 | Zugriff auf ein Item ist über die Visu  | Kein Schalten möglich, Werte werden nicht aktualisiert             | visu_acl: rw oder visu: yes fehlt bei einem     |
 | nicht gegeben.                          |                                                                    | Item oder als globales Setting beim Plugin      |
-|                                         |                                                                    | visu_smartvisu                                  |                    
+|                                         |                                                                    | visu_smartvisu                                  |
 +-----------------------------------------+--------------------------------------------------------------------+-------------------------------------------------+
 
 
@@ -284,13 +284,15 @@ Connection - Telnet:
 Mehr Informationen zum CLI Plugin unter: :doc:`./plugins/cli/README`
 
 
-Fehlersuche mit Backend (ab SmartHomeNG v1.2)
+Fehlersuche mit Backend Plugin bzw. Admin GUI
 =============================================
 
 Ab Version SmartHomeNG v1.2 gibt es das Plugin Backend. Das Backend Plugin muß in der ../etc/plugin.yaml
-bzw. ../etc/plugin.conf konfiguriert werden und wird über <ip des SmartHomeNG>:8383 im Browser 
-aufgerufen. Es ist eigentlich selbsterklärend und bildet über den Browser ein mehr Informationen 
-ab als das CLI Plugin. 
+bzw. ../etc/plugin.conf konfiguriert werden und wird über <ip des SmartHomeNG>:8383 im Browser
+aufgerufen. Es ist eigentlich selbsterklärend und bildet über den Browser ein mehr Informationen
+ab als das CLI Plugin.
 
-Mehr Informationen zum Backend Plugin unter: :doc:`./backend/backend`
+Ab Version 1.6 steht ein neues Administrationsinterface zur Verfügung.
+
+Mehr Informationen zur Administrations-GUI unter: :doc:`./admin/admin`
 

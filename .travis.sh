@@ -91,7 +91,7 @@ echo "travis_fold:end:Links"
 echo -e "travis_fold:start:Suite\nRunning suite"
 
 cd smarthome
-tox
+tox || exit 1
 cd ..
 
 echo "travis_fold:end:Suite"

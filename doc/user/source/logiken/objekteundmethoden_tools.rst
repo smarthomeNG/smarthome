@@ -7,13 +7,13 @@ Das sh.tools Objekt stellt einige nützliche Funktionen zur Verfügung:
 sh.tools.ping()
 ^^^^^^^^^^^^^^^
 
-Sendet ein Ping an einen Computer und liefert True zurück, falls der Computer antwortet. 
+Sendet ein Ping an einen Computer und liefert True zurück, falls der Computer antwortet.
 
 .. code-block:: python
 
    sh.office.laptop(sh.tools.ping('hostname'))
 
-speichert das Ergebis des Pings von 'hostname' in das Item office.laptop:
+speichert das Ergebnis des Pings von 'hostname' in das Item office.laptop:
 
 
 sh.tools.dewpoint()
@@ -29,7 +29,7 @@ Errechnet der Taupukt für die gegebene Temperatur und Luftfeuchtigkeit.
 sh.tools.fetch_url()
 ^^^^^^^^^^^^^^^^^^^^
 
-Liefert den Inhalt einer Website als String oder ‘False’, walls das Lesen der Website fehlschlägt.
+Liefert den Inhalt einer Website als String oder ``False``, falls das Lesen der Website fehlschlägt.
 
 
 .. code-block:: python
@@ -41,7 +41,7 @@ Es ist möglich ‘username’ und ‘password’ anzugeben, um sich bei der Web
 .. code-block:: python
 
    sh.tools.fetch_url('https://www.special.com', 'username', 'password') 
-   
+
 Es ist auch möglich das Standard Timeout von 2 Sekunden für den Aufruf zu ändern:
 
 .. code-block:: python

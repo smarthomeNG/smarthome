@@ -4,7 +4,7 @@
 Logiken
 #######
 
-Zur Konfiguration einer Logik wird in der Datei **../etc/logic.yaml** ein Abschnitt für die 
+Zur Konfiguration einer Logik wird in der Datei **../etc/logic.yaml** ein Abschnitt für die
 Logik angelegt. Unter dem Namen dieses Abschnitts wird die Logik an anderen Stellen referenziert.
 
 In diesem Abschnitt muss SmartHomeNG mitgeteilt werden, welche Code Datei ausgeführt werden soll
@@ -47,5 +47,4 @@ die Logik nicht automatisiert ausgeführt. Sie kann dann nur aus Plugins oder (f
 eine Visualisierung ausgelöst werden.
 
 
-
-Details zur Erstelllung von Logiken finden sich :doc:`hier <../logiken/logiken>` .
+Details zur Erstellung von Logiken finden sich :doc:`hier <../logiken/logics>` .

@@ -12,7 +12,7 @@ Among the hardware commonly used there are found
 
 - Raspberry 1, Raspberry 2, Raspberry 3 (the latter one is **strongly recommended** due to better hardware)
   The majority of users utilize this hardware, see `questionnaire <https://knx-user-forum.de/forum/supportforen/smarthome-py/1112952-welche-hardware-nutzt-ihr-f%C3%BCr-euer-smarthomeng>`_
-- Intel NUC (recommended for stability and speed, although more power needed. Supports normal SATA drives which is an advantage over Raspi's SD-cards)
+- Intel NUC (recommended for stability and speed, although more power needed. Supports normal SATA drives which is an advantage over SD-cards)
 - ODroid
 - Banana Pi
 - Beagle Bone
@@ -23,8 +23,8 @@ Among the hardware commonly used there are found
 Operating System
 ****************
 
-Any Linux or Unix System with shell access to install the requirements and SmartHomeNG should be fine. 
-SmartHomeNG is at least tested on Raspbian and Debian Jessie (amd64)
+Any Linux or Unix System with shell access to install the requirements and SmartHomeNG should be fine.
+SmartHomeNG is at least tested on Raspbian and Debian Stretch (amd64)
 
 If using a hardware platform without buffered real time clock it is mandatory to have a NTP daemon running to get time via internet.
 Otherwise SmartHomeNG will not start due to missing time information.

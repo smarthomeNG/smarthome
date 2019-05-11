@@ -1,4 +1,4 @@
-lib.db 
+lib.db
 ------
 
 .. automodule:: lib.db

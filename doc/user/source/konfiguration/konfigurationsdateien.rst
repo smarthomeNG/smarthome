@@ -8,7 +8,7 @@ die Konfigurationsdateien beschrieben, die in diesen Verzeichnissen gespeichert 
 
 Die Konfiguration erfolgt im weit verbreiteten `yaml <https://en.wikipedia.org/wiki/YAML>`_ Format.
 
-Ältere Versionen von smarthome.py und SmartHomeNG benutzten das `configobj <http://www.voidspace.org.uk/python/articles/configobj.shtml>`_ 
+Ältere Versionen von smarthome.py und SmartHomeNG benutzten das `configobj <http://www.voidspace.org.uk/python/articles/configobj.shtml>`_
 Dateiformat, welches ähnlich zum bekannten `ini-file <https://en.wikipedia.org/wiki/INI_file>`_ Format
 ist, jedoch die Möglichkeit hat, Abschnitte mit Unterstrukturen in Multilevel Strukturen anzulegen.
 Dieses Dateiformat ist von SmartHomeNG noch unterstützt. Es ist jedoch veraltet und wird nur für Umsteiger aus
@@ -33,6 +33,7 @@ Konfigurationsdateien im Verzeichnis *../etc*
 - plugin.yaml
 - logic.yaml
 - logging.yaml
+- struct.yaml
 
 
 -------------------------------------------------
@@ -69,5 +70,6 @@ Logik Code im Verzeichnis *../logics*
    konfigurationsdateien_logic.rst
    konfigurationsdateien_logging.rst
    konfigurationsdateien_items.rst
+   konfigurationsdateien_struct.rst
    konfigurationsdateien_logics.rst
    konfigurationsdateien_scenes.rst

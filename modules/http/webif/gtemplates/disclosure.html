@@ -1,0 +1,241 @@
+ <!DOCTYPE html>
+{% extends "base.html" %}
+{% block navbar %}
+	{% with active_page="disclosure" %}
+	{% include "navbar.html" %}
+	{% endwith %}
+{% endblock navbar %}
+
+{% block title %}
+{{ _('Disclosure', 'menu') }} - SmartHomeNG
+{% endblock title %}
+
+{% block content %}
+<div class="container-fluid navBorder">
+<div class="shng_headline">{{ _('disclosure_title', 'disclosure') }}</div><br>
+</div>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="card-title shng_headline">{{ _('Verwendete Open Source Software Komponenten', 'disclosure') }}</div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr class="shng_heading">
+                        <th>{{ _('Name', 'disclosure') }}</th>
+                        <th>{{ _('Lizenz', 'disclosure') }}</th>
+                        <th>{{ _('Link', 'disclosure') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr><td class="p-1" width="250px;">Bootstrap v4.3.1</td><td class="p-1">MIT License</td><td class="p-1"><a class="text-shng" target="_blank" href="http://getbootstrap.com/">http://getbootstrap.com/</a></td></tr>
+                <tr><td class="p-1">Bootstrap Tree View</td><td class="p-1">Apache License, Version 2.0</td><td class="p-1"><a class="text-shng" target="_blank" href="https://github.com/jonmiles/bootstrap-treeview">https://github.com/jonmiles/bootstrap-treeview</a></td></tr>
+                <tr><td class="p-1">Bootstrap Datepicker v1.8.0</td><td class="p-1">Apache License, Version 2.0</td><td class="p-1"><a class="text-shng" target="_blank" href="https://github.com/uxsolutions/bootstrap-datepicker">https://github.com/uxsolutions/bootstrap-datepicker</a></td></tr>
+                <tr><td class="p-1">popper.js</td><td class="p-1">MIT License</td><td class="p-1"><a class="text-shng" target="_blank" href="https://popper.js.org/">https://popper.js.org/</a></td></tr>
+                <tr><td class="p-1">CodeMirror 5.46.0</td><td class="p-1">MIT License</td><td class="p-1"><a class="text-shng" target="_blank" href="https://codemirror.net/">https://codemirror.net/</a></td></tr>
+                <tr><td class="p-1">jQuery 3.4.1</td><td class="p-1">MIT License</td><td class="p-1"><a class="text-shng" target="_blank" href="https://jquery.org">https://jquery.org</a></td></tr>
+                <tr><td class="p-1">Font Awesome 5.8.1 (Free)</td><td class="p-1">Font Awesome licensed under <a class="text-shng" href="http://scripts.sil.org/OFL" target="_blank">SIL OFL 1.1</a><br/>Font Awesome CSS, LESS, and Sass files are licensed under the <a class="text-shng" href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a><br/>Font Awesome icons (all icons packaged as .svg and .js files) are licensed under the <a class="text-shng" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0 License</a></td><td class="p-1"><a class="text-shng" target="_blank" href="http://fontawesome.com">http://fontawesome.com</a></td></tr>
+                <tr><td class="p-1" width="150px;">{{ _('Icons/Bilder', 'disclosure') }}</td><td class="p-1">{{ _('Alle Icons und Bilder kommen von', 'disclosure') }} https://openclipart.org</td><td class="p-1"><a class="text-shng" target="_blank" href="https://openclipart.org">https://openclipart.org</a></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<hr/>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body p-2">
+            <h5 class="card-title">Bootstrap v4.3.1:</h5>
+            <p class="card-text">
+                The MIT License (MIT)<br/>
+                <br/>
+                Copyright (c) 2011-2019 Twitter, Inc.<br/>
+                Copyright (c) 2011-2019 The Bootstrap Authors<br/>
+                <br/>
+                Permission is hereby granted, free of charge, to any person obtaining a copy<br/>
+                of this software and associated documentation files (the "Software"), to deal<br/>
+                in the Software without restriction, including without limitation the rights<br/>
+                to use, copy, modify, merge, publish, distribute, sublicense, and/or sell<br/>
+                copies of the Software, and to permit persons to whom the Software is<br/>
+                furnished to do so, subject to the following conditions:<br/>
+                <br/>
+                The above copyright notice and this permission notice shall be included in all<br/>
+                copies or substantial portions of the Software.<br/>
+                <br/>
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR<br/>
+                IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,<br/>
+                FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE<br/>
+                AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER<br/>
+                LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,<br/>
+                OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE<br/>
+                SOFTWARE.<br/>
+            </p>
+        </div>
+    </div>
+    <br/>
+    <div class="card">
+        <div class="card-body p-2">
+            <h5 class="card-title">popper.js</h5>
+            <p class="card-text">
+                MIT License<br/>
+                <br/>
+                Copyright © 2016 Federico Zivolo and contributors<br/>
+                <br/>
+                Permission is hereby granted, free of charge, to any person obtaining a copy<br/>
+                of this software and associated documentation files (the "Software"), to deal<br/>
+                in the Software without restriction, including without limitation the rights<br/>
+                to use, copy, modify, merge, publish, distribute, sublicense, and/or sell<br/>
+                copies of the Software, and to permit persons to whom the Software is<br/>
+                furnished to do so, subject to the following conditions:<br/>
+                <br/>
+                The above copyright notice and this permission notice shall be included in all<br/>
+                copies or substantial portions of the Software.<br/>
+                <br/>
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR<br/>
+                IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,<br/>
+                FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE<br/>
+                AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER<br/>
+                LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,<br/>
+                OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE<br/>
+                SOFTWARE.<br/>
+            </p>
+        </div>
+    </div>
+    <br/>
+    <div class="card">
+        <div class="card-body p-2">
+            <h5 class="card-title">Bootstrap Tree View:</h5>
+            <p class="card-text">
+                Copyright 2013 Jonathan Miles<br/>
+                <br/>
+                Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at <a class="text-shng" target="_blank" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a><br/>
+                <br/>
+                Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.<br/>
+            </p>
+          </div>
+    </div>
+    <br/>
+    <div class="card">
+        <div class="card-body p-2">
+            <h5 class="card-title">Bootstrap Datepicker:</h5>
+            <p class="card-text">Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)
+            </p>
+          </div>
+    </div>
+    <br/>
+    <div class="card">
+        <div class="card-body p-2">
+            <h5 class="card-title">CodeMirror 5.46.0:</h5>
+            <p class="card-text">
+                Copyright (C) 2017 by Marijn Haverbeke <marijnh@gmail.com> and others<br/>
+                <br/>
+                Permission is hereby granted, free of charge, to any person obtaining a copy<br/>
+                of this software and associated documentation files (the "Software"), to deal<br/>
+                in the Software without restriction, including without limitation the rights<br/>
+                to use, copy, modify, merge, publish, distribute, sublicense, and/or sell<br/>
+                copies of the Software, and to permit persons to whom the Software is<br/>
+                furnished to do so, subject to the following conditions:<br/>
+                <br/>
+                The above copyright notice and this permission notice shall be included in<br/>
+                all copies or substantial portions of the Software.<br/>
+                <br/>
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR<br/>
+                IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,<br/>
+                FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE<br/>
+                AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER<br/>
+                LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,<br/>
+                OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN<br/>
+                THE SOFTWARE.<br/>
+            </p>
+        </div>
+    </div>
+    <br/>
+    <div class="card">
+        <div class="card-body p-2">
+            <h5 class="card-title">Font Awesome 5.8.1 (Free)</h5>
+            <p class="card-text">
+                Font Awesome Free is free, open source, and GPL friendly. You can use it for
+                commercial projects, open source projects, or really almost whatever you want.
+                Full Font Awesome Free license: <a class="text-shng" href="https://fontawesome.com/license" target="_blank">https://fontawesome.com/license</a>.
+                <br/><br/>
+                # Icons:<br/>
+                CC BY 4.0 License (<a class="text-shng" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">https://creativecommons.org/licenses/by/4.0/</a>)
+                In the Font Awesome Free download, the CC BY 4.0 license applies to all icons
+                packaged as SVG and JS file types.
+                <br/><br/>
+                # Fonts:<br/>
+                SIL OFL 1.1 License (<a class="text-shng" href="https://scripts.sil.org/OFL" target="_blank">https://scripts.sil.org/OFL</a>)
+                In the Font Awesome Free download, the SIL OLF license applies to all icons
+                packaged as web and desktop font files.
+                <br/><br/>
+                # Code:<br/>
+                MIT License (<a class="text-shng" href="https://opensource.org/licenses/MIT" target="_blank">https://opensource.org/licenses/MIT</a>)
+                In the Font Awesome Free download, the MIT license applies to all non-font and
+                non-icon files.
+                <br/><br/>
+                # Attribution<br/>
+                Attribution is required by MIT, SIL OLF, and CC BY licenses. Downloaded Font
+                Awesome Free files already contain embedded comments with sufficient
+                attribution, so you shouldn't need to do anything additional when using these
+                files normally.
+                <br/><br/>
+                We've kept attribution comments terse, so we ask that you do not actively work
+                to remove them from files, especially code. They're a great way for folks to
+                learn about Font Awesome.
+                <br/><br/>
+                # Brand Icons<br/>
+                All brand icons are trademarks of their respective owners. The use of these
+                trademarks does not indicate endorsement of the trademark holder by Font
+                Awesome, nor vice versa. **Please do not use brand logos for any purpose except
+                to represent the company, product, or service to which they refer.**
+            </p>
+        </div>
+    </div>
+    <br/>
+    <div class="card">
+        <div class="card-body p-2">
+            <h5 class="card-title">JQuery 3.4.1:</h5>
+            <p class="card-text">
+                MIT License<br/>
+                <br/>
+                Copyright jQuery Foundation and other contributors, https://jquery.org/<br/>
+                <br/>
+                This software consists of voluntary contributions made by many<br/>
+                individuals. For exact contribution history, see the revision history<br/>
+                available at https://github.com/jquery/jquery<br/>
+                <br/>
+                The following license applies to all parts of this software except as<br/>
+                documented below:<br/>
+                <br/>
+                <br/>
+                <br/>
+                Permission is hereby granted, free of charge, to any person obtaining<br/>
+                a copy of this software and associated documentation files (the<br/>
+                "Software"), to deal in the Software without restriction, including<br/>
+                without limitation the rights to use, copy, modify, merge, publish,<br/>
+                distribute, sublicense, and/or sell copies of the Software, and to<br/>
+                permit persons to whom the Software is furnished to do so, subject to<br/>
+                the following conditions:<br/>
+                <br/>
+                The above copyright notice and this permission notice shall be<br/>
+                included in all copies or substantial portions of the Software.<br/>
+                <br/>
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,<br/>
+                EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF<br/>
+                MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND<br/>
+                NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE<br/>
+                LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION<br/>
+                OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION<br/>
+                WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.<br/>
+                <br/>
+                <br/>
+                <br/>
+                All files located in the node_modules and external directories are<br/>
+                externally maintained libraries used by this software which have their<br/>
+                own licenses; we recommend you read them, as their terms may differ from<br/>
+                the terms above.<br/><br/>
+            </p>
+        </div>
+    </div>
+    <br/>
+</div>
+{% endblock %}

@@ -9,7 +9,7 @@
    :hidden:
 
    /dev/sample_plugin/README.md
-   
+
 .. toctree::
    :maxdepth: 2
    :glob:
@@ -19,4 +19,4 @@
    /plugins/alexa/nginx.md
    /plugins/buderus/TODO.md
    /plugins/buderus/URLs.md
-   
+

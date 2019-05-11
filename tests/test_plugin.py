@@ -14,21 +14,21 @@ class TestPlugin(unittest.TestCase):
 		self.item_conf = self.sh.with_items_from(common.BASE + "/tests/resources/plugin_items.conf")
 
 	def test_plugin_is_registered(self):
-		self.assertIsNotNone(self.plugins.get_plugin("wol"))
+		self.assertIsNotNone(self.plugins.get_pluginthread("wol"))
 
 	def test_plugin_not_registered(self):
-		self.assertIsNone(self.plugins.get_plugin("wol1"))
+		self.assertIsNone(self.plugins.get_pluginthread("wol1"))
 
 	def test_plugin_name(self):
-		wolplug = self.plugins.get_plugin("wol_ww")
+		wolplug = self.plugins.get_pluginthread("wol_ww")
 		self.assertEqual(wolplug.name, "wol_ww")
 
 	def test_plugin_implementation(self):
-		wolplug = self.plugins.get_plugin("wol_ww")
+		wolplug = self.plugins.get_pluginthread("wol_ww")
 		self.assertEqual(wolplug.plugin, wolplug.get_implementation())
 
 	def test_plugin_ident(self):
-		wolplug = self.plugins.get_plugin("wol_ww")
+		wolplug = self.plugins.get_pluginthread("wol_ww")
 		self.assertIsNone(wolplug.ident)
 		self.plugins.start()
 		self.assertEqual(wolplug.ident, wolplug.get_ident())
@@ -36,25 +36,25 @@ class TestPlugin(unittest.TestCase):
 		self.plugins.stop()
 
 	def test_plugin_instance_not_set(self):
-		cliplug = self.plugins.get_plugin("cli")
+		cliplug = self.plugins.get_pluginthread("cli")
 		self.assertEqual(cliplug.plugin.get_instance_name(),"")
 
 	def test_plugin_instance_set(self):
-		cliplug = self.plugins.get_plugin("wol_ww")
+		cliplug = self.plugins.get_pluginthread("wol_ww")
 		self.assertEqual(cliplug.plugin.get_instance_name(),"bind")
 
 	def test_plugin_multi_instance_capable_true(self):
-		wolplug = self.plugins.get_plugin("wol_ww")
+		wolplug = self.plugins.get_pluginthread("wol_ww")
 		self.assertTrue(isinstance(wolplug.plugin, SmartPlugin))
 		self.assertTrue(wolplug.plugin.is_multi_instance_capable())
 
 	def test_plugin_multi_instance_capable_false(self):
-		cliplug = self.plugins.get_plugin("cli")
+		cliplug = self.plugins.get_pluginthread("cli")
 		self.assertTrue(isinstance(cliplug.plugin, SmartPlugin))
 		self.assertFalse(cliplug.plugin.is_multi_instance_capable())
 
 	def test_plugin_instance_not_set_has_iattr(self):
-		wolplug = self.plugins.get_plugin("wol")
+		wolplug = self.plugins.get_pluginthread("wol")
 
 		config_mock = {'key3', 'value3'}
 		self.assertTrue(wolplug.plugin.has_iattr(config_mock,"key3"))
@@ -64,7 +64,7 @@ class TestPlugin(unittest.TestCase):
 		self.assertFalse(wolplug.plugin.has_iattr(config_mock, "key3"))
 
 	def test_plugin_instance_set_has_iattr(self):
-		wolplug = self.plugins.get_plugin("wol_ww")
+		wolplug = self.plugins.get_pluginthread("wol_ww")
 
 		config_mock = {'key3@bind', 'value3'}
 		self.assertTrue(wolplug.plugin.has_iattr(config_mock, "key3"))
@@ -74,7 +74,7 @@ class TestPlugin(unittest.TestCase):
 		self.assertFalse(wolplug.plugin.has_iattr(config_mock, "key3"))
 
 	def test_plugin_instance_not_set_get_iattr_value(self):
-		wolplug = self.plugins.get_plugin("wol")
+		wolplug = self.plugins.get_pluginthread("wol")
 
 		config_mock = {'key3@*' : 'value3'}
 		self.assertEqual(wolplug.plugin.get_iattr_value(config_mock, "key3"), "value3")
@@ -84,7 +84,7 @@ class TestPlugin(unittest.TestCase):
 		self.assertIsNone(wolplug.plugin.get_iattr_value(config_mock, "key3"))
 
 	def test_plugin_instance_set_get_iattr_value(self):
-		wolplug = self.plugins.get_plugin("wol_ww")
+		wolplug = self.plugins.get_pluginthread("wol_ww")
 
 		config_mock = {'key3@*' : 'value3'}
 		self.assertEqual(wolplug.plugin.get_iattr_value(config_mock, "key3"), "value3")
@@ -109,7 +109,7 @@ class TestPlugin(unittest.TestCase):
 		self.assertEqual(len(it.get_method_triggers()),0)
 
 	def test_plugin_instance_wol(self):
-		wolplug = self.plugins.get_plugin("wol_ww")
+		wolplug = self.plugins.get_pluginthread("wol_ww")
 		self.sh.scheduler.add(wolplug.name, wolplug.plugin.update_item, prio=5, cycle=300, offset=2)
 		wolplug.plugin.wake_on_lan("11:22:33:44:55:66")
 

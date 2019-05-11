@@ -1,10 +1,13 @@
+.. index:: Standard-Attribute; type
+.. index:: type
+
 .. index:: Items; Datentypen
 .. index:: Datentypen
 
 `type`
 ------
 
-Das Attribut **type** legt den Datentyp des Items fest. Dadurch wird bestimmt, was für Daten in 
+Das Attribut **type** legt den Datentyp des Items fest. Dadurch wird bestimmt, was für Daten in
 dem Item gespeichert werden können und wie das Item verwendet werden kann.
 
 Folgende mögliche Datentypen sind für Items definiert:
@@ -21,7 +24,10 @@ Folgende mögliche Datentypen sind für Items definiert:
 +----------+--------------------------------------------------------------------------------------+
 | list     | Eine Liste/Array von Werten, findet bei bestimmten KNX Datenpunkten Anwendung        |
 +----------+--------------------------------------------------------------------------------------+
-| dict     | Ein Python Dictionary                                                                |
+| dict     | Ein Python Dictionary - Wenn in den Item Definitionen ein Wertzuweisung mit dem      |
+|          | Attribut **value** erfolgen soll, muss unbedingt darauf geachtet werden, dass der    |
+|          | angegebene Wert in Anführungszeichen gesetzt wird, damit yaml den Wert nicht als     |
+|          | Datenstruktur interpretiert. (Also so: value: "{'k1': 'v1', 'k2': 'v2'}" )           |
 +----------+--------------------------------------------------------------------------------------+
 | foo      | allgemeiner Typ - Items dieses Typs können Daten beliebiger anderer Datentypen       |
 |          | aufnehmen                                                                            |

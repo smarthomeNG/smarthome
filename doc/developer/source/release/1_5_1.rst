@@ -1,9 +1,9 @@
-===============================
-Release 1.5.1 - July 15th, 2018
-===============================
+============================
+Release 1.6 - May 11th, 2019
+============================
 
 There are some bugfixes and new features for the core of SmartHomeNG and the plugins.
 
-The detailed release notes can be found in the user documentation under `https://www.smarthomeNG.de/user/release <../../user/release/1_5_1.html>`_
+The detailed release notes can be found in the user documentation under `https://www.smarthomeNG.de/user/release <../../user/release/1_6.html>`_
 and in the SmartHomeNG blog under `https://www.smarthomeNG.de/blog <https://www.smarthomeNG.de/blog/>`_
 

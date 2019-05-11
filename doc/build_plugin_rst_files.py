@@ -31,7 +31,7 @@ it creates the files:
 - plugins_gateway.rst
 - plugins_interface.rst
 - plugins_protocol.rst
-- plugins_system.rst 
+- plugins_system.rst
 - plugins_unclassified.rst
 - plugins_web.rst
 
@@ -79,6 +79,9 @@ plugin_sections = [ ['gateway', 'Gateway', 'Gateway'],
                     ['web', 'Web/Cloud', 'Web/Cloud']
                   ]
 
+def bold(s):
+    return "**"+s+"**" if s else ""
+
 
 def get_pluginlist_fromgit():
     plglist = []
@@ -88,11 +91,11 @@ def get_pluginlist_fromgit():
 #            print(plg.split('/')[0], '   -   ', plg)
             plglist.append(plg.split('/')[0])
     return plglist
-    
-    
+
+
 def get_local_pluginlist():
     plglist = os.listdir('.')
-    
+
     for entry in plglist:
         if entry[0] in ['.','_'] or entry == 'deprecated_plugins':
             plglist.remove(entry)
@@ -103,8 +106,8 @@ def get_local_pluginlist():
         if entry[0] in ['.','_']:
             plglist.remove(entry)
     return plglist
-    
-    
+
+
 def get_pluginyamllist_fromgit():
     plglist = []
     plg_git = subprocess.check_output(['git', 'ls-files', '*/plugin.yaml'], stderr=subprocess.STDOUT).decode().strip('\n')
@@ -113,8 +116,8 @@ def get_pluginyamllist_fromgit():
 #            print(plg,'   -   ', plg.split('/')[0], )
             plglist.append(plg.split('/')[0])
     return plglist
-    
-    
+
+
 def get_description(section_dict, maxlen=70, lang='en'):
     desc = ''
     if lang == 'en':
@@ -130,7 +133,7 @@ def get_description(section_dict, maxlen=70, lang='en'):
             desc = section_dict['description'].get(lang2, '')
         except:
             pass
-            
+
     import textwrap
     lines = textwrap.wrap(desc, maxlen, break_long_words=False)
     if lines == []:
@@ -140,7 +143,7 @@ def get_description(section_dict, maxlen=70, lang='en'):
 
 def get_maintainer(section_dict, maxlen=20):
     maint = section_dict.get('maintainer', '')
-            
+
     import textwrap
     lines = textwrap.wrap(maint, maxlen, break_long_words=False)
     if lines == []:
@@ -150,7 +153,7 @@ def get_maintainer(section_dict, maxlen=20):
 
 def get_tester(section_dict, maxlen=20):
     maint = section_dict.get('tester', '')
-            
+
     import textwrap
     try:
         lines = textwrap.wrap(str(maint), maxlen, break_long_words=False)
@@ -165,7 +168,7 @@ def get_tester(section_dict, maxlen=20):
 
 def get_docurl(section_dict, maxlen=70):
     maint = section_dict.get('documentation', '')
-            
+
     import textwrap
     lines = textwrap.wrap(maint, maxlen, break_long_words=True)
     if lines == []:
@@ -175,7 +178,7 @@ def get_docurl(section_dict, maxlen=70):
 
 def get_supurl(section_dict, maxlen=70):
     maint = section_dict.get('support', '')
-            
+
     import textwrap
     lines = textwrap.wrap(maint, maxlen, break_long_words=True)
     if lines == []:
@@ -199,7 +202,7 @@ def build_pluginlist( plugin_type='all' ):
     result = []
     plugin_type = plugin_type.lower()
     for metaplugin in plugins_git:
-        metafile = metaplugin + '/plugin.yaml' 
+        metafile = metaplugin + '/plugin.yaml'
         plg_dict = {}
         if metaplugin in plugins_git:    #pluginsyaml_git
             if os.path.isfile(metafile):
@@ -249,8 +252,8 @@ def build_pluginlist( plugin_type='all' ):
                 plg_dict['test'] = ['']
                 plg_dict['doc'] = ''
                 plg_dict['sup'] = ''
-                
-            
+
+
             # Adjust list lengths
             maxlen = max( len(plg_dict['desc']), len(plg_dict['maint']), len(plg_dict['test']) )
             while len(plg_dict['desc']) < maxlen:
@@ -259,7 +262,7 @@ def build_pluginlist( plugin_type='all' ):
                 plg_dict['maint'].append('')
             while len(plg_dict['test']) < maxlen:
                 plg_dict['test'].append('')
-                
+
 
         if (plgtype == plugin_type) or (plugin_type == 'all'):
 #            result.append(metaplugin)
@@ -271,6 +274,8 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
     """
     Create a .rst file for each plugin category
     """
+    fh_dummy_used = False;
+
     if heading == '':
         title = plgtype + ' Plugins'
     else:
@@ -279,12 +284,11 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
     rst_filename = 'plugins_doc/plugins_'+plgtype.lower()+'.rst'
     rst_dummyname = 'plugins_doc/dummy_'+plgtype.lower()+'.rst'
     print('Datei: '+rst_filename+ ' '*(26-len(rst_filename)) +'  -  '+title)
-    
+
     plglist = build_pluginlist(plgtype)
-    
+
 #    print("> Opening file "+plugin_rst_dir+'/'+rst_filename)
     fh = open(plugin_rst_dir+'/'+rst_filename, "w")
-    fh_dummy = open(plugin_rst_dir+'/'+rst_dummyname, "w")
 
 #    fh.write(title+'\n')
 #    fh.write('-'*len(title)+'\n')
@@ -297,6 +301,9 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
     if (len(plglist) == 0):
         fh.write('At the moments there are no plugins that have not been classified.\n')
     else:
+        if not fh_dummy_used:
+            fh_dummy = open(plugin_rst_dir + '/' + rst_dummyname, "w")
+            fh_dummy_used = True;
         # write toctree to dummy file to suppress warnings for not included README.md files.
         fh_dummy.write(':orphan:\n')
         fh_dummy.write('\n')
@@ -317,7 +324,8 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
         fh.write('   :hidden:\n')
         fh.write('\n')
         for plg in plglist:
-            fh_dummy.write('   /plugins/'+plg['name']+'/README.md\n')
+            if os.path.isfile(plg['name']+'/README.md'):
+                fh_dummy.write('   /plugins/'+plg['name']+'/README.md\n')
             if docu_type == 'user':
                 fp = plg['name']+'/user_doc'
 #                fp_ignore = plg['name']+'/developer_doc'
@@ -335,7 +343,7 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
             else:
                 fh.write('   /plugins/'+plg['name']+'/README.md\n')
         fh.write('\n')
-        
+
         # write table with details
 #        fh.write('.. include:: /plugins_doc/plugins_'+plgtype+'_header.rst\n')
         fh.write('\n')
@@ -354,7 +362,7 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
             plg_readme_link = ':doc:`'+plg['name']+' <../plugins/'+plg['name']+'/README>`'
             if os.path.isfile(plugin_rst_dir+'/'+'plugins_doc/config/'+plg['name']+'.rst'):
                 plg_readme_link = ':doc:`'+plg['name']+' <config/'+plg['name']+'>`'
-            
+
 #            fh.write('   | {plg:<65.65} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg=plg['name'], desc=plg['desc'][0], maint=plg['maint'][0], test=plg['test'][0]))
             fh.write('   | {plg:<65.65} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg=plg_readme_link, desc=plg['desc'][0], maint=plg['maint'][0], test=plg['test'][0]))
             for l in range(1, len(plg['desc'])):
@@ -376,26 +384,27 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
             fh.write('   +-'+ '-'*65 +'-+-'+ '-'*165 +'-+-----------------+-----------------+\n')
         fh.write('\n')
         fh.write('\n')
-        
+
         fh.write('.. include:: /plugins_doc/plugins_footer.rst\n')
 
     fh.close()
-    fh_dummy.close()
-    
+    if fh_dummy_used:
+        fh_dummy.close()
+
 
 # ==================================================================================
 #   Main Generator Routine
 #
 
 if __name__ == '__main__':
-    
+
 #    print ('Number of arguments:', len(sys.argv), 'arguments.')
-#    print ('Argument List:', str(sys.argv))    
+#    print ('Argument List:', str(sys.argv))
 
     global language
     language = 'en'
 
-    
+
     if 'de' in sys.argv:
         language = 'de'
     if 'en' in sys.argv:
@@ -411,26 +420,26 @@ if __name__ == '__main__':
 
     # change the working diractory to the directory from which the converter is loaded (../tools)
     os.chdir(os.path.dirname(os.path.abspath(os.path.basename(__file__))))
-    
+
     plugindirectory = '../plugins'
     pluginabsdirectory = os.path.abspath(plugindirectory)
-            
+
     os.chdir(pluginabsdirectory)
-    
+
     plugins_git = get_pluginlist_fromgit()
     if not 'xmpp' in plugins_git:
         plugins_git.append('xmpp')
-        
+
     print('--- Liste der Plugins auf github ('+str(len(plugins_git))+'):')
-    
+
     pluginsyaml_git = get_pluginyamllist_fromgit()
     if not 'xmpp' in plugins_git:
         plugins_git.append('xmpp')
-        
+
     print('--- Liste der Plugins mit Metadaten auf github ('+str(len(pluginsyaml_git))+'):')
     print()
-    
-    
+
+
 
     plugin_rst_dir = start_dir+'/source'
     print('zu schreiben in: '+plugin_rst_dir)
@@ -438,9 +447,8 @@ if __name__ == '__main__':
     plugin_types = []
     for pl in plugin_sections:
        plugin_types.append(pl[0])
-           
+
     for pl in plugin_sections:
 #        write_rstfile(pl[0], pl[1])
         write_rstfile(pl[0], pl[2])
     print()
-    

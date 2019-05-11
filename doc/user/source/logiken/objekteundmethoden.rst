@@ -6,7 +6,7 @@ Verfügbare Objekte und Methoden
    :maxdepth: 3
    :hidden:
    :titlesonly:
-   
+
    objekteundmethoden_logging
    objekteundmethoden_zeit_sonne_mond
    objekteundmethoden_item_methoden
@@ -20,9 +20,9 @@ Neben dem **sh** Objekt, gibt es andere wichtige vordefinierte Objekte:
 logic
 -----
 
-Dieses Objekt bietet Zugriff auf das aktuelle Logikobjekt. Es ist möglich, während der Laufzeit 
-logische Attribute (crontab, cycle, ...) abzufragen und ändern. Diese Änderungen gehen nach dem Neustart 
-von SmartHomeNG verloren. 
+Dieses Objekt bietet Zugriff auf das aktuelle Logikobjekt. Es ist möglich, während der Laufzeit
+logische Attribute (crontab, cycle, ...) abzufragen und ändern. Diese Änderungen gehen nach dem Neustart
+von SmartHomeNG verloren.
 
 Definierte Methoden des Logikobjekts:
 
@@ -65,22 +65,25 @@ Vordefinierte Attribute des Logikobjekts:
 trigger
 -------
 
-trigger ist ein Python-Dictionary, welches als Laufzeitumgebung einige Informationen über das 
+trigger ist ein Python-Dictionary, welches als Laufzeitumgebung einige Informationen über das
 Ereignis liefert, das die Logik ausgelöst hat.
 
-Das Dictionary enthält folgende Informationen: 
+Das Dictionary enthält folgende Informationen:
 
-+-------------------+--------------------------------------------------------------------------------------------------------+
-| Attribut/Funktion | Erläuterung                                                                                            |
-+===================+========================================================================================================+
-| trigger['by']     | Auslösendes Objekt/Plugin  (Beispiel: 'KNX:1.1.241')                                                   |
-+-------------------+--------------------------------------------------------------------------------------------------------+
-| trigger['source'] | enthält den Pfad des Items, welches die Logik getriggert hat.                                          |
-+-------------------+--------------------------------------------------------------------------------------------------------+
-| trigger['dest']   |                                                                                                        |
-+-------------------+--------------------------------------------------------------------------------------------------------+
-| trigger['value']  | enthält den Wert des Items, dass die Logik getriggert hat.                                             |
-+-------------------+--------------------------------------------------------------------------------------------------------+
++---------------------------+--------------------------------------------------------------------------------------------------------+
+| Attribut/Funktion         | Erläuterung                                                                                            |
++===========================+========================================================================================================+
+| trigger['by']             | Auslöser ('Scheduler', Item', etc.)                                                                    |
++---------------------------+--------------------------------------------------------------------------------------------------------+
+| trigger['source']         | enthält den Pfad des Items, welches die Logik getriggert hat.                                          |
++---------------------------+--------------------------------------------------------------------------------------------------------+
+| trigger['source_details'] | Falls eine Logik aus einem Item heraus getriggert wurde (also trigger['by'] == Item ist), enthält      |
+|                           | trigger['source_details'] weitere Details zum Auslöser (Beispiel: 'knx:1.1.241:ga=3/3/5')              |
++---------------------------+--------------------------------------------------------------------------------------------------------+
+| trigger['dest']           |                                                                                                        |
++---------------------------+--------------------------------------------------------------------------------------------------------+
+| trigger['value']          | enthält den Wert des Items, dass die Logik getriggert hat.                                             |
++---------------------------+--------------------------------------------------------------------------------------------------------+
 
 
 logics

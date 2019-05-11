@@ -1,0 +1,2 @@
+# modules: admin
+pyjwt>=1.6.4

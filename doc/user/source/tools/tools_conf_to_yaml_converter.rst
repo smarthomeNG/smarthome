@@ -6,20 +6,20 @@
 conf_to_yaml_converter.py
 =========================
 
-Für Nutzer älterer Versionen, die das CONF Dateiformat für die Konfiguration von Smarthome.py 
-bzw. SmartHomeNG nutzen steht ein Tool zur Verfügung, welches die Konvertierung der 
-Konfigurationsdateien vom CINF Format in das YAML Format übernimmt.
+Für Nutzer älterer Versionen, die das CONF Dateiformat für die Konfiguration von Smarthome.py
+bzw. SmartHomeNG nutzen steht ein Tool zur Verfügung, welches die Konvertierung der
+Konfigurationsdateien vom **CONF** Format in das **YAML** Format übernimmt.
 
 .. note:: 
 
    Da Szenen ein Dateiformat verwenden, welches vom sonst in SmartHomeNG genutzten CONF Dateiformat
    abweicht, wird die Konvertierung von Szenen Konfigurationen in das YAML Format von diesem
    Konvertierungs-Tool nicht unterstützt.
-   
+
 
 .. code::
 
-   smarthome$ python3 tools/conf_to_yaml_converter.py 
+   smarthome$ python3 tools/conf_to_yaml_converter.py
 
    conf_to_yaml_converter.py - tool to convert shng .conf files to yaml
 
@@ -28,7 +28,4 @@ Konfigurationsdateien vom CINF Format in das YAML Format übernimmt.
    - config-directory: /usr/local/smarthome/etc
 
    Convert item files (y/n)?: y
-   Convert config files (y/n)?: 
-
-
-
+   Convert config files (y/n)?:

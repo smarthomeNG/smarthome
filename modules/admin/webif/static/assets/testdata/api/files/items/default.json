@@ -1,0 +1,20 @@
+[
+  "q21_01Kochen.yaml",
+  "q21_02Wohnen.yaml",
+  "q21_03Essen.yaml",
+  "q21_04Flur.yaml",
+  "q21_05Gast.yaml",
+  "q21_06Buero.yaml",
+  "q21_07Dusche.yaml",
+  "q21_08Hauswirtschaft.yaml",
+  "q21_09Bad.yaml",
+  "q21_10Schlafen.yaml",
+
+  "test_cond_trigger.yaml",
+  "test_conf.conf",
+  "test_dict_list.yaml",
+  "test_homematic.yaml",
+  "test_mqtt.yaml",
+  "test_nodered.yaml",
+  "test_relative_attr.yaml"
+]

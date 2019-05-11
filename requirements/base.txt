@@ -1,9 +1,39 @@
-ephem>=3.7
-python-dateutil>=2.5.3
-psutil
-ruamel.yaml>=0.13.7,<=0.15
-requests>=2.9.1;python_version>'3.2'
-#requests>=2.9.1
-# modules:
+
+#   +-----------------------------------------------+
+#   |                 SmartHomeNG                   |
+#   |            DON'T EDIT THIS FILE               |
+#   |           THIS FILE IS GENERATED              |
+#   |       BY tools/build_requirements.py          |
+#   |            ON 03.05.2019 22:32                |
+#   |                                               |
+#   |               INSTALL WITH:                   |
+#   | sudo pip3 install -r requirements/base.txt    |
+#   +-----------------------------------------------+
+
+# SmartHomeNG-module http
 cherrypy>=8.1.2
-jinja2>=2.8
+
+# SmartHomeNG-lib
+ephem>=3.7
+
+# SmartHomeNG-module http
+jinja2>=2.9
+
+# SmartHomeNG-lib
+psutil
+
+# SmartHomeNG-module admin
+pyjwt>=1.6.4
+
+# SmartHomeNG-lib
+python-dateutil>=2.5.3
+
+# SmartHomeNG-lib
+requests>=2.20.0
+
+# SmartHomeNG-lib
+ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
+
+# SmartHomeNG-lib
+ruamel.yaml>0.15.0,<=0.15.74;python_version>='3.7'
+

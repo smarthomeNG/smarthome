@@ -15,7 +15,7 @@ logic3:
     filename: logic3.py
     crontab: init
 
-logic_up:
+logic_up3:
     filename: logic_up.py                         # Test for section update
     crontab: init = Init                          # Execute at initialization
     watch_item:

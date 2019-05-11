@@ -2,7 +2,7 @@ Scheduler-API
 =============
 
 There are two ways to access the API
-        
+
 1. Directly
 
    Use it the following way to access the api, if you have no access to the sh object in your method or function:
@@ -16,10 +16,10 @@ There are two ways to access the API
        # to access a method (eg. to trigger a logic):
        scheduler.trigger(...)
 
-2. Through the main SmartHome object 
-        
+2. Through the main SmartHome object
+
    If you have access to the sh object in your method or function, you can use the following way:
-           
+
    .. code-block:: python
 
        # to access a method (eg. to trigger a logic):

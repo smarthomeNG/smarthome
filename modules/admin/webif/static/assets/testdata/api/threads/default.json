@@ -1,0 +1,71 @@
+[
+  25,
+  [
+    {
+      "name": "CP Server (API)",
+      "sort": "cp server",
+      "id": "(14 threads)",
+      "alive": "True"
+    },
+    {
+      "name": "homematic_hm1",
+      "sort": "homematic_hm1",
+      "id": 139626886977280,
+      "alive": "True"
+    },
+    {
+      "name": "HTTPServer",
+      "sort": "httpserver",
+      "id": "(2 threads)",
+      "alive": "True"
+    },
+    {
+      "name": "Main",
+      "sort": "main",
+      "id": 139628560434240,
+      "alive": "True"
+    },
+    {
+      "name": "Scheduler",
+      "sort": "scheduler",
+      "id": 139628445185792,
+      "alive": "True"
+    },
+    {
+      "name": "Thread-1",
+      "sort": "thread-1",
+      "id": 139628436793088,
+      "alive": "True"
+    },
+    {
+      "name": "Thread-2",
+      "sort": "thread-2",
+      "id": 139628428400384,
+      "alive": "True"
+    },
+    {
+      "name": "Thread-23",
+      "sort": "thread-23",
+      "id": 139626878584576,
+      "alive": "True"
+    },
+    {
+      "name": "Thread-3",
+      "sort": "thread-3",
+      "id": 139628420007680,
+      "alive": "True"
+    },
+    {
+      "name": "Thread-4",
+      "sort": "thread-4",
+      "id": 139628411614976,
+      "alive": "True"
+    },
+    {
+      "name": "Thread-5",
+      "sort": "thread-5",
+      "id": 139628403222272,
+      "alive": "True"
+    }
+  ]
+]

@@ -1,24 +1,36 @@
-# Metadata for the Smart-Plugin
+# Metadata for the plugin
 plugin:
     # Global plugin attributes
-    type: <plg-type>              # plugin type (gateway, interface, protocol, system, web)
-    description:                  # Alternative: description in multiple languages
-        de: 'Implementierung von ...'
-        en: 'Plugin implements ...'
-    maintainer: <author>
-#    tester:                        # Who tests this plugin?
+    type: unknown                   # plugin type (gateway, interface, protocol, system, web)
+    description:
+        de: 'Beispiel Plugin für SmartHomeNG v1.5 und höher'
+        en: 'Sample plugin for SmartHomeNG v1.5 and up'
+    maintainer: msinn
+#    tester:                         # Who tests this plugin?
+    state: develop                  # change to ready when done with development
 #    keywords: iot xyz
 #    documentation: https://github.com/smarthomeNG/smarthome/wiki/CLI-Plugin        # url of documentation (wiki) page
 #    support: https://knx-user-forum.de/forum/supportforen/smarthome-py
 
-    version: 1.4.3                 # Plugin version
-    sh_minversion: 1.4             # minimum shNG version to use this plugin
+    version: 1.6.0                  # Plugin version
+    sh_minversion: 1.4              # minimum shNG version to use this plugin
 #    sh_maxversion:                 # maximum shNG version to use this plugin (leave empty if latest)
-    multi_instance: False          # plugin supports multi instance
+    multi_instance: False           # plugin supports multi instance
+    restartable: unknown
+    classname: SamplePlugin         # class containing the plugin
 
 parameters:
-    # Definition of parameters to be configured in etc/plugin.yaml
-    
+    # Definition of parameters to be configured in etc/plugin.yaml (enter 'parameters: NONE', if section should be empty)
+
 item_attributes:
-    # Definition of item attributes defined by this plugin
-    
+    # Definition of item attributes defined by this plugin (enter 'item_attributes: NONE', if section should be empty)
+
+item_structs:
+    # Definition of item-structure templates for this plugin (enter 'item_structs: NONE', if section should be empty)
+
+plugin_functions:
+    # Definition of plugin functions defined by this plugin (enter 'plugin_functions: NONE', if section should be empty)
+
+logic_parameters:
+    # Definition of logic parameters defined by this plugin (enter 'logic_parameters: NONE', if section should be empty)
+

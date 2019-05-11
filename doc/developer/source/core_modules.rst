@@ -1,7 +1,7 @@
 Core modules
 ============
 
-Theare are loadable modules (SmartHomeNG modules) that can be used when developping plugins.
+There are loadable modules (SmartHomeNG modules) that can be used when developing plugins.
 They implement additional functionality that is not implemented in the core itself.
 
 Modules are configured in ``etc/modules.yaml``. The parameters are described in the README.md
@@ -13,7 +13,7 @@ At the moment, the following modules exist:
 .. toctree::
    :maxdepth: 3
    :titlesonly:
-   
+
    /modules_doc/modules_readmes
 
 
@@ -35,10 +35,6 @@ The **metadata** file is named ``/modules/<name of the module>/module.yaml``. It
 
 .. include:: metadata/parameters.rst
 
-xxxxxx
 
-.. toctree::
-   :maxdepth: 3
-   :titlesonly:
-
-   /modules_doc/module_metadata
+If a module has requirements for a Python package that is not met by the standard Python installation, it has to be added
+to the **requirements.txt** file in the modules' directory.

@@ -28,7 +28,7 @@ After the base system is installed a closer look at the SmartHomeNG directory
    plugins        contains the available plugins
    requirements   you will find the requirements file here for the core and all plugins
    scenes         scene files
-   tests          contains the test environment with tests and testdata
+   tests          contains the test environment with tests and test data
    tools          contains little programs helping to maintain SmartHomeNG
    var            its subdirectories contain various collected data
    var/cache      contains cached item values
@@ -53,7 +53,8 @@ Config files in directory **etc**
 ---------------------------------
 
 The configuration is done by the widespread `yaml <https://en.wikipedia.org/wiki/YAML>`_ format.
-Older versions used `configobj <http://www.voidspace.org.uk/python/articles/configobj.shtml>`_ file format which is like a well-known `ini-file <https://en.wikipedia.org/wiki/INI_file>`_ but with the ability to create multilevel sub-sections.
+Older versions used `configobj <http://www.voidspace.org.uk/python/articles/configobj.shtml>`_ file format 
+which is like a well-known `ini-file <https://en.wikipedia.org/wiki/INI_file>`_ but with the ability to create multilevel sub-sections.
 It is still supported in SmartHomeNG but it is deprecated
 for a while and was removed from documentation.
 
@@ -126,16 +127,21 @@ Referencing a plugin in the configuration
 -----------------------------------------
 
 Up to SmartHomeNG v1.3 a plugin had to be referenced by the parameters ``class_name`` and ``class_path``.
-Now it is possible to reference it alone by specifing the parameter ``plugin_name``, where
+**Now it is possible** to reference it alone by specifying the parameter ``plugin_name``, where
 the value would be the former class_path without the `plugins.` prefix. Since all plugins are
 located in the ``/plugins`` folder, the `plugins.` is redundant information.
 
-If the plugin comes with a metadata definition (what allmost all plugins do), there is no need so specify
+If the plugin comes with a metadata definition (what almost all plugins do), there is no need so specify
 the ``class_name`` parameter. This information is retrieved from the metadata.
 
 .. Note::
 
-    Should the need arise to configure a plugin that is located outside the ``/plugins`` folder, ``class_path`` can be used.
+   As standard the parameter **plugin_name** should be used when configuring plugins.
+
+   Only is the need arises to configure a plugin that is located outside the ``../plugins`` folder, **class_path** should be used.
+
+   The parameter **class_name** shouldn't be used any more, since the name of the plugin's class is defined in the metadata file
+
 
 
 Using an older version of a plugin
@@ -183,7 +189,7 @@ logging.yaml
 
 The core and also every module is able to output logging information.
 The logging can be configured to be rich in detail for debugging purposes or rather smart with warning or general info.
-There is a seperate document to explain how to configure :doc:`logging <logging>`.
+There is a separate document to explain how to configure :doc:`logging <logging>`.
 To get started, simply copy the given ``logging.yaml.default``
 to ``logging.yaml`` and edit it to your needs. It should look like the following:
 

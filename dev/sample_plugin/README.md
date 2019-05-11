@@ -41,51 +41,54 @@ Including Python modules and SmartHomeNG modules
 
 ### plugin.yaml
 
-Please provide a plugin.yaml snippet for your plugin with ever option your plugin supports. Optional attributes should be commented out.
+Please refer to the documentation generated from plugin.yaml metadata.
 
-```yaml
-My:
-   class_name: MyPlugin
-   class_path: plugins.myplugin
-   host: 10.10.10.10
-#   port: 1010
-```
-
-Please provide a description of the attributes.
-This plugin needs an host attribute and you could specify a port attribute which differs from the default '1010'.
 
 ### items.yaml
 
-List and describe the possible item attributes.
+Please refer to the documentation generated from plugin.yaml metadata.
 
-#### my_attr
-
-Description of the attribute(s)...
-
-#### my_attr2
-
-#### Example
-
-Please provide an item configuration with every attribute and usefull settings.
-
-```yaml
-# items/my.yaml
-
-someroom:
-    mydevice:
-        type: bool
-        my_attr: setting
-```
 
 ### logic.yaml
-If your plugin support item triggers as well, please describe the attributes like the item attributes.
+Please refer to the documentation generated from plugin.yaml metadata.
 
 
 ## Methods
-If your plugin provides methods for logics. List and describe them here...
+Please refer to the documentation generated from plugin.yaml metadata.
 
-### method1(param1, param2)
-This method enables the logic to send param1 and param2 to the device. You could call it with `sh.my.method1('String', 2)`.
 
-### method2()
-This method does nothing.
+## Examples
+
+If you have extensive examples, you could describe them here.
+
+
+## Web Interfaces
+
+For building a web interface for a plugin, we deliver the following 3rd party components with the HTTP module:
+
+   * JQuery 3.4.1: 
+     * JS: &lt;script src="/gstatic/js/jquery-3.4.1.min.js"&gt;&lt;/script&gt;
+   * Bootstrap : 
+     * CSS: &lt;link rel="stylesheet" href="/gstatic/bootstrap/css/bootstrap.min.css" type="text/css"/&gt; 
+     * JS: &lt;script src="/gstatic/bootstrap/js/bootstrap.min.js"&gt;&lt;/script&gt;     
+   * Bootstrap Tree View: 
+      * CSS: &lt;link rel="stylesheet" href="/gstatic/bootstrap-treeview/bootstrap-treeview.css" type="text/css"/&gt; 
+      * JS: &lt;script src="/gstatic/bootstrap-treeview/bootstrap-treeview.min.js"&gt;&lt;/script&gt;
+   * Bootstrap Datepicker v1.8.0:
+      * CSS: &lt;link rel="stylesheet" href="/gstatic/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" type="text/css"/&gt;
+      * JS:
+         * &lt;script src="/gstatic/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"&gt;&lt;/script&gt;
+         * &lt;script src="/gstatic/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js"&gt;&lt;/script&gt;
+   * popper.js: 
+      * JS: &lt;script src="/gstatic/popper.js/popper.min.js"&gt;&lt;/script&gt;
+   * CodeMirror 5.46.0: 
+      * CSS: &lt;link rel="stylesheet" href="/gstatic/codemirror/lib/codemirror.css"/&gt;
+      * JS: &lt;script src="/gstatic/codemirror/lib/codemirror.js"&gt;&lt;/script&gt;
+   * Font Awesome 5.8.1:
+      * CSS: &lt;link rel="stylesheet" href="/gstatic/fontawesome/css/all.css" type="text/css"/&gt;
+
+ For addons, etc. that are delivered with the components, see /modules/http/webif/gstatic folder!
+ 
+ If you are interested in new "global" components, contact us. Otherwise feel free to use them in your plugin, as long as
+ the Open Source license is ok.
+ 

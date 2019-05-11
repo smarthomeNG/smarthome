@@ -21,7 +21,13 @@
 #########################################################################
 
 import os
+import sys
 import subprocess
+
+sys.path.append('..')
+
+import plugins.__init__ as plugin_vers
+
 
 # Update auf 1.3d wg. neuer item features on_update, on_change
 # Update auf 1.3e wg. neuer logic features for visu_websocket
@@ -35,8 +41,16 @@ import subprocess
 # Update auf 1.4e wg. lib.item Anpassung (trigger_condition)"
 # Update auf 1.5  wg. Release"
 # Update auf 1.5.1 wg. Hotfix Release
+# Update auf 1.5a wg. Changes in lib.shtime
+# Update auf 1.5b wg. Einführung von lib.shpypi
+# Update auf 1.5c wg. Einführung von bin.shngversion.get_shng_branch()
+# Update auf 1.5d wg. Einführung von Item Strukturen
+# Update auf 1.5e wg. Einführung von Item Property 'attributes'
 
-shNG_version = '1.5.1'
+# Update auf 1.6 wg. Release
+
+shNG_version = '1.6'
+shNG_branch = 'master'
 
 # ---------------------------------------------------------------------------------
 FileBASE = None
@@ -63,13 +77,13 @@ def _get_git_data(sub='', printout=False):
             pass
     if printout:
         print()
-        print("_get_git_data: BASE={}".format(BASE)) 
+        print("_get_git_data: BASE={}".format(BASE))
         print("- describe: {}".format(describe))
         print("- commit_short : {}".format(commit_short))
         print("- commit .: {}".format(commit))
         print("- branch .: {}".format(branch))
         print()
-    return commit, commit_short, branch, describe 
+    return commit, commit_short, branch, describe
 
 # ---------------------------------------------------------------------------------
 
@@ -81,22 +95,50 @@ def get_shng_version():
     VERSION = get_shng_main_version()
     if branch == 'master':
         VERSION += '.'+branch+' ('+commit_short+')'
+    elif branch == 'manual':
+        VERSION += '.'+shNG_branch+' ('+branch+')'
     else:
         VERSION += '.'+commit_short+'.'+branch
     return VERSION
+
+def get_shng_branch():
+    commit, commit_short, branch, describe = _get_git_data()
+    return branch
 
 def get_shng_description():
     commit, commit_short, branch, describe = _get_git_data()
     return describe
 
+
 def get_plugins_version():
     commit, commit_short, branch, describe = _get_git_data('plugins')
     VERSION = get_shng_main_version()
+    try:
+        PLUGINS_VERSION = plugin_vers.plugin_release()
+    except:
+        PLUGINS_VERSION = VERSION
+    try:
+        PLUGINS_SOURCE_BRANCH = plugin_vers.plugin_branch()
+    except:
+        PLUGINS_SOURCE_BRANCH = ''
+
     if branch == 'master':
+        VERSION = PLUGINS_VERSION
         VERSION += '.'+branch+' ('+commit_short+')'
+    elif branch == 'manual':
+        VERSION = PLUGINS_VERSION
+        if PLUGINS_SOURCE_BRANCH != '':
+            VERSION += '.'+PLUGINS_SOURCE_BRANCH
+        VERSION += ' ('+branch+')'
     else:
+        VERSION = PLUGINS_VERSION
         VERSION += '.'+commit_short+'.'+branch
     return VERSION
+
+
+def get_plugins_branch():
+    commit, commit_short, branch, describe = _get_git_data('plugins')
+    return branch
 
 def get_plugins_description():
     commit, commit_short, branch, describe = _get_git_data('plugins')
@@ -110,16 +152,18 @@ def get_shng_docversion():
     return VERSION
 
 if __name__ == '__main__':
-    print()
-    commit, commit_short, branch, describe = _get_git_data()
-    print("get_shng_git         :", commit+'.'+branch)
-    commit, commit_short, branch, describe = _get_git_data('plugins')
-    print("get_plugins_git      :", commit+'.'+branch)
+
     print()
     print("get_shng_main_version:", get_shng_main_version())
+    print()
     print("get_shng_version     :", get_shng_version())
     print(" - description       :", get_shng_description())
+    commit, commit_short, branch, describe = _get_git_data()
+    # print(" - get_shng_git      :", commit+'.'+branch)
+    print()
     print("get_plugins_version  :", get_plugins_version())
     print(" - description       :", get_plugins_description())
+    commit, commit_short, branch, describe = _get_git_data('plugins')
+    # print(" - get_plugins_git   :", commit+'.'+branch)
     print()
 

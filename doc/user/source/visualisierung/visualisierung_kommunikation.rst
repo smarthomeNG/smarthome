@@ -66,5 +66,5 @@ Das Plugin **visu_websocket** muss in **../etc/plugin.yaml** konfiguriert werden
    :maxdepth: 4
    :hidden:
    :titlesonly:
-   
+
    reverse_proxy

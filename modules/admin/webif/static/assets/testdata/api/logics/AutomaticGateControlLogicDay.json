@@ -1,0 +1,12 @@
+{
+  "filename":"automatic_gate_control_day.py",
+  "enabled":true,
+  "last_run":"2019-01-15 05:00:00+0100",
+  "watch_item":[
+    "avm.monitor.newest.event"
+  ],
+  "crontab":"0 6 * 0,1,2,3,4",
+  "name":"AutomaticGateControlLogicDay",
+  "knx_listen":"1/2/3",
+  "next_exec":"2019-01-16 05:00:00+0100"
+}

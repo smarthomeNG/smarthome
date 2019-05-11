@@ -23,10 +23,9 @@ Stand gebracht werden.
 .. code::
 
    smarthome@<yourcomputer>:/usr/local/smarthome$ sudo pip3 install -r requirements/base.txt
-   
+
 .. attention::
 
    Bitte darauf achten das Kommando **pip3** zu verwenden. Bei Verwendung von **pip** wird, falls
-   eine Python v2.7 Installation auf dem Computer existiert, diese aktualisiert und nicht die 
+   eine Python v2.7 Installation auf dem Computer existiert, diese aktualisiert und nicht die
    Python 3 Version.
-   

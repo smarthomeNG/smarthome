@@ -15,7 +15,7 @@ Features
    messages and to trigger logics.
 -  :doc:`DMX plugin </plugins/dmx/README>`  accepts now a channel list to bound several channel to one item (value)
 -  :doc:`KNX plugin </plugins/dmx/README>` changed class options to ``host`` and ``port``.
-   Adding support for more DPTs. Sending the date/time on the
+   Adding support for more datapoint types. Sending the date/time on the
    bus.
 -  :doc:`Asterisk plugin </plugins/asterisk/README>` changed class options to
    ``host`` and ``port``. New functions: db\_write, db\_read and

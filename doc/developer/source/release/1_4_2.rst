@@ -56,8 +56,8 @@ New plugins and plugin extensions
 
   * Check of **comfoair_trigger** setting corrected
 
-* UZSU
+* uzsu
 
-  * More debug messages for attribut 'active' watching
+  * More debug messages for attribute ``active`` watching
 
 

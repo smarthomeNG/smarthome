@@ -1,0 +1,20 @@
+%YAML 1.1
+---
+# plugin.yaml
+
+cli:
+    class_name: CLI
+    class_path: plugins.cli
+    ip: 0.0.0.0
+    update: True
+    hashed_password: 1245a9633edf47b7091f37c4d294b5be5a9936c81c5359b16d1c4833729965663f1943ef240959c53803fedef7ac19bd59c66ad7e7092d7dbf155ce45884607d
+
+wol:
+    class_name: WakeOnLan
+    class_path: plugins.wol
+
+wol_ww:
+    instance: bind
+    class_name: WakeOnLan
+    class_path: plugins.wol
+

@@ -22,6 +22,7 @@
 
 import datetime
 import dateutil
+from dateutil.tz import tzlocal
 import logging
 import os
 
@@ -58,9 +59,9 @@ class Shtime:
         self.set_tzinfo(dateutil.tz.gettz('UTC'))
 
 
-    # -------------------------------------------------------------------------------------------
-    #   Following (static) method of the class Scheduler implement the API for schedulers in shNG
-    # -------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------------
+    #   Following (static) method of the class Shtime implement the API for date and time handling in shNG
+    # -----------------------------------------------------------------------------------------------------
 
     @staticmethod
     def get_instance():
@@ -148,6 +149,17 @@ class Shtime:
         return self._tzinfo
 
 
+    def tzname(self):
+        """
+        Returns the name about the actual local timezone (e.g. CET)
+
+        :return: Timezone info
+        :rtype: object
+        """
+
+        return datetime.datetime.now(tzlocal()).tzname()
+
+
     def utcnow(self):
         """
         Returns the actual time in GMT
@@ -184,3 +196,23 @@ class Shtime:
         return datetime.datetime.now() - self._starttime
 
 
+    def runtime_as_dict(self):
+        """
+        Returns the uptime of SmartHomeNG as a dict of integers
+
+        :return: {days, hours, minutes, seconds}
+        :rtype: dict
+        """
+
+        # return SmarthomeNG runtime
+        rt = str(self.runtime())
+        daytest = rt.split(' ')
+        if len(daytest) == 3:
+            days = int(daytest[0])
+            hours, minutes, seconds = [float(val) for val in str(daytest[2]).split(':')]
+        else:
+            days = 0
+            hours, minutes, seconds = [float(val) for val in str(daytest[0]).split(':')]
+        total_seconds = days * 24 * 3600 + hours * 3600 + minutes * 60 + seconds
+
+        return {'days': days, 'hours': hours, 'minutes': minutes, 'seconds': seconds, 'total_seconds': total_seconds}

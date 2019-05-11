@@ -1,0 +1,39 @@
+﻿if sh.knx.weather.wind() < 0.3:
+    sh.knx.weather.wind.string("Windstille")
+    sh.knx.weather.wind.beaufort(0)
+elif 0.3 <= sh.knx.weather.wind() < 1.6:
+    sh.knx.weather.wind.string("leiser Zug")
+    sh.knx.weather.wind.beaufort(1)
+elif 1.6 <= sh.knx.weather.wind() < 3.4:
+    sh.knx.weather.wind.string("leichte Brise")
+    sh.knx.weather.wind.beaufort(2)
+elif 3.4 <= sh.knx.weather.wind() < 5.5:
+    sh.knx.weather.wind.string("schwacher Wind")
+    sh.knx.weather.wind.beaufort(3)
+elif 5.5 <= sh.knx.weather.wind() < 8.0:
+    sh.knx.weather.wind.string("mäßiger Wind")
+    sh.knx.weather.wind.beaufort(4)
+elif 8.0 <= sh.knx.weather.wind() < 10.8:
+    sh.knx.weather.wind.string("frischer Wind")
+    sh.knx.weather.wind.beaufort(5)
+elif 10.8 <= sh.knx.weather.wind() < 13.9:
+    sh.knx.weather.wind.string("starker Wind")
+    sh.knx.weather.wind.beaufort(6)
+elif 13.9 <= sh.knx.weather.wind() < 17.2:
+    sh.knx.weather.wind.string("steifer Wind")
+    sh.knx.weather.wind.beaufort(7)
+elif 17.2 <= sh.knx.weather.wind() < 20.8:
+    sh.knx.weather.wind.string("stürmischer Wind")
+    sh.knx.weather.wind.beaufort(8)
+elif 20.8 <= sh.knx.weather.wind() < 24.5:
+    sh.knx.weather.wind.string("Sturm")
+    sh.knx.weather.wind.beaufort(9)
+elif 24.5 <= sh.knx.weather.wind() < 28.5:
+    sh.knx.weather.wind.string("schwerer Sturm")
+    sh.knx.weather.wind.beaufort(10)
+elif 28.5 <= sh.knx.weather.wind() < 32.7:
+    sh.knx.weather.wind.string("orkanartiger Sturm")
+    sh.knx.weather.wind.beaufort(11)
+else:
+    sh.knx.weather.wind.string("Orkan")
+    sh.knx.weather.wind.beaufort(12)

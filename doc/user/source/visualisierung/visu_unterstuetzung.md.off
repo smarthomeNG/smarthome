@@ -4,7 +4,7 @@
 
 Im Release 1.2 wurde die Unterstützung für die smartVISU weiterentwickelt. Dabei wurde das visu Plugin durch zwei neue Plugins ersetzt. 
 
-- Das erste Plugin (**``visu_websocket``**) implementiert das Websocket Protokoll über das smartVISU mit SmartHomeNG kommunziert.
+- Das erste Plugin (**``visu_websocket``**) implementiert das Websocket Protokoll über das smartVISU mit SmartHomeNG kommuniziert.
 - Das zweite Plugin (**``visu_smartvisu``**) implementiert die aus den bisherigen Releases bekannte Möglichkeit zur automatischen Generierung von smartVISU Seiten. Diese Funktion wurde stark erweitert. Weiterhin ermöglicht dieses Plugin die Installation von Widgets in die smartVISU, die die Entwickler von SmartHomeNG Plugins geschrieben und ihren Plugins beigefügt haben.
 
 Das smartVISU Plugin implementiert:

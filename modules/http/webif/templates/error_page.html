@@ -1,19 +1,20 @@
-<!DOCTYPE html>
-<head>
-	<script src="/gstatic/fontawesome/svg-with-js/js/fontawesome-all.min.js"></script>
-	<link rel="stylesheet" href="/gstatic/fontawesome/svg-with-js/css/fa-svg-with-js.css" type="text/css"/>
-	<link rel="stylesheet" href="/gstatic/bootstrap/css/bootstrap.min.css" type="text/css"/>
-	<link rel="icon" href="/gstatic/img/favicon.ico" type="image/png"/>
-</head>'
-<body>
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4 ml-0">
 	<h1 class="margin-base-vertical">
-		&nbsp;<img src="/gstatic/img/logo_small_120x120.png" width="40" height="40" style="vertical-align:top">
-		&nbsp; Oops, Error {{ errno }}:
+		<img src="/gstatic/img/logo_small_120x120.png" width="40" height="40" style="vertical-align:top">
+		Oops, Error {{ errno }}:
 	</h1>
-	<br>
-	<h3>
-		&nbsp;{{ errmsg }}
-	</h3>
-	<br>
-	<h5 style="color: #2269aa;"> {{ traceback }}</h5>
-</body>
+	<br/>
+	<h3>{{ errmsg }}</h3>
+	<br/>
+	{% if traceback %}
+		<div class="card">
+			<div class="card-header"><strong>Traceback</strong></div>
+		  	<div class="card-body text-shng">
+			{{ traceback }}
+		  	</div>
+		</div>
+	{% endif %}
+</div>
+{% endblock %}

@@ -1,120 +1,121 @@
-# !!!                 SmartHomeNG                !!!
-# !!!            DON'T EDIT THIS FILE            !!!
-# !!!           THIS FILE IS GENERATED           !!!
-# !!!       BY tools/build_requirements.py       !!!
-# !!!            ON 14.07.2018 00:39             !!!
-# !!!               INSTALL WITH:                !!!
-# !!! sudo pip3 install -r requirements/base.txt !!!
 
-# mvg_live
+#   +-----------------------------------------------+
+#   |                 SmartHomeNG                   |
+#   |            DON'T EDIT THIS FILE               |
+#   |           THIS FILE IS GENERATED              |
+#   |       BY tools/build_requirements.py          |
+#   |            ON 03.05.2019 22:32                |
+#   |                                               |
+#   |               INSTALL WITH:                   |
+#   | sudo pip3 install -r requirements/all.txt     |
+#   +-----------------------------------------------+
+
+# plugin mvg_live
 PyMVGLive>=1.1.4
 
-# SmartHomeNG Core
-# blockly
-# _pv_1_3_5
-# _pv_1_4_9
+# plugin withings_health
+arrow>=0.12,<=0.13.1
+
+# SmartHomeNG-module http
 cherrypy>=8.1.2
 
-# SmartHomeNG Core
+# SmartHomeNG-lib
 ephem>=3.7
 
-# SmartHomeNG Core
-# blockly
-# backend
-# _pv_1_3_5
-# _pv_1_4_9
+# SmartHomeNG-module http
 jinja2>=2.9
 
-# xiaomi
+# plugin dashbutton
+kamene>=0.32
+
+# plugin miflora
 miflora>=0.4
 
-# systemair
+# plugin systemair
 minimalmodbus>=0.7
 
-# nokia_health
-nokia==0.4.0
+# plugin withings_health
+nokia>=1.0.0,<=1.2.0
 
-# mqtt
+# plugin mqtt
 paho-mqtt>=1.2.2
 
-# SmartHomeNG Core
+# SmartHomeNG-lib
 psutil
 
-# appletv
+# plugin appletv
 pyatv==0.3.9
 
-# homematic
+# plugin homematic
 pyhomematic>=0.1.28
 
-# systemair
-# dlms_1
-# dlms
+# plugin jsonread
+pyjq
+
+# SmartHomeNG-module admin
+pyjwt>=1.6.4
+
+# plugin avdevice
+# plugin priv_lintronic
+# plugin systemair
+# plugin dlms
 pyserial>=3.2.1
 
-# SmartHomeNG Core
-# blockly
-# backend
-# _pv_1_3_5
-# _pv_1_4_9
+# SmartHomeNG-lib
+# plugin blockly
+# plugin backend
 python-dateutil>=2.5.3
 
-# pushbullet
+# plugin pushbullet
 python-magic>=0.4.12
 
-# zwave
+# plugin zwave
 python-openzwave>=0.4.0.35
 
-# telegram
+# plugin telegram
 python-telegram-bot>=9.0.0
 
-# avm
-# pushbullet
-# tankerkoenig
-# nuki
-# traffic
-# pushover
-# sonos
-# enigma2
-# join
-# intercom_2n
-# odlinfo
-requests==2.5.1;python_version=='3.2'
+# plugin iaqstick
+pyusb>=1.0.2
 
-# SmartHomeNG Core
-# avm
-# pushbullet
-# tankerkoenig
-# nuki
-# traffic
-# pushover
-# sonos
-# enigma2
-# join
-# intercom_2n
-# odlinfo
-requests>=2.9.1;python_version>'3.2'
+# plugin withings_health
+# SmartHomeNG-lib
+requests>=2.20.0
 
-# SmartHomeNG Core
-ruamel.yaml>=0.13.7,<=0.15
+# plugin jsonread
+requests-file
 
-# dashbutton
-scapy-python3>=0.18
+# plugin withings_health
+requests-oauth>=0.4.1,<0.5
 
-# harmony
+# plugin withings_health
+requests-oauthlib>=1.0,<1.1
+
+# SmartHomeNG-lib
+ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
+
+# SmartHomeNG-lib
+ruamel.yaml>0.15.0,<=0.15.74;python_version>='3.7'
+
+# plugin uzsu
+scipy>=1.1.0
+
+# plugin harmony
+# plugin xmpp
 sleekxmpp>=1.3.1
 
-# telegram_1
+# plugin priv_telegram_1_1_3
 telepot>=8.3
 
-# sonos
+# plugin sonos
 tinytag>=0.18.0
 
-# telegram
-# telegram_1
+# plugin priv_telegram_1_1_3
 urllib3>=1.9.1
 
-# smarttv
+# plugin smarttv
 websocket-client>=0.44.0
 
-# sonos
+# plugin sonos
 xmltodict>=0.11.0
+

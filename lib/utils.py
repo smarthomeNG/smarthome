@@ -160,7 +160,8 @@ class Utils(object):
         except:
             IP = '127.0.0.1'
         finally:
-            s.close()
+            if 's' in locals():
+                s.close()
         return IP
 
     @staticmethod
@@ -179,7 +180,8 @@ class Utils(object):
         except:
             IP = '::1'
         finally:
-            s.close()
+            if 's' in locals():
+                s.close()
         return IP
 
 
@@ -429,7 +431,7 @@ class Utils(object):
     def string_to_list(string):
         """
         Convert a string to a list
-        
+
         If the parameter is not of type str, the parameter gest returned unchanged
 
         If parameter string is
@@ -441,7 +443,7 @@ class Utils(object):
 
         :param string: string to convert
         :type string: str
-        
+
         :return: list of unchanged value
         """
         if isinstance(string, list):
@@ -513,3 +515,16 @@ class Utils(object):
                         string3 += Utils.strip_quotes(s)
                     string = string3
         return string
+
+
+    @staticmethod
+    def get_type(var):
+        """
+        returns the type of the passed variable
+
+        :param var: Variable to get the type of
+        :return: type of the var
+        :rtype: str
+        """
+
+        return str(type(var))[8:-2]

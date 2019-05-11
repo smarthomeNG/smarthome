@@ -6,14 +6,14 @@ Plugins
    :maxdepth: 5
    :hidden:
    :titlesonly:
-   
-   plugins_multiinstance
-   
 
-Das Grundsystem von SmartHomeNG kann durch den Einsatz von Plugins erweitert werden. Ein Plugin 
-ist ein Zusatzmodul in einem Unterverzeichnis unterhalb des Verzeichnisses **../plugins**. 
-Um ein Plugin in SmartHomeNG zu verwenden (eine Instanz des Plugins zu laden) muß eine Sektion 
-für das gewünschte Plugin in der Datei **etc/plugin.conf** erstellt werden. 
+   plugins_multiinstance
+
+
+Das Grundsystem von SmartHomeNG kann durch den Einsatz von Plugins erweitert werden. Ein Plugin
+ist ein Zusatzmodul in einem Unterverzeichnis unterhalb des Verzeichnisses **../plugins**.
+Um ein Plugin in SmartHomeNG zu verwenden (eine Instanz des Plugins zu laden) muß eine Sektion
+für das gewünschte Plugin in der Datei **etc/plugin.conf** erstellt werden.
 
 Für das oft benutzte KNX-Plugin sieht das z.B. so aus:
 
@@ -51,8 +51,8 @@ bzw. im alten Format:
       date_ga = 8/0/1
 
 
-Dabei kann der Name der **Plugin-Instanz** (Name des Abschnitts) frei gewählt werden. Es muss 
-nur darauf geachtet werden, dass er eindeutig ist, also nur einmal vorkommt. Der name der Instanz 
+Dabei kann der Name der **Plugin-Instanz** (Name des Abschnitts) frei gewählt werden. Es muss
+nur darauf geachtet werden, dass er eindeutig ist, also nur einmal vorkommt. Der name der Instanz
 sollte auch so gewählt werden, dass es zu keiner Namensgleichheit mit Top-Level Items kommt.
 
 Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
@@ -78,7 +78,7 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 |                | fähig sein. Damit die Items der richtigen Plugin-Instanz zugeordnet werden, muss    |
 |                | in der jeweiligen Item Definition der Name des Plugin-spezifische Attributes um     |
 |                | die Angabe der Instanz ergänzt werden. Also z.B.: Statt **avm_data_type: uptime**   |
-|                | muss es **avm_data_type@<instance>: uptime** heissen.                               |
+|                | muss **avm_data_type@<instance>: uptime** geschrieben werden.                       |
 +----------------+-------------------------------------------------------------------------------------+
 | plugin_version | Wenn im Plugin Repository mehrere Versionen eines Plugins zur Verfügung stehen,     |
 |                | kann über diesen Parameter eine andere als die neueste Version des Plugins geladen  |
@@ -86,9 +86,9 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 |                | (z.B.  **plugin_version: 1.4.9**)                                                   |
 +----------------+-------------------------------------------------------------------------------------+
 
-Die weiteren Einträge sind Plugin spezifisch. Welche Parameter ein Plugin kennt ist auch der 
-README.md des Plugins zu entnehmen. Je nach Plugin können sie verpflichtend oder optional sein. 
-Im obigen Beispiel sind sie alle optional. Diese Parameter werden  beim Start von SmartHomeNG an 
+Die weiteren Einträge sind Plugin spezifisch. Welche Parameter ein Plugin kennt ist auch der
+README.md des Plugins zu entnehmen. Je nach Plugin können sie verpflichtend oder optional sein.
+Im obigen Beispiel sind sie alle optional. Diese Parameter werden  beim Start von SmartHomeNG an
 das Plugin übergeben.
 
 Ein **#** wirkt wie auch bei den Konfigurationsdateien der Items als Beginn eines Kommentars.

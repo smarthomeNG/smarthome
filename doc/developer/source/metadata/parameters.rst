@@ -1,5 +1,5 @@
-Metadata section `parameters:`
-------------------------------
+Section `parameters:`
+---------------------
 
 Parameter metadata is used to check if the configured parameters in ``/etc`` are valid.
 If the configured data is not valid, warnings are logged in the logfile of SmartHomeNG.
@@ -13,7 +13,7 @@ Metadata is supported in SmartHomeNG v1.4 and up.
 The ``parameters:`` section has a section for each parameter that is implemented. The name of that
 section is the name of the parameter.
 
-The definitions in the ``parameters:`` section are used for validity checking of the plugin/module configuration. 
+The definitions in the ``parameters:`` section are used for validity checking of the plugin/module configuration.
 In the future the definitions will be used for a configuration tool for SmartHomeNG.
 
 .. code:: yaml
@@ -29,10 +29,20 @@ In the future the definitions will be used for a configuration tool for SmartHom
               - 1234
               - 2222
               - 4321
-        
+
         param2:
             type: ...
-            
-        
+
+
 .. include:: /metadata/parameter_keys.rst
+
+if a plugin has no parameters, this is signaled by the following entry in the plugin.yaml file:
+
+.. code:: yaml
+
+    parameters: NONE
+
+.. hint::
+
+    Please note, that NONE has to be written in upper case.
 

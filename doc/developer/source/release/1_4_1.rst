@@ -8,11 +8,11 @@ There are some bugfixes and new features for the core of SmartHomeNG and the plu
 Supported Python versions
 =========================
 
-Please note: Starting from SmartHomeNG Release 1.4 we cease the active support of older Python 
+Please note: Starting from SmartHomeNG Release 1.4 we cease the active support of older Python
 versions. The oldest supported Python version will be Python 3.4.
 (See *Hard- & Software Requirements* in section *Installation* for supported Python versions)
 
-This does not necessarily mean that SmartHomeNG as of Release 1.4 is no longer running under older 
+This does not necessarily mean that SmartHomeNG as of Release 1.4 is no longer running under older
 Python versions. It means that SmartHomeNG is no longer tested with older Python versions and
 reported errors with older Python versions are no longer fixed.
 
@@ -20,9 +20,9 @@ reported errors with older Python versions are no longer fixed.
 Absolute minimum Python versions raised to 3.3
 ==============================================
 
-The minimum Python version on which SmartHomeNG starts has been increased in SmartHomeNG v1.4 from 
-3.2 to 3.3. By virtue of the major changes between Python 3.2 and 3.3 it has already been 
-problematic in the past to run SmartHomeNG with plugins in a Python 3.2 environment..
+The minimum Python version on which SmartHomeNG starts has been increased in SmartHomeNG v1.4 from
+3.2 to 3.3. By virtue of the major changes between Python 3.2 and 3.3 it has already been
+problematic in the past to run SmartHomeNG with plugins in a Python 3.2 environment.
 
 
 New functions
@@ -55,7 +55,7 @@ New plugins and plugin extensions
 
 * Backend:
 
-  * Basic editability of items if type is **list** or **dict**
+  * Items of types **list** or **dict** can be edited
   * For user-defined items: Display of the file name in which the item was defined
   * Display of SmartHomeNG version extended
   * Loggers are filtered out of the logging list, if they have only a NullHandler.
@@ -64,19 +64,16 @@ New plugins and plugin extensions
 
   * With the extended casting for **list** s and **dict** s it is possible with the CLI plugin to assign values to lists and dictionaries
 
-* mail: 
+* mail:
 
   * Added Gmail support
 
-* UZSU:
+* uzsu:
 
   * Times with sunrise / sunset are now timezone aware rather than utc
-
-
 
 
 Documentation
 -------------
 
 * Advanced user documentation (German) on the Web
-

@@ -46,9 +46,9 @@ html:
 	@echo starting at:
 	@pwd
 	@echo
-	@test ! -L "source/plugins" && echo "creating a link to the plugin directory" && ln ../../../plugins source/plugins -s || echo "link to plugins directory already exists"
-	@test ! -L "source/modules" && echo "creating a link to the module directory" && ln ../../../modules source/modules -s || echo "link to modules directory already exists"
-	@test ! -L "source/dev" && echo "creating a link to the dev directory" && ln ../../../dev source/dev -s || echo "link to dev directory already exists"
+	@test ! -L "source/plugins" && echo "creating a link to the plugin directory" && ln -s ../../../plugins source/plugins || echo "link to plugins directory already exists"
+	@test ! -L "source/modules" && echo "creating a link to the module directory" && ln -s ../../../modules source/modules || echo "link to modules directory already exists"
+	@test ! -L "source/dev" && echo "creating a link to the dev directory" && ln -s ../../../dev source/dev || echo "link to dev directory already exists"
 	@echo
 	@python3 -V
 	@python3 ../build_plugin_config_files.py de

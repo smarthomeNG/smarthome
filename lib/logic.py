@@ -21,7 +21,7 @@
 ##########################################################################
 
 """
-This library implements logics in SmartHomeNG. 
+This library implements logics in SmartHomeNG.
 
 The main class ``Logics`` implements the handling for all logics. This class has a couple
 of static methods. These methods implement the API for handling logics from within SmartHomeNG and from plugins.
@@ -29,7 +29,7 @@ This API enables plugins to configure new logics or change the configuration of 
 
 Each logic is represented by an instance of the class ``Logic``.
 
-The methods of the class Logics implement the API for logics. 
+The methods of the class Logics implement the API for logics.
 They can be used the following way: To call eg. **enable_logic(name)**, use the following syntax:
 
 .. code-block:: python
@@ -79,7 +79,7 @@ class Logics():
 
     plugins = None
     scheduler = None
-        
+
     _config_type = None
     _logicname_prefix = 'logics.'     # prefix for scheduler names
 
@@ -113,7 +113,7 @@ class Logics():
         _logics_instance = self
 
         self.scheduler = Scheduler.get_instance()
-        
+
         _config = {}
         self._systemlogics = self._read_logics(envlogicconf, self._env_dir)
         _config.update(self._systemlogics)
@@ -127,7 +127,7 @@ class Logics():
     def _read_logics(self, filename, directory):
         """
         Read the logics configuration file
-        
+
         :param filename: name of the logics configurtion file
         :param directory: directory where the logics are stored
         """
@@ -142,7 +142,7 @@ class Logics():
             for name in config:
                 if 'filename' in config[name]:
                     config[name]['pathname'] = directory + config[name]['filename']
-            
+
         return config
 
 
@@ -176,8 +176,8 @@ class Logics():
                 for item in self.items.match_items(entry):
                     item.add_logic_trigger(logic)
         return True
-        
-    
+
+
     def __iter__(self):
         for logic in self._logics:
             yield logic
@@ -209,18 +209,18 @@ class Logics():
     def get_instance():
         """
         Returns the instance of the Logics class, to be used to access the logics-api
-        
+
         Use it the following way to access the api:
-        
+
         .. code-block:: python
 
             from lib.logic import Logics
             logics = Logics.get_instance()
-            
+
             # to access a method (eg. enable_logic()):
             logics.enable_logic(name)
 
-        
+
         :return: logics instance
         :rtype: object or None
         """
@@ -233,9 +233,9 @@ class Logics():
     def scheduler_add(self, name, obj, prio=3, cron=None, cycle=None, value=None, offset=None, next=None):
         """
         This methods adds a scheduler entry for a logic-scheduler
-        
+
         A plugin identifiction is added to the scheduler name
-         
+
         The parameters are identical to the scheduler.add method from lib.scheduler
         """
         if name != '':
@@ -254,27 +254,27 @@ class Logics():
         name = self._logicname_prefix+self.get_fullname()+name
         self.logger.debug("scheduler_change: name = {}".format(name))
         self.scheduler.change(name, kwargs)
-        
-        
+
+
     def scheduler_remove(self, name):
         """
         This methods rmoves a scheduler entry of a logic-scheduler
-        
+
         A plugin identifiction is added to the scheduler name
-         
+
         The parameters are identical to the scheduler.remove method from lib.scheduler
         """
         if name != '':
             name = '.'+name
         name = self._logicname_prefix+self.get_fullname()+name
         self.logger.debug("scheduler_remove: name = {}".format(name))
-        self.scheduler.remove(name, from_smartplugin=False) 
+        self.scheduler.remove(name, from_smartplugin=False)
 
 
     def get_logics_dir(self):
         """
         Returns the path of the dirctory, where the user-logics are stored
-        
+
         :return: path to logics directory
         :rtype: str
         """
@@ -284,11 +284,11 @@ class Logics():
     def _get_etc_dir(self):
         """
         Returns the path of the dirctory, where the SmartHomeNG configuration (/etc) is stored
-        
+
         It is not a public method because handling of the configuration file /etc/logic.yaml
         should be done by the api implementation. Only special plugins should access the
         files in /etc themself.
-        
+
         :return: path to SmartHomeNG configuration directory
         :rtype: str
         """
@@ -297,16 +297,16 @@ class Logics():
 
     def _get_logic_conf_basename(self):
         """
-        Returns the basename of the logic configuration file 
+        Returns the basename of the logic configuration file
         """
 #        return self._sh._logic_conf_basename
-        return self._userlogicconf        
+        return self._userlogicconf
 
     def reload_logics(self):
         """
         Function to reload all logics
-        
-        It generates new bytecode for every logic that is loaded. The configured triggers 
+
+        It generates new bytecode for every logic that is loaded. The configured triggers
         are not loaded from the configuration, so the triggers that where active before the
         reload remain active.
         """
@@ -317,10 +317,10 @@ class Logics():
     def is_logic_loaded(self, name):
         """
         Test if a logic is loaded. Given is the name of the section in /etc/logic.yaml
-    
+
         :param name: logic name (name of the configuration section section)
         :type name: str
-    
+
         :return: True: Logic is loaded
         :rtype: bool
         """
@@ -332,7 +332,7 @@ class Logics():
 
     def return_logic(self, name):
         """
-        Returns (the object of) one loaded logic with given name 
+        Returns (the object of) one loaded logic with given name
 
         :param name: name of the logic to get
         :type name: str
@@ -340,14 +340,14 @@ class Logics():
         :return: object of the logic
         :rtype: object
         """
-        
+
         return self[name]
 
 
     def get_logic_info(self, name, ordered=False):
         """
         Returns a dict with information about the logic
-        
+
         :param name: name of the logic to get info for
         :type name: str
 
@@ -385,7 +385,7 @@ class Logics():
         info['visu_access'] = self.visu_access(logic.name)
 #        info['watch_item_list'] = []
         return info
-        
+
 
     def visu_access(self, name):
         """
@@ -397,13 +397,16 @@ class Logics():
         except Exception as e:
             pass
         return False
-        
+
 
     def is_logic_enabled(self, name):
         """
         Returns True, if the logic is enabled
         """
         mylogic = self.return_logic(name)
+        if mylogic is None:
+            logger.warning("logics.is_logic_enabled: No logic found with name {}".format(name))
+            return False
         return mylogic.is_enabled()
 
 
@@ -412,69 +415,80 @@ class Logics():
         Enable a logic
         """
         mylogic = self.return_logic(name)
+        if mylogic is None:
+            logger.warning("logics.enable_logic: No logic found with name {}".format(name))
+            return False
         mylogic.enable()
 #        self.set_config_section_key(name, 'enabled', True)
         self.set_config_section_key(name, 'enabled', None)
         return mylogic.enabled
-    
-    
+
+
     def disable_logic(self, name):
         """
         Disable a logic
         """
         mylogic = self.return_logic(name)
+        if mylogic is None:
+            logger.warning("logics.disable_logic: No logic found with name {}".format(name))
+            return False
         mylogic.disable()
         self.set_config_section_key(name, 'enabled', False)
         return mylogic.enabled
-    
-    
+
+
     def toggle_logic(self, name):
         """
         Toggle a logic (Invert the enabled/disabled state)
         """
         mylogic = self.return_logic(name)
+        if mylogic is None:
+            logger.warning("logics.toggle_logic: No logic found with name {}".format(name))
+            return False
         if mylogic.enabled:
             mylogic.disable()
         else:
             logger.info("toggle_logic: name = {}".format(name))
             mylogic.enable()
         return mylogic.enabled
-    
-    
+
+
     def trigger_logic(self, name, by='unknown'):
         """
         Trigger a logic
         """
         logger.debug("trigger_logic: Trigger logic = '{}'".format(name))
         if name in self.return_loaded_logics():
-            self.scheduler.trigger(self._logicname_prefix+name, by='Backend')
+            if by == 'unknown':
+                by = 'Backend'
+            self.scheduler.trigger(self._logicname_prefix+name, by=by)
         else:
             logger.warning("trigger_logic: Logic '{}' not found/loaded".format(name))
 
 
     def is_userlogic(self, name):
         """
-        Returns True if userlogic and False if systemlogic or unknown 
+        Returns True if userlogic and False if systemlogic or unknown
         """
         try:
             pathname = str(self.return_logic(name).pathname)
         except:
             return False
         return os.path.basename(os.path.dirname(pathname)) == 'logics'
-        
+
 
     def load_logic(self, name):
         """
         Load a specified logic
-        
+
         Load a logic as defined in the configuration section. After loading the logic's code,
         the defined schedules and/or triggers are set.
-        
+
         If a logic is already loaded, it is unloaded and then reloaded.
-        
+
         :param name: Name of the logic (name of the configuration section)
         :type name: str
-        
+
         :return: Success
         :rtype: bool
         """
@@ -485,7 +499,7 @@ class Logics():
         if not (name in _config):
             logger.warning("load_logic: FAILED: Logic '{}', _config = {}".format( name, str(_config) ))
             return False
-    
+
         logger.info("load_logic: Logic '{}', _config = {}".format( name, str(_config) ))
         return self._load_logic(name, _config)
 
@@ -493,9 +507,9 @@ class Logics():
     def unload_logic(self, name):
         """
         Unload a specified logic
-        
+
         This function unloads a logic. Before unloading, it remove defined schedules and triggers for ``watch_item`` s.
-        
+
         :param name: Name of the section that defines the logic in the configuration file
         :type name: str
         """
@@ -503,14 +517,14 @@ class Logics():
         mylogic = self.return_logic(name)
         if mylogic == None:
             return False
-        
+
         mylogic.enabled = False
         mylogic.cycle = None
         mylogic.crontab = None
 
         # Scheduler entfernen
         self.scheduler.remove(self._logicname_prefix+name)
-    
+
         # watch_items entfernen
         if hasattr(mylogic, 'watch_item'):
             if isinstance(mylogic.watch_item, str):
@@ -528,13 +542,26 @@ class Logics():
         return True
 
 
+    def get_logiccrontab(self, name):
+        """
+        Return the crontab string of a logic
+        """
+        logger.debug("get_logiccrontab: Get crontab of logic = '{}'".format(name))
+
+        mylogic = self.return_logic(name)
+        if mylogic is None:
+            return None
+        else:
+            return mylogic.crontab
+
+
     def return_logictype(self, name):
         """
         Returns the type of a specified logic (Python, Blockly, None)
-        
+
         :param name: Name of the logic (name of the configuration section)
         :type name: str
-        
+
         :return: Logic type ('Python', 'Blockly' or None)
         :rtype: str or None
         """
@@ -553,7 +580,7 @@ class Logics():
         else:
             logger.info("return_logictype: name {} is not loaded".format(name))
             # load /etc/logic.yaml if logic is not in the loaded logics
-            conf_filename = os.path.join(self._get_etc_dir(), 'logic') 
+            conf_filename = os.path.join(self._get_etc_dir(), 'logic')
             config = shyaml.yaml_load_roundtrip(conf_filename)
             if config is not None:
                 if name in config:
@@ -565,21 +592,21 @@ class Logics():
                 logic_type = 'Python'
                 if os.path.isfile(os.path.join(self.get_logics_dir(), blocklyname)):
                     logic_type = 'Blockly'
-                    
+
         logger.debug("return_logictype: name '{}', filename '{}', logic_type '{}'".format(name, filename, logic_type))
         return logic_type
-        
+
 
     def return_defined_logics(self, withtype=False):
         """
         Returns the names of defined logics from file /etc/logic.yaml as a list
-        
+
         If ``withtype`` is specified and set to True, the function returns a dict with names and
         logictypes ('Python', 'Blockly')
 
         :param withtype: If specified and set to True, the function will additionally return the logic types
         :type withtype: bool
-        
+
         :return: list of defined logics or dict of defined logics with type
         :rtype: list or dict
         """
@@ -587,9 +614,9 @@ class Logics():
             logic_list = {}
         else:
             logic_list = []
-        
+
         # load /etc/logic.yaml
-        conf_filename = os.path.join(self._get_etc_dir(), 'logic') 
+        conf_filename = os.path.join(self._get_etc_dir(), 'logic')
         config = shyaml.yaml_load_roundtrip(conf_filename)
 
         if config is not None:
@@ -603,14 +630,14 @@ class Logics():
                     if os.path.isfile(os.path.join(self.get_logics_dir(), blocklyname)):
                         logic_type = 'Blockly'
                 logger.debug("return_defined_logics: section '{}', logic_type '{}'".format(section, logic_type))
-            
+
                 if withtype:
                     logic_list[section] = logic_type
                 else:
                     logic_list.append(section)
 
         return logic_list
-        
+
 
     def return_loaded_logics(self):
         """
@@ -628,14 +655,14 @@ class Logics():
 
     def return_config_type(self):
         """
-        Return the used config type 
-        
+        Return the used config type
+
         After initialization this function returns '.conf', if the used logic configuration file in /etc
         is in the old file format or '.yaml' if the used configuration file is in YAML format.
-        
+
         To use the following functions for reading and manipulating the logic configuration, the
         configuration file **has to be** in YAML format. Otherwise the functions will not work/return empty results.
-    
+
         :return: '.yaml', '.conf' or None
         :rtype: str or None
         """
@@ -645,25 +672,25 @@ class Logics():
     def read_config_section(self, section):
         """
         Read a section from /etc/logic.yaml
-        
+
         This funtion returns the data from one section of the configuration file as a list of
         configuration entries. A configuration entry is a list with three items:
         - key      configuration key
         - value    configuration value (string or list)
         - comment  comment for the value (string or list)
-          
+
         :param section: Name of the logic (section)
         :type section: str
-        
+
         :return: config_list: list of configuration entries. Each entry of this list is a list with three string entries: ['key', 'value', 'comment']
         :rtype: list of lists
         """
         if self.return_config_type() != YAML_FILE:
             logger.error("read_config_section: Editing of configuration only possible with new (yaml) config format")
             return False
-            
+
         # load /etc/logic.yaml
-        conf_filename = os.path.join(self._get_etc_dir(), 'logic') 
+        conf_filename = os.path.join(self._get_etc_dir(), 'logic')
         conf = shyaml.yaml_load_roundtrip(conf_filename)
 
         config_list = []
@@ -679,53 +706,54 @@ class Logics():
                             try:
                                 c = section_dict[key].ca.items[i][0].value
                             except:
-                                logger.info("c: {}, Key: {}".format(c, key)) 
+                                logger.info("c: {}, Key: {}".format(c, key))
                                 c = ''
                             if len(c) > 0 and c[0] == '#':
                                 c = c[1:]
                         else:
                             c = ''
-                    
+
                         comment.append(c.strip())
                 else:
                     value = section_dict[key]
                     c = ''
                     if key in section_dict.ca.items:
                         try:
-                            c = section_dict.ca.items[key][2].value    # if not list: loaded['a'].ca.items['b'][2].value 
+                            c = section_dict.ca.items[key][2].value    # if not list: loaded['a'].ca.items['b'][2].value
                         except:
-                            logger.info("c2: {}, Key: {}".format(c, key)) 
+                            logger.info("c2: {}, Key: {}".format(c, key))
                         if len(c) > 0 and c[0] == '#':
                             c = c[1:]
                     comment = c.strip()
-            
+
 #                logger.warning("-> read_config_section: section_dict['{}'] = {}, comment = '{}'".format(key, str(section_dict[key]), comment ))
                 config_list.append([key, value, comment])
         return config_list
-        
-        
+
+
     def set_config_section_key(self, section, key, value):
         """
         Sets the value of key for a given logic (section)
-        
+
         :param section: logic to set the key for
         :param key: key for which the value should be set
         :param value: value to set
-        
+
         """
         # load /etc/logic.yaml
-        conf_filename = os.path.join(self._get_etc_dir(), 'logic') 
+        conf_filename = os.path.join(self._get_etc_dir(), 'logic')
         conf = shyaml.yaml_load_roundtrip(conf_filename)
-        
+
         logger.info("set_config_section_key: section={}, key={}, value={}".format(section, key, str(value)))
         if value == None:
-            del conf[section][key]
+            if conf[section].get(key, None) != None:
+                del conf[section][key]
         else:
             conf[section][key] = value
 
         # save /etc/logic.yaml
         shyaml.yaml_save_roundtrip(conf_filename, conf, True)
-        
+
         # activate visu_acl without reloading the logic
         if key == 'visu_acl':
             mylogic = self.return_logic(section)
@@ -736,15 +764,15 @@ class Logics():
                 mylogic.visu_acl = str(value)
 
         return
-        
-        
+
+
     def update_config_section(self, active, section, config_list):
         """
         Update file /etc/logic.yaml
-    
+
         This method creates/updates a section in /etc/logic.yaml. If the section exist, it is cleared
         before new configuration imformation is written to the section
-    
+
         :param active: True: logic is/should be active, False: Triggers are not written to /etc/logic.yaml
         :param section: name of section to configure in logics configurationfile
         :param config_list: list of configuration entries. Each entry of this list is a list with three string entries: ['key', 'value', 'comment']
@@ -755,24 +783,28 @@ class Logics():
         if section == '':
             logger.error("update_config_section: No section name specified. Not updatind logics configuration.")
             return False
-            
+
         if self.return_config_type() != YAML_FILE:
             logger.error("update_config_section: Editing of configuration only possible with new (yaml) config format")
             return False
-                        
+
         # load /etc/logic.yaml
-        conf_filename = os.path.join(self._get_etc_dir(), 'logic') 
+        conf_filename = os.path.join(self._get_etc_dir(), 'logic')
         conf = shyaml.yaml_load_roundtrip(conf_filename)
         if conf is None:
             conf = shyaml.get_emptynode()
-            
+
         # empty section
         if conf.get(section, None) == None:
             conf[section] = shyaml.get_emptynode()
-        del conf[section]['filename']
-        del conf[section]['cycle']
-        del conf[section]['crontab']
-        del conf[section]['watch_item']
+        if conf[section].get('filename', None) != None:
+            del conf[section]['filename']
+        if conf[section].get('cycle', None) != None:
+            del conf[section]['cycle']
+        if conf[section].get('crontab', None) != None:
+            del conf[section]['crontab']
+        if conf[section].get('watch_item', None) != None:
+            del conf[section]['watch_item']
 
         # add entries to section
         logger.info("update_config_section: section {}".format(section))
@@ -805,7 +837,7 @@ class Logics():
                         conf[section].yaml_add_eol_comment(comment, key, column=50)
             else:
                 logger.warning("update_config_section: unsupported datatype for key '{}'".format(key))
-                
+
             if active:
                 if isinstance(value, list):
                     # process a list of triggers
@@ -837,29 +869,29 @@ class Logics():
     def delete_logic(self, name):
         """
         Deletes a complete logic
-        
+
         The python code and the section from the configuration file /etc/logic.yaml are
         removed. If it is a blockly logic, the blockly code is removed too.
-        
+
         If a code file is references by more than the logic that is being deleted, the code
         file will not be deleted. It will only be deleted when the last logic referencing
         this code file is being deleted.
-        
+
         :param name: name of the logic
         :type name: str
-        
+
         :return: True, if deletion fas successful
         :rtype: bool
         """
-        logger.warning("delete_logic: This routineimplements the deletion of logic '{}' (still in testing)".format(name))
-        
+        logger.warning("delete_logic: This routine implements the deletion of logic '{}' (still in testing)".format(name))
+
         # Logik entladen
         if self.is_logic_loaded(name):
             logger.warning("delete_logic: Logic '{}' unloaded".format(name))
-            self.unload_logic( name)
+            self.unload_logic(name)
 
         # load /etc/logic.yaml
-        conf_filename = os.path.join(self._get_etc_dir(), 'logic') 
+        conf_filename = os.path.join(self._get_etc_dir(), 'logic')
         conf = shyaml.yaml_load_roundtrip(conf_filename)
 
         section = conf.get(name, None)
@@ -867,6 +899,7 @@ class Logics():
             logger.warning("delete_logic: Section '{}' not found in logic configuration.".format(name))
             return False
 
+        # delete code file in ../logics
         filename = section.get('filename', None)
         if filename is None:
             logger.warning("delete_logic: Filename of logic is not defined in section '{}' of logic configuration.".format(name))
@@ -885,14 +918,16 @@ class Logics():
                     logger.warning("delete_logic: Logic file '{}' deleted".format(filename))
             else:
                 logger.warning("delete_logic: Skipped deletion of logic file '{}' because it is used by {} other logic(s)".format(filename, count-1))
-        
-        del conf[name]
-        logger.warning("delete_logic: Section '{}' from configuration deleted".format(name))
-        
+
+        # delete logic configuration from ../etc/logic.yaml
+        if conf.get(name, None) is not None:
+            del conf[name]
+            logger.warning("delete_logic: Section '{}' from configuration deleted".format(name))
+
         # save /etc/logic.yaml
         shyaml.yaml_save_roundtrip(conf_filename, conf, True)
         return True
-        
+
 
 # ------------------------------------------------------------------------------------
 
@@ -927,7 +962,7 @@ class Logic():
             self._generate_bytecode()
         else:
             logger.error("Logic {} is not configured correctly (configuration has no attibutes)".format(self.name))
-        
+
 
     def id(self):
         """
@@ -941,7 +976,7 @@ class Logic():
     def __call__(self, caller='Logic', source=None, value=None, dest=None, dt=None):
         if self.enabled:
             self.scheduler.trigger(self._logicname_prefix+self.name, self, prio=self.prio, by=caller, source=source, dest=dest, value=value, dt=dt)
-            
+
     def enable(self):
         """
         Enables the loaded logic
@@ -959,11 +994,11 @@ class Logic():
         Is the loaded logic enabled?
         """
         return self.enabled
-        
+
     def last_run(self):
         """
         Returns the timestamp of the last run of the logic or None (if the logic wasn't triggered)
-        
+
         :return: timestamp of last run
         :rtype: datetime timestamp
         """
@@ -972,12 +1007,12 @@ class Logic():
     def set_last_run(self):
         """
         Sets the timestamp of the last run of the logic to now
-        
+
         This method is called by the scheduler
         """
 #        self._last_run = self._sh.now()
         self._last_run = self.shtime.now()
-        
+
 
     def trigger(self, by='Logic', source=None, value=None, dest=None, dt=None):
         if self.enabled:

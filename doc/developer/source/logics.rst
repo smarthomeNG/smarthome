@@ -11,16 +11,16 @@ The configuration file tells SmartHomeNG when to execute a certain logic script.
 
 The following sample configuration file defines four logic scripts for use by SmartHomeNG.
 
-* The first logic script is named ``InitSmartHomeNG`` and its sourcecode
+* The first logic script is named ``InitSmartHomeNG`` and its source code
   is configured to be found in ``logics/InitSmartHomeNG.py``.
   The attribute ``crontab: init`` tells SmartHomeNG to start the script just after
   SmartHomeNG has started.
 * The second logic script named ``Hourly`` resides in ``logics/time.py``
-  and the attribute ``cycle: 60`` tells SmartHomeNG to call (execute) the script every 60 minutes.
+  and the attribute ``cycle: 3600`` tells SmartHomeNG to call (execute) the script every 3600 seconds (one hour).
 * The third logic script named ``Gate`` resides in ``logics/gate.py`` and the attribute
   ``watch_item: gate.alarm`` tells SmartHomeNG to call the script when item
   value of gate.alarm changed.
-* The fourth logic thus is named ``disks`` and it's sourcecode ``logics/disks.py``
+* The fourth logic thus is named ``disks`` and it's source code ``logics/disks.py``
   will be executed every 5 minutes.
 
 .. code-block:: yaml
@@ -32,7 +32,7 @@ The following sample configuration file defines four logic scripts for use by Sm
 
    Hourly:
        filename: time.py
-       cycle: 60
+       cycle: 3600
 
    Gate:
        filename: gate.py
@@ -49,7 +49,7 @@ The following sample configuration file defines four logic scripts for use by Sm
 Configuration parameters
 ------------------------
 
-The following parameters can be used in `etc/logic.yaml` to configure the logic and it's behaviour.
+The following parameters can be used in `etc/logic.yaml` to configure the logic and it's behavior.
 
 watch_item
 ~~~~~~~~~~
@@ -94,8 +94,15 @@ Optional use a parameter
    cycle: 60 = 100
 
 
-This triggers the logic every 60 minutes and passes the value 100 to the logic.
+This triggers the logic every 60 seconds and passes the value 100 to the logic.
 The object ``trigger['value']`` can be queried and will here result in '100'
+
+**Since SmartHomeNG v1.3** there are extended configuration options.
+
+The value for the ``cycle duration`` can be provided as follows:
+
+1. a number defining the duration in seconds, can be optionally followed by an ``s``
+2. a number follows by an ``m`` to define the duration in minutes
 
 crontab
 ~~~~~~~
@@ -369,44 +376,67 @@ Converts the relative humidity to the absolute humidity.
 Accessing items
 ---------------
 
-sh.return_item(path)
-~~~~~~~~~~~~~~~~~~~~~
+Usage of Object ``sh`` for items is deprecated, it's better to use the Item API:
+
+.. code:: python
+
+   from lib.item import Items
+   items = Items.get_instance()
+
+With ``items`` Object in place the following functions can be called:
+
+items.return_item(path)
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Returns an item object for the specified path. E.g.
-``sh.return_item('first_floor.bath')``
+``items.return_item('first_floor.bath')``
 
-sh.return_items()
-~~~~~~~~~~~~~~~~~~
+items.return_items()
+~~~~~~~~~~~~~~~~~~~~
 
 Returns all item objects.
 .. code-block:: python
 
-   for item in sh.return_items():
+   for item in items.return_items():
       logger.info(item.id())
 
-sh.match_items(regex)
-~~~~~~~~~~~~~~~~~~~~~
+items.match_items(regex)
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Returns all items matching a regular expression path and optional attribute.
 
 .. code-block:: python
 
-   for item in sh.match_items('*.lights'):     # selects all items ending with 'lights'
+   for item in items.match_items('*.lights'):     # selects all items ending with 'lights'
        logger.info(item.id())
 
-   for item in sh.match_items('*.lights:special'):     # selects all items ending with 'lights' and attribute 'special'
+   for item in items.match_items('*.lights:special'):     # selects all items ending with 'lights' and attribute 'special'
        logger.info(item.id())
 
-sh.find_items(configattribute)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+items.find_items(configattribute)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Returns all items with the specified config attribute
-.. code-block:: python
+Depending on ``configattribute`` the following items will be returned:
 
-   for item in sh.find_items('my_special_attribute'):
+.. table::
+
+   ======================  ====================================================
+   attribute               Ergebnis
+   ======================  ====================================================
+   ``attribute``           Only items having no instance id
+   ``attribute@``          Items with or without instance id
+   ``attribute@instance``  Items with exact match of attribute and instance id
+   ``@instance``           Items having this instance id
+   ======================  ====================================================
+
+
+.. code:: python
+
+   for item in items.find_items('my_special_attribute'):
        logger.info(item.id())
 
 find\_children(parentitem, configattribute):
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Returns all children items with the specified config attribute.
+Returns all child items with the specified config attribute. The search for ``configattribute``
+will be exactly conducted as described in ``find_items(configattribute)`` above.

@@ -3,7 +3,7 @@ Development of Plugins
 ======================
 
 
-Information about writing a plugin and getting it included in SmartHomeNG can be found here: 
+Information about writing a plugin and getting it included in SmartHomeNG can be found here:
 
 .. toctree::
    :maxdepth: 1
@@ -19,45 +19,51 @@ It is accessible via ``sh``-Object. The libraries provide extra functionality li
    :maxdepth: 1
    :titlesonly:
    :hidden:
-   
+
    development_plugin/plugin_in5minutes.md
-   
+
 
 A plugin consists of a minimum of three files (without user- and developer documentation):
 
-+--------------------------+----------------------------------------------------------------------+
-| File                     | Description                                                          |
-+==========================+======================================================================+
-| **__init__.py**          | The file containing the Python source code                           | 
-+--------------------------+----------------------------------------------------------------------+
-| **plugin.yaml**          | The file containing the metadata of the plugin                       |               
-+--------------------------+----------------------------------------------------------------------+
-| **locale.yaml**          | Optional, containing translation strings for the multi-language      |
-|                          | implementation of a web interface                                    |
-+--------------------------+----------------------------------------------------------------------+
-| **README.md** or         | A basic documentation file (in English language) - The documentation |
-| **README.rst**           | can be written in **markdown** or **restructured text** format       |
-+--------------------------+----------------------------------------------------------------------+
-| **user_doc.rst**         | Optional, a user documentation file (in German language). It         |
-|                          | will be included in the navigation of the user documentation.        |
-+--------------------------+----------------------------------------------------------------------+
-| **developer_doc.rst**    | Optional, a developer documentation file (in English language).      |
-|                          | It will be included in the navigation of the developer documentation |
-+--------------------------+----------------------------------------------------------------------+
-   
-If one of the documentation files (**user_doc.\*** or **developer_doc.\***) should include images or 
++--------------------------+---------------------------------------------------------------------------------+
+| File                     | Description                                                                     |
++==========================+=================================================================================+
+| **__init__.py**          | The file containing the Python source code                                      |
++--------------------------+---------------------------------------------------------------------------------+
+| **plugin.yaml**          | The file containing the metadata of the plugin                                  |
++--------------------------+---------------------------------------------------------------------------------+
+| **locale.yaml**          | Optional, containing translation strings for the multi-language implementation  |
+|                          | of a web interface                                                              |
++--------------------------+---------------------------------------------------------------------------------+
+| **README.md** or         | A basic documentation file (in English language) - The documentation can be     |
+| **README.rst**           | written in **markdown** or **restructured text** format                         |
++--------------------------+---------------------------------------------------------------------------------+
+| **user_doc.rst**         | Optional, a user documentation file (in German language). It will be included   |
+|                          | in the navigation of the user documentation.                                    |
++--------------------------+---------------------------------------------------------------------------------+
+| **developer_doc.rst**    | Optional, a developer documentation file (in English language).                 |
+|                          | It will be included in the navigation of the developer documentation            |
++--------------------------+---------------------------------------------------------------------------------+
+| **requirements.txt**     | If the plugin has requirements in regard to Python packages that are not met by |
+|                          | the Python standard installation or through the requirements of the core/modules|
+|                          | of SmartHomeNG, they have to be defined in this file. (For a file format        |
+|                          | descriptions look at the documentation of **pip**                               |
+|                          | (https://pip.pypa.io/en/stable/reference/pip_install/#requirements-file-format) |
++--------------------------+---------------------------------------------------------------------------------+
+
+If one of the documentation files (**user_doc.\*** or **developer_doc.\***) should include images or
 other assets, create a directory named **assets** in the plugin directory and put the files in that
-directory **../<plugin>/assets**. The documentation files (**user_doc.\*** or **developer_doc.\***) 
+directory **../<plugin>/assets**. The documentation files (**user_doc.\*** or **developer_doc.\***)
 need not to be referenced in the metadata file **plugin.yaml**
 
 .. important::
 
-   The first Heading of the **user_doc.rst** / **user_doc.md** or **developer_doc.rst** / **developer_doc.md** 
+   The first Heading of the **user_doc.rst** / **user_doc.md** or **developer_doc.rst** / **developer_doc.md**
    MUST be the short-name of the plugin in lower case.
-   
+
    It is used as the entry in the navigation bar of the documentation. Choosing an other top level
    header for these files would make the documentations navigation inconsistent.
-   
+
 
 The plugin may have the following subdirectories:
 
@@ -98,12 +104,12 @@ The plugin code is a class based on the class SmartPlugin. The methods of SmartP
    :maxdepth: 5
    :titlesonly:
    :hidden:
-   
+
    development_plugin/plugin_metadata
    development_plugin/plugin_documentation_files
    development_plugin/webinterface
    development_plugin/multilanguage
-   development_plugin/sampleplugins
+   development_plugin/sampleplugin
    modules_doc/modules_plugins
    modules_doc/modules_readmes
    development_plugin/libraries_plugins

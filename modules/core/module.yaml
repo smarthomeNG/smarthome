@@ -1,0 +1,85 @@
+# Metadata for the core parameter (etc/smarthome.yaml)
+module:
+    # Global pseido-module attributes
+    classname: None
+    version: 1.5.7
+    description:
+        de: 'Core des SmartHomeNG Systems'
+        en: 'Core of the SmartHomeNG system'
+        fr: 'Coeur du système SmartHomeNG'
+
+parameters:
+    # Definition of parameters to be configured in etc/module.yaml
+    lat:
+        type: num
+        default: 53.5989481
+        description:
+            de: Breitengrad der SmartHomeNG Installation
+            en: Lattitude of the SmartHomeNG installation
+            fr: Degré de latitude de l'installation SmartHomeNG
+    lon:
+        type: num
+        default: 10.0459898
+        description:
+            de: Längengrad der SmartHomeNG Installation
+            en: Logitude of the SmartHomeNG installation
+            fr: Degré de longitude de l'installation SmartHomeNG
+    elev:
+        type: num
+        default: 20
+        description:
+            de: Höhe der SmartHomeNG Installation über Normal-Null
+            en: Elevation of the SmartHomeNG installation
+            fr: Élévation de l'installation SmartHomeNG
+
+    tz:
+        type: str
+        default: 'Europe/Berlin'
+        description:
+            de: Zeitzone der SmartHomeNG Installation
+            en: timezone of the SmartHomeNG installation
+            fr: Fuseau horaire de l'installation SmartHomeNG
+
+    default_language:
+        type: str
+        default: 'de'
+        valid_list: ['de', 'en', 'fr', 'pl']
+        description:
+            de: Standard-Sprache der SmartHomeNG Installation
+            en: Default language of the SmartHomeNG installation
+            fr: Langue par défaut de l'installation SmartHomeNG
+
+    fallback_language_order:
+        type: str
+        default: en,de
+        valid_list: ['en,de', 'de,en']
+        description:
+            de: 'Reihenfolge der Sprachen in der Texte gesucht werden, wenn der Text in der gewählten Sprache nicht vorhanden ist, alls die gewählte Sprache nicht Deutsch oder Englisch ist'
+            en: 'Order of languages in which texts are searched, if the text is not available in the selected language'
+            fr: "Ordre des langues dans lesquelles les textes sont recherchés, si le texte n'est pas disponible dans la langue sélectionnée"
+
+    assign_compatibility:
+        type: str
+        default: 'latest'
+        valid_list: ['latest', 'compat_1.2']
+        description:
+            de: Wenn 'latest' gewählt wird, werden Werte bei der Zuweisung zu Items in den Datentyp des Items gewandelt, sonst werden sie als string zugewiesen
+            en: If 'latest', values are castet to the datatype of the destination item, otherwise they are assigned as strings
+            fr: Si 'latest' est sélectionné, les valeurs seront transformés vers le type de données de l'objet lors de l'attribution. Sinon ils seront assignés comme châines de caractères.
+
+    use_conditional_triggers:
+        type: bool
+        default: False
+        description:
+            de: 'Advanced: Verwendung konditionaler Trigger zulassen'
+            en: 'Advanced: Allow use of conditional triggers'
+            fr: "Avancé: Autoriser l'utilisation de déclencheurs conditionnels"
+
+    deprecated_warnings:
+        type: bool
+        default: False
+        description:
+            de: 'Advanced: Warnungen loggen, wenn Funktionen/Methoden aufgerufen werden, die als veraltet gekennzeichnet sind'
+            en: 'Advanced: Log warnings, if functions/methods are used which are flaged as deprecated'
+            fr: "Avancé: Enregistrer les avertissements si des fonctions / méthodes sont utilisées qui sont affichées comme obsolètes"
+

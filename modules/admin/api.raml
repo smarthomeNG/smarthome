@@ -1,0 +1,115 @@
+#%RAML 0.8
+title: SmartHomeNG Admin REST API
+version: v1
+baseUri: http://smarthomeng.fritz.box:1234/api
+mediaType:  application/json
+
+securitySchemes:
+  JWT:
+    description: Authenticate this to any method that needs a valid JWT to be set.
+    type: x-{other}
+    describedBy:
+      headers:
+        Authorization:
+          description: X-AuthToken
+          type: string
+          required: true
+      responses:
+        401:
+          description: Authentication problem (JWT not set or expired)
+          body:
+            # type: common.Error
+
+/authenticate:
+  /user:
+    post:
+      securedBy: [null]
+      body:
+        application/json:
+#            {"username": "e22ac8c78ea726102c34e5e6d31560057a9ed90332e897edcbb5f81d3dd74699438974fde7901781cdac989c86891164305c6f975bfe19ad26018a302fc364da", "password": "c015e863393ef15877c21c4eeff8bf40fa16613d02049a6bdd9f1877452f853c21ee7ce070a2d68a1e912927593ab1c76d82b6122d7863859bcd8b1196a8fc64"}
+    put:
+      securedBy: [JWT]
+
+/config:
+  /core:
+    get:
+    put:
+    securedBy: [JWT]
+  /common:
+    get:
+    put:
+    securedBy: [JWT]
+  /admin:
+    get:
+    put:
+    securedBy: [JWT]
+  /http:
+    get:
+    put:
+    securedBy: [JWT]
+
+/items:
+  /structs:
+    get:
+    securedBy: [JWT]
+
+/logics:
+  displayName: Information about existing logics or info about a specified logic
+  get:
+    securedBy: [JWT]
+  /{logicName}
+    securedBy: [JWT]
+
+/logs:
+  displayName: Information about existing logs or content of a specified log
+  get:
+    securedBy: [JWT]
+  /{logName}
+    securedBy: [JWT]
+
+/scenes:
+  displayName: Info about defined scenes
+  get:
+    securedBy: [JWT]
+
+/schedulers:
+  displayName: Info about defined schedulers
+  get:
+    securedBy: [JWT]
+
+/server:
+  displayName: Public Serverinfo of the SmartHomeNG software
+  get:
+    securedBy: [null]
+  /info:
+    displayName: Serverinfo of the SmartHomeNG software and operating system
+    get:
+      securedBy: [JWT]
+  /status:
+    displayName: Run state of the SmartHomeNG software
+    get:
+      securedBy: [JWT]
+  /restart:
+    displayName: Restart the SmartHomeNG software
+    put:admin
+      securedBy: [JWT]
+
+/services:
+  /yamlcheck:
+    displayName: Check the syntax of yaml text snippet
+    put:
+      securedBy: [JWT]
+  /cachecheck:
+    displayName: Check for orphan cache files and return them as a list
+    get:
+      securedBy: [JWT]
+  /cachefile_delete:
+    displayName: delete a cache file (cachefile_delete?filename=cachefile) or a list of cache files (cachefile_delete?filename=["cachefile1","cachefile2"])
+    put:
+      securedBy: [JWT]
+
+/threads:
+  displayName: Info about running threads
+  get:
+    securedBy: [JWT]
+

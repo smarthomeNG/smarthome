@@ -13,6 +13,8 @@ PACKAGES = find_packages(exclude=['tests', 'tests.*'])
 #    'psutil',
 #
 #]
+REQUIRES = [
+]
 
 setup(
     name='SmartHomeNG',

@@ -28,6 +28,8 @@ env:
         diskusagepercent:
             name: Genutzte Größe des Laufwerks auf dem Smarthome.py derzeit läuft in Prozent der Gesamtgröße
             type: num
+            sqlite: init
+            database: init
 
         libs:
 

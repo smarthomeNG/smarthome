@@ -1,50 +1,36 @@
-<!DOCTYPE html>
-<head>
-	<script src="/gstatic/fontawesome/svg-with-js/js/fontawesome-all.min.js"></script>
-	<link rel="stylesheet" href="/gstatic/fontawesome/svg-with-js/css/fa-svg-with-js.css" type="text/css"/>
-	<link rel="stylesheet" href="/gstatic/bootstrap/css/bootstrap.min.css" type="text/css"/>
-	<link rel="icon" href="/gstatic/img/favicon.ico" type="image/png"/>
-</head>
-<body>
-<div class="container">
-	<br>
-	<br>
-	<br>
-	<br>
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid p-5">
     <div class="row">
-        <div align="center" class="col-md-10 col-md-offset-2 panel panel-default">
-			<h1 class="margin-base-vertical">
-			<img src="gstatic/img/logo_big.png" width="150" height="75">
-			&nbsp; SmartHomeNG</h1>
-
-            <br>
-			<h4>
-				http-Modul von SmartHomeNG.
-			</h4>
-            <p align="center">
-                Diese Seite wird angezeigt, da (noch) keine Weiterleitung in <strong>{{ '../etc/module.yaml' }}</strong> festgelegt wurde
-            </p>
-			<br>
-
-            <table align="center" border="1" cellpadding="10">
-            <th colspan="2">
-                <h3>Plugins mit Web-Interface:</h3>
-            </th>
-			{% for webif in webinterfaces.keys() %}
-				<tr>
-				    <td>
-                        <a href="/{{ webif }}">{{ webinterfaces[webif].Webifname }}</a>
-                    </td>
-                    <td>
-                        {{ webinterfaces[webif].Description }}
-                    </td>
-                </tr>
-			{% endfor %}
-            </table>
-			<br>
-			<br>
-			<br>
-        </div><!-- //main content -->
-    </div><!-- //row -->
+        <h1><img src="gstatic/img/logo_big.png" width="150" height="75">&nbsp;SmartHomeNG</h1>
+    </div>
+    <div class="row">
+        <h4>
+            http-Modul von SmartHomeNG.
+        </h4>
+    </div>
+    <div class="row">
+        <p>
+            Diese Seite wird angezeigt, da (noch) keine Weiterleitung in <strong>{{ '../etc/module.yaml' }}</strong> festgelegt wurde
+        </p>
+    </div>
+    <div class="row">
+        <div class="card">
+            <div class="card-header"><strong>Plugins mit Web-Interface:</strong></div>
+            <td class="card-body text-shng">
+                <table class="table table-striped table-hover">
+                  <tbody>
+                    {% for webif in webinterfaces.keys() %}
+                    <tr><td class="p-2">
+                      <a class="text-shng" href="/{{ webif }}">{{ webinterfaces[webif].Webifname }}</a>
+                    </td><td class="p-2">
+                      {{ webinterfaces[webif].Description }}
+                    </td></tr>
+                  {% endfor %}
+                  </tbody></table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div> <!-- //container -->
-</body>
+{% endblock %}

@@ -1,7 +1,7 @@
 Logging
 =======
 
-Configuration 
+Configuration
 -------------
 
 Logging for SmartHomeNG is configured in ``etc/logging.yaml``. This file is in YAML format.
@@ -68,7 +68,7 @@ The logging level can be one of:
 
 Logging of single plugins
 -------------------------
-Within the logging the configuration can be set seperately for single plugins, logics and libs.
+Within the logging the configuration can be set separately for single plugins, logics and libs.
 
 .. code-block:: YAML
    :caption: Sample for knx plugin

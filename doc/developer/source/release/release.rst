@@ -7,6 +7,7 @@ Release notes for SmartHomeNG:
    :maxdepth: 1
    :titlesonly:
 
+   1_6
    1_5_1
    1_5
    1_4_2

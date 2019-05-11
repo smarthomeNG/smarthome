@@ -1,0 +1,17 @@
+{
+  "default_language": "de",
+  "fallback_language_order": "en,de",
+  "client_ip": "1.2.3.4",
+  "itemtree_fullpath": false,
+  "itemtree_searchstart": 2,
+  "tz": "Europe/Berlin",
+  "tzname": "CEST",
+  "core_branch": "develop",
+  "plugins_branch": "develop",
+  "websocket_host": "smarthomeng.local",
+  "websocket_port": "2424",
+  "daemon_knx": "eibd",
+  "daemon_ow": "SERVICES.INACTIVE",
+  "daemon_mqtt": "SERVICES.INACTIVE",
+  "daemon_node_red": "SERVICES.INACTIVE"
+}

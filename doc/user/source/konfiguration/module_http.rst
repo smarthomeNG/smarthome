@@ -1,4 +1,5 @@
 .. index:: http
+.. index:: modules; http
 .. index:: Webinterfaces; Konfiguration
 .. index:: Webservices; Konfiguration
 
@@ -6,7 +7,7 @@
 Module http
 ###########
 
-Dieses Modul erlaubt es Plugins eine Webschnittstelle zu implementieren. Die API wird weiter 
+Dieses Modul erlaubt es Plugins eine Webschnittstelle zu implementieren. Die API wird weiter
 unten beschrieben. Das erste Plugin zur Nutzung dieser API ist das Backend-Plugin.
 
 Es implementiert auch die Basisauthentifizierung für den Zugriff auf Webinterfaces und Webservices.
@@ -16,12 +17,12 @@ bestimmte Features anzubieten.
 
 Über Webservices können Plugins Dienste zu Verfügung stellen, welche die Kommunikation mit anderen
 Anwendungen ermöglichen (z.B. ein REST Interface).
- 
+
 
 Voraussetzungen
 ===============
 
-Dieses Modul läuft nur unter neueren SmmartHomeNG-Versionen. Mindestvoraussetzung ist SmartHomeNG v1.4. 
+Dieses Modul läuft nur unter neueren SmartHomeNG-Versionen. Mindestvoraussetzung ist SmartHomeNG v1.4.
 Es benötigt Python >= 3.4, sowie das Python Package  **cherrypy**. Python-Module können
 folgendermaßen installiert werden:
 
@@ -29,16 +30,10 @@ folgendermaßen installiert werden:
 
    sudo pip3 install cherrypy
 
-Bitte beachten, dass die lib (s) für Python3 installiert sind und nicht ein älteres Python 2.7, 
-welches wahrscheinlich auch auf dem System installiert ist. Deshalb unbedingt `pip3` und nicht` pip` 
+Bitte beachten, dass die lib (s) für Python3 installiert sind und nicht ein älteres Python 2.7,
+welches wahrscheinlich auch auf dem System installiert ist. Deshalb unbedingt `pip3` und nicht` pip`
 verwenden.
 
-.. note::
-
-   Für dieses Modul muss die Modulhandhabung in SmartHomeNG aktiviert sein. Bitte darauf achten, 
-   dass `use_modules` in **../etc/smarthome.yaml** auf **nicht** auf **True** gesetzt ist!
-   
-   
 
 .. index:: Konfigurationsdateien; /etc/module.yaml
 
@@ -51,7 +46,7 @@ Datei *../etc/module.yaml*
 
 .. code-block:: yaml
    :caption: ../etc/module.yaml
-   
+
    # etc/module.yaml
    http:
        module_name: http
@@ -71,6 +66,12 @@ Datei *../etc/module.yaml*
    #    service_hashed_password: 1245a9633edf47b7091f37c4d294b5be5a9936c81c5359b16d1c4833729965663f1943ef240959c53803fedef7ac19bd59c66ad7e7092d7dbf155ce45884607d
 
 
+.. note::
+
+    Die Konfigurationsparameter des http Modules, die in dieser Datei konfiguriert werden, können auch über das graphische
+    Administrations-Interface geändert werden.
+
+
 
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | Parameter               | Bemerkung                                                                                            |
@@ -84,7 +85,7 @@ Datei *../etc/module.yaml*
 | threads                 | **Optional**: Die Anzahl der Threads, die CherryPy für jeden Port startet, auf dem es lauscht.       |
 |                         | Default ist 8, was für leistungsschwächere CPUs zu viel sein kann                                    |
 +-------------------------+------------------------------------------------------------------------------------------------------+
-| showtraceback           | **Optional**: Falls dieser Parameter auf  **True** gesetzt wird, zeigen Fehlerseiten (außer Fehler   | 
+| showtraceback           | **Optional**: Falls dieser Parameter auf  **True** gesetzt wird, zeigen Fehlerseiten (außer Fehler   |
 |                         | bei 404) einen Python Fehler-Trace an. Normalerweise wird dieser Trace nur im **smarthome.log**      |
 |                         | aufgezeichnet.                                                                                       |
 +-------------------------+------------------------------------------------------------------------------------------------------+
@@ -137,5 +138,5 @@ Datei *../etc/module.yaml*
    kann trotzdem die Übersichtsseite mit der Liste aller geledenen Plugins, die ein Webinterface registriert
    haben über **http://smarthomeNG.local:8383/plugins** angezeigt werden. Außer, man hat über
    ``showpluginlist: False`` diese Übersichtsseite deaktiviert.
-   
+
 

@@ -3,7 +3,7 @@ Installation
 ############
 
 The steps described here will work for a fresh installation of Debian Linux (8.x aka Jessie).
-Other packages might be needed another Linux flavour like Ubuntu, Archlinux, etc. is installed.
+Other packages might be needed another Linux flavour like Ubuntu, Arch Linux, etc. is installed.
 
 First, please update the system to the latest fixes. Then install the following packages from the distribution:
 
@@ -12,13 +12,13 @@ First, please update the system to the latest fixes. Then install the following 
    sudo apt-get -y install dialog python3 python3-dev python3-setuptools unzip build-essential
    sudo apt-get install python3-pip
 
-For security reasons it is **strongly recommended** to create a **dedicated user account** for SmartHomeNG. 
+For security reasons it is **strongly recommended** to create a **dedicated user account** for SmartHomeNG.
 On most Linux Distributions this can be done via:
 
 .. code-block:: bash
 
    sudo adduser smarthome
-   
+
 In the following it is expected that SmartHomeNG **is not installed and run as user root** but instead uses
 the dedicated user *smarthome*
 
@@ -50,19 +50,19 @@ Please notice the dot at the end of the **git** commands!
 Required Python modules
 =======================
 
-For many plugins there are some further Python modules needed. There are two ways of providing access 
-for the application to these modules. The first method is to install any module systemwide. 
-You will need to run pip with ``sudo`` prefix then. 
+For many plugins there are some further Python modules needed. There are two ways of providing access
+for the application to these modules. The first method is to install any module system wide.
+You will need to run pip with ``sudo`` prefix then.
 
 If you decide to run more than SmartHomeNG on your system
 you might encounter situations were SmartHomeNG needs a module with a special version but another program
-needs another version of this module. You might not be able to solve this conflict. 
-One idea is to use a virtual environment for python for a specific program. 
+needs another version of this module. You might not be able to solve this conflict.
+One idea is to use a virtual environment for python for a specific program.
 
 Both methods are described below:
 
-Systemwide installation
------------------------
+System wide installation
+------------------------
 
 It is a good idea to first upgrade the Python package manager pip:
 
@@ -77,16 +77,16 @@ Then enter the SmartHomeNG directory and start pip with
    cd /usr/local/smarthome                      # change if necessary
    sudo pip3 install -r requirements/base.txt
 
-Now the dependencies for the core should be met. Some plugins however require further Python modules. 
+Now the dependencies for the core should be met. Some plugins however require further Python modules.
 Since every plugin supplies a requirement file, the missing modules can be installed with
 
 .. code-block:: bash
 
-   cd /usr/local/smarthome                      # change if necessary
-   sudo pip install -r plugins/pluginname/requirements.txt # Install requirements of pluginname.
+   cd /usr/local/smarthome                                      # change if necessary
+   sudo pip install -r plugins/pluginname/requirements.txt      # Install requirements of given plugin.
 
 It is also possible to install all requirements of **all** plugins at once:
-   
+
 .. code-block:: bash
 
    cd /usr/local/smarthome                      # change if necessary
@@ -99,12 +99,12 @@ take a look at ``plugins/<pluginname>/README.md`` file.
 Virtualenv / Pyenv
 ------------------
 
-If other software is running on the same system then a better choice might be to isolate the needed Python 
+If other software is running on the same system then a better choice might be to isolate the needed Python
 modules for SmartHomeNG using a virtual environment.
 With Python >= 3.5 this is provided with the pyvenv tool, before virtualenv will do this job.
-First the home directory of SmartHomeNG is entered and then 
+First the home directory of SmartHomeNG is entered and then
 a subdirectory ``shpy-virtualenv`` will be created within the home directory of user **smarthome**.
-Next the Python package manager is updated to the most recent version and finally the modules are 
+Next the Python package manager is updated to the most recent version and finally the modules are
 installed according to requirements in base.txt
 
 .. code-block:: bash

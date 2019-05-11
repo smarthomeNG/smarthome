@@ -8,11 +8,11 @@ There are a lot of new features for the core of SmartHomeNG and the plugins.
 Supported Python versions
 =========================
 
-Please note: Starting from SmartHomeNG Release 1.4 we cease the active support of older Python 
+Please note: Starting from SmartHomeNG Release 1.4 we cease the active support of older Python
 versions. The oldest supported Python version will be Python 3.4.
 (See *Hard- & Software Requirements* in section *Installation* for supported Python versions)
 
-This does not necessarily mean that SmartHomeNG as of Release 1.4 is no longer running under older 
+This does not necessarily mean that SmartHomeNG as of Release 1.4 is no longer running under older
 Python versions. It means that SmartHomeNG is no longer tested with older Python versions and
 reported errors with older Python versions are no longer fixed.
 
@@ -20,9 +20,9 @@ reported errors with older Python versions are no longer fixed.
 Absolute minimum Python versions raised to 3.3
 ==============================================
 
-The minimum Python version on which SmartHomeNG starts has been increased from 3.2 to 3.3. 
-By virtue of the major changes between Python 3.2 and 3.3 it has already been problematic in 
-the past to run SmartHomeNG with plugins in a Python 3.2 environment..
+The minimum Python version on which SmartHomeNG starts has been increased from 3.2 to 3.3.
+By virtue of the major changes between Python 3.2 and 3.3 it has already been problematic in
+the past to run SmartHomeNG with plugins in a Python 3.2 environment.
 
 
 New functions
@@ -52,7 +52,7 @@ New functions in the CORE
 
   * Plugins can implement a web interface (by using the http module)
   * Support multiple versions of a plugin. Predecessor versions of plugins can be delivered with a plugin and loaded by offering the version number in /etc/plugin.yaml instead of the current version
-  * User and developer documentation can be dynamically supplemented with plugin documentation. (By creating the user_doc.rst or develpoer_doc.rst files)
+  * User and developer documentation can be dynamically supplemented with plugin documentation. (By creating the user_doc.rst or developer_doc.rst files)
 
 * Scheduler:
 
@@ -65,9 +65,9 @@ New functions in the CORE
   * For existing plugin metadata, the version compatibility between shNG and plugin is checked.
   * For existing parameter definitions in the plugin metadata, the values configured in /etc/plugin.yaml are checked for formal validity (data type, min / max values, value list, etc.).
   * New parameter interface for plugins: For existing parameter definitions in the plugin metadata, the checked values in the target data type are transferred in a dict to the started plugin.
-  * Specifying `classname` in the metadata allows easier configuration: Only `plugin_name:` must be specified in /etc/plugin.yaml, instead of `class_path:` and `class_name:` ( `classname` hat been added to the metadata of all existing plugins).
+  * Specifying ``classname`` in the metadata allows easier configuration: Only `plugin_name:` must be specified in /etc/plugin.yaml, instead of `class_path:` and `class_name:` ( `classname` hat been added to the metadata of all existing plugins).
   * Classification of plug-ins in the metadata for a better overview. The classification is used to create the documentation.
-  
+
 * Scenes:
 
   * Support of the YAML format for the configuration of scenes
@@ -79,12 +79,12 @@ New functions in the CORE
 
   * Added method last_run()
   * Logic's API
-  
+
     * Implementation of an API for Logics
     * The enable / disable of logics via the API is persisted (thus also remains after a restart of SmartHomeNG)
     * The API allows the backend, blockly and CLI plugins to handle logics more extensively (e.g., update the logic configuration) if the new configuration format (yaml) is used.
-    * Details of the API are available in the developer documentatio
-    
+    * Details of the API are available in the developer documentation
+
   * Access to the Logics API from the inside of logics
   * Documented possibility of persistent variables for logics
 
@@ -134,46 +134,46 @@ New plugins and plugin extensions
     * YAML syntax checker added
     * Added a eval syntax checker
     * Syntax highlighting in the CONF-YAML converter
-    
+
   * Items:
-  
-    * Display of **update_age** "Age (Update)" added
-    * Display of **prev_update_age** "prev. age (Update)" und **prev_update** "prev. update" hinzugefügt
+
+    * Display of **update_age** added
+    * Display of **prev_update_age** and **prev_update** added
 
   * Logics:
-  
+
     * Create new logicS
     * Logic configuration (etc/logic.yaml) can be changed at runtime
     * Logics can be unloaded and loaded
     * Edit logic
-    
-      * Enhancements to the CodeMirror logic codeeditor (Python source code
-      
+
+      * Enhancements to the CodeMirror logic code editor (Python source code)
+
         * Full Screen mode via F11
         * Automatic adjustment to browser window
         * Autocomplete for Python commands and item paths
         * Optional line breaks
-        
+
       * Delete logics
       * Integration for the Blockly Plugin
       * Displays the time of the last run on the Logic Detail page
-      
+
     * Scheduler
 
       * Item schedules, logic schedules, plugin schedules and other schedules are displayed on their own tabs
-      
+
     * Plugins:
-    
+
       * Extended display of the plugin list
       * Display the configuration settings from the plugin.yaml/.conf by clicking on the respective plugin in the list
       * Link to web interfaces of plugins (if implemented)
-      
+
     * Scenes:
-    
+
       * Added a new page to display the defined scenes
-      
+
     * Threads
-    
+
       * Improved display of active threads
 
 * CLI:
@@ -190,14 +190,14 @@ New plugins and plugin extensions
 
 * Pushover plugin for sending notifications to devices such as smartphones
 * DataLog plugin contains a fix for the field `stamp`
-* Added more plugins to SmartPlugin: datalog, memlog, comfoair, artnet, luxtronic2
+* Converted more plugins to being a SmartPlugin: datalog, memlog, comfoair, artnet, luxtronic2
 * SMA Plugin checks for Bluetooth support in Python to alert the user to missing support
 * Enocean:
 
   * Support for simple switches (protocol D2-01-07), such as Peha d 451 fu-ebi pf o.t. No. 00364476
   * Support for  Eltako lightsensor (FAH60)
   * Learning methods restructured and expanded
-  
+
 * KNX plugin: Typo Fix in enable_stats () / disable_stats ()
 * DLMS Plugin: checksum treatment reintroduced / activated
 * LIRCD Plugin: New plugin to send via lircd IR commands
@@ -214,7 +214,7 @@ New plugins and plugin extensions
 
   * Improved display of the **Category** page on mobile devices
   * Added initial support for smartVISU v2.9
-  
+
 * visu_websocket:
 
   * For logics: Now reacts to changes to visu_acl attribute without rebooting SmartHomeNG
@@ -224,7 +224,7 @@ New plugins and plugin extensions
 Removed plugins
 ---------------
 
-So far none
+None
 
 
 Documentation

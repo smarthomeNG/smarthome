@@ -15,24 +15,33 @@ _env.location.sunrise_ ist dabei das [Systemitem](https://github.com/smarthomeNG
 ### Item (SmarthomeNG)
 
 ```
-[Zentral]
-	[[Astronomie]]
-		[[[Sonne]]]
-			[[[[Berechnung]]]]
-				type = bool
-				visu = yes
-				crontab = init = 1 | 30 2 * * = 1
-				enforce_updates = true
+%YAML 1.1
+---
 
-			[[[[Aufgang]]]]
-				type = foo
-				visu = yes
-				eval = sh.sun.rise().astimezone(sh.tzinfo())
-				eval_trigger = Zentral.Astronomie.Sonne.Berechnung
-				knx_dpt = 10
-				knx_send = 0/2/10
-				enforce_updates = true
+Zentral:
+
+    Astronomie:
+
+        Sonne:
+
+            Berechnung:
+                type: bool
+                visu: yes
+                crontab:
+                  - init = 1
+                  - 30 2 * * = 1
+                enforce_updates: 'true'
+
+            Aufgang:
+                type: foo
+                visu: yes
+                eval: sh.sun.rise().astimezone(sh.tzinfo())
+                eval_trigger: Zentral.Astronomie.Sonne.Berechnung
+                knx_dpt: 10
+                knx_send: 0/2/10
+                enforce_updates: 'true'
 ```
+
 Erläuterung:
 
 In diesem Beispiel verwenden wir zwei Items. Das eigentliche Item für den Sonnenaufgang ist das _Zentral.Astronomie.Sonne.Aufgang_ - Item. Damit der Sonnenaufgang bei diesem Item überhaupt berechnet wird, muss die Berechnung erst mal ausgelöst (getriggert) werden. Diese Triggerung wird über _eval_trigger = Zentral.Astronomie.Sonne.Berechnung_ ausgelöst. Dabei wird durch das Item _Zentral.Astronomie.Sonne.Berechnung_, welches im oberen Codeausschnitt zu sehen ist, eine Neuberechnung des items _Aufgang_ ausgelöst.

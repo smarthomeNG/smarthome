@@ -1,0 +1,381 @@
+==========================
+Release 1.6 - 11. Mai 2019
+==========================
+
+Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+
+
+Unterstützte Python Versionen
+=============================
+
+Bitte beachten: Seit SmartHomeNG Release 1.4 wollen wir die aktive Unterstützung älterer Python
+Versionen einstellen. Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.6 ist Python 3.5.
+(Siehe auch *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
+
+Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.6 nicht mehr unter älteren Python Versionen läuft. Es
+bedeutet, dass SmartHomeNG nicht mehr mit älteren Python Versionen getestet wird und das gemeldete Fehler mit älteren
+Python Versionen nicht mehr zu Buxfixen führen.
+
+Die meisten Funktionen werden auch unter Python 3.4 funktionieren. Es werden jedoch zunehmend Features eingesetzt, die
+erste ab Python 3.5 zur Verfügung stehen.
+
+
+Absolute minimum Python Version
+===============================
+
+Die Minimum Python Version in der SmartHomeNG startet wurde bei v3.4 belassen. Bei einer Neuinstallation wird jedoch
+empfohlen auf einer der neueren Python Versionen (3.6 oder 3.7) aufzusetzen.
+
+
+
+Bitte auch die Release Notes für Version 1.6 unter `https://www.smarthomeNG.de/user/release <../../user/release/1_6.html>`_ beachten.
+
+
+
+
+Bugfixes im CORE
+----------------
+
+* Bugfix für den Interactive Mode
+* Catch an error in ``lib.daemon`` where PID read yields a malformed process id and warn about a possible file system problem (especially with Raspberry Pi and SD cards)
+
+
+
+Updates im CORE
+---------------
+
+* Vor der Initialisierung prüft SmartHomeNG ob die in requirements/base.txt beschriebenen Python Packages installiert sind und bricht ab, falls nicht.
+* Requirement für das requests package auf >=2.20.0 heraufgesetzt (wg. CVE-2018-18074)
+* Bugfix für die Initialisierung von env.system.start
+
+* Items:
+
+  * Funktionen des Python time-Packages können nun in eval genutzt werden.
+  * Werte der Items (z.B. ```var = item1()```) werden als Deep-Copy ausgeliefert, um bei dicts und lists bei Änderungen
+    an ``var``` ungewünschte Änderungen innerhalb des Items zu verhindern.
+  * Wenn dict-Items ihren Wert als String zugewiesen bekommen (z.B. ```item1("{'k1': 'v1', 'k2: 'v2}")```) werden jetzt
+    auch numerische Keys (z.B. ```item2("{1: 'v1', 2: 'v2}")```) richtig verarbeitet.
+  * Properties **enforce_updates** (r/w), **trigger** (r/w) und **eval** (r/w) implementiert (die ersten drei primär um
+    dem Plugin stateengine (ehemals autoblind) den Verzicht des Zugriffs auf private Variablen zu ermöglichen)
+  * Public Properties für items implementiert. Sie sind über ```sh.<Item-Pfad>.property.<Property-Name>``` zugänglich.
+    Folgende Properties sind bisher implementiert:
+
+    * enforce_updates (bool, r/w)
+    * eval (str, r/w)
+    * name (str, r/w)
+    * path (str, r/o)
+    * trigger (list of str, r/w)
+    * type (str, r/o)
+    * weitere Properties -> siehe Doku
+  * Die public Properties **name** und **path** sollen längerfristig die Nutzung von **item** (zum Zugriff auf den
+    Item-Namen) und **item.id()** sowie **item.path()** (zum Zugriff auf den Item--Pfad) in der Nutzung ersetzen.
+  * Logiken erhalten in trigger['source_details'] Informationen über den Ursprung (z.B. Device ID), falls sie von Items
+    getriggert werden.
+  * Templates für Item-Strukturen implementiert
+
+    * können in Plugins definiert werden (Metadaten in plugin.yaml)
+    * können individuell definiert werden (../etc/struct.yaml)
+  * sh.find_items(confattribute) und sh.find_children(parent, confattribute) erweitert auf Berücksichtigung
+    der eventuell vorhandenen Instanz Kennung.
+
+
+* Logiken:
+
+  * Handling korrigiert, wenn Items nicht existieren, die in Szenendefinitionen verwendet werden
+
+* lib.shtime erweitert
+* lib.shpypi hinzugefügt (zur Prüfung von Requirements und der Abfrage von Informationen von pypi.org)
+
+* Module:
+
+  * Fehlgeschlagener Import von Python Packages in Modulen wird mit einer sinnvollen Fehlermeldung abgefangen und
+    das Plugin wird nicht geladen
+  * http:
+
+    * Wechsel auf WebFonts von Font Awesome, wegen Problemen in der Darstellung mit Bootstrap 4.1.2
+    * Updates der 3rd Party Komponenten
+  * admin:
+
+    * Initiale Version eines Admin Moduls hinzugefügt, welches das Backend-Plugin ablösen wird.
+
+* Plugins:
+
+  * Fehlgeschlagener Import von Python Packages in Plugins wird mit einer sinnvollen Fehlermeldung abgefangen und das
+    Plugin wird nicht geladen
+  * Bei Multi-Instanz Plugins wird der Name der Plugin-Instanz automatisch zum Logtext hinzugefügt (Voraussetzung:
+    Im Smartplugin wird die Anweisung ```self.logger = logging.getLogger(__name__)``` weggelassen.
+  * Metadaten:
+
+    * Tool zum Prüfen der Vollständigkeit der Metadaten von Plugins
+    * Attribut **state** für den Status des Plugins hinzugefügt ['develop', 'ready', 'qa-passed','deprecated']
+
+      Hintergrund: Plugins im Status 'develop' sollen nicht in den Releases in den Master übernommen werden.
+
+      Wenn **state** auf deprecated gesetzt wird, ist das eine Vorwarnung, dass das Plugin in kommenden Releases nicht
+      mehr enthalten sin wird. Hierzu wird auch eine Warnung im Admin-Interface angezeigt.
+    * Attribut **restartable** hinzugefügt (Hintergrund: Kennzeichnung der Plugins für die geplante Funktionalität zum
+      Entladen und neu Laden von Plugins)
+    * Abschnitt zur Definition der Funktionen hinzugefügt, die ein Plugin implementiert.
+  * Allgemeiner Parameter **plugin_enabled** hinzugefügt, um das Laden von Plugins zu kontrollieren/verhindern
+  * Beispiel Plugin unter dev/sample_plugin aktualisiert
+  * Exception Handling für run() und stop() Methode. Bisher wurden Exceptions, die nicht innerhalb der Methoden
+    gehandled wurden ignoriert (unterdrückt).
+  * Unabhängige Versionsnummer für das Plugin-Repositories eingeführt
+
+
+
+Neue Plugins
+------------
+
+Für Details zu den inhaltlichen Änderungen der einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins konsultieren.
+
+* Alexa4p3:
+
+  * Neues Plugin, dass das alte Alexa Plugin in Release 1.6 ablösen wird. Das Plugin kommt mit V3 der Payload Daten klar und sollte zu V2 rückwärtskompatibel sein!
+
+* jsonread
+
+  * Neues Plugin: json parser plugin basierend auf jq
+    This is a generic JSON to smarthome plugin. Fetch any JSON encoded data via http(s) or from a file,
+    extract the interesting data and feed the values to smarthome items.
+
+* mailrcv
+
+  * Neues Plugin zum empfangen von Mails. Ist Multi-Instance fähig
+
+* mailsend
+
+  * Neues Plugin zum senden von Mails. Ist Multi-Instance fähig
+
+* openweathermap
+
+  * Neues Plugin
+
+* slack:
+
+  * neues Benachrichtigungs-Plugin hinzugefügt
+  * Slack steht für „Searchable Log of All Conversation and Knowledge“ (dt. durchsuchbares Protokoll aller
+    Konversationen und des Wissens)
+  * Sofort-Nachrichten mit programmierbarem Text an die Slack Arbeitsgruppen senden
+  * Unterstützt bei der Überwachung definierter Ereignisse
+
+* stateengine:
+
+  * Neues Plugin, das dem ehemaligen **autoblind** Plugin entspricht (siehe oben) welches einen besseren Namen bekommen hat
+  * Bietet Templates für Item-Strukturen
+
+
+
+Plugin Erweiterungen
+--------------------
+
+* avm:
+
+  * CURL zum Test von AHA Devices als Codekommentar hinzugefügt
+  * Plugin API in plugin.yaml beschrieben
+  * item mit name monitor.trigger aus dem README muss in monitor.trigger1 umbenannt werden, da es auf dem ITEM
+    im 1.6er Core die Funktion "trigger()" gibt!
+  * Englische Übersetzung via locale.yaml für das WebIf
+  * Plugin API wird via WebIf ausgegeben
+  * Reconnect-Handling für den Callmonitor, Vermeidung von "Log-Error-Spam" im Fall, dass das AVM-Device nicht
+    erreichbar ist.
+  * Plugin "restartable" in plugin.yaml hinzugefügt
+  * Reconnect (Internet) und Reboot (AVM Device) Buttons in WebIF hinzugefügt
+  * Unterstützung für HKR Module (FritzDECT301)
+
+* backend:
+
+  * Logik-Seite:
+
+    * Autocomplete für sinnvolle Pluginmethoden
+    * Info beim Autocomplete, ob man ein Plugin oder Item auswählt
+    * Neue Sortierfunktion
+    * Klammern beim Autocomplete von Items
+    * Autocomplete für watch_items
+  * Plugin Seite:
+
+    * In den Plugin Details werden die durch das Plugin definierten öffentlichen Methoden angezeigt
+
+* darksky:
+
+  * Erweiterung um eine Methode map_icon, mit der die zurückgelieferten Icons auf SmartVisu Icons gemapped werden
+    können (inkl. Beispiel im README)
+  * Erweiterung der Beispiele im README, um die Wettervorhersage für die nächsten 3 Tage auszulesen.
+  * Bietet Templates für Item-Strukturen
+
+* dashbutton:
+
+  * Nutzt jetzt das pypi "kamene" Paket, das scapy-python3 "beerbt". Vermeidet so eine Warnung beim Start!
+
+* database
+
+  * Anzeige der Anzahl der Datensätze pro Tag
+  * neue Funktion countall für item.db, die die Anzahl aller Datensätze zählt. Integration dieser in das WebInterface
+    über neuen Button
+  * Plugin API wird via WebIf ausgegeben
+  * Neue Einstellung `precision`: Gibt an wie viele Nachkommastellen bei Abfragen zurückgeliefert werden sollen
+  * Fix: Datenbankeinträge erhalten beim Starten von SHNG nun den aktuellen Zeitstempel anstatt den letzten aus der
+    Datenbank (Wert wirkt sonst so, als wäre er während SHNG nicht lief gleich geblieben)
+  * Button für den Start eines Datenbank-Cleanups (löscht alle Einträge, für die es kein Item mehr gibt) in Web-GUI
+    integriert
+  * Neue `countall` Funktion (gibt die Gesamtanzahl der Logeinträge für ein Item zurück)
+  * Neue `integrate` Funktion
+
+* datalog:
+
+  * Initialisierung auf aktuelle API umgestellt (kwargs, args)
+  * Konfiguration der Dateien (`filepatterns`) und Patterns (`logpatterns`) nur noch via YAML-Format möglich (default
+    funktioniert weiterhin)
+
+* dlms
+
+  * logging aktualisiert
+  * Konvertierungsfunktionen bug bereinigt
+  * Prüfung auf fehlende Python library (REQUIRED_PACKAGE_IMPORTED) eingebaut
+  * plugin.yaml erweitert
+  * erstmalige Abfrage des Smartmeters erfolgt nun direkt nach Plugin-Start
+  * Berücksichtigung von lib.shtime
+
+* drexelundweiss:
+
+  * Beim Updaten eines Readonly-Items wird dessen Wert abgefragt
+  * interne Anpassungen im Plugin (Metadaten, Logging, Initialisierung)
+
+* ebus
+
+  * Plugin auf SmartPlugin umgestellt
+
+* gpio:
+
+  * Bereitstellung eines Webinterface im Backend
+  * Logging verbessert
+
+* homematic
+
+  * Source Angaben um Device Adressen erweitert (zur Anzeige im Backend und Nutzung in Logiken)
+
+* knx
+
+  * Source Angaben um Gruppen-Adressen erweitert (zur Anzeige im Backend und Nutzung in Logiken)
+  * dpt 17.001 hinzugefügt (Szenennummer 1-64)
+  * dpt 18.001 hinzugefügt (Szenen-Kontrolle 1-64=abrufen, 129-192=speichern)
+  * dpt 229 hinzugefügt für Smart Metering Anwendungen (z.B. Hager eHZ für Funkumsetzer auf KNX)
+  * dpt 275.100 hinzugefügt (DPT_TempRoomSetpSetF16 4 Bytes)
+  * Fix for knx_cache and knx_init to allow mutlitple GAs to be defined (analog to knx_listen, to allow knx_listen with multiple GAs and initialisation of value
+
+* mail
+
+  * Plugin aufgeteilt um dem SmartHomeNG Standard zu entsprechen (1 Plugin Klasse je Plugin).
+  * Neue Plugins sind **mailrcv** und **mailsend**
+
+* mqtt
+
+  * Bugfix
+
+* nuki
+
+  * noWait Flag ist jetzt konfigurierbar
+  * Anpassungen des Loggings (Text)
+  * Web Interface mit Schaltfunktion
+  * Kleiner Fix für Exceptions bei 503er Fehlern von der Nuki Bridge
+
+* operationlog
+
+  * Metadaten des Plugins angelegt
+  * Einstellung `logger` hinzugefügt um in einen konfigurierten Standard-Logger zusätzlich zu loggen
+
+* pushbullet
+
+  * API Beschreibung in plugin.yaml ergänzt
+
+* telegram
+
+  * Added a plugin parameter pretty_thread_names that defaults to True for a clearer naming of the sub Threads
+
+    * updater --> Telegram Updater
+    * dispatcher --> Telegram Dispatcher
+    * cryptic-id_0 --> Telegram Worker 0
+    * cryptic-id_1 --> Telegram Worker 1
+    * cryptic-id_2 --> Telegram Worker 2
+    * cryptic-id_3 --> Telegram Worker 3
+
+* visu_websocket
+
+  * Erweitert um ``.property.<attributname>`` Damit ist es möglich Attribute direkt in der SmartVISU anzuzeigen,
+    also z.B. ``Schlafzimmer.Fernseher.property.last_change``
+
+* webservices
+
+  * neuer Parameter für items und itemsets der mit "?mode=..." (val oder full) angehängt werden muss. Der Parameter
+    sorgt dafür, dass die in dem Items konfigurierten Werte für webservices_data ignoriert werden und das
+    zurückgeliefert wird, was in mode steht
+
+* withings_health (ehemals nokia_health)
+
+  * Umbenennung des Plugins und der Parameter wegen Rückübernahme durch Withings
+  * Neuimplementierung für OAuth2, und Version 1.0.0-1.1.0 des Nokia Pypi Pakets. **Achtung:** es müssen 4 neue Items
+    erstellt werden. withings_type: access_token, token_expiry, token_type, refresh_token. Diese müssen mit dem Attribut cache als File, oder in einer Datenbank (sqlite, database plugin) zwischengespeichert werden, da sonst das Plugin nach SHNG Neustart erneut OAuth2 durchlaufen muss!
+  * Durchlauf des OAuth2 Prozesses von der WebGUI gegen (lokale) Callback-URL (ebenfalls via WebGUI)
+  * Englische Version der WebGUI
+
+* xiaomi:
+
+  * Umbenennung des Plugins von "xiaomi" nach "miflora"
+  * Umbenennung der Itemattribute von "xiaomi_data_type" zu "miflora_data_type"
+
+* xmpp:
+
+  * Einstellung `server` hinzugefügt mit der angegeben werden kann zu welchem Server die Verbindung aufgebaut werden
+    soll (optional)
+  * Einstellung `use_ipv6` hinzugefügt über die IPv6 deaktiviert werden kann (Default ist IPv6 aktiv)
+  * Einstellung `plugins` hinzugefügt über die zusätzliche Plugins geladen werden können (z.B. Multi User Chat XEP-45)
+  * Einstellung `join` hinzugefügt über die eingestellt werden kann in welche Gruppen-Chats automatisch beigetreten wird
+  * Implementierung eines Standard-Log-Handlers um Logs via XMPP an einen XMPP-Server zu schicken
+
+
+
+Veraltete Plugins
+-----------------
+
+Die folgenden Plugins wurden als *deprecated* (veraltet) gekennzeichnet. Dieses Kennzeichen bedeutet, dass die Plugins
+zwar noch funktionieren, aber nicht mehr weiterentwickelt werden und aus dem kommenden Release von SmartHomeNG entfernt
+werden. Nutzer dieser Plugins sollten auf entsprechende Nachfolge-Plugins umstellen.
+
+* System Plugins
+
+  * sqlite - auf das **database** Plugin umstellen
+  * sqlite_visu2_8 - auf das **database** Plugin umstellen
+
+* Gateway Plugins
+
+  * tellstick - classic Plugin, laut Umfrage nicht genutzt
+
+* Interface Plugins
+
+  * netio230b - classic Plugin, laut Umfrage nicht genutzt
+  * smawb - classic Plugin, laut Umfrage nicht genutzt
+
+* Web Plugins
+
+  * alexa - auf das **alexa4p3** Plugin umstellen
+  * boxcar - classic Plugin, laut Umfrage nicht genutzt
+  * mail - auf die Plugins **mailsend** bzw. **mailrcv** umstellen
+  * openenergymonitor - classic Plugin, laut Umfrage nicht genutzt
+  * wunderground - das freie API wird durch Wunderground nicht mehr zur Verfügung gestellt
+
+
+Dokumentation
+-------------
+
+* Anwender Dokumentation
+
+  * Hinweis zum Neubau der Python Requiremments zur Installationsanleitung hinzugefügt
+  * Beschreibung des neuen Administrations-Interface hinzugefügt
+  * Allgemeine Updates
+
+
+* Entwickler Dokumentation
+
+  * Plugin-API Dokumentation erweitert
+  * Item-API Dokumentation erweitert
+  * Allgemeine Updates

@@ -11,4 +11,4 @@ Features
 Bug Fixes
 ^^^^^^^^^
 
--  using the enviroment timezone (TZ) - if provided
+-  using the environment timezone (TZ) - if provided

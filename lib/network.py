@@ -24,7 +24,6 @@
 
 |  *** ATTENTION: This is early work in progress. Interfaces are subject to change. ***
 |  *** DO NOT USE IN PRODUCTION until you know what you are doing ***
-|  *** This library is foreseen for SHNG v1.6 release ***
 |
 
 This library contains the future network classes for SmartHomeNG.
@@ -42,9 +41,14 @@ import re
 import requests
 import select
 import socket
+import struct
+import subprocess
 import threading
 import time
 
+# Turn off ssl warnings
+requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 class Network(object):
     """ This Class has some usefull static methods that you can use in your projects """
@@ -215,6 +219,79 @@ class Network(object):
         """
         return 'IPv6' if ipver == socket.AF_INET6 else 'IPv4'
 
+    @staticmethod
+    def ping(ip):
+        """
+        Tries to ICMP ping a host using external OS utilities. Currently IPv4 only.
+
+        :param ip: IPv4 address as a string
+        :type ip: string
+
+        :return: True if a reachable, false otherwise.
+        :rtype: bool
+        """
+        logger = logging.getLogger(__name__)
+        if subprocess.call("ping -c 1 %s" % ip, shell=True, stdout=open('/dev/null', 'w'), stderr=subprocess.STDOUT) == 0:
+            logger.debug('Ping: {} is online'.format(ip))
+            return True
+        else:
+            logger.debug('Ping: {} is offline'.format(ip))
+            return False
+
+    @staticmethod
+    def ping_port(ip, port=80):
+        """
+        Tries to reach a given TCP port. Currently IPv4 only.
+
+        :param ip: IPv4 address
+        :param port: Port number
+
+        :type ip: string
+        :type port: int
+
+        :return: True if a reachable, false otherwise.
+        :rtype: bool
+        """
+        logger = logging.getLogger(__name__)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(2)
+        if sock.connect_ex((ip, int(port))) == 0:
+            logger.debug('Ping: port {} on {} is reachable'.format(port, ip))
+            sock.close()
+            return True
+        else:
+            logger.debug('Ping: port {} on {} is offline or not reachable'.format(port, ip))
+            sock.close()
+            return False        
+
+    @staticmethod
+    def send_wol(mac, ip='255.255.255.255'):
+        """
+        Sends a wake on lan packet to the given mac address using ipv4 broadcast (or directed to specific ip)
+
+        :param mac: Mac address to wake up (pure numbers or with any separator)
+        :type mac: string
+        """
+        logger = logging.getLogger(__name__)
+        if len(mac) == 12:
+            pass
+        elif len(mac) == 12 + 5:
+            mac = mac.replace(mac[2], '')
+        else:
+            logger.error('Incorrect MAC address format')
+            return
+
+        data = ''.join(['FFFFFFFFFFFF', mac * 16])
+        send_data = b''
+        for i in range(0, len(data), 2):
+            send_data = b''.join([send_data, struct.pack('B', int(data[i: i + 2], 16))])
+
+        for _ in range(15):
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+            sock.sendto(send_data, (ip, 9))
+        logger.debug('Sent WOL packet to {}'.format(mac))
+
 
 class Http(object):
     """
@@ -223,33 +300,80 @@ class Http(object):
     :param baseurl: base URL used everywhere in this instance (example: http://www.myserver.tld)
     :type baseurl: str
     """
-    def __init__(self, baseurl=None):
+    def __init__(self, baseurl='', timeout=10):
         self.logger = logging.getLogger(__name__)
 
         self.baseurl = baseurl
         self._response = None
-        self.timeout = 10
+        self.timeout = timeout
+        self._session = requests.Session()
 
-    def get_json(self, url=None, params=None):
+    def HTTPDigestAuth(self, user=None, password=None):
+        """
+        Creates a HTTPDigestAuth instance and returns it to the caller.
+
+        :param user: Username
+        :param password: Password
+
+        :type user: str
+        :type password: str
+
+        :return: HTTPDigestAuth object
+        :rtype: HTTPDigestAuth
+        """
+        return requests.auth.HTTPDigestAuth(user, password)
+
+    def post_json(self, url=None, params=None, verify=True, auth=None, json=None, files={}):
+        """
+        Launches a POST request and returns JSON answer as a dict or None on error.
+
+        :param url: Optional URL to fetch from. If None (default) use baseurl given on init.
+        :param params: Optional dict of parameters to add to URL query string.
+        :param verify: Set to false to ignore SSL certificate verification errors (for self-signed for example)
+        :param auth: Optional authentication object
+
+        :type url: str
+        :type params: dict
+        :type verify: bool
+        :type auth: HTTPBasicAuth | HTTPDigestAuth | ...
+
+        :return: JSON answer decoded into a dict or None on whatever error occured
+        :rtype: dict | None
+        """
+        if self.__post(url=url, params=params, verify=verify, auth=auth, json=json, files=files):
+            json = None
+            try:
+                json = self._response.json()
+            except:
+                self.logger.warning("Invalid JSON received from {} !".format(url if url else self.baseurl))
+            return json
+        return None
+
+    def get_json(self, url=None, params=None, verify=True, auth=None):
         """
         Launches a GET request and returns JSON answer as a dict or None on error.
 
         :param url: Optional URL to fetch from. If None (default) use baseurl given on init.
         :param params: Optional dict of parameters to add to URL query string.
+        :param verify: Set to false to ignore SSL certificate verification errors (for self-signed for example)
+        :param auth: Optional authentication object
 
         :type url: str
         :type params: dict
+        :type verify: bool
+        :type auth: HTTPBasicAuth | HTTPDigestAuth | ...
 
         :return: JSON answer decoded into a dict or None on whatever error occured
         :rtype: dict | None
         """
-        self.__get(url=url, params=params)
-        json = None
-        try:
-            json = self._response.json()
-        except:
-            self.logger.warning("Invalid JSON received from {} !".format(url if url else self.baseurl))
-        return json
+        if self.__get(url=url, params=params, verify=verify, auth=auth):
+            json = None
+            try:
+                json = self._response.json()
+            except:
+                self.logger.warning("Invalid JSON received from {} !".format(url if url else self.baseurl))
+            return json
+        return None
 
     def get_text(self, url=None, params=None, encoding=None, timeout=None):
         """
@@ -275,6 +399,35 @@ class Http(object):
             except:
                 self.logger.error("Successfull GET, but decoding response failed. This should never happen !")
         return _text
+
+    def download(self, url=None, local=None, params=None, verify=True, auth=None):
+        """
+        Downloads a binary file to a local path
+
+        :param url: Remote file to download. Attention: Must be full url. 'baseurl' is NOT prefixed here.
+        :param local: Local file to save
+        :param params: Optional dict of parameters to add to URL query string.
+        :param verify: Set to false to ignore SSL certificate verification errors (for self-signed for example)
+        :param auth: Optional authentication object
+
+        :type url: str
+        :type local: str
+        :type params: dict
+        :type verify: bool
+        :type auth: HTTPBasicAuth | HTTPDigestAuth | ...
+
+        :return: Returns true on success, else false
+        :rtype: bool
+        """
+        if self.__get(url=url, params=params, verify=verify, auth=auth, stream=True):
+            self.logger.debug("Download of {} successfully completed, saving to {}".format(url, local))
+            with open(str(local), 'wb') as f:
+                for chunk in self._response:
+                    f.write(chunk)  
+            return True
+        else:
+            self.logger.warning("Download error: {}".format(url))
+            return False
 
     def get_binary(self, url=None, params=None):
         """
@@ -336,15 +489,29 @@ class Http(object):
         """
         return self._response
 
-    def __get(self, url=None, params=None, timeout=None):
-        url = url if url else self.baseurl
+    def __post(self, url=None, params=None, timeout=None, verify=True, auth=None, json=None, data=None, files={}):
+        url = self.baseurl + url if url else self.baseurl
+        timeout = timeout if timeout else self.timeout
+        data = json if json else data
+        self.logger.info("Sending POST request {} to {}".format(json, url))
+        try:
+            self._response = self._session.post(url, params=params, timeout=timeout, verify=verify, auth=auth, data=data, files=files)
+            self.logger.debug("{} Posted to URL {}".format(self.response_status(), self._response.url))
+        except Exception as e:
+            self.logger.warning("Error sending POST request to {}: {}".format(url, e))
+            return False
+        return True
+
+    def __get(self, url=None, params=None, timeout=None, verify=True, auth=None, stream=False):
+        url = self.baseurl + url if url else self.baseurl
         timeout = timeout if timeout else self.timeout
         self.logger.info("Sending GET request to {}".format(url))
         try:
-            self._response = requests.get(url, params=params, timeout=timeout)
+            self._response = self._session.get(url, params=params, timeout=timeout, verify=verify, auth=auth, stream=stream)
             self.logger.debug("{} Fetched URL {}".format(self.response_status(), self._response.url))
         except Exception as e:
             self.logger.warning("Error sending GET request to {}: {}".format(url, e))
+            self._response = None
             return False
         return True
 

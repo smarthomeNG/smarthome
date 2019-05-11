@@ -20,11 +20,13 @@
 #  along with SmartHomeNG. If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
+import logging
+
 """
 This module contains utils to be used in logging
 """
 
-class Filter(object):
+class Filter(logging.Filter):
     """
     This class builds a filter to be used in logging.yaml to configure logging
     
@@ -32,16 +34,18 @@ class Filter(object):
     whereas False will include the record into further processing and eventual output
     """
     def __init__(self, name=''):
-        self.name = name
-        self.nlen = len(name)
+        if isinstance(name, list):
+            self.name = name
+        elif len(name) == 0:
+            self.name = []
+        else:
+            self.name = [name]
 
     def filter(self, record):
-        if self.nlen == 0:
-            return True
-        elif self.name == record.name:
-            return False
-        else: 
-            return True
+        for n in self.name:
+            if n == record.name:
+                return False
+        return True
 
 class DuplicateFilter(object):
     """

@@ -1,11 +1,13 @@
 
 .. index:: Items; enforce_updates
+.. index:: Standard-Attribute; enforce_updates
 .. index:: enforce_updates
+
 
 .. role:: bluesup
 
-enforce_updates :bluesup:`update`
-=================================
+enforce_updates
+===============
 
 Die Wirkungsweise von *enforce_updates* erschließt sich nicht sofort. Zum Verständnis was *enforce_updates* bewirkt, ist es
 wichtig erstmal "in **Items** zu denken" und Plugins oder Logiken für einen Moment zu vergessen.
@@ -15,7 +17,7 @@ Wenn sich der Wert eines Items ändert, löst das eine Reihe von Aktionen aus:
     - *eval* Statements in anderen Items werden getriggert, wenn in anderen in den Items ein *eval_trigger* auf das geänderte Item verweist.
     - *on_change* Definitionen des Items werden ausgewertet
     - *on_update* Definitionen des Items werden ausgewertet
-    - Logiken werden getriggert, wenn der Trigger der Logik (in ../etc/logoc.yaml) auf das geänderte Item verweist.
+    - Logiken werden getriggert, wenn der Trigger der Logik (in ../etc/logic.yaml) auf das geänderte Item verweist.
     - Plugins, die mit diesem Item verbunden sind, erhalten eine Info über den neuen Wert
 
 
@@ -31,7 +33,7 @@ Erst wenn das Item auf **False** wechselt, werden die Plugins und Logiken über 
 
 Wenn jetzt aber ein Item immer wieder nacheinander auf **True** gesetzt wird, ohne dass irgendwoher das Item
 zwischendurch auf **False** gesetzt wurde, und man möchte z.B. über das KNX Plugin bei jedem Update ein Telegram verschicken,
-so kann durch setzen von *enforce_updates* auf **True** erzungen werden, dass alle im ersten Fall beschriebenen Aktivitäten
+so kann durch setzen von *enforce_updates* auf **True** erzwungen werden, dass alle im ersten Fall beschriebenen Aktivitäten
 ausgelöst werden, auch wenn sich beim Update des Items der Wert nicht ändert.
 
 

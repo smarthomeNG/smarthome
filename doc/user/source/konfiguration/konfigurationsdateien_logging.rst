@@ -9,7 +9,7 @@ Das Logging kann so konfiguriert werden, das für Debugging viele Detailinformat
 oder für den normalen Betrieb so, dass nur wichtige bzw. kritische Informationen geloggt werden.
 
 Es existiert eine separate Seite, auf der erklärt wird wie das :doc:`Logging im einzelnen konfiguriert <logging>`
-werden kann. Zum Start reicht es die Einstellungen zu verwenden, wie si in der Datei ``logging.yaml.default`` 
+werden kann. Zum Start reicht es die Einstellungen zu verwenden, wie si in der Datei ``logging.yaml.default``
 vorgegeben sind. Einfach diese Datei zu ``logging.yaml`` kopieren und nach den eigenen Bedürfnissen
 anpassen. Die Konfiguration sollte in etwa so aussehen:
 

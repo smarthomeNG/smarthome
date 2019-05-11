@@ -1,9 +1,9 @@
 
 .. role:: bluesup
 
-########################
-Szenen :bluesup:`update`
-########################
+######
+Szenen
+######
 
 Für die Verwendung von Szenen ist eine Konfigurationsdatei für jedes 'Szenenobjekt' im Szenenverzeichnis
 erforderlich. Diese Dateien können im alten Szenen-Conf Format (Endung '.conf') oder im
@@ -35,15 +35,15 @@ Szenen sind in SmartHomeNG analog zu KNX implementiert.
 Bei KNX gibt es 64 Szenen (0 - 63) die auf einer Gruppenadresse (analog hier auf
 einem Szenen-Item) angewählt werden können.
 
-Bei KNX Aktoren erfolgt die Zuordnuung zu Szenen dadurch, dass die Aktoren mit der
+Bei KNX Aktoren erfolgt die Zuordnung zu Szenen dadurch, dass die Aktoren mit der
 entsprechenden Gruppenadresse verbunden werden. In SmartHomeNG müssen in der Szenen-
-Definition entsprechende Aktions-Items angelgt werden, die durch die Szene angesteuert
+Definition entsprechende Aktions-Items angelegt werden, die durch die Szene angesteuert
 werden sollen.
 
 KNX kennt zwei unterschiedliche Modi für Aktoren. Entweder wird der gewünschte Wert
 zu einem Szenenstatus bei Programmierung des Aktors als Konstante festgelegt oder
 des entsprechende Wert kann gelernt werden. Dabei kann ein Default-Wert als Konstante
-vorgegeben werden. Das ist in SmartHomeNG analig implementiert.
+vorgegeben werden. Das ist in SmartHomeNG analog implementiert.
 
 Zum Lernen der Szenenstati ist auf die Szenennummer 128 zu addieren und dieser Wert an
 die Gruppenadresse (bzw. an das Szenen-Item) zu senden. Wird auf die Gruppenadresse

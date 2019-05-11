@@ -1,13 +1,14 @@
 # Metadata for the plugin
 module:
-    # Global plugin attributes
+    # Global module attributes
     classname: Http
-    version: 1.4.6
-    sh_minversion: 1.4
+    version: 1.6.0
+    sh_minversion: 1.5b
 #   sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)
     description:
         de: 'Modul zur Implementierung von Backend-Webinterfaces für Plugins'
         en: 'Module for implementing a backend-webinterface for plugins'
+        fr: "Module pour l'implémentation d'interfaces web des extensions"
 
 parameters:
     # Definition of parameters to be configured in etc/module.yaml
@@ -17,16 +18,19 @@ parameters:
         description:
             de: Benutzername für den Web Zugriff (Basic Auth), falls ein Passwort definiert ist
             en: username for the web access (basic auth), if a password is defined
+            fr: Nom d'utilisateur pour l'accès web (Auth basique) si un mot de passe est défini
     password:
         type: str
         description:
             de: Passwort (im Klartext) für den Web Zugriff
             en: password (unencrypted) for the web access
+            fr: Mot de passe (texte clair) pour l'accès web
     hashed_password:
-        type: str
+        type: password
         description:
             de: hashed Version des Passworts für den Web Zugriff, ersetzt den Parameter 'password'
             en: hashed version of the password for the web access, supersedes the parameter 'password'
+            fr: version haché du mot de passe pour l'interface web, remplace le paramètre 'password'
 
     service_user:
         type: str
@@ -34,42 +38,106 @@ parameters:
         description:
             de: Benutzername für den Zugriff auf Webservices (Basic Auth), falls ein Passwort definiert ist
             en: username for the access to webervices (basic auth), if a password is defined
+            fr: Nom d'utilisateur pour l'accès au service web (Auth basique) si un mot de passe est défini
     service_password:
         type: str
         description:
             de: Passwort (im Klartext) für den Zugriff auf Webservices
             en: password (unencrypted) for the access to webervices
+            fr: Mot de passe (texte clair) pour l'accès aux services web
     service_hashed_password:
-        type: str
+        type: password
         description:
             de: hashed Version des Passworts für den Zugriff auf Webservices, ersetzt den Parameter 'password'
             en: hashed version of the password for the access to webervices, supersedes the parameter 'password'
+            fr: version haché du mot de passe pour l'accès au service web (Auth basique) si un mot de passe est défini
     ip:
         type: ipv4
         description:
             de: IP Adresse auf der das http Modul aktiv sein soll - muss normalerweise nicht angegeben werden
-            en: IP adress on which the http module should operate - not deeded, has only to be specified for special configurations
+            en: IP adress on which the http module should operate - not needed, has only to be specified for special configurations
+            fr: Adresse IP sur laquelle le module http devrait fonctionner - il n'est généralement pas nécessaire de la spécifier
     port:
         type: int
+        valid_min: 0
+        valid_max: 65535
         default: 8383
         description:
             de: Portnummer für die Webinterfaces
-            en: Port number for the access to webervices
+            en: Port number for the access to web interfaces
+            fr: Numéro de port pour l'accès à l'interface web
+    tls_port:
+        type: int
+        valid_min: 0
+        valid_max: 65535
+        default: 8385
+        description:
+            de: Portnummer für die Webinterfaces bei Nutzung von https
+            en: Port number for the access to webervices when using https
+            fr: Numéro de port pour l'accès à l'interface web si utilisation de https
+    use_tls:
+        type: bool
+        default: False
+        description:
+            de: Auf True setzen, um Zugriffe über https zu ermöglichen (Zertifikat muss installiert sein)
+            en: Set to true to allow access over https (certificate has to be installed)
+            fr: Mettre sur 'true' pour activer les accès par https (certificats doivent être installés)
+    tls_cert:
+        type: str
+        default: shng.cer
+        description:
+            de: Name der Zertifikatsdatei. Die Datei muss im Verzeichnis ../etc liegen
+            en: Name of the certificate file. The file musst be stored in ../etc
+            fr: Nom du fichier contanent les certificats. Le fichier doit se trouver dans ../etc
+    tls_key:
+        type: str
+        default: shng.key
+        description:
+            de: Name der Datei mit dem privaten Schlüssel. Die Datei muss im Verzeichnis ../etc liegen
+            en: Name of the private key file. The file musst be stored in ../etc
+            fr: Nom du fichier contanent les clés privés. Le fichier doit se trouver dans ../etc
+
     servicesport:
         type: int
+        valid_min: 0
+        valid_max: 65535
         default: 8384
+        description:
+            de: Portnummer für die Webservices
+            en: Port number for the access to webervices
+            fr: Numéro de port pour les services web
+
     showpluginlist:
         type: bool
         default: True
+        description:
+            de: Anzeige einer Liste der Plugins mit Webinterfaces unter der url /plugins
+            en: Show a list of plugins with web interfaces under the url /plugins
+            fr: Afficher une listes des extensions avec interface web sous l'url /plugins
+
     showservicelist:
         type: bool
         default: False
+        description:
+            de: Anzeige einer Liste der Plugins mit Webservices unter der url /services
+            en: Show a list of plugins with webservices under the url /services
+            fr: Afficher une listes des extensions avec des services web sous l'url /services
+
     starturl:
         type: str
-        default: 
+        default: admin
+        description:
+            de: Weiterleitungs-Url, wenn SmartHomeNG im Browser nur mit <DNS-Name>:<Portnummer> aufgerufen wird.
+            en: Redirection-url, if SmartHomeNG is called in the browser only by <dns-name>:<portnumber>
+            fr: Url de redirection si SmartHomeNG est chargé par le navigateur en utilisant seulement <nom-dns>:<numéro de port>.
+
     threads:
         type: int
-        default: 8
+        default: 4
+        description:
+            de: Anzahl Threads, die für jede CherryPy App eingerichtet wird
+            en: number of threads setup per CherryPy app
+            fr: numéro de tâches prévus par application CherryPy
         valid_list:
           - 2
           - 3
@@ -78,23 +146,11 @@ parameters:
           - 6
           - 7
           - 8
+
     showtraceback:
         type: bool
         default: False
-        
-#    test1:
-#        Test auf einen ungültigen Default Wert (-1 bei Datentyp positive Integer): es wird der default für pint (0) verwendet
-#        type: pint
-#        default: -1
-
-#    test2:
-#        Test auf einen ungültigen Default Wert (8 ist nicht Element der Liste): es wird der 1. Listeneintrag verwendet
-#        type: int
-#        default: 8
-#        valid_list:
-#          - 4
-#          - 2
-#          - 3
-#          - 5
-#          - 6
-        
+        description:
+            de: Traceback bei Python Exceptions in der Fehlermeldung im Browser anzeigen. (Sollte in Produktionsinstallationen False sein)
+            en: Show traceback of Python exceptions on the error page displayed in the browser. (Should be False in production environment)
+            fr: Montrer les traces des exepctions Python sur la page d'erreurs affiché dans le navigateur. (Normallement 'False' dans en environnement de production)

@@ -32,10 +32,10 @@ today = str(now.day) + '. ' + calendar.month_name[now.month] + ' ' + str(now.yea
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 # Disabled: , 'sphinx.ext.intersphinx'
 extensions = [
-  'sphinx.ext.autodoc', 
+  'sphinx.ext.autodoc',
   'sphinx.ext.autosummary',
-  'sphinx.ext.todo', 
-  'sphinx.ext.ifconfig', 
+  'sphinx.ext.todo',
+  'sphinx.ext.ifconfig',
   'sphinx.ext.viewcode',
   'sphinx.ext.githubpages' ]
 
@@ -67,7 +67,7 @@ html_add_permalinks = ""
 project = u'Anwenderdokumentation'
 #copyright = u'2011-2013, Marcus Popp; since 2016 SmartHomeNG Team'
 #copyright = u'2016-2017 SmartHomeNG Team, based on smarthome.py © 2011-2014 Marcus Popp'
-copyright = u'2016-2018 SmartHomeNG Team, SmartHomeNG is based on smarthome.py © Marcus Popp'
+copyright = u'2016-2019 SmartHomeNG Team, SmartHomeNG is based on smarthome.py © Marcus Popp'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

@@ -2,7 +2,6 @@
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
 # Copyright 2018-       Martin Sinn                         m.sinn@gmx.de
-# Copyright 2016        Christian Strassburg          c.strassburg@gmx.de
 #########################################################################
 #  This file is part of SmartHomeNG
 #
@@ -35,185 +34,40 @@ The procedure is as following:
 """
 
 import os
-import fnmatch
-import re
-import datetime
-import pprint
+import sys
+
+sh_basedir = os.sep.join(os.path.realpath(__file__).split(os.sep)[:-2])
+sys.path.insert(0, sh_basedir)
+
+import lib.shpypi as shpypi
 
 
-def seperate_operator_version(op_vers):
-    """
-    Seperate operator and version number into a list of two seperate strings
-
-    :param op_vers:
-
-    :return: list containing 2 elements (operator, version)
-    :rtype: list
-    """
-    op_vers = op_vers.strip()
-    if op_vers.startswith('>='):
-        op = '>='
-        vers = op_vers[2:]
-    elif op_vers.startswith('=='):
-        op = '=='
-        vers = op_vers[2:]
-    elif op_vers.startswith('<='):
-        op = '<='
-        vers = op_vers[2:]
-    else:
-        op = ''
-        vers = op_vers
-    vers = vers.strip()
-
-    return [op,vers]
+# ==========================================================================
 
 
-def build_packagelist():
-    """
-    Build a list of dicts with package information
-
-    :return: list of package-dicts
-    :rtype: list
-    """
-
-    # build list of package requirement dicts
-    packagelist = []
-    for key in requirements:
-        packaged = {}
-        wrk = re.split('<|>|=', key)
-        packaged['pkg'] = wrk[0].strip()
-        if packaged['pkg'].startswith('#'):
-            continue
-
-        pkg = key[len(packaged['pkg']):]
-        if pkg.find(';') == -1:
-            # keine python_version angegeben
-            packaged['py_vers'] = ''
-            wrk = re.split(',', pkg)
-            wrk2 = []
-            for r in wrk:
-                r2 = seperate_operator_version(r)
-                wrk2.append(r2)
-            packaged['req'] = wrk2
-        else:
-            # python_version angegeben
-            wrk = re.split(';', pkg)
-            if wrk[1].startswith('python_version'):
-                wrk[1] = wrk[1][len('python_version'):]
-            packaged['py_vers'] = wrk[1]
-            wrk = re.split(',', wrk[0])
-            wrk2 = []
-            for r in wrk:
-                r2 = seperate_operator_version(r)
-                wrk2.append(r2)
-            packaged['req'] = wrk2
-
-        plglist = requirements[key]
-        packaged['plugins'] = requirements[key]
-        packaged['key'] = packaged['pkg'] + '+' + packaged['py_vers']
-        packagelist.append(packaged)
-
-    # reassemble pip reqirements entries
-    for p in packagelist:
-        wrk = p['pkg']
-        wrk += p['req'][0][0] + p['req'][0][1]
-        if len(p['req']) > 1:
-            wrk += ','+p['req'][1][0] + p['req'][1][1]
-        if p['py_vers'] != '':
-            wrk += ';' + 'python_version' + p['py_vers']
-        p['requests'] = wrk
-
-    return packagelist
+selection = 'all'
 
 
-files = []
-requirements = {}
-SEP='/'
-workdir = SEP.join(os.path.realpath(__file__).split(SEP)[:-2])
-
-if not os.path.exists(workdir + SEP+"plugins"):
-    print ("plugins directory not found!")
+if not os.path.exists(os.path.join(sh_basedir, 'modules')):
+    print ("Directory <shng-root>/modules not found!")
     exit(1)
-if not os.path.exists(workdir + SEP+"requirements"):
-    print ("requirements directory not found!")
+if not os.path.exists(os.path.join(sh_basedir, 'plugins')):
+    print ("Directory <shng-root>/plugins not found!")
+    exit(1)
+if not os.path.exists(os.path.join(sh_basedir, 'requirements')):
+    print ("Directory <shng-root>/requirements not found!")
     exit(1)
 
-# build list of all plugins
-for root, dirnames, filenames in os.walk(workdir + SEP + 'plugins'):
-    for filename in fnmatch.filter(filenames, 'requirements.txt'):
-        files.append(os.path.join(root, filename))
+req_files = shpypi.Requirements_files()
 
-# Read base requirements
-with open(workdir + SEP + "requirements"+SEP+"base.txt") as infile:
-    for line in infile:
-        if len(line.rstrip()) != 0:
-            requirements.setdefault(line.rstrip(), []).append("SmartHomeNG Core")
+# req_files.create_requirementsfile('core')
+# print("File 'requirements" + os.sep + "core.txt' created.")
+# req_files.create_requirementsfile('modules')
+# print("File 'requirements" + os.sep + "modules.txt' created.")
+fn = req_files.create_requirementsfile('base')
+print("File {} created.".format(fn))
 
-# Read requirements for plugins
-for fname in files:
-    module = ''.join((fname.split(SEP))[-2:-1])
-
-    with open(fname) as infile:
-        for line in infile:
-            if len(line.rstrip()) != 0:
-                requirements.setdefault(line.rstrip(), []).append(module)
-
-
-# build list of package requirement dicts
-packagelist = build_packagelist()
-packagels = sorted(packagelist, key=lambda k: k['key'])
-for p in packagels:
-    print(p)
-print('-----------------------------')
-
-packagelo = []
-for p in packagels:
-    for idx, po in enumerate(packagelo):
-        if p['key'] == po['key']:
-            if p['req'][0][0] == po['req'][0][0]:
-                # if operators are equal
-                if p['req'][0][0] == '>=' and (p['req'][0][1]) >= po['req'][0][1]:
-                    # if operator is == and version of p >= version of po
-                    if po['plugins'] != p['plugins']:
-                        # join list of plugins that use the package
-                        pl = po['plugins']
-                        pl.extend(p['plugins'])
-                        p['plugins'] = pl
-                        packagelo[idx] = p
-                    break
-                else:
-                    print('gleiche Version '+ po['req'][0][1] + ' / '+ p['req'][0][1])
-                    break
-            elif po['req'][0][0] == '==':
-                # if operator is ==
-                if p['req'][0][0] == '>=' and (not (po['req'][0][1] >= p['req'][0][1])):
-                    print('ERROR: Requirements cannot be reconciled')
-                    print(po['pkg']+': '+po['req'][0][0]+po['req'][0][1]+' is incompatible to '+p['req'][0][0]+p['req'][0][1])
-                    packagelo.append(p)
-
-            elif p['req'][0][0] == '==':
-                print('p Gleichheit ' + po['req'][0][1] + ' / ' + p['req'][0][1])
-    else:
-        packagelo.append(p)
-
-
-for key in requirements:
-    requirements[key] = sorted(requirements[key], key=lambda name: (len(name.split('.')), name))
-
-
-#pprint.pprint(requirements)
-
-with open(workdir + SEP + 'requirements' + SEP+'all.txt', 'w') as outfile:
-    outfile.write("# !!!                 SmartHomeNG                !!!\n")
-    outfile.write("# !!!            DON'T EDIT THIS FILE            !!!\n")
-    outfile.write("# !!!           THIS FILE IS GENERATED           !!!\n")
-    outfile.write("# !!!       BY tools/build_requirements.py       !!!\n")
-    outfile.write("# !!!            ON "+datetime.datetime.now().strftime("%d.%m.%Y %H:%M")+"             !!!\n")
-    outfile.write("# !!!               INSTALL WITH:                !!!\n")
-    outfile.write("# !!! sudo pip3 install -r requirements/base.txt !!!\n")
-    for pkg in packagelo:
-        for req in pkg['plugins']:
-            outfile.write('\n# {}'.format(req))
-        outfile.write('\n{}\n'.format(pkg['requests']))
-
-print("File 'requirements"+SEP+"all.txt' created.")
+# req_files.create_requirementsfile('plugins')
+# print("File 'requirements" + os.sep + "plugins.txt' created.")
+fn = req_files.create_requirementsfile('all')
+print("File {} created.".format(fn))

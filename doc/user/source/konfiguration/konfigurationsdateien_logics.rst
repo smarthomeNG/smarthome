@@ -8,9 +8,9 @@ logics/\*.py
 Übersicht
 ---------
 
-Logiken werden in SmartHomeNG durch einfache Python Skripte bereitgestellt. Damit SmartHomeNG 
-die Skripte findet, müssen sie unter **../logics** abgelegt sein. Zusätzlich 
-müssen diese Logiken in der Datei **logic.yaml** im Verzeichnis  **../etc** 
+Logiken werden in SmartHomeNG durch einfache Python Skripte bereitgestellt. Damit SmartHomeNG
+die Skripte findet, müssen sie unter **../logics** abgelegt sein. Zusätzlich
+müssen diese Logiken in der Datei **logic.yaml** im Verzeichnis  **../etc**
 konfiguriert werden.
 
 
@@ -30,7 +30,7 @@ generierten Python Code (Dateiendung **.py**).
 
 .. note::
 
-   Ab SmartHomeNG v1.4 können Logiken vollständig in der graphischen Administrationsoberfläche 
+   Ab SmartHomeNG v1.4 können Logiken vollständig in der graphischen Administrationsoberfläche
    **Backend** erstellt und konfiguriert werden.
 
    .. image:: assets/backend_logik_editor.jpg
@@ -38,5 +38,5 @@ generierten Python Code (Dateiendung **.py**).
 
 Für weitere Details zur Konfiguration von Logiken, bitte die Seite :doc:`Logiken <logiken>` im Abschnitt Konfiguration lesen.
 
-Für Details zur Erstellung von Logiken, bitte den Abschitt :doc:`Logiken <../logiken/logiken>` dieser Dokumentation lesen.
+Für Details zur Erstellung von Logiken, bitte den Abschitt :doc:`Logiken <../logiken/logics>` dieser Dokumentation lesen.
 

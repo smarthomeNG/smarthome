@@ -7,19 +7,19 @@ Automatische Generierung
 =========
 
 Im Vergleich zum Visu Plugin der vorhergehenden smarthome.py/SmartHomeNG Releases, wurden die
-Möglichkeiten zur automatischen Generierung von Seiten für die smartVISU stark erweitert. 
+Möglichkeiten zur automatischen Generierung von Seiten für die smartVISU stark erweitert.
 Unterstützt werden smartVISU v2.7 und v2.8.
 
-Die zusätzlichen Attribute, die in der item.conf Datei für die Items konfiguriert werden können, 
-sind in der README Datei des Plugins :doc:`../plugins/visu_smartvisu/README` beschrieben. 
+Die zusätzlichen Attribute, die in der item.conf Datei für die Items konfiguriert werden können,
+sind in der README Datei des Plugins :doc:`../plugins/visu_smartvisu/README` beschrieben.
 
-Diese Seite und die zugehörien Unterseiten sollen einige der Möglichkeiten aufzeigen, die sich 
+Diese Seite und die zugehörien Unterseiten sollen einige der Möglichkeiten aufzeigen, die sich
 durch die Erweiterungen bieten:
 
 Anzeige von zusätzlichen Informationen in der Navigation
 --------------------------------------------------------
 
-In der Navigation können eine Reihe zusätzlicher Informationen angezeigt werden. 
+In der Navigation können eine Reihe zusätzlicher Informationen angezeigt werden.
 
 Die Details sind auf der Seite :doc:`./navigation_zusatzinfos` beschrieben.
 
@@ -27,7 +27,7 @@ Die Details sind auf der Seite :doc:`./navigation_zusatzinfos` beschrieben.
 Generierung einer Konfigurations-Navigation
 -------------------------------------------
 
-Zusätzlich zum Aufbau einer Navigation über die Seiten der Räume, kann eine Navigation über 
+Zusätzlich zum Aufbau einer Navigation über die Seiten der Räume, kann eine Navigation über
 mehrere Konfigurationsseiten aufgebaut werden.
 
 Die Details sind auf der Seite :doc:`./navigation_configurationseiten` beschrieben.
@@ -44,7 +44,7 @@ Die Details sind auf der Seite :doc:`./navigation_trenner` beschrieben.
 Unterschiedliche Visu-Styles
 ----------------------------
 
-Zusätzlich zum von bisherigen Releases unterstützen Standard-Style, wird der Style **black** 
+Zusätzlich zum von bisherigen Releases unterstützen Standard-Style, wird der Style **black**
 unterstützt.
 
 Die Details sind auf der Seite :doc:`./visu_styles` beschrieben.
@@ -53,7 +53,7 @@ Die Details sind auf der Seite :doc:`./visu_styles` beschrieben.
 Unterschiedliche Blockgrößen
 ----------------------------
 
-Die Blöcke in denen Widgets angezeigt werden, hatten in den bisherigen Releases eine fest 
+Die Blöcke in denen Widgets angezeigt werden, hatten in den bisherigen Releases eine fest
 definierte (Mindest-)Größe. Jetzt stehen drei unterschiedliche Mindestgrößen zur Verfügung.
 
 Die Details sind auf der Seite :doc:`./visu_blockgroessen` beschrieben.
@@ -62,7 +62,7 @@ Die Details sind auf der Seite :doc:`./visu_blockgroessen` beschrieben.
 Unterschiedliche Blocktypen
 ---------------------------
 
-Die Blöcke in denen Widgets angezeigt werden, hatten in den bisherigen Releases einen festen 
+Die Blöcke in denen Widgets angezeigt werden, hatten in den bisherigen Releases einen festen
 Typ. Nun ist ein Typ **Dual** hinzugekommen.
 
 Die Details sind auf der Seite :doc:`./visu_blocktypen` beschrieben.
@@ -74,7 +74,7 @@ Die Details sind auf der Seite :doc:`./visu_blocktypen` beschrieben.
    :maxdepth: 4
    :hidden:
    :titlesonly:
-   
+
    navigation_zusatzinfos
    navigation_configurationseiten
    navigation_trenner

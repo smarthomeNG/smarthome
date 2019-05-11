@@ -76,6 +76,7 @@ class TestItem(unittest.TestCase):
             logger.warning('')
             logger.warning('test_item_relative_references: {}'.format(str(item_conf)))
             logger.warning('test_item_relative_references: {}'.format(str(item_conf.items())))
+#        lib.item._items_instance = None
         self.items = lib.item.Items(self)
         for attr, value in item_conf.items():
             if isinstance(value, dict):

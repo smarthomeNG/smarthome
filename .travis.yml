@@ -1,13 +1,19 @@
 sudo: false
 language: python
-python:
-    - "3.4"
-    - "3.5"
-    - "3.6"
+
+matrix:
+    include:
+      - python: 3.4
+      - python: 3.5
+      - python: 3.6
+      - python: 3.7
+        dist: xenial
 
 env:
     - REPOSITORY_ORIGIN=smarthome
 
+before_install:
+    - sudo apt-get install libudev-dev
 install:
     - pip install tox-travis "virtualenv<14.0.0"
     - pip install sphinx sphinx_rtd_theme recommonmark ruamel.yaml

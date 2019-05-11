@@ -4,13 +4,13 @@ Scheduler Methoden
 sh.scheduler.trigger() / sh.trigger()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Diese globale Funktion triggert eine Logic durch die Angabe ihrers Namens.
+Diese globale Funktion triggert eine Logic durch die Angabe ihres Namens.
 
 .. code-block:: python
 
    sh.trigger(name [, by] [, source] [, value] [, dt])
-   
-- `name` (die Angabe von ist Pflicht) defniert die zu triggernde Logik. 
+
+- `name` (die Angabe von ist Pflicht) defniert die zu triggernde Logik.
 - `by` Name der aufrufenden Logik
 - `source` der eigentliche Grund für das Auslösen der Logik
 - `value` Wert (des auslösenden Items)
@@ -20,7 +20,7 @@ Diese globale Funktion triggert eine Logic durch die Angabe ihrers Namens.
 .. note::
 
    Ab SmartHomeNG v1.4 darauf achten, dass eine Trennung der
-   Namensräume für die Trigger stattgefunden hat. Wenn sh.trigger genutzt wird, muss dem Namen 
+   Namensräume für die Trigger stattgefunden hat. Wenn sh.trigger genutzt wird, muss dem Namen
    **logics.** vorangestellt werden.
 
 
@@ -32,7 +32,7 @@ Diese Methode ändert einige Laufzeit Optionen der Logik.
 
 .. code-block:: python
 
-   sh.scheduler.change('alarmclock', active=False) 
+   sh.scheduler.change('alarmclock', active=False)
 
 disabled die Logik ‘alarmclock’. Außer dem active Flag, ist es möglich `cron` und `cycle` zu ändern.
 

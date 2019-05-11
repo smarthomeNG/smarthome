@@ -1,0 +1,330 @@
+{
+  "common": {
+    "data": {
+      "lat": 53.5989481,
+      "lon": 10.0459898,
+      "elev": 20,
+      "tz": "Europe/Berlin",
+      "default_language": "de",
+      "fallback_language_order": "en,de",
+      "deprecated_warnings": true,
+      "use_conditional_triggers": true
+    },
+    "meta": {
+      "module": {
+        "classname": "None",
+        "version": "1.5.7",
+        "description": {
+          "de": "Core des SmartHomeNG Systems",
+          "en": "Core of the SmartHomeNG system"
+        }
+      },
+      "parameters": {
+        "lat": {
+          "type": "num",
+          "default": 53.5989481,
+          "description": {
+            "de": "Breitengrad der SmartHomeNG Installation",
+            "en": "Lattitude of the SmartHomeNG installation"
+          }
+        },
+        "lon": {
+          "type": "num",
+          "default": 10.0459898,
+          "description": {
+            "de": "Längengrad der SmartHomeNG Installation",
+            "en": "Logitude of the SmartHomeNG installation"
+          }
+        },
+        "elev": {
+          "type": "num",
+          "default": 20,
+          "description": {
+            "de": "Höhe der SmartHomeNG Installation über Normal-Null",
+            "en": "Elevation of the SmartHomeNG installation"
+          }
+        },
+        "tz": {
+          "type": "str",
+          "default": "Europe/Berlin",
+          "description": {
+            "de": "Zeitzone der SmartHomeNG Installation",
+            "en": "timezone of the SmartHomeNG installation"
+          }
+        },
+        "default_language": {
+          "type": "str",
+          "default": "de",
+          "valid_list": [
+            "de",
+            "en",
+            "fr",
+            "pl"
+          ],
+          "description": {
+            "de": "Standard-Sprache der SmartHomeNG Installation",
+            "en": "Default language of the SmartHomeNG installation"
+          }
+        },
+        "fallback_language_order": {
+          "type": "str",
+          "default": "en,de",
+          "valid_list": [
+            "en,de",
+            "de,en"
+          ],
+          "description": {
+            "de": "Reihenfolge der Sprachen in der Texte gesucht werden, wenn der Text in der gewählten Sprache nicht vorhanden ist",
+            "en": "Order of languages in which texts are searched, if the text is not available in the selected language"
+          }
+        },
+        "assign_compatibility": {
+          "type": "str",
+          "default": "latest",
+          "valid_list": [
+            "latest",
+            "compat_1.2"
+          ],
+          "description": {
+            "de": "Wenn 'latest' gewählt wird, werden Werte bei der Zuweisung zu Items in den Datentyp des Items gewandelt, sonst werden sie als string zugewiesen",
+            "en": "If 'latest', values are castet to the datatype of the destination item, otherwise they are assigned as strings"
+          }
+        },
+        "use_conditional_triggers": {
+          "type": "bool",
+          "default": false,
+          "description": {
+            "de": "Advanced: Verwendung konditionaler Trigger zulassen",
+            "en": "Advanced: Allow use of conditional triggers"
+          }
+        },
+        "deprecated_warnings": {
+          "type": "bool",
+          "default": true,
+          "description": {
+            "de": "Advanced: Warnungen loggen, wenn Funktionen/Methoden aufgerufen werden, die als veraltet gekennzeichnet sind",
+            "en": "Advanced: Log warnings, if functions/methods are used which are flaged as deprecated"
+          }
+        }
+      }
+    }
+  },
+  "http": {
+    "data": {
+      "module_name": "http",
+      "starturl": "backend",
+      "threads": 4,
+      "showtraceback": true,
+      "port": 1234,
+      "tls_port": 1236,
+      "hashed_password": "844aa969034f4093b4aca9a7dc234c5009f44e03b823b3a1670aaa81cf671acdf4bc16d34338d4a9566d6c4936682d54bec8a71cb81831b09c30e599fa2a20fd",
+      "use_tls": true,
+      "servicesport": 1235
+    },
+    "meta": {
+      "module": {
+        "classname": "Http",
+        "version": "1.4.7",
+        "sh_minversion": 1.4,
+        "description": {
+          "de": "Modul zur Implementierung von Backend-Webinterfaces für Plugins",
+          "en": "Module for implementing a backend-webinterface for plugins"
+        }
+      },
+      "parameters": {
+        "user": {
+          "type": "str",
+          "default": "admin",
+          "description": {
+            "de": "Benutzername für den Web Zugriff (Basic Auth), falls ein Passwort definiert ist",
+            "en": "username for the web access (basic auth), if a password is defined"
+          }
+        },
+        "password": {
+          "type": "str",
+          "description": {
+            "de": "Passwort (im Klartext) für den Web Zugriff",
+            "en": "password (unencrypted) for the web access"
+          }
+        },
+        "hashed_password": {
+          "type": "password",
+          "description": {
+            "de": "hashed Version des Passworts für den Web Zugriff, ersetzt den Parameter 'password'",
+            "en": "hashed version of the password for the web access, supersedes the parameter 'password'"
+          }
+        },
+        "service_user": {
+          "type": "str",
+          "default": "serviceuser",
+          "description": {
+            "de": "Benutzername für den Zugriff auf Webservices (Basic Auth), falls ein Passwort definiert ist",
+            "en": "username for the access to webervices (basic auth), if a password is defined"
+          }
+        },
+        "service_password": {
+          "type": "str",
+          "description": {
+            "de": "Passwort (im Klartext) für den Zugriff auf Webservices",
+            "en": "password (unencrypted) for the access to webervices"
+          }
+        },
+        "service_hashed_password": {
+          "type": "password",
+          "description": {
+            "de": "hashed Version des Passworts für den Zugriff auf Webservices, ersetzt den Parameter 'password'",
+            "en": "hashed version of the password for the access to webervices, supersedes the parameter 'password'"
+          }
+        },
+        "ip": {
+          "type": "ipv4",
+          "description": {
+            "de": "IP Adresse auf der das http Modul aktiv sein soll - muss normalerweise nicht angegeben werden",
+            "en": "IP adress on which the http module should operate - not deeded, has only to be specified for special configurations"
+          }
+        },
+        "port": {
+          "type": "int",
+          "valid_min": 0,
+          "valid_max": 65535,
+          "default": 8383,
+          "description": {
+            "de": "Portnummer für die Webinterfaces",
+            "en": "Port number for the access to webervices"
+          }
+        },
+        "tls_port": {
+          "type": "int",
+          "valid_min": 0,
+          "valid_max": 65535,
+          "default": 8385,
+          "description": {
+            "de": "Portnummer für die Webinterfaces bei Nutzung von https",
+            "en": "Port number for the access to webervices when using https"
+          }
+        },
+        "use_tls": {
+          "type": "bool",
+          "default": false,
+          "description": {
+            "de": "Auf True setzen, um Zugriffe über https zu ermöglichen (Zertifikat muss installiert sein)",
+            "en": "Set to true to allow access over https (certificate has to be installed)"
+          }
+        },
+        "tls_cert": {
+          "type": "str",
+          "default": "shng.cer",
+          "description": {
+            "de": "Name der Zertifikatsdatei. Die Datei muss im Verzeichnis ../etc liegen",
+            "en": "Name of the certificate file. The file musst be stored in ../etc"
+          }
+        },
+        "tls_key": {
+          "type": "str",
+          "default": "shng.key",
+          "description": {
+            "de": "Name der Datei mit dem privaten Schlüssel. Die Datei muss im Verzeichnis ../etc liegen",
+            "en": "Name of the private key file. The file musst be stored in ../etc"
+          }
+        },
+        "servicesport": {
+          "type": "int",
+          "valid_min": 0,
+          "valid_max": 65535,
+          "default": 8384
+        },
+        "showpluginlist": {
+          "type": "bool",
+          "default": true
+        },
+        "showservicelist": {
+          "type": "bool",
+          "default": false
+        },
+        "starturl": {
+          "type": "str",
+          "default": null
+        },
+        "threads": {
+          "type": "int",
+          "default": 8,
+          "valid_list": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ]
+        },
+        "showtraceback": {
+          "type": "bool",
+          "default": false
+        }
+      }
+    }
+  },
+  "admin": {
+    "data": {
+      "module_name": "admin",
+      "websocket_host": "smarthomeng.fritz.box",
+      "websocket_port": 2424
+    },
+    "meta": {
+      "module": {
+        "classname": "Admin",
+        "version": "0.2.2",
+        "sh_minversion": "1.5a",
+        "description": {
+          "de": "Modul zur Implementierung von ...",
+          "en": "Module for implementing ..."
+        }
+      },
+      "parameters": {
+        "pypi_timeout": {
+          "type": "int",
+          "valid_min": 1,
+          "default": 5,
+          "description": {
+            "de": "Timeout bei der Abfrage der pypi Website",
+            "en": "Timeout for getting data from the pypi website"
+          }
+        },
+        "itemtree_fullpath": {
+          "type": "bool",
+          "default": true,
+          "description": {
+            "de": "Im Item-Tree die Items mit vollem Pfad-Namen anzeigen",
+            "en": "Display items with full path in item tree"
+          }
+        },
+        "itemtree_searchstart": {
+          "type": "num",
+          "default": 2,
+          "description": {
+            "de": "Minimale Anzahl eingegebener Zeichen ab denen die Suche im Item-Tree beginnt",
+            "en": "Minimum number of entered characters to start searching the item tree"
+          }
+        },
+        "websocket_host": {
+          "type": "ip",
+          "description": {
+            "de": "IP Adresse für den websocket Zugriff",
+            "en": "ip address to usefor websocket access"
+          }
+        },
+        "websocket_port": {
+          "type": "int",
+          "valid_min": 0,
+          "valid_max": 65535,
+          "default": 2424,
+          "description": {
+            "de": "Port der für den Websocket Zugriff verwendet wird",
+            "en": "Port that is used for the websocket protocol"
+          }
+        }
+      }
+    }
+  }
+}

@@ -2,34 +2,32 @@
 Komplettanleitung
 #################
 
-.. Aus dem Wiki übernommen: 11. November 2017 von Seite https://github.com/smarthomeNG/smarthome/wiki/Komplettanleitung
-
 Ziel dieser Anleitung
 =====================
 
-Diese Anleitung beschreibt ein komplettes Installieren von **SmartHomeNG 1.5** inklusive knxd, 1-Wire 
-und SmartVISU auf einem Debian 8.x (Jessie) oder Debian 9.x (Stretch) Linux Betriebssystem.
+Diese Anleitung beschreibt eine komplette Installation von **SmartHomeNG v1.6** auf
+einem Linuxsystemmit Debian 9.8 (Stretch).
+Zusätzlich wird die Installation folgender weiterer Pakete beschrieben:
 
-Debian > 8.x nutzt als init System den Systemd. Das hat den Effekt, das die Scripte zum Start 
-der Services wegfallen und stattdessen nur Konfig-Dateien genutzt werden. Für einige optionale Module 
-wie den knxd, ofws sind bereits entsprechende config-Dateien in den Paketen enthalten.
+- SmartVISU (Visualisierung für SmartHomeNG und andere Systeme),
+- knxd (KNX daemon),
+- Onewire (Günstiges Bussystem zur Bereitstellung von Messdaten wie Temperatur, Luftfeuchte, etc.)
+- Mosquitto (IoT-Broker) und
+- Samba (Dateifreigabe für Windows Clients)
 
-Es bietet sich an die allererste Installation einfach in einer virtuellen Maschine (VirtualBox, VMWare, etc.) 
-durchzuführen um den Ablauf einmal gesehen und erlebt zu haben. Beim Installieren als VM solltet Ihr darauf 
-achten, das die neue VM auch eine IP aus dem internen Netzwerk bekommt. Bei VirtualBox geht das z.B. über 
-den Verbindungsmodus "bridged".
-
+Es bietet sich an die allererste Installation einfach in einer virtuellen Maschine
+(VirtualBox, VMWare, etc.) durchzuführen um den Ablauf einmal gesehen zu haben.
 
 .. toctree::
    :maxdepth: 5
    :hidden:
 
-   komplettanleitung_debian.md
-   komplettanleitung_knx.md
-   komplettanleitung_mosquitto
+   komplettanleitung_debian
    komplettanleitung_smarthomeng
-   komplettanleitung_smartvisu.md
-   komplettanleitung_onewire.md
-   komplettanleitung_samba.md
-   komplettanleitung_abschluss.md
+   komplettanleitung_smartvisu
+   komplettanleitung_knxd
+   komplettanleitung_onewire
+   komplettanleitung_mosquitto
+   komplettanleitung_samba
+   komplettanleitung_shng_daemon
 

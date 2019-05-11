@@ -99,7 +99,7 @@ class Scheduler(threading.Thread):
         self._sh = smarthome
         self._lock = threading.Lock()
         self._runc = threading.Condition()
-        
+
         global _scheduler_instance
         if _scheduler_instance is not None:
             import inspect
@@ -108,7 +108,7 @@ class Scheduler(threading.Thread):
             logger.critical("A second 'scheduler' object has been created. There should only be ONE instance of class 'Scheduler'!!! Called from: {} ({})".format(calframe[1][1], calframe[1][3]))
 
         _scheduler_instance = self
-        
+
         self.shtime = Shtime.get_instance()
         self.items = Items.get_instance()
 
@@ -204,10 +204,10 @@ class Scheduler(threading.Thread):
     def stop(self):
         self.alive = False
 
-    def trigger(self, name, obj=None, by='Logic', source=None, value=None, dest=None, prio=3, dt=None):
+    def trigger(self, name, obj=None, by='Logic', source=None, value=None, dest=None, prio=3, dt=None, from_smartplugin=False):
         """
         triggers the execution of a logic optional at a certain datetime given with dt
-        
+
         :param name:
         :param obj:
         :param by:
@@ -218,7 +218,7 @@ class Scheduler(threading.Thread):
         :param dt: a certain datetime
         :return: always None
         """
-        name = self.check_caller(name)
+        name = self.check_caller(name, from_smartplugin)
         if obj is None:
             if name in self._scheduler:
                 obj = self._scheduler[name]['obj']
@@ -284,23 +284,24 @@ class Scheduler(threading.Thread):
             pass
         return name
 
-    def return_next(self, name):
+    def return_next(self, name, from_smartplugin=False):
+        # name = self.check_caller(name, from_smartplugin)   # ms
         if name in self._scheduler:
             return self._scheduler[name]['next']
 
     def add(self, name, obj, prio=3, cron=None, cycle=None, value=None, offset=None, next=None, from_smartplugin=False):
         """
         Adds an entry to the scheduler.
-        
-        :param name:
-        :param obj:
+
+        :param name: Name of the scheduler
+        :param obj: Method to call by the scheduler
         :param prio: a priority with default of 3 having 1 as most important and higher numbes less important
         :param cron: a crontab entry of type string or a list of entries
         :param cycle: a time given as integer in seconds or a string with a time given in seconds and a value after an equal sign
         :param value:
         :param offset: an optional offset for cycle. If not given, cycle start point will be varied between 10..15 seconds to prevent too many scheduler entries with the same starting times
         :param next:
-        :param from_smartplugin:
+        :param from_smartplugin: Only to set to True, if called from the internal method in SmartPlugin class
         """
         if self.shtime == None:
             self.shtime = Shtime.get_instance()
@@ -375,8 +376,8 @@ class Scheduler(threading.Thread):
         else:
             return None
 
-    def change(self, name, **kwargs):
-        name = self.check_caller(name)
+    def change(self, name, from_smartplugin=False, **kwargs):
+        name = self.check_caller(name, from_smartplugin)
         if name in self._scheduler:
             for key in kwargs:
                 if key in self._scheduler[name]:
@@ -482,7 +483,11 @@ class Scheduler(threading.Thread):
         threading.current_thread().name = name
         logger = logging.getLogger(name)
         if obj.__class__.__name__ == 'Logic':
-            trigger = {'by': by, 'source': source, 'dest': dest, 'value': value}  # noqa
+            source_details = None
+            if isinstance(source, dict):
+                source_details = source.get('details', '')
+                source = source.get('item', '')
+            trigger = {'by': by, 'source': source, 'source_details': source_details, 'dest': dest, 'value': value}  # noqa
             logic = obj  # noqa
             logics = obj._logics
             sh = self._sh  # noqa
@@ -525,7 +530,7 @@ class Scheduler(threading.Thread):
         """
         inspects if a crontab entry contains a sunbound time instruction (e.g. "17:00<sunset<20:00") or
         if it contains a normal crontab entry (e.g. "*/5 6-19/1 * * *")
-        
+
         :param crontab: a string containing an enhanced crontab entry that may include a sunset/sunrise
         :return: a timezone aware datetime with the next event time or
         an error datatime object that lies 10 years in the future
@@ -547,7 +552,7 @@ class Scheduler(threading.Thread):
         """
         Inspects a given string with classic crontab information to calculate the next point in time that matches
         The function depends on the function now() of SmartHomeNG core
-        
+
         :param crontab: a string with crontab entries. It is expected to have the form of ``minute hour day weekday``
         :param next_month: inspect the current month or the next following month
         :return: false or datetime
@@ -693,7 +698,7 @@ class Scheduler(threading.Thread):
     def _range(self, entry, low, high):
         """
         inspects a single crontab entry for minutes our hours
-        
+
         :param entry: a string with single entries of intervals, numeric ranges or single values
         :param low: lower limit as integer
         :param high: higher limit as integer
@@ -735,7 +740,7 @@ class Scheduler(threading.Thread):
     def _day_range(self, days):
         """
         inspect a given string with days given as integer numbers separated by ","
-        
+
         :param days:
         :return: an array with strings containing the days of month
         """
@@ -751,5 +756,4 @@ class Scheduler(threading.Thread):
             day = now + dateutil.relativedelta.relativedelta(weekday=wday(+2))
             result.append(day.strftime("%d"))
         return result
-
 
