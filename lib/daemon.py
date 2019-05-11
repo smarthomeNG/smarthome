@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 #########################################################################
-#  Copyright 2013 Marcus Popp                              marcus@popp.mx
 # Copyright 2016-     Christian Strassburg            c.strassburg@gmx.de
 #########################################################################
 #  This file is part of SmartHomeNG.
@@ -137,16 +136,6 @@ def read_pidfile(pidfile):
     :return: PID of SmartHomeNG or 0 if it is not running
     :rtype: int
     """
-<<<<<<< HEAD
-    
-    if os.path.isfile(pidfile):
-        try:
-            fd = open(pidfile,'r')
-            line = fd.readline()
-            return int(line)
-        except:
-            return 0  #happens if pid-file could not be opened or is empty (i.e. disc was full)
-=======
 
     try:
         if os.path.isfile(pidfile):
@@ -156,7 +145,6 @@ def read_pidfile(pidfile):
             return pid
     except ValueError:
         logger.warning("PID could not be read, maybe a false write or a corrupt filesystem? Please check the file system ASAP!")
->>>>>>> origin/release-1.6
     return 0
 
 
@@ -213,3 +201,4 @@ def kill(pidfile, waittime=15):
             if p.is_running():
                 logger.warning("Killing process")
                 p.kill()
+                
