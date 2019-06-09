@@ -97,7 +97,7 @@ Verwendet man zur Instanziierung einen eigenen Namen (nicht empfohlen), wie z.B.
    self.logger = logging.getLogger('DWD')
 
 
-muss in der config auch dieser Name verwendet werden. Ohne `plugin.`
+muss in der config auch dieser Name verwendet werden. Ohne `plugin.` oder `logics.`
 
 .. code-block:: yaml
    :caption: ../etc/logging.yaml
