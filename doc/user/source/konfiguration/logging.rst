@@ -72,8 +72,8 @@ Eintrag im Handler **file:** erfolgen. Der Eintrag `level: WARNING` führt dazu,
 Handler **file:** nur Ausgaben für Fehler und Warnungen erfolgen. INFO und DEBUG Ausgaben erfolgen
 dann nur noch über den zusätzlichen Handler.
 
-Plugin Entwicklung
-==================
+Plugin und Logik Entwicklung
+============================
 
 Für die Entwickler von Plugins:
 Der Logger sollte nun nicht global mit logging.getLogger('') instanziert werden sondern innerhalb
@@ -90,6 +90,7 @@ aus `__name__` den Namen des Plugins macht.
 So wird aus plugins/cli/ der Name „plugins.cli“, aus lib/scheduler.py wird „lib.scheduler“
 Daher muss dann in der Konfiguration des Loggings der Name „plugin.cli“ angegeben werden.
 
+Für die Entwickler von Plugins und Logiken:
 Verwendet man zur Instanziierung einen eigenen Namen (nicht empfohlen), wie z.B.
 
 .. code-block:: python
@@ -97,7 +98,7 @@ Verwendet man zur Instanziierung einen eigenen Namen (nicht empfohlen), wie z.B.
    self.logger = logging.getLogger('DWD')
 
 
-muss in der config auch dieser Name verwendet werden. Ohne `plugin.`
+muss in der config auch dieser Name verwendet werden. Ohne `plugin.` oder `logics.`
 
 .. code-block:: yaml
    :caption: ../etc/logging.yaml
@@ -115,7 +116,7 @@ Auf den Logger kann dann so zugegriffen werden:
    self.logger.info("")
 
 
-Beispiel:
+Beispiel (Plugin):
 
 .. code-block:: python
 
@@ -123,6 +124,8 @@ Beispiel:
        self.logger = logging.getLogger(__name__)
        # Logger verwenden:
        self.logger.debug("Debug Message")
+
+
 
 
 Logging der Veränderung von Items
