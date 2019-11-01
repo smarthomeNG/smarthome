@@ -25,7 +25,7 @@
           "version": "1.4.13",
           "sh_minversion": "1.4e",
           "multi_instance": false,
-          "classname": "BackendServer"
+          "class_name": "BackendServer"
         },
         "parameters": {
           "updates_allowed": {
@@ -85,7 +85,7 @@
           "version": "1.4.0",
           "sh_minversion": "1.3b",
           "multi_instance": false,
-          "classname": "Blockly"
+          "class_name": "Blockly"
         },
         "parameters": {
           "section_prefix": {
@@ -129,7 +129,7 @@
           "sh_minversion": 1.4,
           "multi_instance": false,
           "restartable": "unknown",
-          "classname": "CLI"
+          "class_name": "CLI"
         },
         "parameters": {
           "update": {
@@ -264,7 +264,7 @@
           "version": "1.5.0",
           "sh_minversion": "1.4c",
           "multi_instance": false,
-          "classname": "Develop"
+          "class_name": "Develop"
         }
       },
       "_description": {
@@ -285,7 +285,7 @@
           "version": "1.5.0",
           "sh_minversion": "1.4c",
           "multi_instance": false,
-          "classname": "Logconf"
+          "class_name": "Logconf"
         }
       },
       "_description": {
@@ -312,7 +312,7 @@
           "sh_minversion": "1.4d",
           "multi_instance": true,
           "restartable": "unknown",
-          "classname": "Homematic"
+          "class_name": "Homematic"
         },
         "parameters": {
           "host": {
@@ -426,7 +426,7 @@
           "sh_minversion": 1.4,
           "multi_instance": true,
           "restartable": "unknown",
-          "classname": "KNX",
+          "class_name": "KNX",
           "attribute_prefix": "knx"
         },
         "parameters": {
@@ -980,7 +980,7 @@
           "version": "1.4.6",
           "sh_minversion": 1.4,
           "multi_instance": true,
-          "classname": "Mqtt"
+          "class_name": "Mqtt"
         },
         "parameters": {
           "host": {
@@ -1317,7 +1317,7 @@
           "sh_minversion": "1.4c",
           "multi_instance": false,
           "restartable": "unknown",
-          "classname": "Simulation"
+          "class_name": "Simulation"
         },
         "parameters": {
           "data_file": {
@@ -1387,7 +1387,7 @@
           "sh_minversion": 1.3,
           "multi_instance": true,
           "restartable": true,
-          "classname": "SmartVisu"
+          "class_name": "SmartVisu"
         },
         "parameters": {
           "smartvisu_dir": {
@@ -1613,7 +1613,7 @@
           "sh_minversion": 1.4,
           "multi_instance": false,
           "restartable": "unknown",
-          "classname": "TankerKoenig"
+          "class_name": "TankerKoenig"
         },
         "parameters": {
           "apikey": {
@@ -1735,7 +1735,7 @@
           "sh_minversion": "1.4c",
           "multi_instance": false,
           "restartable": "unknown",
-          "classname": "WebSocket"
+          "class_name": "WebSocket"
         },
         "parameters": {
           "ip": {
@@ -1974,7 +1974,7 @@
           "sh_minversion": "1.4c",
           "multi_instance": true,
           "restartable": "unknown",
-          "classname": "Wunderground"
+          "class_name": "Wunderground"
         },
         "parameters": {
           "apikey": {
@@ -2162,7 +2162,7 @@
           "sh_minversion": "1.4c",
           "multi_instance": true,
           "restartable": "unknown",
-          "classname": "Wunderground"
+          "class_name": "Wunderground"
         },
         "parameters": {
           "apikey": {
@@ -2340,7 +2340,7 @@
           "version": "1.4c.0",
           "sh_minversion": "1.3a",
           "multi_instance": false,
-          "classname": "Widgets"
+          "class_name": "Widgets"
         },
         "parameters": null,
         "item_attributes": null
@@ -2375,7 +2375,7 @@
           "version": "1.5.4",
           "sh_minversion": "1.4c",
           "multi_instance": true,
-          "classname": "AVM"
+          "class_name": "AVM"
         },
         "parameters": {
           "username": {
@@ -2649,7 +2649,7 @@
           "version": "1.5.4",
           "sh_minversion": "1.4c",
           "multi_instance": true,
-          "classname": "AVM"
+          "class_name": "AVM"
         },
         "parameters": {
           "username": {
@@ -2924,7 +2924,7 @@
           "sh_minversion": "1.3c",
           "multi_instance": true,
           "restartable": "unknown",
-          "classname": "Enigma2"
+          "class_name": "Enigma2"
         },
         "parameters": {
           "username": {
@@ -3215,7 +3215,7 @@
           "sh_minversion": "1.3c",
           "multi_instance": true,
           "restartable": "unknown",
-          "classname": "Enigma2"
+          "class_name": "Enigma2"
         },
         "parameters": {
           "username": {
@@ -3506,7 +3506,7 @@
           "sh_minversion": "1.3c",
           "multi_instance": true,
           "restartable": "unknown",
-          "classname": "Enigma2"
+          "class_name": "Enigma2"
         },
         "parameters": {
           "username": {
@@ -3786,7 +3786,7 @@
           "version": "1.3.0",
           "sh_minversion": "1.4c",
           "multi_instance": false,
-          "classname": "OperationLog"
+          "class_name": "OperationLog"
         },
         "parameters": null,
         "item_attributes": null
@@ -3824,7 +3824,7 @@
           "version": "1.4.2",
           "sh_minversion": "1.3c",
           "multi_instance": false,
-          "classname": "HUE"
+          "class_name": "HUE"
         },
         "parameters": {
           "hue_ip": {
@@ -3918,7 +3918,7 @@
             "de": "Implementierung von ...",
             "en": "GImplementation of ..."
           },
-          "classname": "Classic"
+          "class_name": "Classic"
         }
       }
     },
@@ -3944,7 +3944,7 @@
           "sh_minversion": "1.4c",
           "multi_instance": true,
           "restartable": "unknown",
-          "classname": "Database"
+          "class_name": "Database"
         },
         "parameters": {
           "driver": {
@@ -4553,7 +4553,7 @@
           "sh_minversion": 1.5,
           "multi_instance": false,
           "restartable": "unknown",
-          "classname": "WebServices"
+          "class_name": "WebServices"
         },
         "parameters": {
           "mode": {
@@ -4616,7 +4616,7 @@
           "sh_minversion": 1.1,
           "multi_instance": true,
           "restartable": "unknown",
-          "classname": "WakeOnLan"
+          "class_name": "WakeOnLan"
         },
         "parameters": "NONE",
         "item_attributes": {
@@ -4666,7 +4666,7 @@
           "version": "1.5.0",
           "sh_minversion": 1.4,
           "multi_instance": false,
-          "classname": "SamplePlugin"
+          "class_name": "SamplePlugin"
         }
       },
       "_description": {

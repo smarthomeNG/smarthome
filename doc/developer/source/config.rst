@@ -100,7 +100,7 @@ The ``plugins`` directory contains a subdirectory for every available plugin.
 The file ``etc/plugin.yaml`` holds the configuration for every plugin to be used during runtime.
 
 For each plugin at least the plugin object name is needed and the
-attributes where to find the plugin and how to expect the classname to be.
+attributes where to find the plugin and how to expect the class_name to be.
 
 The example below configures a plugin for the KNX bus to send and receive telegrams from and to eibd or knxd (both a software gateway to the KNX hardware bus).
 In this case the object name is ``knx``, the place to look for the module is within subdirectory ``plugins/knx/`` and the class of the plugin is ``KNX``.

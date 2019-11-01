@@ -259,7 +259,7 @@ def bla(self):
 **!! Look at the sample plugin in /dev/sample_plugin for an actual template !!**
 
 First you import certain things you need and get access to the logger. The logger allows you to log output of your plugin into the
-smarthome.log file. Then you start you class. The class name has to match the ``classname`` parameter in the plugin.conf file.
+smarthome.log file. Then you start you class. The class name has to match the ``class_name`` parameter in the plugin.conf file.
 Afterwards you define the required functions.
 
 ```python

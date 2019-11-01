@@ -4,7 +4,7 @@
 #   |            DON'T EDIT THIS FILE               |
 #   |           THIS FILE IS GENERATED              |
 #   |       BY tools/build_requirements.py          |
-#   |            ON 03.05.2019 22:32                |
+#   |            ON 01.11.2019 15:46                |
 #   |                                               |
 #   |               INSTALL WITH:                   |
 #   | sudo pip3 install -r requirements/all.txt     |
@@ -37,6 +37,9 @@ minimalmodbus>=0.7
 # plugin withings_health
 nokia>=1.0.0,<=1.2.0
 
+# plugin uzsu
+numpy
+
 # plugin mqtt
 paho-mqtt>=1.2.2
 
@@ -45,6 +48,9 @@ psutil
 
 # plugin appletv
 pyatv==0.3.9
+
+# plugin stateengine
+pydotplus
 
 # plugin homematic
 pyhomematic>=0.1.28
@@ -55,15 +61,18 @@ pyjq
 # SmartHomeNG-module admin
 pyjwt>=1.6.4
 
+# plugin trovis557x
+pymodbus>=2.2.0
+
 # plugin avdevice
-# plugin priv_lintronic
 # plugin systemair
 # plugin dlms
-pyserial>=3.2.1
+# plugin thz
+pyserial>=3.4.0
 
 # SmartHomeNG-lib
-# plugin blockly
 # plugin backend
+# plugin blockly
 python-dateutil>=2.5.3
 
 # plugin pushbullet
@@ -71,6 +80,9 @@ python-magic>=0.4.12
 
 # plugin zwave
 python-openzwave>=0.4.0.35
+
+# plugin snap7_logo
+python-snap7>=0.10
 
 # plugin telegram
 python-telegram-bot>=9.0.0
@@ -98,20 +110,14 @@ ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
 ruamel.yaml>0.15.0,<=0.15.74;python_version>='3.7'
 
 # plugin uzsu
-scipy>=1.1.0
+scipy>=1.1.0,<=1.2.1
 
-# plugin harmony
 # plugin xmpp
+# plugin harmony
 sleekxmpp>=1.3.1
-
-# plugin priv_telegram_1_1_3
-telepot>=8.3
 
 # plugin sonos
 tinytag>=0.18.0
-
-# plugin priv_telegram_1_1_3
-urllib3>=1.9.1
 
 # plugin smarttv
 websocket-client>=0.44.0

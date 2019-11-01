@@ -1,7 +1,7 @@
 # Metadata for the core parameter (etc/smarthome.yaml)
 module:
     # Global pseido-module attributes
-    classname: None
+    class_name: None
     version: 1.5.7
     description:
         de: 'Core des SmartHomeNG Systems'

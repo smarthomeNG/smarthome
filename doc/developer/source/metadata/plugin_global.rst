@@ -24,7 +24,7 @@ The global metadata section ``plugin:`` has the following keys:
     #    sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)
         multi_instance: true        # plugin supports multi instance (if not specified, False is assumed)
 
-        classname: <plugin_class>   # Name of the class that implements the plugin
+        class_name: <plugin_class>   # Name of the class that implements the plugin
 
 Description of the keys in the section ``plugin:``
 
@@ -42,7 +42,7 @@ Description of the keys in the section ``plugin:``
     - **sh_maxversion:** Maximum SmartHomeNG version this plugin is compatible with (or empty, if compatible with the actual version of SmartHomeNG) [Test not yet implemented]
     - **multi_instance:** Is the plugin multi-instance capable?
     - **restartable:** Is the plugin restartable?  (valid entries are: **True**, ** **False**, **unknown**)
-    - **classname:** Name of the Python class to initialize (the class that implements the plugin)
+    - **class_name:** Name of the Python class to initialize (the class that implements the plugin)
 
     - **classpath:** **Usually not specified.** Only needed, if the plugin resides outside the ``/plugins`` folder
 

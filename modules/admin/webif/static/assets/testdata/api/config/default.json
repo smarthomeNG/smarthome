@@ -12,7 +12,7 @@
     },
     "meta": {
       "module": {
-        "classname": "None",
+        "class_name": "None",
         "version": "1.5.7",
         "description": {
           "de": "Core des SmartHomeNG Systems",
@@ -123,7 +123,7 @@
     },
     "meta": {
       "module": {
-        "classname": "Http",
+        "class_name": "Http",
         "version": "1.4.7",
         "sh_minversion": 1.4,
         "description": {
@@ -273,7 +273,7 @@
     },
     "meta": {
       "module": {
-        "classname": "Admin",
+        "class_name": "Admin",
         "version": "0.2.2",
         "sh_minversion": "1.5a",
         "description": {

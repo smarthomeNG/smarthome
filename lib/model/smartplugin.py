@@ -46,7 +46,7 @@ class SmartPlugin(SmartObject, Utils):
     _sh = None          #: Variable containing a pointer to the main SmartHomeNG object; is initialized during loading of the plugin; :Warning: Don't change it
     _configname = ''    #: Configname of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
     _shortname = ''     #: Shortname of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
-    _classname = ''     #: Classname of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
+    _class_name = ''     #: Classname of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
     shtime = None       #: Variable containing a pointer to the SmartHomeNG time handling object; is initialized during loading of the plugin; :Warning: Don't change it
 
     _pluginname_prefix = 'plugins.'
@@ -168,19 +168,19 @@ class SmartPlugin(SmartObject, Utils):
             return  self.get_shortname() + '_' + self.get_instance_name()
 
 
-    def get_classname(self):
+    def get_class_name(self):
         """
-        return the classname of the plugin
+        return the class_name of the plugin
 
         :note: Only available in SmartHomeNG versions **beyond** v1.3
 
-        :return: classname of the plugin
+        :return: class_name of the plugin
         :rtype: str
         """
-        return self._classname
+        return self._class_name
 
 
-    def _set_classname(self, classname):
+    def _set_class_name(self, class_name):
         """
         ...
 
@@ -188,10 +188,10 @@ class SmartPlugin(SmartObject, Utils):
 
         :note: Only available in SmartHomeNG versions **beyond** v1.3
 
-        :param classname: name of the plugin's class
-        :type classname: str
+        :param class_name: name of the plugin's class
+        :type class_name: str
         """
-        self._classname = classname
+        self._class_name = class_name
 
 
     def get_version(self, extended=False):

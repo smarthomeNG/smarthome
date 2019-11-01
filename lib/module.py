@@ -95,10 +95,10 @@ class Modules():
             module_name, self.meta = self._get_modulename_and_metadata(module, _conf[module])
             if self.meta.test_shngcompatibility():
                 args = self._get_conf_args(_conf[module])
-                classname, classpath = self._get_classname_and_classpath(_conf[module], module_name)
-                if not self._test_duplicate_configuration(module, classname):
+                class_name, classpath = self._get_class_name_and_classpath(_conf[module], module_name)
+                if not self._test_duplicate_configuration(module, class_name):
                     try:
-                        self._load_module(module, classname, classpath, args)
+                        self._load_module(module, class_name, classpath, args)
                     except Exception as e:
                         logger.exception("Module {0} exception: {1}".format(module, e))
 
@@ -154,36 +154,36 @@ class Modules():
         return args
 
 
-    def _get_classname_and_classpath(self, mod_conf, module_name):
+    def _get_class_name_and_classpath(self, mod_conf, module_name):
         """
-        Returns the classname and the classpath for the actual module
+        Returns the class_name and the classpath for the actual module
         
         :param mod_conf: loaded section of the module.yaml for the actual module
         :param module_name: Module name (to be used, for building classpass, if it is not specified in the configuration
         :type mod_conf: dict
         :type module_name: str
         
-        :return: classname, classpass
+        :return: class_name, classpass
         :rtype: str, str
         """
-        classname = self.meta.get_string('classname')
-        if classname == '':
-            classname = mod_conf.get(KEY_CLASS_NAME,'')
+        class_name = self.meta.get_string('class_name')
+        if class_name == '':
+            class_name = mod_conf.get(KEY_CLASS_NAME,'')
         try:
             classpath = mod_conf[KEY_CLASS_PATH]
         except:
             classpath = 'modules.' + module_name
-        return (classname, classpath)
+        return (class_name, classpath)
         
 
-    def _test_duplicate_configuration(self, module, classname):
+    def _test_duplicate_configuration(self, module, class_name):
         """
-        Returns True, if a module instance of the classname is already loaded by another configuration section
+        Returns True, if a module instance of the class_name is already loaded by another configuration section
         
         :param module: Name of the configuration
-        :param classname: Name of the class to check
+        :param class_name: Name of the class to check
         :type module: str
-        :type classname: str
+        :type class_name: str
         
         :return: True, if module is already loaded
         :rtype: bool
@@ -191,30 +191,30 @@ class Modules():
         # give a warning if a module uses the same class twice
         duplicate = False
         for m in self._modules:
-            if m.__class__.__name__ == classname:
+            if m.__class__.__name__ == class_name:
                 duplicate = True
-                logger.warning("Modules, section '{}': Multiple module instances of class '{}' detected, additional instance not initialized".format(module, classname))
+                logger.warning("Modules, section '{}': Multiple module instances of class '{}' detected, additional instance not initialized".format(module, class_name))
         return duplicate
         
         
-    def _load_module(self, name, classname, classpath, args):
+    def _load_module(self, name, class_name, classpath, args):
         """
-        Module Loader. Loads one module defined by the parameters classname and classpath.
+        Module Loader. Loads one module defined by the parameters class_name and classpath.
         Parameters defined in the configuration file are passed to this function as 'args'
         
         :param name: Section name in module configuration file (etc/module.yaml)
-        :param classname: Name of the (main) class in the module
+        :param class_name: Name of the (main) class in the module
         :param classpath: Path to the Python file containing the class
         :param args: Parameter as specified in the configuration file (etc/module.yaml)
         :type name: str
-        :type classname: str
+        :type class_name: str
         :type classpath: str
         :type args: dict
         
         :return: loaded module
         :rtype: object
         """
-        logger.debug('_load_module: Section {}, Module {}, classpath {}'.format( name, classname, classpath ))
+        logger.debug('_load_module: Section {}, Module {}, classpath {}'.format( name, class_name, classpath ))
         logger.info("Loading module '{}': args = '{}'".format(name, args))
         
         # Load an instance of the module
@@ -223,13 +223,13 @@ class Modules():
         except Exception as e:
             logger.critical("Module '{}' ({}) exception during import of __init__.py: {}".format(name, classpath, e))
             return None
-        exec("self.loadedmodule = {0}.{1}.__new__({0}.{1})".format(classpath, classname))
+        exec("self.loadedmodule = {0}.{1}.__new__({0}.{1})".format(classpath, class_name))
                 
         # get arguments defined in __init__ of module's class to self.args
-        exec("self.args = inspect.getargspec({0}.{1}.__init__)[0][1:]".format(classpath, classname))
+        exec("self.args = inspect.getargspec({0}.{1}.__init__)[0][1:]".format(classpath, class_name))
 
         # get list of argument used names, if they are defined in the module's class
-        logger.debug("Module '{}': args = '{}'".format(classname, str(args)))
+        logger.debug("Module '{}': args = '{}'".format(class_name, str(args)))
         arglist = [name for name in self.args if name in args]
         argstring = ",".join(["{}={}".format(name, args[name]) for name in arglist])
 

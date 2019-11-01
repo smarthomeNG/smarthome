@@ -322,7 +322,7 @@ def display_metadata(plg, with_description):
         disp_formatted('Restartable', str(metadata['plugin'].get('restartable', '-')))
         disp_formatted('shNG min. Version', str(metadata['plugin'].get('sh_minversion', '-')))
         disp_formatted('shNG max. Version', str(metadata['plugin'].get('sh_maxversion', '-')))
-        disp_formatted('Classname', metadata['plugin'].get('classname', '-'))
+        disp_formatted('Classname', metadata['plugin'].get('class_name', '-'))
 
         disp_formatted('Maintainer', metadata['plugin'].get('maintainer', '-'))
         disp_formatted('Tester', metadata['plugin'].get('tester', '-'))
@@ -521,8 +521,8 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
     else:
         if metadata['plugin'].get('version', None) == None:
             disp_error('No version number given', "Add 'version:' to the plugin section")
-        if metadata['plugin'].get('classname', None) == None:
-            disp_error('No classname for the plugin', "Add 'classname:' to the plugin section and set it to the name of the Python class that implements the plugin")
+        if metadata['plugin'].get('class_name', None) == None:
+            disp_error('No class_name for the plugin', "Add 'class_name:' to the plugin section and set it to the name of the Python class that implements the plugin")
 
         if metadata['plugin'].get('type', None) == None:
             disp_warning('No plugin type set', "Add 'type:' to the plugin section")

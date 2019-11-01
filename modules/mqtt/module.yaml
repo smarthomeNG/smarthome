@@ -1,7 +1,7 @@
 # Metadata for the plugin
 module:
     # Global plugin attributes
-    classname: Mqtt
+    class_name: Mqtt
     version: 1.5.0
     sh_minversion: 1.5
 #   sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)

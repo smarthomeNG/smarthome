@@ -129,20 +129,20 @@ class Plugins():
             if str(_conf[plugin].get('plugin_enabled', None)).lower() == 'false':
                 logger.info("Section {} (plugin_name {}) is disabled - Plugin not loaded".format(plugin, _conf[plugin].get('plugin_name', None)))
             elif self.meta.test_shngcompatibility():
-                classname, classpath = self._get_classname_and_classpath(_conf[plugin], plugin_name)
-                if (classname == '') and (classpath == ''):
+                class_name, classpath = self._get_class_name_and_classpath(_conf[plugin], plugin_name)
+                if (class_name == '') and (classpath == ''):
                     logger.error("Plugins, section {}: plugin_name is not defined".format(plugin))
-                elif classname == '':
+                elif class_name == '':
                     logger.error("Plugins, section {}: class_name is not defined".format(plugin))
                 elif classpath == '':
                     logger.error("Plugins, section {}: class_path is not defined".format(plugin))
                 else:
                     args = self._get_conf_args(_conf[plugin])
-#                    logger.warning("Plugin '{}' from from section '{}': classname = {}, classpath = {}".format( str(classpath).split('.')[1], plugin, classname, classpath ) )
+#                    logger.warning("Plugin '{}' from from section '{}': class_name = {}, classpath = {}".format( str(classpath).split('.')[1], plugin, class_name, classpath ) )
                     instance = self._get_instancename(_conf[plugin]).lower()
-                    dummy = self._test_duplicate_pluginconfiguration(plugin, classname, instance)
+                    dummy = self._test_duplicate_pluginconfiguration(plugin, class_name, instance)
                     try:
-                        plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance, self.meta, self._gtrans)
+                        plugin_thread = PluginWrapper(smarthome, plugin, class_name, classpath, args, instance, self.meta, self._gtrans)
                         if plugin_thread._init_complete == True:
                             try:
                                 self._plugins.append(plugin_thread.plugin)
@@ -249,27 +249,27 @@ class Plugins():
         return args
 
 
-    def _get_classname_and_classpath(self, plg_conf, plugin_name):
+    def _get_class_name_and_classpath(self, plg_conf, plugin_name):
         """
-        Returns the classname and the classpath for the actual plugin
+        Returns the class_name and the classpath for the actual plugin
 
         :param plg_conf: loaded section of the plugin.yaml for the actual plugin
         :param plugin_name: Plugin name (to be used, for building classpass, if it is not specified in the configuration
         :type plg_conf: dict
         :type plugin_name: str
 
-        :return: classname, classpass
+        :return: class_name, classpass
         :rtype: str, str
         """
-        classname = plg_conf.get(KEY_CLASS_NAME,'')
+        class_name = plg_conf.get(KEY_CLASS_NAME,'')
         plugin_version = ''
         if plugin_name == '':
             plugin_version = plg_conf.get('plugin_version','').lower()
             if plugin_version != '':
                 plugin_version = '._pv_' + plugin_version.replace('.','_')
 
-        if classname == '':
-            classname = self.meta.get_string('classname')
+        if class_name == '':
+            class_name = self.meta.get_string('class_name')
         try:
             classpath = plg_conf[KEY_CLASS_PATH]
         except:
@@ -277,8 +277,8 @@ class Plugins():
                 classpath = ''
             else:
                 classpath = 'plugins.' + plugin_name
-#        logger.warning("_get_classname_and_classpath: plugin_name = {}, classpath = {}, classname = {}".format(plugin_name, classpath, classname))
-        return (classname, classpath+plugin_version)
+#        logger.warning("_get_class_name_and_classpath: plugin_name = {}, classpath = {}, class_name = {}".format(plugin_name, classpath, class_name))
+        return (class_name, classpath+plugin_version)
 
 
     def _get_instancename(self, plg_conf):
@@ -299,14 +299,14 @@ class Plugins():
         return instance
 
 
-    def _test_duplicate_pluginconfiguration(self, plugin, classname, instance):
+    def _test_duplicate_pluginconfiguration(self, plugin, class_name, instance):
         """
-        Returns True, if a plugin instance of the classname is already loaded by another configuration section
+        Returns True, if a plugin instance of the class_name is already loaded by another configuration section
 
         :param plugin: Name of the configuration
-        :param classname: Name of the class to check
+        :param class_name: Name of the class to check
         :type plugin: str
-        :type classname: str
+        :type class_name: str
 
         :return: True, if plugin is already loaded
         :rtype: bool
@@ -319,14 +319,14 @@ class Plugins():
                 if p.get_instance_name() == instance:
                     for t in self._threads:
                         if t.plugin == p:
-                            if t.plugin.__class__.__name__ == classname:
+                            if t.plugin.__class__.__name__ == class_name:
                                 duplicate = True
                                 prev_plugin = t._name
                                 logger.warning("Plugin section '{}' uses same class '{}' and instance '{}' as plugin section '{}'".format(plugin, p.__class__.__name__, 'default' if instance == '' else instance, prev_plugin))
                                 break
 
-            elif p.__class__.__name__ == classname:
-                logger.warning("Multiple classic plugin instances of class '{}' detected".format(classname))
+            elif p.__class__.__name__ == class_name:
+                logger.warning("Multiple classic plugin instances of class '{}' detected".format(class_name))
         return duplicate
 
 
@@ -515,25 +515,25 @@ class PluginWrapper(threading.Thread):
 
     :param smarthome: Instance of the smarthome master-object
     :param name: Section name in plugin configuration file (etc/plugin.yaml)
-    :param classname: Name of the (main) class in the plugin
+    :param class_name: Name of the (main) class in the plugin
     :param classpath: Path to the Python file containing the class
     :param args: Parameter as specified in the configuration file (etc/plugin.yaml)
     :param instance: Name of the instance of the plugin
     :param meta:
     :type samrthome: object
     :type name: str
-    :type classname: str
+    :type class_name: str
     :type classpath: str
     :type args: dict
     :type instance: str
     :type meta: object
     """
 
-    def __init__(self, smarthome, name, classname, classpath, args, instance, meta, gtranslations):
+    def __init__(self, smarthome, name, class_name, classpath, args, instance, meta, gtranslations):
         """
         Initialization of wrapper class
         """
-        logger.debug('PluginWrapper __init__: Section {}, classname {}, classpath {}'.format( name, classname, classpath ))
+        logger.debug('PluginWrapper __init__: Section {}, class_name {}, classpath {}'.format( name, class_name, classpath ))
 
         threading.Thread.__init__(self, name=name)
 
@@ -550,7 +550,7 @@ class PluginWrapper(threading.Thread):
             logger.exception("Plugin '{}' exception during import of __init__.py: {}".format(name, e))
             return
         try:
-            exec("self.plugin = {0}.{1}.__new__({0}.{1})".format(classpath, classname))
+            exec("self.plugin = {0}.{1}.__new__({0}.{1})".format(classpath, class_name))
         except Exception as e:
             logger.exception("Plugin '{}' exception during execution of plugin: {}".format(name, e))
 
@@ -575,7 +575,7 @@ class PluginWrapper(threading.Thread):
 #            self.get_implementation()._config_section = name
             self.get_implementation()._set_shortname(str(classpath).split('.')[1])
             self.get_implementation()._classpath = classpath
-            self.get_implementation()._set_classname(classname)
+            self.get_implementation()._set_class_name(class_name)
             # if instance != '' war auskommentiert, reaktiviert: 26.01.2018 MS
             if self.get_implementation().ALLOW_MULTIINSTANCE is None:
                 self.get_implementation().ALLOW_MULTIINSTANCE = self.meta.get_bool('multi_instance')
@@ -596,15 +596,15 @@ class PluginWrapper(threading.Thread):
             self.get_implementation()._configname = name
             self.get_implementation()._shortname = str(classpath).split('.')[1]
             self.get_implementation()._classpath = classpath
-            self.get_implementation()._classname = classname
+            self.get_implementation()._class_name = class_name
             self.get_implementation()._plgtype = ''
         self.get_implementation()._itemlist = []
 
         # get arguments defined in __init__ of plugin's class to self.args
-        exec("self.args = inspect.getargspec({0}.{1}.__init__)[0][1:]".format(classpath, classname))
+        exec("self.args = inspect.getargspec({0}.{1}.__init__)[0][1:]".format(classpath, class_name))
 
         # get list of argument used names, if they are defined in the plugin's class
-        logger.debug("Plugin '{}': args = '{}'".format(classname, str(args)))
+        logger.debug("Plugin '{}': args = '{}'".format(class_name, str(args)))
         arglist = [name for name in self.args if name in args]
         argstring = ",".join(["{}={}".format(name, args[name]) for name in arglist])
 #        logger.debug("Plugin '{}' using arguments {}".format(str(classpath).split('.')[1], arglist))

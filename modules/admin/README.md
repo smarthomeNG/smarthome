@@ -145,7 +145,7 @@ Startet die SmartHomeNG Server Instanz neu
 `dummy` is a loadlable module. Therefore there is no guarantiee that it is present in every system. Before you can use this module, you have to make sure ist is loaded. You can do it by calling a method of the main smarthome object. Do it like this:
 
 ```
-self.classname = self.__class__.__name__
+self.class_name = self.__class__.__name__
 
 try:
     self.mod_admin = self._sh.get_module('admin')
@@ -155,7 +155,7 @@ except:
 if self.mod_admin == None:
     # Do what is necessary if you can't use the admin interface
     # for your plugin. For example:
-    self.logger.error('{}: Module ''admin'' not loaded - Abort loading of plugin {0}'.format(self.classname))
+    self.logger.error('{}: Module ''admin'' not loaded - Abort loading of plugin {0}'.format(self.class_name))
     return
 ```
 

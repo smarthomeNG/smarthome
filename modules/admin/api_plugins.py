@@ -346,7 +346,7 @@ class PluginsInfoController(RESTResource):
                     plugin['attributes'].append(a_dict)
 
                 plugin['metadata']['classpath'] = x._classpath  # str
-                plugin['metadata']['classname'] = x.get_classname()
+                plugin['metadata']['class_name'] = x.get_class_name()
             else:
                 plugin['pluginname'] = x._shortname
                 plugin['configname'] = x._configname
@@ -359,7 +359,7 @@ class PluginsInfoController(RESTResource):
                 plugin['attributes'] = []
 
                 plugin['metadata']['classpath'] = str(x._classpath)  # str
-                plugin['metadata']['classname'] = str(x._classname)  # str
+                plugin['metadata']['class_name'] = str(x._class_name)  # str
                 plugin['stopped'] = False
 
             plugin['metadata']['type'] = x._metadata.get_string('type')

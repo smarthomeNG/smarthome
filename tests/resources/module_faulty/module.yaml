@@ -1,7 +1,7 @@
 # Metadata for the plugin
 module:
     # Global plugin attributes
-    classname: dummy
+    class_name: dummy
     version: 1.x.yz
     sh_minversion: 1.3a
 #   sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)

@@ -83,7 +83,7 @@
       "maintainer": "psilo",
       "tester": "msinn",
       "classpath": "plugins.homematic",
-      "classname": "Homematic",
+      "class_name": "Homematic",
       "sh_minversion": "",
       "sh_maxversion": ""
     },
@@ -175,7 +175,7 @@
       "maintainer": "psilo",
       "tester": "Sandman60, msinn",
       "classpath": "plugins.homematic",
-      "classname": "Homematic",
+      "class_name": "Homematic",
       "sh_minversion": "",
       "sh_maxversion": ""
   }
@@ -200,7 +200,7 @@
       "maintainer": "psilo",
       "tester": "Sandman60, msinn",
       "classpath": "plugins.homematic",
-      "classname": "Homematic",
+      "class_name": "Homematic",
       "sh_minversion": "",
       "sh_maxversion": ""
     }
@@ -246,7 +246,7 @@
       "maintainer": "msinn",
       "tester": "Sandman60",
       "classpath": "plugins.homematic",
-      "classname": "Homematic",
+      "class_name": "Homematic",
       "sh_minversion": "",
       "sh_maxversion": ""
     }
@@ -268,7 +268,7 @@
       "maintainer": "psilo",
       "tester": "ohinckel",
       "classpath": "plugins.homematic",
-      "classname": "Homematic",
+      "class_name": "Homematic",
       "sh_minversion": "",
       "sh_maxversion": ""
     }
@@ -290,7 +290,7 @@
       "maintainer": "msinn",
       "tester": "",
       "classpath": "plugins.homematic",
-      "classname": "Homematic",
+      "class_name": "Homematic",
       "sh_minversion": "",
       "sh_maxversion": ""
     }

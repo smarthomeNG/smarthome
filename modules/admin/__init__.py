@@ -181,7 +181,7 @@ class Admin():
             self.mod_http.register_webif(WebInterface( ... ), 
                                self.get_shortname(), 
                                config, 
-                               self.get_classname(), self.get_instance_name(),
+                               self.get_class_name(), self.get_instance_name(),
                                description,
                                webifname,
                                use_global_basic_auth)
