@@ -269,7 +269,7 @@ class Plugins():
                 plugin_version = '._pv_' + plugin_version.replace('.','_')
 
         if class_name == '':
-            class_name = self.meta.get_string('class_name')
+            class_name = self.meta.get_string(KEY_CLASS_NAME)
         try:
             classpath = plg_conf[KEY_CLASS_PATH]
         except:
