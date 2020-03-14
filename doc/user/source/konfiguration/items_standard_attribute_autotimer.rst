@@ -45,11 +45,14 @@ können nun auch Items als *dauer* und/oder *wert* angegeben werden:
        type: num
        autotimer: sh.item.dauer() = 0
        dauer:
-           value: 45
+           initial_value: 45
+       wert:
+           initial_value: 1
 
 setzt nach der in *item.dauer* angegebenen Dauer (hier initial 45
-Sekunden) den Wert des Items auf 0. Die Angabe des Items kann auch als
-relative Angabe erfolgen (*sh..dauer()*)
+Sekunden) den Wert des Items auf in *item.wert* (hier initial mit 1
+angegebenen). Die Angabe der Items kann auch als relative Angabe erfolgen
+(bspw. *sh..dauer()*)
 
 Der Wert für *dauer* kann auf folgende Weise angegeben werden:
 
