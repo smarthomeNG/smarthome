@@ -1,18 +1,19 @@
-############################
-Visualisierung mit smartVISU
-############################
+.. index:: Visualisierung mit smartVISU
+.. index:: smartVISU
 
-Visu Unterstützung ab SmartHomeNG v1.2
-======================================
+============================
+Visualisierung mit smartVISU
+============================
+
 
 Überblick
----------
+=========
 
 Im Release 1.2 wurde die Unterstützung für die smartVISU weiterentwickelt. Dabei wurde das
 Visu Plugin durch zwei neue Plugins ersetzt.
 
 In SmartHomeNG v1.2 und v1.3 wurden die smartVISU Versionen v2.7 und v2.8 unterstützt.
-In SmartHomeNG v1.4 kommt Unterstützung für smartVISU Versionen v2.9 hinzu.
+Mit SmartHomeNG v1.4 kam Unterstützung für smartVISU Versionen v2.9 hinzu.
 
 - Das erste Plugin (**visu_websocket**) implementiert das Websocket Protokoll über das smartVISU
   mit SmartHomeNG kommuniziert.
@@ -44,7 +45,7 @@ in der Datei **../etc/plugin.yaml** folgendermaßen konfiguriert:
    #    port: 2424
        smartvisu_dir: /var/www/smartvisu
    #    acl: rw
-   
+
 
 Ab v1.2 sind für die vollständige smartVISU Unterstützung zwei Plugins an Stelle des bisherigen
 visu Plugins zu konfigurieren.
@@ -90,3 +91,5 @@ zu konfigurieren.
    visualisierung_kommunikation
    visualisierung_autogenerierung
    visualisierung_widgets
+   reverse_proxy
+

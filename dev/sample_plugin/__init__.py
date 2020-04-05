@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
-#  Copyright 2018 <AUTHOR>                                        <EMAIL>
+#  Copyright 2019-      <AUTHOR>                                  <EMAIL>
 #########################################################################
-#  This file is part of SmartHomeNG.   
+#  This file is part of SmartHomeNG.
+#  https://www.smarthomeNG.de
+#  https://knx-user-forum.de/forum/supportforen/smarthome-py
 #
 #  Sample plugin for new plugins to run with SmartHomeNG version 1.4 and
 #  upwards.
@@ -25,6 +27,7 @@
 
 from lib.module import Modules
 from lib.model.smartplugin import *
+from lib.item import Items
 
 
 # If a needed package is imported, which might be not installed in the Python environment,
@@ -37,39 +40,30 @@ class SamplePlugin(SmartPlugin):
     the update functions for the items
     """
 
-    PLUGIN_VERSION = '1.6.0'
+    PLUGIN_VERSION = '1.7.0'
 
-    def __init__(self, sh, *args, **kwargs):
+    def __init__(self, sh):
         """
-        Initalizes the plugin. The parameters describe for this method are pulled from the entry in plugin.conf.
-
-        :param sh:  **Deprecated**: The instance of the smarthome object. For SmartHomeNG versions 1.4 and up: **Don't use it**!
-        :param *args: **Deprecated**: Old way of passing parameter values. For SmartHomeNG versions 1.4 and up: **Don't use it**!
-        :param **kwargs:**Deprecated**: Old way of passing parameter values. For SmartHomeNG versions 1.4 and up: **Don't use it**!
+        Initalizes the plugin.
 
         If you need the sh object at all, use the method self.get_sh() to get it. There should be almost no need for
         a reference to the sh object any more.
 
-        The parameters *args and **kwargs are the old way of passing parameters. They are deprecated. They are imlemented
-        to support oder plugins. Plugins for SmartHomeNG v1.4 and beyond should use the new way of getting parameter values:
-        use the SmartPlugin method get_parameter_value(parameter_name) instead. Anywhere within the Plugin you can get
+        Plugins have to use the new way of getting parameter values:
+        use the SmartPlugin method get_parameter_value(parameter_name). Anywhere within the Plugin you can get
         the configured (and checked) value for a parameter by calling self.get_parameter_value(parameter_name). It
         returns the value in the datatype that is defined in the metadata.
         """
+
+        # Call init code of parent class (SmartPlugin)
+        super().__init__()
+
         from bin.smarthome import VERSION
         if '.'.join(VERSION.split('.', 2)[:2]) <= '1.5':
             self.logger = logging.getLogger(__name__)
 
-        # If an package import with try/except is done, handle an import error like this:
-
-        # Exit if the required package(s) could not be imported
-        # if not REQUIRED_PACKAGE_IMPORTED:
-        #     self.logger.error("Unable to import Python package '<exotic package>'")
-        #     self._init_complete = False
-        #     return
-
         # get the parameters for the plugin (as defined in metadata plugin.yaml):
-        #   self.param1 = self.get_parameter_value('param1')
+        # self.param1 = self.get_parameter_value('param1')
 
         # cycle time in seconds, only needed, if hardware/interface needs to be
         # polled for value changes by adding a scheduler entry in the run method of this plugin
@@ -82,11 +76,8 @@ class SamplePlugin(SmartPlugin):
         #   self._init_complete = False
         #   return
 
-        # The following part of the __init__ method is only needed, if a webinterface is being implemented:
-
         # if plugin should start even without web interface
         self.init_webinterface()
-
         # if plugin should not start without web interface
         # if not self.init_webinterface():
         #     self._init_complete = False
@@ -98,7 +89,7 @@ class SamplePlugin(SmartPlugin):
         Run method for the plugin
         """
         self.logger.debug("Run method called")
-        # setup scheduler for device poll loop   (disable the following line, if you don't need to poll the device. Rember to comment the self_cycle statement in __init__ as well
+        # setup scheduler for device poll loop   (disable the following line, if you don't need to poll the device. Rember to comment the self_cycle statement in __init__ as well)
         self.scheduler_add('poll_device', self.poll_device, cycle=self._cycle)
 
         self.alive = True
@@ -153,8 +144,9 @@ class SamplePlugin(SmartPlugin):
         :param source: if given it represents the source
         :param dest: if given it represents the dest
         """
-        if caller != self.get_shortname():
-            # code to execute, only if the item has not been changed by this this plugin:
+        if self.alive and caller != self.get_shortname():
+            # code to execute if the plugin is not stopped
+            # and only, if the item has not been changed by this this plugin:
             self.logger.info("Update item: {}, item has been changed outside this plugin".format(item.id()))
 
             if self.has_iattr(item.conf, 'foo_itemtag'):
@@ -171,7 +163,7 @@ class SamplePlugin(SmartPlugin):
 
         This method is only needed, if the device (hardware/interface) does not propagate
         changes on it's own, but has to be polled to get the actual status.
-        It is called by the scheduler.
+        It is called by the scheduler which is set within run() method.
         """
         # # get the value from the device
         # device_value = ...
@@ -255,6 +247,8 @@ class WebInterface(SmartPluginWebIf):
         self.plugin = plugin
         self.tplenv = self.init_template_environment()
 
+        self.items = Items.get_instance()
+
     @cherrypy.expose
     def index(self, reload=None):
         """
@@ -262,9 +256,35 @@ class WebInterface(SmartPluginWebIf):
 
         Render the template and return the html file to be delivered to the browser
 
-        :return: contents of the template after beeing rendered 
+        :return: contents of the template after beeing rendered
         """
         tmpl = self.tplenv.get_template('index.html')
         # add values to be passed to the Jinja2 template eg: tmpl.render(p=self.plugin, interface=interface, ...)
-        return tmpl.render(p=self.plugin)
+        return tmpl.render(p=self.plugin, items=sorted(self.items.return_items(), key=lambda k: str.lower(k['_path'])))
+
+
+    @cherrypy.expose
+    def get_data_html(self, dataSet=None):
+        """
+        Return data to update the webpage
+
+        For the standard update mechanism of the web interface, the dataSet to return the data for is None
+
+        :param dataSet: Dataset for which the data should be returned (standard: None)
+        :return: dict with the data needed to update the web page.
+        """
+        if dataSet is None:
+            # get the new data
+            data = {}
+
+            # data['item'] = {}
+            # for i in self.plugin.items:
+            #     data['item'][i]['value'] = self.plugin.getitemvalue(i)
+            #
+            # return it as json the the web page
+            # try:
+            #     return json.dumps(data)
+            # except Exception as e:
+            #     self.logger.error("get_data_html exception: {}".format(e))
+        return {}
 

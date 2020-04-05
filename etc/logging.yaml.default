@@ -33,10 +33,19 @@ filters:
 
     # The following sections define filters that can be used for different logs
     #
-    loggerfilter:
+    knx_filter:
         # This filter must be enabled when busmonitor logging from the knx plugin should be used.
+        # It filters all log entries coming from the logger named knx_busmonitor (that is initialized in the KNX plugin)
         (): lib.logutils.Filter
         name: knx_busmonitor
+
+    filter_example:
+        # This filter hides all messages from logger module "item" with messages containing "This is a very nice filter"
+        (): lib.logutils.Filter
+        module: item
+        msg: "This is a very nice filter"
+        # The next invert: True parameter would ONLY show messages matching both module and msg parameters and nothing else
+        #invert: True
 
 
 handlers:
@@ -74,6 +83,7 @@ handlers:
         backupCount: 7
         filename: ./var/log/smarthome-details.log
         encoding: utf8
+        filters: [knx_filter]
 
     #develop_file:
     #    # This handler should be used for development purposes. It writes all entries to
@@ -91,6 +101,7 @@ handlers:
     #    backupCount: 7
     #    filename: ./var/log/smarthome-develop.log
     #    encoding: utf8
+    #    filters: [filter_example]
 
     #shng_busmonitor_file:
     #    # This handler must be enabled when busmonitor logging from the knx plugin should be used.

@@ -2,7 +2,7 @@
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
 # Copyright 2016-       Martin Sinn                         m.sinn@gmx.de
-# Copyright 2016-       Christian Strassburg
+# Copyright 2016        Christian Strassburg
 # Copyright 2018        Stefan Widmer (smailee)
 # Copyright 2011-2013   Marcus Popp                        marcus@popp.mx
 #########################################################################
@@ -56,6 +56,7 @@ import collections
 import os.path		# until Backend is modified
 
 import lib.config
+import lib.translation as translation
 import lib.shyaml as shyaml
 from lib.model.smartplugin import SmartPlugin
 from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE,YAML_FILE,CONF_FILE)
@@ -109,8 +110,6 @@ class Plugins():
         if _conf == {}:
             return
 
-        self._load_translations()
-
         logger.info('Load plugins')
 
         # for every section (plugin) in the plugin.yaml file
@@ -138,21 +137,21 @@ class Plugins():
                     logger.error("Plugins, section {}: class_path is not defined".format(plugin))
                 else:
                     args = self._get_conf_args(_conf[plugin])
-#                    logger.warning("Plugin '{}' from from section '{}': classname = {}, classpath = {}".format( str(classpath).split('.')[1], plugin, classname, classpath ) )
+#                    logger.warning("Plugin '{}' from section '{}': classname = {}, classpath = {}".format( str(classpath).split('.')[1], plugin, classname, classpath ) )
                     instance = self._get_instancename(_conf[plugin]).lower()
                     dummy = self._test_duplicate_pluginconfiguration(plugin, classname, instance)
                     try:
-                        plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance, self.meta, self._gtrans)
+                        plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance, self.meta)
                         if plugin_thread._init_complete == True:
                             try:
                                 self._plugins.append(plugin_thread.plugin)
                                 self._threads.append(plugin_thread)
                                 if instance == '':
-                                    logger.info("Initialized plugin '{}' from from section '{}'".format( str(classpath).split('.')[1], plugin ) )
+                                    logger.info("Initialized plugin '{}' from section '{}'".format( str(classpath).split('.')[1], plugin ) )
                                 else:
-                                    logger.info("Initialized plugin '{}' instance '{}' from from section '{}'".format( str(classpath).split('.')[1], instance, plugin ) )
+                                    logger.info("Initialized plugin '{}' instance '{}' from section '{}'".format( str(classpath).split('.')[1], instance, plugin ) )
                             except:
-                                logger.warning("Plugin '{}' from from section '{}' not loaded".format( str(classpath).split('.')[1], plugin ) )
+                                logger.warning("Plugin '{}' from section '{}' not loaded".format( str(classpath).split('.')[1], plugin ) )
                     except Exception as e:
                         logger.exception("Plugin '{}' from section '{}' exception: {}".format(str(classpath).split('.')[1], plugin, e))
 
@@ -185,18 +184,6 @@ class Plugins():
             logger.debug("Plugins.get_logic_parameters(): {} = {}".format(p, paramdict[p]))
 
         return paramdict
-
-
-    def _load_translations(self):
-        """
-        """
-        self._gtrans = {}
-        self.relative_filename = os.path.join( 'bin', 'locale'+YAML_FILE )
-        filename = os.path.join( self._sh.get_basedir(), self.relative_filename )
-        trans = shyaml.yaml_load(filename, ordered=False, ignore_notfound=True)
-        if trans != None:
-            self._gtrans = trans.get('global_translations', {})
-            logger.info("Loaded global translations = {}".format(self._gtrans))
 
 
     def _get_pluginname_and_metadata(self, plg_section, plg_conf):
@@ -529,7 +516,7 @@ class PluginWrapper(threading.Thread):
     :type meta: object
     """
 
-    def __init__(self, smarthome, name, classname, classpath, args, instance, meta, gtranslations):
+    def __init__(self, smarthome, name, classname, classpath, args, instance, meta):
         """
         Initialization of wrapper class
         """
@@ -543,8 +530,8 @@ class PluginWrapper(threading.Thread):
         try:
             exec("import {0}".format(classpath))
         except ImportError as e:
-            logger.error("Plugins: Plugin '{}' error importing Python package: {}".format(name, e))
-            logger.error("Plugins: Plugin '{}' initialization failed, plugin not loaded".format(name))
+            logger.error("Plugin '{}' error importing Python package: {}".format(name, e))
+            logger.error("Plugin '{}' initialization failed, plugin not loaded".format(name))
             return
         except Exception as e:
             logger.exception("Plugin '{}' exception during import of __init__.py: {}".format(name, e))
@@ -552,16 +539,12 @@ class PluginWrapper(threading.Thread):
         try:
             exec("self.plugin = {0}.{1}.__new__({0}.{1})".format(classpath, classname))
         except Exception as e:
-            logger.exception("Plugin '{}' exception during execution of plugin: {}".format(name, e))
+            logger.error("Plugin '{}' class name '{}' defined in metadata, but not found in plugin code".format(name, classname))
+            logger.error("Plugin '{}' initialization failed, plugin not loaded".format(name))
+            return
 
-        relative_filename = os.path.join( classpath.replace('.', '/'), 'locale'+YAML_FILE )
-        filename = os.path.join( smarthome.get_basedir(), relative_filename )
-        trans = shyaml.yaml_load(filename, ordered=False, ignore_notfound=True)
-        if trans != None:
-            self._ptrans = trans.get('plugin_translations', {})
-            logger.info("Plugin '{}': Loaded plugin translations = {}".format(name, self._ptrans))
-        else:
-            self._ptrans = {}
+        # load plugin-specific translations
+        self._ptrans = translation.load_translations('plugin', classpath.replace('.', '/'), 'plugin/'+classpath.split('.')[1])
 
         # make the plugin a method/function of the main smarthome object  (MS: Ist das zu früh? Falls Init fehlschlägt?)
 #        setattr(smarthome, self.name, self.plugin)
@@ -569,8 +552,6 @@ class PluginWrapper(threading.Thread):
             logger.warning("Plugin '{}' (section '{}') is deprecated. Consider to use a replacement instead".format(classpath.split('.')[1], name))
         # initialize attributes of the newly created plugin object instance
         if isinstance(self.get_implementation(), SmartPlugin):
-            self.get_implementation()._gtranslations = gtranslations
-            self.get_implementation()._ptranslations = self._ptrans
             self.get_implementation()._set_configname(name)
 #            self.get_implementation()._config_section = name
             self.get_implementation()._set_shortname(str(classpath).split('.')[1])
@@ -582,10 +563,10 @@ class PluginWrapper(threading.Thread):
             if instance != '':
                 logger.debug("set plugin {0} instance to {1}".format(name, instance ))
                 self.get_implementation()._set_instance_name(instance)
-#           addition von smai
+#           addition by smai
             # Customized logger instance for plugin to append name of plugin instance to log text
             self.get_implementation().logger = PluginLoggingAdapter(logging.getLogger(classpath), {'plugininstance': self.get_implementation().get_loginstance()})
-#           end addition von smai
+#           end addition by smai
             self.get_implementation()._set_sh(smarthome)
             self.get_implementation()._set_plugin_dir( os.path.join( os.path.dirname( os.path.dirname(os.path.abspath(__file__)) ), classpath.replace('.',os.sep) ) )
             self.get_implementation()._plgtype = self.meta.get_string('type')
@@ -601,7 +582,9 @@ class PluginWrapper(threading.Thread):
         self.get_implementation()._itemlist = []
 
         # get arguments defined in __init__ of plugin's class to self.args
-        exec("self.args = inspect.getargspec({0}.{1}.__init__)[0][1:]".format(classpath, classname))
+#        exec("self.args = inspect.getargspec({0}.{1}.__init__)[0][1:]".format(classpath, classname))
+        exec("self.args = inspect.getfullargspec({0}.{1}.__init__)[0][1:]".format(classpath, classname))
+        #logger.warning("- self.args = '{}'".format(self.args))
 
         # get list of argument used names, if they are defined in the plugin's class
         logger.debug("Plugin '{}': args = '{}'".format(classname, str(args)))

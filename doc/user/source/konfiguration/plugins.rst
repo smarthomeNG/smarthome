@@ -1,6 +1,6 @@
-#######
+=======
 Plugins
-#######
+=======
 
 .. toctree::
    :maxdepth: 5
@@ -22,10 +22,7 @@ Für das oft benutzte KNX-Plugin sieht das z.B. so aus:
    # etc/plugin.yaml
    knx:
        plugin_name: knx
-   #    class_name: KNX
-   #    class_path: plugins.knx
    #    instance: knx_1
-
    #    host: 127.0.0.1
    #    port: 6720
        send_time: 600    # update date/time every 600 seconds, default none
@@ -40,10 +37,7 @@ bzw. im alten Format:
    # etc/plugin.conf
    [knx]
       plugin_name = knx
-   #   class_name = KNX
-   #   class_path = plugins.knx
    #   instance = knx_1
-
    #   host = 127.0.0.1
    #   port = 6720
       send_time = 600 # update date/time every 600 seconds, default none
@@ -61,17 +55,16 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 | Parameter      | Bedeutung                                                                           |
 +================+=====================================================================================+
 | plugin_name    | Der Kurzname des Plugins, das eingebunden werden soll (Name des Verzeichnisses      |
-|                | im **../plugins** Verzeichnis). Statt des Parameters **plugin_name** können auch    |
-|                | die Parameter **class_name** und **class_path** angegeben werden. Dieses ist        |
-|                | jedoch nur in Ausnahmefällen notwendig.                                             |
+|                | im **../plugins** Verzeichnis). Statt des Parameters **plugin_name** konnten bisher |
+|                | auch die Parameter **class_name** und **class_path** angegeben werden.              |
 +----------------+-------------------------------------------------------------------------------------+
-| class_name     | Name der Klasse in der Plugin Datei. Was hier einzutragen ist, steht in der         |
-|                | Dokumentation zum jeweiligen Plugin. Im Normalfall ist die Konfiguration über den   |
-|                | Parameter **plugin_name** vorzuziehen.                                              |
+| class_name     | **DEPRECATED**: Name der Klasse in der Plugin Datei. Was hier einzutragen ist,      |
+|                | steht in der Dokumentation zum jeweiligen Plugin. Stattdessen ist die               |
+|                | Konfiguration über den Parameter **plugin_name** vorzunehmen.                       |
 +----------------+-------------------------------------------------------------------------------------+
-| class_path     | Pfad zur Plugin Datei. Was hier einzutragen ist, steht in der                       |
-|                | Dokumentation zum jeweiligen Plugin. Im Normalfall ist die Konfiguration über den   |
-|                | Parameter **plugin_name** vorzuziehen.                                              |
+| class_path     | **DEPRECATED**: Pfad zur Plugin Datei. Was hier einzutragen ist, steht in der       |
+|                | Dokumentation zum jeweiligen Plugin. Stattdessen ist die Konfiguration  über den    |
+|                | Parameter **plugin_name** vorzunehmen.                                              |
 +----------------+-------------------------------------------------------------------------------------+
 | instance       | Optional: Dieser Parameter muss nur verwendet werden, wenn mehrere Instanzen des    |
 |                | selben Plugins geladen werden sollen. Das Plugin selbst muss dazu **Multiinstance** |

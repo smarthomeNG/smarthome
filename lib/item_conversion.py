@@ -65,11 +65,9 @@ def is_ruamelyaml_installed():
 
 def _strip_quotes(string):
     string = string.strip()
-    if len(string) >= 2:
-        if string[0] in ['"', "'"]:  # check if string starts with ' or "
-            if string[0] == string[-1]:  # and end with it
-                if string.count(string[0]) == 2:  # if they are the only one
-                    string = string[1:-1]  # remove them
+    # check if string starts with ' or ", and end with it, if they are the only one
+    if len(string) >= 2 and string[0] in ['"', "'"] and string[0] == string[-1] and string.count(string[0]) == 2:
+        string = string[1:-1]  # remove them
     return string
 
 
@@ -317,9 +315,7 @@ def convert_yaml(data):
     """
 
     ordered = (type(data).__name__ == 'OrderedDict')
-    dict_type = 'dict'
     if ordered:
-        dict_type = 'OrderedDict'
         sdata = _ordered_dump(data, Dumper=yaml.SafeDumper, version=yaml_version, indent=indent_spaces, block_seq_indent=2, width=32768, allow_unicode=True, default_flow_style=False)
     else:
         sdata = yaml.dump(data, Dumper=yaml.SafeDumper, indent=indent_spaces, block_seq_indent=2, width=32768, allow_unicode=True, default_flow_style=False)

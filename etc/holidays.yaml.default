@@ -1,0 +1,38 @@
+%YAML 1.1
+---
+# etc/holidays.yaml
+
+# Supports holidays for 50 countries
+# Supports regional holidays for provinces of a country
+#
+# Popular countries for SmartHomeNG:
+#  - Germany or DE: province = BW, BY, BE, BB, HB, HH, HE, MV, NI, NW, RP, SL, SN, ST, SH, TH
+#  - Austria or AT: province = B, K, N, O, S, ST, T, V, W (default)
+#  - Switzerland or CH: province = AG, AR, AI, BL, BS, BE, FR, GE, GL, GR, JU, LU, NE, NW, OW, SG, SH, SZ, SO, TG, TI, UR, VD, VS, ZG, ZH
+#
+#  - Belgium or BE: province = None
+#  - France or FRA: province = Métropole (default), Alsace-Moselle, Guadeloupe, Guyane, Martinique, Mayotte, Nouvelle-Calédonie, La Réunion, Polynésie Française, Saint-Barthélémy, Saint-Martin, Wallis-et-Futuna
+#  - Luxembourg or LU: province = None
+#  - Poland or PL: province = None
+#  - UnitedKingdom or UK: province = None
+#  - England, Northern Ireland, Scotland, Wales: province = None
+
+location:
+    country: Germany
+    #province: HH       # for DE
+    #state: FL          # state is only used for United States and Brazil
+
+#custom:
+#    # custom holidays without a specified year repeat every year
+#    - '{"dow": 5, "dow_week": "last", "month": 7, "name": "Sysadmin day"}'           # last friday in July
+#    - {"day": 2, "month": 8, "name": "Jon Doe's birthday"}
+#    - {"day": 22, "month": 11, "name: "Jane Doe's birthday"}
+#    - {"day": 2, "month": 8, "year": 2020, "name": "Jon Doe's 100th birthday"}
+#    - {"dow": 5, "dow_week": "last", "month": 7, "name": "Sysadmin day"}         # last friday in July
+#    - {"dow": 2, "dow_week": 2, "month": 7, "name": "second tuesday in July"}
+#    - {"dow": 2, "dow_week": 2, "month": 7, "year": 2019, "name": "second tuesday in July '19"}
+#    - {"dow": 3, "dow_week": 2, "year": 2021, "name": "Every second wednesday in 2021"}
+#    - {"dow": 3, "dow_week": 2, "dow_start_week": 1, "year": 2021, "name": "Every second wednesday in 2021, starting on 1st wednesday"}
+
+custom:
+    - '{"dow": 5, "dow_week": "last", "month": 7, "name": "Sysadmin day"}'           # last friday in July

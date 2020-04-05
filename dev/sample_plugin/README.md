@@ -64,31 +64,9 @@ If you have extensive examples, you could describe them here.
 
 ## Web Interfaces
 
-For building a web interface for a plugin, we deliver the following 3rd party components with the HTTP module:
+For building a web interface for a plugin, SmartHomeNG delivers a set of 3rd party components with the HTTP module. 
+For addons, etc. that are delivered with the components, see /modules/http/webif/gstatic folder!
 
-   * JQuery 3.4.1: 
-     * JS: &lt;script src="/gstatic/js/jquery-3.4.1.min.js"&gt;&lt;/script&gt;
-   * Bootstrap : 
-     * CSS: &lt;link rel="stylesheet" href="/gstatic/bootstrap/css/bootstrap.min.css" type="text/css"/&gt; 
-     * JS: &lt;script src="/gstatic/bootstrap/js/bootstrap.min.js"&gt;&lt;/script&gt;     
-   * Bootstrap Tree View: 
-      * CSS: &lt;link rel="stylesheet" href="/gstatic/bootstrap-treeview/bootstrap-treeview.css" type="text/css"/&gt; 
-      * JS: &lt;script src="/gstatic/bootstrap-treeview/bootstrap-treeview.min.js"&gt;&lt;/script&gt;
-   * Bootstrap Datepicker v1.8.0:
-      * CSS: &lt;link rel="stylesheet" href="/gstatic/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" type="text/css"/&gt;
-      * JS:
-         * &lt;script src="/gstatic/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"&gt;&lt;/script&gt;
-         * &lt;script src="/gstatic/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js"&gt;&lt;/script&gt;
-   * popper.js: 
-      * JS: &lt;script src="/gstatic/popper.js/popper.min.js"&gt;&lt;/script&gt;
-   * CodeMirror 5.46.0: 
-      * CSS: &lt;link rel="stylesheet" href="/gstatic/codemirror/lib/codemirror.css"/&gt;
-      * JS: &lt;script src="/gstatic/codemirror/lib/codemirror.js"&gt;&lt;/script&gt;
-   * Font Awesome 5.8.1:
-      * CSS: &lt;link rel="stylesheet" href="/gstatic/fontawesome/css/all.css" type="text/css"/&gt;
-
- For addons, etc. that are delivered with the components, see /modules/http/webif/gstatic folder!
- 
- If you are interested in new "global" components, contact us. Otherwise feel free to use them in your plugin, as long as
- the Open Source license is ok.
+The plugin needs further components, they have to be located in the static folder of the plugin's web interface 
+folder (webif).
  

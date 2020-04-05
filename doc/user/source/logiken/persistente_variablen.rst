@@ -2,13 +2,14 @@
 
 .. role:: bluesup
 
+=======================================
 Persistente Variablen :bluesup:`update`
 =======================================
 
-Normale Variablen innerhalb von Logiken sind zur für den jeweiligen Lauf gültig. Es ist jedoch
+Normale Variablen innerhalb von Logiken sind nur für den jeweiligen Lauf gültig. Es ist jedoch
 in einigen Fällen notwendig, Werte zwischen verschiedenen Läufen einer Logik zu übergeben.
 
-Solche persistente Variablen sind in in Logiken von SmartHomeNG möglich, es sind jedoch einige
+Solche persistente Variablen sind in Logiken von SmartHomeNG möglich, es sind jedoch einige
 Dinge zu beachten:
 
 - Diese Variablen sind über mehrere Läufe von Logiken persistent. Allerdings gilt das nur während
@@ -18,17 +19,17 @@ Dinge zu beachten:
 - Beim 1. Lauf einer Logik nach dem Start von SmartHomeNG existieren diese Variablen nicht. Der
   erste Zugriff innerhalb einer Logik muss deshalb in einen **if not hasattr():** Ausdruck
   eingebunden werden.
-- Diese Variablen sind **lokal zur Logik**. Sie stehen außerhalb der Logik die sie definiert hat
+- Diese Variablen sind **lokal zur Logik**. Sie stehen außerhalb der Logik, die sie definiert hat,
   nicht zur Verfügung. Wenn die Daten auch außerhalb der Logik verwendet werden, müssen sie in
   Items abgelegt werden. (Ein Sonderfall sind Werte, die zwar außerhalb der definierenden Logik
   verwendet werden sollen, aber nur in Logiken. Hier gibt es eine weitere Möglichkeit, die
   weiter unten beschrieben wird).
 - Es dürfen einige Namen nicht verwendet werden, da sie interne Variablen des Logik Objektes
   überschreiben würden.
-  
+
 
 Einrichten einer persistenten Variablen
----------------------------------------
+=======================================
 
 Normale Variablen sind lokal zum Lauf der der Logik. Eine Variable **myvar** die während eines
 Laufes der Logik einen Wert zugewiesen bekommt, ist beim Beginn des nächsten Laufes nicht
@@ -55,7 +56,7 @@ nur in der Logik zur Verfügung, die sie auch definiert hat.
 
 
 Existenz einer Variable sicherstellen
--------------------------------------
+=====================================
 
 Wenn auf eine Variable zugegriffen wird bevor sie definiert wird, führt das zu einer Exception
 und der Rest der Logik wird nicht ausgeführt. Beim ersten Lauf einer Logik nach einem Neustart
@@ -71,10 +72,10 @@ definiert werden. Das kann zum Beispiel in der folgenden Form erfolgen, in der d
 
 
 Nutzung selbst definierter Parameter
-------------------------------------
+====================================
 
 Es ist möglich eigene Parameter in der Datei **../etc/logic.yaml** zu definieren. Diese Parameter
-stehen in der Logik under **logic.<Parameter>** zur Verfügung. Diese Parameter können als
+stehen in der Logik unter **logic.<Parameter>** zur Verfügung. Diese Parameter können als
 eine bereits initialisierte Variable verstanden/genutzt werden. Sie können in der Logik nicht
 nur gelesen, sondern auch verändert werden. Diese Änderung geht wie beschrieben bei einem
 Neustart von SmartHomeNG verloren.
@@ -89,7 +90,7 @@ Neustart von SmartHomeNG verloren.
 
 
 Einrichten einer persistenten Variablen (Logik übergreifend)
-------------------------------------------------------------
+============================================================
 
 Statt eine persistende lokale Variable einzurichten:
 
@@ -116,14 +117,14 @@ Analog zur lokalen persistenten Variable muss die Existenz folgendermaßen siche
 
 
 Unterschiede zu lokalen persistenten Variablen
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------
 
 Eine einmal initialisierte Logik-übergreifende persistente Variable behält ihren Wert bis
 zum Neustart von SmartHomeNG.
 
 .. attention::
 
-   Da die Variable ihren Wert auch behält, wenn die Logik die sie initialisiert hat neu geladen
-   wird, kann es zu unerwarteten Ergebnissen kommen, da sich die Logik nun evtl. bei einem Neustart
-   der Logik anders verhält, als beim Neustart von SmartHomeNG!
+   Da die Logik-übergreifende Variable ihren Wert auch behält, wenn die Logik die sie initialisiert hat
+   neu geladen wird, kann es zu unerwarteten Ergebnissen kommen, da sich die Logik nun evtl. bei einem
+   Neustart der Logik anders verhält, als beim Neustart von SmartHomeNG!
 

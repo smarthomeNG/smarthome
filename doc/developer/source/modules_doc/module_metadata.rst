@@ -1,5 +1,5 @@
-Module Metadata
-===============
+Metadata for Modules
+====================
 
 Modules are configured in ``etc/module.yaml``. The parameters are described in the README.md
 files of the modules.

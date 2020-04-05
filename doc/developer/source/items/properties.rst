@@ -5,8 +5,8 @@
 .. role:: redsup
 
 
-Properties of an item :redsup:`new`
-===================================
+Properties of an item
+=====================
 
 Each defined item offers the following properties, which may be used in **eval** expressions.
 All properties are at least readable (r/o). Some properties can also written to (r/w).

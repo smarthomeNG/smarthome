@@ -1,11 +1,11 @@
-# Module mqtt
+# Module mqtt (README.md)
 
 This module allows plugins to utilize the MQTT protocol. The API is described below.
 
 
 ## Requirements
 
-This module is running under SmmartHomeNG versions beyond v1.3. It requires Python >= 3.4.
+This module is running under SmmartHomeNG versions beyond v1.6.
 
 > Note: This module needs the module handling in SmartHomeNG to be activated. Make sure, that `use_modules`in `etc/smarthome.yaml` is **not** set to False!
 

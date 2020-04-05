@@ -263,24 +263,31 @@ smarthome.log file. Then you start you class. The class name has to match the ``
 Afterwards you define the required functions.
 
 ```python
-def __init__(self, smarthome, Parameter1 = False):
+def __init__(self, sh:
 ```
 
-The function __init__ is called once when SmartHomeNG initializes before the items are loaded. Here you place the code that is needed to initialize you plugin. For example you can open a serial port if you need to communicate to an external device, open files, initialize other variables you need and so on.
-The function receives the parameter ``smarthome`` which gives access to the SmartHomeNG functions. You should save the value in a variable for later use like in the example above.
-Other parameter values are received from the file plugin.conf. You can default values for the case that the parameter is not defined in the plugin.conf file. It is a good practice to log your plugin name to the smarthome.log file.
+The function __init__ is called once when SmartHomeNG initializes before the items are loaded. Here you place the code 
+that is needed to initialize you plugin. For example you can open a serial port if you need to communicate to an 
+external device, open files, initialize other variables you need and so on.
+The function receives the parameter ``smarthome`` which gives access to the SmartHomeNG functions. You should save the 
+value in a variable for later use like in the example above. Other parameter values are received from the file 
+plugin.yaml. You can default values for the case that the parameter is not defined in the plugin.yaml file.
 
 ```python
 def run(self):
 ```
 
-The function run is called once when SmartHomeNG starts. Run is executed after all items are loaded. You need to set the variable self.alive=True here.
+The function run is called once when SmartHomeNG starts. Run is executed after all items are loaded. You need to set 
+the variable self.alive=True here.
 
 ```python
 def stop(self):
 ```
 
-This is called when SmartHomeNG shuts down. This is the right place to close files and data connections. You need to set the variable self.alive=False here.
+This is called when SmartHomeNG shuts down. This is the right place to close files and data connections. You need to 
+set the variable self.alive=False here. You need to stop all threads that the plugin might have started
+
+If self.alive is False, the plugin should not send data from changed items or receive data and store it to items!
 
 ```python
 def parse_item(self, item):
@@ -309,16 +316,19 @@ You can access the parameter ``ivalue`` using the following code:
         return None
 ```
 
-Here you check if the parameter ivalue is defined in the item. It case it is, the variable ad is set to the parameter value and the function update_item is returned. The function update_item is called each time when the item changes. Each time the lamp is switched on or off by KNX or something else, the function update_item is called.
-The parameter values are always string values. Even if you set ``ivalue: 1`` in the plugin.yaml your code
-will receive the string '1'. If you need a number you must convert it on your own.
-If the parameter ivalue is not in the item definition, nothing is done and a change of the item does not affect you plugin at all.
+Here you check if the parameter ivalue is defined in the item. It case it is, the variable ad is set to the parameter 
+value and the function update_item is returned. The function update_item is called each time when the item changes. 
+Each time the lamp is switched on or off by KNX or something else, the function update_item is called. The parameter 
+values are always string values. Even if you set ``ivalue: 1`` in the plugin.yaml your code will receive the 
+string '1'. If you need a number you must convert it on your own. If the parameter ivalue is not in the item 
+definition, nothing is done and a change of the item does not affect you plugin at all.
 
 ```python
 def parse_logic(self, logic):    # (version>=1.3)
 ```
 
-This function called for each logic during startup when SmartHomeNG reads the logic.conf file. You can access logic parameters and start according action here. For example you have the following logic defined in …/etc/logic.yaml
+This function called for each logic during startup when SmartHomeNG reads the logic.conf file. You can access logic 
+parameters and start according action here. For example you have the following logic defined in …/etc/logic.yaml
 
 
 ```yaml
@@ -329,7 +339,8 @@ This function called for each logic during startup when SmartHomeNG reads the lo
         some_plugin_setting: send-notify
 ```
 
-A plugin can now check the `some_plugin_setting` to find logics where the execution is interesting for it. The following implementation could be used to register a hook for such logics:
+A plugin can now check the `some_plugin_setting` to find logics where the execution is interesting for it. The 
+following implementation could be used to register a hook for such logics:
 
 ```python
     if 'some_plugin_setting' in logic.conf:

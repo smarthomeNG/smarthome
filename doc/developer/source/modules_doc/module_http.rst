@@ -1,3 +1,9 @@
+.. index:: Modules; http
+.. index:: http; http Module
+
+.. role:: redsup
+.. role:: bluesup
+
 Module http
 ===========
 

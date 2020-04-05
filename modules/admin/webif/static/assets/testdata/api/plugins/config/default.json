@@ -1040,6 +1040,7 @@
           },
           "last_will_topic": {
             "type": "str",
+            "gui_type": "wide_str",
             "default": "",
             "description": {
               "de": "Topic für Last-Will Telegramm",
@@ -1056,9 +1057,10 @@
           },
           "last_will_payload": {
             "type": "str",
+            "gui_type": "wide_str",
             "default": "",
             "description": {
-              "de": "Payload für die MQTT testament message. Wenn keine **last_will_payload** angegeben wird, wird kein Last-Will Telegramm gesendet.",
+              "de": "Payload für die MQTT testament message. Wenn keine <strong>last_will_payload</strong> angegeben wird, wird kein Last-Will Telegramm gesendet.",
               "en": "Payload for the MQTT testament message. If **last_will_payload** is not specified, there will be no last-will message sent."
             },
             "listtype": [
@@ -1068,6 +1070,7 @@
           },
           "birth_topic": {
             "type": "str",
+            "gui_type": "wide_str",
             "default": "",
             "description": {
               "de": "Topic für das Birth Telegramm",
@@ -1084,6 +1087,7 @@
           },
           "birth_payload": {
             "type": "str",
+            "gui_type": "wide_str",
             "default": "",
             "description": {
               "de": "Payload für das Birth Telegramm. Wenn keine birth_payload konfiguriert ist, wird keine Birth Message gesendet. In diesem Fall wird auch keine last-will message gesendet, falls die Verbindung ordnungsgemäß geschlossen wird (beim Beenden von SmartHomeNG).",
@@ -3933,7 +3937,7 @@
         "plugin": {
           "type": "system",
           "description": {
-            "de": "Database plugin, **seit SmartHomeNG v1.3**",
+            "de": "Database plugin, **seit SmartHomeNG v1.3** ",
             "en": "Database plugin, **since SmartHomeNG v1.3**"
           },
           "maintainer": "ohinckel",
@@ -4529,7 +4533,7 @@
         }
       },
       "_description": {
-        "de": "Database plugin, **seit SmartHomeNG v1.3**",
+        "de": "Database plugin, **seit SmartHomeNG v1.3** ",
         "en": "Database plugin, **since SmartHomeNG v1.3**"
       }
     },

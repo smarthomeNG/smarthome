@@ -1,12 +1,12 @@
-============================
-Release 1.2 - May 16th, 2016
-============================
+==========================
+Release 1.2 - 16. Mai 2016
+==========================
 
 New CORE features
 -----------------
 
 * further improved logging (Konfiguration via ``etc/logging.yaml``)
-* new env.location Items: 
+* new env.location Items:
 
  - env.location.sunrise.azimut.degrees
  - env.location.sunrise.azimut.radians

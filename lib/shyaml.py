@@ -49,16 +49,16 @@ try:
 #    if str(yaml.__version__) < '0.15.0':
 #        logger.critical("shyaml: Loaded version of ruamel.yaml ({}) is too old".format(yaml.__version__))
 #        exit(1)
-    
+
 except:
     EDITING_ENABLED = False
     logger.critical("shyaml: ruamel.yaml is not installed")
     exit(1)
-    
+
 yaml_version = '1.1'
 indent_spaces = 4
 block_seq_indent = 0
-  
+
 def editing_is_enabled():
     return(EDITING_ENABLED == True)
 
@@ -93,12 +93,12 @@ def convert_linenumber(s, occ=1):
 def yaml_load(filename, ordered=False, ignore_notfound=False):
     """
     Load contents of a configuration file into an dict/OrderedDict structure. The configuration file has to be a valid yaml file
-   
+
     :param filename: name of the yaml file to load
     :type filename: str
     :param ordered: load to an OrderedDict? Default=False
     :type ordered: bool
-    
+
     :return: configuration data loaded from the file (or None if an error occured)
     :rtype: Dict | OrderedDict | None
     """
@@ -143,14 +143,14 @@ def yaml_load(filename, ordered=False, ignore_notfound=False):
 def yaml_load_fromstring(string, ordered=False):
     """
     Load contents of a string into an dict/OrderedDict structure. The string has to be valid yaml
-   
+
     :param string: name of the yaml file to load
     :type string: str
     :param ordered: load to an OrderedDict? Default=False
     :type ordered: bool
-    
-    :return: configuration data loaded from the file (or None if an error occured)
-    :rtype: Dict | OrderedDict | None
+
+    :return: configuration data loaded from the file (or None if an error occured) and error string
+    :rtype: Dict|OrderedDict|None, str
     """
 
     dict_type = 'dict'
@@ -188,7 +188,7 @@ def yaml_save(filename, data):
     :param data: configuration data to to save
     :type filename: str
     :type data: OrderedDict
-    
+
     :returns: Nothing
     """
 
@@ -212,16 +212,16 @@ def _format_yaml_load(data):
     Reinsert '\n's that have been removed fom comments to make file more readable
 
     :param data: string to format
-    
+
     :return: formatted string
     """
 
 #    ptr = 0
 #    cptr = data[ptr:].find('comment: ')
-    
+
     data = data.replace('\n', '\n\n')
     return data
-    
+
 
 def _ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
     """
@@ -231,7 +231,7 @@ def _ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
     :param stream: stream to read from
     :param Loader: yaml-loader to use
     :object_pairs_hook: ...
-    
+
     :return: OrderedDict structure
     """
 
@@ -255,7 +255,7 @@ def _format_yaml_dump(data):
     | - Add an empty line before a new item
 
     :param data: string to format
-    
+
     :return: formatted string
     """
 
@@ -272,7 +272,7 @@ def _format_yaml_dump(data):
             rdata.append(line)
     fdata = '\n'.join(rdata)
     return fdata
-        
+
 
 def _ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
     """
@@ -282,7 +282,7 @@ def _ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
     :param stream: stream to write to
     :param Dumper: yaml-dumper to use
     :**kwds: Additional keywords
-    
+
     :return: OrderedDict structure
     """
 
@@ -322,7 +322,7 @@ def yaml_load_roundtrip(filename):
         y = yaml.load(sdata, yaml.RoundTripLoader)
     except Exception as e:
         logger.error("yaml_load_roundtrip: YAML-file load error: '%s'" % (e))
-        y = {} 
+        y = {}
     return y
 
 
@@ -331,14 +331,14 @@ def get_emptynode():
    Return an empty node
    """
    return yaml.comments.CommentedMap([])
-       
+
 
 def get_commentedseq(l):
    """
    Convert a list to a commented sequence
    """
    return yaml.comments.CommentedSeq( l )
-       
+
 
 def yaml_dump_roundtrip(data):
     """
@@ -364,13 +364,13 @@ def yaml_save_roundtrip(filename, data, create_backup=False):
         return
     sdata = yaml.dump(data, Dumper=yaml.RoundTripDumper, version=yaml_version, indent=indent_spaces, block_seq_indent=block_seq_indent, width=12288, allow_unicode=True)
     sdata = _format_yaml_dump2( sdata )
-    
+
     if not filename.lower().endswith('.yaml'):
         filename += YAML_FILE
     if create_backup:
         if os.path.isfile(filename):
             shutil.copy2(filename, filename+'.bak')
-        
+
     with open(filename, 'w') as outfile:
         outfile.write( sdata )
 
@@ -378,7 +378,7 @@ def yaml_save_roundtrip(filename, data, create_backup=False):
 
 def _strip_empty_lines(data):
     ldata = data.split('\n')
-    
+
     rdata = []
     for index, line in enumerate(ldata):
         if len(line.strip()) == 0:
@@ -405,7 +405,7 @@ def _format_yaml_dump2(sdata):
 
 
     :param data: string to format
-    
+
     :return: formatted string
     """
 
@@ -413,7 +413,7 @@ def _format_yaml_dump2(sdata):
     sdata = _strip_empty_lines(sdata)
     sdata = sdata.replace('\n\n\n', '\n')
     sdata = sdata.replace('\n\n', '\n')
-#    sdata = sdata.replace(': |4\n', ': |\n')    # Multiline strings: remove '4' inserted by ruyaml 
+#    sdata = sdata.replace(': |4\n', ': |\n')    # Multiline strings: remove '4' inserted by ruyaml
 
     ldata = sdata.split('\n')
     rdata = []
@@ -468,7 +468,7 @@ def _format_yaml_dump2(sdata):
 #
 
 # Set a given data in a dictionary with position provided as a list
-def setInDict(dataDict, path, value): 
+def setInDict(dataDict, path, value):
     mapList = path.split('.')
     try:
         for k in mapList[:-1]: dataDict = dataDict[k]
@@ -476,8 +476,8 @@ def setInDict(dataDict, path, value):
     except:
         return False
     return True
-    
-    
+
+
 # Get parent to a path
 def get_parent(path):
     pathlist = path.split('.')
@@ -513,7 +513,7 @@ def writeBackToFile(filename, itempath, itemattr, value):
         itemyamlfile.load()
     itemyamlfile.setleafvalue(itempath, itemattr, value)
     itemyamlfile.save()
-    
+
 
 # ==================================================================================
 #   class yamlfile (for editing multiple entries at a time)
@@ -523,7 +523,7 @@ class yamlfile():
     data = None
     filename = ''
 
-    
+
     def __init__(self, filename, filename_write='', create_bak=False):
         """
         initialize class for handling a yaml-file (read/write)
@@ -533,7 +533,7 @@ class yamlfile():
         :param filename: name of the yaml-file (without the .yaml extension!)
         :param filename_write: name of the file to write the resluts to (if different from filename)
         :param create_bak: True, if a backup-file of the original file shall be created
-    
+
         :return: formatted string
         """
         self.filename = filename
@@ -565,9 +565,9 @@ class yamlfile():
     def getnode(self, path):
         """
         get the contents of a node (branch or leaf)
-        
+
         :param path: path of the node to return
-        
+
         :return: content of the node
         """
         returned, ret_nodetype = self._getFromDict(path)
@@ -577,9 +577,9 @@ class yamlfile():
     def getvalue(self, path):
         """
         get the value of a leaf-node
-        
+
         :param path: path of the node to return
-        
+
         :return: value of the leaf (or None, if the node is no leaf-node)
         """
         returned, ret_nodetype = self._getFromDict(path)
@@ -592,9 +592,9 @@ class yamlfile():
     def getnodetype(self, path):
         """
         get the type of a node
-        
+
         :param path: path of the node to return
-        
+
         :return: node type ('branch', 'leaf' or 'none')
         """
         returned, ret_nodetype = self._getFromDict(path)
@@ -604,9 +604,9 @@ class yamlfile():
     def getvaluetype(self, path):
         """
         get the valuetype of a node
-        
+
         :param path: path of the node to return
-        
+
         :return: node valuetype
         """
         returned, ret_nodetype = self._getFromDict(path)
@@ -622,7 +622,7 @@ class yamlfile():
     def setvalue(self, path, value):
         """
         set the value of a leaf, specified by leaf-path
-        
+
         :param path: path of the leaf-node to modify
         :param value: new value of the leaf-node
         """
@@ -638,7 +638,7 @@ class yamlfile():
                     self.data[get_key(get_parent(path))] = None
                 else:
                     node[get_key(get_parent(path))] = None
-            return 
+            return
         else:
             return self._add_node_and_leaf(path, value)
 
@@ -647,7 +647,7 @@ class yamlfile():
     def setleafvalue(self, branch, leaf, value):
         """
         set the value of a leaf, specified by branch-path and attribute name
-        
+
         :param branch: path of the branch-node which contains th attribute
         :param attr: name of the attribute to modify
         :param value: new value of the attribute
@@ -665,23 +665,23 @@ class yamlfile():
     # Add an empty branch
     def _ensurebranch(self, path):
         if self.getnodetype(path) == 'leaf':
-            raise KeyError("Node-ERROR: Unable to set branch '"+path+"', it exists already as a leaf")    
+            raise KeyError("Node-ERROR: Unable to set branch '"+path+"', it exists already as a leaf")
         elif self.getnodetype(path) == 'branch':
-            pass  
+            pass
         else:
             if not self._addnode(path):
-                raise KeyError("Node-ERROR: Unable to set branch '"+path+"' in item structure")    
+                raise KeyError("Node-ERROR: Unable to set branch '"+path+"' in item structure")
 
 
     # Add an empty branch
     def _addbranch(self, path):
         if self.getnodetype(path) == 'leaf':
-            raise KeyError("Node-ERROR: Unable to set branch '"+path+"', it exists already as a leaf")    
+            raise KeyError("Node-ERROR: Unable to set branch '"+path+"', it exists already as a leaf")
         elif self.getnodetype(path) == 'branch':
-            raise KeyError("Node-ERROR: Unable to set branch '"+path+"', it exists already as a branch")    
+            raise KeyError("Node-ERROR: Unable to set branch '"+path+"', it exists already as a branch")
         else:
             if not self._addnode(path):
-                raise KeyError("Node-ERROR: Unable to set branch '"+path+"' in item structure")    
+                raise KeyError("Node-ERROR: Unable to set branch '"+path+"' in item structure")
 
 
     # Add an empty node (internal for recursion)
@@ -694,7 +694,7 @@ class yamlfile():
             parent = '.'.join(pathlist[0:len(pathlist)-1])
             if self._addnode(parent):
                 result = self._add_node_and_leaf(path, None)
-        return result    
+        return result
 
 
     # Add a leaf to an empty node

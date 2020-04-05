@@ -7,30 +7,23 @@
 .. role:: redsup
 
 
-Administrations-Interface :redsup:`new`
-=======================================
+Administrations-Interface :bluesup:`Update`
+===========================================
 
 Seit SmartHomeNG v1.2 steht eine graphische Oberfläche zur Verfügung, die bei der Administration
-von SmartHomeNG hilft.
+von SmartHomeNG hilft. Dazu implementiert SmartHomeNG einen eigenen Webserver, der in der Standardkonfiguration
+auf **Port 8383** hört.
 
-Diese Oberfläche wird durch das **Backend Plugin** zur Verfügung gestellt. Dazu implementiert
-SmartHomeNG einen eigenen Webserver, der in der Standardkonfiguration auf **Port 8383** hört.
-
-
-Das Backend Plugin ist unter :doc:`/plugins/backend/user_doc` ausführlich beschrieben.
-
-
-Ab v1.6 wird SmartHomeNG um ein graphisches Administrations-Interface erweitert, welches eine Weiterentwicklung des
+Diese Oberfläche wurde bisher durch das **Backend Plugin** zur Verfügung gestellt. Das Backend Plugin ist unter
+:doc:`/plugins/backend/user_doc` ausführlich beschrieben. Es wird jedoch in einer der kommenden Versionen entfernt,
+da seit v1.6 ein neues graphisches Administrations-Interface zur Verfügung steht, welches eine Weiterentwicklung des
 Backend Plugins ist und in der Funktionalität über die Möglichkeiten des Backend Plugins hinausgeht.
 
-Während das Backend Plugin vorwiegend zur Anzeige von Informationen über die SmartHomeNG Installation diente, soll das
-Admin-Interface nach und nach die vollständige Konfiguration von SmartHomeNG ermöglichen.
-
-In v1.6 ist das Admin-Interface noch nicht Feature-Complete. Es können also noch nicht alle Aspekte von SmartHomeNG
-in der GUI konfiguriert werden.
+Während das Backend Plugin vorwiegend zur Anzeige von Informationen über die SmartHomeNG Installation diente, ermöglicht
+das Admin-Interface nach die vollständige Konfiguration von SmartHomeNG.
 
 Um einen problemlosen Übergang zu gewährleisten, steht das Backend Plugin für einen Übergangszeit weiter zur Verfügung.
-Es wird voraussichtlich mit v1.8 von SmartHomeNG als deprecated (veraltet) eingestuft.
+Es ist als deprecated (veraltet) eingestuft und wird voraussichtlich mit v1.8 von SmartHomeNG entfernt.
 
 
 Das Administrations-Interface wird durch folgenden Aufruf gestartet:

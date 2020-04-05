@@ -1,9 +1,5 @@
 %YAML 1.1
 ---
-BackendServer:
-    plugin_name: backend
-    #updates_allowed: False
-
 cli:
     plugin_name: cli
     ip: 0.0.0.0
@@ -16,9 +12,16 @@ websocket:
     plugin_name: visu_websocket
     #ip: 0.0.0.0
     #port: 2424
-    #tls: no
+    #tls: False
     #wsproto: 4
     #acl: rw
+
+database:
+    plugin_name: database
+    driver: sqlite3
+    connect:
+    -   database:./var/db/smarthomeng.db
+    -   check_same_thread:0
 
 # memlog:
 #     plugin_name: memlog
@@ -33,7 +36,6 @@ websocket:
 #     date_ga: 6/0/1    # default none
 #     busmonitor: True  # log all knx messages, default false
 #     readonly: True    ## don't write to knx bus, default false"
-#     instance: default
 
 # ow:
 #     plugin_name: onewire
@@ -166,7 +168,7 @@ websocket:
 
 # simulation:
 #     plugin_name: simulation
-#     data_file: /usr/local/smarthome/var/db/simulation.txt
+#     data_file: ./var/db/simulation.txt
 
 # nw:
 #     plugin_name: network

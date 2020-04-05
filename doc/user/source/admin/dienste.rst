@@ -12,12 +12,6 @@ Weiterhin kann der Status einiger von Plugins genutzter Dienste angesehen werden
 Rechner laufen wie SmartHomeNG selbst.
 
 
-.. index:: eval Syntax-Prüfer
-.. index:: Dienste; eval Syntax-Prüfer
-.. index:: Backup
-.. index:: Dienste; Backup
-.. index:: Sicherung der Konfiguration
-
 Dienste
 =======
 
@@ -27,13 +21,34 @@ Auf diesem Tab können folgende Funktionen ausgelöst werden:
 
   Diese Funktion setzt voraus, dass SmartHomeNG läuft
 
-* Herunterladen der Konfigurationsdaten von SmartHomeNG als Zip Archiv
+.. index:: Sicherung der Konfiguration
+.. index:: Backup; Admin GUI
+.. index:: Admin GUI; Backup
+
+* **Backup**: Herunterladen der Konfigurationsdaten von SmartHomeNG als Zip Archiv
 
   Das Zip-Archiv enthält die yaml Konfigurationsdateien aus dem /etc Verzeichnis (logging.yaml, logic.yaml,
   module.yaml, plugin.yaml, smarthome.yaml und struct.yaml). Weiterhin sind alle yaml Dateien der Verzeichnisse
   /items und /scenes enthalten. Außerdem enthält das Archiv den Python Code der Logiken aus dem Verzeichnis /logics.
+  Ab SmartHomeNG v1.7 werden auch die Zertifikats- und Key Dateien (\*.cer, \*.key) für tls/https aus dem /etc
+  Verzeichnis mit gesichert.
 
-  Das heruntergeladene Archiv trägt den Namen shng_config_backup_<Jahr>-<Monat>-<Tag>.zip
+  Das heruntergeladene Archiv trägt den Namen shng_config_backup_<Jahr>-<Monat>-<Tag>-<Stunde>-<Minuten>.zip
+
+  Links neben dem **Herunterladen** Button wird Datum/Uhrzeit des letzten Backups angezeigt.
+
+.. index:: Wiederherstellen der Konfiguration
+.. index:: Restore; Admin GUI
+.. index:: Admin GUI; Restore
+
+* **Restore**: Wiederherstellen der Konfiguration von SmartHomeNG aus einem Zip Archiv
+
+  Über diese Funktion kann eine Zip Archivdatei ausgewählt und zum SmartHomeNG Server hochgeladen werden. Im Anschluß
+  wird die in dem Zip Archiv gesicherte Konfiguration wiederhergestellt. Als Vorsichtsmaßnahme wird vor Beginn der
+  Wiederherstellung ein Backup der aktuellen Konfiguration vorgenommen. Dieses verbleibt auf dem SmartHomeNG Server
+  um im Notfall die aktuelle Konfiguration wiederherstellen zu können, falls die hochgeladene Datei nicht die gewünschte
+  Konfiguration enthielt. Dieses Backup wird im Verzeichnis ../var/backup abgelegt unt trägt den Dateinamen
+  shng_config_backup_before_restore_<Jahr>-<Monat>-<Tag>-<Stunde>-<Minuten>.zip
 
 
 .. image:: assets/services.jpg
@@ -50,6 +65,9 @@ Hash bei der Konfiguration automatisch erzeugt wird.
 
 eval Syntax-Prüfer
 ==================
+
+.. index:: eval Syntax-Prüfer
+.. index:: Dienste; eval Syntax-Prüfer
 
 Auf diesem Tab können eval Ausdrücke auf richtigen Syntax geprüft werden. Die Evaluierung der Ausdrücke findet im Kontext
 von SmartHomeNG statt, so dass auf alle Items und Funktionen von Plugins zugegriffen werden kann. Es ist auch möglich

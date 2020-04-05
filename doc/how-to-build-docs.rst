@@ -1,7 +1,7 @@
 SmartHomeNG Documentation
 =========================
 
-This directory contains the developer and the user documentation. The developer Documentation is
+This directory contains the developer and the user documentation. The developer documentation is
 in English. The user documentation is in German and will be multilingual. It will be translated
 into English.
 
@@ -12,10 +12,11 @@ The user documentation (master language 'de') is going to be stored in ``doc/use
 How to build the documentation
 ==============================
 
-Currently only th generation of html is configured. There are sections in the Makefile which also offer 
-other targets but they are not working right now. (Feel free to improve that!)
+Currently only the generation of html is configured. There are sections in the makefile
+which also offer other targets but they are not working right now.
+(Feel free to improve that!)
 
-At first you need to satisfy the needed modules described in requirements.txt. 
+At first you need to satisfy the needed modules described in requirements.txt.
 You can install them at once with either:
 
 .. code-block:: bash
@@ -32,8 +33,8 @@ or:
 If you are using **virtualenv** or **pyenv** you might first checkout your environment and choose a different way
 
 
-Then you simply copy two files (**build_doc.sh** and **remove_built_files.sh**) from the doc directory to an empty directory on your system and start 
-the shell script build_doc by typing './build_doc.sh'
+Then you simply copy two files (**build_doc.sh** and **remove_built_files.sh**) from the doc directory to an
+empty directory on your system and start the shell script build_doc by typing './build_doc.sh'
 
 To build the user documentation only, start the script with option -u (``./build_doc.sh -u``)
 To build the developer documentation only, start the script with option -d (``./build_doc.sh -d``)
@@ -54,4 +55,3 @@ Do get your changes to github do the following:
 - commit your changes
 
 Afterwards you can delete the directory **work**.
-

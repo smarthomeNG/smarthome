@@ -11,9 +11,12 @@
    /admonition_arten.rst
    /dev/README.md
    /dev/sample_plugin/README.md
+   /dev/sample_mqttplugin/README.md
+   /dev/sample_module/README.md
    /modules/admin/README.md
    /modules/http/README.md
    /modules/mqtt/README.md
+   /release/1_x_vorlage.rst
 
 .. toctree::
    :maxdepth: 2
@@ -21,8 +24,9 @@
    :titlesonly:
    :hidden:
 
+   /plugins/README.md
    /plugins/alexa/nginx.md
    /plugins/buderus/TODO.md
    /plugins/buderus/URLs.md
-   /plugins/knx/pv_1_3_4/README.md
-   /plugins/uzsu/user_doc_en.rst
+   /plugins/blockly/How_to_Update_Blockly_Components.rst
+   /plugins/wunderground/README_OLD.md

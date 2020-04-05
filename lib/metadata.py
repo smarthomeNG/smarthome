@@ -412,18 +412,26 @@ class Metadata():
         :rtype: bool
         """
         self._version = self.get_string('version')
-        if code_version == None:
+        if code_version is None:
             logger.info("{} '{}' version not defined in Python code, metadata version is {}".format(self._addon_type, self._addon_name, self._version))
             return True
         else:
+            if 2 > code_version.count('.') > 4:
+                logger.warning(
+                    "{} '{}' code version not compliant to plugin version schemas x.x.x or x.x.x.x ".format(
+                        self._addon_type, self._addon_name))
             if self._version == '':
                 logger.info("{} '{}' metadata contains no version number".format(self._addon_type, self._addon_name))
                 self._version = code_version
             else:
-                if str(code_version) != self._version:
+                if 2 > str(self._version).count('.') < 4:
+                    logger.warning(
+                        "{} '{}' metadata version not compliant to plugin version schemas x.x.x or x.x.x.x ".format(
+                            self._addon_type, self._addon_name))
+                if str(code_version) != str(self._version):
                     logger.error("{} '{}' version differs between Python code ({}) and metadata ({})".format(self._addon_type, self._addon_name, str(code_version), self._version))
                     return False
-        return True
+            return True
 
 
     # ------------------------------------------------------------------------
@@ -811,7 +819,7 @@ class Metadata():
                     value = definitions[definition].get('default')
                 typ = self._get_definition_type(definition, definitions)
                 if value == 'None*':
-                    logger.warning("_get_definition_defaultvalue: default value is 'None*' -> None")
+                    logger.info("_get_definition_defaultvalue: default value is 'None*' -> None")
                     value = None
                 else:
                     if value == None:

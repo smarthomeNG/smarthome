@@ -4,10 +4,19 @@
 {{ p.get_shortname() }} Plugin
 {% endblock title %}
 
+<!--
+	set onload= attribute of <body> tag to periodically update data of web interface
+-->
+{%- block body_attribs %}
+	{%- if update_interval is defined and update_interval > 0 %} onload="setInterval(shngGetUpdatedData, {{ update_interval }})"
+	{%- endif %}
+{%- endblock body_attribs %}
+
+
 {% block content %}
 
 {% if scroll_heading is not defined %}
-<div style="position: fixed; top: 0; width: 100%; height: 180px; background: RGB(255, 255, 255); z-index: 2;">
+<div style="position: fixed; top: 0; width: 100%; height: 180px; background: RGB(255, 255, 255); z-index: 10;">
 {% endif %}
 
 <div class="container-fluid m-3">
@@ -15,22 +24,22 @@
 
 		<div class="{% if logo_frame %}card {% endif %} col-sm-2" style="height:150px;">
 		    {% if isfile("static/img/plugin_logo.png") %}
-				<img src="static/img/plugin_logo.png" style="object-fit:contain; width:100%; height:100%; margin-left: auto; margin-right: auto; display: block;">
+				<img src="static/img/plugin_logo.png" alt="plugin_logo" style="object-fit:contain; width:100%; height:100%; margin-left: auto; margin-right: auto; display: block;">
 		    {% elif isfile("static/img/plugin_logo.jpg") %}
-				<img src="static/img/plugin_logo.jpg" style="object-fit:contain; width:100%; height:100%; margin-left: auto; margin-right: auto; display: block;">
+				<img src="static/img/plugin_logo.jpg" alt="plugin_logo" style="object-fit:contain; width:100%; height:100%; margin-left: auto; margin-right: auto; display: block;">
 		    {% elif isfile("static/img/plugin_logo.svg") %}
-				<img src="static/img/plugin_logo.svg" style="object-fit:contain; width:100%; height:100%; margin-left: auto; margin-right: auto; display: block;">
+				<img src="static/img/plugin_logo.svg" alt="plugin_logo" style="object-fit:contain; width:100%; height:100%; margin-left: auto; margin-right: auto; display: block;">
 		    {% else %}
 			    {% set plgtype_logo = "/gstatic/img/plugin_"+p._plgtype+".svg" %}
 				{% if isfile(plgtype_logo) %}
 					<img src="{{ plgtype_logo }}" style="object-fit:contain; width:100%; height:100%; margin-left: auto; margin-right: auto; display: block;">
 				{% else %}
-					<img src="/gstatic/img/plugin_unknown.svg" style="object-fit:contain; width:100%; height:100%; margin-left: auto; margin-right: auto; display: block;">
+					<img src="/gstatic/img/plugin_unknown.svg" alt="plugin_logo_unknown" style="object-fit:contain; width:100%; height:100%; margin-left: auto; margin-right: auto; display: block;">
 				{% endif %}
 			{% endif %}
 		</div>
 		<div class="col-sm-3">
-			<h3><img src="/gstatic/img/logo_long.png" height="40" valign="top" align="left" style="align: left; display: block;"></h3>
+			<h3><img src="/gstatic/img/logo_long.png" alt="shng_logo_long" height="40" valign="top" align="left" style="align: left; display: block;"></h3>
 			<div class="m-3">
 			<br>
 			</div>
@@ -44,7 +53,7 @@
 		</div>
 
 		<div class="col-sm-7">
-	
+
 			{% block headtable %}
 			{% endblock %}
 
@@ -69,7 +78,7 @@
 {% if scroll_heading is not defined %}
 </div>
 
-<div style="margin: 180px auto 0; z-index: 1;">
+<div style="margin: 180px auto 0; z-index: 9;">
 {% endif %}
 
 {% if tabcount is not defined %}
@@ -82,7 +91,7 @@
 {% if start_tab > tabcount %}
 	{% set start_tab = tabcount %}
 {% endif %}
-	
+
 {% if tabcount > 4 %}
 	{% set tabcount = 4 %}
 {% endif %}
@@ -105,8 +114,11 @@
 {% endif %}
 
 
-<div class="container-fluid ">
+<div class="container-fluid" style="position: sticky;background-color: white;top:  180px;z-index: 8;">
 	<ul class="nav nav-tabs">
+		{% if tabcount == 1 %}
+			<li id="tab_1" class="nav-item"><a class="text-dark nav-link active" href="#bodytab_1">{{ tab1title }}</a></li>
+		{% endif %}
 		{% if tabcount > 1 %}
 			<li id="tab_1" class="nav-item"><a class="text-dark nav-link {% if start_tab==1 %}active{% endif %}" data-toggle="tab" href="#bodytab_1">{{ tab1title }}</a></li>
 			<li id="tab_2" class="nav-item"><a class="text-dark nav-link {% if start_tab==2 %}active{% endif %}" data-toggle="tab" href="#bodytab_2">{{ tab2title }}</a></li>
@@ -118,7 +130,6 @@
 			<li id="tab_4" class="nav-item"><a class="text-dark nav-link {% if start_tab==4 %}active{% endif %}" data-toggle="tab" href="#bodytab_4">{{ tab4title }}</a></li>
 		{% endif %}
 	</ul>
-	<br>
 </div>
 
 <div style="margin-left: 10px; margin-right: 10px;" class="tab-content">

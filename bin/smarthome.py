@@ -36,8 +36,8 @@
 # Check Python Version
 #####################################################################
 import sys
-if sys.hexversion < 0x03040000:
-    print("Sorry your python interpreter ({0}.{1}) is too old. Please update to 3.4 or newer.".format(sys.version_info[0], sys.version_info[1]))
+if sys.hexversion < 0x03050000:
+    print("Sorry your python interpreter ({0}.{1}) is too old. Please update to 3.5 or newer.".format(sys.version_info[0], sys.version_info[1]))
     exit()
 PYTHON_VERSION = str(sys.version_info[0])+'.'+str(sys.version_info[1])+'.'+str(sys.version_info[2])+' '+str(sys.version_info[3])
 if sys.version_info[3] != 'final':
@@ -70,7 +70,10 @@ import subprocess
 import threading
 import time
 import traceback
-import psutil
+try:
+    import psutil
+except:
+    pass
 #####################################################################
 # Base
 #####################################################################
@@ -78,10 +81,28 @@ BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
 sys.path.insert(0, BASE)
 PIDFILE= os.path.join(BASE,'var','run','smarthome.pid')
 
-#####################################################################
-# Import 3rd Party Modules
-#####################################################################
-#from dateutil.tz import gettz
+from lib.shpypi import Shpypi
+
+#############################################################
+# test if needed Python packages are installed
+# - core requirements = libs
+#shpypi = Shpypi(base=BASE)
+shpypi = Shpypi.get_instance()
+if shpypi is None:
+    shpypi = Shpypi(base=BASE)
+
+core_reqs = shpypi.test_core_requirements(logging=False)
+if core_reqs == 0:
+    print("Starting SmartHomeNG again...")
+    command = sys.executable + ' ' + os.path.join(BASE, 'bin', 'smarthome.py')
+    p = subprocess.Popen(command, shell=True)
+    time.sleep(10)
+    print()
+    exit(0)
+elif core_reqs == -1:
+    print("ERROR: Unable to install core requirements")
+    print()
+    exit(1)
 
 #####################################################################
 # Import SmartHomeNG Modules
@@ -100,8 +121,8 @@ import lib.tools
 import lib.utils
 import lib.orb
 import lib.backup
+import lib.translation
 from lib.shtime import Shtime
-from lib.shpypi import Shpypi
 import lib.shyaml
 
 from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE)
@@ -251,10 +272,16 @@ class SmartHome():
         #############################################################
         # test if needed Python packages are installed
         # - core requirements = libs
-        self.shpypi = Shpypi(self)
-        if not self.shpypi.test_core_requirements(logging=False):
-            print()
-            exit(1)
+        # self.shpypi = Shpypi(self)
+        # core_reqs = shpypi.test_core_requirements(logging=False)
+        # if core_reqs == 0:
+        #     print("Trying to restart shng")
+        #     print()
+        #     exit(0)
+        # elif core_reqs == -1:
+        #     print("Unable to install core requirements")
+        #     print()
+        #     exit(1)
 
         #############################################################
         # setup logging
@@ -276,6 +303,9 @@ class SmartHome():
         if self._extern_conf_dir != BASE:
             self._logger.warning("Using config dir {}".format(self._extern_conf_dir))
 
+        #############################################################
+        # Initialize multi-language support
+        lib.translation.initialize_translations(self._base_dir, self._default_language, self._fallback_language_order)
 
         #############################################################
         # Test if plugins are installed
@@ -292,17 +322,33 @@ class SmartHome():
         #############################################################
         # test if needed Python packages for configured plugins
         # are installed
-        if not self.shpypi.test_base_requirements():
-            self._logger.critical("Python package requirements for modules are not met.")
+        self.shpypi = Shpypi.get_instance()
+        if self.shpypi is None:
+            self.shpypi = Shpypi(self)
+
+        base_reqs = self.shpypi.test_base_requirements()
+        if base_reqs == 0:
+            self.restart('SmastHomeNG (Python package installation)')
+            exit(0)
+        elif base_reqs == -1:
+            self._logger.critical("Python package requirements for modules are not met and unable to install base requirements")
             self._logger.critical("Aborting")
             exit(1)
 
-        if not self.shpypi.test_conf_plugins_requirements(self._plugin_conf_basename, self._plugins_dir):
-            self._logger.critical("Python package requirements for configured plugins are not met.")
+        plugin_reqs = self.shpypi.test_conf_plugins_requirements(self._plugin_conf_basename, self._plugins_dir)
+        if plugin_reqs == 0:
+            self.restart('SmastHomeNG (Python package installation)')
+            exit(0)
+        elif plugin_reqs == -1:
+            self._logger.critical("Python package requirements for configured plugins are not met and unable to install base requirements")
             self._logger.critical("Aborting")
             exit(1)
 
         self.shng_status = {'code': 2, 'text': 'Initalizing: Requirements checked'}
+
+
+        self.shtime._initialize_holidays()
+
 
         # Add Signal Handling
 #        signal.signal(signal.SIGHUP, self.reload_logics)
@@ -363,6 +409,7 @@ class SmartHome():
         Returns the configured default language of SmartHomeNG
         """
         self._default_language = language
+        lib.translation.set_default_language(language)
 
 
     def get_basedir(self):
@@ -433,7 +480,7 @@ class SmartHome():
         - logic.yaml / logic.conf
 
         """
-        configs = ['logging', 'smarthome', 'module', 'plugin', 'logic']
+        configs = ['holidays', 'logging', 'logic', 'module', 'plugin', 'smarthome']
 
         for c in configs:
             default = os.path.join(self._base_dir, 'etc', c + YAML_FILE + DEFAULT_FILE)
@@ -642,15 +689,16 @@ class SmartHome():
         exit()
 
 
-    def restart(self,source=''):
+    def restart(self, source=''):
         """
-        This method is used to restart the python interpreter amd SmartHomeNG
+        This method is used to restart the python interpreter and SmartHomeNG
         """
         self.shng_status = {'code': 30, 'text': 'Restarting'}
         if source != '':
             source = ', initiated by ' + source
         self._logger.warning("SmartHomeNG restarting"+source)
         command = sys.executable + ' ' + os.path.join(self._base_dir, 'bin', 'smarthome.py') + ' -r'
+        self._logger.info("Restart command = '{}'".format(command))
         p = subprocess.Popen(command, shell=True)
 
 
@@ -1036,7 +1084,7 @@ class SmartHome():
         DEPRECATED - Use the Logics-API instead
         """
         self._deprecated_warning('Logics-API')
-        self.logics.reload_logics()
+        self.logics.reload_logics(signum, frame)
 
 
     def return_logic(self, name):
@@ -1052,7 +1100,7 @@ class SmartHome():
         :rtype: object
         """
         self._deprecated_warning('Logics-API')
-        self.logics.return_logic()
+        self.logics.return_logic(name)
 
 
     def return_logics(self):
@@ -1177,6 +1225,8 @@ if __name__ == '__main__':
     arggroup.add_argument('-V', '--version', help='show SmartHomeNG version', action='store_true')
     arggroup.add_argument('--start', help='start SmartHomeNG and detach from console (default)', default=True, action='store_true')
     arggroup.add_argument('-cb', '--create_backup', help='create backup of SmartHomeNG configuration (yaml configuration only)', action='store_true')
+    arggroup.add_argument('-cbt', '--create_backup_t', help='create backup of SmartHomeNG configuration with a timestamp in the filename', action='store_true')
+    arggroup.add_argument('-rb', '--restore_backup', help='restore backup of configuration to SmartHomeNG installation (yaml configuration only). CAUTION: Existing configuration is overwritten!', action='store_true')
     argparser.add_argument('-c', '--config_dir', help='use external config dir (should contain "etc", "logics" and "items" subdirectories)')
 
     arggroup.add_argument('-v', '--verbose', help='verbose (info output) logging to the logfile - DEPRECATED use logging-configuration', action='store_true')
@@ -1188,6 +1238,8 @@ if __name__ == '__main__':
     extern_conf_dir = BASE
     if args.config_dir is not None:
         extern_conf_dir = os.path.normpath(args.config_dir)
+
+    lib.backup.make_backup_directories(BASE)
 
     if args.interactive:
         MODE = 'interactive'
@@ -1237,8 +1289,20 @@ if __name__ == '__main__':
         MODE = 'foreground'
         pass
     elif args.create_backup:
-        fn = lib.backup.create_backup(extern_conf_dir)
-        print("Backup of configuration created: {}".format(fn))
+        fn = lib.backup.create_backup(extern_conf_dir, BASE)
+        if fn:
+            print("Backup of configuration created at: \n{}".format(fn))
+        exit(0)
+    elif args.create_backup_t:
+        fn = lib.backup.create_backup(extern_conf_dir, BASE, filename_with_timestamp=True)
+        if fn:
+            print("Backup of configuration created at: \n{}".format(fn))
+        exit(0)
+    elif args.restore_backup:
+        fn = lib.backup.restore_backup(extern_conf_dir, BASE)
+        if fn is not None:
+            print("Configuration has been restored from: \n{}".format(fn))
+            print("Restart SmartHomeNG to use the restored configuration")
         exit(0)
     # check for pid file
     if lib.daemon.check_sh_is_running(PIDFILE):

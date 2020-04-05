@@ -39,6 +39,7 @@ from lib.shpypi import Shpypi
 from lib.shtime import Shtime
 from lib.utils import Utils
 import lib.config
+import lib.daemon
 
 
 class SystemData:
@@ -72,22 +73,11 @@ class SystemData:
         arch = platform.machine()
         user = pwd.getpwuid(os.geteuid()).pw_name  # os.getlogin()
 
-        # ipv6 = Utils.get_local_ipv6_address()
+        ipv6 = Utils.get_local_ipv6_address()
         ip = Utils.get_local_ipv4_address()
-        ipv6 = ''
 
         space = os.statvfs(self._sh.base_dir)
         freespace = space.f_frsize * space.f_bavail / 1024 / 1024
-
-        # rt = str(self.module.shtime.runtime())
-        # daytest = rt.split(' ')
-        # if len(daytest) == 3:
-        #     days = int(daytest[0])
-        #     hours, minutes, seconds = [float(val) for val in str(daytest[2]).split(':')]
-        # else:
-        #     days = 0
-        #     hours, minutes, seconds = [float(val) for val in str(daytest[0]).split(':')]
-        # sh_runtime_seconds = days * 24 * 3600 + hours * 3600 + minutes * 60 + seconds
 
         rt = Shtime.get_instance().runtime_as_dict()
         sh_runtime_seconds = rt['total_seconds']
@@ -114,6 +104,7 @@ class SystemData:
         response['pyversion'] = pyversion
         response['ip'] = ip
         response['ipv6'] = ipv6
+        response['pid'] = str(lib.daemon.read_pidfile(self._sh._pidfile))
 
         self.logger.debug("admin: systeminfo_json: response = {}".format(response))
         return json.dumps(response)

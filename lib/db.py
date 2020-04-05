@@ -135,7 +135,7 @@ class Database():
         directly as parameter or as name 'sqlite3').
 
         How the database is accessed is specified by the 'connect' parameter
-        which supports key/value pairs separated by '|'. These named
+        which supports key/value pairs specified as dict. These named
         parameters will be used as 'connect()' parameters of the DB-API driver
         implementation.
 
@@ -159,9 +159,12 @@ class Database():
             raise Exception("Database [{}]: SQL format style {} not supported (only {})".format(self._name, self._format_input, self._styles))
 
         self._params = {}
+
+        # Deprecated, remove with 1.7 or 1.8
         if type(connect) is str:
             connect = [p.strip() for p in connect.split('|')]
 
+        # Deprecated, remove with 1.7 or 1.8
         if type(connect) is list:
             for arg in connect:
                key, sep, value = arg.partition(':')
@@ -173,7 +176,7 @@ class Database():
                    pass
                self._params[key] = v
 
-        elif type(connect) is dict:
+        elif type(connect) in [dict, collections.OrderedDict]:
             self._params = connect
 
         self._format_output = self._dbapi.paramstyle

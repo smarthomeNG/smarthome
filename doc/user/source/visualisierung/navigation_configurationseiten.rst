@@ -1,3 +1,5 @@
+.. index:: smartVISU Autogenerierung; Konfigurationsseiten
+
 Navigation: Konfigurationsseiten
 ================================
 

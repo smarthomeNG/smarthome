@@ -36,7 +36,7 @@ oder im `Chat auf gitter.im <https://gitter.im/smarthomeNG/smarthome>`_ .
    **Anmerkungen** und **Änderungswünsche** zu dieser Anwenderdokumentation bitte auf
    `dieser Feedback Seite <https://www.smarthomeng.de/feedback-zur-dokumentation>`_ hinterlassen.
 
-.. [#f1] SmartHomeNG © Copyright 2016-2019 SmartHomeNG Team, basiert auf smarthome.py © 2011-2014 Marcus Popp.
+.. [#f1] SmartHomeNG © Copyright 2016-2020 SmartHomeNG Team, basiert auf smarthome.py © 2011-2014 Marcus Popp.
 
 
 .. toctree::
@@ -51,6 +51,7 @@ oder im `Chat auf gitter.im <https://gitter.im/smarthomeNG/smarthome>`_ .
    logiken/logics.rst
    visualisierung/visualisierung.rst
    admin/admin.rst
+   beispiele/beispiele.rst
    tools/tools.rst
    fehlersuche
    faq

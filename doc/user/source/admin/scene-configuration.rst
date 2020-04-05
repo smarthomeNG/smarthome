@@ -1,5 +1,5 @@
 
-.. index:: Szenen
+.. index:: Szenen Konfiguration
 
 ====================
 Szenen Konfiguration

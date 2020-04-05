@@ -1,17 +1,19 @@
-##########################
-Kommunikation mit der Visu
-##########################
+.. index:: smartVISU; Kommunikation mit der Visu
 
-Die Kommunikation zwischen SmartHomeNG und der smartVISU wird auf Seite von SmartHomeNG durch 
-das Plugin **visu_websocket** gesteuert. Auf Seite der smartVISU wird die Kommunikation über 
-den Treiber **io_smarthome.py.js** abgewickelt. Dieser Treiber is in Javascript geschrieben 
+==========================
+Kommunikation mit der Visu
+==========================
+
+Die Kommunikation zwischen SmartHomeNG und der smartVISU wird auf Seite von SmartHomeNG durch
+das Plugin **visu_websocket** gesteuert. Auf Seite der smartVISU wird die Kommunikation über
+den Treiber **io_smarthome.py.js** abgewickelt. Dieser Treiber is in Javascript geschrieben
 und ermöglicht die Kommunikation des Browsers der die Visu anzeigt mit dem Websocket Plugin
 von SmartHomeNG.
 
 .. important::
 
    Die Kommunikation findet zwischen dem Browser und SmartHomeNG statt, NICHT zwischen dem
-   Webserver und SmartHomeNG. Der Webserver liefert nur den statischen Kontent der Visu aus. 
+   Webserver und SmartHomeNG. Der Webserver liefert nur den statischen Kontent der Visu aus.
 
 Das Plugin **visu_websocket** muss in **../etc/plugin.yaml** konfiguriert werden.
 

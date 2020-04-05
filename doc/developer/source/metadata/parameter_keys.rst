@@ -32,7 +32,15 @@ Description of the keys in the section of a parameter/attribute:
 
     :sup:`1` *subtype* can only be a simple datatype
 
-- **default:** Optional: Specifies the default value to be used, if no value is given in in the
+- **gui_type:** Optional: Specifies how the parameter is handled in the admin gui shngadmin. The handling of parameters
+  in the admin gui is determined by **type**. **type** is restricted to datatypes that are known to/handled by
+  SmartHomeNG. For editing it may me desirable to have different editors for values of the same **type**.
+
+  At the moment, only one value for gui_type is implemented:
+
+  - **wide_str:** Is used to have a wider edtor field for potentially long strings
+
+- **default**: Optional: Specifies the default value to be used, if no value is given in in the
   configuration file `/etc/plugin.yaml` or `/etc/module.yaml`
 
 - **description:** is a multi language text. - The texts in the different languages are specified

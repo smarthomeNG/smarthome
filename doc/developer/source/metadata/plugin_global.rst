@@ -1,5 +1,11 @@
-Section `plugin:`
------------------
+
+.. role:: redsup
+.. role:: bluesup
+
+.. index:: Plugin Metadata; Global Metadata
+
+Section `plugin`
+================
 
 The global metadata section ``plugin:`` has the following keys:
 

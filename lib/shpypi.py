@@ -3,7 +3,7 @@
 #########################################################################
 # Copyright 2018-       Martin Sinn                         m.sinn@gmx.de
 #########################################################################
-#  This file is part of SmartHomeNG.    
+#  This file is part of SmartHomeNG.
 #
 #  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -36,9 +36,7 @@ import sys
 import fnmatch
 import datetime
 import re
-import operator
 
-import pprint
 
 from lib.utils import Utils
 from lib.constants import (YAML_FILE)
@@ -49,12 +47,12 @@ _shpypi_instance = None    # Pointer to the initialized instance of the Shpypi c
 
 class Shpypi:
 
-    def __init__(self, sh=None):
+    def __init__(self, sh=None, base=None):
         """
 
         :param smarthome:
 
-        During initialization (and initial calls to some methods, the logging interface is not yet initialized!!!
+        NOTE: During initialization (and initial calls to some methods, the logging interface is not yet initialized!!!
         """
         self.logger = logging.getLogger(__name__)
 
@@ -63,14 +61,16 @@ class Shpypi:
             import inspect
             curframe = inspect.currentframe()
             calframe = inspect.getouterframes(curframe, 4)
-            self.logger.critical("A second 'shpypi' object has been created. There should only be ONE instance of class 'Shpypi'!!! Called from: {} ({})".format(calframe[1][1], calframe[1][3]))
+            self.logger.critical("A second 'shpypi' object has been created. There should only be ONE instance of class 'Shpypi'!!! Called from: {} {} ({})".format(calframe[1][1], calframe[1][2], calframe[1][3]))
 
         _shpypi_instance = self
         self.req_files = Requirements_files()
 
 
         if sh is None:
-            pass
+            if base:
+                self._sh_dir = base
+                self._error = False
         else:
             self._sh_dir = sh.get_basedir()    # anders bestimmen für tools/build_requirements.py
 
@@ -109,6 +109,18 @@ class Shpypi:
         """
         Returns a dict with the versions of the installed packages
 
+        When problems with requirements occur, it probably has to do with multiple Python 3 versions beeing installed
+        Make sure, the packages are installed into the Python version you are using to start SmartHomeNG
+
+            instead of using
+                [sudo] pip[3] install [--upgrade] <package(s)>,
+            use
+                [sudo] <python used to start SmartHomeNG> -m pip[3] install [--upgrade] <package(s)>
+
+        How to change from default to alternative Python version on Debian Linux:
+
+            https://linuxconfig.org/how-to-change-from-default-to-alternative-python-version-on-debian-linux
+
         :return: dict of package and version
         :rtype: dict
         """
@@ -123,6 +135,27 @@ class Shpypi:
         return installed_packages_dict
 
 
+    # def get_installed_packages(self):
+    #     """
+    #     Returns a dict with the versions of the installed packages
+    #
+    #     :return: dict of package and version
+    #     :rtype: dict
+    #     """
+    #     import subprocess
+    #
+    #     test = subprocess.check_output(['pip3', 'freeze'])
+    #     test_list = test.decode().split('\n')
+    #     test_dict = {}
+    #     self.logger.info("shpypi: Installed Python packages:")
+    #     for pkg in test_list:
+    #         if '==' in pkg:
+    #             p,v = pkg.split('==')
+    #             self.logger.info(" - {}: v{}".format(p, v))
+    #             test_dict[p.lower()] = v
+    #     return test_dict
+
+
     def test_requirements(self, filepath, logging=True, hard_requirement=True):
         if logging:
             self.logger.info("test_requirements: filepath '{}' is checked".format(filepath))
@@ -132,7 +165,7 @@ class Shpypi:
 
         requirements_met = True
         for req_pkg in req_dict:
-            inst_vers = inst_dict.get(req_pkg, '-')
+            inst_vers = inst_dict.get(req_pkg.lower(), '-')
             min = req_dict[req_pkg].get('min', '*')
             max = req_dict[req_pkg].get('max', '*')
             if min == '*':
@@ -148,22 +181,26 @@ class Shpypi:
                 requirements_met = False
                 if logging:
                     if hard_requirement:
-                        if inst_vers == '-':
-                            self.logger.error("test_requirements: package '{}' is not installed".format(req_pkg))
+                        if inst_vers == '-' and min == '*':
+                            self.logger.error("test_requirements: '{}' not installed, any version needed".format(req_pkg))
+                        elif inst_vers == '-':
+                            self.logger.error("test_requirements: '{}' not installed. Minimum v{} needed".format(req_pkg, min))
                         elif not min_met:
-                            self.logger.error("test_requirements: package '{}' v{} is too old. Minimum v{} is needed".format(req_pkg, inst_vers, min))
+                            self.logger.error("test_requirements: '{}' v{} too old. Minimum v{} needed".format(req_pkg, inst_vers, min))
                         else:
-                            self.logger.error("test_requirements: package '{}' v{} is too new. Maximum v{} is needed".format(req_pkg, inst_vers, max))
+                            self.logger.error("test_requirements: '{}' v{} too new. Maximum v{} needed".format(req_pkg, inst_vers, max))
                 else:
                     if not self._error:
                         print()
                         self._error = True
-                    if inst_vers == '-':
-                        print("test_requirements: package '{}' is not installed".format(req_pkg))
+                    if inst_vers == '-' and min == '*':
+                        print("test_requirements: '{}' not installed, any version needed".format(req_pkg))
+                    elif inst_vers == '-':
+                        print("test_requirements: '{}' not installed. Minimum v{} needed".format(req_pkg, min))
                     elif not min_met:
-                        print("test_requirements: package '{}' v{} is too old. Minimum v{} is needed".format(req_pkg, inst_vers, min))
+                        print("test_requirements: '{}' v{} too old. Minimum v{} needed".format(req_pkg, inst_vers, min))
                     else:
-                        print("test_requirements: package '{}' v{} is too new. Maximum v{} is needed".format(req_pkg, inst_vers, max))
+                        print("test_requirements: '{}' v{} too new. Maximum v{} needed".format(req_pkg, inst_vers, max))
 
         return requirements_met
 
@@ -180,16 +217,21 @@ class Shpypi:
         complete_filename = os.path.join(self._sh_dir, 'requirements', 'core.txt')
         requirements_met = self.test_requirements(os.path.join(complete_filename), logging)
 
-        if not requirements_met:
-            if logging:
-                self.logger.error("test_core_requirements: Python package requirements not met - Should terminate")
+        if requirements_met:
+            os.remove(complete_filename)
+            return 1
+        else:
+            if self.install_requirements('core', logging):
+                return 0
             else:
-                # no logging, if called before logging is configured
-                print()
-                print("Python package requirements not met - SmartHomeNG is terminating")
+                if logging:
+                    self.logger.error("test_core_requirements: Python package requirements not met - Should terminate")
+                else:
+                    # no logging, if called before logging is configured
+                    print()
+                    print("Python package requirements not met - SmartHomeNG is terminating")
+                return -1
 
-        os.remove(complete_filename)
-        return requirements_met
 
 
     _conf_plugin_filelist = []
@@ -204,13 +246,15 @@ class Shpypi:
         # test if the requirements of the base.txt file are met
         requirements_met = self.test_requirements(os.path.join(self._sh_dir, 'requirements', 'base.txt'), logging)
 
-        if not requirements_met:
-            self.logger.info("test_base_requirements: Python package requirements not met")
+        if requirements_met:
+            return 1
+        else:
+            if self.install_requirements('base', logging):
+                return 0
+            else:
+                self.logger.info("test_base_requirements: Python package requirements not met")
+                return -1
 
-        return requirements_met
-
-
-    _conf_plugin_filelist = []
 
     def test_conf_plugins_requirements(self, plugin_conf_basename, plugins_dir):
         # import lib.shyaml here, so test_base_requirements() can be run even if ruamel.yaml package is not installed
@@ -251,10 +295,56 @@ class Shpypi:
         self.req_files.create_requirementsfile('conf_all')
 
         requirements_met = self.test_requirements(os.path.join(self._sh_dir, 'requirements', 'conf_all.txt'), True)
-        if not requirements_met:
-            self.logger.info("test_conf_plugins_requirements: Python package requirements for configured plugins not met")
+        if requirements_met:
+            return 1
+        else:
+            if self.install_requirements('conf_all', logging):
+                return 0
+            else:
+                self.logger.info("test_base_requirements: Python package requirements for configured plugins not met")
+                return -1
 
-        return requirements_met
+
+    def install_requirements(self, req_type, logging=True):
+        req_type_display = req_type
+        if req_type == 'conf_all':
+            req_type_display = 'plugin'
+        complete_filename = os.path.join(self._sh_dir, 'requirements', req_type + '.txt')
+        if logging:
+            self.logger.warning("Installing "+req_type_display+" requirements for the current user, please wait...")
+        else:
+            print()
+            print("Installing "+req_type_display+" requirements for the current user, please wait...")
+
+        stdout, stderr = Utils.execute_subprocess('pip3 install -r requirements/'+req_type+'.txt --user --no-warn-script-location')
+        if stderr != '':
+            if 'virtualenv' in stderr and '--user' in stderr:
+                if logging:
+                    self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
+                else:
+                    print("Running in a virtualenv environment,")
+                    print("installing "+req_type_display+" requirements only to actual virtualenv, please wait...")
+                stdout, stderr = Utils.execute_subprocess('pip3 install -r requirements/'+req_type+'.txt')
+
+        if not logging:
+            print()
+
+        if stderr == '':
+            if logging:
+                self.logger.warning(req_type_display+" requirements installed")
+            else:
+                print(req_type_display+" requirements installed")
+                print()
+            #print('len(stdout)=' + str(len(str(stdout))))
+            #print(stdout)
+            return True
+        else:
+            if logging:
+                self.logger.error(stderr)
+            else:
+                print('len(stderr)='+str(len(str(stderr))))
+                print(stderr)
+        return False
 
 
     def parse_requirementsfile(self, file_path):
@@ -989,18 +1079,19 @@ class Requirements_files():
 
 
     def _write_header(self, ofile, filename):
-        filename = filename.ljust(25)
+        pip_statement = 'pip3 install -r '+filename+' --user'
+        pip_statement = pip_statement.ljust(49)
         ofile.write('\n')
-        ofile.write('#   +-----------------------------------------------+\n')
-        ofile.write('#   |                 SmartHomeNG                   |\n')
-        ofile.write('#   |            DON\'T EDIT THIS FILE               |\n')
-        ofile.write('#   |           THIS FILE IS GENERATED              |\n')
-        ofile.write('#   |       BY tools/build_requirements.py          |\n')
-        ofile.write('#   |            ON '+datetime.datetime.now().strftime('%d.%m.%Y %H:%M')+'                |\n')
-        ofile.write('#   |                                               |\n')
-        ofile.write('#   |               INSTALL WITH:                   |\n')
-        ofile.write('#   | sudo pip3 install -r '+filename+'|\n')
-        ofile.write('#   +-----------------------------------------------+\n')
+        ofile.write('#   +--------------------------------------------------+\n')
+        ofile.write('#   |                 SmartHomeNG                      |\n')
+        ofile.write('#   |            DON\'T EDIT THIS FILE                  |\n')
+        ofile.write('#   |           THIS FILE IS GENERATED                 |\n')
+        ofile.write('#   |              BY lib/shpypi.py                    |\n')
+        ofile.write('#   |            ON '+datetime.datetime.now().strftime('%d.%m.%Y %H:%M')+'                   |\n')
+        ofile.write('#   |                                                  |\n')
+        ofile.write('#   |               INSTALL WITH:                      |\n')
+        ofile.write('#   | '+pip_statement+'|\n')
+        ofile.write('#   +--------------------------------------------------+\n')
         ofile.write('\n')
 
 

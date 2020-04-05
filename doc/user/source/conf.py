@@ -62,13 +62,6 @@ master_doc = 'index'
 # To get rid of the ¶ sign on descriptions over a box
 html_add_permalinks = ""
 
-# General information about the project.
-#project = u'SmartHomeNG'
-project = u'Anwenderdokumentation'
-#copyright = u'2011-2013, Marcus Popp; since 2016 SmartHomeNG Team'
-#copyright = u'2016-2017 SmartHomeNG Team, based on smarthome.py © 2011-2014 Marcus Popp'
-copyright = u'2016-2019 SmartHomeNG Team, SmartHomeNG is based on smarthome.py © Marcus Popp'
-
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
@@ -76,6 +69,14 @@ copyright = u'2016-2019 SmartHomeNG Team, SmartHomeNG is based on smarthome.py �
 # The short X.Y version.
 #version = '1.3c'
 version = shngversion.get_shng_main_version()
+
+# General information about the project.
+#project = u'SmartHomeNG'
+project = u'Anwenderdokumentation v' + version
+#copyright = u'2011-2013, Marcus Popp; since 2016 SmartHomeNG Team'
+#copyright = u'2016-2017 SmartHomeNG Team, based on smarthome.py © 2011-2014 Marcus Popp'
+copyright = u'2016-2020 SmartHomeNG Team, SmartHomeNG is based on smarthome.py © Marcus Popp'
+
 # The full version, including alpha/beta/rc tags.
 #release = '1.3a dev (as of 13. October 2017)'  13. October 2017 is replaced by makefile with a date in the form of '2. September 2017'
 #release = '1.3c dev (as of 13. October 2017)'
@@ -114,7 +115,7 @@ gettext_compact = True
 # directories to ignore when looking for source files.
 #exclude_patterns = ['plugins/backend_shng_1_3', 'plugins/backend/static', '._*']
 #exclude_patterns = ['plugins/deprecated_plugins', 'plugins/backend_shng_1_3/static', 'plugins/backend/static', '**/._*md']
-exclude_patterns = ['plugins/deprecated_plugins', 'modules/http/webif/gstatic', 'plugins/blockly/webif/static', '**/_pv_*', '**/._*md', '**/developer_doc.*']
+exclude_patterns = ['**/._*.rst', '**/priv_*', '**/user_doc_en.rst', 'plugins/deprecated_plugins', 'modules/http/webif/gstatic', 'plugins/blockly/webif/static', '**/_pv_*', '**/pv_*', '**/._*md', '**/developer_doc.*']
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None

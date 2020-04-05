@@ -1,10 +1,8 @@
-
 import unittest
-import common
+from . import common
 import lib.config
 
 verbose = True
-
 
 class ConfigBaseTests:
     fmt = None

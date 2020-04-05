@@ -1,3 +1,5 @@
+.. index:: smartVISU Autogenerierung; Trenner in der Navigation
+
 Trenner in der Navigation
 =========================
 

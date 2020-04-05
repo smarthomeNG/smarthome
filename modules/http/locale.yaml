@@ -1,0 +1,23 @@
+# translations for the web interface
+module_translations:
+    # Translations for the plugin specially for the web interface
+    'Test':                  {'de': '=', 'en': 'English test'}
+#    'Scanne bis IP':         {'de': '=', 'en': 'Scan to IP'}
+#    'IP Adresse':            {'de': '=', 'en': 'IP address'}
+#    'Produkt Typ':           {'de': '=', 'en': 'Product Type'}
+#    'nach Devices suchen':   {'de': '=', 'en': 'Scan for devices'}
+#
+#    'B&O Gerät':             {'de': '=', 'en': 'B&O Device'}
+#    'Software Version':      {'de': '=', 'en': '='}
+#    'Einschalt-Status':      {'de': '=', 'en': 'Power State'}
+#    'Quelle':                {'de': '=', 'en': 'Source'}
+#
+#    'standby':               {'de': 'Standby', 'en': '='}
+#    'unknown':               {'de': 'unbekannt', 'en': '='}
+#    'on':                    {'de': 'Ein', 'en': '='}
+
+    # Alternative format for translations of longer texts:
+#    'Hier kommt der Inhalt des Webinterfaces hin.':
+#        de: '='
+#        en: 'Here goes the content of the web interface.'
+

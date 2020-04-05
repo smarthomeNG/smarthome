@@ -28,6 +28,8 @@ class Log(collections.deque):
     def __init__(self, smarthome, name, mapping, maxlen=50):
         """
         Class to implement a log (deprecated? -> old logging!)
+        As of version 1.6 develop this is used in core at bin/smarthome.py and
+        in plugins memlog, operationlog
         """
         collections.deque.__init__(self, maxlen=maxlen)
         self.mapping = mapping

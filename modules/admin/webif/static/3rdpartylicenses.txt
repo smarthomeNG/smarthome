@@ -217,8 +217,8 @@ bootstrap
 MIT
 The MIT License (MIT)
 
-Copyright (c) 2011-2018 Twitter, Inc.
-Copyright (c) 2011-2018 The Bootstrap Authors
+Copyright (c) 2011-2019 Twitter, Inc.
+Copyright (c) 2011-2019 The Bootstrap Authors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -329,7 +329,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 lodash
 MIT
-Copyright JS Foundation and other contributors <https://js.foundation/>
+Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
 
 Based on Underscore.js, copyright Jeremy Ashkenas,
 DocumentCloud and Investigative Reporters & Editors <http://underscorejs.org/>

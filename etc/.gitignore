@@ -4,8 +4,9 @@
 !.gitignore
 #!logging.yaml
 # except yaml default-files
-!smarthome.yaml.default
-!plugin.yaml.default
+!holidays.yaml.default
 !logging.yaml.default
-!module.yaml.default
 !logic.yaml.default
+!module.yaml.default
+!plugin.yaml.default
+!smarthome.yaml.default

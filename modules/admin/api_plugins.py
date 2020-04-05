@@ -25,6 +25,9 @@ import shutil
 import logging
 import json
 import collections
+import requests
+import time
+import threading
 
 import lib.shyaml as shyaml
 import lib.config
@@ -38,7 +41,6 @@ from .rest import RESTResource
 
 
 class PluginsController(RESTResource):
-
     def __init__(self, module):
         self._sh = module._sh
         self.base_dir = self._sh.get_basedir()
@@ -206,7 +208,7 @@ class PluginsConfigController(RESTResource):
     #
     def read(self, id=None):
         """
-        return an object with data about all installed plugins
+        return an object with data about all configured plugins
         """
         if self.plugins is None:
             self.plugins = Plugins.get_instance()
@@ -269,6 +271,10 @@ class PluginsConfigController(RESTResource):
 
 class PluginsInfoController(RESTResource):
 
+    blog_urls = {}
+    _update_bloglinks_active = False
+
+
     def __init__(self, module, shng_url_root):
         self._sh = module._sh
         self.module = module
@@ -281,6 +287,76 @@ class PluginsInfoController(RESTResource):
         self.plugins = Plugins.get_instance()
 
         self.plugin_data = {}
+
+        self.blog_urls = {}
+        self._update_bloglinks_active = True
+        self._update_bloglinks_thread = threading.Thread(target=self._test_for_blog_articles,
+                                                         name="Admin: Update blog links").start()
+
+        try:
+            module.add_stop_method(self.stop, self.__class__.__name__)
+        except Exception as e:
+            self.logger.exception("__init__: Exception {}".format(e))
+        return
+
+
+    def stop(self):
+        """
+        If the Controller has started threads or uses python modules that created threads,
+        put cleanup code here.
+        """
+        self.logger.info("PluginsInfoController: Shutting down")
+        self._update_bloglinks_active = False
+        return
+
+
+    def _test_for_blog_articles(self):
+        while self._update_bloglinks_active:
+            self.logger.info("_test_for_blog_articles: Testing for blog articles for every configured plugin")
+            start = time.time()
+            temp_blog_urls = {}
+            if self.plugins == None:
+                self.plugins = Plugins.get_instance()
+            if self.plugins != None:
+                try:
+                    for plugin in self.plugins.return_plugins():
+                        if not self._update_bloglinks_active:
+                            break
+                        if isinstance(plugin, SmartPlugin):
+                            plugin_name = plugin.get_shortname()
+                            if temp_blog_urls.get(plugin_name, None) is None:
+                                # add link to blog, if articles exist, that have the pluginname as a tag
+                                #   example: Blog articles with tag 'backend'
+                                #   - https://www.smarthomeng.de/tag/backend
+                                #   alternative example: Blog articles with category 'plugins' and tag 'backend'
+                                #   - https://www.smarthomeng.de/category/plugins?tag=backend
+                                temp_blog_urls[plugin_name] = 'https://www.smarthomeng.de/tag/' + plugin_name
+                                r = requests.get(temp_blog_urls[plugin_name])
+                                if r.status_code == 404:
+                                    temp_blog_urls[plugin_name] = ''
+                                elif r.status_code != 200:
+                                    self.logger.error("Received status_code {} for get-request to {}".format(r.status_code, temp_blog_urls[plugin_name]))
+                                    temp_blog_urls[plugin_name] = ''
+                            else:
+                                pass
+                except Exception as e:
+                    self.logger.exception("_test_for_blog_articles: Exception {}".format(e))
+                sleeptime = 120 * 60   # test every 2 hours
+            else:
+                sleeptime = 30
+                self.logger.debug("_test_for_blog_articles: Plugin initialization not finished")
+            self.blog_urls = temp_blog_urls
+            end = time.time()
+            self.logger.info("_test_for_blog_articles: Used time: {} - blog_urls = {}".format(end-start, self.blog_urls))
+
+            max_sleepcount = sleeptime / 5
+
+            sleepcount = 0
+            while self._update_bloglinks_active and sleepcount < max_sleepcount:
+                sleepcount += 1
+                time.sleep(5)
+
+        self.logger.info("Thread '_test_for_blog_articles' exited because '_update_bloglinks_active' is False")
         return
 
 
@@ -303,6 +379,7 @@ class PluginsInfoController(RESTResource):
             conf_plugins[plugin] = {}
             conf_plugins[plugin] = _conf[plugin]
 
+        #self._test_for_blog_articles()
         plugin_list = []
         for x in self.plugins.return_plugins():
             plugin = dict()
@@ -326,6 +403,8 @@ class PluginsInfoController(RESTResource):
                         if webif['Instance'] == plugin['instancename']:
                             # plugin['webif_url'] = self.shng_url_root + webif['Mount']  # don't specify full path (for docker installations reletive path is needed)
                             plugin['webif_url'] = webif['Mount']
+
+                plugin['blog_url'] = self.blog_urls.get(plugin['pluginname'], '')
 
                 plugin['parameters'] = []
                 if bool(x._parameters):

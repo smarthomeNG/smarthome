@@ -6,7 +6,8 @@
     "smartplugin": true,
     "multiinstance": true,
     "instancename": "willy_tel",
-    "webif_url": "http://smarthomeng.fritz.box:1234/avm_willy_tel/",
+    "webif_url": "http://smarthomeng.local:1234/avm_willy_tel/",
+    "blog_url": "https://www.smarthomeng.de/tag/avm",
     "parameters": [
       {
         "name": "username",
@@ -99,6 +100,7 @@
     "multiinstance": true,
     "instancename": "fritz_wz",
     "webif_url": "http://smarthomeng.fritz.box:1234/avm_fritz_wz/",
+    "blog_url": "",
     "parameters": [
       {
         "name": "username",
@@ -178,7 +180,8 @@
       "classname": "Homematic",
       "sh_minversion": "",
       "sh_maxversion": ""
-  }
+  },
+
 },
   {
     "pluginname": "backend",
@@ -189,6 +192,7 @@
     "multiinstance": false,
     "instancename": "",
     "webif_url": "",
+    "blog_url": "https://www.smarthomeng.de/tag/backend",
     "parameters": [],
     "metadata": {
       "type": "system",

@@ -48,8 +48,12 @@ import plugins.__init__ as plugin_vers
 # Update auf 1.5e wg. Einführung von Item Property 'attributes'
 
 # Update auf 1.6 wg. Release
+# Update auf 1.6a wg. Kennzeichnung des Stands als "nach dem v1.6 Release"
+# Update auf 1.6B wg. ÄNnderung bei RelativsPath Auflösung & Doku Änderungen
 
-shNG_version = '1.6'
+# Update auf 1.7 wg. Release
+
+shNG_version = '1.7'
 shNG_branch = 'master'
 
 # ---------------------------------------------------------------------------------

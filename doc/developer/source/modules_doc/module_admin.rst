@@ -1,3 +1,9 @@
+.. index:: Modules; admin
+.. index:: Adminnistration Interface; admin Module
+
+.. role:: redsup
+.. role:: bluesup
+
 Module admin
 ============
 

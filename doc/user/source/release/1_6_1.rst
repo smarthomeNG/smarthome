@@ -1,0 +1,120 @@
+===============================
+Release 1.6.1 - 10. August 2019
+===============================
+
+Es gibt eine Menge neuer Features in den Plugins. Dieses ist ein reines Plugin Release. Am Core gibt es keine
+Veränderungen.
+
+
+Neue Plugins
+------------
+
+Dieses Release enhält neue Plugins
+
+* indego:
+
+  * Ansteuerung von Bosch Indego Rasenmähroboter
+  * Smartplugin
+
+* snap7_logo:
+
+  * Ansteuerung einer Siemens LOGO PLC
+
+* thz:
+
+  * Ansteuerng von Stiebel Eltron und Tecalor Wärmepumpen LWZ/THZ 30x/40x.
+  * Smartplugin
+
+* unifi:
+
+  * Ansteuerung und Abfragen von Ubiquiti Netzwerkkomponenten (Switch, AP, verbundene Endgeräte, etc.)
+
+* trovis557x:
+
+  * Plugin zum Auslesen von SAMSON TROVIS 557x Heizungsreglern
+
+
+
+Plugin Erweiterungen
+--------------------
+
+* artnet:
+
+  * rework of plugin
+
+* avm:
+
+  * Bugfixes
+  * Multi phone book support for get_calllist, get_contact_name_by_phone_number, and get_phone_numbers_by_name
+
+* helios:
+
+  * Remove startup error (cycle conversion from num to int fails)
+  * Make the data reading/writing 10 times faster (by error 70 instead of 7ms were used in the past)
+  * Changed logging of unknown received data (e.g. from noise on bus) to ‚info‘ level
+  * Adjusted items.yaml to latest stand, some values are still under development
+
+* ical:
+
+  Heruntergeladene Dateien werden nun nach der Domäne benannt und nicht nach dem Online Filenamen
+  Nutzen von Online- und Offline Kalendern funktioniert nun zuverlässig
+
+* kodi:
+
+  * Weitere Kommandos hinzugefügt
+  * Verbessertes Threading und Abfragen von Playerinformationen
+  * Ermöglichen von Befehlsabfolgen (Makros; derzeit hardcoded)
+  * Warteschlange für Befehle, damit keine Kommandos verloren gehen
+  * Abwarten einer passenden Antwort und Neu-Senden des Befehls, falls nötig
+  * Abfangen von Problemen, wenn mehrere Antworten zeitgleich empfangen werden
+  * Ein- und Ausschalten von Kodigeräten und Mute-Befehlen funktioniert nun
+  * Besseres Verbindungshandling, Initialisierung beim (Wieder)aufbau der Verbindung, zusätzliche Parameter
+
+* pushbullet:
+
+  * Fix sending files (wasn’t working in 1.6.0 release)
+
+* simulation:
+
+  * Bugfix für NextDay Einträge ohne „\n“ beim Abspielen
+
+* sonos:
+
+  * Es sind jetzt alle Boxen (mehrere) wieder erreichbar
+  * Die Transport Actions werden wieder korrekt befüllt
+  * Getestet mit dem aktuellen Sonos Rev 10.3
+  * Google TTS funktioniert
+  * In der letzten SoCo Version gab es noch ein memory leak. Ob dieses noch vorhanden ist, muss beobachtet werden
+
+* squeezebox:
+
+  * Fixed big problem in struct items (they wouldn’t load because of the name items)
+
+* stateengine:
+
+  * Callersource beinhaltet nun den Namen des SE Items, wodurch ein Auslösen von SE durch andere SE möglich wird
+  * Neue special Aktion zum Retriggern des SE Items
+  * Bedingungen können nun auch Listen enthalten, wenn Variablen oder Evals enthalten sind
+  * Spezielle Bedingungen wie laststate, min(age) können ebenfalls mittels Listen definiert werden
+  * Es ist nun auch das Bedingungsset, das für einen Zustandswechsel verantwortlich war, in einem eigenen Item hinterlegt und mittels var:current.conditionset_id/name abfragbar
+  * Weiter ist es möglich, Aktionen nur bei bestimmten Bedingungsgruppen auszuführen
+  * manual_exclude/include Vergleiche nutzen nun RegEx
+  * se_eval ist nun auch zusätzlich zu stateengine_eval möglich
+  * Neue Eval Funktionen: get_attributevalue, get_relative_item, get_relative_itemproperty
+  * Möglichkeit, Templates zu nutzen
+  * Neue Variable: current.action_name
+  * Durch se_eval deklarierte Items sind nun universell einsetzbar, auch für min/max/age
+  * Webinterface mit grafischer Visualisierung
+
+* telegram:
+
+  * Log eines Fehlers, wenn das Plugin mit einem invaliden Token gestartet wird
+
+* uzsu:
+
+  * Korrekte Scheduler auch wenn mehrere uzsu items das gleiche name Attribut haben
+
+* withings_health:
+
+  * Verbesserungen im Error Handling
+

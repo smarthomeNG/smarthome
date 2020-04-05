@@ -21,6 +21,7 @@ The description of the libraries' functions is shown here:
    /lib/module
    /lib/scene
    /lib/shyaml
+   /lib/translation
 
 
 The following libraries are more public. They can be used for plugin development too.

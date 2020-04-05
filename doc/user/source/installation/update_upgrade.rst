@@ -1,47 +1,60 @@
-Update von einer älteren Version
-================================
+. index:: Konfiguration
+.. index:: Konfiguration; Sichern und Wiederherstellen
 
-Es kann verschiedene Szenarien geben von denen aus man ein Update machen
-möchte. Es gibt unterschiedliche Ansätze wenn es sich um eine Virtuelle
-Maschine handelt oder wenn ein Raspberry Pi upgedated werden soll. Es
-gibt hier leider nicht **die** Methode. Leider gibt es derzeit auch
-keine Systemübergreifende Backup Methode. Es ist also ein wenig ein
-Stückwerk.
+.. role:: redsup
+.. role:: bluesup
 
+==================================================
+Update von einer älteren Version :bluesup:`update`
+==================================================
+
+Es kann verschiedene Szenarien geben von denen aus man ein Update machen möchte. Es gibt unterschiedliche Ansätze
+wenn es sich um eine Virtuelle Maschine handelt oder wenn ein Raspberry Pi upgedated werden soll. Es gibt hier
+leider nicht **die** Methode. Leider gibt es derzeit auch keine vollständige Systemübergreifende Backup Methode.
+Es ist also ein wenig ein Stückwerk.
+
+
+--------------------------------
 Gedanken zu Distributionsupgrade
 --------------------------------
 
-Bei Linux Betriebsystemversionen gibt es tiefgreifende Änderungen, was
-die Systemdienste betrifft. Gab es bei älteren Systemen wie Debian 7
-(Wheezy) oder Ubuntu 14.x noch die init-Skripte, so ist bei neuen
-Systemen wie Debian 8 (Jessie) oder Ubuntu 15 ein neuer Ansatz gefunden
-worden: **systemd** Die Art und Weise wie Systemunterbauten für
-SmartHomeNG laufen haben sich also grundlegend angepasst. Als **alter
-Linuxhase** ist das sicher mit einem Distributionsupgrade schnell
-erledigt aber dann kommen noch solche Dinge wie Umstellung von **eibd**
-auf **knxd** dazu. Es kann also sinnvoll sein ein frisch installiertes
-System auf Basis SmartHomeNG einem aktualisierten System vorzuzuiehen.
-In diesem Fall müssen nur die Konfigurationen vom SmartHomeNG angepasst
-und die smartVISU Dateien rüberkopiert werden. Zusätzlich sind noch die
-Dateien der SQLite zu migrieren.
+Bei Linux Betriebsystemversionen gibt es tiefgreifende Änderungen, was die Systemdienste betrifft. Gab es bei
+älteren Systemen wie Debian 7 (Wheezy) oder Ubuntu 14.x noch die init-Skripte, so ist bei neuen Systemen wie
+Debian 8 (Jessie) oder Ubuntu 15 ein neuer Ansatz gefunden worden: **systemd** Die Art und Weise wie Systemunterbauten
+für SmartHomeNG laufen haben sich also grundlegend angepasst. Als **alter Linuxhase** ist das sicher mit einem
+Distributionsupgrade schnell erledigt aber dann kommen noch solche Dinge wie Umstellung von **eibd** auf **knxd** dazu.
+Es kann also sinnvoll sein ein frisch installiertes System auf Basis SmartHomeNG einem aktualisierten System
+vorzuzuiehen.
 
-Grundsätzlich empfiehlt sich, vor dem Update von SmarthomeNG auf eine
-aktuelle Linux-Distribution upzudaten. Für ein Update von
-Raspian Wheezy auf Jessie findet sich
-`hier <https://www.elektronik-kompendium.de/sites/raspberry-pi/2005051.htm>`__
-eine gute Anleitung. Zusätzlich müssen noch die `in der
-Komplettanleitung <https://github.com/smarthomeNG/smarthome/wiki/Komplettanleitung#smarthomeng-installieren>`__
-unter Vorbedingungen angegebenen Programme und auf der selben Seite
-weiter unten beschriebenen Python-Pakete (ephem, pyyaml, ...)
-installiert werden.
+In diesem Fall müssen nur die Konfigurationen vom SmartHomeNG angepasst und die smartVISU Dateien rüberkopiert werden.
+Zusätzlich sind noch die Dateien der SQLite zu migrieren.
 
-Update von SmarthomeNG ab V1.1 und höher
+Grundsätzlich empfiehlt sich, vor dem Update von SmarthomeNG auf eine aktuelle Linux-Distribution upzudaten. Für ein
+Update von Raspian Wheezy auf Jessie findet sich `hier <https://www.elektronik-kompendium.de/sites/raspberry-pi/2005051.htm>`__
+eine gute Anleitung. Zusätzlich müssen noch die `in der Komplettanleitung <https://github.com/smarthomeNG/smarthome/wiki/Komplettanleitung#smarthomeng-installieren>`__
+unter Vorbedingungen angegebenen Programme und auf der selben Seite weiter unten beschriebenen Python-Pakete
+(ephem, pyyaml, ...) installiert werden.
+
+
+------------------------------------------------------
+Update von SmarthomeNG ab v1.6 und höher :redsup:`neu`
+------------------------------------------------------
+
+Wenn von einer Version v1.6 oder höher ein Update durchgeführt werden soll, gibt es eine neue Möglichkeit. Statt
+ein Update durchzuführen, kann bestehende die Konfiguration gesichert werden, eine Neuinstallation durchgeführt werden
+und anschließend die gesicherte Konfiguration eingespielt werden. Das vereinfacht auch das Update, wenn man das
+Raspberry Pi Image verwendet.
+
+Wie das Sichern und Wiederherstellen der Konfiguration funktioniert, ist auf der Seite
+:doc:`/konfiguration/konfiguration_backup_restore` beschrieben.
+
+
+----------------------------------------
+Update von SmarthomeNG ab v1.1 und höher
 ----------------------------------------
 
-Wenn man SmarthomeNG laut der
-`Komplettanleitung <https://github.com/smarthomeNG/smarthome/wiki/Komplettanleitung>`__
-(mithilfe "git clone [...]") installiert hat, in das Verzeichnis
-"smarthome" wechseln und anschliessend
+Wenn man SmarthomeNG laut der `Komplettanleitung <https://github.com/smarthomeNG/smarthome/wiki/Komplettanleitung>`__
+(mithilfe "git clone [...]") installiert hat, in das Verzeichnis "smarthome" wechseln und anschliessend
 
 .. code-block:: bash
 
@@ -58,6 +71,23 @@ einen Pull durchführen:
     cd plugins
     git pull
     cd ..
+
+   .. note::
+
+      Es kann durchaus vorkommen, das das ``git pull`` abgebrochen wird mit einer
+      Fehlermeldung der Art:
+
+      .. code-block: python
+
+         error: Ihre lokalen Änderungen in den folgenden Dateien würden durch den
+         Merge überschrieben werden:
+         requirements/all.txt
+         Bitte committen oder stashen Sie Ihre Änderungen, bevor sie mergen.
+         Abbruch
+
+      In diesem Fall würde ein ``git checkout -- requirements/all.txt`` aus dem
+      aktuellen Branch die fragliche Datei auschecken und damit für ``git pull``
+      wieder überschreibbar machen.
 
 Anschließend müssen noch benötigte Pakete aktualisiert werden.
 Diese werden von Pypi bereitgestellt. Bei SmartHomeNG gibt es zum einen den
@@ -81,19 +111,29 @@ der Plugins ermittelt. Dies Skript wird aufgerufen mit:
    nicht erfüllt, beendet sich SmartHomeNG mit einem entsprechenden Eintrag im Log.
 
 
-
 Vom Programmkern benötigte Bibliotheken herunterladen und installieren mit:
 
    .. code-block:: bash
 
-       sudo pip3 install -r requirements/base.txt
+       pip3 install -r requirements/base.txt --user
 
 Und dann für jedes Plugin einzeln die benötigten Bibliotheken herunterladen
 und installieren mit:
 
    .. code-block:: bash
 
-       sudo pip3 install -r plugins/<pluginname>/requirements.txt
+       pip3 install -r plugins/<pluginname>/requirements.txt --user
+
+
+.. attention::
+
+    In früheren Beschreibungen wurde die globale Installation von Python Packages mit dem sudo Kommando
+    beschrieben:
+
+       sudo pip3 install -r requirements/base.txt
+
+    Dieses funktioniert unter Debian Buster **NICHT** mehr. Zumindest unter Buster **muss** die Installation
+    für den entsprechenden User mit **--user** erfolgen (wie oben beschrieben).
 
 
 Zum Abschluss SmarthomeNG dann starten. Um zu prüfen, ob sich vielleicht
@@ -104,11 +144,10 @@ Debugmodus von der Kommandozeile aus machen:
 
     python3 bin/smarthome.py
 
-Jetzt heißt es genau zu schauen, was an **Warning** oder **Error**
-gemeldet wird. Logfiles findet man auch im Verzeichnis ``../var/log``
-(in der Standardinstallation unter ``/usr/local/smarthome/var/log``).
-Von da aus kann man sie mit einem Editor in Ruhe anschauen und auf
-Fehler durchsuchen.
+
+Jetzt heißt es genau zu schauen, was an **WARNING** oder **ERROR** gemeldet wird. Logfiles findet man im
+Verzeichnis ``../var/log`` (in der Standardinstallation unter ``/usr/local/smarthome/var/log``).
+Von da aus kann man sie mit einem Editor in Ruhe anschauen und auf Fehler durchsuchen.
 
 Wenn dann die Konfiguration stimmt, kann man natürlich den automatischen
 Neustart von SmartHomeNG wieder einschalten. In der Komplettanleitung

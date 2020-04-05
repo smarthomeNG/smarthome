@@ -99,6 +99,15 @@ The plugin code is a class based on the class SmartPlugin. The methods of SmartP
 
    development_plugin/smartplugin
 
+Plugins that use MQTT should be derived from clatt MqttPlugin. MqttPlugin is a subclass of SmartPlugin. The methods of
+MqttPlugin are documented here.
+
+.. toctree::
+   :maxdepth: 5
+   :titlesonly:
+
+   development_plugin/mqttplugin
+
 
 .. toctree::
    :maxdepth: 5
@@ -110,6 +119,7 @@ The plugin code is a class based on the class SmartPlugin. The methods of SmartP
    development_plugin/webinterface
    development_plugin/multilanguage
    development_plugin/sampleplugin
+   development_plugin/samplemqttplugin
    modules_doc/modules_plugins
    modules_doc/modules_readmes
    development_plugin/libraries_plugins

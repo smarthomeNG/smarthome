@@ -1,6 +1,8 @@
-########################
+.. index:: smartVISU; Installation von Widgets
+
+========================
 Installation von Widgets
-########################
+========================
 
 smartVISU Widget-Handling ab SmartHomeNG v1.2
 =============================================

@@ -19,7 +19,8 @@ in der Navigationsleiste.
    - kann nur der Autor des jeweiligen Plugins sicherstellen, dass keine ungewünschten Mischungen der Sprache (Deutsch/Englisch) vorkommen.
    - kann keine Dokumentation für Plugins außerhalb des SmartHomeNG Plugin-Repositories in die Dokumentation aufgenommen werden.
    
-   Hinweise auf weitere Plugins, die sich nicht im SmartHomeNG Repository befinden, sind auf der `entsprechenden Wiki Seite <https://github.com/smarthomeNG/smarthome/wiki/Plugins-außerhalb-des-SmartHomeNG-Repository>`_ zu finden.
+   Hinweise auf weitere Plugins, die sich nicht im SmartHomeNG Repository befinden, sind auf der 
+   entsprechenden `Wiki Seite <https://github.com/smarthomeNG/smarthome/wiki/Plugins-außerhalb-des-SmartHomeNG-Repository>`_ zu finden.
 
 Die Plugins sind in die folgenden Kategorien unterteilt:
 

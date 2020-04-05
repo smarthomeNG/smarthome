@@ -4,76 +4,110 @@
     "name": "visu",
     "next": "2018-07-29 01:51:24+0200",
     "cycle": "{300: '1'}",
-    "cron": "None"
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": null
+
   },
   {
     "group": "logic",
     "name": "a_testlogic2a",
     "next": "2018-07-29 01:49:00+0200",
     "cycle": "-",
-    "cron": "{'* * * *': None}"
+    "cron": "{'* * * *': None}",
+    "prio": 3,
+    "active": true,
+    "value": false
   },
   {
     "group": "item",
     "name": "config.fenster.check_sensor_error",
     "next": "2018-07-29 01:49:28+0200",
     "cycle": "{60: '1'}",
-    "cron": "None"
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": null
   },
   {
     "group": "logic",
     "name": "a_testlogic2b",
     "next": "2018-07-29 01:49:37+0200",
     "cycle": "{60: None}",
-    "cron": "None"
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": "hoch"
   },
   {
     "group": "item",
     "name": "test.cycle.testcycle_item_new1",
     "next": "2018-07-29 01:49:28+0200",
     "cycle": "{60: '42'}",
-    "cron": "None"
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": null
   },
   {
     "group": "item",
     "name": "test.cycle.testcycle_item_old1",
     "next": "2018-07-29 01:49:05+0200",
     "cycle": "{30: '42'}",
-    "cron": "None"
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": null
   },
   {
     "group": "item",
     "name": "test.cycle.testcycle_item_new2",
     "next": "2018-07-29 01:49:28+02000",
     "cycle": "{60: ''}",
-    "cron": "None"
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": null
   },
   {
     "group": "plugin",
     "name": "avm_fritz_wz.update",
     "next": "2018-08-01 19:32:46+0200",
     "cycle": "{300: None}",
-    "cron": "None"
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": null
   },
   {
     "group": "other",
     "name": "Database dump",
     "next": "2018-08-01 19:29:38+0200",
     "cycle": "{60: None}",
-    "cron": "None"
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": null
   },
   {
     "group": "other",
     "name": "sh.connections",
     "next": "2018-08-01 19:29:36+0200",
     "cycle": "{10: None}",
-    "cron": "None"
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": null
   },
   {
     "group": "other",
     "name": "sh.garbage_collection",
     "next": "2018-08-02 02:04:00+0200",
     "cycle": "-",
-    "cron": "{'4 2 * *': None}"
+    "cron": "{'4 2 * *': None}",
+    "prio": 3,
+    "active": true,
+    "value": null
   }
 ]

@@ -59,10 +59,13 @@ class SchedulersController(RESTResource):
                 schedule['cycle'] = str(s['cycle'])
                 #            schedule['cron'] = html.escape(str(s['cron']))
                 schedule['cron'] = str(s['cron'])
+                schedule['prio'] = s['prio']
+                schedule['active'] = s['active']
+                schedule['value'] = s['value']
 
-                if schedule['cycle'] == None:
+                if schedule['cycle'] == 'None':
                     schedule['cycle'] = '-'
-                if schedule['cron'] == None:
+                if schedule['cron'] == 'None':
                     schedule['cron'] = '-'
 
                 nl = entry.split('.')

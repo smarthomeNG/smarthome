@@ -4,7 +4,7 @@ Hard- u. Software Anforderungen
 Um SmartHomeNG nutzen zu können, braucht es nicht viel. Für jemanden,
 der erstmalig SmartHomeNG installiert bietet es sich an zum Kennenlernen
 eine virtuelle Maschine zu erstellen und dort als Betriebssystem ein
-aktuelles Debian Stretch (>= 9.x) oder Ubuntu (>= 15.x) zu verwenden.
+aktuelles Debian Buster (>= 10.x) oder Ubuntu (>= 18.04) zu verwenden.
 
 Da SmartHomeNG in den meisten Fällen im Hintergrund laufen wird,
 benötigt das System keine grafische Benutzeroberfläche und kann
@@ -18,13 +18,13 @@ wie Rechner mit einer ARM CPU wie Raspberry Pi.
 
 Häufig verwendete Hardware ist:
 
--  Raspberry Pi 2 oder Raspberry Pi 3 (der Letztere wird aufgrund der besseren Hardware **unbedingt empfohlen**)
+-  Raspberry Pi 2, 3 oder 4 (der letztere wird aufgrund der besseren Hardware **unbedingt empfohlen**)
    besonders wenn die Webinterfaces der Plugins genutzt werden und falls die Visualisierung (smartVISU) auf dem
    selben System betrieben werden sollen. Der Großteil der Nutzer verwendet diese Hardware, siehe
    `Umfrage <https://knx-user-forum.de/forum/supportforen/smarthome-py/1112952-welche-hardware-nutzt-ihr-f%C3%BCr-euer-smarthomeng>`__
 -  Intel NUC (Empfohlen für Stabilität und Geschwindigkeit, auch wenn
    diese Rechner mehr Leistung haben, als benötigt wird. Unterstützt
-   normale SATA Festplatten, was ein Vorteil gegenüber den Raspberry Pi
+   normale SATA Festplatten/SSD, was ein Vorteil gegenüber den Raspberry Pi
    mit ihren SD-Karten ist)
 -  ODroid
 -  Banana Pi
@@ -36,15 +36,16 @@ Virtuelle Maschine
 ~~~~~~~~~~~~~~~~~~
 
 Eine brauchbare Grundlage um **SmartHomeNG** auszuprobieren ist eine
-Virtuelle Maschine mit 512MB RAM und zwischen 20GB und 60GB
+virtuelle Maschine mit 512MB RAM und zwischen 40GB und 80GB
 Plattenplatz.
 
 
-Raspberry Pi 2 oder 3, jeweils Modell B oder B+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Raspberry Pi 2, 3 oder 4
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 SmartHomeNG ist auf einem Raspberry Pi 1 zwar lauffähig, sollte dann aber nur in einer Minimalkonfiguration eingesetzt
-werden. Das
+werden.
+
 Vorteile:
 ^^^^^^^^^
 
@@ -62,7 +63,7 @@ Nachteile:
    Schreibzyklen (Alternativ ist eine `Auslagerung der
    Dateien <https://knx-user-forum.de/forum/supportforen/smarthome-py/862047-wie-sqlite-auf-schnelleres-medium-verlagern>`__
    auf einen USB-Stick möglich
-   Aktuelle Raspbian Versionen unterstüten auch das booten von USB Devices, so dass eine HD oder SSD über USB angeschlossen
+   Aktuelle Raspbian Versionen unterstützen auch das Booten von USB Geräten, so dass eine HD oder SSD über USB angeschlossen
    werden kann.
 -  Empfindlich, braucht eine **sehr stabile Spannungsversorgung**
 -  ARM Plattform, es gibt nicht für alles fertige Pakete zum Download
@@ -78,14 +79,14 @@ Vorteile:
 
 -  verschiedene Hardwareausstattungen möglich
 -  niedriger Verbrauch
--  Normale SSD kann verwendet werden (60GB oder 120GB macht Sinn)
+-  Normale SSD kann verwendet werden (ab 40GB)
 -  Installation über Docker-Container leicht möglich
 
 
 Nachteile:
 ^^^^^^^^^^
 
--  teurer (z.B. bei 4GB RAM, 60GB SSD um 250 EUR)
+-  teurer (z.B. bei 4GB RAM und 60GB SSD um 250 EUR)
 
 
 NAS wie z.B. Synology, QNAP
@@ -129,7 +130,7 @@ Betriebssystem
 Ein beliebiges Linux oder Unix System (mit Shell Zugang um die Requirements und SmartHomeNG zu installieren) sollte
 funktionieren.
 
-SmartHomeNG ist mindestens getestet auf Raspbian und Debian Stretch (amd64)
+SmartHomeNG ist mindestens getestet auf Raspbian und Debian Buster (amd64)
 
 Wenn eine Hardware ohne gepufferte Echtzeituhr (Realtime Clock) genutzt wird, ist der
 Einsatz eines NTP Daemons notwendig, um die Zeit über das Internet zu
@@ -145,8 +146,7 @@ Ab SmartHomeNG v1.6 sollte eine Installation unter MacOS möglich sein.
 weitere Software
 ----------------
 
-Die aktuelle Version 1.6 von SmartHomeNG setzt Python der Version 3.5
-oder neuer voraus.
+Die aktuelle Version von SmartHomeNG setzt Python der Version 3.5 oder neuer voraus.
 
 Die Grundregel nach der sich der Support für Python Versionen richten
 soll ist folgende:
@@ -163,8 +163,12 @@ Version aktuelle Python Version und die zwei Vorgängerversionen.**
   "v1.5",            "Python 3.6",  "Python 3.4, 3.5, 3.6"
   "v1.6",            "Python 3.7",  "Python 3.5, 3.6, 3.7"
   "v1.7",            "Python 3.7",  "Python 3.5, 3.6, 3.7"
+  "v1.8",            "Python 3.8",  "Python 3.6, 3.7, 3.8"
 
-Das bedeutet nicht automatisch, dass SmartHomeNG auf älteren Versionen
-von Python nicht mehr funktioniert. Die Entwicklung wird nur nicht mehr
-gegen die älteren Versionen getestet.
+Das bedeutet nicht automatisch, dass SmartHomeNG mit älteren Python Versionen nicht mehr funktioniert,
+die Entwicklung wird nur nicht mehr mit älteren Versionen getestet.
+
+Debian Buster bringt aktuell Python 3.7.x und PHP 7.3 mit und Ubuntu 18.04 LTS Python 3.6 und PHP 7.2
+
+PHP wird für SmartHomeNG selbst nicht benötigt, ist jedoch eine Voraussetzung für den Einsatz von smartVISU.
 

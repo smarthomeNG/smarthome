@@ -4,8 +4,14 @@
 backup_restore.py
 =================
 
-Dieses Skript kann ein Backup der Konfiguration erzeugen, indem es die Konfigurationsdateien 
-aus den Verzeichnissen **../etc**, **../items** und **../scenes** in eine tar.gz Datei 
+.. attention::
+
+    Dieses Skript ist veraltet und wird in einem der kommenden Releases entfernt. Bitte stattdessen die Backup/Restore
+    Funktion der Admin GUI oder die Kommandozeilen Optionen von smarthome.py zum Backup und Restore verwenden.
+
+
+Dieses Skript kann ein Backup der Konfiguration erzeugen, indem es die Konfigurationsdateien
+aus den Verzeichnissen **../etc**, **../items** und **../scenes** in eine tar.gz Datei
 zusammenführt.
 
 Alternativ kann das Skript die Konfigurationsdateien aus einem früheren Backup wiederherstellen.
@@ -13,7 +19,7 @@ Alternativ kann das Skript die Konfigurationsdateien aus einem früheren Backup 
 
 .. attention::
 
-   Das Skript sichert in der jetzigen Form keine **Logiken** und und es erzeugt auch kein Backup 
+   Das Skript sichert in der jetzigen Form keine **Logiken** und und es erzeugt auch kein Backup
    einer verwendeten **Datenbank**.
 
 

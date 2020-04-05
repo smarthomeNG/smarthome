@@ -119,7 +119,7 @@ Tage aufheben.
 Konfiguration zusätzlicher Logausgaben
 --------------------------------------
 
-Um zusätzliche Logausgaben zu konfigurieren muss nur der Abschnitt
+Um zusätzliche Logausgaben zu konfigurieren, muss nur der Abschnitt
 **logger:** der Logging Konfiguration angepasst/erweitert werden.
 
 Die meisten Plugins schreiben ihre Logausgaben in einen eigenen Logger,
@@ -236,13 +236,63 @@ Konfiguration, die den meisten Anforderungen genügt. Wenn man dennoch
 darüber hinausgehende Anforderungen hat, kann man dieses Logging Modell
 auch noch erweitern.
 
+Logging Filter
+~~~~~~~~~~~~~~
+
+Filter können dazu genutzt werden, nur bestimmte Logeinträge anzuzeigen bzw.
+diese eben auch zu verstecken. Hierzu wird zuerst ein Filter angelegt:
+
+.. code-block:: yaml
+
+   filter:
+       meinfilter:
+           (): lib.logutils.Filter
+           module: "[sS]tate[eE]ngineLogger"
+           name: "plugins.stateengine.licht.test"
+           msg: "(.*)Item (.*) not found!"
+           #invert: True
+
+Dieser Filter muss nun beim entsprechenden Handler noch referenziert werden:
+
+.. code-block:: yaml
+
+   handlers:
+       stateengine_file:
+           class: logging.handlers.TimedRotatingFileHandler
+           formatter: shng_simple
+           filename: ./var/log/stateengine.log
+           filters: [meinfilter]
+
+Wichtig sind dabei die eckigen Klammern, auch wenn nur ein Filter referenziert
+wird. Und ja, es können hier durch Beistrich auch mehrere Filter gelistet
+werden. Schließlich muss der Handler noch im entsprechenden logger eingetragen
+werden.
+
+.. code-block:: yaml
+
+   loggers:
+        plugins.stateengine:
+            handlers: [stateengine_file]
+            level: DEBUG
+
+Dies führt dazu, dass nicht mehr alle DEBUG Informationen des Loggers vom
+Stateengine Plugin in die Datei stateengine.log geschrieben werden. Auf Grund
+des Filters werden sämtliche Einträge ignoriert, die..
+- vom Modul StateEngine (s und e können sowohl groß, als auch klein geschrieben
+werden) stammen
+- vom Logger mit dem Namen 'plugins.stateengine.licht.test' stammen
+- am Ende der Zeile "Item <beliebiger Eintrag> not found!" beinhalten
+
+Hätte man im Filter "invert: True" angegeben, würden alle Einträge ignoriert
+werden, die NICHT den oben genannten Kriterien entsprechen.
+
 Erweitertes Logging für die Plugin Entwicklung
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Für die Entwicklung von Plugins kann es hilfreich sein, wenn man im Log
 sehen kann, aus welchem Teil des Plugins die Logmessage kommt. Dazu kann
-man einen Formatter schreiben, der die Funktion/Methode die das Log
-geschrieben hat mit anzeigt.
+man einen Formatter schreiben, der die Funktion/Methode, die das Log
+geschrieben hat, mit anzeigt.
 
 Dazu erzeugt man einen zusätzlichen Formatter als Kopie aus dem
 (verbesserten) simple Formatter und nennt ihn ``funcname``. Dann fügt

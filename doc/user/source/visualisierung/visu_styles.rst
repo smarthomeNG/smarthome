@@ -1,3 +1,5 @@
+.. index:: smartVISU Autogenerierung; Unterschiedliche Visu-Styles
+
 Unterschiedliche Visu-Styles
 ============================
 

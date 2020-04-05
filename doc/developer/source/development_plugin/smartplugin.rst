@@ -1,3 +1,8 @@
+.. index:: Class; SmartPlugin
+.. index:: Plugin; Class SmartPlugin
+
+.. role:: redsup
+.. role:: bluesup
 
 Class SmartPlugin
 =================

@@ -7,3 +7,6 @@ http:
 
 admin:
     module_name: admin
+
+#mqtt:
+#    module_name: mqtt

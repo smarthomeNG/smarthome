@@ -1,8 +1,9 @@
 :tocdepth: 7
 
-###########
+===========
 SmartHomeNG
-###########
+===========
+
 
 Developer documentation
 =======================
@@ -30,7 +31,7 @@ any way you want and can.
    Place **remarks** und **wishes for changes** regarding this developer documentation on
    `this feedback page <https://www.smarthomeng.de/feedback-zur-dokumentation>`_ .
 
-.. [#f1] SmartHomeNG © Copyright 2016-2018 SmartHomeNG Team, is based on smarthome.py © 2011-2014 Marcus Popp.
+.. [#f1] SmartHomeNG © Copyright 2016-2020 SmartHomeNG Team, is based on smarthome.py © 2011-2014 Marcus Popp.
 
 
 .. toctree::
@@ -51,6 +52,7 @@ any way you want and can.
    config
    items
    logics
+   modules
    plugins_all
 
 

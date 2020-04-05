@@ -62,9 +62,9 @@ class ItemsController(RESTResource):
 
             return json.dumps(result)
 
-            raise cherrypy.NotFound
-            self.logger.info("LogController (GET): logfiles = {}".format(logs))
-            return json.dumps({'logs':logs, 'default': self.root_logname})
+            #raise cherrypy.NotFound
+            #self.logger.info("LogController (GET): logfiles = {}".format(logs))
+            #return json.dumps({'logs':logs, 'default': self.root_logname})
 
         return None
 

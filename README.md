@@ -61,36 +61,30 @@ An example is shown below
 ```yaml
 # plugin.yaml
 knx:
-    class_name: KNX
-    class_path: plugins.knx
+    plugin_name: knx
     host: 127.0.0.1
     port: 6720
 
-# send_time = 600 # update date/time every 600 seconds, default none
-# time_ga = 1/1/1 # default none
-# date_ga = 1/1/2 # default none
+# send_time: 600 # update date/time every 600 seconds, default none
+# time_ga: 1/1/1 # default none
+# date_ga: 1/1/2 # default none
 ow:
-    class_name: OneWire
-    class_path: plugins.onewire
+    plugin_name: onewire
 
 visu:
-    class_name: WebSocket
-    class_path: plugins.visu_websocket
+    plugin_name: visu_websocket
 
 smartvisu:
-    class_name: SmartVisu
-    class_path: plugins.visu_smartvisu
+    plugin_name: visu_smartvisu
     smartvisu_dir: /var/www/html/smartVISU
 
 cli:
-    class_name: CLI
-    class_path: plugins.cli
+    plugin_name: cli
     ip: 0.0.0.0
     update: 'True'
 
 sql:
-    class_name: SQL
-    class_path: plugins.sqlite
+    plugin_name: database
 ```
 
 ### etc/logic.yaml

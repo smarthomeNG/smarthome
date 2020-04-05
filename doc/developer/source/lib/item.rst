@@ -40,9 +40,18 @@ lib.item
     :no-members:
 
 
-.. module:: lib.item
+.. .. module:: lib.item
+
 
 The API consists of two classes.
+
+.. toctree::
+   :maxdepth: 6
+   :hidden:
+
+   item_class_item
+   item_class_items
+
 
 
 class Item
@@ -52,6 +61,7 @@ This class implements the item itself:
 
 .. autoclass:: Item
    :no-members:
+   :noindex:
 
 :doc:`class Item </lib/item_class_item>`
 
@@ -63,6 +73,7 @@ This class implements the loading and management of the items in form of the ite
 
 .. autoclass:: Items
    :no-members:
+   :noindex:
 
 :doc:`class Items </lib/item_class_items>`
 

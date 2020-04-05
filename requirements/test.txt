@@ -10,3 +10,9 @@ pydocstyle>=1.0.0
 virtualenv<14.0.0;python_version=='3.2'
 coverage<4.0.0;python_version=='3.2'
 beautifulsoup4>=4.1.0
+
+# SmartHomeNG-lib
+ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
+
+# SmartHomeNG-lib
+ruamel.yaml>0.15.0,<=0.15.74;python_version>='3.7'

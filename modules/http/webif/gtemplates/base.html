@@ -65,10 +65,14 @@
     <script src="/gstatic/bootstrap-treeview/bootstrap-treeview.min.js"></script>
 
     <script src="/gstatic/js/smarthomeng.js"></script>
+
+	{% block pluginscripts %}
+	{% endblock pluginscripts %}
+
     {%- endblock scripts %}
     {%- endblock head %}
   </head>
-  <body{% block body_attribs %}{% endblock body_attribs %}>
+  <body{%- block body_attribs %}{%- endblock body_attribs %}>
     {% block body -%}
     {% block navbar %}
     {%- endblock navbar %}

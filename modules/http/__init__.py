@@ -23,12 +23,14 @@
 import logging
 import os
 import time
+import threading
 from collections import OrderedDict
 
 import cherrypy
 from jinja2 import Environment, FileSystemLoader
 
 from lib.utils import Utils
+from lib.model.module import Module
 
 
 class CherryPyFilter(logging.Filter):
@@ -57,7 +59,7 @@ class CherryPyFilter(logging.Filter):
         return True
 
 
-class Http():
+class Http(Module):
 
     version = '1.6.0'
     _shortname = ''
@@ -78,9 +80,10 @@ class Http():
     gstatic_dir = ''
 
 
-    def __init__(self, sh, port=None, servicesport=None, ip='', threads=8, starturl='',
-                       showpluginlist='True', showservicelist='False', showtraceback='False',
-                       user='', password='', hashed_password=''):
+    # def __init__(self, sh, port=None, servicesport=None, ip='', threads=8, starturl='',
+    #                    showpluginlist='True', showservicelist='False', showtraceback='False',
+    #                    user='', password='', hashed_password=''):
+    def __init__(self, sh):
         """
         Initialization Routine for the module
         """
@@ -90,9 +93,8 @@ class Http():
 
         self.logger = logging.getLogger(__name__)
         self._sh = sh
-        self.logger.debug("Module '{}': Initializing".format(self._shortname))
-
-        self.logger.debug("Module '{}': Parameters = '{}'".format(self._shortname, str(dict(self._parameters))))
+        self.logger.debug("Initializing...")
+        self.logger.debug("Parameters = '{}'".format(str(dict(self._parameters))))
 
 
         #================================================================================
@@ -124,13 +126,22 @@ class Http():
 
             self._starturl = self._parameters['starturl']
         except:
-            self.logger.critical("Inconsistent module (invalid metadata definition)".format(self._shortname))
+            self.logger.critical("Inconsistent module (invalid metadata definition)")
             self._init_complete = False
             return
 
         self._cert_dir = self._sh._etc_dir
         self._cert_file = os.path.join(self._cert_dir, self._cert_name)
         self._privkey_file = os.path.join(self._cert_dir, self._privkey_name)
+
+        if self._ip == '0.0.0.0':
+            self._ip = self._get_local_ip_address()
+
+        if self.is_port_in_use(int(self._port)):
+            self.logger.critical("Error starting http module: port {} is already in use".format(self._port))
+            self._init_complete = False
+            return
+
 
         # test if tls and certificate configuration is correct, otherwise https is not possible
         if self._use_tls:
@@ -143,6 +154,11 @@ class Http():
             elif not os.path.isfile(self._privkey_file):
                 self.logger.error("Private key '{}' is not installed - https not activated".format(self._privkey_name))
                 self._use_tls = False
+        if self._use_tls:
+            if self.is_port_in_use(int(self._tls_port)):
+                self.logger.critical("Error starting http module: TLS-port {} is already in use".format(self._tls_port))
+                self._init_complete = False
+                return
 
 
         # Check user information and fill _user_dict
@@ -182,6 +198,12 @@ class Http():
 
         if self._ip == '0.0.0.0':
             self._ip = self._get_local_ip_address()
+
+        if self.is_port_in_use(int(self._servicesport)):
+            self.logger.critical("Error starting http module: servicesport {} is already in use".format(self._servicesport))
+            self._init_complete = False
+            return
+
 
         # ------------------------------------------------------------------------
         # Setting up webinterface environment
@@ -340,6 +362,11 @@ class Http():
 #                                  pluginclass='', instance='', description='', servicename='')
 
         return
+
+    def is_port_in_use(self, port):
+        import socket
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            return s.connect_ex((self._ip, port)) == 0
 
 
     def _is_set(self, password):

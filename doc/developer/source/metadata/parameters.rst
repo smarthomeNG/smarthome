@@ -1,5 +1,12 @@
-Section `parameters:`
----------------------
+
+.. role:: redsup
+.. role:: bluesup
+
+.. index:: parameters; Plugin Metadata
+.. index:: Plugin Metadata; parameters
+
+Section `parameters`
+====================
 
 Parameter metadata is used to check if the configured parameters in ``/etc`` are valid.
 If the configured data is not valid, warnings are logged in the logfile of SmartHomeNG.

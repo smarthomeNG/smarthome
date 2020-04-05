@@ -21,7 +21,7 @@
 #  along with SmartHomeNG If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
-import common
+from . import common
 import unittest
 import logging
 import shutil

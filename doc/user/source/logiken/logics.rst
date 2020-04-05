@@ -38,10 +38,11 @@ Eine Logik sieht prinzipiell folgendermaßen aus:
 
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
    :hidden:
 
    objekteundmethoden
    persistente_variablen
-   beispiellogiken
+   funktions_nutzung
+   mqtt_nutzung
 

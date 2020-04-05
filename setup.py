@@ -3,7 +3,7 @@ import os
 from setuptools import setup, find_packages
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-DOWNLOAD_URL = ('https://github.com/{}.zip'.format("1.1"))
+DOWNLOAD_URL = ('https://github.com/smarthomeNG/smarthome/archive/v{}.zip'.format("1.6"))
 
 PACKAGES = find_packages(exclude=['tests', 'tests.*'])
 
@@ -18,7 +18,7 @@ REQUIRES = [
 
 setup(
     name='SmartHomeNG',
-    version="1.3",
+    version="1.6b",
     license='GPL',
     url='https://github.com/smarthomeNG/smarthome',
     download_url=DOWNLOAD_URL,
@@ -40,8 +40,11 @@ setup(
     classifiers=[
         'Intended Audience :: End Users/Desktop',
         'Intended Audience :: Developers',
-        'Operating System :: Linux',
-        'Programming Language :: Python :: 3.4',
+        'Operating System :: POSIX :: Linux',
+        'Operating System :: MacOS :: MacOS X',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Home Automation'
     ],
 )

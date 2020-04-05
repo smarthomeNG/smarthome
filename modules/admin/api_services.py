@@ -142,14 +142,29 @@ class ServicesController(RESTResource):
         yaml_code = self.strip_empty_lines(yaml_code)
 
         import lib.shyaml as shyaml
+        import lib.config as shconfig
+
+        # load yaml code to dict ydata, get error message (if error occures) to estr
         ydata, estr = shyaml.yaml_load_fromstring(yaml_code, True)
         self.logger.info("yaml_syntax_checker(): type(ydata) = {},estr='{}'".format(type(ydata), estr))
+
         if estr != '':
             check_result = 'ERROR: \n\n' + estr
         elif not isinstance(ydata, collections.OrderedDict):
             check_result = 'ERROR: \n\n' + 'No valid YAML code'
         elif ydata != None:
-            check_result += convert_yaml(ydata).replace('\n\n', '\n')
+            # found valid yaml code
+
+            # Test if the loaded data items with 'struct' attribute
+            config = collections.OrderedDict()
+            self.items = Items.get_instance()
+            struct_dict = self.items._struct_definitions
+            shconfig.search_for_struct_in_items(ydata, struct_dict, config)
+            self.logger.info("ydata = {}".format(ydata))
+            self.logger.info("config = {}".format(config))
+
+            # return data structure converted back to yaml format
+            check_result = convert_yaml(config).replace('\n\n', '\n')
 
         return check_result
 

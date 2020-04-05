@@ -83,3 +83,73 @@ parameters:
             en: 'Advanced: Log warnings, if functions/methods are used which are flaged as deprecated'
             fr: "Avancé: Enregistrer les avertissements si des fonctions / méthodes sont utilisées qui sont affichées comme obsolètes"
 
+    holidays_country:
+        type: str
+        default: DE
+        description:
+            de: "Land dessen Feiertage berücksichtigt werden sollen (DE, AT, CH, FRA, LU, BE, PL, UK, ...)"
+            en: "Country for holidays to be used (DE, AT, CH, FRA, LU, BE, PL, UK, ...)"
+
+    holidays_province:
+        type: str
+        default: ""
+        description:
+            de: "Hier wird das Bundesland für die regionalen Feiertage festgelegt
+                - für DE: BW, BY, BE, BB, HB, HH, HE, MV, NI, NW, RP, SL, SN, ST, SH, TH
+                - für AT: B, K, N, O, S, ST, T, V, W (default)
+                - für CH: AG, AR, AI, BL, BS, BE, FR, GE, GL, GR, JU, LU, NE, NW, OW, SG, SH, SZ, SO, TG, TI, UR, VD, VS, ZG, ZH
+                - für FRA: Métropole (default), Alsace-Moselle, Guadeloupe, Guyane, Martinique, Mayotte, Nouvelle-Calédonie, La Réunion, Polynésie Française, Saint-Barthélémy, Saint-Martin, Wallis-et-Futuna
+                "
+            en: "Province to be used for regional holifays
+                - for DE: BW, BY, BE, BB, HB, HH, HE, MV, NI, NW, RP, SL, SN, ST, SH, TH
+                - for AT: B, K, N, O, S, ST, T, V, W (default)
+                - for CH: AG, AR, AI, BL, BS, BE, FR, GE, GL, GR, JU, LU, NE, NW, OW, SG, SH, SZ, SO, TG, TI, UR, VD, VS, ZG, ZH
+                - for FRA: Métropole (default), Alsace-Moselle, Guadeloupe, Guyane, Martinique, Mayotte, Nouvelle-Calédonie, La Réunion, Polynésie Française, Saint-Barthélémy, Saint-Martin, Wallis-et-Futuna
+            "
+
+    holidays_state:
+        type: str
+        default: ""
+        description:
+            de: "holiday_state wird nur für United States (CA, FL, NY, etc.) und Brazil verwendet"
+            en: "holiday_state is only used for United States (CA, FL, NY, etc.) and Brazil"
+
+    holidays_custom1:
+        type: str
+        gui_type: wide_str
+        default: ""
+        description:
+            de: "Zur Verwendung bitte die Dokumentation konsultieren"
+            en: "Please consult the user manual for information about usage"
+
+    holidays_custom2:
+        type: str
+        gui_type: wide_str
+        default: ""
+        description:
+            de: ""
+            en: ""
+
+    holidays_custom3:
+        type: str
+        gui_type: wide_str
+        default: ""
+        description:
+            de: ""
+            en: ""
+
+    holidays_custom4:
+        type: str
+        gui_type: wide_str
+        default: ""
+        description:
+            de: ""
+            en: ""
+
+    holidays_custom5:
+        type: str
+        gui_type: wide_str
+        default: ""
+        description:
+            de: ""
+            en: ""

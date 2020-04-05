@@ -1,5 +1,5 @@
 
-import common
+from . import common
 import unittest
 import sqlite3
 import threading

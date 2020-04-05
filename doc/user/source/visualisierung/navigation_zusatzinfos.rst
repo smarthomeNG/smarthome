@@ -1,3 +1,6 @@
+.. index:: smartVISU Autogenerierung; Zusätzliche Infos in der Navigation
+
+
 Navigation: Zusätzliche Infos
 =============================
 

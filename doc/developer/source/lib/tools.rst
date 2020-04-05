@@ -1,5 +1,5 @@
 lib.tools
-----------
+---------
 
 .. automodule:: lib.tools
     :members:

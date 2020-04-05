@@ -1,5 +1,12 @@
-Section `plugin_functions:`
----------------------------
+
+.. role:: redsup
+.. role:: bluesup
+
+.. index:: plugin_functions; Plugin Metadata
+.. index:: Plugin Metadata; plugin_functions
+
+Section `plugin_functions`
+==========================
 
 This sections describes the public functions that are defined by the plugin.
 
@@ -35,6 +42,10 @@ In the future the definitions will be used for a configuration tool for SmartHom
 
 
 .. include:: /metadata/parameter_keys.rst
+
+
+Plugins without plugin-functions
+================================
 
 if a plugin has no public functions, this is signaled by the following entry in the plugin.yaml file:
 

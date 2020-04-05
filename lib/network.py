@@ -262,7 +262,7 @@ class Network(object):
         else:
             logger.debug('Ping: port {} on {} is offline or not reachable'.format(port, ip))
             sock.close()
-            return False        
+            return False
 
     @staticmethod
     def send_wol(mac, ip='255.255.255.255'):
@@ -298,7 +298,10 @@ class Http(object):
     Creates an instance of the Http class.
 
     :param baseurl: base URL used everywhere in this instance (example: http://www.myserver.tld)
+    :param timeout: Set a maximum amount of seconds the class should try to establish a connection
+
     :type baseurl: str
+    :type timeout: int
     """
     def __init__(self, baseurl='', timeout=10):
         self.logger = logging.getLogger(__name__)
@@ -423,7 +426,7 @@ class Http(object):
             self.logger.debug("Download of {} successfully completed, saving to {}".format(url, local))
             with open(str(local), 'wb') as f:
                 for chunk in self._response:
-                    f.write(chunk)  
+                    f.write(chunk)
             return True
         else:
             self.logger.warning("Download error: {}".format(url))
@@ -855,7 +858,7 @@ class _Client(object):
                 self.logger.warning("Error encoding data for client {}".format(self.name))
                 return False
         try:
-            
+
             self.writer.write(message)
             self.writer.drain()
         except:
@@ -1001,7 +1004,7 @@ class Tcp_server(object):
         self._incoming_connection_callback = incoming_connection
         self._data_received_callback = data_received
         self._disconnected_callback = disconnected
-    
+
     def start(self):
         """ Start the server socket
 
@@ -1014,7 +1017,7 @@ class Tcp_server(object):
             self.logger.info("Starting up TCP server socket {}".format(self.__our_socket))
             self.__loop = asyncio.new_event_loop()
             asyncio.set_event_loop(self.__loop)
-            self.__coroutine = asyncio.start_server(self.__handle_connection, self._interfaceip, self._port)   
+            self.__coroutine = asyncio.start_server(self.__handle_connection, self._interfaceip, self._port)
             self.__server = self.__loop.run_until_complete(self.__coroutine)
 
             self.__listening_thread = threading.Thread(target=self.__listening_thread_worker, name='TCP_Server_{}'.format(self.name))
@@ -1033,7 +1036,7 @@ class Tcp_server(object):
         except:
             self.logger.debug('*** Error in loop.run_forever()')
         finally:
-            
+
             for task in asyncio.Task.all_tasks():
                 task.cancel()
             self.__server.close()
@@ -1047,12 +1050,12 @@ class Tcp_server(object):
         peer = writer.get_extra_info('peername')
         socket_object = writer.get_extra_info('socket')
         peer_socket = Network.ip_port_to_socket(peer[0], peer[1])
-        
+
         client = _Client(server=self, socket=socket_object, ip=peer[0], port=peer[1])
         client.ipver = socket.AF_INET6 if Network.is_ipv6(client.ip) else socket.AF_INET
         client.name = Network.ip_port_to_socket(client.ip, client.port)
         client.writer = writer
-        
+
         self.logger.info("Incoming connection from {} on socket {}".format(peer_socket, self.__our_socket))
         self._incoming_connection_callback and self._incoming_connection_callback(self, client)
 
@@ -1067,7 +1070,7 @@ class Tcp_server(object):
                 data = None
 
             if data and data[0] == 0xFF and client.process_iac:
-                data = client._process_IAC(data)                
+                data = client._process_IAC(data)
             if data:
                 try:
                     string = str.rstrip(str(data, 'utf-8'))
@@ -1083,11 +1086,11 @@ class Tcp_server(object):
                 finally:
                     del client
                 return
- 
+
     def __close_client(self, client):
         self.logger.info("Lost connection to client {}".format(client.name))
         self._disconnected_callback and self._disconnected_callback(self, client)
-        client.writer.close()        
+        client.writer.close()
 
     def listening(self):
         """ Returns the current listening state
@@ -1135,4 +1138,3 @@ class Tcp_server(object):
         if self.__listening_thread and self.__listening_thread.isAlive():
             self.__listening_thread.join()
         self.__loop.close()
-        

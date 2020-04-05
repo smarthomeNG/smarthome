@@ -26,6 +26,7 @@ import json
 import cherrypy
 
 
+from lib.model.module import Module
 from lib.module import Modules
 from lib.shtime import Shtime
 
@@ -57,10 +58,12 @@ from .api_plugin import *
 suburl = 'admin'
 
 
-class Admin():
+class Admin(Module):
     version = '1.6.0'
     longname = 'Admin module for SmartHomeNG'
     port = 0
+
+    _stop_methods = []      # list of stop methods defined by the various controllers of the admin api
 
     def __init__(self, sh, testparam=''):
         """
@@ -82,8 +85,7 @@ class Admin():
         self.jwt_secret = 'SmartHomeNG$0815'
 
         try:
-            self.mod_http = Modules.get_instance().get_module(
-                'http')  # try/except to handle running in a core version that does not support modules
+            self.mod_http = Modules.get_instance().get_module('http')  # try/except to handle running in a core version that does not support modules
         except:
             self.mod_http = None
         if self.mod_http == None:
@@ -106,7 +108,7 @@ class Admin():
             self.log_chunksize = self._parameters['log_chunksize']
         except:
             self.logger.critical(
-                "Module '{}': Inconsistent module (invalid metadata definition)".format(self.shortname))
+                "Module '{}': Inconsistent module (invalid metadata definition)".format(self._shortname))
             self._init_complete = False
             return
 
@@ -218,6 +220,11 @@ class Admin():
         return
 
 
+    def add_stop_method(self, method, classname=''):
+        self.logger.info("Adding stop method of class {}".format(classname))
+        self._stop_methods.append(method)
+
+
     def stop(self):
         """
         If the module has started threads or uses python modules that created threads,
@@ -225,8 +232,10 @@ class Admin():
 
         Otherwise don't enter code here
         """
-        #        self.logger.debug("Module '{}': Shutting down".format(self.shortname))
-        pass
+        self.logger.info("Shutting down".format(self._shortname))
+        for stop_method in self._stop_methods:
+            stop_method()
+        self.logger.info("Shutted down".format(self._shortname))
 
 
     def error_page(self, status, message, traceback, version):

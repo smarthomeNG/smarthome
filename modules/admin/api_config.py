@@ -32,7 +32,7 @@ from .rest import RESTResource
 
 class ConfigController(RESTResource):
     """
-    Support for
+    Support for reading and writing the core's configuration (including modules)
     """
 
     def __init__(self, module):
@@ -47,6 +47,7 @@ class ConfigController(RESTResource):
         self.core_conf = shyaml.yaml_load(os.path.join(self.modules_dir, 'core', 'module.yaml'))
         self.http_conf = shyaml.yaml_load(os.path.join(self.modules_dir, 'http', 'module.yaml'))
         self.admin_conf = shyaml.yaml_load(os.path.join(self.modules_dir, 'admin', 'module.yaml'))
+        self.mqtt_conf = shyaml.yaml_load(os.path.join(self.modules_dir, 'mqtt', 'module.yaml'))
 
         return
 
@@ -66,6 +67,74 @@ class ConfigController(RESTResource):
 
 
     # ======================================================================
+    #  Read holidays
+    #
+    def read_holidays(self):
+        self.holidays_confdata = shyaml.yaml_load(os.path.join(self.etc_dir, 'holidays.yaml'))
+        if self.holidays_confdata.get('location', None) is not None:
+            self.core_confdata['holidays_country'] = self.holidays_confdata['location'].get('country', '')
+            self.core_confdata['holidays_province'] = self.holidays_confdata['location'].get('province', '')
+            self.core_confdata['holidays_state'] = self.holidays_confdata['location'].get('state', '')
+
+        for i in range(1,6):
+            self.core_confdata['holidays_custom'+str(i)] = ''
+        try:
+            for i in range(1, 6):
+                if isinstance(self.holidays_confdata['custom'][i-1], dict):
+                    self.core_confdata['holidays_custom'+str(i)] = json.dumps(self.holidays_confdata['custom'][i-1])
+                else:
+                    self.core_confdata['holidays_custom' + str(i)] = self.holidays_confdata['custom'][i - 1]
+        except:
+            pass
+        return
+
+
+    # ======================================================================
+    #  Update holidays
+    #
+    def update_holidays(self, data):
+        filename = os.path.join(self.etc_dir, 'holidays.yaml')
+        self.holidays_confdata = shyaml.yaml_load_roundtrip(filename)
+        self.logger.info("update_holidays: self.holidays_confdata = '{}'".format(self.holidays_confdata))
+        self.logger.info("update_holidays: data['common']['data'] = '{}'".format(data['common']['data']))
+
+        if self.holidays_confdata.get('location', None) is None:
+            self.holidays_confdata['location'] = {}
+
+        self.holidays_confdata['location']['country'] = data['common']['data']['holidays_country']
+        self.holidays_confdata['location']['province'] = data['common']['data']['holidays_province']
+        self.holidays_confdata['location']['state'] = data['common']['data']['holidays_state']
+        del data['common']['data']['holidays_country']
+        del data['common']['data']['holidays_province']
+        del data['common']['data']['holidays_state']
+
+        if self.holidays_confdata.get('custom', None) is None:
+            self.holidays_confdata['custom'] = []
+
+        try:
+            if len(self.holidays_confdata['custom']) > 5:
+                for i in range(1, 6):
+                    custom = data['common']['data']['holidays_custom' + str(i)]
+                    if custom != '':
+                        self.holidays_confdata['custom'][i-1] = custom
+            else:
+                self.holidays_confdata['custom'] = []
+                for i in range(1, 6):
+                    custom = data['common']['data']['holidays_custom' + str(i)]
+                    if custom != '':
+                        self.holidays_confdata['custom'].append(custom)
+
+            for i in range(1, 6):
+                del data['common']['data']['holidays_custom' + str(i)]
+        except Exception as e:
+            self.logger.critical("update_holidays: Exception {}".format(e))
+
+        self.logger.info("update_holidays: self.holidays_confdata = '{}'".format(self.holidays_confdata))
+        shyaml.yaml_save_roundtrip(filename, self.holidays_confdata, create_backup=True)
+        return
+
+
+    # ======================================================================
     #  Handling of http REST requests
     #
     def read(self, id=None):
@@ -75,6 +144,8 @@ class ConfigController(RESTResource):
         self.logger.info("ConfigController.read(): config = {}".format(id))
 
         self.core_confdata = shyaml.yaml_load(os.path.join(self.etc_dir, 'smarthome.yaml'))
+        self.read_holidays()
+
         self.module_confdata = shyaml.yaml_load(os.path.join(self.etc_dir, 'module.yaml'))
 
         result = {}
@@ -88,6 +159,11 @@ class ConfigController(RESTResource):
             result['admin'] = {}
             result['admin']['data'] = self.module_confdata.get('admin', {})
             result['admin']['meta'] = self.admin_conf
+            result['mqtt'] = {}
+            result['mqtt']['data'] = self.module_confdata.get('mqtt', {})
+            if result['mqtt']['data'].get('enabled', None) is None:
+                result['mqtt']['data']['enabled'] = True
+            result['mqtt']['meta'] = self.mqtt_conf
             self.logger.info("  - index: core = {}".format(result))
             return json.dumps(result)
 
@@ -109,6 +185,14 @@ class ConfigController(RESTResource):
             self.logger.info("  - index: admin = {}".format(result))
             return json.dumps(result)
 
+        if id == 'mqtt':
+            result['data'] = self.module_confdata.get('mqtt', {})
+            if result['mqtt']['data'].get('enabled', None) is None:
+                result['mqtt']['data']['enabled'] = True
+            result['meta'] = self.mqtt_conf
+            self.logger.info("  - index: admin = {}".format(result))
+            return json.dumps(result)
+
         raise cherrypy.NotFound
 
     read.expose_resource = True
@@ -121,7 +205,7 @@ class ConfigController(RESTResource):
         Handle PUT requests
         """
         self.logger.info("ConfigController() update: config {}".format(id))
-        if id in ['common', 'http', 'admin', 'core']:
+        if id in ['common', 'http', 'admin', 'mqtt', 'core']:
 
             # get http headers
             cl = cherrypy.request.headers.get('Content-Length', 0)
@@ -130,6 +214,9 @@ class ConfigController(RESTResource):
             rawbody = cherrypy.request.body.read(int(cl))
             data = json.loads(rawbody.decode('utf-8'))
             self.logger.info("  - update: data = {}".format(data))
+
+            # update holidays and remove keys from self.core_confdata
+            self.update_holidays(data)
 
             # update etc/smarthome.yaml with data from admin frontend
             self.core_confdata = shyaml.yaml_load_roundtrip(os.path.join(self.etc_dir, 'smarthome.yaml'))
@@ -140,6 +227,19 @@ class ConfigController(RESTResource):
             self.module_confdata = shyaml.yaml_load_roundtrip(os.path.join(self.etc_dir, 'module.yaml'))
             self.update_configdict(self.module_confdata['http'], data, 'http')
             self.update_configdict(self.module_confdata['admin'], data, 'admin')
+
+            if self.module_confdata.get('mqtt', None) is None:
+                self.module_confdata['mqtt'] = {}
+                self.module_confdata['mqtt']['module_name'] = 'mqtt'
+            self.update_configdict(self.module_confdata['mqtt'], data, 'mqtt')
+            self.logger.warning("Update: self.mqtt_conf = {}".format(self.mqtt_conf))
+            if self.module_confdata['mqtt'].get('enabled', None) is None:
+                self.module_confdata['mqtt']['enabled'] = False
+            if self.module_confdata['mqtt']['enabled']:
+                self.module_confdata['mqtt'].pop('enabled', None)
+            self.logger.warning("Update: ['mqtt'] = {}".format(self.module_confdata['mqtt']))
+            self.logger.warning("Update: enabled = {}".format(self.module_confdata['mqtt'].get('enabled', None)))
+
             shyaml.yaml_save_roundtrip(os.path.join(self.etc_dir, 'module.yaml'), self.module_confdata, create_backup=True)
 
             result = {"result": "ok"}

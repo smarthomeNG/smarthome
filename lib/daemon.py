@@ -37,11 +37,11 @@ def daemonize(pidfile,stdin='/dev/null', stdout='/dev/null', stderr=None):
     """
     This method daemonizes the sh.py process and redirects standard file descriptors.
 
-    :param pidfile: Path to pidfile 
+    :param pidfile: Path to pidfile
     :param stdin: Path to new stdin, default value is "/dev/null"
     :param stdout: Path to new stdout, default value is "/dev/null"
     :param stderr: Path to new stderr, default value is None, but if stderr is None it is mapped to stdout
-    :type pidfile: string 
+    :type pidfile: string
     :type stdin: string
     :type stdout: string
     :type stderr: string
@@ -51,34 +51,34 @@ def daemonize(pidfile,stdin='/dev/null', stdout='/dev/null', stderr=None):
     if (not stderr):
         stderr = stdout
 
-    # do the UNIX double-fork magic, see Stevens' "Advanced 
+    # do the UNIX double-fork magic, see Stevens' "Advanced
     # Programming in the UNIX Environment" for details (ISBN 0201563177)
-    try: 
-        pid = os.fork() 
+    try:
+        pid = os.fork()
         if pid > 0:
             # exit first parent
-            sys.exit(0) 
-    except OSError as  e: 
+            sys.exit(0)
+    except OSError as  e:
         print("fork #1 failed: %d (%s)" % (e.errno, e.strerror) , file=sys.stderr)
         sys.exit(1)
 
     # decouple from parent environment
     os.setsid()
-    os.umask(0) 
+    os.umask(0)
 
     # do second fork
-    try: 
-        pid = os.fork() 
+    try:
+        pid = os.fork()
         if pid > 0:
             # exit from second parent, print eventual PID before
             print ("Daemon PID %d" % pid )
             sys.exit(0)
         else:
             write_pidfile(os.getpid(), pidfile)
-        
-    except OSError as  e: 
+
+    except OSError as  e:
         print("fork #2 failed: %d (%s)" % (e.errno, e.strerror) , file=sys.stderr)
-        sys.exit(1) 
+        sys.exit(1)
 
     # Redirect standard file descriptors.
     si = open(stdin, 'r')
@@ -95,7 +95,7 @@ def daemonize(pidfile,stdin='/dev/null', stdout='/dev/null', stderr=None):
 def remove_pidfile(pidfile):
     """
     This method removes the pidfile.
-    
+
     :param pidfile: Name of the pidfile to write to
     :type pidfile: str
     """
@@ -107,13 +107,13 @@ def remove_pidfile(pidfile):
 def write_pidfile(pid, pidfile):
     """
     This method writes the PID to the pidfile and locks it while the process is running.
-    
+
     :param pid: PID of SmartHomeNG
     :param pidfile: Name of the pidfile to write to
     :type pid: int
     :type pidfile: str
     """
-    
+
     fd = open(pidfile, 'w+')
     fd.write("%s" % pid)
     fd.close()
@@ -129,10 +129,10 @@ def write_pidfile(pid, pidfile):
 def read_pidfile(pidfile):
     """
     This method reads the pidfile and returns the PID.
-    
+
     :param pidfile: Name of the pidfile to check
     :type pidfile: str
-    
+
     :return: PID of SmartHomeNG or 0 if it is not running
     :rtype: int
     """
@@ -151,14 +151,14 @@ def read_pidfile(pidfile):
 def check_sh_is_running(pidfile):
     """
     This method checks whether another smarthome process process is already running.
-    
+
     :param pidfile: Name of the pidfile to check
     :type pidfile: str
-    
-    :return: True: if SmartHomeNG is running, False: if SmartHome is not running     
+
+    :return: True: if SmartHomeNG is running, False: if SmartHome is not running
     :rtype: bool
     """
-    
+
     pid = read_pidfile(pidfile)
     isRunning = False
     if pid > 0 and psutil.pid_exists(pid):
@@ -182,7 +182,7 @@ def check_sh_is_running(pidfile):
 def kill(pidfile, waittime=15):
     """
     This method kills the process identified by pidfile.
-    
+
     :param pidfile: Name of the pidfile identifying the process to kill
     :param waittime: Number of seconds to wait before killing the process
     :type pidfile: str
@@ -191,6 +191,7 @@ def kill(pidfile, waittime=15):
 
     pid = read_pidfile(pidfile)
     if psutil.pid_exists(pid):
+        logger.warning("Stopping SmartHomeNG, please wait...")
         p = psutil.Process(pid)
         if p is not None:
             p.terminate()
@@ -199,6 +200,11 @@ def kill(pidfile, waittime=15):
             except Exception as e:
                 pass
             if p.is_running():
-                logger.warning("Killing process")
+                logger.warning("Trying to terminate SmartHomeNG timed out, killing process")
                 p.kill()
-                
+                try:
+                    p.wait(timeout=5)
+                except Exception as e:
+                    pass
+    else:
+        logger.warning("No instance of SmartHomeNG running")

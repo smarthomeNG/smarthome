@@ -10,7 +10,7 @@ user interface experience.
 New Plugins
 ^^^^^^^^^^^
 
--  :doc:`DWD Plugin </plugins/dwd/README>`: fetch weather warnings and forecasts from Deutscher Wetterdienst (DWD).
+-  :**DWD Plugin**: fetch weather warnings and forecasts from Deutscher Wetterdienst (DWD).
 -  :doc:`Mail Plugin </plugins/mail/README>`: sending (SMTP) and receiving (IMAP) mail.
 -  :doc:`RRD Plugin </plugins/rrd/README>`: build round robin databases.
 -  :doc:`Russound Plugin </plugins/russound/README>`: control a Russound audio device with RIO over TCP.

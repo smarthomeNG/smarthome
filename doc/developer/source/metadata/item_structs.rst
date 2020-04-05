@@ -2,8 +2,13 @@
 .. role:: redsup
 .. role:: bluesup
 
-Section `item_structs:` :redsup:`new`
-=====================================
+.. index:: item_structs; Plugin Metadata
+.. index:: structs; Plugin Metadata
+.. index:: Plugin Metadata; item_structs
+.. index:: Plugin Metadata; structs
+
+Section `item_structs` :bluesup:`update`
+========================================
 
 The ``item_structs:`` allows to define templates of item-structures (sub-trees) which can be included in the item
 definitions.
@@ -51,6 +56,40 @@ the following form:
        struct: example_plugin.struct1
 
 
+Nested struct definitions
+-------------------------
+
+Starting with SmartHomeNG v1.7 struct definitions can be nested. Like items that reference a struct definition by using
+the attribute **struct:**, structs can now do this too.
+
+SmartHomeNG resolves all sub-struct references before loading the item tree, to speed up loading of the item definitions.
+
+.. note::
+
+   Please note: When sub-struct definitions are resolved, there are two differences to the way item definitions are
+   loaded. The differences only surface, if structs/sub-structs redefine attributes.
+
+
+Redefining Attributes
+~~~~~~~~~~~~~~~~~~~~~
+
+When defining items, it is possible to define the same attribute for an item in multiple item yaml files. When reading
+the item definition, the attribute definition wins, that is read in last. In struct/sub-struct definitions, the
+attribute definition that is read in first wins.
+
+When resolving sub-structs, usually the definition of the upper level struct should win. This enables an "overwriting"
+of attribute values that have been defined in a sub-struct. To make this happen, the attribute in the upperlevel struct
+has to be defined before the **struct** attribute. if the attribute is defined after the **struct** attribute, the
+definition in the sub-struct wins.
+
+
+Redefining list-Attributes
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When redefining attributes which are lists, no "overwriting" takes place. Instead, the lists are joined. The order of
+the list entries are determinded by the order the attribute definitions are read in.
+
+
 Definitions for multi-instance plugins
 --------------------------------------
 
@@ -91,7 +130,7 @@ When looking at the loaded item (using the admin interface), **item3** will have
 
 
 Plugins without item-structs
-----------------------------
+============================
 
 if a plugin has no item struct, this is signaled by the following entry in the plugin.yaml file:
 

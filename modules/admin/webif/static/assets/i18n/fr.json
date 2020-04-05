@@ -67,6 +67,7 @@
     "COMMON_SETTINGS": "Général",
     "HTTP_SETTINGS": "Module http",
     "ADMIN_SETTINGS": "Module d'administration",
+    "MQTT_SETTINGS": "Module MQTT",
     "ADVANCED_SETTINGS": "Avancé",
 
     "SET_PASSWORD": "Définir mot de passe",
@@ -83,9 +84,14 @@
   "SERVICES": {
     "SERVICES": "Services",
     "LANGUAGE_UI": "Langue de l'interface graphique",
-    "BACKUP_CONFIG": "Sauvegarder la configuration",
+    "BACKUP_CONFIG": "Configuration - dernière sauvegarde",
     "BACKUP_DONE_TITLE": "Sauvegarde de la configuration créée",
     "BACKUP_DONE": "Un archive ZIP de la configuration a été téléchargé.",
+    "RESTORE_TITLE": "Restaurer la configuration",
+    "RESTORE": "Choose the file with the configuration to be restored. \nAfterwards press 'Télécharger & Restaurer' to upload the configuration and restore it:",
+    "CHOOSE_FILE": "Choisir",
+    "UPLOAD_RESTORE": "Télécharger & Restaurer",
+    "CANCEL": "Annuler",
     "KNX_SUPPORT": "Service pour le support KNX",
     "OW_SUPPORT": "Service pour le support 1-wire",
     "MQTT_SUPPORT": "Courtier pour le support MQTT",
@@ -181,7 +187,7 @@
     "PATH": "Chemin de l'objet",
     "NAME": "Nom de l'objet",
     "TYPE": "Type de donnée",
-    "STRUCT": "Dérivé de la structure",
+    "STRUCT": "Contient des structures",
     "UPDATE INFORMATION": "Informations des mises à hour",
     "LAST CHANGE": "Dernière modification",
     "LAST UPDATE": "Dernière mise à jour",
@@ -274,6 +280,8 @@
     "OTHER SCHEDULERS": "Autres planificateurs",
     "SCHEDULER": "Planificateur",
     "NEXT EXECUTION": "Prochaine exécution",
+    "PRIO": "Prio",
+    "VALUE": "Valeur",
     "CYCLE": "Cycle",
     "CRONTAB": "Crontab"
   },
@@ -333,7 +341,9 @@
     "OPEN_WEBIF": "Ouvrir interface web",
     "OPEN_CONFIGINFO": "Ouvrir documentation de configuration",
     "OPEN_DOC": "Ouvrir documentation de l'extension",
-    "OPEN_SUPPORT_THREAD": "Ouvrir fil de support"
+    "OPEN_SUPPORT_THREAD": "Ouvrir fil de support",
+    "OPEN_BLOGS": "Ouvrir Articles de blogs"
+
   },
   "SCENES": {
     "SCENE": "Scène",
@@ -411,6 +421,7 @@
     "SAVE_SETTINGS": "Enregistrer les paramètres",
     "CHECK": "Vérifier",
     "DOWNLOAD": "Télécharger",
+    "RESTORE": "Restaurer",
     "CLEAR_FILTER": "Supprimer fultre",
     "NEW_DEFINITION_FILE": "Nouveau fichier",
     "NEW_LOGIC": "Nouvelle logique",
@@ -447,6 +458,9 @@
     "CTRL-L": "Activer / désactiver le renvoie à la ligne automatique",
     "CTRL-Q": "Plier / déplier ligne à la position du curseur",
     "SHIFT-CTRL-Q": "Déplier tout le document",
+    "CTRL-F": "Chercher un texte",
+    "SHIFT-CTRL-F": "Remplacer un texte",
+    "ALT-G": "Aller à une ligne",
     "CRONTAB": "Si plusieurs entrés sont a considérer comme liste, il faut les séparer avec un caractère | .",
     "AUTOCOMPLETE": "Une liste avec des propositions est affichée après avoir entrée les premiers 3 caractères"
   },

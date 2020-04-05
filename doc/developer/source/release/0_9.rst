@@ -27,7 +27,7 @@ Features
 -  `1-Wire Plugin </plugins/onewire/README>`: rewritten to support many different sensors.
 -  :doc:`Asterisk plugin </plugins/asterisk/README>`: adding destination support for user events
 -  :doc:`CLI plugin </plugins/cli/README>`: new command 'cl' to clean the memory log of sh.py
--  :doc:`DWD plugin </plugins/dwd/README>`: adding support for Pollen forecast
+-  **DWD plugin**: adding support for Pollen forecast
 -  :doc:`KNX plugin </plugins/knx/README>`:
 
    -  change encoding of dpt10 to use a datetime object and send the isoweekday

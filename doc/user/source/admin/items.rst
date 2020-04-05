@@ -19,6 +19,13 @@ Item Baum
 Hier kann die Baum-Struktur der geladenen Items angezeigt werden. Außerdem können die Eigenschaften und Attribute eines
 ausgewählten Items angezeigt werden.
 
+.. note::
+
+    Die Baum-Struktur zeigt die in SmartHomeNG geladenen Items an. Wenn während der Laufzeit von SmartHomeNG Änderungen
+    an den Item Definitionen in den Konfigurationsdateien vorgenommen werden, so wird dieses hier bis zu einem Neustart
+    von SmartHomeNG nicht sichtbar.
+
+
 .. image:: assets/items-itemtree.jpg
    :class: screenshot
 

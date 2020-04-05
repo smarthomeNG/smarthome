@@ -4,7 +4,7 @@
 Logging
 #######
 
-Zur Konfiguration des Loggings mit SmartHomeNG wird seit der Version 1.2 eine Konfigurationsdatei 
+Zur Konfiguration des Loggings mit SmartHomeNG wird seit der Version 1.2 eine Konfigurationsdatei
 im YAML Format verwendet.
 
 
@@ -45,11 +45,25 @@ Die einzelnen Konfigurationseinträge haben die folgende Bedeutung:
 |                 | hinzugefügt werden.                                                                                |
 +-----------------+----------------------------------------------------------------------------------------------------+
 | **handlers:**   | Handler definieren die Log-Behandlungsroutinen/Ausgabekanäle die verwendet werden.                 |
-|                 | In Python gibt es bereits mehrere vorimplementierte und mächtige Handler-Typen die                 |
-|                 | `hier <https://docs.python.org/3.4/library/logging.handlers.html#module-logging.handlers>`_        |
+|                 | In Python gibt es bereits mehrere vorimplementierte und mächtige Handler-Typen die in der          |
+|                 | `Python Doku <https://docs.python.org/3.4/library/logging.handlers.html#module-logging.handlers>`_ |
 |                 | beschrieben sind. Als eigentliche Handler sind in der Konfigurationsdatei **etc/logging.yaml**     |
 |                 | die Handler **`console`** und **`file`** vordefiniert. Wenn Log-Einträge z.B. in eine andere       |
 |                 | Datei geschrieben werden sollen, muss ein weiterer Handler definiert werden.                       |
+|                 | Sollen Filter angewendet werden, so sind diese im entsprechenden Handler durch                     |
+|                 | filters: [`filtername1`, `filtername2`] anzugeben (siehe filters)                                  |
++-----------------+----------------------------------------------------------------------------------------------------+
+| **filters:**    | Filter bestimmen durch Angabe des Loggernamen, -moduls und -eintrags, welche Zeilen aus dem Log    |
+|                 | angezeigt bzw. versteckt werden sollen. Der Eintrag (z.B. loggerfilter) kann bei den Handlers      |
+|                 | mittels **`filters: [<filtername>]`** referenziert werden. Wichtig ist, den Filternamen in eckige  |
+|                 | Klammern zu setzen, auch wenn nur ein Filter zum Einsatz kommen soll.                              |
+|                 | Jeder Filter kann durch bis zu drei Parameter definiert werden, wobei diese nach AND Logik         |
+|                 | evaluiert werden:                                                                                  |
+|                 | - name: Loggername (z.B. lib.item)                                                                 |
+|                 | - module: Loggermodul, va. bei Plugins u.U. relevant (z.B. item)                                   |
+|                 | - msg: Der tatsächliche Logeintrag (z.B. Result = (.\*) \(for attribute 'eval'\))                  |
+|                 | Durch die Angabe von invert: True werden NUR die passenden Messages geloggt und sonst nichts.      |
+|                 | Ein Beispiel ist unter :doc:`Logging - Best Practices <logging_best_practices>` zu finden.         |  
 +-----------------+----------------------------------------------------------------------------------------------------+
 | **loggers:**    | Hier werden die einzelnen Logger definiert und was mit diesen Einträgen passiert,                  |
 |                 | welche Handler und formatter verwendet werden. Das Level konfiguriert dabei die                    |
@@ -62,8 +76,8 @@ Die einzelnen Konfigurationseinträge haben die folgende Bedeutung:
 |                 | sind. Da der root Logger ALLE Logeinträge empfängt sollte der level: unbedingt auf WARNING stehen. |
 +-----------------+----------------------------------------------------------------------------------------------------+
 
-Wenn man **Logger** definiert, welche die Log-Einträge über zusätzliche **Handler** ausgeben ist
-zu beachten, dass die Ausgabe zusätzlich IMMER durch den Standardhandler (**file:**) erfolgt. Dieses
+Wenn man **Logger** definiert, welche die Log-Einträge über zusätzliche **Handler** ausgeben, ist
+zu beachten, dass die Ausgabe zusätzlich IMMER durch den Standardhandler (**file:**) erfolgt. Dies
 führt dazu, dass die Einträge sowohl in der Standard Log-Datei von SmartHomeNG, als auch in der
 zusätzlich definierten Log Datei erscheinen, falls der Level des Log Eintrages INFO oder höher ist.
 
@@ -72,11 +86,11 @@ Eintrag im Handler **file:** erfolgen. Der Eintrag `level: WARNING` führt dazu,
 Handler **file:** nur Ausgaben für Fehler und Warnungen erfolgen. INFO und DEBUG Ausgaben erfolgen
 dann nur noch über den zusätzlichen Handler.
 
-Plugin Entwicklung
-==================
+Plugin und Logik Entwicklung
+============================
 
 Für die Entwickler von Plugins:
-Der Logger sollte nun nicht global mit logging.getLogger('') instanziert werden sondern innerhalb
+Der Logger sollte nun nicht global mit logging.getLogger('') instanziert werden, sondern innerhalb
 der `__init__` Methode mit:
 
 .. code-block:: python
@@ -90,6 +104,7 @@ aus `__name__` den Namen des Plugins macht.
 So wird aus plugins/cli/ der Name „plugins.cli“, aus lib/scheduler.py wird „lib.scheduler“
 Daher muss dann in der Konfiguration des Loggings der Name „plugin.cli“ angegeben werden.
 
+Für die Entwickler von Plugins und Logiken:
 Verwendet man zur Instanziierung einen eigenen Namen (nicht empfohlen), wie z.B.
 
 .. code-block:: python
@@ -97,7 +112,8 @@ Verwendet man zur Instanziierung einen eigenen Namen (nicht empfohlen), wie z.B.
    self.logger = logging.getLogger('DWD')
 
 
-muss in der config auch dieser Name verwendet werden. Ohne `plugin.`
+muss in der config auch dieser Name verwendet werden. Ohne `plugin.` oder `logics.`
+
 
 .. code-block:: yaml
    :caption: ../etc/logging.yaml
@@ -107,15 +123,21 @@ muss in der config auch dieser Name verwendet werden. Ohne `plugin.`
            level: DEBUG
 
 
-Auf den Logger kann dann so zugegriffen werden:
+Auf den Logger kann dann so zugegriffen werden (Plugin):
 
 .. code-block:: python
 
    self.logger.debug("")
    self.logger.info("")
 
+Beispiel (Logik):
 
-Beispiel:
+.. code-block:: python
+
+   logger.debug("Habe etwas gefunden")
+   logger.info("Bin in Zeile 23")
+
+Beispiel (Plugin):
 
 .. code-block:: python
 
@@ -123,6 +145,8 @@ Beispiel:
        self.logger = logging.getLogger(__name__)
        # Logger verwenden:
        self.logger.debug("Debug Message")
+
+
 
 
 Logging der Veränderung von Items
@@ -168,4 +192,3 @@ Wer eine brauchbare leicht konfigurierbare Logging Konfiguration sucht, der wird
    :titlesonly:
 
    logging_best_practices.md
-

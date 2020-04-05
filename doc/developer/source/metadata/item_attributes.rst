@@ -1,5 +1,12 @@
-Section `item_attributes:`
---------------------------
+
+.. role:: redsup
+.. role:: bluesup
+
+.. index:: item_attributes; Plugin Metadata
+.. index:: Plugin Metadata; item_attributes
+
+Section `item_attributes`
+=========================
 
 The ``item_attributes:`` section has a section for each attribute that is additionally implemented for am item.
 The name of that section is the name of the attribute.
@@ -27,6 +34,10 @@ The definitions in the ``item_attributes:`` section are used in the future for a
 
 
 .. include:: /metadata/parameter_keys.rst
+
+
+Plugins without item-attributes
+===============================
 
 if a plugin has no item attributes, this is signaled by the following entry in the plugin.yaml file:
 

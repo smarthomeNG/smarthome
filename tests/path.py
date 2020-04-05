@@ -1,3 +1,8 @@
+#
+# Created by ohinckel and merged May 9th, 2016
+#
+# maybe obsolete?
+# 
 import sys
 import os
 print(sys.path)

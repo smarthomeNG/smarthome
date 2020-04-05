@@ -27,7 +27,7 @@ from lib.model.smartobject import SmartObject
 from lib.shtime import Shtime
 from lib.module import Modules
 from lib.utils import Utils
-
+from lib.translation import translate as lib_translate
 import logging
 import os
 
@@ -57,6 +57,12 @@ class SmartPlugin(SmartObject, Utils):
     _parameters = {}    # Dict for storing the configuration parameters read from /etc/plugin.yaml
 
     logger = logging.getLogger(__name__)
+
+
+    # Initialization of SmartPlugin class called by super().__init__() from the plugin's __init__() method
+    def __init__(self, **kwargs):
+        pass
+
 
 
     def _append_to_itemlist(self, item):
@@ -630,42 +636,22 @@ class SmartPlugin(SmartObject, Utils):
         raise NotImplementedError("'Plugin' subclasses should have a 'stop()' method")
 
 
-    def _get_translation(self, translation_lang, txt):
-        """
-        Returns translated text for a specified language - This is a DUMMY at the moment
-        """
-        translations = self._ptranslations.get(txt, {})
-        if translations == {}:
-            translations = self._gtranslations.get(txt, {})
-        return translations.get(translation_lang, '')
-
-
-    def translate(self, txt):
+    def translate(self, txt, block=None):
         """
         Returns translated text
         """
         txt = str(txt)
+        if block:
+            self.logger.warning("unsuported 2. parameter '{}' used in translation function _( ... )".format(block))
 
-        translation_lang = self.get_sh().get_defaultlanguage()
-        translated_txt = self._get_translation(translation_lang, txt)
-        if translated_txt == '=':
-            translated_txt = txt
-        elif translated_txt == '':
-            translated_txt = self._get_translation('en', txt)
-            if translated_txt == '=':
-                translated_txt = txt
-            elif translated_txt == '':
-                translated_txt = txt
-                if self._ptranslations != {}:
-                    self.logger.info("translate: Text '{}' to language '{}' -> no translation ('{}' or 'en') found".format(txt, translation_lang, translation_lang))
-            else:
-                self.logger.info("translate: Text '{}' to language '{}' -> no translation found".format(txt, translation_lang))
-
-        return translated_txt
+        return lib_translate(txt, additional_translations='plugin/'+self.get_shortname())
 
 
 
-from jinja2 import Environment, FileSystemLoader
+try:
+    from jinja2 import Environment, FileSystemLoader
+except:
+    pass
 from lib.module import Modules
 
 
@@ -714,7 +700,7 @@ class SmartPluginWebIf():
         return result
 
 
-    def translate(self, txt, block=''):
+    def translate(self, txt):
         """
         Returns translated text
 

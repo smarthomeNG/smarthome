@@ -1,3 +1,5 @@
+.. index:: NGINX als ReverseProxy
+
 NGINX als ReverseProxy
 ======================
 

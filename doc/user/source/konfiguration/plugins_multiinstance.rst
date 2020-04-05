@@ -17,15 +17,11 @@ dadurch, dass jeder Instanz ein Parameter **instance** hinzugefügt wird:
 
    fritzbox_1:
        plugin_name: avm
-   #    class_name: AVM
-   #    class_path: plugins.avm
        instance: fb6360
        ...
 
    fritzbox_2:
        plugin_name: avm
-   #    class_name: AVM
-   #    class_path: plugins.avm
        instance: fb7490
        ...
 

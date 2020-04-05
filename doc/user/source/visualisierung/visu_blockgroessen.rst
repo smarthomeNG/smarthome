@@ -1,3 +1,5 @@
+.. index:: smartVISU Autogenerierung; Unterschiedliche Blockgrößen
+
 Unterschiedliche Blockgrößen
 ============================
 

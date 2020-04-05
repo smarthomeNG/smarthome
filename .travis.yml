@@ -1,9 +1,7 @@
-sudo: false
 language: python
 
-matrix:
+jobs:
     include:
-      - python: 3.4
       - python: 3.5
       - python: 3.6
       - python: 3.7
@@ -14,9 +12,10 @@ env:
 
 before_install:
     - sudo apt-get install libudev-dev
+    - sudo apt-get install librrd-dev libpython3-dev
 install:
-    - pip install tox-travis "virtualenv<14.0.0"
-    - pip install sphinx sphinx_rtd_theme recommonmark ruamel.yaml
+    - pip install tox-travis virtualenv
+    - pip install sphinx sphinx_rtd_theme recommonmark
 
 script:
     - sh .travis.sh

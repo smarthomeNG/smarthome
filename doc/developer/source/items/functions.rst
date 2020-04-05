@@ -5,8 +5,8 @@
 .. role:: redsup
 
 
-Functions of an item :redsup:`new`
-==================================
+Functions of an item
+====================
 
 Each defined item offers the following methods, which can be used in **eval** expressions or logics.
 

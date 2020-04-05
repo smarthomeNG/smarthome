@@ -1,3 +1,5 @@
+.. index:: smartVISU Autogenerierung; Unterschiedliche Blocktypen
+
 Unterschiedliche Blocktypen
 ===========================
 

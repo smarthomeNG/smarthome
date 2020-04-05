@@ -37,11 +37,20 @@ lib.plugin
 
 .. automodule:: lib.plugin
     :no-members:
+    :noindex:
 
 
 .. module:: lib.plugin
 
 The API consists of two classes.
+
+
+.. toctree::
+   :maxdepth: 6
+   :hidden:
+
+   plugin_class_pluginwrapper
+   plugin_class_plugins
 
 
 class PluginWrapper
@@ -51,6 +60,7 @@ This class implements the Plugin itself:
 
 .. autoclass:: PluginWrapper
    :no-members:
+   :noindex:
 
 :doc:`class PluginWrapper </lib/plugin_class_pluginwrapper>`
 
@@ -62,6 +72,7 @@ This class implements the loading and management of the plugins.
 
 .. autoclass:: Plugins
    :no-members:
+   :noindex:
 
 :doc:`class Plugins </lib/plugin_class_plugins>`
 

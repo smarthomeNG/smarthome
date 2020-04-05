@@ -1,6 +1,8 @@
-########################
+.. index:: smartVISU; Autogenerierung
+
+========================
 Automatische Generierung
-########################
+========================
 
 
 Überblick
@@ -8,13 +10,15 @@ Automatische Generierung
 
 Im Vergleich zum Visu Plugin der vorhergehenden smarthome.py/SmartHomeNG Releases, wurden die
 Möglichkeiten zur automatischen Generierung von Seiten für die smartVISU stark erweitert.
-Unterstützt werden smartVISU v2.7 und v2.8.
+Unterstützt werden smartVISU v2.7, v2.8 und v2.9.
 
 Die zusätzlichen Attribute, die in der item.conf Datei für die Items konfiguriert werden können,
 sind in der README Datei des Plugins :doc:`../plugins/visu_smartvisu/README` beschrieben.
 
 Diese Seite und die zugehörien Unterseiten sollen einige der Möglichkeiten aufzeigen, die sich
-durch die Erweiterungen bieten:
+durch die Erweiterungen bieten. Es ist auch möglich einen Teil der Seiten generieren zu lassen
+und einen anderen Teil der Seiten manuell zu erstellen.
+
 
 Anzeige von zusätzlichen Informationen in der Navigation
 --------------------------------------------------------
@@ -68,6 +72,12 @@ Typ. Nun ist ein Typ **Dual** hinzugekommen.
 Die Details sind auf der Seite :doc:`./visu_blocktypen` beschrieben.
 
 
+Manuell erstellte Seiten
+------------------------
+
+In smartVISU können manuell erstellte oder modifizierte Seiten in die Autogenerierung eingemischt werden.
+
+Die Details sind auf der Seite :doc:`./visu_partlyauto` beschrieben.
 
 
 .. toctree::
@@ -81,3 +91,5 @@ Die Details sind auf der Seite :doc:`./visu_blocktypen` beschrieben.
    visu_styles
    visu_blockgroessen
    visu_blocktypen
+   visu_partlyauto
+

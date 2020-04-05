@@ -23,7 +23,7 @@ Mit SmartHomeNG v1.4 kommen folgende neue Features hinzu:
 - Für Szenen Aktionen in denen ein absoluter Wert angegeben wird, wird bei Verwendung des neuen Dateiformats das Lernen (analog zu KNX Szenen) unterstützt
 
 
-Die Nutzung dieser neuen Features ist unter :doc:`Konfiguation/Konfigurationsdateien/scenes/\*.yaml <./konfigurationsdateien_scenes>`
+Die Nutzung dieser neuen Features ist unter :doc:`Konfiguation/Konfigurationsdateien/scenes/\*.yaml <./konfigurationsdateien/scenes>`
 beschrieben.
 
 

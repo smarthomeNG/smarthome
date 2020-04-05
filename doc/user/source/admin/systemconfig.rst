@@ -8,6 +8,8 @@ System Konfiguration
 In der System Konfiguration können der Core und die Core Module konfiguriert werden.
 
 
+.. index:: Konfiguraton; System, allgemein
+
 Allgemein
 =========
 
@@ -19,6 +21,9 @@ die in der Konfigurationsdatei ../etc/smarthome.yaml abgelegt sind.
 
 Der Button ```Core neu starten``` wir erst aktiv, wenn geänderte Einstellungen gesichert wurden.
 
+
+.. index:: Konfiguration; http
+.. index:: http; Konfiguration (Admin GUI)
 
 Http Modul
 ==========
@@ -32,6 +37,9 @@ sind.
 .. image:: assets/system-http.jpg
    :class: screenshot
 
+
+.. index:: Konfiguration; Admin Modul
+.. index:: Admin Modul; Konfiguration
 
 Admin Modul
 ===========
@@ -54,3 +62,17 @@ Der Parameter **login_autorenew** legt fest, ob bei Nutzung des Administrations-
 verlängert wird oder nicht. Wenn **login_autorenew** auf **true** gesetzt ist, wird bei einer Nutzung des
 Administrations-Interfaces nach Ablauf der halben Gültigkeits-Dauer das Token erneuert, so dass es wieder die volle
 mit **login_experiation** festgelegte Dauer gültig ist.
+
+
+.. index:: Konfiguration; mqtt
+.. index:: mqtt Konfiguration
+
+MQTT Modul
+==========
+
+In diesem Tab werden die Einstellungen für Nutzung des MQTT Protokolls konfiguriert. Es handelt sich hierbei um die
+Einstellungen, die in der Konfigurationsdatei ../etc/module.yaml im Abschnitt ``mqtt:`` abgelegt sind.
+
+.. image:: assets/system-mqtt.jpg
+   :class: screenshot
+

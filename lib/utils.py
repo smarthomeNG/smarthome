@@ -528,3 +528,52 @@ class Utils(object):
         """
 
         return str(type(var))[8:-2]
+
+
+    @staticmethod
+    def execute_subprocess(commandline, wait=True):
+        """
+        Executes a subprocess via a shell and returns the output written to stdout by this process as a string
+        """
+        ## get subprocess module
+        import subprocess
+
+        ## call date command ##
+        p = subprocess.Popen(commandline, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+
+        # Talk with date command i.e. read data from stdout and stderr. Store this info in tuple ##
+        # Interact with process: Send data to stdin. Read data from stdout and stderr, until end-of-file is reached.
+        # Wait for process to terminate. The optional input argument should be a string to be sent to the child process, or None, if no data should be sent to the child.
+        (result, err) = p.communicate()
+    #    logger.warning("get_process_info: commandline='{}', result='{}', err='{}'".format(command, result, err))
+
+    #    print("result="+str(result))
+    #    print("err="+str(err))
+        if wait:
+            ## Wait for date to terminate. Get return returncode ##
+            p_status = p.wait()
+        return (str(result, encoding='utf-8', errors='strict'), str(err, encoding='utf-8', errors='strict'))
+
+
+
+
+
+def execute_subprocess(commandline, wait=True):
+    """
+    Executes a subprocess via a shell and returns the output written to stdout by this process as a string
+    """
+    ## get subprocess module
+    import subprocess
+    ## call date command ##
+    p = subprocess.Popen(commandline, stdout=subprocess.PIPE, shell=True)
+    # Talk with date command i.e. read data from stdout and stderr. Store this info in tuple ##
+    # Interact with process: Send data to stdin. Read data from stdout and stderr, until end-of-file is reached.
+    # Wait for process to terminate. The optional input argument should be a string to be sent to the child process, or None, if no data should be sent to the child.
+    (result, err) = p.communicate()
+#    logger.warning("execute_subprocess: commandline='{}', result='{}', err='{}'".format(command, result, err))
+    print("err='{}'".format(err))
+    if wait:
+        ## Wait for date to terminate. Get return returncode ##
+        p_status = p.wait()
+    return str(result, encoding='utf-8', errors='strict')
+

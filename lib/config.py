@@ -79,10 +79,14 @@ def parse_itemsdir(itemsdir, item_conf, addfilenames=False, struct_dict={}):
     At the moment it looks for .yaml files and a .conf files
     Both filetypes are read, even if they have the same basename
 
-    :param itemsdir: Name of folder containing the configuration files
-    :param item_conf: Optional OrderedDict tree, into which the configuration should be merged
-    :type itemsdir: str
-    :type item_conf: OrderedDict
+    :param itemsdir:      Name of folder containing the configuration files
+    :param item_conf:     Optional OrderedDict tree, into which the configuration should be merged
+    :param addfilenames:
+    :param struct_dict:   dict with all defined structs (from /etc/structs.yaml and from loaded plugins)
+    :type itemsdir:       str
+    :type item_conf:      OrderedDict
+    :type addfilenames:
+    :type struct_dict:    dict / OrderedDict
 
     :return: The resulting merged OrderedDict tree
     :rtype: OrderedDict
@@ -90,15 +94,16 @@ def parse_itemsdir(itemsdir, item_conf, addfilenames=False, struct_dict={}):
     '''
     logger.info("parse_itemsdir: Beginning to parse items directory {}".format(itemsdir))
     for item_file in sorted(os.listdir(itemsdir)):
-        if item_file.endswith(CONF_FILE) or item_file.endswith(YAML_FILE):
-            if item_file == 'logic'+YAML_FILE and itemsdir.find('lib/env/') > -1:
-                logger.info("parse_itemsdir: skipping logic definition file = {}".format( itemsdir+item_file ))
-            else:
-                try:
-                    item_conf = parse(itemsdir + item_file, item_conf, addfilenames, parseitems=True, struct_dict=struct_dict)
-                except Exception as e:
-                    logger.exception("Problem reading {0}: {1}".format(item_file, e))
-                    continue
+        if not item_file.startswith('.'):
+            if item_file.endswith(CONF_FILE) or item_file.endswith(YAML_FILE):
+                if item_file == 'logic'+YAML_FILE and itemsdir.find('lib/env/') > -1:
+                    logger.info("parse_itemsdir: skipping logic definition file = {}".format( itemsdir+item_file ))
+                else:
+                    try:
+                        item_conf = parse(itemsdir + item_file, item_conf, addfilenames, parseitems=True, struct_dict=struct_dict)
+                    except Exception as e:
+                        logger.exception("Problem reading {0}: {1}".format(item_file, e))
+                        continue
     logger.info("parse_itemsdir: Finished parsing items directory {}".format(itemsdir))
     return item_conf
 
@@ -110,6 +115,8 @@ def parse(filename, config=None, addfilenames=False, parseitems=False, struct_di
 
     :param filename: Name of the configuration file
     :param config: Optional OrderedDict tree, into which the configuration should be merged
+
+    :param struct_dict:   dict with all defined structs (from /etc/structs.yaml and from loaded plugins)
     :type filename: str
     :type config: OrderedDict
 
@@ -117,10 +124,11 @@ def parse(filename, config=None, addfilenames=False, parseitems=False, struct_di
     :rtype: OrderedDict
 
     '''
-    if filename.endswith(YAML_FILE) and os.path.isfile(filename):
-         return parse_yaml(filename, config, addfilenames, parseitems, struct_dict)
-    elif filename.endswith(CONF_FILE) and os.path.isfile(filename):
-        return parse_conf(filename, config)
+    if not filename.startswith('.'):
+        if filename.endswith(YAML_FILE) and os.path.isfile(filename):
+             return parse_yaml(filename, config, addfilenames, parseitems, struct_dict)
+        elif filename.endswith(CONF_FILE) and os.path.isfile(filename):
+            return parse_conf(filename, config)
     return {}
 
 
@@ -149,7 +157,7 @@ def remove_keys(ydata, func, remove=[REMOVE_ATTR], level=0, msg=None, key_prefix
                 key_remove = REMOVE_PATH in remove and func(key_str)
             if key_remove:
                 if msg:
-                    logger.warn(msg.format(key_prefix+key_str))
+                    logger.warning(msg.format(key_prefix+key_str))
                 ydata.pop(key)
             elif key_dict:
                 remove_keys(ydata[key], func, remove, level+1, msg, key_prefix+key_str+'.')
@@ -214,7 +222,51 @@ def remove_invalid(ydata, filename=''):
     remove_keys(ydata, lambda k: True if True in [True for i in range(len(k)) if k[i] not in valid_chars] else False, [REMOVE_ATTR, REMOVE_PATH], msg="Problem parsing '{}' in file '"+filename+"': Invalid character. Valid characters are: " + str(valid_chars))
 
 
-def merge(source, destination):
+struct_merging_active = False
+struct_merge_lists = True
+special_listentry_found = False
+
+
+def merge_structlists(l1, l2, key=''):
+
+    if not struct_merging_active:
+        global special_listentry_found
+        # merge* or merge_unique*
+        if (len(l1) > 0 and l1[0] == 'merge_unique*') and (len(l2) > 0 and l2[0] == 'merge_unique*'):
+            #logger.warning("merge_structlists: both lists contains 'merge_unique*' - l1={}, l2={}, key={}".format(l1, l2, key))
+            special_listentry_found = True
+            l1 = list(collections.OrderedDict.fromkeys(l1))
+            return l1
+
+        if (len(l1) > 0 and l1[0] == 'merge*') and (len(l2) > 0 and l2[0] == 'merge*'):
+            #logger.warning("merge_structlists: both lists contains 'merge*' - l1={}, l2={}, key={}".format(l1, l2, key))
+            special_listentry_found = True
+            return l1
+
+        if (len(l2) > 0 and l2[0] == 'merge*'):
+            #logger.warning("merge_structlists: list l2 contains 'merge*' - l1={}, l2={}, key={}".format(l1, l2, key))
+            del l2[0]
+            l1 = ['merge*'] + l1 + l2
+            l2 = ['merge*'] + l2
+            return l1
+
+        if (len(l1) > 0 and l1[0] == 'merge*') or (len(l2) > 0 and l2[0] == 'merge*'):
+            #logger.warning("merge_structlists: a list contains 'merge*' - l1={}, l2={}, key={}".format(l1, l2, key))
+            pass
+        return l2       # Last wins
+
+    if not struct_merge_lists:
+        #logger.warning("merge_structlists: Not merging lists, key '{}' value '{}' is ignored'".format(key, l2))
+        return l1       # First wins
+    else:
+        if not isinstance(l1, list):
+            l1 = [l1]
+        if not isinstance(l2, list):
+            l2 = [l2]
+        return l1 + l2
+
+
+def merge(source, destination, source_name='', dest_name='', filename=''):
     '''
     Merges an OrderedDict Tree into another one
 
@@ -236,20 +288,42 @@ def merge(source, destination):
         True
 
     '''
-    try:
-        for key, value in source.items():
+    
+#    if struct_merging_active:
+    if filename == 'test_struct.yaml':
+        logger.warning("merge: source={}, destination={}, source_name={}, dest_name={}".format(dict(source), dict(destination), source_name, dest_name))
+    for key, value in source.items():
+        try:
             if isinstance(value, collections.OrderedDict):
                 # get node or create one
                 node = destination.setdefault(key, collections.OrderedDict())
-                merge(value, node)
-            else:
-                if type(value).__name__ == 'list':
+                if node == 'None':
                     destination[key] = value
                 else:
+                    merge(value, node, source_name, dest_name)
+            else:
+#                if struct_merging_active:
+#                    logger.warning("merge: - value={}, destination.get(key, None)={}".format(value, destination.get(key, None)))
+                if isinstance(value, list) or isinstance(destination.get(key, None), list):
+                    if destination.get(key, None) is None:
+                        destination[key] = value
+                    else:
+                        destination[key] = merge_structlists(destination[key], value, key)
+                else:
                     # convert to string and remove newlines from multiline attributes
-                    destination[key] = str(value).replace('\n','')
-    except:
-        logger.error("Problem merging subtrees, probably invalid YAML file")
+                    destination[key] = str(value).replace('\n', '')
+                    # if destination.get(key, None) is None:
+                    #     destination[key] = str(value).replace('\n', '')
+
+                # if type(value).__name__ == 'list':
+                #     destination[key] = value
+                # else:
+                #     # convert to string and remove newlines from multiline attributes
+                #     destination[key] = str(value).replace('\n','')
+#                if struct_merging_active:
+#                    logger.warning("merge: - destination={}".format(dict(destination)))
+        except Exception as e:
+            logger.error("Problem merging subtrees (key={}), probably invalid YAML file '{}' with entry '{}'. Error: {}".format(key, source_name, destination, e))
 
     return destination
 
@@ -257,6 +331,7 @@ def merge(source, destination):
 #-------------------------------------------------------------------------------------
 # Handling of structs while loading item tree from yaml files
 #
+
 
 def nested_get(input_dict, path):
     internal_dict_value = input_dict
@@ -278,6 +353,10 @@ def nested_put(output_dict, path, value):
     '''
     internal_dict_value = output_dict
     nested_key = path.split('.')
+    internal_last_dict_value = None
+    # if struct_merging_active:
+    #     logger.warning("nested_put: path = {}, value = {}  -  nested_key = {}".format(path, value, nested_key))
+    #     logger.warning("nested_put: - output_dict = {}".format(dict(output_dict)))
     for k in nested_key:
         if internal_dict_value.get(k, None) is None:
             if isinstance(output_dict, collections.OrderedDict):
@@ -286,23 +365,38 @@ def nested_put(output_dict, path, value):
                 internal_dict_value[k] = {}
         internal_last_dict_value = internal_dict_value
         internal_dict_value = internal_dict_value.get(k, None)
-    internal_last_dict_value[nested_key[len(nested_key)-1]] = value
+
+    if internal_last_dict_value is not None:
+        # if struct_merging_active:
+        #     logger.warning("nested_put: - dest subtree = {}".format(dict(internal_last_dict_value[nested_key[len(nested_key)-1]])))
+        #     logger.warning("nested_put: - merge struct = {}".format(dict(value)))
+
+        #internal_last_dict_value[nested_key[len(nested_key)-1]] = value
+        merge(value, internal_last_dict_value[nested_key[len(nested_key)-1]], 'struct-tree', 'sub-tree')
+
+        # if struct_merging_active:
+        #     logger.warning("nested_put: - dest result  = {}".format(dict(internal_last_dict_value[nested_key[len(nested_key)-1]])))
+
+    # if struct_merging_active:
+    #     logger.warning("nested_put: - internal_last_dict_value = {}".format(internal_last_dict_value))
     return
 
 
-def search_for_struct_in_items(items, template, struct_dict, config, nestlevel=0, parent=''):
-    '''
+def search_for_struct_in_items(items, struct_dict, config, source_name='', parent='', level=0):
+    """
     Test if the loaded file contains items with 'struct' attribute.
 
     This function is (recursively) called before merging the loaded file into the item tree
 
-    :param config: OrderedDict tree, into which the configuration should be merged
+    :param items:        tree content of a single items.yaml file (or part of it during recursion)
+    :param struct_dict:  dict with all defined structs (from /etc/structs.yaml and from loaded plugins)
+    :param config:       tree, into which the configuration should be merged
+    :param parent:
+    :type items:         OrderedDict
+    :type config:        OrderedDict
+    :return: True, if a struct attribute was expanded
+    """
 
-    :return:
-    '''
-
-    result = False
-    template = collections.OrderedDict()
     for key in items:
         value = items[key]
         if key == 'struct':
@@ -313,16 +407,20 @@ def search_for_struct_in_items(items, template, struct_dict, config, nestlevel=0
                 struct_names = [struct_names]
 
             instance = items.get('instance', '')
+            template = collections.OrderedDict()
+
+            global struct_merging_active
+            struct_merging_active = True
             for struct_name in struct_names:
                 wrk = struct_name.find('@')
                 if wrk > -1:
                     add_struct_to_template(parent, struct_name[:wrk], template, struct_dict, struct_name[wrk+1:])
                 else:
                     add_struct_to_template(parent, struct_name, template, struct_dict, instance)
-                if template != {}:
-                    config = merge(template, config)
-                    template = collections.OrderedDict()
-            result = True
+            if template != {}:
+                config = merge(template, config, source_name, 'Item-Tree')
+            struct_merging_active = False
+
         else:
             #item is no struct
             if isinstance(value, collections.OrderedDict):
@@ -332,14 +430,23 @@ def search_for_struct_in_items(items, template, struct_dict, config, nestlevel=0
                 else:
                     path = parent+'.'+key
                 # test if a aub-item is a struct
-                if search_for_struct_in_items(value, template, struct_dict, config, nestlevel+1, parent=path):
-                    result = True
+                search_for_struct_in_items(value, struct_dict, config, source_name, parent=path, level=level+1)
+                template = collections.OrderedDict()
+                nested_put(template, path, value)
+                config = merge(template, config, source_name, 'Item-Tree')
 
-#        if nestlevel == 0:
-#            if template != {}:
-#                config = merge(template, config)
-    return result
+    return
 
+
+def remove_special_listentries(config, filename=''):
+    for k, v in config.items():
+        if isinstance(v, dict):
+            remove_special_listentries(v, filename)
+        else:
+            if isinstance(v, list):
+                if len(v) > 0 and v[0] in ['merge*','merge_unique*']:
+                    #logger.warning("remove_special_listentries: a list={} -> {} - {}".format(k, v, filename))
+                    del v[0]
 
 def set_attr_for_subtree(subtree, attr, value, indent=0):
     '''
@@ -367,21 +474,19 @@ def add_struct_to_template(path, struct_name, template, struct_dict, instance):
     :param path: Path of the item which references a struct (template)
     :param struct_name: Name of the to use for the item
     :param template: Template dict to be merged into the item tree
-    :param struct_dict: struct to be inserted
+    :param struct_dict:   dict with all defined structs (from /etc/structs.yaml and from loaded plugins)
     :param instance: For multi instance plugins: instance for which the items work (is derived from item with struct attribute)
 
     :return:
     '''
-    logger.info("add_struct_to_template: 'struct' '{}' reference found in item '{}', instance '{}'".format(struct_name, path, instance))
-
     struct = struct_dict.get(struct_name, None)
     if struct is None:
         # no struct/template with this name
         nf = collections.OrderedDict()
         nf['name'] = "ERROR: struct '" + struct_name+"' not found!"
-        nf['value'] = nf['name']
+        # nf['value'] = nf['name']
         nested_put(template, path, nf)
-        logger.warning("add_struct_to_template: 'struct' definition for '{}' not found (referenced in item {})".format(struct_name, path))
+        logger.error("add_struct_to_template: Struct definition for '{}' not found (referenced in item {})".format(struct_name, path))
     else:
         # add struct/template to temporary item(template) tree
         nested_put(template, path, copy.deepcopy(struct))
@@ -417,7 +522,7 @@ def replace_struct_instance(path, subtree, instance):
                 newkey = key[:-9]
             else:
                 newkey = key[:-9] + '@' + instance
-            logger.info("- path {}: key '{}' --> newkey '{}'".format(path, key, newkey))
+            logger.info("replace_struct_instance: - path {}: key '{}' --> newkey '{}'".format(path, key, newkey))
             subtree[newkey] = subtree.pop(key)
     # logger.info("replace_struct_instance: Done set instance to {} for subtree {}".format(instance, subtree))
     return
@@ -482,20 +587,24 @@ def parse_yaml(filename, config=None, addfilenames=False, parseitems=False, stru
         remove_keyword(items, filename)
         remove_invalid(items, filename)
 
-        if parseitems:
-            # test if file contains 'struct' attribute
-            logger.debug("parse_yaml: Checking if file {} contains 'struct' attribute".format(os.path.basename(filename)))
-            items_template = collections.OrderedDict()
-            if search_for_struct_in_items(items, items_template, struct_dict, config):
-                pass
-#                if items_template != {}:
-#                    config = merge(items_template, config)
-
         if addfilenames:
             logger.debug("parse_yaml: Add filename = {} to items".format(os.path.basename(filename)))
             _add_filenames_to_config(items, os.path.basename(filename))
 
-        config = merge(items, config)
+        if parseitems:
+            # test if file contains 'struct' attribute and merge all items into config
+            logger.debug("parse_yaml: Checking if file {} contains 'struct' attribute".format(os.path.basename(filename)))
+
+            search_for_struct_in_items(items, struct_dict, config, os.path.basename(filename))
+
+            global special_listentry_found
+            if special_listentry_found:
+                remove_special_listentries(config, os.path.basename(filename))
+            special_listentry_found = False
+
+        if not parseitems:
+            # if not parsing items
+            config = merge(items, config, os.path.basename(filename), 'Config-Tree')
     return config
 
 
@@ -513,7 +622,7 @@ def _add_filenames_to_config(items, filename, level=0):
     for attr, value in items.items():
         if isinstance(value, dict):
             child_path = dict(value)
-            if filename != '':
+            if (filename != ''):
                 value['_filename'] = filename
             _add_filenames_to_config(child_path, filename, level+1)
     return
