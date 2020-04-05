@@ -66,6 +66,9 @@ def get_local_pluginlist():
     plglist = os.listdir('.')
 
     for entry in plglist:
+        if os.path.isfile(entry):
+            plglist.remove(entry)
+    for entry in plglist:
         if entry[0] in ['.' ,'_'] or entry == 'deprecated_plugins':
             plglist.remove(entry)
     for entry in plglist:
@@ -150,6 +153,7 @@ def list_plugins(option):
             return
         if metadata.get('plugin', None) == None:
             sectionPlg = MISSING_TEXT
+            plgstate = 'NOMETA'
         else:
             sectionPlg = 'Ok'
             version = metadata['plugin'].get('version', '-')
@@ -532,23 +536,26 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
 
     if (plg_type != 'classic' and not list_classic):
 
-        if metadata['plugin'].get('state', None) == None:
-            disp_error('No development state given for the plugin', "Add 'state:' to the plugin section and set it to one of the following values ['develop', 'ready', 'qa-passed']", "The state'qa-passed' should only be set by the shNG core team")
-        if metadata['plugin'].get('multi_instance', None) == None:
-            disp_warning('It is not documented if wether the plugin is multi-instance capable or not', "Add 'multi_instance:' to the plugin section")
+        if metadata.get('plugin', None) is None:
+            disp_error("No section 'plugin' in metadata found")
         else:
-            if not(metadata['plugin'].get('multi_instance', None) in [True, False]):
-                disp_error('multi_instance has to be True or False')
-        if metadata['plugin'].get('restartable', None) == None:
-            disp_hint('It is not documented if wether the plugin is restartable or not [stop() and run()]', "Add 'restartable:' to the plugin section")
-        else:
-            if not(metadata['plugin'].get('restartable', None) in [True, False, 'True', 'False', 'unknown']):
-                disp_error('restartable has to be True, False or unknown')
-        if metadata['plugin'].get('sh_minversion', None) == None:
-            disp_warning('No minimum version of the SmartHomeNG core given that is needed to run the plugin', "Add 'sh_minversion:' to the plugin section")
+            if metadata['plugin'].get('state', None) == None:
+                disp_error('No development state given for the plugin', "Add 'state:' to the plugin section and set it to one of the following values ['develop', 'ready', 'qa-passed']", "The state'qa-passed' should only be set by the shNG core team")
+            if metadata['plugin'].get('multi_instance', None) == None:
+                disp_warning('It is not documented if wether the plugin is multi-instance capable or not', "Add 'multi_instance:' to the plugin section")
+            else:
+                if not(metadata['plugin'].get('multi_instance', None) in [True, False]):
+                    disp_error('multi_instance has to be True or False')
+            if metadata['plugin'].get('restartable', None) == None:
+                disp_hint('It is not documented if wether the plugin is restartable or not [stop() and run()]', "Add 'restartable:' to the plugin section")
+            else:
+                if not(metadata['plugin'].get('restartable', None) in [True, False, 'True', 'False', 'unknown']):
+                    disp_error('restartable has to be True, False or unknown')
+            if metadata['plugin'].get('sh_minversion', None) == None:
+                disp_warning('No minimum version of the SmartHomeNG core given that is needed to run the plugin', "Add 'sh_minversion:' to the plugin section")
 
-        if metadata['plugin'].get('tester', None) == None:
-            disp_hint('The tester(s) of the plugin are not documented', "Add 'tester:' to the plugin section")
+            if metadata['plugin'].get('tester', None) == None:
+                disp_hint('The tester(s) of the plugin are not documented', "Add 'tester:' to the plugin section")
 
         # Checking parameter metadata
         if metadata.get('parameters', None) == None:
