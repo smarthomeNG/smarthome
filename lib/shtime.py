@@ -1001,9 +1001,9 @@ class Shtime:
 
     def is_weekend(self, date=None):
         """
-        Returns True, if the date is a holiday
+        Returns True, if the date is on a weekend
 
-        Note: Easter sunday is not concidered a holiday (since it is a sunday already)!
+        Note: Easter sunday is not considered a holiday (since it is a sunday already)!
 
         :param date: date for which the weekday should be returned. If not specified, today is used
         :type date: str|datetime.datetime|datetime.date|int|float
