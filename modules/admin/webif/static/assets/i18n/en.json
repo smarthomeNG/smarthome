@@ -305,6 +305,7 @@
     "MULTI INSTANCE": "Multi-Instance",
     "WEBIF": "Web IF",
     "HELP": "Help",
+    "DEVELOP": "Plugin is still in the development state",
     "DEPRECATED": "Plugin is deprecated",
     "DEPRECATED_TEXT": "The plugin is deprecated and will most likely be removed from the next version of SmartHomeNG. If you still need this functionallity, look for a substitute!",
 
@@ -312,7 +313,7 @@
     "PARAMETERS": "Parameters",
     "PARAMETER": "Parameter",
     "VALUE": "Value",
-    "DESCRIPTION_INSTANCE_ATTRIBUTE": "If multiple instances of a multi-instance plugin are configured, an unique instance name has to be entered here",
+    "DESCRIPTION_INSTANCE_ATTRIBUTE": "If several instances of a multi-instance plugin are configured, a unique instance name must be specified here (one instance may remain without a name). If only one instance is configured, no name should be assigned here.",
     "ITEM ATTRIBUTES": "Item Attributes",
     "UPDATES TRIGGERED BY": "Plugin updates are triggered by {{count}} items",
     "PLUGIN METADATA": "Plugin Metadata",

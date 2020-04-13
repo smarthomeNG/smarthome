@@ -63,7 +63,7 @@
     },
     "documentation": "http://smarthomeng.de/user/plugins/backend/user_doc.html",
     "multi_instance": false,
-    "state": "qa-passed",
+    "state": "deprecated",
     "type": "system",
     "version": "1.5.15"
   },

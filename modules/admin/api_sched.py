@@ -61,7 +61,7 @@ class SchedulersController(RESTResource):
                 schedule['cron'] = str(s['cron'])
                 schedule['prio'] = s['prio']
                 schedule['active'] = s['active']
-                schedule['value'] = s['value']
+                schedule['value'] = str(s['value'])
 
                 if schedule['cycle'] == 'None':
                     schedule['cycle'] = '-'

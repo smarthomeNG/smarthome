@@ -326,21 +326,24 @@ class SmartHome():
         if self.shpypi is None:
             self.shpypi = Shpypi(self)
 
-        base_reqs = self.shpypi.test_base_requirements()
+        base_reqs = self.shpypi.test_base_requirements(self)
         if base_reqs == 0:
-            self.restart('SmastHomeNG (Python package installation)')
+            self.restart('SmartHomeNG (Python package installation)')
             exit(0)
         elif base_reqs == -1:
             self._logger.critical("Python package requirements for modules are not met and unable to install base requirements")
+            self._logger.critical("Do you have multiple Python3 Versions installed? Maybe PIP3 looks into a wrong Python environment. Try to configure pip_command in etc/smarthome.yaml")
             self._logger.critical("Aborting")
             exit(1)
 
         plugin_reqs = self.shpypi.test_conf_plugins_requirements(self._plugin_conf_basename, self._plugins_dir)
         if plugin_reqs == 0:
-            self.restart('SmastHomeNG (Python package installation)')
+            self.restart('SmartHomeNG (Python package installation)')
             exit(0)
         elif plugin_reqs == -1:
-            self._logger.critical("Python package requirements for configured plugins are not met and unable to install base requirements")
+            self._logger.critical("Python package requirements for configured plugins are not met and unable to install those requirements")
+            self._logger.critical("Do you have multiple Python3 Versions installed? Maybe PIP3 looks into a wrong Python environment. Try to configure pip_command in etc/smarthome.yaml")
+
             self._logger.critical("Aborting")
             exit(1)
 

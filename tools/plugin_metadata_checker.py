@@ -32,8 +32,10 @@ The result is printed to stdout
 import os
 import argparse
 
+VERSION = '1.7.1'
+
 print('')
-print(os.path.basename(__file__) + ' - Checks the care status of plugin metadata')
+print(os.path.basename(__file__) + ' v' + VERSION + ' - Checks the care status of plugin metadata')
 print('')
 start_dir = os.getcwd()
 
@@ -44,7 +46,6 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, '..')
 sys.path.insert(0, '../lib')
 import shyaml
-
 
 
 type_unclassified = 'unclassified'
@@ -158,7 +159,7 @@ def list_plugins(option):
             sectionPlg = 'Ok'
             version = metadata['plugin'].get('version', '-')
             plgstate = metadata['plugin'].get('state', '-')
-            if not plgstate in ['qa-passed', 'ready', 'develop', 'deprecated', '-']:
+            if not plgstate in ['qa-passed', 'ready', 'develop', 'deprecated']:
                 plgstate = 'INVALID'
         plgtype = get_plugintype(plg)
         if plgtype == 'Smart':
@@ -214,7 +215,7 @@ def list_plugins(option):
 
         if (option == 'all') or \
            (option == plgtype.lower()) or \
-           (option == 'inc' and (sectionPlg == MISSING_TEXT or sectionParam == MISSING_TEXT or sectionIAttr == MISSING_TEXT or sectionFunc == MISSING_TEXT or sectionLogics == MISSING_TEXT)) or \
+           (option == 'inc' and (plgstate == 'INVALID' or sectionPlg == MISSING_TEXT or sectionParam == MISSING_TEXT or sectionIAttr == MISSING_TEXT or sectionFunc == MISSING_TEXT or sectionLogics == MISSING_TEXT)) or \
            (option == 'compl' and (plgtype.lower() != 'classic' and sectionPlg != MISSING_TEXT and sectionParam != MISSING_TEXT and sectionIAttr != MISSING_TEXT and sectionFunc != MISSING_TEXT) and (sectionLogics != MISSING_TEXT)) or \
            (option == 'inc_para' and sectionParam == MISSING_TEXT) or (option == 'inc_attr' and sectionIAttr == MISSING_TEXT):
             if not header_displayed:
@@ -573,7 +574,7 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
 
         # Checking function metadata
         if metadata.get('plugin_functions', None) == None:
-            disp_error("No public functions of the attribute defined in metadata", "If the plugin defines no public functions, document this by creating an empty section. Write 'plugin_functions: NONE' to the metadata file.")
+            disp_error("No public functions of the plugin defined in metadata", "If the plugin defines no public functions, document this by creating an empty section. Write 'plugin_functions: NONE' to the metadata file.")
 
         # Checking logic parameter metadata
         if metadata.get('logic_parameters', None) == None:
@@ -590,6 +591,8 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
                     if not is_dict(par_dict):
                         disp_error("Definition of parameter '{}' is not a dict".format(par), '')
                     else:
+                        if par_dict.get('mandatory', None) != None and par_dict.get('mandatory', None) != None:
+                            disp_error("parameter '{}': mandatory and default cannot be used together".format(par), "If mandatory and a default value are specified togeather, mandatory has no effect, since a value for the parameter is already specified (the default value).")
                         test_description('parameter', par, par_dict.get('description', None))
 
         if metadata.get('item_attributes', None) != None:
@@ -599,6 +602,8 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
                     if not is_dict(par_dict):
                         disp_error("Definition of item_attribute '{}' is not a dict".format(par), '')
                     else:
+                        if par_dict.get('mandatory', None) != None and par_dict.get('mandatory', None) != None:
+                            disp_error("item '{}': mandatory and default cannot be used together".format(par), "If mandatory and a default value are specified togeather, mandatory has no effect, since a value for the parameter is already specified (the default value).")
                         test_description('item attribute', par, par_dict.get('description', None))
 
         if metadata.get('plugin_functions', None) != None:

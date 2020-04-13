@@ -307,6 +307,7 @@
     "MULTI INSTANCE": "Multi-Instance",
     "WEBIF": "Web IF",
     "HELP": "Hilfe",
+    "DEVELOP": "Plugin ist noch im Entwicklungsstadium",
     "DEPRECATED": "Plugin ist veraltet",
     "DEPRECATED_TEXT": "Dieses Plugin ist veraltet und wird voraussichtlich in der nächsten Version von SmartHomeNG entfernt werden. Falls die Funktionalität noch benötigt wird, bitte nach Ersatz umsehen!",
 
@@ -314,7 +315,7 @@
     "PARAMETERS": "Parameter",
     "PARAMETER": "Parameter",
     "VALUE": "Wert",
-    "DESCRIPTION_INSTANCE_ATTRIBUTE": "Falls mehrere Instanzen eines Multi-Instance Plugins konfiguriert sind, muss hier ein eindeutiger Instanz-Name angegeben werden",
+    "DESCRIPTION_INSTANCE_ATTRIBUTE": "Falls mehrere Instanzen eines Multi-Instance Plugins konfiguriert sind, muss hier ein eindeutiger Instanz-Name angegeben werden (eine Instanz darf ohnen Namen bleiben). Falls nur eine Instanz konfiguriert ist, sollte hier kein Name vergeben werden.",
     "ITEM ATTRIBUTES": "Item Attribute",
     "UPDATES TRIGGERED BY": "Plugin Updates werden durch {{count}} Items getriggered",
     "PLUGIN METADATA": "Plugin Metadata",

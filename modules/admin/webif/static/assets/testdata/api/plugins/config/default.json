@@ -82,6 +82,7 @@
             "en": "Blockly - graphical editor for logics - Still in development, not for use"
           },
           "maintainer": "msinn, psilo909",
+          "state": "develop",
           "version": "1.4.0",
           "sh_minversion": "1.3b",
           "multi_instance": false,
@@ -4669,7 +4670,7 @@
           "maintainer": "msinn",
           "version": "1.5.0",
           "sh_minversion": 1.4,
-          "multi_instance": false,
+          "multi_instance": true,
           "classname": "SamplePlugin"
         }
       },

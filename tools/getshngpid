@@ -1,0 +1,3 @@
+printf "The PID of the running instance of SmartHomeNG is "
+cat /usr/local/shng_dev/var/run/smarthome.pid
+echo ""

@@ -92,7 +92,7 @@ class Metadata():
         self.plugin_functions = None
         self._plugin_functionlist = []
 
-        if self.meta != None:
+        if self.meta is not None:
             # read paramter and item definition sections
             if self._addon_type == 'module':
                 self.parameters = self.meta.get(META_MODULE_PARAMETER_SECTION)
@@ -117,7 +117,7 @@ class Metadata():
                 logger.debug(self._log_premsg+"has no parameter definitions in metadata")
 
             # test validity of item definition section
-            if self.itemdefinitions != None:
+            if self.itemdefinitions is not None:
                 if self.itemdefinitions == 'NONE':
                     self.itemdefinitions = None
                 else:
@@ -159,7 +159,7 @@ class Metadata():
 
 
             # test validity of structs definition section
-            if self.itemstructs != None:
+            if self.itemstructs is not None:
                 if self.itemstructs == 'NONE':
                     self.itemstructs = None
                 else:
@@ -178,7 +178,7 @@ class Metadata():
                 logger.info(self._log_premsg + "has no item-struct definitions in metadata")
 
         # Read global metadata for addon (either 'plugin' or 'module'
-        if self.meta != None:
+        if self.meta is not None:
             self.addon_metadata = self.meta.get(addon_type)
         else:
             self.addon_metadata = None
@@ -198,7 +198,7 @@ class Metadata():
             for f in sorted(self.plugin_functions):
                 fp = ''
                 func_param_yaml = self.plugin_functions[f].get('parameters', None)
-                if func_param_yaml != None:
+                if func_param_yaml is not None:
                     for par in func_param_yaml:
                         if fp != '':
                             fp += ', '
@@ -229,7 +229,7 @@ class Metadata():
         definition_list = list(definition_dict.keys())
 #        logger.warning(self._log_premsg+"Metadata definition_list = '{}'".format( definition_list ) )
         for definition in definition_list:
-            if definition_dict[definition] != None:
+            if definition_dict[definition] is not None:
                 typ = str(definition_dict[definition].get('type', FOO)).lower()
                 # to be implemented: timeframe
                 definition_dict[definition]['listtype'] = [FOO]
@@ -277,7 +277,6 @@ class Metadata():
                 logger.info(self._log_premsg+"definition = '{}'".format( definition ) )
         return
 
-
     def _strip_quotes(self, string):
         if type(string) is str:
             string = string.strip()
@@ -323,11 +322,11 @@ class Metadata():
         :return: value for the key
         :rtype: str
         """
-        if self.addon_metadata == None:
+        if self.addon_metadata is None:
             return ''
 
         key_dict = self.addon_metadata.get(mlkey)
-        if key_dict == None:
+        if key_dict is None:
             return ''
         try:
             result = key_dict.get(self._sh.get_defaultlanguage(), '')
@@ -350,7 +349,7 @@ class Metadata():
         :return: value for the key
         :rtype: bool
         """
-        if self.addon_metadata == None:
+        if self.addon_metadata is None:
             return False
 
         return Utils.to_bool(self.addon_metadata.get(key, ''))
@@ -444,7 +443,7 @@ class Metadata():
         """
 #        logger.warning(self._log_premsg+"_test_valuetype-list: typ={}, subtype={}, value={}".format(typ, subtype, value))
         if typ == 'bool':
-            return (Utils.to_bool(value, default='?') != '?')
+            return Utils.to_bool(value, default='?') != '?'
         elif typ == 'int':
             return Utils.is_int(value)
         elif typ in ['float','num']:
@@ -607,11 +606,11 @@ class Metadata():
                             value.append('')
                         result = value
 
-        if self.parameters[param] == None:
+        if self.parameters[param] is None:
             logger.warning(self._log_premsg+"_test_validity: param {}".format(param))
         else:
             valid_list = self.parameters[param].get('valid_list')
-            if (valid_list == None) or (len(valid_list) == 0):
+            if (valid_list is None) or (len(valid_list) == 0):
                 pass
             else:
                 if result in valid_list:
@@ -664,9 +663,9 @@ class Metadata():
         :return: datatype of the parameter
         :rtype: str
         """
-        if definitions == None:
+        if definitions is None:
             return FOO
-        if definitions[definition] == None:
+        if definitions[definition] is None:
             return FOO
         return str(definitions[definition].get('type', FOO)).lower()
 
@@ -696,9 +695,9 @@ class Metadata():
         :return: subtype of the parameter
         :rtype: str
         """
-        if definitions == None:
+        if definitions is None:
             return FOO
-        if definitions[definition] == None:
+        if definitions[definition] is None:
             return FOO
         result = str(definitions[definition].get('type', FOO)).lower()
         sub = ''
@@ -729,9 +728,9 @@ class Metadata():
         :return: subtype of the parameter
         :rtype: str or None
         """
-        if definitions == None:
+        if definitions is None:
             return FOO
-        if definitions[definition] == None:
+        if definitions[definition] is None:
             return FOO
         result = str(definitions.get('type', FOO)).lower()
         llen = 0
@@ -766,9 +765,9 @@ class Metadata():
         :return: datatype with subtype of the parameter
         :rtype: str
         """
-        if definitions == None:
+        if definitions is None:
             return FOO
-        if definitions[definition] == None:
+        if definitions[definition] is None:
             return FOO
         result = self._get_definition_type(definition, definitions)
         sub = self._get_definition_subtype(definition, definitions)
@@ -793,7 +792,6 @@ class Metadata():
         """
         return self._get_definition_type_with_subtype(definition, self.itemdefinitions)
 
-
     def _get_definition_defaultvalue(self, definition, definitions, definitionlist):
         """
         Returns the default value for the parameter
@@ -811,9 +809,9 @@ class Metadata():
         """
         value = None
         if definition in definitionlist:
-            if self.parameters[definition] != None:
+            if self.parameters[definition] is not None:
                 if self._get_definition_type(definition, definitions) == 'dict':
-                    if definitions[definition].get('default') != None:
+                    if definitions[definition].get('default') is not None:
                         value = dict(definitions[definition].get('default'))
                 else:
                     value = definitions[definition].get('default')
@@ -822,14 +820,14 @@ class Metadata():
                     logger.info("_get_definition_defaultvalue: default value is 'None*' -> None")
                     value = None
                 else:
-                    if value == None:
+                    if value is None:
                         value = self._get_default_if_none(typ)
                     value = self._expand_listvalues(definition, value)
                     if not self._test_value(definition, value):
                         # Für non-default Prüfung nur Warning
                         logger.error(self._log_premsg+"Invalid data for type '{}' in metadata file '{}': default '{}' for parameter '{}' -> using '{}' instead".format( definitions[definition].get('type'), self.relative_filename, value, definition, self._get_default_if_none(typ) ) )
                         value = None
-                    if value == None:
+                    if value is None:
                         value = self._get_default_if_none(typ)
                     value = self._convert_value(definition, value, is_default=True)
 
@@ -852,8 +850,6 @@ class Metadata():
         Returns the default value for an item attribute definition
         """
         return self._get_definition_defaultvalue(definition, self.itemdefinitions, self._itemdeflist)
-
-
 
     def _get_definitioninfo(self, definition, key, definitions):
         """
@@ -885,8 +881,6 @@ class Metadata():
         """
         return self.__get_definitioninfo(definition, key, self.itemdefinitions)
 
-
-
     def check_parameters(self, args):
         """
         Checks the values of a dict of configured parameters.
@@ -904,10 +898,10 @@ class Metadata():
         """
         addon_params = collections.OrderedDict()
         hide_params = collections.OrderedDict()
-        if self.meta == None:
+        if self.meta is None:
             logger.info(self._log_premsg+"No metadata found" )
             return (addon_params, True, hide_params)
-        if self.parameters == None:
+        if self.parameters is None:
             logger.info(self._log_premsg+"No parameter definitions found in metadata" )
             return (addon_params, True, hide_params)
 
@@ -915,7 +909,7 @@ class Metadata():
         if self._paramlist != []:
             for param in self._paramlist:
                 value = Utils.strip_quotes(args.get(param))
-                if value == None:
+                if value is None:
                     if self.parameters[param] is not None:
                         if self.parameters[param].get('mandatory'):
                             logger.error(self._log_premsg+"'{}' is mandatory, but was not found in /etc/{}".format(param, self._addon_type+YAML_FILE))
@@ -930,13 +924,13 @@ class Metadata():
                     if self._test_value(param, value):
                         addon_params[param] = self._convert_value(param, value)
 
-                        if self.parameters[param] == None:
+                        if self.parameters[param] is None:
                             hide_params[param] = None
                         else:
                             hide_params[param] = Utils.to_bool(self.parameters[param].get('hide'), default=False)
                         logger.debug(self._log_premsg+"Found '{}' with value '{}' in /etc/{}".format(param, value, self._addon_type+YAML_FILE))
                     else:
-                        if self.parameters[param].get('mandatory') == True:
+                        if self.parameters[param].get('mandatory') is True:
                             logger.error(self._log_premsg+"'{}' is mandatory, but no valid value was found in /etc/{}".format(param, self._addon_type+YAML_FILE))
                             allparams_ok = False
                         else:
@@ -945,5 +939,3 @@ class Metadata():
                             logger.error(self._log_premsg+"Found invalid value '{}' for parameter '{}' (type {}) in /etc/{}, using default value '{}' instead".format(value, param, self.parameters[param]['type'], self._addon_type+YAML_FILE, str(addon_params[param])))
 
         return (addon_params, allparams_ok, hide_params)
-
-

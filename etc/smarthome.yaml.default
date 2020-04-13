@@ -26,3 +26,8 @@ default_language: de     # default_language is used, where multiple languages ar
 #
 # Loggen von Warnungen, falls abgekündigte Funktionen aufgerufen werden (Standard: False)
 #deprecated_warnings: True
+
+# If the standard commend PIP3 does not work when multiple Python3 versions are installed
+# enter the name or full path of the right pip command below
+#pip_command: pip3.5
+

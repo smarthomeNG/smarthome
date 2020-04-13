@@ -304,6 +304,7 @@
     "MULTI INSTANCE": "Instances multiples",
     "WEBIF": "Interface web",
     "HELP": "Aide",
+    "DEVELOP": "Le plugin est encore au stade de développement",
     "DEPRECATED": "Extension obsolète",
     "DEPRECATED_TEXT": "Cette extension est obsolète et sera probablement enlevée dans une prochaine version de SmartHomeNG. Si la fonctionnalité est encore nécessaire veuillez chercher un remplacement!",
 
@@ -311,7 +312,7 @@
     "PARAMETERS": "Paramètres",
     "PARAMETER": "Paramètre",
     "VALUE": "Valeur",
-    "DESCRIPTION_INSTANCE_ATTRIBUTE": "Si plusieurs instances sont configurées il faut ici renseigner le nom unique de l'instance.",
+    "DESCRIPTION_INSTANCE_ATTRIBUTE": "Si plusieurs instances d'un plug-in multi-instance sont configurées, un nom d'instance unique doit être spécifié ici (une instance peut rester sans nom). Si une seule instance est configurée, aucun nom ne doit être attribué ici.",
     "ITEM ATTRIBUTES": "Attributs de l'objet",
     "UPDATES TRIGGERED BY": "Mises à jour de l'extension déclenchées par {{count}} objets",
     "PLUGIN METADATA": "Métadonnées de l'extension",
