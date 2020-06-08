@@ -30,6 +30,7 @@ import traceback
 import threading
 import random
 import inspect
+import re
 
 from lib.shtime import Shtime
 from lib.item import Items
@@ -649,8 +650,13 @@ class Scheduler(threading.Thread):
         :return: false or datetime
         """
         now = self.shtime.now()
+        crontab_list = re.split(r'\s+(?![^()]*\))', crontab.strip())
         try:
-            minute, hour, day, wday = crontab.strip().split()
+            if len(crontab_list) > 4:
+                second, minute, hour, day, wday = [i.strip() for i in crontab_list]
+            else:
+                minute, hour, day, wday = [i.strip() for i in crontab_list]
+                second = '0'
         except:
             logger.warning("crontab entry '{}' can not be split up into 4 parts for minute, hour, day and weekday".format(crontab))
             return False
@@ -688,7 +694,7 @@ class Scheduler(threading.Thread):
                 return False
             next_time = now
         day, hour, minute = next_event.split('-')
-        return next_time.replace(day=int(day), hour=int(hour), minute=int(minute), second=0, microsecond=0)
+        return next_time.replace(day=int(day), hour=int(hour), minute=int(minute), second=int(second), microsecond=0)
 
     def _next(self, f, seq):
         for item in seq:
