@@ -649,6 +649,25 @@ class Scheduler(threading.Thread):
         :param next_month: inspect the current month or the next following month
         :return: false or datetime
         """
+        
+        def random_value(value, min_value, max_value):
+            """
+            If crontab value uses rand/random keyword a random number between min and max is returned
+
+            :param value: a string value formatted like 'random(min, max)' - min and max might be wrong values, but this function fixes those problems
+            :param min: minimum value, usually 0
+            :param max: maximal value, 59 for minutes or 23 for hours.
+            :return: None or random integer
+            """
+            try:
+                random_vals = value[value.find('(')+len('('):value.rfind(')')].split(',')
+                rand_start, rand_end = random_vals[0].strip(), random_vals[1].strip()
+                rand_start = max(min_value, min(int(rand_start), max_value))
+                rand_end = max(min_value, min(int(rand_end), max_value))
+                return str(random.randint(rand_start, rand_end))
+            except:
+                return None
+        
         now = self.shtime.now()
         crontab_list = re.split(r'\s+(?![^()]*\))', crontab.strip())
         try:
@@ -659,6 +678,16 @@ class Scheduler(threading.Thread):
                 second = '0'
         except:
             logger.warning("crontab entry '{}' can not be split up into 4 parts for minute, hour, day and weekday".format(crontab))
+            return False
+        # randomize value if necessary
+        if second.startswith("rand"):
+            second = random_value(second, 0, 59)
+        if minute.startswith("rand"):
+            minute = random_value(minute, 0, 59)
+        if hour.startswith("rand"):
+            hour = random_value(hour, 0, 23)
+        if None in [second, minute, hour]:
+            logger.warning("crontab entry '{}' has wrong random syntax. Use 'rand(min, max)'".format(crontab))
             return False
         # evaluate the crontab strings
         minute_range = self._range(minute, 00, 59)
