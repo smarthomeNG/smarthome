@@ -38,7 +38,7 @@ from math import *
 from lib.plugin import Plugins
 from lib.shtime import Shtime
 
-from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE, KEY_CACHE, KEY_CYCLE, KEY_CRONTAB, KEY_EVAL,
+from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE, KEY_CACHE, KEY_CYCLE, KEY_CYCLE_OFFSET, KEY_CRONTAB, KEY_EVAL,
                            KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_TYPE, KEY_STRUCT,
                            KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM, KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE,
                            KEY_LOG_CHANGE, KEY_THRESHOLD,
@@ -102,6 +102,7 @@ class Item():
         self.conf = {}
         self._crontab = None
         self._cycle = None
+        self._cycle_offset = None
         self._enforce_updates = False
         self._enforce_change = False
         self._eval = None				    # -> KEY_EVAL
@@ -178,7 +179,7 @@ class Item():
         #############################################################
         for attr, value in config.items():
             if not isinstance(value, dict):
-                if attr in [KEY_CYCLE, KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE]:
+                if attr in [KEY_CYCLE, KEY_CYCLE_OFFSET, KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE]:
                     if attr == KEY_INITVALUE:
                         attr = KEY_VALUE
                     setattr(self, '_' + attr, value)
@@ -1000,9 +1001,11 @@ class Item():
         #############################################################
         if self._crontab is not None or self._cycle is not None:
             cycle = self._cycle
+            if self._cycle_offset is not None:
+                self._cycle_offset = int(self._cycle_offset)
             if cycle is not None:
                 cycle = self._build_cycledict(cycle)
-            self._sh.scheduler.add(self._itemname_prefix+self._path, self, cron=self._crontab, cycle=cycle)
+            self._sh.scheduler.add(self._itemname_prefix+self._path, self, cron=self._crontab, cycle=cycle, offset=self._cycle_offset)
 
         return
 
