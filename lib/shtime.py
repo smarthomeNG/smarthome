@@ -37,7 +37,7 @@ import os
 
 import lib.shyaml as shyaml
 from lib.constants import (YAML_FILE)
-from lib.translation import translate
+#from lib.translation import translate
 from lib.translation import translate as lib_translate
 
 
@@ -103,7 +103,7 @@ class Shtime:
             return _shtime_instance
 
 
-    def translate(self, txt):
+    def translate(self, txt, vars=None):
         """
         Returns translated text
 
@@ -115,7 +115,7 @@ class Shtime:
         """
         txt = str(txt)
 
-        return lib_translate(txt, additional_translations='lib/shtime')
+        return lib_translate(txt, vars, additional_translations='lib/shtime')
 
 
     def set_tz(self, tz):
@@ -505,7 +505,7 @@ class Shtime:
             if week is None:
                 logger.error("beginning_of_week: "+self.translate("Week not specified"))
                 return self.today()
-
+        week -= 1
         #monday = datetime.datetime.strptime(f'{year}-{week}-1', "%Y-%W-%w")  # geht erst ab Python 3.6
         monday = datetime.datetime.strptime('{year}-{week}-1'.format(year=year, week=week), "%Y-%W-%w")
         return monday.date()
@@ -1002,7 +1002,7 @@ class Shtime:
     def is_weekend(self, date=None):
         """
         Returns True, if the date is on a weekend
-        
+
         Note: Easter sunday is not considered a holiday (since it is a sunday already)!
 
         :param date: date for which the weekday should be returned. If not specified, today is used

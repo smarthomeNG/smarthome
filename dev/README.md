@@ -30,7 +30,7 @@ A detailed description (in german language) about the way the workflow is used f
 ### Getting the Source
 
   * you could fork the repository on github or
-  * get the repository: `git clone --recursive https://github.com/smarthomeNG/smarthome.git' (The --recursive option ensures, that a version of the plugins are checked out as well)
+  * get the repository: `git clone --recursive https://github.com/smarthomeNG/smarthome.git` (The --recursive option ensures, that a version of the plugins are checked out as well)
   * create your own (local) branch (from develop) `git checkout -b myplugin develop`
 
 ## Python Version
@@ -114,9 +114,11 @@ If you have problems pushing, you could check the repo git config. Mine looks li
 [remote "origin"]
     url = https://github.com/smarthomeNG/smarthome
     fetch = +refs/heads/*:refs/remotes/origin/*
+
 [branch "master"]
     remote = origin
     merge = refs/heads/master
+
 [branch "develop"]
     remote = origin
     merge = refs/heads/develop

@@ -1,18 +1,26 @@
+#   +--------------------------------------------------+
+#   |                 SmartHomeNG                      |
+#   |            This file contains all                |
+#   |            requirements needed for               |
+#   |              automated testing                   |
+#   |             by travis/tox/pytest                 |
+#   |                                                  |
+#   |               INSTALL WITH:                      |
+#   | pip3 install -r requirements/test.txt --user     |
+#   +--------------------------------------------------+
 
 flake8>=2.5.1
 pylint>=1.5.3
 coveralls>=1.1
-pytest==3.6.0
+pytest>=3.6.0
 pytest-cov>=2.2.0
 pytest-timeout>=1.0.0
 betamax==0.5.1
 pydocstyle>=1.0.0
-virtualenv<14.0.0;python_version=='3.2'
-coverage<4.0.0;python_version=='3.2'
 beautifulsoup4>=4.1.0
 
-# SmartHomeNG-lib
+# the following needs to be exactly the same as in requirements/base.txt
+# otherwise inconsistent requirements will occur in Travis/Tox/Testing
 ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
-
-# SmartHomeNG-lib
-ruamel.yaml>0.15.0,<=0.15.74;python_version>='3.7'
+ruamel.yaml>=0.15.0,<=0.15.74;python_version=='3.7'
+ruamel.yaml>=0.15.78,<=0.16.8;python_version>='3.8'

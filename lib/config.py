@@ -68,7 +68,7 @@ def parse_basename(basename, configtype=''):
         config = parse(basename+CONF_FILE)
     if config == {}:
         if not (configtype == 'logics'):
-            logger.critical("No file '{}.*' found with {} configuration".format(basename, configtype))
+            logger.critical("No valid file '{}.*' found with {} configuration".format(basename, configtype))
     return config
 
 
@@ -233,24 +233,28 @@ def merge_structlists(l1, l2, key=''):
         global special_listentry_found
         # merge* or merge_unique*
         if (len(l1) > 0 and l1[0] == 'merge_unique*') and (len(l2) > 0 and l2[0] == 'merge_unique*'):
-            #logger.warning("merge_structlists: both lists contains 'merge_unique*' - l1={}, l2={}, key={}".format(l1, l2, key))
+            logger.debug("merge_structlists: merge_unique* l1={}, l2={}".format(l1,l2))
+            logger.debug("merge_structlists: both lists contains 'merge_unique*' - l1={}, l2={}, key={}".format(l1, l2, key))
             special_listentry_found = True
             l1 = list(collections.OrderedDict.fromkeys(l1))
             return l1
 
         if (len(l1) > 0 and l1[0] == 'merge*') and (len(l2) > 0 and l2[0] == 'merge*'):
-            #logger.warning("merge_structlists: both lists contains 'merge*' - l1={}, l2={}, key={}".format(l1, l2, key))
+            logger.debug("merge_structlists: merge* l1={}, l2={}".format(l1,l2))
+            logger.debug("merge_structlists: both lists contains 'merge*' - l1={}, l2={}, key={}".format(l1, l2, key))
             special_listentry_found = True
             return l1
 
         if (len(l2) > 0 and l2[0] == 'merge*'):
-            #logger.warning("merge_structlists: list l2 contains 'merge*' - l1={}, l2={}, key={}".format(l1, l2, key))
+            logger.debug("merge_structlists: l2 contains merge* l1={}, l2={}".format(l1,l2))
+            logger.debug("merge_structlists: list l2 contains 'merge*' - l1={}, l2={}, key={}".format(l1, l2, key))
             del l2[0]
             l1 = ['merge*'] + l1 + l2
             l2 = ['merge*'] + l2
             return l1
 
         if (len(l1) > 0 and l1[0] == 'merge*') or (len(l2) > 0 and l2[0] == 'merge*'):
+            logger.debug("merge_structlists: l1 or l2 contain merge* l1={}, l2={}".format(l1,l2))
             #logger.warning("merge_structlists: a list contains 'merge*' - l1={}, l2={}, key={}".format(l1, l2, key))
             pass
         return l2       # Last wins
@@ -288,10 +292,13 @@ def merge(source, destination, source_name='', dest_name='', filename=''):
         True
 
     '''
-    
+
 #    if struct_merging_active:
-    if filename == 'test_struct.yaml':
-        logger.warning("merge: source={}, destination={}, source_name={}, dest_name={}".format(dict(source), dict(destination), source_name, dest_name))
+    if source.get('_filename', '') == 'test_struct.yaml':
+        logger.info("merge {}: source={}, destination={}, source_name={}, dest_name={}".format(source.get('_filename', ''), dict(source), dict(destination), source_name, dest_name))
+        ext_logging = True
+    else:
+        ext_logging = False
     for key, value in source.items():
         try:
             if isinstance(value, collections.OrderedDict):
@@ -308,6 +315,8 @@ def merge(source, destination, source_name='', dest_name='', filename=''):
                     if destination.get(key, None) is None:
                         destination[key] = value
                     else:
+                        if ext_logging:
+                            logger.info("merge: call merge_structlists - key={}, value={}, destination.get(key, None)={}".format(key, value, destination.get(key, None)))
                         destination[key] = merge_structlists(destination[key], value, key)
                 else:
                     # convert to string and remove newlines from multiline attributes
@@ -397,8 +406,17 @@ def search_for_struct_in_items(items, struct_dict, config, source_name='', paren
     :return: True, if a struct attribute was expanded
     """
 
+    if source_name.startswith('test_struct'):
+        logger.info("search_for_struct_in_items: items.keys()={}, source_name={}, parent={}".format(list(dict(items).keys()), source_name, parent))
+
     for key in items:
         value = items[key]
+        if source_name.startswith('test_struct'):
+            if isinstance(value, collections.OrderedDict):
+                logger.info("search_for_struct_in_items: - items[{}]={}".format(key, dict(value)))
+            else:
+                logger.info("search_for_struct_in_items: - items[{}]={}".format(key, value))
+
         if key == 'struct':
             # item is a struct
             struct_names = value
@@ -414,9 +432,9 @@ def search_for_struct_in_items(items, struct_dict, config, source_name='', paren
             for struct_name in struct_names:
                 wrk = struct_name.find('@')
                 if wrk > -1:
-                    add_struct_to_template(parent, struct_name[:wrk], template, struct_dict, struct_name[wrk+1:])
+                    add_struct_to_item_template(parent, struct_name[:wrk], template, struct_dict, struct_name[wrk+1:])
                 else:
-                    add_struct_to_template(parent, struct_name, template, struct_dict, instance)
+                    add_struct_to_item_template(parent, struct_name, template, struct_dict, instance)
             if template != {}:
                 config = merge(template, config, source_name, 'Item-Tree')
             struct_merging_active = False
@@ -467,18 +485,19 @@ def set_attr_for_subtree(subtree, attr, value, indent=0):
     return
 
 
-def add_struct_to_template(path, struct_name, template, struct_dict, instance):
+def add_struct_to_item_template(path, struct_name, template, struct_dict, instance):
     '''
     Add the referenced struct to the items_template subtree
 
     :param path: Path of the item which references a struct (template)
     :param struct_name: Name of the to use for the item
     :param template: Template dict to be merged into the item tree
-    :param struct_dict:   dict with all defined structs (from /etc/structs.yaml and from loaded plugins)
+    :param struct_dict: dict with all defined structs (from /etc/structs.yaml and from loaded plugins)
     :param instance: For multi instance plugins: instance for which the items work (is derived from item with struct attribute)
 
     :return:
     '''
+    logger.info("add_struct_to_item_template: path (parent)={}, struct_name={}, template={}".format(path, struct_name, dict(template)))
     struct = struct_dict.get(struct_name, None)
     if struct is None:
         # no struct/template with this name
@@ -486,18 +505,21 @@ def add_struct_to_template(path, struct_name, template, struct_dict, instance):
         nf['name'] = "ERROR: struct '" + struct_name+"' not found!"
         # nf['value'] = nf['name']
         nested_put(template, path, nf)
-        logger.error("add_struct_to_template: Struct definition for '{}' not found (referenced in item {})".format(struct_name, path))
+        logger.error("add_struct_to_item_template: Struct definition for '{}' not found (referenced in item {})".format(struct_name, path))
     else:
         # add struct/template to temporary item(template) tree
+        #logger.debug("- add_struct_to_item_template: struct_dict = {}".format(dict(struct_dict)))
+        #logger.debug("- add_struct_to_item_template: struct '{}' to item '{}'".format(struct_name, path))
         nested_put(template, path, copy.deepcopy(struct))
         if instance != '' or True:
             # add instance to items added by template struct
             subtree = nested_get(template, path)
-            # logger.info("add_struct_to_template: Adding 'instance: {}' to template for subtree '{}'".format(instance, path))
+            # logger.info("add_struct_to_item_template: Adding 'instance: {}' to template for subtree '{}'".format(instance, path))
             # add instance name to attributes which carry '@instance'
+            logger.debug("- add_struct_to_item_template: Add instance={} to subtree={}".format(instance, subtree))
             replace_struct_instance(path, subtree, instance)
-        logger.debug("add_struct_to_template: struct_dict = {}".format(struct_dict))
 
+    logger.info("- add_struct_to_item_template: - after add - template={}".format(dict(template)))
     return
 
 
@@ -512,7 +534,7 @@ def replace_struct_instance(path, subtree, instance):
     :return:
     """
     keys = list(subtree.keys())
-    # logger.info("replace_struct_instance: Setting  instance to {} for subtree {}".format(instance, subtree))
+    #logger.info("replace_struct_instance: Setting  instance to {} for subtree {}".format(instance, subtree))
     for key in keys:
         # replace recursively
         if Utils.get_type(subtree[key]) == 'collections.OrderedDict':
@@ -522,7 +544,7 @@ def replace_struct_instance(path, subtree, instance):
                 newkey = key[:-9]
             else:
                 newkey = key[:-9] + '@' + instance
-            logger.info("replace_struct_instance: - path {}: key '{}' --> newkey '{}'".format(path, key, newkey))
+            #logger.debug("replace_struct_instance: - path {}: key '{}' --> newkey '{}'".format(path, key, newkey))
             subtree[newkey] = subtree.pop(key)
     # logger.info("replace_struct_instance: Done set instance to {} for subtree {}".format(instance, subtree))
     return
@@ -575,7 +597,8 @@ def parse_yaml(filename, config=None, addfilenames=False, parseitems=False, stru
     Valid characters for the attributes are the same as for an item plus @ and *
 
     """
-    logger.debug("parse_yaml: Parsing file {}".format(os.path.basename(filename)))
+    if os.path.basename(filename).startswith('test_'):
+        logger.info("parse_yaml: Parsing file {}".format(os.path.basename(filename)))
     if config is None:
         config = collections.OrderedDict()
 
@@ -588,12 +611,12 @@ def parse_yaml(filename, config=None, addfilenames=False, parseitems=False, stru
         remove_invalid(items, filename)
 
         if addfilenames:
-            logger.debug("parse_yaml: Add filename = {} to items".format(os.path.basename(filename)))
+            #logger.debug("parse_yaml: Add filename = {} to items".format(os.path.basename(filename)))
             _add_filenames_to_config(items, os.path.basename(filename))
 
         if parseitems:
             # test if file contains 'struct' attribute and merge all items into config
-            logger.debug("parse_yaml: Checking if file {} contains 'struct' attribute".format(os.path.basename(filename)))
+            #logger.debug("parse_yaml: Checking if file {} contains 'struct' attribute".format(os.path.basename(filename)))
 
             search_for_struct_in_items(items, struct_dict, config, os.path.basename(filename))
 
@@ -709,7 +732,7 @@ def parse_conf(filename, config=None):
                 linenu += 1
                 line = line.rstrip().rstrip('\\') + next(lines, '').lstrip()
             line = line.partition('#')[0].strip()
-            if line is '':
+            if line == '':
                 continue
             if line[0] == '[':  # item
                 brackets = 0

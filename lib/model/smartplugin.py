@@ -52,18 +52,18 @@ class SmartPlugin(SmartObject, Utils):
     _pluginname_prefix = 'plugins.'
 
     _itemlist = []		# List of items, that trigger update methods of this plugin (filled by lib.item); :Warning: Don't change!
-
+    _add_translation = None
 
     _parameters = {}    # Dict for storing the configuration parameters read from /etc/plugin.yaml
 
     logger = logging.getLogger(__name__)
 
+    alive = False
+
 
     # Initialization of SmartPlugin class called by super().__init__() from the plugin's __init__() method
     def __init__(self, **kwargs):
         pass
-
-
 
     def _append_to_itemlist(self, item):
         self._itemlist.append(item)
@@ -636,16 +636,63 @@ class SmartPlugin(SmartObject, Utils):
         raise NotImplementedError("'Plugin' subclasses should have a 'stop()' method")
 
 
-    def translate(self, txt, block=None):
+    def translate(self, txt, vars=None, block=None):
         """
         Returns translated text
         """
         txt = str(txt)
         if block:
-            self.logger.warning("unsuported 2. parameter '{}' used in translation function _( ... )".format(block))
+            self.logger.warning("unsuported 3. parameter '{}' used in translation function _( ... )".format(block))
 
-        return lib_translate(txt, additional_translations='plugin/'+self.get_shortname())
+        if self._add_translation is None:
+            # test initially, if plugin has additional translations
+            translation_fn = os.path.join(self._plugin_dir, 'locale.yaml')
+            self._add_translation = os.path.isfile(translation_fn)
 
+        if self._add_translation:
+            return lib_translate(txt, vars, additional_translations='plugin/'+self.get_shortname())
+        else:
+            return lib_translate(txt, vars)
+
+
+    def init_webinterface(self, WebInterface=None):
+        """"
+        Initialize the web interface for this plugin
+
+        This method is only needed if the plugin is implementing a web interface
+        """
+        if WebInterface is None:
+            return False
+
+        try:
+            # try/except to handle running in a core version that does not support modules
+            self.mod_http = Modules.get_instance().get_module('http')
+        except:
+            self.mod_http = None
+        if self.mod_http == None:
+            self.logger.error("Plugin '{}': Not initializing the web interface".format(self.get_shortname()))
+            return False
+
+        # set application configuration for cherrypy
+        webif_dir = self.path_join(self.get_plugin_dir(), 'webif')
+        config = {
+            '/': {
+                'tools.staticdir.root': webif_dir,
+            },
+            '/static': {
+                'tools.staticdir.on': True,
+                'tools.staticdir.dir': 'static'
+            }
+        }
+
+        # Register the web interface as a cherrypy app
+        self.mod_http.register_webif(WebInterface(webif_dir, self),
+                                     self.get_shortname(),
+                                     config,
+                                     self.get_classname(), self.get_instance_name(),
+                                     description='')
+
+        return True
 
 
 try:
@@ -672,7 +719,8 @@ class SmartPluginWebIf():
         tplenv = Environment(loader=FileSystemLoader([mytemplates,globaltemplates]))
 
         tplenv.globals['isfile'] = self.is_staticfile
-        tplenv.globals['_'] = self.translate
+        tplenv.globals['_'] = self.plugin.translate
+        tplenv.globals['len'] = len
         return tplenv
 
 
@@ -696,7 +744,7 @@ class SmartPluginWebIf():
             complete_path = self.plugin.path_join(self.webif_dir, path)
         from os.path import isfile as isfile
         result = isfile(complete_path)
-        self.logger.debug("is_staticfile: path={}, complete_path={}, result={}".format(path, complete_path, result))
+        # self.logger.debug("is_staticfile: path={}, complete_path={}, result={}".format(path, complete_path, result))
         return result
 
 

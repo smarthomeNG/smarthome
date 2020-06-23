@@ -68,13 +68,13 @@ Datentyp der Wertzuweisung
 --------------------------
 
 Bei der Nutzung von *autotimer* und *cycle* ist eine Besonderheit zu
-beachten: Unabhängig vom mit ``type =`` angegebenen Datentyp erfolgt in
+beachten: Unabhängig vom mit ``type:`` angegebenen Datentyp erfolgt in
 smarthome.py und SmartHomeNG **bis v1.2** die Zuweisung **immer** als
 String! Das ist inkonsistent und kann zu unerwarteten Ergebnissen
 führen, wenn das Item in ``eval``-Ausdrücken verwendet wird.
 
 **Ab SmartHomeNG v1.3** kann alternativ die Zuweisung des Wertes in dem
-Datentyp erfolgen, der mit ``type =`` angegebenen wurde. Das kann jedoch
+Datentyp erfolgen, der mit ``type:`` angegebenen wurde. Das kann jedoch
 zu Kompatibilitätsproblemen führen, falls jemand in **eval**-Ausdrücken
 berücksichtigt hat, dass bisher die Wertzuweisung immer als String
 erfolgte. Um diese Probleme zu umgehen, kann das Verhalten (Zuweisung

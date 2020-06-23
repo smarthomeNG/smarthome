@@ -39,6 +39,15 @@ import sys
 sh_basedir = os.sep.join(os.path.realpath(__file__).split(os.sep)[:-2])
 sys.path.insert(0, sh_basedir)
 
+program_name = sys.argv[0]
+arguments = sys.argv[1:]
+if "-debug_tox" in arguments:
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+    logger = logging.getLogger('build_requirements')
+    logger.setLevel(logging.DEBUG)
+    logger.debug("sys.path = {}".format(sys.path))
+
 import lib.shpypi as shpypi
 
 

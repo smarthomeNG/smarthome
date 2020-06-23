@@ -41,11 +41,11 @@ class Module(SmartObject, Utils):
     _longname = ''      #: Long name of the module; is initialized during loading of the module
 
 
-    def translate(self, txt):
+    def translate(self, txt, vars=None):
         """
         Returns translated text
         """
         txt = str(txt)
 
-        return lib_translate(txt, additional_translations='module/'+self._shortname)
+        return lib_translate(txt, vars, additional_translations='module/'+self._shortname)
 

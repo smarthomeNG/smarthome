@@ -7,7 +7,7 @@ interfaces to be used by plugins.
 At the moment, the following modules exist:
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :glob:
    :titlesonly:
 

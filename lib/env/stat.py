@@ -1,3 +1,7 @@
+# System logic 'stat' of SmartHomeNG
+#
+# schedule is defined in lib.env.logic.yaml
+#
 import os
 import sys
 import shutil
@@ -21,11 +25,23 @@ if gc.garbage != []:
 # Threads
 sh.env.core.threads(threading.activeCount(), logic.lname)
 
+# Scheduler: Worker threads
+sh.env.core.scheduler.worker_threads(sh.scheduler.get_worker_count(), logic.lname)
+sh.env.core.scheduler.idle_threads(sh.scheduler.get_idle_worker_count(), logic.lname)
+sh.env.core.scheduler.worker_names(sh.scheduler.get_worker_names(), logic.lname)
+
 # Memory
 p = psutil.Process(os.getpid())
 mem_info = p.memory_info()
 mem = mem_info.rss
 sh.env.core.memory(mem, logic.lname)
+
+# System Memory
+swap_info = psutil.swap_memory()
+sh.env.system.swap(swap_info.used, logic.lname)
+sysmem_info = psutil.virtual_memory()
+sh.env.system.memory.used(sysmem_info.used, logic.lname)
+sh.env.system.memory.percent(sysmem_info.percent, logic.lname)
 
 # Load
 l1, l5, l15 = os.getloadavg()

@@ -4,9 +4,9 @@
 .. role:: bluesup
 .. role:: redsup
 
-====================================
-Samba installieren :bluesup:`update`
-====================================
+==================
+Samba installieren
+==================
 
 Wer mit einem Windows-Rechner auf die Dateien von SmartHomeNG und
 SmartVISU zugreifen möchte, *kann* dazu **Samba** installieren.
@@ -82,7 +82,7 @@ In die Datei folgendes einfügen:
    directory mask = 0775
 
    [smartVISU]
-   path = /var/www/html/smartVISU
+   path = /var/www/html/smartvisu
    comment = smartVISU Directories
    available = yes
    browseable = yes

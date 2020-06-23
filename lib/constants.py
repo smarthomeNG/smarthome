@@ -37,6 +37,7 @@ META_DATA_DEFAULTS={'bool': False, 'int': 0, 'float': 0.0, 'num': 0, 'scene': 0,
 
 #config params for items
 KEY_ENFORCE_UPDATES = 'enforce_updates'
+KEY_ENFORCE_CHANGE = 'enforce_change'
 KEY_CACHE = 'cache'
 KEY_CYCLE = 'cycle'
 KEY_NAME = 'name'

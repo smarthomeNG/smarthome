@@ -21,6 +21,7 @@
 
 import logging
 import os
+import sys
 import collections
 
 from lib.utils import Utils
@@ -364,23 +365,63 @@ class Metadata():
         """
         l = str(self._sh.version).split('.')
         shng_version = l[0]+'.'+l[1]
+        if len(l) > 2:
+            shng_version += '.'+l[2]
+
         l = str(self.get_string('sh_minversion')).split('.')
         min_shngversion = l[0]
         if len(l) > 1:
             min_shngversion += '.'+l[1]
+        if len(l) > 2:
+            min_shngversion += '.'+l[2]
+
         l = str(self.get_string('sh_maxversion')).split('.')
         max_shngversion = l[0]
         if len(l) > 1:
             max_shngversion += '.'+l[1]
+        if len(l) > 2:
+            max_shngversion += '.'+l[2]
+
         mod_version = self.get_string('version')
 
         if min_shngversion != '':
             if min_shngversion > shng_version:
-                logger.error("{0} '{1}': The version of SmartHomeNG is too old for this {0}. It requires at least version v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, min_shngversion))
+                logger.error("{0} '{1}': The version {3} of SmartHomeNG is too old for this {0}. It requires at least version v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, min_shngversion, shng_version))
                 return False
         if max_shngversion != '':
             if max_shngversion < shng_version:
-                logger.error("{0} '{1}': The version of SmartHomeNG is too new for this {0}. It requires a version up to v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, max_shngversion))
+                logger.error("{0} '{1}': The version {3} of SmartHomeNG is too new for this {0}. It requires a version up to v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, max_shngversion, shng_version))
+                return False
+        return True
+
+
+    def test_pythoncompatibility(self):
+        """
+        Test if the actual running version of Python is in the range of supported versions for this addon (module/plugin)
+
+        :return: True if the Python version is in the supported range
+        :rtype: bool
+        """
+        l = sys.version_info
+        py_version = str(l[0])+'.'+str(l[1])
+
+        l = str(self.get_string('py_minversion')).split('.')
+        min_pyversion = l[0]
+        if len(l) > 1:
+            min_pyversion += '.'+l[1]
+        l = str(self.get_string('py_maxversion')).split('.')
+        max_pyversion = l[0]
+        if len(l) > 1:
+            max_pyversion += '.'+l[1]
+        mod_version = self.get_string('version')
+
+        if min_pyversion != '':
+            if min_pyversion > py_version:
+                logger.error("{0} '{1}': The Python version {3} is too old for this {0}. It requires at least version v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, min_pyversion, py_version))
+                return False
+        if max_pyversion != '':
+            if max_pyversion < py_version:
+                logger.error("{0} '{1}': The Python version {3} is too new for this {0}. It requires a version up to v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, max_pyversion, py_version))
                 return False
         return True
 

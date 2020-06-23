@@ -1,3 +1,19 @@
+
+:root {
+  --shng-blue: #709cc2;
+  --shng-red: #c40808;
+  --shng-green: green;
+  --shng-warning: #e3d304;
+  --shng-orange: #FF8000;
+
+  --shng-disabled: #bbb;
+/*  älter: --shng-border: #d9d9d9; */
+/*  --shng-border: #f9f9f9; */
+  --shng-border: #dee2e5;
+  --shng-secondary-button: #e0e0e0;
+  --shng-toggle-off: #a9a9a9;
+}
+
 plusIconlist-group-item.py-2.node-tree.node-selected {
 	background-color: #c3daee;
 }
@@ -180,17 +196,24 @@ a.text-shng:focus, a.text-shng:hover {
 }
 */
 
-.btn-shng-danger {
+.btn-shng-warning {
   color: #fff;
-  background-color: #cc5200;
-  border-color: #cc5200;
+  background-color: var(--shng-orange);
+  border-color: var(--shng-orange);
 }
 
+.btn-shng-danger {
+  color: #fff;
+  background-color: var(--shng-red);
+  border-color: var(--shng-red);
+}
+/*
 .btn-shng-danger:hover {
   color: #fff;
   background-color: #b34700;
   border-color: #b34700;
 }
+*/
 /*
 .btn-shng-danger:focus, .btn-shng-danger.focus {
   box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.5);

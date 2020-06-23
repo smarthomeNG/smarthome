@@ -1,3 +1,5 @@
+:tocdepth: 1
+
 .. index:: NGINX als ReverseProxy
 
 NGINX als ReverseProxy

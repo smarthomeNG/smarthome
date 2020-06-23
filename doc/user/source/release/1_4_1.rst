@@ -1,3 +1,5 @@
+:tocdepth: 1
+
 =================================
 Release 1.4.1 - 23. Dezember 2017
 =================================
@@ -8,20 +10,20 @@ Es gibt eine Reihe von Bugfixes und neue Features im Core von SmartHomeNG und de
 Unterstützte Python Versionen
 =============================
 
-Bitte beachten: Ab SmartHomeNG Release 1.4 wollen wir die aktive Unterstützung älterer Python 
-Versionen einstellen. Die älteste unterstützte Python Version wird dann Python 3.4 sein. 
+Bitte beachten: Ab SmartHomeNG Release 1.4 wollen wir die aktive Unterstützung älterer Python
+Versionen einstellen. Die älteste unterstützte Python Version wird dann Python 3.4 sein.
 (Siehe *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
 
-Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.4 nicht mehr unter älteren Python 
-Versionen läuft. Es bedeutet, dass SmartHomeNG nicht mehr mit älteren Python Versionen getestet 
+Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.4 nicht mehr unter älteren Python
+Versionen läuft. Es bedeutet, dass SmartHomeNG nicht mehr mit älteren Python Versionen getestet
 wird und das gemeldete Fehler mit älteren Python Versionen nicht mehr zu Buxfixen führen.
 
 
 Absolute minimum Python Versionen auf 3.3 angehoben
 ===================================================
 
-Die Minimum Python Version in der SmartHomeNG startet wurde in SmartHomeNG v1.4 von 3.2 auf 3.3 
-erhöht. Aufgrund der größeren Änderungen zwischen Python 3.2 und 3.3 war es schon bisher 
+Die Minimum Python Version in der SmartHomeNG startet wurde in SmartHomeNG v1.4 von 3.2 auf 3.3
+erhöht. Aufgrund der größeren Änderungen zwischen Python 3.2 und 3.3 war es schon bisher
 problematisch SmartHomeNG mit Plugins in eine Python 3.2 zum Laufen zu bringen.
 
 
@@ -39,8 +41,8 @@ Neue Funktionen im CORE
   * Bugfix: Expansion von relativen Item-Pfaden, wenn das Item Attribut kein String sondern eine Liste von Strings ist
   * Casting für **list** s und **dict** s so erweitert, dass Werte vom Type **str** entsprechend gecastet werden (über json.loads)
   * Beim Laden von Item Definitionen wird bei Anwender-Definierten Items der Quell-Dateiname im Item gespeichert (zur Anzeige im Backend und für zukünftige Features)
-  
-* Scheduler: 
+
+* Scheduler:
 
   * Zeiten mit sunrise/sunset in crontab werden jetzt timezone aware wiedergegeben statt mit utc
 
@@ -52,20 +54,20 @@ Neue Plugins und Plugin-Erweiterungen
 * AVDevice:
 
   * Anpassungen
-  
+
 * Backend:
 
   * Grundsätzliche Editierbarkeit von Items der Typen **list** und **dict**
   * Für Anwender-definierte Items: Anzeige des Dateinamens in dem das Item definiert wurde
   * Anzeige der SmartHomeNG Version erweitert
   * Aus der Logging-Liste werden Logger herausgefiltert, die nur einen NullHandler haben.
-  
-* CLI: 
+
+* CLI:
 
   * Durch das erweiterte Casting für **list** s und **dict** s ist es möglich mit dem CLI Plugin Listen und Dictionaries Werte zuzuweisen
 
 * mail:
- 
+
   * Gmail Support hinzugefügt
 
 * UZSU:

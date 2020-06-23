@@ -5,8 +5,8 @@
 .. role:: redsup
 
 
-Funktionen eines Items :bluesup:`update`
-========================================
+Funktionen eines Items
+======================
 
 
 Jedes definierte Item bietet die folgenden Methoden an, die unter anderem in **eval** Ausdrücken

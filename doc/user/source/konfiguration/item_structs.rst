@@ -13,20 +13,27 @@ structs (Item Strukturen)
 Überblick
 =========
 
-Eine Reihe von Plugins benötigt eine bestimmte Item Struktur bzw. eine größere Zahl an Items um sinnvoll zu
-funktionieren. Diese Items müssen dazu innerhalb des Item-Trees als Teilbaum angelegt werden (zum Teil auch mehrfach).
+Seit SmartHomeNG v1.6 werden Item-Struktur-Templates unterstützt, mit denen sich wiederholende Itemstrukturen einfach realisieren lassen.
+Die Anwendung erfolgt mit Hilfe des **struct**-Attributes mit dem jeweiligen Namen des Item-Templates. Dies wird bei dem Item definiert,
+unter dem die definierte Struktur (Teil-Item-Baum) eingefügt werden soll.
 
-Seit SmartHomeNG v1.6 werden diese Strukturen/Templates unterstützt, die dann mit Hilfe des **struct**-Attributs in
-den Item-Tree eingefügt werden können. Dazu muss bei dem Item an dessen Stelle der Teilbaum eingefügt werden soll,
-der Name des Templates (der Item-Struktur) angegeben werden.
+Prinzipiell gibt es 2 Anwendungsfälle:
 
-Die Item Strukturen/Templates können an zwei verschiedenen Stellen definiert werden:
+ - Der Nutzer kann selbst entsprechende Item-Struktur-Templates anlegen und verwenden
+ - Eine Reihe von Plugins benötigt eine bestimmte Item Struktur bzw. eine größere Zahl an Items um sinnvoll zu funktionieren.
 
-- der Nutzer kann die Strukturen in der Konfigurationsdatei ../etc/struct.yaml definieren
-- Autoren von Plugins können die Strukturen in den Metadaten des Plugins definieren. Beim Start von SmartHomeNG
-  stehen die dann die Strukturen aller konfigurierten Plugins zur Verfügung.
+Demzufolge können die Item-Struktur-Templates an zwei verschiedenen Stellen definiert werden:
 
-Mit dem **struct**-Attribut kann nicht nur eine Item Struktur in den Item-Tree eingefügt werden, sondern auch mehrere.
+ - der Nutzer kann die Strukturen in der Konfigurationsdatei ../etc/struct.yaml definieren
+ - Autoren von Plugins können die Strukturen in den Metadaten des Plugins definieren. Beim Start von SmartHomeNG stehen die dann die Strukturen aller konfigurierten Plugins zur Verfügung.
+
+Um eine doppelte Namensvergabe zu vermeiden, wird bei der Nutzung den structs, die in Plugins definiert wurden, der
+Name des Plugins vorangestellt. Wenn z.B. die struct **weather** genutzt werden soll, die im Plugin **darksky**
+definiert wurde, so muss als Referenz **darksky.weather** angegeben werden.
+
+Eine Übersicht der zur Verfügung stehenden structs kann in der Admin GUI unter **Items/Struktur** Templates eingesehen werden.
+
+Mit dem **struct**-Attribut kann nicht nur eine, sondern auch mehrere vordefinierte Item-Strukturen in den Item-Tree eingefügt werden.
 Dazu wird im **struct**-Attribut eine Liste von **struct** Namen angegeben. Wenn eine Liste angegeben wird, werden
 die Template Strukturen in der Reihenfolge angewendet, in der sie in der Liste angegeben wurden.
 
@@ -38,17 +45,15 @@ die Template Strukturen in der Reihenfolge angewendet, in der sie in der Liste a
             - mein_wetter2
             - ....
 
-Um eine doppelte Namensvergabe zu vermeiden, wird bei der Nutzung den structs, die in Plugins definiert wurden, der
-Name des Plugins vorangestellt. Wenn z.B. die struct **weather** genutzt werden soll, die im Plugin **darksky**
-definiert wurde, so muss als Referenz **darksky.weather** angegeben werden.
+struct bei Plugins
+==================
 
-Eine Übersicht der zur Verfügung stehenden structs kann in der Admin GUI unter **Items/Struktur** Templates eingesehen
-werden.
-
+Anwendung
+---------
 
 Das folgende Beispiel verdeutlicht das Vorgehen am Wettervorhersage-Plugin **darksky**:
 
-Bisher musste man in den Items einen ganzen Teilbaum eintragen (hier unter **aussen.mein_wetter**):
+Bisher musste man in den Items einen ganzen Teilbaum selbst eintragen (hier unter **aussen.mein_wetter**):
 
 .. code-block:: yaml
 
@@ -71,11 +76,9 @@ Bisher musste man in den Items einen ganzen Teilbaum eintragen (hier unter **aus
             ...
 
 
-Das Plugin **darksky** bringt nun ein Template mit dem Namen **weather** mit, welcher mit **darksky.weather** angesprochen
-werden kann.
+Das Plugin **darksky** bringt nun ein Template mit dem Namen **weather** mit, welcher mit **darksky.weather** angesprochen werden kann.
 
-Um nun die ganzen Items für die Wettervorhersage anzulegen, muss nur noch für das Item **mein_wetter** das Attribut
-**struct** gesetzt werden:
+Um nun die ganzen Items für die Wettervorhersage anzulegen, muss nur noch für das Item **mein_wetter** das Attribut **struct** gesetzt werden:
 
 .. code-block:: yaml
     :caption: items/item.yaml
@@ -85,19 +88,17 @@ Um nun die ganzen Items für die Wettervorhersage anzulegen, muss nur noch für 
             struct: darksky.weather
 
 
-Wenn das Plugin darksky konfiguriert ist, kann man in der Administrationsoberfläche die gesamten Items, die zum
-Wetterbericht gehören, sehen.
+Wenn das Plugin darksky konfiguriert ist, kann man in der Administrationsoberfläche die gesamten Items, die zum Wetterbericht gehören, sehen.
 
 
 Multi-Instance Unterstützung
-============================
+----------------------------
 
 Wenn mehrere Instanzen eines Plugins verwendet werden, so muss (wie zu erwarten) bei dem Item welches die **struct**
 referenziert, das Attribute **instance** angegeben werden.
 
-In der Definition der structs in den Multi-Instance fähigen Plugins wird vom Plugin Autor an Stelle des aktuellen
-Instance Namen das Wort **instance** als Platzhalter angegeben (wie im folgenden Beispiel beim Attribut
-**ds_matchstring**:
+In der Definition der **structs** in den Multi-Instance fähigen Plugins wird vom Plugin Autor an Stelle des aktuellen
+Instance Namen das Wort **instance** als Platzhalter angegeben (wie im folgenden Beispiel beim Attribut **ds_matchstring**:
 
 .. code-block:: yaml
     :caption: plugins/darksky/plugin.yaml
@@ -115,8 +116,7 @@ Instance Namen das Wort **instance** als Platzhalter angegeben (wie im folgenden
             ...
 
 
-In der Definition der Items bestehen zwei Möglichkeiten einer **struct** die **instance** mitzugeben auf die sich
-die **struct** beziehen soll.
+In der Definition der Items bestehen zwei Möglichkeiten einer **struct** die **instance** mitzugeben auf die sich die **struct** beziehen soll.
 
 
 1. Die **instance** kann in dem Item in dem die **struct** referenziert wird, als zusätzliches Attribut definiert werden:
@@ -142,7 +142,6 @@ Das kann man auch in der Administrationsoberfläche sehen.
 .. code-block:: yaml
     :caption: items/item.yaml
 
-    ...:
         weather_home:
             struct: darksky.weather@home
 
@@ -152,69 +151,176 @@ Das kann man auch in der Administrationsoberfläche sehen.
 
 .. note::
 
-    Wenn man eigene Items in den Teilbaum der durch das Template hinzugefügt wurde einfügen will, muss man für diese
+    Wenn man eigene Items, in den Teilbaum der durch das Template hinzugefügt wurde, einfügen will, muss man für diese
     selbst hinzugefügten Items natürlich das Attribut **instance** angeben.
 
 
 
-Selbst definierte Item-Strukturen
-=================================
+struct bei selbst definierte Item-Struktur-Templates
+====================================================
 
-Zusätzlich zu den Item-Strukturen, die Plugins als Template mitbringen, können eigene Strukturen angelegt werden. Diese
-Strukturen werden in der Konfigurationdatei **../etc/struct.yaml** abgelegt werden. (Siehe
-:doc:`Konfigurationsdateien/struct.yaml </konfiguration/konfigurationsdateien/struct>`)
+Anwendung
+---------
 
-Diese Templates werden mit dem Namen der Struktur ohne einen vorrangestellten Plugin-Namen angegeben:
+Eigens definierte Item-Struktur-Templates werden in der Konfigurationdatei **../etc/struct.yaml** abgelegt.
+
+Hierbei gibt die oberste Ebene den Namen der Templates an. Darunter können Item-Strukturen definiert werden, wie man es
+auch in der Item Definition in den items.yaml Dateien machen würde. Das folgende Beispiel zeigt die Definition von zwei
+Strukturen (**my_struct_01** und **my_struct_02**):
 
 .. code-block:: yaml
-    :caption: items/item.yaml
+    :caption: etc/struct.yaml
 
-    komplexes_item:
-        struct: meine_struktur
+    my_struct_01:
+        name: Name der erste eigenen Item Struktur
+
+        item_01:
+            name: Erstes Item
+            type: num
+            ...
+        item_02:
+            name: Zweites Item
+            type: bool
+            ...
+            subitem:
+                name: Sub-Item
+                type: str
+                ...
 
 
-Eigene Items und Attribute innerhalb der Strukturen
-===================================================
+    my_struct_02:
+        name: Name der zweiten eigenen Item Struktur
+        type: bool
 
-Innerhalb der durch die Templates angelegten Strukturen können in der Item Definition eigene Items und Attribute
-angegeben werden. Es ist dabei sogar möglich, Attribute die in den Templates gesetzt wurden zu überschreiben.
+        item_a:
+            name: Item A
+            type: num
+            ...
+        item_b:
+            name: Item B
+            type: str
+            ...
 
-Wenn ein Attribut in einem **struct** Template und in den Item Definitionen definiert wird, "gewinnt" die Angabe
-aus der Item Definition. Regel: "Item wins"
+Wenn jetzt in der Item Definition diese Strukturen referenziert werden:
+
+.. code-block:: yaml
+    :caption: items/items.yaml
+
+    my_tree:
+        my_complex_data:
+            name: Geänderter Name für meine komplexen Daten
+            struct: my_struct_01
+
+            individual_item:
+                name: Individuelles Item
+                type: str
+                ...
 
 
-Besonderheit bei Attributen, die Listen enthalten
--------------------------------------------------
+entsteht im Item-Tree die selbe Struktur, als wenn man folgendes direkt in die item.yaml eingetragen hätte:
 
-Wenn ein Attribut eine Liste enthält, kann das Standardverhalten "Angabe im Item gewinnt" abgeändert werden.
-In diesem Fall können die Liste die im Item definiert ist und die Liste die im **struct** Template definiert ist,
+.. code-block:: yaml
+    :caption: items/items.yaml
+
+    my_tree:
+        name: Geänderter Name für meine komplexen Daten
+        struct: my_struct_01
+
+        item_01:
+            name: Erstes Item
+            type: num
+            ...
+        item_02:
+            name: Zweites Item
+            type: bool
+            ...
+            subitem:
+                name: Sub-Item
+                type: str
+                ...
+        individual_item:
+            name: Individuelles Item
+            type: str
+            ...
+
+
+Beim Einfügen der Struktur bleibt das Attribut **struct** erhalten, so dass man zur Laufzeit sehen kann, dass die Struktur zumindest in Teilen aus einem Template stammt. Die Definition des Attributes **name** aus dem Template wird durch die Angabe aus der Datei items/item.yaml ersetzt. Das **individual_item** wird an die Struktur des Templates angefügt.
+(Siehe :doc:`Konfigurationsdateien/struct.yaml </konfiguration/konfigurationsdateien/struct>`)
+
+
+Verschachtelte struct Definitionen (nested structs)
+---------------------------------------------------
+
+Ab SmartHomeNG v1.7 können Strukturdefinitionen verschachtelt werden. Wie Items, die mithilfe des Attributs **struct:**
+auf eine Strukturdefinition verweisen, können dies jetzt auch Strukturen selbst tun.
+
+In Strukturen wird das **struct** Attribut **nur** auf der obersten Ebene als Referenz ausgewertet.
+
+SmartHomeNG löst alle Unterstrukturreferenzen vor dem Laden des Item Trees auf, um das Laden der Item Definitionen zu beschleunigen.
+
+.. note::
+
+  Wenn Unterstrukturdefinitionen aufgelöst werden, gibt es zwei Unterschiede zu der Art und Weise,
+  wie Item Definitionen geladen werden. Die Unterschiede treten nur dann zutage, wenn Strukturen / Unterstrukturen
+  Attribute re-definieren. (Siehe hierzu auch folgende Kaptiel und :doc:`Konfiguration/structs </konfiguration/item_structs>`)
+
+
+Re-Definieren von Attributen (außer list-Atrributen)
+----------------------------------------------------
+
+Beim Definieren von Items ist es möglich, dasselbe Attribut für ein Item in mehreren Item YAML-Dateien zu definieren.
+Grundsätzlich werden alle Attribute zu einem Item, dass in mehreren Item YAML-Dateien definiert wurde, gemerged, also zusammengeführt.
+
+.. note::
+
+    Gibt es eine Attributdefinition an mehreren Stellen, gelten folgende Regeln:
+     - Beim Lesen der Item Definition gewinnt die Attributdefinition, welche zuletzt eingelesen wird. Regel: **"last wins"**
+     - In Struktur- /Unterstrukturdefinitionen gewinnt die zuerst eingelesene Attributdefinition. Regel: **"first wins"**
+     - Wenn ein Attribut in einem struct-Template und in den Item Definitionen definiert wird, "gewinnt" die Angabe aus der
+       Item Definition. Regel: **"Item wins"**
+
+Beim Auflösen von Unterstrukturen gewinnt die Definition der Struktur der oberen Ebene, wenn das Attribut
+in der Struktur der oberen Ebene vor dem **struct**-Attribut definiert ist. Dies ermöglicht ein "Überschreiben"
+von Attributwerten, die in einer Unterstruktur definiert wurden. Wenn das Attribut nach dem
+**struct**-Attribut definiert ist, gewinnt die Definition in der Unterstruktur. Regel: **"first wins"**
+
+
+Re-Definieren von list-Attributen
+----------------------------------
+
+Das Verhalten bei Re-Definieren von list-Attributen ist abhängig von der Anwendung. Zu unterscheiden gilt, ob es
+  - ein struct in einem Item ist, oder
+  - ein sub-struct in einem struct.
+
+.. note::
+    Gibt es eine Attributdefinition mit Listen an mehreren Stellen, gelten folgende Regeln:
+      - Bei structs/substructs werden Listen immer gemergt.
+      - Bei Items/structs nur, wenn dort Am Anfang einer der Spezialeinträge steht.
+
+
+Verhalten bei struct in einem Item
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Wenn ein Attribut eine Liste enthält, kann das Standardverhalten **"first wins"** in **merge** abgeändert werden.
+Es können die Liste, die im Item definiert ist, und die Liste, die im **struct** Template definiert ist,
 miteinander verbunden werden. Dabei wird die Liste aus dem **struct** Template an die Liste im Item Attribut
 angehängt.
 
 Dazu müssen folgende Voraussetzungen erfüllt sein:
-
-- Das zu mergende Attribut MUSS vor dem **struct** Attribut definiert werden
-- Das zu mergende Attribut MUSS im Item als Liste definiert sein
-- Das zu mergende Attribut MUSS im Item als ersten Eintrag **merge\*** oder **merge_unique\*** enthalten
-  (Der Stern/Asterix muss direkt, ohne Leerzeichen, auf **merge** bzw. **merge_unique** folgen)
+  - Das zu mergende Attribut MUSS vor dem **struct** Attribut definiert werden
+  - Das zu mergende Attribut MUSS im Item als Liste definiert sein
+  - Das zu mergende Attribut MUSS im Item als ersten Eintrag **merge\*** oder **merge_unique\*** enthalten
+    (Der Stern/Asterix muss direkt, ohne Leerzeichen, auf **merge** bzw. **merge_unique** folgen)
 
 Falls der erste Listeintrag **merge\*** ist, bleiben doppelte Listeinträge erhalten.
 
 
-Verwendung des *struct* Attributes in *struct* Definitionen
-===========================================================
+Verhalten bei sub-struct in struct
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Innerhalb von **struct** Definitionen kann auf der obersten Ebene das Attribut **struct** angeben werden, um weitere
-**struct** Templates in die **struct** einzubinden.
-
-Unterschiede zum **struct** Attribut in Item Definitionen:
-
-- Ob bei abweichenden Werten in einem Attribut der Wert der übergeordneten **struct** oder der referenzierten
-  **struct** "gewinnt", hängt von der Reihenfolge der Definition ab. Falls das entsprechende Attribut vor dem
-  **struct** Attribut definiert wird, bleibt der Wert der übergeordneten **struct** erhalten. Anderenfalls bleibt
-  der Wert aus der referenzierten **struct** erhalten. Regel: "first wins"
-- Innerhalb der **struct** Definitionen braucht das Attribut **merge\*** nicht angegeben zu werden.
-  Listen von structs und sub-structs werden standardmäßig gemerged.
+Bei der Neudefinition von Attributen, bei denen es sich um Listen handelt, erfolgt kein "Überschreiben". Stattdessen
+werden die Listen zusammengefügt. Die Reihenfolge der Listeneinträge wird durch die Reihenfolge bestimmt, in der die
+Attributdefinitionen eingelesen werden.
 
 
 Beispiele

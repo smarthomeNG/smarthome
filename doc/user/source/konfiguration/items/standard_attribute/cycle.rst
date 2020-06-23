@@ -48,13 +48,13 @@ Datentyp der Wertzuweisung
 --------------------------
 
 Bei der Nutzung von ``autotimer``\ und ``cycle`` ist eine Besonderheit
-zu beachten: Unabhängig vom mit ``type =`` angegebenen Datentyp erfolgt
+zu beachten: Unabhängig vom mit ``type:`` angegebenen Datentyp erfolgt
 in smarthome.py und SmartHomeNG **bis v1.2** die Zuweisung **immer** als
 String! Das ist inkonsistent und kann zu unerwarteten Ergebnissen
 führen, wenn das Item in ``eval``-Ausdrücken verwendet wird.
 
 **Ab SmartHomeNG v1.3** kann alternativ die Zuweisung des Wertes in dem
-Datentyp erfolgen, der mit ``type =`` angegebenen wurde. Das kann jedoch
+Datentyp erfolgen, der mit ``type:`` angegebenen wurde. Das kann jedoch
 zu Kompatibilitätsproblemen führen, falls jemand in ``eval``-Ausdrücken
 berücksichtigt hat, dass bisher die Wertzuweisung immer als String
 erfolgte. Um diese Probleme zu umgehen, kann das Verhalten (Zuweisung
@@ -88,7 +88,7 @@ Die Angabe des Kompatibilitätsmodus erfolgt folgendermaßen:
 .. code-block:: yaml
 
    item:
-       autotimer: <dauer> = <wert> = <kompatibilität>
+       cycle: <dauer> = <wert> = <kompatibilität>
 
 Beispiel:
 
@@ -96,11 +96,11 @@ Beispiel:
 
    item:
        type: num
-       autotimer: 5m = 0 = compat_1.2
+       cycle: 5m = 0 = compat_1.2
 
    item2:
        type: bool
-       autotimer: 5m = true = latest
+       cycle: 5m = true = latest
 
-Nach auslösen der Autotimer wird ``item`` der String ``'0'``\ zugewiesen
+Nach auslösen des cycle wird ``item`` der String ``'0'``\ zugewiesen
 und ``item2`` wird der boolsche Wert ``True``\ zugewiesen.

@@ -939,11 +939,12 @@ class Logic():
     _logicname_prefix = 'logics.'
 
     def __init__(self, smarthome, name, attributes, logics):
-        self._sh = smarthome
+        self.sh = smarthome               # initialize to use 'logic.sh' in logics
+        self.logger = logger              # initialize to use 'logic.logger' in logics
         self.name = name
+        self.shtime = logics.shtime
         self.lname = "Logic '"+name+"'"   # string is to be used in item assignements sh.xxx(<value>, logic.lname)
         self._logics = logics             # access to the logics api
-        self.shtime = self._logics.shtime
         self.enabled = True if 'enabled' not in attributes else Utils.to_bool(attributes['enabled'])
         self.crontab = None
         self.cycle = None

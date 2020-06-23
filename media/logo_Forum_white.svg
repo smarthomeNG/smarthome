@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="29.615" height="29.615" version="1.1" viewBox="0 0 29.615 29.615" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g fill="#fff">
+  <g stroke-width="0">
+   <path d="m2.2365 26.792h25.069v2.8231h-25.069z"/>
+   <path d="m14.804 0.71234-14.804 8.5425 0.66188 1.147 14.146-8.1627 14.146 8.1627 0.66156-1.147-14.804-8.5425-4e-3 6e-3 -4e-3 -6e-3z"/>
+   <path d="m8.7439 1.4323h-1.2679v2.8504l1.2679-0.72733z"/>
+  </g>
+  <g transform="scale(.99678 1.0032)" stroke-width="1.0397px" style="font-feature-settings:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal" aria-label="SH">
+   <path d="m11.82 10.601v2.7806q-1.0823-0.48396-2.1118-0.73034-1.0295-0.24638-1.9447-0.24638-1.2143 0-1.7951 0.33438-0.58076 0.33437-0.58076 1.0383 0 0.52796 0.38717 0.82714 0.39597 0.29038 1.4255 0.50156l1.4431 0.29038q2.191 0.43997 3.115 1.3375 0.92393 0.89753 0.92393 2.5518 0 2.1734-1.2935 3.2382-1.2847 1.0559-3.9333 1.0559-1.2495 0-2.5078-0.23758-1.2583-0.23758-2.5166-0.70395v-2.8598q1.2583 0.66875 2.4286 1.0119 1.1791 0.33437 2.2702 0.33437 1.1087 0 1.6983-0.36957 0.58955-0.36957 0.58955-1.0559 0-0.61595-0.40477-0.95033-0.39597-0.33437-1.5927-0.59835l-1.3111-0.29038q-1.971-0.42237-2.8862-1.3463-0.90633-0.92393-0.90633-2.4902 0-1.9622 1.2671-3.0182 1.2671-1.0559 3.6429-1.0559 1.0823 0 2.2262 0.16719 1.1439 0.15839 2.367 0.48396z" style="font-feature-settings:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal"/>
+   <path d="m15.665 10.187h3.3877v5.0068h4.998v-5.0068h3.3877v13.137h-3.3877v-5.57h-4.998v5.57h-3.3877z" style="font-feature-settings:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal"/>
+  </g>
+ </g>
+</svg>

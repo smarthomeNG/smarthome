@@ -464,11 +464,11 @@ class Stream(Base):
     def close(self):
         if self.connected:
             logger.debug("{}: closing socket {}".format(self._name, self.address))
-        self.connected = False
-        try:
-            self._poller.unregister_connection(self.socket.fileno())
-        except:
-            pass
+            self.connected = False
+            try:
+                self._poller.unregister_connection(self.socket.fileno())
+            except:
+                pass
         try:
             self.handle_close()
         except:

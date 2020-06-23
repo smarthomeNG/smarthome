@@ -1,0 +1,487 @@
+:tocdepth: 2
+
+=============================
+Release 1.7.2 - 23. June 2020
+=============================
+
+Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+
+
+Überblick
+=========
+
+Dieses ist ein Wartungs-Release für SmartHomeNG v1.7. Die Änderungen gegenüber dem Release v1.7.1 sind im
+folgenden in diesen Release Notes beschrieben.
+
+
+Unterstützte Python Versionen
+-----------------------------
+
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.7 ist Python 3.5 und die
+neueste unterstützte Python Version ist 3.7.
+(Siehe auch *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
+
+..
+    Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.7 nicht mehr unter älteren Python Versionen läuft,
+    sondern das SmartHomeNG nicht mehr mit älteren Python Versionen getestet wird und das gemeldete Fehler mit älteren
+    Python Versionen nicht mehr zu Buxfixen führen.
+
+    Es werden jedoch zunehmend Features eingesetzt, die erst ab Python 3.5 zur Verfügung stehen.
+
+
+Absolute Minimum Python Version
+-------------------------------
+
+Die Minimum Python Version in der SmartHomeNG startet wurde auf v3.5 angehoben, da Python 3.4 im Jahr 2019 End-of-Life
+(End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python
+Versionen (3.6 oder 3.7) aufzusetzen.
+
+.. important::
+
+   Mit dem kommenden Release 1.8 werden die unterstützten Python Versionen
+   :doc:`(wie hier beschrieben) </installation/anforderungen>` auf **Python 3.6, 3.7, 3.8** angehoben. Python 3.6
+   hat eine Reihe sehr interessanter Features und Verbesserungen gebracht, die dann in SmartHomeNG genutzt
+   werden können.
+
+   Sollten solche neuen Features in den Core Einzug halten, wird die **Absolute Minimum Python Version** auf 3.6
+   angehoben werden. Sollten die Features nur in Plugins genutzt werden, so können nur solche Plugins nicht genutzt
+   werden, wenn eine ältere Python Version als 3.6 eingesetzt wird.
+
+
+Änderungen am Core
+==================
+
+Bugfixes in the CORE
+--------------------
+
+* lib.shtime: fixed bug in beginning_of_week() that returned the date of the monday of the following week
+* tools: Bugfix in plugin_metadata_checker when checking parameters for mandatory and default parameters
+
+
+Updates in the CORE
+-------------------
+
+* bin.smarthome: Logging more detailed platform information on startup
+* Translations: Added the option to have variables within the translation strings
+* Changed default files in /etc
+
+* Items:
+
+  * ...
+
+* Logics:
+
+  * Added sh, items, shtime to context 'logic' to increase support for functions in logics
+
+* lib:
+
+  * class SmartPlugin: variable self.alive is initialized (even before __init__ is called)
+  * class SmartPlugin: init_webinterface() added
+  * lib.connection: Bugfix in Client.close()
+  * lib.db: Changed error handling, if api initialization fails
+  * lib.env:
+
+    * Added env items for scheduler's worker thread information
+    * Added enfoce_change to Items written to database
+    * Added items with information for system swap and memory use
+
+  * lib.item: Added enforce_change attribute
+  * lib.metadata: Added py_minversion an py_maxversion to plugin and module metadata for pluguins/modules that are
+    not compatible with every Python version that is supported by SmartHomeNG
+  * lib.scheduler:
+
+    * Implemented restart of SmartHomeNG if number of worker threads goes through the roof
+    * Added methods to export worker thread information to env items
+
+  * lib.shpypi:
+
+    * Changed to avoid loading the wrong PIP command for package installation
+    * Bugfix for existing etc/plugin.yaml without any configured plugin
+
+* Modules:
+
+  * admin:
+
+    * shngadmin:
+
+      * Implemented chart for scheduler workers
+      * shngadmin: Adjusted Resource-Graph tab to fit on iPad in landscape mode
+      * Added charts with system memory ans swap used
+      * Chart tab changed to css grid layout
+      * Improvements to system information
+      * Improvements to services information
+
+  * http:
+
+    * Disabled cherrypy logging to screen; Added instance name to title of web interface
+
+  * mqtt:
+
+    * Changed initialization in case the broker is not running/reachable on startup of SmartHomeNG
+    * Fix for subscriptions placed before connection initialization with broker was complete
+    * Bugfix for topics with wildcards ('+' and '#')
+    * Bugfix for multiple plugins subscribing to the same topic
+
+
+Änderungen bei Plugins
+======================
+
+New Plugins
+-----------
+
+For details of the changes of the individual plugins, please refer to the documentation of the respective plugin.
+
+* casambi: Gateway plugin for controlling and reading Casambi devices via the Casambi backend API
+* deebot_ozmo: This plugin can control and monitor an Ecovacs Deebot Ozmo series vaccum cleaner robot
+* raumfeld_ng: Alternative plugin to contol raumfeld devices
+* robonect: Plugin for reading data from Husqvarna, Gardena, Flymo or McCulloch robotic lawnmowers, equipped with
+  the Robonect Hx module (STILL UNDER DEVELOPMENT)
+* tasmota: New plugin to control devices with tasmota firmware (STILL UNDER DEVELOPMENT)
+
+
+
+Plugin Updates
+--------------
+
+* alexarc4shng:
+
+  * Added some french translations
+
+* apcups:
+
+  * now uses get_param_value
+  * fixed scheduler.add to scheduler_add
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+
+* appletv:
+
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+
+* avdevice:
+
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+
+* avm:
+
+  * new arguments for hkr_device added
+  * Fixed instance handling for hkr dect devices
+  * added instance name to examples in README.md
+
+* Buderus:
+
+  * now supports get_param_value and start/stop
+  * Bugfix:  Removed wrong (duplicate) if statement in line 169
+
+* darksky:
+
+  * redesigned structs (use of sub-structs); choice if data is written to database
+  * Fixed bug 'dictionary keys changed during iteration' that showed under Python 3.8
+
+* database:
+
+  * Isolated web interface to seperate file
+  * added sourcecode documentation
+  * fixed bug that prevented data being written to database if 'database_acl: rw' was specified
+  * added support for type foo in webinterface details; documented sourcecode
+  * Added total number of records and timestamp of oldest value for an item to thw web interface (page details)
+  * Implemented job to remove records older than maxage
+  * Added column with number of log entries to web interface; removed 'count LOG' button
+  * Additional parameter to configure if log entries should be counted for all items
+  * Changed __init__() to reflect changed error handling in lib.db
+  * Corrected logging
+  * Changed translations to use variable parameters in text
+  * fixed bug that wrote value to database for items with attribute database_acl set to ro
+  * Fixed bug when trying to read cache value on initialization and log table has no entries for item
+  * Clarified warning message when skipping dumps
+  * Added multiple entry parsing in series duration parsing for visu_websocket ('1w 2y 3h 1d 39i 15s') - for smartVISU requesting series
+  * Ignore negative duration in timestamp/duration parser - for SV requesting series
+  * Modified timestamp/duration parser to ignore timestamps inthe future (return now insteead) - for smartVISU requesting series
+
+* dlms:
+
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+
+* executor:
+
+  * update plugin.yaml
+  * translation corrected
+  * include possibility to test evals with relative items
+  * added user_doc
+
+* gpio:
+
+  * added pullup config, fixed startup handling, cleaned code
+  * changed startup behaviour, new item attribute gpio_init
+  * added gpio_invert parameter to invert gpio levels
+  * fixed errors, completed documentation
+  * log current value of output on startup
+  * logging and reporting streamlined
+  * added english translation for web interface
+
+* helios:
+
+  * update plugin.yaml
+
+* helios_tcp:
+
+  * Corrected update_item not to send value to device if item was updated by the plugin itself
+  * added name of plugin to assignment of item (for update_item() and display in admin GUI)
+  * changed "manual_mode" type from bool to int (line 97)
+
+* homematic:
+
+  * Support Thread added to metadata
+
+* ical:
+
+  * Added shtime call for tzinfo()
+  * scheduler_add to assign icalUpdate and Refresh schedulers correctly
+  * import all methods from smartplugin API
+  * scheduler use smartplugin method
+  * init super on start
+  * remove schedulers on stop
+
+* indego:
+
+  * update plugin.yaml
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+
+* influxdb:
+
+  * use self.get_parameter
+  * fix plugin.yaml
+  * fix udp_port
+  * added http_port metadata
+
+* join:
+
+  * now uses get_param_value
+
+* jsonread:
+
+  * update plugin.yaml
+
+* kathrein:
+
+  * update plugin.yaml
+
+* knx:
+
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+
+* kodi:
+
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+  * extended update command to initiate connect if necessary
+  * check parameter value for type conformance to bounds, convert if necessary, fixed error in _update_status()
+  * set power item on connect/disconnect
+  * final adjustments and fixes, update struct definitions, adjust documentation for autoreconnect features
+  * changes to handling of stale commands, reduced redundant info queries
+
+* kostalmodbus:
+
+  * Added minimum Python Version to metadata
+
+* lirc:
+
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+
+* mailrcv:
+
+  * update plugin.yaml
+
+* mailsend:
+
+  * now uses get_param_value and writes more debug output
+
+* mpd:
+
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+
+* mqtt:
+
+  * Bugfix for retain attribute in items
+
+* onewire:
+
+  * Fixes ValueError: cannot switch from automatic field numbering to manual field specification
+  * Fixes for some debug string formats
+  * should be able to run as multiinstance plugin now
+  * Log warning about unknown 1-wire device only once
+  * Added a further submodel of multisensor (xf7) for test purpose
+
+* pushover:
+
+  * Missing assignement to self.alive added in run() and stop()
+
+* rrd:
+
+  * fixes typo in plugin.yaml (as described in issue #386)
+  * added item overview to WebIF
+
+* rtr:
+
+  * update plugin.yaml
+
+* russound:
+
+  * fixes a str conversion bug in _decode()
+
+* shelly:
+
+  * Added documentation how to configure a shelly device for use with mqtt
+  * Addes item-structs for shellyplug and shellyplug-s
+  * sorted shelly Items in web interface
+  * Correction to display discovered shelly devices even if they are not configured in items
+
+* slack:
+
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+
+* smarttv:
+
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+
+* sml:
+
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+
+* snap7_logo:
+
+  * Dummy translation file added
+
+* sonos:
+
+  * Fixed proper plugin shutdown.
+  * Adapted plugin parameter handling to recommended get_parameter_value function.
+
+* squeezebox:
+
+  * struct tweaks and playstop optimize
+  * fix logging when having problems with connection
+  * re-fix stop and pause handling
+  * fix delay at plugin startup for sending commands
+
+* stateengine:
+
+  * cast values for evals correctly
+  * webinterface translation
+  * Improvement of struct definitions and documentation
+  * don't update manual item (for suspend) when change comes from stateengine plugin
+  * replace condition re.match by re.fullmatch to allow more specific conditionset regex
+  * change "original changed by" evaluation to "original updated by" (used for manual item check)
+  * fix cycle and crontab check at startup
+  * all schedulers are now correctly defined as smartplugin schedulers
+  * adjust crontab and cycle entries for SE item correctly
+
+* telegram:
+
+  * ids must be int, fixed some bugs, validate commands
+
+* visu_websocket:
+
+  * avoid error when monitor item does not exist
+  * Added command 'series_cancel' to websocket protocol
+
+* volkszaehler:
+
+  * update plugin.yaml
+
+* withings_health:
+
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+  * Changed plugin logo
+
+* wunderground:
+
+  * now uses get_param_value
+  * fixed scheduler.add to scheduler_add
+  * Removed instance parameter from metadata (is globally defined for MI plugins)
+
+* xiaomi_vac:
+
+  * enable segment clean
+  * updated struct definitions
+  * assign scheduler correctly to the plugin by using smartplugin method scheduler_add
+  * remove scheduler on stop method
+  * update_item only if plugin is alive
+
+* yamahayxc:
+
+  * updated struct definition with relativ item references
+  * fixed plugin.yaml
+
+* Several plugins:
+
+  * Changed README.md and other files to conform with new Sphinx / recommonmark versions
+
+
+Outdated Plugins
+----------------
+
+The following plugins were already marked in version v1.6 as *deprecated*. This means that the plugins
+are still working, but are not developed further anymore and are removed from the release of SmartHomeNG
+in the next release. User of these plugins should switch to corresponding succeeding plugins.
+
+* System Plugins
+
+  * sqlite - switch to the **database** plugin
+  * sqlite_visu2_8 - switch to the **database** plugin
+
+* Gateway Plugins
+
+  * tellstick - classic Plugin, not used according to survey in knx-user-forum
+
+* Interface Plugins
+
+  * netio230b - classic plugin, not used according to survey in knx-user-forum
+  * smawb - classic plugin, not used according to survey in knx-user-forum
+
+* Web Plugins
+
+  * alexa - switch to the **alexa4p3** plugin
+  * boxcar - classic Plugin, not used according to survey in knx-user-forum
+  * mail - switch to the **mailsend** and **mailrcv** plugin
+  * openenergymonitor - classic plugin, not used according to survey in knx-user-forum
+  * wunderground - the free API is not provided anymore by Wunderground
+
+
+The following plugins are marked as *deprecated* with SmartHomeNG v1.7, because neither user nor tester have been found:
+
+* Gateway Plugins
+
+  * ecmd
+  * elro
+  * iaqstick
+  * snom
+  * tellstick
+
+* Interface Plugins
+
+  * easymeter
+  * netio230b
+  * smawb
+  * vr100
+
+* Web Plugins
+
+  * boxcar
+  * nma
+
+Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecated*, because the new mqtt
+plugin takes over the functionality. This plugin is based on the mqtt module and the recent core.
+
+
+Documentation
+-------------
+
+* User Documentation
+
+  * fix of wrong description of knxd router setup in komplettanleitung
+  * Updated build process to work with actual versions of sphinx and recommonmark
+  * Reworked documentation to implement better navigation though sidebar
+  * Updates to sample plugins
+
+* Developer Documentation
+
+  * Updated build process to work with actual versions of sphinx and recommonmark

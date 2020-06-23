@@ -3,12 +3,15 @@
 .. index:: Webinterfaces; Administrations GUI
 .. index:: Webinterfaces; Administrations-Interface
 
-.. role:: bluesup
 .. role:: redsup
+.. role:: bluesup
+.. role:: darkbluesup
+.. role:: greensup
+.. role:: blacksup
 
 
-Administrations-Interface :bluesup:`Update`
-===========================================
+Administrations-Interface :greensup:`Update`
+============================================
 
 Seit SmartHomeNG v1.2 steht eine graphische Oberfläche zur Verfügung, die bei der Administration
 von SmartHomeNG hilft. Dazu implementiert SmartHomeNG einen eigenen Webserver, der in der Standardkonfiguration
@@ -59,7 +62,7 @@ nur, wenn das im Browser gespeicherte Token abläuft. Die Lebensdauer des Token 
    :hidden:
    :titlesonly:
 
-   systemeigenschaften
+   system
    dienste
    items
    logiken

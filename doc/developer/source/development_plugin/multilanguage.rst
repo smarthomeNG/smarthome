@@ -1,9 +1,13 @@
-.. index:: New; Multi-Language Support
+
+.. index:: Multi-Language Support
+.. index:: translations
 
 .. role:: redsup
+.. role:: bluesup
 
-Multi-Language Support
-======================
+========================================
+Multi-Language Support :bluesup:`Update`
+========================================
 
 This documentation is valid vor SmartHomeNG versions beyond v1.4.2. It does not work on v1.4.2
 and below.
@@ -12,10 +16,10 @@ Words or phrases in the webinterface can be marked for translation.
 
 
 Marking text for translation
-----------------------------
+============================
 
 1. In Jinja2 templates
-~~~~~~~~~~~~~~~~~~~~~~
+----------------------
 
 To mark a word or phrase for translation, it has to be part of a Jinja1 expression
 (it has to be included in ``{{ ... }}``).
@@ -42,15 +46,17 @@ constant string to be translated:
 
 
 2. In Python code
-~~~~~~~~~~~~~~~~~
+-----------------
 
 To mark a word or phrase for translation, the function translate of the plugin has to be called:
 
-``translated _text = self.translate('text')``
+.. code-block:: python
+
+   translated _text = self.translate('text')
 
 
 How translation works
----------------------
+=====================
 
 The translation is a multi-step process. The translation of the text (word/phrase) is:
 
@@ -63,12 +69,13 @@ The translation is a multi-step process. The translation of the text (word/phras
 
 The plugins' translation file is called **locale.yaml** and is stored in the plugin's directory.
 
-The global translation file, which holds translations (mostly for single words) that are used in
-several plugins,is called **locale.yaml** too and is stored in the **bin** directory of SmartHomeNG.
+The global translation file, which holds translations (mostly for single words) that are used by the core,
+by modules and/or in several plugins,is called **locale.yaml** too and is stored in the **bin** directory
+of SmartHomeNG.
 
 
 Adding translations/languages
------------------------------
+=============================
 
 In the translation files, for each text to be translated a dict structure is defined in the section
 ``plugin_translations:``:
@@ -91,5 +98,51 @@ Further languages can be added, using the appropriate language code, followed by
    plugin_translations:
        # Translations for the plugin specially for the web interface
        'Schließen':         {'de': '=', 'en': 'Close', 'fr': 'Fermer'}
+
+
+Using placeholders in translation strings :redsup:`Neu`
+=======================================================
+
+In the actual version of SmartHomeNG it is possible to use placeholders in translation strings. This makes it
+easier to translate complete sentences, since the structure of a sentence can differ from language to language.
+
+Translation strings can contain multiple placeholders. The placeholders and its values have to be defined as
+a Pyhon dict. The keys are the placeholders names anf the values specifiy the values to be inserted into the
+translation string.
+
+The following example shows translation strings that contain a placeholder for the **item_id**. The name of
+the placeholder must be surrounded by curly braces (with **no** spaces between the braces and the placeholder's
+name).
+
+.. code-block:: YAML
+   :caption: Example of a translation with a placeholder
+
+   plugin_translations:
+    'Löschauftrag für die Einträge von Item ID {item_id} in der Tabelle "log" wurde erfolgreich initiiert!':
+        'de': '='
+        'en': 'Deletion of data for the entries of item ID {item_id} in table "log" successfully initiated.'
+
+
+1. Defining placeholders in Jinja2 templates
+--------------------------------------------
+
+If you want a translation string (like in the example above) but you want to be flexible with the service name
+and don't want to define a seperate translation string for each service you handle (e.g. KNX, enOcean, ...)
+you can do it the following way:
+
+.. code-block:: html
+
+   <td class="py-1"><strong>{{ _('Service für den {service} Support', vars={'service': 'KNX'}) }}</strong></td>
+
+
+2. Defining placeholders in Python code
+---------------------------------------
+
+If a translation text contains placeholders, the self.translate method of a plugin has to be called with a
+second parameter, specifying the placeholder dict:
+
+.. code-block:: python
+
+   translated _text = self.translate('text', {'item_id', item.id()})
 
 

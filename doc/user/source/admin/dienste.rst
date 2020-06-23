@@ -12,8 +12,8 @@ Weiterhin kann der Status einiger von Plugins genutzter Dienste angesehen werden
 Rechner laufen wie SmartHomeNG selbst.
 
 
-Dienste
-=======
+Übersicht
+=========
 
 Auf diesem Tab können folgende Funktionen ausgelöst werden:
 

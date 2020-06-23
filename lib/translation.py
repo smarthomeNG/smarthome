@@ -20,7 +20,21 @@
 #########################################################################
 
 """
-This library implements the multi langugage support of SmartHomeNG.
+This library implements the multi language support of SmartHomeNG.
+
+It is used in
+  - lib.module
+  - lib.shtime
+  - lib.model.module
+  - lib.model.smartplugin
+
+The shortcut _(...) for translate(...) is defined in class SmartPluginWebIf()
+SmartPluginWebIf() which is defined in lib.model.smartplugin.py
+
+If is a replacement when rendering templates using Jinja2:
+
+    tplenv.globals['_'] = self.translate
+
 """
 
 import logging
@@ -168,7 +182,7 @@ def _get_translation(translation_lang, txt, additional_translations=None):
         if additional_translations in _translations.keys():
             translations = _translations[additional_translations].get(txt, {})
         else:
-            logger.error("Trying to use undefined aditional_translations '{}'".format(additional_translations))
+            logger.warning("Trying to use undefined aditional_translations '{}'".format(additional_translations))
 
     if translations == {}:
         if 'global' in _translations.keys():
@@ -181,11 +195,12 @@ def _get_translation(translation_lang, txt, additional_translations=None):
     return translations.get(translation_lang, None)
 
 
-def translate(txt, additional_translations=None):
+def translate(txt, vars= None, additional_translations=None):
     """
     Returns translated text
 
     :param txt: TEXT TO TRANSLATE
+    :param vars: dict with variables to replace in the translated text
     :param additional_translations: ID for additional translations (if None, only global translations are used)
 
     :return: Translated text
@@ -211,5 +226,16 @@ def translate(txt, additional_translations=None):
     if translated_txt == '=':
         translated_txt = txt
     logger.debug("Translation '{}' to '{}' -> '{}'".format(txt, _default_language, translated_txt))
+
+    if vars is not None:
+        # replace parameters in the translated text
+        if isinstance(vars, dict):
+            logger.info("translate: Trying to use parameters {} for string '{}'".format(vars, translated_txt))
+            try:
+                translated_txt = translated_txt.format(**vars)
+            except Exception as e:
+                logger.error("translate: Could not fill in variables {}. Exception: {}".format(vars, e))
+        else:
+            logger.error("translate: Invalid vars for string {} -> vars must be a dict".format(txt))
 
     return translated_txt

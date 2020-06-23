@@ -1,3 +1,4 @@
+:tocdepth: 1
 
 .. index:: Beispiele; Tipps & Tricks
 .. index:: Tipps & Tricks

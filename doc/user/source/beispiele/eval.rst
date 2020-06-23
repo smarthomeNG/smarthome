@@ -1,3 +1,4 @@
+:tocdepth: 1
 
 .. index:: eval_trigger; Beispiele
 .. index:: Beispiele; eval_trigger

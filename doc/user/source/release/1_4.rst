@@ -1,3 +1,5 @@
+:tocdepth: 1
+
 ===============================
 Release 1.4 - 17. Dezember 2017
 ===============================
@@ -8,20 +10,20 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 Unterstützte Python Versionen
 =============================
 
-Bitte beachten: Ab SmartHomeNG Release 1.4 wollen wir die aktive Unterstützung älterer Python 
-Versionen einstellen. Die älteste unterstützte Python Version wird dann Python 3.4 sein. 
+Bitte beachten: Ab SmartHomeNG Release 1.4 wollen wir die aktive Unterstützung älterer Python
+Versionen einstellen. Die älteste unterstützte Python Version wird dann Python 3.4 sein.
 (Siehe *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
 
-Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.4 nicht mehr unter älteren Python 
-Versionen läuft. Es bedeutet, dass SmartHomeNG nicht mehr mit älteren Python Versionen getestet 
+Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.4 nicht mehr unter älteren Python
+Versionen läuft. Es bedeutet, dass SmartHomeNG nicht mehr mit älteren Python Versionen getestet
 wird und das gemeldete Fehler mit älteren Python Versionen nicht mehr zu Buxfixen führen.
 
 
 Absolute minimum Python Versionen auf 3.3 angehoben
 ===================================================
 
-Die Minimum Python Version in der SmartHomeNG startet wurde von 3.2 auf 3.3 erhöht. Aufgrund 
-der größeren Änderungen zwischen Python 3.2 und 3.3 war es schon bisher problematisch SmartHomeNG 
+Die Minimum Python Version in der SmartHomeNG startet wurde von 3.2 auf 3.3 erhöht. Aufgrund
+der größeren Änderungen zwischen Python 3.2 und 3.3 war es schon bisher problematisch SmartHomeNG
 mit Plugins in eine Python 3.2 zum Laufen zu bringen.
 
 
@@ -34,7 +36,7 @@ Neue Funktionen im CORE
 
 * Ladbare Core Module:
 
-  * Module-Loader: Ermöglicht ladbare Module zur Erweiterung der Core Funktionalität. 
+  * Module-Loader: Ermöglicht ladbare Module zur Erweiterung der Core Funktionalität.
   * Der Module-Loader unterstützt die Prüfung der Parameter gegen Metadaten (analog zu den Plugins).
   * http-Modul: Ermöglicht Plugins selbst über CherryPy Webinterfaces zur Verfügung zu stellen
   * Rudimentäres Module API implementiert
@@ -109,7 +111,7 @@ Neue Plugins und Plugin-Erweiterungen
 * Blockly: Graphischer Logik Editor mit Integration in das Backend Plugin (noch Expermental)
 * WebServices Plugin, dass das neue Web-Interface nutzt
 * Nokia Health Plugin
-* AV Device: 
+* AV Device:
 
   * Änderung der txt Konfigurationsdatei (Achtung! Bestehende Dateien müssen aktualisiert werden!)
   * Unterstützt nun neben Pioneer AV Receivern auch die wichtigsten Funktionen von Denon AV-Geräten
@@ -148,7 +150,7 @@ Neue Plugins und Plugin-Erweiterungen
 
         * Full Screen Modus via F11
         * Automatische Anpassung an Browserfenster
-        * Autocomplete für Python Befehle und Item-Pfade 
+        * Autocomplete für Python Befehle und Item-Pfade
         * Optionale Zeilenumbrüche
 
       * Löschen von Logiken
@@ -191,7 +193,7 @@ Neue Plugins und Plugin-Erweiterungen
 * SMA Plugin prueft auf Bluetooth Support in Python um den Nutzer auf fehlende Unterstuetzung hinzuweisen
 * Enocean:
 
-  * Unterstützung für einfache Schalter (Protokoll D2-01-07), wie z.B. Peha d 451 fu-ebi pf o.t. nr. 00364476 
+  * Unterstützung für einfache Schalter (Protokoll D2-01-07), wie z.B. Peha d 451 fu-ebi pf o.t. nr. 00364476
   * Unterstützung für Eltako Heligkeitssensor (FAH60)
   * Lernmethoden restrukturiert und erweitert
 
@@ -199,7 +201,7 @@ Neue Plugins und Plugin-Erweiterungen
 * DLMS Plugin: Pruefsummenbehandlung wieder eingefuehrt/aktiviert
 * LIRCD Plugin: Neues Plugin um via lircd IR Kommandos zu verschicken
 * MPD Plugin: Unterstützung um Playlists zu laden und abzuspielen
-* Database-Plugin mit neuen Aggregatsfunktionen: 
+* Database-Plugin mit neuen Aggregatsfunktionen:
 
   * `sum` - Liefert summierte Werte über den abgefragten Zeitraum zurück
   * `count` - Liefert summierte Anzahl über den abgefragen Zeitraum zurück (kann mit einer Bedingung kombiniert werden z.B. `count>10`)
@@ -212,12 +214,12 @@ Neue Plugins und Plugin-Erweiterungen
   * Verbesserte Anzeige der **Category** Seite auf mobilen Endgeräten
   * Initialer Support für smartVISU v2.9 hinzugefügt
 
-* visu_websocket: 
+* visu_websocket:
 
   * Reagiert nun bei Logiken auf Änderungen an visu_acl ohne Neustart von SmartHomeNG
   * Protokollerweiterung für spätere smartVISU Versionen
- 
-  
+
+
 Entfernte Plugins
 -----------------
 

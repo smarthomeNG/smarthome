@@ -90,8 +90,10 @@ Nach der Konfigurationsänderung muß der ``owserver`` neu gestartet werden:
 SmartHomeNG Plugin konfigurieren
 ================================
 
-Damit das Onewire-Plugin von SmartHomeNG genutzt werden kann, muß in der
-**../etc/plugin.yaml** noch folgendes eingefügt werden:
+Die Konfiguration des Plugins erfolgt über das Admin Interface (Siehe Abschnitt Konfiguration).
+
+Alternativ kann die Konfiguration des Onewire-Plugin natürlich auch ber die Konfigurationsdatei
+**../etc/plugin.yaml** erfolgen. Dazu muss dort noch folgendes eingefügt werden:
 
 .. code-block:: yaml
 
@@ -101,4 +103,3 @@ Damit das Onewire-Plugin von SmartHomeNG genutzt werden kann, muß in der
       port: 4304
       cycle: 60  # update every minute
 
-Alternativ kann dazu natürlich auch das Admin Interface genutzt werden.

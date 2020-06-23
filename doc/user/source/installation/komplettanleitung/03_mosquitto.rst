@@ -23,8 +23,8 @@ Mosquitto installieren
 Ein populärer Open Source Broker ist **Eclipse Mosquitto™**. Die Installation dieses Brokers wird im folgenden beschrieben.
 Weitergehende Informationen zu dem Broker sind unter https://mosquitto.org zu finden.
 
-Mosquitto ist bei Debian Stretch im Standard Repository enthalten und kann daher einfach mit dem folgenden Kommando
-installiert werden:
+Mosquitto ist bei Debian seit dem Stretch-Release im Standard Repository enthalten und kann daher einfach mit
+dem folgenden Kommando installiert werden:
 
 .. code-block:: bash
 

@@ -6,16 +6,15 @@
 .. role:: redsup
 .. role:: bluesup
 
-=========================
-Module mqtt :redsup:`Neu`
-=========================
+===========
+Module mqtt
+===========
 
 Dieses Modul erlaubt es SmartHomeNG über das MQTT Protokoll zu kommunizieren. Es stellt ein einfach zu nutzendes
 Interface für Logiken und Plugins zur Verfügung. Dabei kann das mqtt Modul von mehreren Logiken und/oder Plugins
 gleichzeitig genutzt werden.
 
-- Informationen zur Nutzung in Logiken sind im Abschnitt :doc:`Logiken <../../logiken/mqtt_nutzung>` der Anwender
-  Dokumentation zu finden.
+- Informationen zur Nutzung in Logiken sind im Abschnitt **Logiken** der Anwender Dokumentation zu finden.
 - Informationen zur Nutzung in Plugins sind im Abschnitt **Development of Plugins** der Entwickler Dokumentation zu finden.
 
 Aktuell unterstützt das Modul MQTT bis zur Protokoll Version 3.1.1. Sobald das verwendete Python Package des Eclipse

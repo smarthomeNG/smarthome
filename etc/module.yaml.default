@@ -8,5 +8,6 @@ http:
 admin:
     module_name: admin
 
+#enable, if mqtt protocol is going to be used
 #mqtt:
 #    module_name: mqtt

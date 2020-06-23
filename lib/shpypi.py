@@ -69,6 +69,7 @@ class Shpypi:
 
         self.sh = sh
         if sh is None:
+            self.logger.debug("SmartHomeNG is None")
             if base:
                 self._sh_dir = base
                 self._error = False
@@ -76,6 +77,7 @@ class Shpypi:
             self._sh_dir = sh.get_basedir()    # anders bestimmen für tools/build_requirements.py
 
             self._error = False
+        self.logger.debug("SmartHomeNG is using '{}' as base directory".format(self._sh_dir))
         return
 
 
@@ -159,7 +161,7 @@ class Shpypi:
 
     def test_requirements(self, filepath, logging=True, hard_requirement=True):
         if logging:
-            self.logger.info("test_requirements: filepath '{}' is checked".format(filepath))
+            self.logger.info("test_requirements: filepath '{}' is being checked".format(filepath))
 
         req_dict = self.parse_requirementsfile(filepath)
         inst_dict = self.get_installed_packages()
@@ -270,24 +272,25 @@ class Shpypi:
         plugin_conf = shyaml.yaml_load(plugin_conf_basename + YAML_FILE, ordered=False)
 
         req_dict = {}
-        for plugin_instance in plugin_conf:
-            plugin_name = plugin_conf[plugin_instance].get('plugin_name', None)
-            class_path = plugin_conf[plugin_instance].get('class_path', None)
-            plugin = ''
-            if class_path:
-                if class_path.startswith('plugins.'):
-                    sp = class_path.split('.')
-                    if len(sp) == 2:
-                        plugin = sp[1]
-            if plugin == '' and plugin_name:
-                plugin = plugin_name
+        if plugin_conf is not None:
+            for plugin_instance in plugin_conf:
+                plugin_name = plugin_conf[plugin_instance].get('plugin_name', None)
+                class_path = plugin_conf[plugin_instance].get('class_path', None)
+                plugin = ''
+                if class_path:
+                    if class_path.startswith('plugins.'):
+                        sp = class_path.split('.')
+                        if len(sp) == 2:
+                            plugin = sp[1]
+                if plugin == '' and plugin_name:
+                    plugin = plugin_name
 
-            filename = os.path.join(plugins_dir, plugin, 'requirements.txt')
-            if not os.path.isfile(filename):
-                filename = ''
-            else:
-                if plugin != '':
-                    req_dict[plugin] = filename
+                filename = os.path.join(plugins_dir, plugin, 'requirements.txt')
+                if not os.path.isfile(filename):
+                    filename = ''
+                else:
+                    if plugin != '':
+                        req_dict[plugin] = filename
 
         self._conf_plugin_filelist = []
         for plugin in req_dict:
@@ -319,12 +322,20 @@ class Shpypi:
             print()
             print("Installing "+req_type_display+" requirements for the current user, please wait...")
 
-        pip_command = 'pip3'
+        if self.sh:
+            python_bin_path = os.path.split(self.sh.python_bin)[0]
+        else:
+            python_bin_path = os.path.split(os.environ['_'])[0]
+        pip_command = os.path.join(python_bin_path, 'pip3')
+        if not os.path.isfile(pip_command):
+            # to find the right pip command when using 'update-alternatives'
+            python_bin_path, python_bin_executable = os.path.split(os.__file__)
+            pip_command = os.path.join(python_bin_path[:python_bin_path.find('/lib')], 'bin', ('pip' + python_bin_path[-3:]))
         try:
             pip_command = self.sh._pip_command
             if logging:
                 self.logger.warning("PIP command read from smarthome.yaml: '{}'".format(pip_command))
-        except: pass
+        except: self.logger.warning("Using PIP command: '{}'".format(pip_command))
         self.logger.info('> '+pip_command+' install -r requirements/'+req_type+'.txt --user --no-warn-script-location')
 
         stdout, stderr = Utils.execute_subprocess(pip_command+' install -r requirements/'+req_type+'.txt --user --no-warn-script-location')
@@ -768,10 +779,43 @@ class Shpypi:
                 if self._compare_versions(pyversion, version, operator):
                     result_list.append(self._split_requirement_to_min_max(requirement[0]))
 
-        if len(result_list) > 1:
+        if len(result_list) > 2:
             # Hier sollten die Einträge noch konsolidiert werden
             # Vorübergehend: Eine Liste von dicts zurückliefern
             return result_list
+
+        if len(result_list) == 2:
+            result = {}
+
+            #consolidate minimum values (only '*' at the moment)
+            val0 = result_list[0].get('min', None)
+            val1 = result_list[1].get('min', None)
+            if  val0 is not None and val1 is not None:
+                # Consolidate minimum requirements
+                if val0 == '*':
+                    result['min'] = val1
+                elif val1 == '*':
+                    result['min'] = val0
+            elif val0 is None:
+                result['min'] = val1
+            elif val1 is None:
+                result['min'] = val0
+
+            #consolidate maximum values (only '*' at the moment)
+            val0 = result_list[0].get('max', None)
+            val1 = result_list[1].get('max', None)
+            if  val0 is not None and val1 is not None:
+                # Consolidate minimum requirements
+                if val0 == '*':
+                    result['max'] = val1
+                elif val1 == '*':
+                    result['max'] = val0
+            elif val0 is None:
+                result['max'] = val1
+            elif val1 is None:
+                result['max'] = val0
+
+            return result
 
         if len(result_list) == 0:
             return {}
@@ -900,6 +944,7 @@ class Requirements_files():
 
         self._conf_plugin_files = []
         self.sh_basedir = os.sep.join(os.path.realpath(__file__).split(os.sep)[:-2])
+        self.logger.debug("Requirements_files is using '{}' as base directory".format(self.sh_basedir))
         return
 
 
@@ -947,7 +992,7 @@ class Requirements_files():
             packaged['pkg'] = wrk[0].strip()
             if packaged['pkg'].startswith('#'):
                 continue
-            self.logger.debug("Req_files: - key: '{}', wrk = '{}', packaged = '{}'".format(key, wrk, packaged))
+            self.logger.debug("_build_packagelist: Req_files: - key: '{}', wrk = '{}', packaged = '{}'".format(key, wrk, packaged))
 
             pkg = key[len(packaged['pkg']):]
             if pkg.find(';') == -1:
@@ -992,14 +1037,27 @@ class Requirements_files():
 
 
     def _get_filelist(self, selection):
-
+        """
+        returns a list of files with all paths for a requirements.txt within a
+        certain selection subpath.
+        Currently selection is one of 'modules', 'lib', 'plugins'
+        When testing with travis the self.sh_basedir will be something like "/home/travis/build/<repo owner>/smarthome"
+        On a native Linux without specialities this is normally "/usr/local/smarthome"
+        When inspecting the plugins then all requirements.txt for previous plugin versions should be omitted from the list.
+        The names of previous plugins subdirectories start with "_pv"
+        """
+        self.logger.debug("_get_filelist for '{}'".format(selection))
         file_list = []
+        basedir_level = self.sh_basedir.count(os.sep)
         for root, dirnames, filenames in os.walk(self.sh_basedir + os.sep + selection):
             level = root.count(os.sep)
-            if level < 6:  # don't search for requirements in _pv (previous versions)
+            #self.logger.debug("level = {}: root = {}".format(level, root))
+            if (selection == "plugins" and "_pv" not in root) or (level < basedir_level + 3):
                 for filename in fnmatch.filter(filenames, 'requirements.txt'):
                     # print("level = {}: root = {}".format(level, root))
                     file_list.append(os.path.join(root, filename))
+                    self.logger.debug("found '{}'".format(os.path.join(root, filename)))
+        self.logger.debug("_get_filelist found '{}'".format(file_list))
         return file_list
 
 
@@ -1037,7 +1095,11 @@ class Requirements_files():
             for line in ifile:
                 if len(line.rstrip()) != 0:
                     #                self.setdefault(line.rstrip(), []).append('SmartHomeNG ' + package)
-                    requirements.setdefault(line.rstrip(), []).append(add_info + package)
+                    if add_info.endswith(' '):
+                        info = add_info + "'" + package + "'"
+                    else:
+                        info = add_info + package
+                    requirements.setdefault(line.rstrip(), []).append(info)
         return
 
 
@@ -1071,6 +1133,7 @@ class Requirements_files():
 
         # sort = <package>+<python-version req (if specified)+reqversion>
         packagelist_sorted = sorted(packagelist, key=lambda k: k['sort'])
+        self.logger.info("_consolidate_requirements: packagelist_sorted={}".format(packagelist_sorted))
 
         packagelist_consolidated = []
         self.logger.debug("Req_files: _consolidate_requirements: packagelist_sorted = '{}'".format(packagelist_sorted))
@@ -1117,9 +1180,19 @@ class Requirements_files():
                                   package_consolidated['req'][0][1] + ' is incompatible to ' + p['req'][0][0] + p['req'][0][
                                       1])
                             packagelist_consolidated.append(p)
-
                     elif p['req'][0][0] == '==':
                         print('p Gleichheit ' + package_consolidated['req'][0][1] + ' / ' + p['req'][0][1])
+                    elif package_consolidated['req'][0][0] == '':
+                        # if consolidated version has no special requirements
+                        self.logger.debug("_consolidate_requirements: package_consolidated requirement w/o version - pkg={}".format(package_consolidated['pkg']))
+                        # join list of plugins that use the package
+                        pl = package_consolidated['used_by']
+                        pl.extend(p['used_by'])
+                        p['used_by'] = pl
+                        packagelist_consolidated[idx] = p
+                        break
+
+
             else:
                 packagelist_consolidated.append(p)
 
@@ -1153,15 +1226,20 @@ class Requirements_files():
 
         filename = 'requirements' + os.sep + selection + '.txt'
         complete_filename = self.sh_basedir + os.sep + filename
-        with open(complete_filename, 'w') as outfile:
-            self._write_header(outfile, filename)
 
-            for pkg in packagelist_consolidated:
-                for req in pkg['used_by']:
-                    outfile.write('# {}\n'.format(req))
-                outfile.write('{}\n\n'.format(pkg['requests']))
+        if len(packagelist_consolidated) > 0:
+            with open(complete_filename, 'w') as outfile:
+                self._write_header(outfile, filename)
+
+                for pkg in packagelist_consolidated:
+                    for req in pkg['used_by']:
+                        outfile.write('# {}\n'.format(req))
+                    outfile.write('{}\n\n'.format(pkg['requests']))
+        else:
+            self.logger.error("_write_resultfile: packagelist_consolidated is empty".format())
 
         return complete_filename
+
 
     def set_conf_plugin_files(self, conf_plugin_filelist):
         self._conf_plugin_files = conf_plugin_filelist
@@ -1184,6 +1262,7 @@ class Requirements_files():
 
         # build list of all packages
         selection = selection.lower()
+        self.logger.debug("create_requirementsfile for '{}'".format(selection))
         self._build_filelists(selection)
 
         requirements = self.__read_requirementfiles()
@@ -1193,6 +1272,9 @@ class Requirements_files():
 
         # consolidate requirements
         packagelist_consolidated = self._consolidate_requirements(packagelist)
+
+        self.logger.info("create_requirementsfile: selection={}, packagelist={}".format(selection, packagelist))
+        self.logger.info("create_requirementsfile: selection={}, packagelist_consolidated={}".format(selection, packagelist_consolidated))
 
         return self._write_resultfile(selection, packagelist_consolidated, requirements)
 

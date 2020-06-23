@@ -20,8 +20,8 @@
 
 .. role:: bluesup
 
-Standard Attribute :bluesup:`update`
-====================================
+Standard Attribute
+==================
 
 
 In SmartHomeNG werden eine Reihe von Standard Attributen unterstützt. Diese sind in der folgenden
@@ -48,9 +48,13 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                 | Logik oder Eval-Funktion). **Ab SmartHomeNG v1.3** werden die                          |
 |                 | Konfigurationsmöglichkeiten erweitert (siehe Beschreibung unten).                      |
 +-----------------+----------------------------------------------------------------------------------------+
-| enforce_updates | Wenn das Attribut auf 'Yes' gesetzt wird, führt jede Wertzuweisung ans Item            |
+| enforce_updates | Wenn das Attribut auf **True** gesetzt wird, führt jede Wertzuweisung ans Item         |
 |                 | dazu, das abhängige Logiken und item Evaluationen getriggert werden, auch              |
 |                 | wenn sich der Wert des Items bei der Zuweisung nicht ändert.                           |
++-----------------+----------------------------------------------------------------------------------------+
+| enforce_change  | Wenn das Attribut auf **True** gesetzt wird, führt jede Wertzuweisung ans Item         |
+|                 | dazu, dass ein Update (keine Wertänderung) wie ein Change verarbeitet wird. Es werden  |
+|                 | die Attribute *changed_by*, *last_change*, etc. aktualisiert.                          |
 +-----------------+----------------------------------------------------------------------------------------+
 | eval            | eval legt einen Ausdruck fest, nach dem der Wert des Items berechnet wird. Mit         |
 |                 | eval_trigger wird festgelegt, wann eine (Neu)berechnung erfolgt (siehe Beschreibung    |
@@ -115,6 +119,7 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
    crontab
    cycle
    enforce_updates
+   enforce_change
    eval
    on_update
    struct

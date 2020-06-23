@@ -28,8 +28,6 @@ import threading
 import collections
 import re
 
-logger = logging.getLogger('')
-
 
 class Database():
     """A database abstraction layer based on DB-API2 specification.
@@ -46,6 +44,8 @@ class Database():
     'fetchone()' - execute statement and return first row from result
     'fetchall()' - execute statement and reeturn all rows from result
     'cursor()' - create a cursor object to execute multiple statements
+    'commit()' - commit a transaction (if the selcted database supports it)
+    'rollback()' - rollback a transaction (if the selcted database supports it)
     'lock()' - acquire the database lock (prevent simultaneous reads/writes)
     'release()' - release the database lock
     'verify()' - check database connection and reconnect if required
@@ -131,7 +131,7 @@ class Database():
         if the database structure is up to date) and logging.
 
         Use the 'dbapi' parameter to specify the DB-API2 module of the
-        database type to use (e.g. import the sqlite3 module and pass it 
+        database type to use (e.g. import the sqlite3 module and pass it
         directly as parameter or as name 'sqlite3').
 
         How the database is accessed is specified by the 'connect' parameter
@@ -142,21 +142,26 @@ class Database():
         The 'formatting' parameter can be used to specify a different type
         of formatting (see DB-API spec) which defaults to 'pyformat'.
         """
+        self.logger = logging.getLogger(__name__)
+
         self._name = name
         self._dbapi = dbapi
         self._format_input = formatting
         self._connected = False
         self._conn = None
 
+        self.api_initialized = False
+
         if type(dbapi) is str:
             try:
                 self._dbapi = __import__(dbapi)
             except ImportError as e:
-                logger.error("DB-API import failed for \"{}\": {} - module installed?".format(dbapi, e))
-                raise
+                self.logger.error("DB-API import failed for \"{}\": {} - module installed?".format(dbapi, e))
+                return
 
         if self._format_input not in self._styles:
-            raise Exception("Database [{}]: SQL format style {} not supported (only {})".format(self._name, self._format_input, self._styles))
+            self.logger.error("Database [{}]: SQL format style {} not supported (only {})".format(self._name, self._format_input, self._styles))
+            return
 
         self._params = {}
 
@@ -181,12 +186,16 @@ class Database():
 
         self._format_output = self._dbapi.paramstyle
         if self._format_output not in self._styles:
-            raise Exception("Database [{}]: DB-API driver format style {} not supported (only {})".format(self._name, self._format_output, self._styles))
+            self.logger.error("Database [{}]: DB-API driver format style {} not supported (only {})".format(self._name, self._format_output, self._styles))
+            return
 
         self._translation = self._translations[self._format_input][self._format_output]
         self._translation_param_type = self._translation_param_types[self._format_output]
 
         self._fdb_lock = threading.Lock()
+
+        self.api_initialized = True
+        return
 
     def connect(self):
         """Connects to the database"""
@@ -194,12 +203,12 @@ class Database():
         try:
             self._conn = self._dbapi.connect(**self._params)
         except Exception as e:
-            logger.error("Database [{}]: Could not connect to the database: {}".format(self._name, e))
+            self.logger.error("Database [{}]: Could not connect to the database: {}".format(self._name, e))
             raise
         finally:
             self.release()
         self._connected = True
-        logger.info("Database [{}]: Connected with {} using \"{}\" style".format(self._name, self._conn, self._format_output))
+        self.logger.info("Database [{}]: Connected with {} using \"{}\" style".format(self._name, self._conn, self._format_output))
 
     def close(self):
         """Closes the database connection"""
@@ -244,13 +253,13 @@ class Database():
             if version == None:
                version = 0
         except Exception as e:
-            logger.info("Missing table " + version_table + " error can be ignored, will be created now!");
+            self.logger.info("Missing table " + version_table + " error can be ignored, will be created now!");
             self.execute("CREATE TABLE " + version_table + "(version NUMERIC, updated BIGINT, rollout TEXT, rollback TEXT)", cur=cur)
             version = 0
-        logger.info("Database [{}]: Version {} found".format(self._name, version))
+        self.logger.info("Database [{}]: Version {} found".format(self._name, version))
         for v in sorted(queries.keys()):
             if float(v) > version:
-                logger.info("Database [{}]: Upgrading to version {}".format(self._name, v))
+                self.logger.info("Database [{}]: Upgrading to version {}".format(self._name, v))
                 self.execute(queries[v][0], cur=cur)
 
                 dt = datetime.datetime.utcnow()
@@ -302,7 +311,7 @@ class Database():
         try:
             stmt, args = self._prepare(stmt, params, formatting)
         except Exception as e:
-            logger.error("Can not prepare query: {} (args {}): {}".format(stmt, params, e))
+            self.logger.error("Can not prepare query: {} (args {}): {}".format(stmt, params, e))
             raise
 
         c = None
@@ -316,7 +325,7 @@ class Database():
                 result = cur.execute(stmt, args)
             return result
         except Exception as e:
-            logger.error("Can not execute query: {} (args {}): {}".format(stmt, args, e))
+            self.logger.error("Can not execute query: {} (args {}): {}".format(stmt, args, e))
             raise
         finally:
             if c is not None:
@@ -351,7 +360,7 @@ class Database():
                     self.release()
 
             except Exception as e:
-                logger.warning("Database [{}]: Connection error {}".format(self._name, e))
+                self.logger.warning("Database [{}]: Connection error {}".format(self._name, e))
                 if locked:
                     self.release()
                 self.close()

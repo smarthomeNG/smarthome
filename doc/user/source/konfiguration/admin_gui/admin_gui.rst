@@ -4,9 +4,9 @@
 .. role:: bluesup
 .. role:: redsup
 
-========================================
-Konfiguration über die GUI :redsup:`Neu`
-========================================
+==========================
+Konfiguration über die GUI
+==========================
 
 SmartHomeNG kann vollständig über die graphische Oberfläche konfiguriert werden. Für einen Teil der Konfiguration stehen
 Dialoge zur Verfügung, die Erläuterungen zu den einzelnen Einstellungen geben und evtl. vorhandene Standardwerte

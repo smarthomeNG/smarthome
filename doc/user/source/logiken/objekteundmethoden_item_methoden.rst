@@ -1,9 +1,10 @@
 
 .. role:: bluesup
+.. role:: redsup
 
-###########################################
-Item Methoden :bluesup:`update`
-###########################################
+=============
+Item Methoden
+=============
 
 Die grundsätzlichen Methoden, die jedes Item hat, sind unter **Items** beschrieben. Darüber
 hinaus stehen die nachfolgend beschrieben Methoden zum Handling von Items zur Verfügung.
@@ -20,7 +21,7 @@ genutzt werden:
 Nun können folgende Funktionen aufgerufen werden:
 
 return_item(path)
-^^^^^^^^^^^^^^^^^
+=================
 
 Liefert das Item Objekt für den angegebenen Pfad zurück.
 
@@ -30,7 +31,7 @@ Liefert das Item Objekt für den angegebenen Pfad zurück.
 
 
 return_items()
-^^^^^^^^^^^^^^
+==============
 
 Liefert sämtliche definierten Item Objekte zurück.
 
@@ -41,7 +42,7 @@ Liefert sämtliche definierten Item Objekte zurück.
 
 
 match_items(regex)
-^^^^^^^^^^^^^^^^^^
+==================
 
 Liefert alle Items zurück, die der Regular Expression, dem Pfad und dem optionalen Attribut entsprechen.
 
@@ -57,7 +58,7 @@ Liefert alle Items zurück, die der Regular Expression, dem Pfad und dem optiona
 
 
 find_items(configattribute)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+===========================
 
 In Abhängigkeit von ``configattribute`` werden wie folgt Items zurückgeliefert:
 
@@ -80,7 +81,7 @@ In Abhängigkeit von ``configattribute`` werden wie folgt Items zurückgeliefert
 
 
 find_children(parentitem, configattribute)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==========================================
 
 Diese Funktion liefert ausgehend vom Item ``parentitem`` alle Items mit passendem
 ``configattribute``. Dabei wird die Suche nach dem Attribut exakt so ausgeführt wie

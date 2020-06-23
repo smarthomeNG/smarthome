@@ -93,7 +93,7 @@ class Orb():
         # Limit degree offset to the highest or lowest possible for the given date
         doff = max(doff, max_altitude + 0.00001) if doff < 0 else min(doff, max_altitude - 0.00001) if doff > 0 else doff
         if not originaldoff == doff:
-            logger.warning("Had to truncate the degree offset to {} as the sun never goes "
+            logger.info("Had to truncate the degree offset to {} as the sun never goes "
                            "below/above the given value {}.".format(doff, originaldoff))
         return doff
 

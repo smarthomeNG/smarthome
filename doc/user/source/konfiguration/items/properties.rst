@@ -5,8 +5,8 @@
 .. role:: redsup
 
 
-Properties eines Items :bluesup:`update`
-========================================
+Properties eines Items
+======================
 
 Jedes definierte Item bietet die folgenden Properties an, die unter anderem in **eval** Ausdrücken
 genutzt werden können. Alle Properties sind zumindest lesend (r/o) zugreifbar. Einige Properties können

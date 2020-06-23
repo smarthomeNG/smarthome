@@ -71,7 +71,7 @@ import lib.shyaml as shyaml
 from lib.shtime import Shtime
 
 import lib.utils
-from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_CACHE, KEY_CYCLE, KEY_CRONTAB, KEY_EVAL,
+from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE, KEY_CACHE, KEY_CYCLE, KEY_CRONTAB, KEY_EVAL,
                            KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_TYPE, KEY_STRUCT,
                            KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM, KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE,
                            KEY_LOG_CHANGE, KEY_THRESHOLD, CACHE_FORMAT, CACHE_JSON, CACHE_PICKLE,
@@ -616,6 +616,7 @@ class Item():
         self._crontab = None
         self._cycle = None
         self._enforce_updates = False
+        self._enforce_change = False
         self._eval = None				    # -> KEY_EVAL
         self._eval_unexpanded = ''
         self._eval_trigger = False
@@ -696,7 +697,7 @@ class Item():
                     setattr(self, '_' + attr, value)
                 elif attr in [KEY_EVAL]:
                     self._process_eval(value)
-                elif attr in [KEY_CACHE, KEY_ENFORCE_UPDATES]:  # cast to bool
+                elif attr in [KEY_CACHE, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE]:  # cast to bool
                     try:
                         setattr(self, '_' + attr, _cast_bool(value))
                     except:
@@ -1127,6 +1128,32 @@ class Item():
 
             if isinstance(value, bool):
                 self._item._enforce_updates = value
+                return
+            else:
+                self._type_error('non-boolean')
+                return
+
+
+        @property
+        def enforce_change(self):
+            """
+            Property: enforce_change
+
+            Available in SmartHomeNG v1.6 and above
+
+            :param value: enforce_change state of the item
+            :type value: bool
+
+            :return: enforce_change state of the item
+            :rtype: bool
+            """
+            return self._item._enforce_change
+
+        @enforce_change.setter
+        def enforce_change(self, value):
+
+            if isinstance(value, bool):
+                self._item._enforce_change = value
                 return
             else:
                 self._type_error('non-boolean')
@@ -2336,7 +2363,7 @@ class Item():
         self.__last_update = self.shtime.now()
         self.__updated_by = "{0}:{1}".format(caller, source)
         trigger_source_details = self.__updated_by
-        if value != self._value:
+        if value != self._value or self._enforce_change:
             _changed = True
             self.__prev_value = self.__last_value
             self.__last_value = self._value

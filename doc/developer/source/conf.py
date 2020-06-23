@@ -17,6 +17,7 @@ for i in sys.path:
     print(i)
 
 import bin.shngversion as shngversion
+import plugins as pluginsversion
 
 import datetime
 now = datetime.datetime.now()
@@ -38,17 +39,18 @@ extensions = [
   'sphinx.ext.todo',
   'sphinx.ext.ifconfig',
   'sphinx.ext.viewcode',
-  'sphinx.ext.githubpages' ]
+  'sphinx.ext.githubpages',
+  'recommonmark']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
 from recommonmark.parser import CommonMarkParser
 
-source_parsers = { '.md': CommonMarkParser }
+# deprecated: source_parsers = { '.md': CommonMarkParser }
 
 # The suffix of source filenames.
-source_suffix = ['.md','.rst']
+# deprecated: source_suffix = ['.md','.rst']
 
 # The encoding of source files.
 source_encoding = 'utf-8-sig'
@@ -134,7 +136,8 @@ pygments_style = 'sphinx'
 # -- Options for HTML output ---------------------------------------------------
 
 def setup(app):
-    app.add_stylesheet('custom.css')
+    # deprecated in Sphinx 4: app.add_stylesheet('custom.css')
+    app.add_css_file('custom.css')
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.

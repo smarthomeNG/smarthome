@@ -83,10 +83,17 @@ if [ "$?" == "1" ]; then
   echo Vor Ausführung dieses Skriptes zum Erstellen der $ACCOUNT/$REPO Doku
   echo \(branch $DESTBRANCH\), bitte prüfen ob Sphinx installiert ist.
   echo
+  echo Die Installation folgender Pakete ist notwendig:
+  echo
+  echo -e "\t Sphinx (Version >= 3.0)"
+  echo -e "\t sphinx_rtd_theme"
+  echo -e "\t recommonmark (Version >= 0.6.0)"
+  echo -e "\t ruamel.yaml (passend zur Python Version)"
+  echo
   echo Die Installation von Sphinx kann mit folgendem Kommando durchgeführt werden:
   echo
-  echo -e "\t $ sudo pip3 install sphinx sphinx_rtd_theme recommonmark"
-  echo -e "\t $ sudo pip3 install 'ruamel.yaml>=0.13.7,<=0.15'"
+  echo -e "\t $ cd /usr/local/smarthome/doc"
+  echo -e "\t $ pip3 install -r requirements.txt"
   echo
   exit
 fi

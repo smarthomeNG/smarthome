@@ -8,10 +8,6 @@
 Komplettanleitung
 =================
 
-
-Ziel dieser Anleitung
-=====================
-
 Diese Anleitung beschreibt eine komplette Installation von **SmartHomeNG v1.7** auf
 einem Linuxsystem mit Debian 10 (Buster).
 

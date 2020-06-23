@@ -5,9 +5,9 @@
 .. role:: bluesup
 .. role:: redsup
 
-==========================================
-SmartHomeNG installieren :bluesup:`update`
-==========================================
+========================
+SmartHomeNG installieren
+========================
 
 SmartHomeNG ist eine in Python erstellte Anwendung. Daher muss bevor SmartHomeNG genutzt werden kann,
 Python installiert werden. Außerdem muß der git Client installert werden, um SmartHomeNG von Github
@@ -29,13 +29,12 @@ Zunächst müssen einige zusätzlichen Pakete installiert werden:
    sudo apt-get install python3-pip
 
 
-.. admonition:: Folgendes ist vor dem Release noch zu prüfen
-
-    Dann sollte Pythons Paketmanager PIP auf den neuesten Stand gebracht werden:
+    Dann sollte evtl. noch Pythons Paketmanager PIP auf den neuesten Stand gebracht werden. Die installierte
+    Version von PIP sollte jedoch bereits ausreichend sein:
 
     .. code-block:: bash
 
-       sudo python3 -m pip install --upgrade pip
+       python3 -m pip install --upgrade pip
 
 
 SmartHomeNG Quellcode laden

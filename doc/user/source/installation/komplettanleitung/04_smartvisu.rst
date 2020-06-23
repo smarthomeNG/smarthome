@@ -138,6 +138,6 @@ Mischung von generierten und manuell erstellten Seiten
 ------------------------------------------------------
 
 Es ist möglich automatisch generierte und manuell erstellte Seiten zu mischen. Das Vorgehen hierzu ist
-in unter :doc:`/visualisierung/visu_partlyauto` und in der
+in unter :doc:`Visualisierung </visualisierung/visualisierung>` und in der
 :doc:`Dokumentation des Plugins </plugins/visu_smartvisu/user_doc>` beschrieben.
 

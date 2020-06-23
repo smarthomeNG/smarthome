@@ -7,7 +7,7 @@ This module allows plugins to implement a web interface. The API is described be
 
 ## Requirements
 
-This module is running under SmmartHomeNG versions beyond v1.3. It requires Python >= 3.4 as well as the lib **cherrypy**. You can install the libraries (python modules) with:
+This module is running under SmartHomeNG versions beyond v1.3. It requires Python >= 3.4 as well as the lib **cherrypy**. You can install the libraries (python modules) with:
 
 ```
 (sudo apt-get install python-cherrypy)

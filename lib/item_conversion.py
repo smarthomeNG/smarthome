@@ -56,7 +56,7 @@ store_raw_output = False			# Only for testing, otherwise False
 def is_ruamelyaml_installed():
 
     return RUAMEL_YAML_INSTALLED
-    
+
 
 # ==================================================================================
 #   config loader from config.py modified for parsing to yaml
@@ -86,7 +86,7 @@ def parse_for_convert(filename=None, conf_code=None, config=None):
     offset = 0
     lastline_was_comment = False
     last_comment_nr = 0
-    
+
     if filename != None:
         print("- parsing '{}'".format(os.path.basename(filename)), end="")
         with open(filename, 'r', encoding='UTF-8') as f:
@@ -95,15 +95,15 @@ def parse_for_convert(filename=None, conf_code=None, config=None):
         lines = conf_code.splitlines()
     else:
         return config
-    
+
     linenu = 0
     parents = collections.OrderedDict()
     parent = collections.OrderedDict()
-    if 1 == 1:    
+    if 1 == 1:
         for raw in lines:
             linenu += 1
             line = raw.lstrip('\ufeff')  # remove BOM
-            
+
             multiline = []
             if line.rstrip().endswith('\\'):
                 i = 0
@@ -155,8 +155,8 @@ def parse_for_convert(filename=None, conf_code=None, config=None):
                         item['comment'] = _handle_multiline_string(_strip_quotes(comment))
                         last_comment_nr = 0
                     lastline_was_comment = True
-                
-            if line is '':
+
+            if line == '':
                 continue
             if line[0] == '[':  # item
                 lastline_was_comment = False
@@ -276,7 +276,7 @@ def _yaml_save_roundtrip(filename, data):
     sdata = '\n'.join(rdata)
     if sdata[0] == '\n':
         sdata =sdata[1:]
-    
+
     with open(filename+'.yaml', 'w') as outfile:
         outfile.write( sdata )
 
@@ -285,7 +285,7 @@ def _yaml_save_roundtrip(filename, data):
 def yaml_save(filename, data):
     """
     ***Converter Special ***
-    
+
     Save contents of an OrderedDict structure to a yaml file
 
     :param filename: name of the yaml file to save to
@@ -307,7 +307,7 @@ def yaml_save(filename, data):
 def convert_yaml(data):
     """
     ***Converter Special ***
-    
+
     Convert data structure to yaml format
 
     :param data: OrderedDict to convert
@@ -327,29 +327,29 @@ def convert_yaml(data):
 def _format_yaml_dump(data):
     """
     ***Converter Special ***
-    
+
     Format yaml-dump to make file more readable
     (yaml structure must be dumped to a stream before using this function)
     | Currently does the following:
     | - Add an empty line before a new item
 
     :param data: string to format
-    
+
     :return: formatted string
     """
 
     data = data.replace('\n\n', '\n')
     ldata = data.split('\n')
     rdata = []
-    
+
     for index, line in enumerate(ldata):
-        if len(line) > 0: 
+        if len(line) > 0:
             # Handle inline-comments from converter
             if line.find('##') > -1 and line.find(": '") > -1 and line[-1:] == "'":
                 line = line.replace('##', '#')
                 line = line.replace(": '", ": ")
                 line = line[:-1]
-            
+
             # Handle comments from converter
             if line.find('comment') > -1 and line.find(':') > line.find('comment'):
 #                print('comment-line>', line, '<')
@@ -365,24 +365,24 @@ def _format_yaml_dump(data):
                 line = " "*indent + '# ' + line[line.find("|\\n")+3:]
                 line = line.replace('>**<', '')
                 line = line.replace('\\n', '\n'+" "*indent + '# ')
-                
+
             # Handle newlines for multiline string-attributes ruamel.yaml
             if line.find(': "|') > -1 and line[-1:] == '"' and line.find('\\n') > -1:
                 indent = len(line) - len(line.lstrip(' ')) + indent_spaces
                 line = line[:-1]
                 line = line.replace(': "|', ': |')
                 line = line.replace('\\n', '\n'+" "*indent)
-                
+
         rdata.append(line)
 
-    
+
     ldata = rdata
     rdata = []
     for index, line in enumerate(ldata):
         if len(line.lstrip()) > 0 and  line.lstrip()[0] == '#' and ldata[index+1][-1:] == ':':
             rdata.append('')
             rdata.append(line)
-        
+
         # Insert empty line before section (key w/o a value)
         elif line[-1:] == ':':
             if not (len(ldata[index-1].lstrip()) > 0 and ldata[index-1].lstrip()[0] == '#'):
@@ -399,7 +399,7 @@ def _format_yaml_dump(data):
     if fdata[0] == '\n':
         fdata = fdata[1:]
     return fdata
-        
+
 
 def _ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
     """
@@ -409,7 +409,7 @@ def _ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
     :param stream: stream to write to
     :param Dumper: yaml-dumper to use
     :**kwds: Additional keywords
-    
+
     :return: OrderedDict structure
     """
 

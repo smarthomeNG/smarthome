@@ -4,9 +4,9 @@
 .. role:: redsup
 .. role:: bluesup
 
-==================================================
-Update von einer älteren Version :bluesup:`update`
-==================================================
+================================
+Update von einer älteren Version
+================================
 
 Es kann verschiedene Szenarien geben von denen aus man ein Update machen möchte. Es gibt unterschiedliche Ansätze
 wenn es sich um eine Virtuelle Maschine handelt oder wenn ein Raspberry Pi upgedated werden soll. Es gibt hier

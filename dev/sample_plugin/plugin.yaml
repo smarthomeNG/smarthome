@@ -15,6 +15,8 @@ plugin:
     version: 1.7.1                  # Plugin version (must match the version specified in __init__.py)
     sh_minversion: 1.5              # minimum shNG version to use this plugin
 #    sh_maxversion:                 # maximum shNG version to use this plugin (leave empty if latest)
+#    py_minversion: 3.6             # minimum Python version to use for this plugin
+#    py_maxversion:                 # maximum Python version to use for this plugin (leave empty if latest)
     multi_instance: False           # plugin supports multi instance
     restartable: unknown
     classname: SamplePlugin         # class containing the plugin

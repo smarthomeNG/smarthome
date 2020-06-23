@@ -4,9 +4,9 @@
 .. role:: redsup
 .. role:: bluesup
 
-========================================================
-Konfiguration Sichern und Wiederherstellen :redsup:`neu`
-========================================================
+==========================================
+Konfiguration Sichern und Wiederherstellen
+==========================================
 
 .. index:: Backup; Kommandozeile
 .. index:: Sichern; Kommandozeile

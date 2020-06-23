@@ -95,7 +95,7 @@ class Modules():
             logger.debug("Modules, section: {}".format(module))
             module_name, self.meta = self._get_modulename_and_metadata(module, _conf[module])
             if module_name != '' and self.meta is not None:
-                if self.meta.test_shngcompatibility():
+                if self.meta.test_shngcompatibility() and self.meta.test_pythoncompatibility():
                     args = self._get_conf_args(_conf[module])
                     classname, classpath = self._get_classname_and_classpath(_conf[module], module_name)
                     if not self._test_duplicate_configuration(module, classname):

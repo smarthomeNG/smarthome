@@ -1,5 +1,5 @@
 .. index:: Modules; admin
-.. index:: Adminnistration Interface; admin Module
+.. index:: Administration Interface; admin Module
 
 .. role:: redsup
 .. role:: bluesup
@@ -9,6 +9,12 @@ Module admin
 
 This module implements a graphical administration interface for SmartHomeNG plugins.
 
+
+.. module:: modules.admin
+    :noindex:
+
+.. module:: modules.admin.rest
+    :noindex:
 
 .. automodule:: modules.admin
     :members:

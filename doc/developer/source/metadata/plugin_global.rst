@@ -26,8 +26,10 @@ The global metadata section ``plugin:`` has the following keys:
     #    support: https://knx-user-forum.de/forum/supportforen/smarthome-py      # url of the support thread or forum
 
         version: 1.4.3
-        sh_minversion: 1.3a
+        sh_minversion: 1.7           # minimum shNG version to use this plugin (leave empty if no special requirement)
     #    sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)
+    #    py_minversion: 3.6          # minimum Python version needed for this plugin (leave empty if no special requirement)
+    #    py_maxversion:              # maximum Python version to use this plugin (leave empty if no special requirement)
         multi_instance: true        # plugin supports multi instance (if not specified, False is assumed)
 
         classname: <plugin_class>   # Name of the class that implements the plugin
@@ -46,6 +48,8 @@ Description of the keys in the section ``plugin:``
     - **version:** Version number of the plugin. It is checked against the version number defined in the Python source code
     - **sh_minversion:** Minimum SmartHomeNG version this plugin is compatible with. If *sh_minversion* is left empty, SmartHomeNG assumes that the plugin is compatible with every version of SmartHomeNG [Test not yet implemented]
     - **sh_maxversion:** Maximum SmartHomeNG version this plugin is compatible with (or empty, if compatible with the actual version of SmartHomeNG) [Test not yet implemented]
+    - **py_minversion:** Minimum Python version this plugin is compatible with. If *py_minversion* is left empty, SmartHomeNG assumes that the plugin is compatible with every older Python version
+    - **py_maxversion:** Maximum Python version this plugin is compatible with (or empty, if compatible with the actual version of Python)
     - **multi_instance:** Is the plugin multi-instance capable?
     - **restartable:** Is the plugin restartable?  (valid entries are: **True**, ** **False**, **unknown**)
     - **classname:** Name of the Python class to initialize (the class that implements the plugin)

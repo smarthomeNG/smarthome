@@ -31,20 +31,23 @@ LINKS="smarthome/plugins/plugins"
 
 # Get the current repository which is processed
 REPOSITORY="$(basename $TRAVIS_REPO_SLUG)"
+REPO_OWNER="$(dirname  $TRAVIS_REPO_SLUG)"
 REPOSITORY_ORIGIN="$REPOSITORY_ORIGIN"
 
 # Find out on which branch to work
-if [ "$TRAVIS_BRANCH" = "master" ] ; then
-  REPOSITORY_BRANCH="master"
-else
-  REPOSITORY_BRANCH="develop"
-fi
+#if [ "$TRAVIS_BRANCH" = "master" ] ; then
+#  REPOSITORY_BRANCH="master"
+#else
+#  REPOSITORY_BRANCH="develop"
+#fi
 
+REPOSITORY_BRANCH=$TRAVIS_BRANCH
+echo -e "Current branch for $REPOSITORY is $REPOSITORY_BRANCH"
 
 #######################################################################
 # 1. Checkout all repositories
 
-echo -e "travis_fold:start:Checkout\nChecking out repositories with $REPOSITORY_BRANCH branch"
+echo -e "travis_fold:start:Checkout\nChecking out additional repositories with $REPOSITORY_BRANCH branch"
 
 # Change to root directory since script is started in checkout
 cd $TRAVIS_BUILD_DIR/..
@@ -53,7 +56,7 @@ cd $TRAVIS_BUILD_DIR/..
 for REPO in $REPOSITORIES ; do
   if [ "$REPO" != "$REPOSITORY_ORIGIN" ] ; then
     echo "Checking out $REPO ..."
-    git clone https://github.com/smarthomeNG/$REPO.git $REPO
+    git clone https://github.com/$REPO_OWNER/$REPO.git $REPO
     cd $REPO
     git checkout $REPOSITORY_BRANCH
     cd ..

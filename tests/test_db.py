@@ -23,8 +23,10 @@ class TestDbTests(unittest.TestCase, TestDbBase):
         self.db(paramstyle='pyformat')
 
     def test_paramstyle_not_supported(self):
-        with self.assertRaisesRegex(Exception, 'driver format style .* not supported'):
-            self.db(paramstyle='wrongformat')
+#        with self.assertRaisesRegex(Exception, 'driver format style .* not supported'):
+#            self.db(paramstyle='wrongformat')
+        test_db = self.db(paramstyle='wrongformat') # 'driver format style .* not supported'
+        self.assertFalse(test_db.api_initialized)
 
     def test_connect(self):
         db = self.db(connect='host:server | user:username | password:secret')

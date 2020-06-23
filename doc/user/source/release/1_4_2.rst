@@ -1,3 +1,5 @@
+:tocdepth: 1
+
 ==============================
 Release 1.4.2 - 2. Januar 2018
 ==============================
@@ -19,7 +21,7 @@ Neue Funktionen im CORE
   * Attribut **update_by** hinzugefügt
   * Initialisierung von prev_update und prev_change für Items mit gecachetem Value korrigiert
 
-* Scenes: 
+* Scenes:
 
   * Bugfix: Fehler beim Start von SmartHomeNG abgefangen, wenn noch keine gelernten Werte gespeichert worden waren.
 

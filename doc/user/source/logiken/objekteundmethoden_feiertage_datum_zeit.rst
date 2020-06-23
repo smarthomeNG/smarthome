@@ -9,8 +9,8 @@
 .. role:: bluesup
 .. role:: redsup
 
-Feiertage, Daten und Zeiten :redsup:`Neu`
-=========================================
+Feiertage, Daten und Zeiten
+===========================
 
 Das Modul **shtime** stellt eine Reihe von Funktionen zur Verfügung, die es erlauben festzustellen ob ein Datum ein
 Feiertag ist (und welcher). Dazu muss die Verwendung von Feiertagen in **/etc/holidays.yaml** konfiguriert sein.

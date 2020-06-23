@@ -29,34 +29,37 @@ sys.path.append('..')
 import plugins.__init__ as plugin_vers
 
 
-# Update auf 1.3d  wg. neuer item features on_update, on_change
-# Update auf 1.3e  wg. neuer logic features for visu_websocket
-# Update auf 1.3f  wg. Vorbereitung Release Candidate
+# Update auf 1.3d   wg. neuer item features on_update, on_change
+# Update auf 1.3e   wg. neuer logic features for visu_websocket
+# Update auf 1.3f   wg. Vorbereitung Release Candidate
 
-# Update auf 1.4a  wg. Kennzeichnung des Stands als "nach dem v1.4 Release"
-# Update auf 1.4b  wg. Kennzeichnung des Stands als "nach dem v1.4.1 Release"
+# Update auf 1.4a   wg. Kennzeichnung des Stands als "nach dem v1.4 Release"
+# Update auf 1.4b   wg. Kennzeichnung des Stands als "nach dem v1.4.1 Release"
 # Update auf 1.4.2
-# Update auf 1.4c  wg. Kennzeichnung des Stands als "nach dem v1.4.2 Release"
-# Update auf 1.4d  wg. SmartPlugin Anpassung (get_configname())"
-# Update auf 1.4e  wg. lib.item Anpassung (trigger_condition)"
-# Update auf 1.5   wg. Release"
-# Update auf 1.5.1 wg. Hotfix Release
-# Update auf 1.5a  wg. Changes in lib.shtime
-# Update auf 1.5b  wg. Einführung von lib.shpypi
-# Update auf 1.5c  wg. Einführung von bin.shngversion.get_shng_branch()
-# Update auf 1.5d  wg. Einführung von Item Strukturen
-# Update auf 1.5e  wg. Einführung von Item Property 'attributes'
+# Update auf 1.4c   wg. Kennzeichnung des Stands als "nach dem v1.4.2 Release"
+# Update auf 1.4d   wg. SmartPlugin Anpassung (get_configname())"
+# Update auf 1.4e   wg. lib.item Anpassung (trigger_condition)"
+# Update auf 1.5    wg. Release"
+# Update auf 1.5.1  wg. Hotfix Release
+# Update auf 1.5a   wg. Changes in lib.shtime
+# Update auf 1.5b   wg. Einführung von lib.shpypi
+# Update auf 1.5c   wg. Einführung von bin.shngversion.get_shng_branch()
+# Update auf 1.5d   wg. Einführung von Item Strukturen
+# Update auf 1.5e   wg. Einführung von Item Property 'attributes'
 
-# Update auf 1.6   wg. Release
-# Update auf 1.6a  wg. Kennzeichnung des Stands als "nach dem v1.6 Release"
-# Update auf 1.6b  wg. ÄNnderung bei RelativsPath Auflösung & Doku Änderungen
+# Update auf 1.6    wg. Release
+# Update auf 1.6a   wg. Kennzeichnung des Stands als "nach dem v1.6 Release"
+# Update auf 1.6b   wg. ÄNnderung bei RelativsPath Auflösung & Doku Änderungen
 
-# Update auf 1.7   wg. Release
-# Update auf 1.7a  wg. Kennzeichnung des Stands als "nach dem v1.6 Release"
+# Update auf 1.7    wg. Release
+# Update auf 1.7a   wg. Kennzeichnung des Stands als "nach dem v1.7 Release"
 
-# Update auf 1.7.1 wg. Release
+# Update auf 1.7.1  wg. Release
+# Update auf 1.7.1a wg. Kennzeichnung des Stands als "nach dem v1.7.1 Release"
 
-shNG_version = '1.7.1'
+# Update auf 1.7.2  wg. Release
+
+shNG_version = '1.7.2'
 shNG_branch = 'master'
 
 # ---------------------------------------------------------------------------------

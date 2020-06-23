@@ -1,3 +1,17 @@
-printf "The PID of the running instance of SmartHomeNG is "
-cat /usr/local/shng_dev/var/run/smarthome.pid
-echo ""
+#!/usr/bin/env python3
+
+import os
+import sys
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+os.chdir('..')
+sys.path.insert(0, './lib')
+base_dir = os.getcwd()
+
+pidfile= os.path.join(base_dir,'var','run','smarthome.pid')
+if not os.path.isfile(pidfile):
+    print("No instance of SmartHomeNG is running")
+else:
+    with open(pidfile) as f:
+        read_data = f.read()
+    print("The PID of the running instance of SmartHomeNG is {}".format(read_data))

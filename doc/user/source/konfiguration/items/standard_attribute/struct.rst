@@ -10,24 +10,12 @@
 .. role:: bluesup
 .. role:: redesup
 
-`struct` :bluesup:`Update`
---------------------------
+struct
+------
 
-Eine Reihe von Plugins benötigt eine bestimmte Item Struktur bzw. eine größere Zahl an Items um sinnvoll zu funktionieren.
-Diese Items müssen dazu innerhalb des Item-Trees als Teilbaum angelegt werden (zum Teil auch mehrfach).
-
-**Seit SmartHomeNG v1.6** können Plugin jetzt diese Strukturen als Templates zur Verfügung stellen, die dann mit Hilfe
-des **struct**-Attributs in den Item-Tree eingefügt werden können. Dazu muss bei dem Item an dessen Stelle der Teilbaum
+Über das Attribut **struct** werden vordefinierte Item-Stukturen in den Item-Treee eingefügt. Dazu muss bei dem Item an dessen Stelle der Teilbaum
 eingefügt werden soll, der Name des Templates (der Item-Struktur) angegeben werden.
 
-Weitere Informationen zu **structs** sind auf der Seite :doc:`Konfiguration/structs </konfiguration/item_structs>`
+Weitere Informationen zu **structs** sind auf der Seite :doc:`Konfiguration/structs </konfiguration/item_structs>` und :doc:`Konfiguration/Konfigurationsdateien/struct.yaml </konfiguration/konfigurationsdateien/struct>`)
 zu finden.
-
-
-Selbst definierte Item-Strukturen
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Zusätzlich zu den Item-Strukturen, die Plugins als Template mitbringen, können eigene Strukturen angelegt werden. Diese
-Strukturen werden in der Konfigurationdatei **../etc/struct.yaml** abgelegt werden.
-(Siehe :doc:`Konfiguration/Konfigurationsdateien/struct.yaml </konfiguration/konfigurationsdateien/struct>`)
 

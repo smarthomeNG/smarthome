@@ -395,6 +395,7 @@ items.return_items()
 ~~~~~~~~~~~~~~~~~~~~
 
 Returns all item objects.
+
 .. code-block:: python
 
    for item in items.return_items():

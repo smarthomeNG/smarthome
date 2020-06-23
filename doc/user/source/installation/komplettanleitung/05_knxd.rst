@@ -4,9 +4,9 @@
 .. role:: bluesup
 .. role:: redsup
 
-===================================
-knxd installieren :bluesup:`update`
-===================================
+=================
+knxd installieren
+=================
 
 Der knxd implementiert Zugriffe auf verschiedenste Schnittstellen zum KNX Bus (z.B. IP-Router, IP-Schnittstelle,
 USB-Schnittstelle, etc.) und bietet dafür eine dokumentierte Softwareschnittstelle für Programme an. SmartHomeNG
@@ -17,31 +17,12 @@ einsetzt, kann diesen Installationsschritt überspringen.
    :local:
 
 
-Grundsätzlich findet sich auf der `knxd-Seite <https://github.com/knxd/knxd>`__ die Anleitung für die
-Installation. Auf der Github Seite kann unter **Code** immer der Branch ausgewählt werden. Jeder Branch
-hat sein eigenes Read.me.
-
-.. important::
-
-    Der knxd wird derzeit aktiv weiterentwickelt. Ab
-    Version 0.12.x ist pthsem nicht mehr notwendig und es wird libev
-    eingesetzt. Wer genügend Wissen zum Testen hat ist herzlich
-    eingeladen hier mitzuhelfen oder zu spenden. Auch bitte **vor** der
-    Installation hier noch einen Blick auf
-    `knxd-Seite <https://github.com/knxd/knxd>`__ werfen um aktuelles
-    nicht zu verpassen.
-
-    Diese Anleitung wird zwar in regelmäßigen Abständen aktualisiert
-    aber eben nicht unbedingt wöchentlich oder gar täglich.
-
-Die folgenden Installationsschritte beziehen sich auf Version **0.14**.
-
 
 knxd unter Debian Buster installieren
 =====================================
 
-Ab dem Buster Release, ist knxd als Installationspaket in der Distribution enthalten. Die in Buster enthaltene knxd
-Version ist 0.14.
+Ab dem Buster Release, ist knxd als Installationspaket in der Distribution enthalten. Die in Buster enthaltene
+knxd Version ist 0.14.
 
 Das fertige knxd Paket kann mit folgenden Kommandos installiert werden:
 
@@ -53,12 +34,49 @@ Das fertige knxd Paket kann mit folgenden Kommandos installiert werden:
 
 Anschließend mit der Konfiguration gemäß Abschnitt `knxd konfigurieren <#knxd-konfigurieren>`__ fortfahren.
 
+Nachdem knxd installiert, konfiguriert und der Dienst gestartet ist, kann mit folgendem Kommando geprüft
+werden, ob eine funktionsfähige Verbindung zum KNX Bus besteht. Dazu das folgende Kommando eingeben:
+
+.. code-block:: bash
+
+    knxtool groupsocketlisten ip:localhost
+
+Damit protokolliert knxtool mit, welche Pakete auf dem Bus übertragen werden. Die Ausgabe sieht dann so
+ähnlich aus:
+
+.. code-block::
+
+    Write from 1.1.202 to 3/3/6: 01 43
+    Write from 1.1.203 to 2/6/25: 02 2E
+    Write from 1.1.204 to 2/6/32: 00 0B
+    Write from 1.1.203 to 2/6/16: 01 BF
+    Write from 1.1.204 to 2/6/34: 02 04
+    Write from 1.1.191 to 0/7/3: C0 C3 F2 FB
+    Write from 0.0.8 to 2/5/14: 7E
+    Write from 1.1.243 to 12/3/13: 45 31 60 00
+
+Das Protokollieren kann mit Ctrl-C beendet werden.
+
 
 knxd unter älteren Debian Versionen installieren
 ================================================
 
-In älteren Debian Linux Versionen ist kein Installationspaket für knxd enthalten. Unter diesen Versionen muss knxd
-zuerst aus dem Quellcode compiliert werden.
+In älteren Debian Linux Versionen ist kein Installationspaket für knxd enthalten. Unter diesen Versionen
+muss knxd zuerst aus dem Quellcode compiliert werden.
+
+Grundsätzlich findet sich auf der `knxd-Seite <https://github.com/knxd/knxd>`__ die Anleitung für die
+Installation. Auf der Github Seite kann unter **Code** immer der Branch ausgewählt werden. Jeder Branch
+hat sein eigenes Read.me.
+
+.. important::
+
+    Der knxd wird derzeit aktiv weiterentwickelt. Auch bitte **vor** der
+    Installation hier noch einen Blick auf `knxd-Seite <https://github.com/knxd/knxd>`__ werfen
+    um aktuelles nicht zu verpassen.
+
+    Diese Anleitung ist eher eine historische Referenz und wird nicht regelmäßig aktualisiert.
+
+Die folgenden Installationsschritte beziehen sich auf Version **0.14**.
 
 
 zusätzliche Pakete zum Bau installieren
@@ -129,7 +147,8 @@ Der Parameter **-c** stellt den knxd so ein, das er einen Cache nutzt. Danach fo
 die Verwendung der Schnittstelle:
 
 -  IP Schnittstelle: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b ipt:<IP der knx Schnittstelle>"``
--  IP Router: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b ip:<IP des knx Routers>"``
+-  IP Router: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b ip:<Multicast IP>"``
+-  IP Router: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b ip:"``
 -  USB-Interface: Bitte `Wiki zum knxd <https://github.com/knxd/knxd/wiki>`__ konsultieren.
 
 Es kann sein, das bei ``KNXD_OPTS`` hinter dem **-c** bei einigen Interfaces noch ein ``--send-delay=30`` eingefügt

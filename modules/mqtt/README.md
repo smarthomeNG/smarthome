@@ -5,7 +5,7 @@ This module allows plugins to utilize the MQTT protocol. The API is described be
 
 ## Requirements
 
-This module is running under SmmartHomeNG versions beyond v1.6.
+This module is running under SmartHomeNG versions beyond v1.6.
 
 > Note: This module needs the module handling in SmartHomeNG to be activated. Make sure, that `use_modules`in `etc/smarthome.yaml` is **not** set to False!
 
@@ -43,7 +43,7 @@ hashed password for the web access. By default empty. Without a hashed password 
 
 #### service_user (optional
 
-username for the access to webervices. By default username `serviceuser` is used.
+username for the access to webservices. By default username `serviceuser` is used.
 
 #### service_password (optional)
 

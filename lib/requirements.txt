@@ -8,10 +8,13 @@ holidays>=0.9.11
 # lib.daemon:
 psutil
 
-# lib.shyaml:
-ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
-ruamel.yaml>=0.15.0,<=0.15.74;python_version>='3.7'
-
 # lib.network:
 #requests: Requirements update to >=2.20.0 due to CVE-2018-18074
 requests>=2.20.0
+
+# the following needs to be exactly the same as in requirements/base.txt
+# otherwise inconsistent requirements will occur in Travis/Tox/Testing
+# lib.shyaml:
+ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
+ruamel.yaml>=0.15.0,<=0.15.74;python_version=='3.7'
+ruamel.yaml>=0.15.78,<=0.16.8;python_version>='3.8'

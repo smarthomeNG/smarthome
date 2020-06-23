@@ -4,9 +4,9 @@
 .. role:: bluesup
 .. role:: redsup
 
-===========================================
-Debian Linux installieren :bluesup:`update`
-===========================================
+=========================
+Debian Linux installieren
+=========================
 
 Die genaue Schritt für Schritt Installation des Betriebsystems wird hier nicht
 beschrieben, das hier ist der falsche Ort dafür. Jedoch werden als

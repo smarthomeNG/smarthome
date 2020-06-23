@@ -1,28 +1,56 @@
-Logging
-=======
 
-logger und sh.log
------------------
+.. index:: Logiken; Logging
+.. index:: Logging; Logiken
 
-Das **logger** Objekt ist nützlich, um Protokollnachrichten zu generieren. Es bietet fünf
-verschiedene Protokollierungsebenen: *debug*, *info*, *warning*, *error* und *critical*.
-Anwendung: **logger.<ebene>(str)** (z.B. **logger.info('42')**.
-Die Lognachrichten werden in einer Logdatei gespeichert (Details sind im Abschnitt
-:doc:`Konfiguration/Logging <../konfiguration/konfigurationsdateien/logging>` dieser Dokumentation nachzulesen).
+.. role:: bluesup
+.. role:: redsup
 
-Außerdem sind die letzten 50 Einträge auch unter **sh.log** verfügbar. So ist es möglich,
-über Plugins (z.B. Visu) und Logiken auf die Log-Nachrichten zuzugreifen.
+
+Logging in Logiken :redsup:`Neu`
+================================
+
+Logiken verfügen über einen vordefinierten Logger. Dieser Logger ist im ``logic`` Objekt hinterlegt und kann
+z.B. über
+
+.. code-block:: python
+
+    logic.logger.info("Logtext")
+
+angesprochen werden. Die Ausgabe und er Loglevel können in ../etc/logging.yaml konfiguriert werden:
+
+.. code-block:: yaml
+
+   loggers:
+
+       # ==============================
+       # Loggers for SmartHomeNG logics
+       # ------------------------------
+       logics:
+           handlers: [shng_details_file]
+           level: WARNING
+
+       logics.<name der Logik>:
+           handlers: [q21]
+           level: INFO
+
+
+Wobei der Logger **logics** den Loglevel und Handler für alle Logiken festlegt, für die keine besonderen
+Konfigurationen vorgenommen werden.
+
+**logics.<name der Logik>** Legt den Loglevel und den Handler für eine einzelne Logik fest.
 
 .. note::
 
-   Die Datum / Uhrzeit Angabe in jedem Protokolleintrag ist bezogen auf die lokale Zeitzone der SmartHomeNG Installation.
+    In SmartHomeNG v1.7.1 und davor, gab es diesen vordefinierten Logger noch nicht,
+    so dass in den Logiken der ein Logger explizit definiert werden musste:
 
-.. code-block:: python
-   :caption: Eine einfache Schleife über die Log Einträge
+    .. code-block:: python
 
-   for entry in sh.log:
-       print(entry)
+        import logging
+        logger = logging.getLogger(__name__)
 
-.. hint::
+        ...
 
-   Wenn SmartHomeNG im Hintergrund als Daemon läuft, sind Ausgabe via print() nicht sichtbar
+        logger.info("Logtext")
+
+

@@ -1,13 +1,22 @@
+:tocdepth: 2
+
 ==============================
 Release 1.7.1 - 14. April 2020
 ==============================
 
-Dieses ist ein Hotfix Release. Die vollständigen Änderungen der Version v1.7 bitte :doc:`hier <release/1_7>`
+Dieses ist ein Hotfix Release. Die vollständigen Änderungen der Version v1.7 bitte :doc:`hier </release/1_7>`
 nachlesen.
 
 
+Überblick
+=========
+
+Dieses ist ein Wartungs-Release für SmartHomeNG v1.7. Die Änderungen gegenüber dem Release v1.7 sind im
+folgenden in diesen Release Notes beschrieben.
+
+
 Unterstützte Python Versionen
-=============================
+-----------------------------
 
 Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.7 ist Python 3.5.
 (Siehe auch *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
@@ -21,7 +30,7 @@ Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.7
 
 
 Absolute Minimum Python Version
-===============================
+-------------------------------
 
 Die Minimum Python Version in der SmartHomeNG startet wurde auf v3.5 angehoben, da Python 3.4 im Jahr 2019 End-of-Life
 (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python
@@ -38,6 +47,9 @@ Versionen (3.6 oder 3.7) aufzusetzen.
    angehoben werden. Sollten die Features nur in Plugins genutzt werden, so können nur solche Plugins nicht genutzt
    werden, wenn eine ältere Python Version als 3.6 eingesetzt wird.
 
+
+Änderungen am Core
+==================
 
 Bugfixes in the CORE
 --------------------
@@ -76,6 +88,9 @@ Updates in the CORE
   * Added Check for **mandantory** and **default** used together
   * Added script to get pid of running SmartHomeNG instance
 
+
+Änderungen bei Plugins
+======================
 
 New Plugins
 -----------

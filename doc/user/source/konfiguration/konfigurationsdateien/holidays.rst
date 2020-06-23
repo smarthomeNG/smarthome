@@ -5,9 +5,9 @@
 .. role:: bluesup
 .. role:: redsup
 
-===========================
-holidays.yaml :redsup:`new`
-===========================
+=============
+holidays.yaml
+=============
 
 
 .. _`holidays.yaml`:

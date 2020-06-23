@@ -12,6 +12,8 @@
 .tox
 nosetests.xml
 *.egg-info
+test.cache
+/.pytest_cache
 
 # OSX specific files
 .DS_Store
@@ -30,10 +32,12 @@ Thumbs.db
 /doc/developer/build
 /doc/developer/source/plugins_doc
 
-# Don't check in plugins to core reository
+# Don't check in plugins to core repository
 /plugins
 
-# don't check in Requirements for actual configured plugins
+# don't check in requirements that are built each time SHNG starts
+requirements/all.txt
+requirements/base.txt
 requirements/conf_all.txt
 
 # don't check in directories under /var beside listed exeptions
@@ -45,7 +49,9 @@ requirements/conf_all.txt
 !/var/rrd
 !/var/run
 
-# Pycharm settings
+# ignore users tools settings
 /.idea
+**/.vscode/
 /custom_plugins
+/priv_tools
 

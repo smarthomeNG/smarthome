@@ -4,9 +4,9 @@
 .. role:: bluesup
 .. role:: redsup
 
-=================================
-SmartHomeNG als Dienst einrichten
-=================================
+===================================================
+SmartHomeNG als Dienst einrichten :bluesup:`update`
+===================================================
 
 .. contents:: Schritte der Installation
    :local:
@@ -38,9 +38,11 @@ und folgenden Text hineinkopieren:
    [Service]
    Type=forking
    ExecStart=/usr/bin/python3 /usr/local/smarthome/bin/smarthome.py
+   WorkingDirectory=/usr/local/smarthome
    User=smarthome
    PIDFile=/usr/local/smarthome/var/run/smarthome.pid
    Restart=on-abort
+   TimeoutStartSec=900
 
    [Install]
    WantedBy=default.target

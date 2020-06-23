@@ -1,3 +1,5 @@
+:tocdepth: 2
+
 ..index:: Logging
 
 #######
@@ -61,9 +63,10 @@ Die einzelnen Konfigurationseinträge haben die folgende Bedeutung:
 |                 | evaluiert werden:                                                                                  |
 |                 | - name: Loggername (z.B. lib.item)                                                                 |
 |                 | - module: Loggermodul, va. bei Plugins u.U. relevant (z.B. item)                                   |
-|                 | - msg: Der tatsächliche Logeintrag (z.B. Result = (.\*) \(for attribute 'eval'\))                  |
+|                 | - timestamp: Uhrzeit/Datum (z.B. "23:00")                                                          |
+|                 | - msg: Der tatsächliche Logeintrag (z.B. "Result = (.\*) \(for attribute 'eval'\)")                |
 |                 | Durch die Angabe von invert: True werden NUR die passenden Messages geloggt und sonst nichts.      |
-|                 | Ein Beispiel ist unter :doc:`Logging - Best Practices <logging_best_practices>` zu finden.         |  
+|                 | Ein Beispiel ist unter :doc:`Logging - Best Practices <logging_best_practices>` zu finden.         |
 +-----------------+----------------------------------------------------------------------------------------------------+
 | **loggers:**    | Hier werden die einzelnen Logger definiert und was mit diesen Einträgen passiert,                  |
 |                 | welche Handler und formatter verwendet werden. Das Level konfiguriert dabei die                    |
@@ -86,25 +89,25 @@ Eintrag im Handler **file:** erfolgen. Der Eintrag `level: WARNING` führt dazu,
 Handler **file:** nur Ausgaben für Fehler und Warnungen erfolgen. INFO und DEBUG Ausgaben erfolgen
 dann nur noch über den zusätzlichen Handler.
 
+
 Plugin und Logik Entwicklung
 ============================
 
 Für die Entwickler von Plugins:
-Der Logger sollte nun nicht global mit logging.getLogger('') instanziert werden, sondern innerhalb
-der `__init__` Methode mit:
 
+Früher musste in Plugins ein Logger in der Form
 .. code-block:: python
+
+   import logging
 
    self.logger = logging.getLogger(__name__)
 
 
-Wobei `__name__` ein sogenanntes magic ist. Dies bedeutet, dass Python
-aus `__name__` den Namen des Plugins macht.
+in der `__init__` Methode instanziert werden. Das ist inzwischen nicht mehr notwendig. Die SmartPlugin
+Klasse erzeugt den Logger inzwischen selbt. Ein **import logging** ist nicht mehr notwendig und die
+Initialisierung des Loggers in der `__init__` Methode sollte auch weggelassen werden.
 
-So wird aus plugins/cli/ der Name „plugins.cli“, aus lib/scheduler.py wird „lib.scheduler“
-Daher muss dann in der Konfiguration des Loggings der Name „plugin.cli“ angegeben werden.
-
-Für die Entwickler von Plugins und Logiken:
+Für die Entwickler von Logiken:
 Verwendet man zur Instanziierung einen eigenen Namen (nicht empfohlen), wie z.B.
 
 .. code-block:: python
@@ -121,31 +124,6 @@ muss in der config auch dieser Name verwendet werden. Ohne `plugin.` oder `logic
    loggers:
        DWD:
            level: DEBUG
-
-
-Auf den Logger kann dann so zugegriffen werden (Plugin):
-
-.. code-block:: python
-
-   self.logger.debug("")
-   self.logger.info("")
-
-Beispiel (Logik):
-
-.. code-block:: python
-
-   logger.debug("Habe etwas gefunden")
-   logger.info("Bin in Zeile 23")
-
-Beispiel (Plugin):
-
-.. code-block:: python
-
-   def __init__(self, smarthome, update='False', ip='127.0.0.1', port=2323):
-       self.logger = logging.getLogger(__name__)
-       # Logger verwenden:
-       self.logger.debug("Debug Message")
-
 
 
 
@@ -180,7 +158,7 @@ und
 
 
 Best Practices
---------------
+==============
 
 Wer eine brauchbare leicht konfigurierbare Logging Konfiguration sucht, der wird hier
 :doc:`Logging - Best Practices <logging_best_practices>` fündig.

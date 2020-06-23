@@ -3,8 +3,10 @@ module:
     # Global plugin attributes
     classname: SampleModule
     version: 1.7.0
-    sh_minversion: 1.6a
-#   sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)
+    sh_minversion: 1.7
+#   sh_maxversion:                  # maximum shNG version to use this module (leave empty if latest)
+#    py_minversion: 3.6             # minimum Python version to use for this module
+#    py_maxversion:                 # maximum Python version to use for this module (leave empty if latest)
     description:
         de: 'Modul implementiert ...'
         en: 'Module implements ...'

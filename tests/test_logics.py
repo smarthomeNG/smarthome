@@ -25,6 +25,7 @@ from . import common
 import unittest
 import logging
 import shutil
+import os
 
 from lib.model.smartplugin import SmartPlugin
 from lib.logic import Logics
@@ -46,6 +47,11 @@ class TestLogics(unittest.TestCase):
 
     def test_99_end(self):    
         logger.warning('')
+        logger.warning('Tidy up')
+        logger.warning("remove '{}'".format(self.sh._logic_conf_basename+'.yaml'))
+        os.remove(self.sh._logic_conf_basename+'.yaml')
+        logger.warning("remove '{}'".format(self.sh._logic_conf_basename+'.yaml.bak'))
+        os.remove(self.sh._logic_conf_basename+'.yaml.bak')
         logger.warning('=== End Logic Tests')
 
 

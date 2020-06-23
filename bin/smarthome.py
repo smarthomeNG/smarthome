@@ -63,6 +63,7 @@ import locale
 import logging
 import logging.handlers
 import logging.config
+import platform
 import shutil
 import re
 import signal
@@ -212,6 +213,9 @@ class SmartHome():
     _default_language = 'de'
     _fallback_language_order = 'en,de'
 
+    # for scheduler
+    _restart_on_num_workers = 30
+
     plugin_load_complete = False
     item_load_complete = False
     plugin_start_complete = False
@@ -221,6 +225,8 @@ class SmartHome():
         Initialization of main smarthome object
         """
         self.shng_status = {'code': 0, 'text': 'Initalizing'}
+
+        self.python_bin = os.environ.get('_','')
 
         self._extern_conf_dir = extern_conf_dir
 
@@ -259,7 +265,11 @@ class SmartHome():
                 if not isinstance(config[attr], dict):  # ignore sub items
                     vars(self)['_' + attr] = config[attr]
             del(config)  # clean up
-
+        else:
+            # no valid smarthome.yaml found
+            print("No base configuration - terminating SmartHomeNG")
+            print("Hint: Are Language (preferably: DE_de) and character (UTF-8) set configured in operating system?")
+            exit(1)
         if hasattr(self, '_module_paths'):
             sys.path.extend(self._module_paths if type(self._module_paths) is list else [self._module_paths])
 
@@ -298,7 +308,7 @@ class SmartHome():
         # Write startup message to log(s)
         pid = lib.daemon.read_pidfile(PIDFILE)
         self._logger.warning("--------------------   Init SmartHomeNG {}   --------------------".format(VERSION))
-        self._logger.warning("Running in Python interpreter 'v{}' (pid={}) on {} platform".format(PYTHON_VERSION, pid, sys.platform))
+        self._logger.warning("Running in Python interpreter 'v{}' on {} (pid={})".format(PYTHON_VERSION, platform.platform(), pid))
 
         if self._extern_conf_dir != BASE:
             self._logger.warning("Using config dir {}".format(self._extern_conf_dir))
@@ -696,13 +706,16 @@ class SmartHome():
         """
         This method is used to restart the python interpreter and SmartHomeNG
         """
-        self.shng_status = {'code': 30, 'text': 'Restarting'}
-        if source != '':
-            source = ', initiated by ' + source
-        self._logger.warning("SmartHomeNG restarting"+source)
-        command = sys.executable + ' ' + os.path.join(self._base_dir, 'bin', 'smarthome.py') + ' -r'
-        self._logger.info("Restart command = '{}'".format(command))
-        p = subprocess.Popen(command, shell=True)
+        if self.shng_status['code'] == 30:
+            self._logger.warning("Another RESTART is issued, while SmartHomeNG is restarting. Reason: "+source)
+        else:
+            self.shng_status = {'code': 30, 'text': 'Restarting'}
+            if source != '':
+                source = ', initiated by ' + source
+            self._logger.warning("SmartHomeNG restarting"+source)
+            command = sys.executable + ' ' + os.path.join(self._base_dir, 'bin', 'smarthome.py') + ' -r'
+            self._logger.info("Restart command = '{}'".format(command))
+            p = subprocess.Popen(command, shell=True)
 
 
     def list_threads(self, txt):
@@ -734,26 +747,27 @@ class SmartHome():
     #################################################################
     # Log Methods
     #################################################################
+    """
+    SmartHomeNG internally keeps a list of logs which can be extended
+    Currently these logs are created by several plugins
+    (plugins memlog, operationlog and visu_websocket) and initMemLog function of SmartHomeNG
+    """
     def add_log(self, name, log):
         """
-        Function to add a log to the list of logs (deprecated? -> old logging!)
+        Adds a log to the list of logs
 
         :param name: Name of log
-        :param log: Log object
-        :type name: str
-        :type log: object
+        :param log: Log object, essentially an object based of a double ended queue
         """
-
         self.__logs[name] = log
 
     def return_logs(self):
         """
-        Function to the list of logs (deprecated? -> old logging!)
+        Function to the list of logs
 
         :return: List of logs
         :rtype: list
         """
-
         return self.__logs
 
 

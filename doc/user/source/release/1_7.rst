@@ -1,3 +1,5 @@
+:tocdepth: 2
+
 ===========================
 Release 1.7 - 6. April 2020
 ===========================
@@ -15,8 +17,15 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
 
 
+Überblick
+=========
+
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.6.1 sind im
+folgenden in diesen Release Notes beschrieben.
+
+
 Unterstützte Python Versionen
-=============================
+-----------------------------
 
 Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.7 ist Python 3.5.
 (Siehe auch *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
@@ -30,7 +39,7 @@ Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.7
 
 
 Absolute Minimum Python Version
-===============================
+-------------------------------
 
 Die Minimum Python Version in der SmartHomeNG startet wurde auf v3.5 angehoben, da Python 3.4 im Jahr 2019 End-of-Life
 (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python
@@ -47,6 +56,9 @@ Versionen (3.6 oder 3.7) aufzusetzen.
    angehoben werden. Sollten die Features nur in Plugins genutzt werden, so können nur solche Plugins nicht genutzt
    werden, wenn eine ältere Python Version als 3.6 eingesetzt wird.
 
+
+Änderungen am Core
+==================
 
 Bugfixes in the CORE
 --------------------
@@ -129,6 +141,9 @@ Updates in the CORE
   * Web interfaces: make all tabs sticky on web interface for better scroll appearance
 
 
+
+Änderungen bei Plugins
+======================
 
 New Plugins
 -----------

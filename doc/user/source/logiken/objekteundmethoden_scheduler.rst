@@ -23,6 +23,8 @@ Diese globale Funktion triggert eine Logic durch die Angabe ihres Namens.
    Namensräume für die Trigger stattgefunden hat. Wenn sh.trigger genutzt wird, muss dem Namen
    **logics.** vorangestellt werden.
 
+   Also: statt ```sh.trigger('my_logic')``  -->  ```sh.sh.trigger('logics.my_logic')```
+
 
 
 sh.scheduler.change()

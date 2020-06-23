@@ -338,7 +338,11 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
 #                fp_ignore = plg['name']+'/user_doc'
                 if os.path.isfile(fp+'.rst') or os.path.isfile(fp+'.md'):
                     fh.write('   /plugins/'+fp+'\n')
-#                if os.path.isfile(fp_ignore+'.rst') or os.path.isfile(fp_ignore+'.md'):
+                else:
+                    fp = plg['name'] + '/user_doc_en'
+                    if os.path.isfile(fp+'.rst') or os.path.isfile(fp+'.md'):
+                        fh.write('   /plugins/'+fp+'\n')
+            #                if os.path.isfile(fp_ignore+'.rst') or os.path.isfile(fp_ignore+'.md'):
 #                    fh_dummy.write('   /plugins/'+fp_ignore+'\n')
             else:
                 fh.write('   /plugins/'+plg['name']+'/README.md\n')

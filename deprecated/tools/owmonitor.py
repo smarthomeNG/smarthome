@@ -39,7 +39,7 @@ old = []
 while 1:
     try:
         new = ow.dir('/uncached')
-    except Exception, e:
+    except Exception as e:
         logger.error(e)
         sys.exit()
     dif = list(set(new) - set(old))
@@ -49,7 +49,7 @@ while 1:
             typ = ow.read(sensor + 'type')
             sensors = ow.identify_sensor(sensor)
             print("new sensor {0} ({1}) provides: {2}".format(sensor, typ, sensors))
-        except Exception, e:
+        except Exception as e:
             pass
     old += dif
     time.sleep(1)

@@ -1,3 +1,4 @@
+:tocdepth: 1
 
 .. figure:: _static/img/logo_long.png
    :alt: Logo SmartHomeNG

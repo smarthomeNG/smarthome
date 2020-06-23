@@ -286,6 +286,35 @@ werden) stammen
 Hätte man im Filter "invert: True" angegeben, würden alle Einträge ignoriert
 werden, die NICHT den oben genannten Kriterien entsprechen.
 
+Ein weiteres Filterbeispiel, das z.B. alle Logeinträge zwischen 20:00 und 08:00
+morgens filtert und somit nicht ins Log schreibt. Wie im Beispiel zu sehen,
+können auch mehrere Angaben zu einem Filterattribut (hier timestamp) als Liste
+deklariert werden.
+
+.. code-block:: yaml
+
+  filter:
+      filter_nacht:
+          (): lib.logutils.Filter
+          timestamp: ['(.*)\s2[0-4]:(.*)', '(.*)\s0[0-8]:(.*)']
+
+Erläuterung der RegEx:
+Es werden beliebige Einträge für Jahr-Monat-Tag akzeptiert. Anschließend folgt
+ein Leerzeichen und der relevante Filtercode. '2[0-4]{1}' filtert alles zwischen
+20 und 24 Uhr und '0[0-8]{1}' alles zwischen 00 und 08 Uhr.
+
+.. code-block:: yaml
+
+  filter:
+      filter_abend_mai:
+          (): lib.logutils.Filter
+          timestamp: '^[0-9]{4}-05-[0-9]{1,2}\s2[0-4]{1}:(.*)'
+
+Erläuterung der RegEx:
+Da das Datum als YYYY-MM-DD HH:MM:SS angegeben wird, können natürlich auch
+nur in bestimmten Monaten Einträge geschrieben werden. Für die Fälle, in denen
+jemand gerne eine Logdatei pro Kalendermonat hätte ;)
+
 Erweitertes Logging für die Plugin Entwicklung
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

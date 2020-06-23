@@ -10,15 +10,48 @@ env:
 
         memory:
             type: num
+            enforce_change: True
             sqlite: init
             database: init
+            database_maxage: 31
 
         threads:
             type: num
+            enforce_change: True
             sqlite: init
             database: init
+            database_maxage: 31
 
         garbage:
             type: num
             sqlite: init
             database: init
+
+        scheduler:
+            worker_threads:
+                type: num
+                enforce_change: True
+                sqlite: init
+                database: init
+                database_maxage: 31
+
+            idle_threads:
+                type: num
+                enforce_change: True
+                sqlite: init
+                database: init
+                database_maxage: 31
+
+            active_threads:
+                type: num
+                eval: sh...worker_threads() - sh...idle_threads()
+                eval_trigger:
+                    - ..worker_threads
+                    - ..idle_threads
+                enforce_change: True
+                sqlite: init
+                database: init
+                database_maxage: 31
+
+            worker_names:
+                type: list

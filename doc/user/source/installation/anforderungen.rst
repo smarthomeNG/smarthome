@@ -1,3 +1,5 @@
+:tocdepth: 2
+
 Hard- u. Software Anforderungen
 ===============================
 

@@ -16,7 +16,7 @@
    /modules/admin/README.md
    /modules/http/README.md
    /modules/mqtt/README.md
-   /release/1_x_vorlage.rst
+   /vorlagen/*
 
 .. toctree::
    :maxdepth: 2

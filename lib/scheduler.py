@@ -166,6 +166,41 @@ class Scheduler(threading.Thread):
             return _scheduler_instance
 
 
+    def get_worker_count(self):
+        """
+        Get number of worker threads initialized by scheduler
+
+        :return: number of worker threads
+        """
+        return len(self._workers)
+
+
+    def get_idle_worker_count(self):
+        """
+        Get number of idle worker threads
+
+        :return: number of worker threads
+        """
+        idle_count = 0
+        for w in self._workers:
+            if w.name == 'idle':
+                idle_count +=1
+        return idle_count
+
+
+    def get_worker_names(self):
+        """
+        Get names on non-idle worker threads
+
+        :return: list with names of worker threads
+        """
+        worker_names = []
+        for w in self._workers:
+            if w.name != 'idle':
+                worker_names.append(w.name)
+        return worker_names
+
+
     def run(self):
         self.alive = True
         logger.debug("creating {0} workers".format(self._worker_num))
@@ -179,12 +214,23 @@ class Scheduler(threading.Thread):
                     if len(self._workers) < self._worker_max:
                         self._add_worker()
                     else:
-                        logger.error("Needing more worker threads than the specified maximum of {0}!".format(self._worker_max))
+                        logger.error("Needing more worker threads than the specified maximum of {}!  ({} worker threads active)".format(self._worker_max, len(self._workers)))
                         tn = {}
-                        for t in threading.enumerate():
+                        # for t in threading.enumerate():
+                        for t in self._workers:
                             tn[t.name] = tn.get(t.name, 0) + 1
-                        logger.info('Threads: ' + ', '.join("{0}: {1}".format(k, v) for (k, v) in list(tn.items())))
-                        self._add_worker()
+                        logger.info('Worker-Threads: ' + ', '.join("{0}: {1}".format(k, v) for (k, v) in list(tn.items())))
+
+                        if int(self._sh._restart_on_num_workers) < self._worker_max:
+                            # do no restart
+                            self._add_worker()
+                        else:
+                            if len(self._workers) < int(self._sh._restart_on_num_workers):
+                                self._add_worker()
+                            else:
+                                logger.warning('Worker-Threads: ' + ', '.join("{0}: {1}".format(k, v) for (k, v) in list(tn.items())))
+                                self._sh.restart('SmartHomeNG (scheduler started too many worker threads ({}))'.format(len(self._workers)))
+
             while self._triggerq.qsize() > 0:
                 try:
                     (dt, prio), (name, obj, by, source, dest, value) = self._triggerq.get()
@@ -200,7 +246,15 @@ class Scheduler(threading.Thread):
                 else:  # put last entry back and break while loop
                     self._triggerq.insert((dt, prio), (name, obj, by, source, dest, value))
                     break
+            # For debugging
+            # task_count = 0
+            # for name in self._scheduler:
+            #     task = self._scheduler[name]
+            #     if task['next'] is not None:
+            #         task_count += 1
+            # End for debugging
             if not self._lock.acquire(timeout=1):
+            #     logger.critical("Scheduler: Deadlock! - Task Count to enter run queue: {}".format(task_count))
                 logger.critical("Scheduler: Deadlock!")
                 continue
             for name in self._scheduler:
@@ -326,10 +380,10 @@ class Scheduler(threading.Thread):
         :param next:
         :param from_smartplugin: Only to set to True, if called from the internal method in SmartPlugin class
         """
-        # Todo: Why the following 4 lines? self.shtime is set within __init__
+        # set shtime and items if they were initialized to None in __init__  (potenital timing problem in init of shng)
         if self.shtime == None:
             self.shtime = Shtime.get_instance()
-        if self.shtime == None:
+        if self.items == None:
             self.items = Items.get_instance()
         self._lock.acquire()
         if isinstance(cron, str):
@@ -509,18 +563,27 @@ class Scheduler(threading.Thread):
                 source_details = source.get('details', '')
                 source = source.get('item', '')
             trigger = {'by': by, 'source': source, 'source_details': source_details, 'dest': dest, 'value': value}  # noqa
-            logic = obj  # noqa
-            logics = obj._logics
 
             #following variables are assigned to be available during logic execution
             sh = self._sh  # noqa
             shtime = self.shtime
             items = self.items
 
+            # set the logic environment here (for use within functions in logics):
+            logic = obj  # noqa
+            logic.sh = sh
+            logic.logger = logger
+            logic.shtime = shtime
+            logic.items = items
+            logic.trigger_dict = trigger    # logic.trigger has naming conflict with method logic.trigger of lib.item
+
+            logics = obj._logics
+
             if not self.mqtt:
                 if _lib_modules_found:
                     self.mqtt = Modules.get_instance().get_module('mqtt')
             mqtt = self.mqtt
+            logic.mqtt = mqtt
 
             try:
                 if logic.enabled:
@@ -786,4 +849,3 @@ class Scheduler(threading.Thread):
             day = now + dateutil.relativedelta.relativedelta(weekday=wday(+2))
             result.append(day.strftime("%d"))
         return result
-

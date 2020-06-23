@@ -96,8 +96,18 @@ p {
   position: relative; top: -0.5em; font-size: 80%; !important;
 }
 
+.darkbluesup  {
+  color: #1c3b6c; !important;
+  position: relative; top: -0.5em; font-size: 80%; !important;
+}
+
 .greensup  {
   color: #27ae60; !important;
+  position: relative; top: -0.5em; font-size: 80%; !important;
+}
+
+.blacksup  {
+  color: #000000; !important;
   position: relative; top: -0.5em; font-size: 80%; !important;
 }
 

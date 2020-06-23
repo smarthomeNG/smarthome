@@ -108,7 +108,7 @@ class ItemData:
         item_data = []
         item = self.items.return_item(item_path)
         if item is not None:
-            if item.type() is None or item.type() is '':
+            if item.type() is None or item.type() == '':
                 prev_value = ''
                 value = ''
             else:
