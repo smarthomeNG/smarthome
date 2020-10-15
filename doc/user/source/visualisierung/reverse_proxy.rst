@@ -269,19 +269,33 @@ NGINX mit ``sudo service nginx restart`` neu starten.
                try_files /wartung.html @loc_websocket;
        }
 
+       # Zugriff auf die SmartVISU mit Basic Auth
+       location /smartVISU {
+                  auth_basic "Restricted Area: smartVISU";
+                  auth_basic_user_file /etc/nginx/.smartvisu;
+                  try_files /wartung.html @loc_smartvisu;
+       }
+
+       # Alexa Plugin Weiterleitung
+       location /alexa {
+           auth_basic "Restricted Area: Alexa";
+           auth_basic_user_file /etc/nginx/.alexa;
+           try_files /wartung.html @loc_alexa;
+       }
+
+       # Network Plugin Weiterleitung
+       location /shng {
+           auth_basic "Restricted Area: SmartHomeNG";
+           auth_basic_user_file /etc/nginx/.shng;
+           try_files /wartung.html @loc_shng;
+       }
+
        location @loc_websocket {
                proxy_pass http://websocket;
                proxy_http_version 1.1;
                proxy_set_header Upgrade $http_upgrade;
                proxy_set_header Connection $connection_upgrade;
                proxy_set_header Host $host;
-       }
-
-       # Zugriff auf die SmartVISU mit Basic Auth
-       location /smartVISU {
-                  auth_basic "Restricted Area: smartVISU";
-                  auth_basic_user_file /etc/nginx/.smartvisu;
-                  try_files /wartung.html @loc_smartvisu;
        }
 
        location @loc_smartvisu {
@@ -292,11 +306,12 @@ NGINX mit ``sudo service nginx restart`` neu starten.
                proxy_set_header X_Forwarded-Proto $scheme;
        }
 
-       # Alexa Plugin Weiterleitung
-       location /alexa {
-           auth_basic "Restricted Area: Alexa";
-           auth_basic_user_file /etc/nginx/.alexa;
-           try_files /wartung.html @loc_alexa;
+       location @loc_smartvisu {
+               proxy_pass http://<SmartHomeNG LAN IP>/$request_uri;
+               proxy_set_header Host $host;
+               proxy_set_header X-Real-IP $remote_addr;
+               proxy_set_header X_Forwarded-For $proxy_add_x_forwarded_for;
+               proxy_set_header X_Forwarded-Proto $scheme;
        }
 
        location @loc_alexa {
@@ -305,13 +320,6 @@ NGINX mit ``sudo service nginx restart`` neu starten.
            proxy_set_header X-Real-IP $remote_addr;
            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
            proxy_set_header X-Forwarded-Proto $scheme;
-       }
-
-       # Network Plugin Weiterleitung
-       location /shng {
-           auth_basic "Restricted Area: SmartHomeNG";
-           auth_basic_user_file /etc/nginx/.shng;
-           try_files /wartung.html @loc_shng;
        }
 
        location @loc_shng {
