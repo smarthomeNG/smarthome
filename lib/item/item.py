@@ -185,9 +185,10 @@ class Item():
         # Item Attributes
         #############################################################
         self._filename = dict(config.items()).get('_filename', None)
+        setattr(self, '_type', dict(config.items()).get('type'))
         for attr, value in config.items():
             if not isinstance(value, dict):
-                if attr in [KEY_CYCLE, KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE]:
+                if attr in [KEY_CYCLE, KEY_NAME, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE]:
                     if attr == KEY_INITVALUE:
                         attr = KEY_VALUE
                     setattr(self, '_' + attr, value)
@@ -254,6 +255,8 @@ class Item():
                 elif attr == '_filename':
                     # name of file, which defines this item
                     #setattr(self, attr, value)    # assignment moved to top (before for loop)
+                    pass
+                elif attr == KEY_TYPE:
                     pass
                 else:
                     #------------------------------------------------------------
@@ -429,7 +432,7 @@ class Item():
                     else:
                         value = mycast('')
             else:
-                logger.warning("Item {}: Unable to cast '{}' to {}".format(self._path, str(value), self._type))
+                logger.warning("Item {}: Type is None. Unable to cast '{}' to {}".format(self._path, str(value), self._type))
         return value
 
 
