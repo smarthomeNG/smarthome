@@ -760,7 +760,12 @@ class Shpypi:
         :return:
         """
         result = []
-        r = requests.get('https://pypi.org/rss/project/' + package + '/releases.xml')
+        try:
+            r = requests.get('https://pypi.org/rss/project/' + package + '/releases.xml')
+        except Exception as e:
+            self.logger.error("Error: {0}".format(e))
+            return result
+
         if r.status_code == 200:
             xmldict = xmltodict.parse(r.text)
 
