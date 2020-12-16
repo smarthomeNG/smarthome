@@ -247,8 +247,13 @@ class Http(Module):
 
         # Update the global CherryPy configuration
         cherrypy.config.update(global_conf)
-        cherrypy.config.update({'log.screen': False})
-
+        cherrypy.config.update(
+            {
+                'log.screen': False,
+                'log.access_file': '',
+                'log.error_file': ''
+            }
+        )
         if self._use_tls:
             self._server1 = cherrypy._cpserver.Server()
             self._server1.socket_port=int(self._port)

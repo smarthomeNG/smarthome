@@ -353,9 +353,9 @@ class PluginsInfoController(RESTResource):
                 if str(e).find('[Errno 101]') > -1:     # [Errno 101] Das Netzwerk ist nicht erreichbar
                     pass
                 else:
-                    self.logger.error("_test_for_blog_articles: Error {}".format(e))
+                    self.logger.error("_test_for_blog_articles: OSError {}".format(e))
             except Exception as e:
-                self.logger.exception("_test_for_blog_articles: Exception {}".format(e))
+                self.logger.error("_test_for_blog_articles: Exception {}".format(e))
             self.blog_urls = temp_blog_urls
             end = time.time()
             self.logger.info("_test_for_blog_articles_task: Used time: {} - blog_urls = {}".format(end - start, self.blog_urls))
