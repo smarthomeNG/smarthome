@@ -237,6 +237,8 @@ class ItemData:
         """
         Is called by items.html when an item value has been changed
         """
+        if self.items is None:
+            self.items = Items.get_instance()
         self.logger.info("item_change_value_html: item '{}' set to value '{}'".format(item_path, value))
         item_data = []
         try:
@@ -297,5 +299,3 @@ class ItemData:
                 else:
                     on_list.append(on_eval_list)
         return on_list
-
-
