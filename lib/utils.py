@@ -586,3 +586,10 @@ def execute_subprocess(commandline, wait=True):
         p_status = p.wait()
     return str(result, encoding='utf-8', errors='strict')
 
+
+def running_virtual():
+    """ Return if we run in a virtual environment. """
+    # Check supports venv && virtualenv
+    return (getattr(sys, 'base_prefix', sys.prefix) != sys.prefix or
+            hasattr(sys, 'real_prefix'))
+

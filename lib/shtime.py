@@ -989,8 +989,12 @@ class Shtime:
                 if count > 0:
                     c_logcount = ' ' + str(count)
                     c_logtext = self.translate('defined')
-                log_msg = self.translate("Using holidays for country '{country}', province '{province}', state '{state}',{count} custom holiday definitions(s) {defined}")
-                logger.warning(log_msg.format(country=self.holidays.country, province=self.holidays.prov, state=self.holidays.state, count=c_logcount, defined=c_logtext))
+                defined_state = ''
+                if self.holidays.state is not None:
+                    defined_state = ", state'" + self.holidays.state + "'"
+                self.log_msg = self.translate("Using holidays for country '{country}', province '{province}'{state},{count} custom holiday(s) {defined}")
+                self.log_msg = self.log_msg.format(country=self.holidays.country, province=self.holidays.prov, state=defined_state, count=c_logcount, defined=c_logtext)
+                logger.info(self.log_msg)
 
                 logger.info(self.translate('Defined holidays') + ':')
                 for ft in sorted(self.holidays):

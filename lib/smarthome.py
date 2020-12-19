@@ -213,6 +213,7 @@ class SmartHome():
         """
         self.shng_status = {'code': 0, 'text': 'Initalizing'}
         self._logger = logging.getLogger(__name__)
+        self._logger_main = logging.getLogger(__name__ + '.main')
 
         self.initialize_vars()
         self.initialize_dir_vars()
@@ -306,13 +307,17 @@ class SmartHome():
             lib.daemon.daemonize(PIDFILE)
         else:
             lib.daemon.write_pidfile(os.getpid(), PIDFILE)
-            print("-----------------  Init SmartHomeNG {}  -----------------".format(self.version))
+            print("--------------------   Init SmartHomeNG {}   --------------------".format(self.version))
 
         #############################################################
         # Write startup message to log(s)
         pid = lib.daemon.read_pidfile(PIDFILE)
-        self._logger.warning("--------------------   Init SmartHomeNG {}   --------------------".format(self.version))
-        self._logger.warning("Running in Python interpreter 'v{}' on {} (pid={})".format(self.PYTHON_VERSION, platform.platform(), pid))
+        virtual_text = ''
+        if lib.utils.running_virtual():
+            virtual_text = ' in virtual environment'
+        self._logger_main.warning("--------------------   Init SmartHomeNG {}   --------------------".format(self.version))
+        self._logger_main.warning("Running in Python interpreter 'v{}'{}".format(self.PYTHON_VERSION, virtual_text))
+        self._logger_main.warning(" - on {} (pid={})".format(platform.platform(), pid))
 
         default_encoding = locale.getpreferredencoding() # returns cp1252 on windows
         if not (default_encoding in  ['UTF8','UTF-8']):
@@ -371,7 +376,7 @@ class SmartHome():
 
 
         self.shtime._initialize_holidays()
-
+        self._logger_main.warning(" - " + self.shtime.log_msg)
 
         # Add Signal Handling
 #        signal.signal(signal.SIGHUP, self.reload_logics)
@@ -659,7 +664,7 @@ class SmartHome():
         # Main Loop
         #############################################################
         self.shng_status = {'code': 20, 'text': 'Running'}
-        self._logger.warning("SmartHomeNG initialization finished")
+        self._logger_main.warning("--------------------   SmartHomeNG initialization finished   --------------------")
 
         while self.alive:
             try:
@@ -706,7 +711,7 @@ class SmartHome():
 #            if header_logged:
 #                self._logger.warning("SmartHomeNG stopped")
 #        else:
-        self._logger.warning("SmartHomeNG stopped")
+        self._logger_main.warning("--------------------   SmartHomeNG stopped   --------------------")
 
         self.shng_status = {'code': 33, 'text': 'Stopped'}
 
@@ -726,7 +731,7 @@ class SmartHome():
             self.shng_status = {'code': 30, 'text': 'Restarting'}
             if source != '':
                 source = ', initiated by ' + source
-            self._logger.warning("SmartHomeNG restarting"+source)
+            self._logger_main.warning("--------------------   SmartHomeNG restarting" + source + "   --------------------")
             # python_bin could contain spaces (at least on windows)
             python_bin = sys.executable
             if ' ' in python_bin:
