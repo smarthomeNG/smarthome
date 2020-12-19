@@ -75,9 +75,16 @@ class Websocket(Module):
         self.use_tls = self.get_parameter_value('use_tls')
         self.tls_cert = self.get_parameter_value('tls_cert')
         self.tls_key = self.get_parameter_value('tls_key')
-        self.sv_enabled = self.get_parameter_value('sv_enabled')
-        self.sv_querydef = self.get_parameter_value('sv_querydef')
-        self.sv_ser_upd_cycle = self.get_parameter_value('sv_ser_upd_cycle')
+
+        # parameters for smartVISU handling are initialized by the smartvisu plugin
+        #self.sv_enabled = self.get_parameter_value('sv_enabled')
+        #self.sv_acl = self.get_parameter_value('sv_acl')
+        #self.sv_querydef = self.get_parameter_value('sv_querydef')
+        #self.sv_ser_upd_cycle = self.get_parameter_value('sv_ser_upd_cycle')
+        self.sv_enabled = False
+        self.sv_acl = 'deny'
+        self.sv_querydef = False
+        self.sv_ser_upd_cycle = 0
 
         self.ssl_context = None
         if self.use_tls:
@@ -134,18 +141,40 @@ class Websocket(Module):
 
         Otherwise don't enter code here
         """
-        self.logger.warning("Module '{}': Shutting down".format(self._shortname))
+        self.logger.info("Shutting down websoocket server(s)...")
 #        self.stop_async = True
 
         self.loop.call_soon_threadsafe(self.loop.stop)
 
         try:
             self._server_thread.join()
-            self.logger.info("Websocket Server: Stopped")
+            self.logger.info("Websocket Server(s): Stopped")
         except:
             pass
         time.sleep(10)
         return
+
+
+    def set_smartvisu_support(self, protocol_enabled=False, default_acl='ro', query_definitions=False, series_updatecycle=0):
+        """
+        Set state of smartvisu support
+
+        :param protocol_enabled:    enable or disable the payload protocol for smartVISU
+        :param query_definitions:   enable or disable the query of item definitions over websocket protocol
+        :param series_updatecycle:  update cycle for smartVISU series requests (if 0, timing from database plugin is used)
+        """
+        self.sv_enabled = protocol_enabled
+        self.sv_acl = default_acl
+        self.sv_querydef = query_definitions
+        self.sv_ser_upd_cycle = series_updatecycle
+        self.logger.warning(f"set_smartvisu_support: Set to protocol_enabled={protocol_enabled}, default_acl={default_acl}, query_definitions={query_definitions}, series_updatecycle={series_updatecycle}")
+        #self.sv_config = {'enabled': self.sv_enabled, 'acl': self.sv_acl, 'query_def': self.sv_querydef, 'upd_cycle': self.sv_ser_upd_cycle}
+        #self.logger.warning(f"sv_config {self.sv_config}")
+
+        #self.stop()
+        #self.start()
+        return
+
 
     # ===============================================================================
     # Module specific code
@@ -214,10 +243,10 @@ class Websocket(Module):
             await asyncio.sleep(1)
 
         if ssl_context:
-            self.logger.warning("Secure websocket server started")
+            self.logger.info("Secure websocket server started")
             await websockets.serve(self.handle_new_connection, ip, port, ssl=ssl_context)
         else:
-            self.logger.warning("Websocket server started")
+            self.logger.info("Websocket server started")
             await websockets.serve(self.handle_new_connection, ip, port)
 #        if self.stop_async:
 #            await websockets.close()
@@ -271,9 +300,9 @@ class Websocket(Module):
         Print info about connection/disconnection of users
         """
         if not websocket.remote_address:
-            self.logger.warning("USER {}: {} - local port: {}".format(action, 'with SSL connection', websocket.port))
+            self.logger.infp("USER {}: {} - local port: {}".format(action, 'with SSL connection', websocket.port))
         else:
-            self.logger.warning("USER {}: {} - local port: {}".format(action, websocket.remote_address, websocket.port))
+            self.logger.info("USER {}: {} - local port: {}".format(action, websocket.remote_address, websocket.port))
 
         self.logger.debug("Connected USERS: {}".format(len(self.USERS)))
         for u in self.USERS:
@@ -391,7 +420,7 @@ class Websocket(Module):
         self.sv_clients[client_addr] = {}
         self.sv_clients[client_addr]['websocket'] = websocket
         self.sv_clients[client_addr]['sw'] = 'Visu'
-        self.logger.warning("smartVISU_protocol_v4: Client {} started".format(client_addr))
+        self.logger.info("smartVISU_protocol_v4: Client {} started".format(client_addr))
         #client_addr = websocket.remote_address[0] + ':' + str(websocket.remote_address[1])
         await self.get_shng_class_instances()
 
@@ -403,7 +432,7 @@ class Websocket(Module):
                 data = json.loads(message)
                 command = data.get("cmd", '')
                 protocol = 'wss' if websocket.secure else 'ws '
-                #self.logger.warning("{} <CMD  : '{}'   -   from {}".format(protocol, data, client_addr))
+                # self.logger.warning("{} <CMD  : '{}'   -   from {}".format(protocol, data, client_addr))
                 answer = {"error": "unhandled command"}
 
                 try:
@@ -412,7 +441,10 @@ class Websocket(Module):
                         value = data['val']
                         item = self.items.return_item(path)
                         if item is not None:
-                            if item.conf.get('acl', None) != 'ro':
+                            item_acl = item.conf.get('acl', None)
+                            if item_acl is None:
+                                item_acl = self.sv_acl
+                            if item_acl != 'ro':
                                 item(value, self.sv_clients[client_addr]['sw'], client_ip)
                             else:
                                 self.logger.warning("Client {0} want to update read only item: {1}".format(client_addr, path))
@@ -433,9 +465,14 @@ class Websocket(Module):
                         self.logger.warning("{} <CMD  not yet tested: '{}'   -   from {}".format(protocol, data, client_addr))
 
                     elif command == 'series':
-                        answer = await self.prepare_series(data, client_addr)
-                        if answer == {}:
-                            self.logger.warning("    series -> No reply")
+                        path = data['item']
+                        item = self.items.return_item(path)
+                        if item is not None:
+                            answer = await self.prepare_series(data, client_addr)
+                            if answer == {}:
+                                self.logger.warning("command 'series' -> No reply from prepare_series() (for request {})".format(data))
+                        else:
+                            self.logger.warning("Client {} requested a series for an unknown item: {}".format(client_addr, path))
 
                     elif command == 'series_cancel':
                         answer = await self.cancel_series(data, client_addr)
@@ -473,7 +510,7 @@ class Websocket(Module):
                         self.sv_clients[client_addr]['hostname'] = data.get('hostname', '')
                         self.sv_clients[client_addr]['browser'] = data.get('browser', '')
                         self.sv_clients[client_addr]['bver'] = data.get('bver', '')
-                        self.logger.warning("smartVISU_protocol_v4: Client {} identified as '{} {}' in Browser '{} {}'".format(client_addr, self.sv_clients[client_addr]['sw'], self.sv_clients[client_addr]['ver'], self.sv_clients[client_addr]['browser'], self.sv_clients[client_addr]['bver']))
+                        self.logger.info("smartVISU_protocol_v4: Client {} identified as '{} {}' in Browser '{} {}'".format(client_addr, self.sv_clients[client_addr]['sw'], self.sv_clients[client_addr]['ver'], self.sv_clients[client_addr]['browser'], self.sv_clients[client_addr]['bver']))
                         answer = {}
 
                     elif command == 'list_items':
@@ -515,7 +552,7 @@ class Websocket(Module):
         except Exception as e:
             self.logger.error("smartVISU_protocol_v4 error deleting client session data: {}".format(e))
 
-        self.logger.warning("smartVISU_protocol_v4: Client {} stopped".format(client_addr))
+        self.logger.info("smartVISU_protocol_v4: Client {} stopped".format(client_addr))
         return
 
     async def prepare_monitor(self, data, client_addr):
@@ -537,7 +574,11 @@ class Websocket(Module):
                 try:
                     item = self.items.return_item(path)
                     if item is not None:
-                        items.append([path, item()])
+                        item_acl = item.conf.get('acl', None)
+                        if item_acl is None:
+                            item_acl = self.sv_acl
+                        if item_acl != 'deny':
+                            items.append([path, item()])
                         if not self.update_visuitem in item.get_method_triggers():
                             item.add_method_trigger(self.update_visuitem)
                     else:
@@ -645,7 +686,7 @@ class Websocket(Module):
         while self._sh.shng_status['code'] != 20:
             await asyncio.sleep(1)
 
-        self.logger.warning("update_all_series: Started")
+        self.logger.info("update_all_series: Started")
         while True:
             remove = []
             series_list = list(self.sv_update_series.keys())
@@ -663,13 +704,13 @@ class Websocket(Module):
                     for reply in replys:
                         try:
                             await websocket.send(reply)
-                            self.logger.warning(">SerUp {}: {}".format(websocket.remote_address, reply))
+                            self.logger.info(">SerUp {}: {}".format(websocket.remote_address, reply))
                         except (asyncio.IncompleteReadError, asyncio.connection_closed_exc) as e:
                             self.logger.error("update_all_series: Error in 'await websocket.send(reply)': {}".format(e))
                         except Exception as e:
                             self.logger.exception("update_all_series: Exception in 'await websocket.send(reply)': {}".format(e))
                 else:
-                    self.logger.warning("update_all_series: Client {} is not active any more".format(client_addr))
+                    self.logger.info("update_all_series: Client {} is not active any more".format(client_addr))
                     remove.append(client_addr)
 
             # Remove series for clients that are not connected any more
@@ -863,13 +904,13 @@ class Websocket(Module):
                 log_entry['cmd'] = 'log'
                 msg = json.dumps(log_entry, default=self.json_serial)
                 try:
-                    self.logger.warning(">LogUp {}: {}".format(self.client_address(websocket), msg))
+                    self.logger.info(">LogUp {}: {}".format(self.client_address(websocket), msg))
                     await websocket.send(msg)
                 except Exception as e:
                     if not str(e).startswith('code = 1006'):
                         self.logger.exception("Error in 'await websocket.send(data)': {}".format(e))
             else:
-                self.logger.warning("update_log: Client {} is not active any more".format(client_addr))
+                self.logger.info("update_log: Client {} is not active any more".format(client_addr))
                 remove.append(client_addr)
 
         # Remove series for clients that are not connected any more
