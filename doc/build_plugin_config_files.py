@@ -536,7 +536,9 @@ def write_configfile(plg, configfile_dir, language='de'):
         validmax = iattributes_yaml[a].get('valid_max', '')
         fh.write(' - Datentyp: '+bold(datatype)+'\n')
         if default != '':
-            fh.write(' - Standardwert: '+bold(default)+'\n')
+            default_printable = default.replace('\r', '\\r')
+            default_printable = default_printable.replace('\n', '\\n')
+            fh.write(' - Standardwert: '+bold(default_printable)+'\n')
         fh.write('\n')
         if validmin != '':
             fh.write(' - Minimalwert: ' + bold(str(validmin)) + '\n')
@@ -580,7 +582,9 @@ def write_configfile(plg, configfile_dir, language='de'):
         validmax = lparameter_yaml[l].get('valid_max', '')
         fh.write(' - Datentyp: '+bold(datatype)+'\n')
         if default != '':
-            fh.write(' - Standardwert: '+bold(default)+'\n')
+            default_printable = default.replace('\r', '\\r')
+            default_printable = default_printable.replace('\n', '\\n')
+            fh.write(' - Standardwert: '+bold(default_printable)+'\n')
         fh.write('\n')
         if validmin != '':
             fh.write(' - Minimalwert: '+bold(str(validmin)) + '\n')
@@ -645,7 +649,9 @@ def write_configfile(plg, configfile_dir, language='de'):
         else:
             fh.write(' - Ergebnistyp der Funktion: ' + bold(datatype) + '\n')
         if default != '':
-            fh.write(' - Standardwert: ' + bold(default) + '\n')
+            default_printable = default.replace('\r', '\\r')
+            default_printable = default_printable.replace('\n', '\\n')
+            fh.write(' - Standardwert: '+bold(default_printable)+'\n')
         fh.write('\n')
         if validmin != '':
             fh.write(' - Minimalwert: ' + bold(str(validmin)) + '\n')
@@ -673,7 +679,9 @@ def write_configfile(plg, configfile_dir, language='de'):
                 validmax = func_param_yaml[par].get('valid_max', '')
                 fh.write(' - Datentyp: ' + bold(datatype) + '\n')
                 if default != '':
-                    fh.write(' - Standardwert: ' + bold(default) + '\n')
+                    default_printable = default.replace('\r', '\\r')
+                    default_printable = default_printable.replace('\n', '\\n')
+                    fh.write(' - Standardwert: ' + bold(default_printable) + '\n')
                 fh.write('\n')
                 if validmin != '':
                     fh.write(' - Minimalwert: ' + bold(str(validmin)) + '\n')
