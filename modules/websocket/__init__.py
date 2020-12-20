@@ -167,7 +167,7 @@ class Websocket(Module):
         self.sv_acl = default_acl
         self.sv_querydef = query_definitions
         self.sv_ser_upd_cycle = series_updatecycle
-        self.logger.warning(f"set_smartvisu_support: Set to protocol_enabled={protocol_enabled}, default_acl={default_acl}, query_definitions={query_definitions}, series_updatecycle={series_updatecycle}")
+        self.logger.info(f"set_smartvisu_support: Set to protocol_enabled={protocol_enabled}, default_acl={default_acl}, query_definitions={query_definitions}, series_updatecycle={series_updatecycle}")
         #self.sv_config = {'enabled': self.sv_enabled, 'acl': self.sv_acl, 'query_def': self.sv_querydef, 'upd_cycle': self.sv_ser_upd_cycle}
         #self.logger.warning(f"sv_config {self.sv_config}")
 
