@@ -40,8 +40,12 @@ Das **smartvisu** Plugin implementiert die selben Funktionen wie das bisherige *
 
 Zusätzlich bietet das neue Plugin folgende Funktionalitäten:
 
-- deprecated Warnings ...
-- structure definition file ...
+- zur Unterstützung des Widget Assistenten der smartVISU erstellt es eine aktuelle Liste der
+  SmartHomeNG Items
+- bei der Generierung der Seiten für die Visualisierung wird geprüft, ob veraltete Widgets der smartVISU genutzt werden
+
+..
+    - structure definition file ...
 
 
 ===========================
@@ -50,6 +54,11 @@ Generierung der Visu Seiten
 
 Die Generierung der Visu Seiten erfolgt (wenn sie konfiguriert ist) beim Start von SmartHomeNG durch ein Plugin.
 Mit der Version 1.8 von SmartHomeNG gibt es hier einige Neuerungen.
+
+.. hint::
+
+    Die folgenden Informationen (auch die über die Navigation links zugänglichen Seiten) setzen voraus, dass ein
+    Grundverständnis der smartVISU vorhanden ist.
 
 .. toctree::
    :maxdepth: 4
@@ -60,6 +69,7 @@ Mit der Version 1.8 von SmartHomeNG gibt es hier einige Neuerungen.
    automatic_generation
    item_attributes
    install_widgets
+   plugin_widgets
 
 
 .. index:: smartVISU; Definition der Navigationsstruktur

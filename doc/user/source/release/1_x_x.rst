@@ -8,10 +8,10 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 6. Dezember 2020
-       (test.mock: Added shng_status to MockSmarthome)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 6. Dezember 2020
-       (Merge pull request #423 from onkelandy/kodi ...)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 20. Dezember 2020
+       (modules.websocket: Adjusted minimum shng version to 'after 1.7.2 master')
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 20. Dezember 2020
+       (smartvisu: Clean up plugin files)
 
 
 
@@ -64,9 +64,14 @@ Bugfixes in the CORE
   * Fixed relative item evaluation when usind '.property'
   * Fixed bug in referencing an attribute of grandpartent item
 
+* lib.logutils
+
+  * fix error when filters are active and logging message is just a boolean value
+
 * lib.shpypi
 
   * Fix to be able to handle first run of smarthomeng (without any installed requirements)
+  * Catching exception if SmartHomeNG temporarily has no internet connection
 
 * lib.shtime:
 
@@ -117,6 +122,8 @@ Updates in the CORE
   * eval, on_update, on_change, eval_trigger: Now support shtime.*, items.* and math.*
   * implemented referencing attributes of greatgrandparent items
   * Added further info to shng_status text
+  * Added error handling for referencing not defined structs
+  * on item creation type gets filled before other attributes to enable casting in attribute definitions (e.g. autotimer)
 
 * lib.metadata:
 
@@ -190,6 +197,7 @@ Updates in the CORE
     * eval checker: Now support shtime.*, items.* and math.*
     * Added details to information while restarting core
     * added display of system pid for threads (when running under Python 3.8 and up)
+    * Added further details to status on services page while SmartHomeNG is restarting
 
   * http:
 
@@ -199,6 +207,7 @@ Updates in the CORE
     * Updated bootstrap from 4.3.1 to 4.5.3
     * Changed global template for plugin webinterface to support up to 6 tabs
     * Webinterfaces now have a prefix '/plugin' in the url -> http://<ip>:<port>/plugin/<plugin_name>
+    * Prevent cherrypy from direct logging to console without using configured loggers
 
   * mqtt:
 
@@ -260,14 +269,21 @@ For details of the changes of the individual plugins, please refer to the docume
   * The plugin comes with structure templates to ease the configuration of items
   * Added two smartVISU widgets (color_control and attributes)
   * It is no direct replacement for the old hue plugin, since it is not configuration compatible
+  * Now turns device on, if brightness is set to value > 0
   * Not yet feature complete
+
+* rtr2:
+
+  * New plugin that implements a room temperature regulator
+  * Extended functionallity compared to rtr plugin
+  * Simplified configuration compared to rtr plugin
 
 * smartvisu: New plugin to replace visu_smartvisu plugin -
 
-  * Not yet feature complete
   * Checks for the usage of deprecated or removed widgets while generating visu pages
   * For sv v2.9 and up templates (index.html, rooms.html from sv are used instead of templates of plugin
   * Structure of smartVISU navigation can optionally be defined in /etc/visu.yaml
+  * Generates an item list for widget creator
 
 
 Plugin Updates and Bugfixes
@@ -410,6 +426,8 @@ Plugin Updates and Bugfixes
   * Added support thread
   * update docs and set js+css resource to local source
   * Modified prompts in web interface to be usable on (tablet) devices with smaller viewport (1024 pixels wide)
+  * Improvements to webinterface tab 'ETS KNX Project'
+  * add debug message when sending knx telegram to bus (update_item)
 
 * kodi:
 
@@ -420,6 +438,10 @@ Plugin Updates and Bugfixes
   * Added definitions of the item_attributes to metadatalirc: Added definitions of the item_attributes to metadata
   * Replace connection lib by network lib and some minor tweaks.
     Problem: Version is not detected correctly. Will be fixed in next major update
+
+* mailrcv:
+
+  * Improved error handling (IMAP exception: command: SELECT => IMAP4rev1 Server logging out)
 
 * mpd:
 
@@ -443,6 +465,8 @@ Plugin Updates and Bugfixes
   * completed metadata
   * new feature to write token obtained via WebIf directly to plugin.yaml with new function update_config_section()
   * added alert text output, e.g. dustbin full
+  * Alert string needs default value other than empty string for basic.stateswitch to work properly
+  * added user_doc
 
 * network:
 
@@ -574,6 +598,7 @@ Plugin Updates and Bugfixes
 * telegram:
 
   * Update to Lib V12.8.0 with refactoring according to changes
+  * only rename jobqueue thread on older telegram packages
 
 * thz:
 
@@ -582,6 +607,7 @@ Plugin Updates and Bugfixes
 * unifi:
 
   * **Changed item atribute name** from 'mac' to 'unifi_client_mac'
+  * fix device generator mac attribute
 
 * uzsu:
 
@@ -597,6 +623,7 @@ Plugin Updates and Bugfixes
 
   * Added item attribute sv_blocksize to metadata
   * Added missing item attributes to metadata
+  * Marked as deprecated
 
 * visu_websocket:
 
@@ -610,6 +637,15 @@ Plugin Updates and Bugfixes
 
   * Changed nh_type to withings_type in plugin.yaml
   * Added english translations for BMI
+
+* xiaomi_vac:
+
+  * fix code, implement counter for Device not discoverable
+  * improve logging messages (english language)
+  * Handle commands if robovac is not connected (revert to previous value)
+  * Add counter to "Unable to detect.." error messages
+  * implement valid_list in metadata (plugin.yaml)
+  * fix typo in struct
 
 * xmpp:
 
@@ -627,13 +663,14 @@ Plugin Updates and Bugfixes
 Outdated Plugins
 ----------------
 
-The following plugins were already marked in version v1.6 as *deprecated*. This means that the plugins
+The following plugins are newly or were already marked as *deprecated*. This means that the plugins
 are still working, but are not developed further anymore and are removed from the release of SmartHomeNG
 in the next release. User of these plugins should switch to corresponding succeeding plugins.
 
 * System Plugins
 
   * sqlite_visu2_8 - switch to the **database** plugin
+  * visu_smartvisu - switch to the **smartvisu** plugin
 
 * Gateway Plugins
 
