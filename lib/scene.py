@@ -73,7 +73,8 @@ class Scenes():
             logger.warning("Directory scenes not found. Ignoring scenes.".format(self._scenes_dir))
             return
 
-     #   for item in smarthome.return_items():
+        self._learned_values = {}
+        #   for item in smarthome.return_items():
         for item in self.items.return_items():
             if item.type() == 'scene':
                 self.scene_file = os.path.join(self._scenes_dir, item.id())
@@ -82,19 +83,20 @@ class Scenes():
                 if scene_file_yaml is not None:
                     # Reading yaml file with scene definition
                     for state in scene_file_yaml:
-                        actions = scene_file_yaml[state]['actions']
-                        if isinstance(actions, dict):
-                            actions = [ actions ]
-                        if isinstance( actions, list ):
-                            for action in actions:
-                                if isinstance(action, dict):
-                                    self._add_scene_entry(item, str(state),
-                                                          action.get('item', ''), str(action.get('value', '')),
-                                                          action.get('learn', ''), scene_file_yaml[state].get('name', ''))
-                                else:
-                                    logger.warning("Scene {}, state {}: action '{}' is not a dict".format(item, state, action))
-                        else:
-                            logger.warning("Scene {}, state {}: actions are not a list".format(item, state))
+                        actions = scene_file_yaml[state].get('actions', None)
+                        if actions is not None:
+                            if isinstance(actions, dict):
+                                actions = [ actions ]
+                            if isinstance( actions, list ):
+                                for action in actions:
+                                    if isinstance(action, dict):
+                                        self._add_scene_entry(item, str(state),
+                                                              action.get('item', ''), str(action.get('value', '')),
+                                                              action.get('learn', ''), scene_file_yaml[state].get('name', ''))
+                                    else:
+                                        logger.warning("Scene {}, state {}: action '{}' is not a dict".format(item, state, action))
+                            else:
+                                logger.warning("Scene {}, state {}: actions are not a list".format(item, state))
                     self._load_learned_values(str(item.id()))
                 else:
                     # Trying to read conf file with scene definition
@@ -109,7 +111,7 @@ class Scenes():
                                     continue
                                 self._add_scene_entry(item, row[0], row[1], row[2])
                     except Exception as e:
-                        logger.warning("Problem reading scene file {0}: {1}".format(self.scene_file, e))
+                        logger.warning("Problem reading scene file {0}: No .yaml or .conf file found with this name".format(self.scene_file))
                         continue
                 item.add_method_trigger(self._trigger)
 
@@ -168,7 +170,6 @@ class Scenes():
         """
         Load learned values for the scene from a file
         """
-        self._learned_values = {}
         scene_learnfile = os.path.join(self._scenes_dir, scene+'_learned')
         learned_dict = yaml.yaml_load(scene_learnfile+'.yaml', ordered=False, ignore_notfound=True)
         if learned_dict is not None:
