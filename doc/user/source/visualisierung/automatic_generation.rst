@@ -28,14 +28,9 @@ Die zusätzlichen Item Attribute, die vom **smartvisu** Plugin zur Nutzung in de
 werden, sind auf der Seite :doc:`item_attributes` im Detail beschrieben.
 
 
-.. note::
-
-    Ab hier noch zu überarbeiten!
-
-
-Diese Seite und die zugehörien Unterseiten sollen einige der Möglichkeiten aufzeigen, die sich
-durch die Erweiterungen bieten. Es ist auch möglich einen Teil der Seiten generieren zu lassen
-und einen anderen Teil der Seiten manuell zu erstellen.
+Diese Seite und die zugehörien Unterseiten sollen einige der Möglichkeiten aufzeigen, die sich durch die
+Erweiterungen bieten. Es ist auch möglich einen Teil der Seiten generieren zu lassen und einen anderen Teil der
+Seiten manuell zu erstellen.
 
 
 Features der Generierung
@@ -49,11 +44,9 @@ Zusätzliche Infos in der Navigation anzeigen
 
 In der Navigation können eine Reihe zusätzlicher Informationen angezeigt werden.
 
-Das folgende Beispiel zeigt die Möglichkeiten zur Anzeige von
-zusätzlichen Informationen in der Navigation. Es können zwei Zeilen
-angezeigt werden. Im Beispiel wird in der ersten Zeile die aktuelle
-Raumtemperatur angezeigt und in der zweiten Zeile werden Icons
-angezeigt, die den Zustand von Geräten in dem Raum anzeigen.
+Das folgende Beispiel zeigt die Möglichkeiten zur Anzeige von zusätzlichen Informationen in der Navigation.
+Es können zwei Zeilen angezeigt werden. Im Beispiel wird in der ersten Zeile die aktuelle Raumtemperatur angezeigt
+und in der zweiten Zeile werden Icons angezeigt, die den Zustand von Geräten in dem Raum anzeigen.
 
 .. figure:: assets/navigation.jpg
    :alt: Navigation Zusatzinfos
@@ -68,8 +61,7 @@ Das Beispiel zeigt folgendes an:
 - Im Büro läuft das TV im Audio Mode
 - Die Waschmaschine läuft
 
-Am Beispiel der Küche zeigt die folgende Konfiguration, wie die
-zusätzlichen Informationen konfiguriert werden:
+Am Beispiel der Küche zeigt die folgende Konfiguration, wie die zusätzlichen Informationen konfiguriert werden:
 
 .. code-block:: yaml
 
@@ -82,25 +74,21 @@ zusätzlichen Informationen konfiguriert werden:
             name: Kochen
             sv_page: room
             sv_img: scene_cooking.png
-            sv_nav_aside: "{{ basic.float('m_kochen.ist', 'wohnung.kochen.heizung.ist', '°') }}"
+            sv_nav_aside: "{{ basic.print('m_kochen.ist', 'wohnung.kochen.heizung.ist', '°') }}"
             sv_nav_aside2: "{{ basic.symbol('m_kochen_kaffee2', 'wohnung.kochen.kaffeeautomat.status', '', 'icons/ws/scene_coffee_maker_automatic.png', '2') }} {{ basic.symbol('m_kochen_kaffee3', 'wohnung.kochen.kaffeeautomat.status', '', 'icons/or/scene_coffee_maker_automatic.png', '3') }} {{ basic.symbol('m_kochen_heizen', 'wohnung.kochen.heizung.heizen', '', icon1~'sani_heating.png') }}"
 
 Wie in den bisherigen Releases:
 
 - ``sv_page`` zeigt an, dass
-  [wohnung.kochen] ein Raum ist und für diesen ein Navigationseintrag und
-  eine Seite generiert werden soll.
-- ``sv_img`` gibt an, welches Icon in
-  der Navigation und auf der Seite angezeigt werden soll.
+  [wohnung.kochen] ein Raum ist und für diesen ein Navigationseintrag und eine Seite generiert werden soll.
+- ``sv_img`` gibt an, welches Icon in der Navigation und auf der Seite angezeigt werden soll.
 
 Neu:
 
-- ``sv_nav_aside`` spezifiziert, was an der Seite in der oberen
-  Zeile angezeigt werden soll. In diesem Fall ist das die aktuelle
-  Raumtemperatur.
-- ``sv_nav_aside2`` spezifiziert,was an der Seite in
-  der unteren Zeile angezeigt werden soll. In diesem Fall ist das eine
-  Reihe von Symbolen:
+- ``sv_nav_aside`` spezifiziert, was an der Seite in der oberen Zeile angezeigt werden soll. In diesem Fall ist das
+  die aktuelle Raumtemperatur.
+- ``sv_nav_aside2`` spezifiziert,was an der Seite in der unteren Zeile angezeigt werden soll. In diesem Fall ist
+  das eine Reihe von Symbolen:
 
   – Kaffeeautomat im Standby
 
@@ -108,10 +96,9 @@ Neu:
 
   – Die Heizung heizt
 
-Wenn die Stati nicht aktiv sind, werden die jeweiligen Icons nicht
-angezeigt. Da der Kaffeeautomat nur entweder im Standby sein kann oder
-heizt, wird nur eines der Icons angezeigt. Wenn der Kaffeeautomat
-ausgeschaltet ist, wird kein Icon angezeigt.
+Wenn die Stati nicht aktiv sind, werden die jeweiligen Icons nicht angezeigt. Da der Kaffeeautomat nur entweder
+im Standby sein kann oder heizt, wird nur eines der Icons angezeigt. Wenn der Kaffeeautomat ausgeschaltet ist,
+wird kein Icon angezeigt.
 
 
 .. index:: smartVISU Autogenerierung; Konfigurationsseiten

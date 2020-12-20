@@ -79,10 +79,10 @@ Optionale Definition der Navigationsstruktur
 ============================================
 
 Ab SmartHomeNG v1.8 ist es möglich an zentraler Stelle die Struktur der Navigation zu definieren. Diese
-zentralen Definitionen haben Vorrang vor der Struktur, die sich durch die Abarbeitung des Item-Trees ergibt
+zentralen Definitionen haben Vorrang vor der Struktur, die sich durch die Abarbeitung des Item-Trees ergibt.
 
-
-. . .
+Weitergehende Informationen sind unter :doc:`/visualisierung/automatic_generation#navigation-structure-definition`
+zu finden.
 
 
 .. index:: smartVISU; Kommunikation mit der Visu

@@ -124,10 +124,6 @@ Befehl ``http://<ip-des-servers>/smartvisu/index.php?pages=kurzanleitung`` erfol
 SmartHomeNG Plugin **visu\_smartvisu**
 ======================================
 
-Mit dem Plugin **visu\_smartvisu** können aus der Definition der Items in SmartHomeNG automatisch Visuseiten
-erstellt werden. Diese Visu Seiten werden im Verzeichnis ``smarthome`` des ``pages`` Verzeichnisses der
-smartVISU erstellt. Das Plugin unterstützt smartVISU Versionen von v2.7 bis zur aktuellen Version.
-
 .. hint::
 
     Bevor man sich an der automatischen Generierung von Visualisierungs-Seiten durch SmartHomeNG heran macht,
@@ -135,6 +131,10 @@ smartVISU erstellt. Das Plugin unterstützt smartVISU Versionen von v2.7 bis zur
     die Seite einer noch nicht konfigurierten smartVISU aufruft, kommt man zu einer Inline Dokumentation der
     smartVISU. Eine umfassende aktuelle Kurzanleitung kann nachinstalliert werden. Wie das geht, ist weiter
     unten beschrieben.
+
+Mit dem Plugin **smartvisu** können aus der Definition der Items in SmartHomeNG automatisch Visuseiten
+erstellt werden. Diese Visu Seiten werden im Verzeichnis ``smarthome`` des ``pages`` Verzeichnisses der
+smartVISU erstellt. Das Plugin unterstützt smartVISU Versionen von v2.8 bis zur aktuellen Version.
 
 
 Mischung von generierten und manuell erstellten Seiten
