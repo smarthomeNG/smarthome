@@ -1,9 +1,7 @@
-Libraries for use in plugins
-============================
+Programm Module zur Nutzung in Plugins
+======================================
 
-There are some libraries (Python modules) that can be used when developing plugins.
-The description of their functions is shown here:
-
+Die folgenden Programm Module können ebenfalls für die Plugin Entwicklung verwendet und referenziert werden:
 
 .. toctree::
    :maxdepth: 4

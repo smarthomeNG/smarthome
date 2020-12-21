@@ -19,7 +19,7 @@ zu installieren.
 
 
 zusätzliche Linux Pakete installieren
-=====================================
+=======================================
 
 Zunächst müssen einige zusätzlichen Pakete installiert werden:
 
@@ -64,7 +64,7 @@ Weitere Python Bibliotheken installieren
 Ab Version 1.7 kann SmartHomeNG benötigte Pakete selbst nachinstallieren. Eine manuelle Installation
 ist daher nur bei älteren Versionen von SmartHomeNG notwendig. (Siehe nächster Abschnitt)
 
-Wenn SmartHomeNG in einer Python Umgebing gestartet wird in der nicht der minimale Set an Packages installiert ist,
+Wenn SmartHomeNG in einer Python Umgebung gestartet wird in der nicht der minimale Set an Packages installiert ist,
 wird dieser installiert und die Informationen werden auf die Konsole ausgegeben (da das Logging dann noch nicht
 konfiguriert werden kann). Anschließend startet SmartHomeNG neu. Das sieht folgendermaßen aus.
 
@@ -103,7 +103,7 @@ installiert sind. Falls nicht, werden diese jeweils installiert und SmartHomeNG 
 
 
 Python Bibliotheken installieren (für SmartHomeNG vor v1.7)
------------------------------------------------------------
+--------------------------------------------------------------
 
 Für den ersten Start müssen noch einige Python Packages nachgeladen werden.
 Im Unterordner ``requirements`` befindet sich dafür eine Datei ``base.txt``.
@@ -173,7 +173,7 @@ Das bedeutet, das SmartHomeNG nun im Hintergrund läuft und unter der Prozess ID
 
 
 Überprüfen, ob SmartHomeNG läuft
---------------------------------
+-----------------------------------
 
 Um festzustellen ob SmartHomeNG läuft, kann der folgende Befehl genutzt werden:
 
@@ -248,7 +248,7 @@ ist. Nach Abschluß der Konfiguration muss SmartHomeNG neu gestartet werden. Die
 
 
 Erstmalige Konfiguration per Kommandozeile (für Fortgeschrittene)
-=================================================================
+====================================================================
 
 Die Konfiguration kann mit der graphischen Oberfläche (Administrations-Interface) oder (für Fortgeschrittene) durch
 Anpassung der Konfigurationdateien vorgenommen werden. Dieses ist hier im folgenden kurz beschrieben. Eine ausführlichere

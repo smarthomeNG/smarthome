@@ -80,3 +80,11 @@ Beim sichern werden folgende Daten in das zip-Archiv übernommen:
 Falls SmartHomeNG mit der Option **-c** bzw. **--config_dir** gestartet wurde, so wird dieses beim Sichern und
 Wiederherstellen berücksichtigt.
 
+
+.. warning::
+
+    Ganz ausdrücklich werden keine Daten aus dem Unterverzeichnis ``var`` gesichert.
+    Also keine Datenbank aus ``var/db`` oder ``var/rrd``, keine Logfiles aus ``log`` und auch keine Cache Daten aus ``var/cache``
+    die via Attribut ``cache: True`` befüllt werden.
+
+    Sollen diese Daten gesichert werden, so muß SmartHomeNG zuerst beendet und danach die gewünschten Dateie manuell gesichert werden.

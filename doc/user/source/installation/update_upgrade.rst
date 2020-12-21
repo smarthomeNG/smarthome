@@ -4,41 +4,86 @@
 .. role:: redsup
 .. role:: bluesup
 
-================================
+==================================
 Update von einer älteren Version
-================================
+==================================
 
 Es kann verschiedene Szenarien geben von denen aus man ein Update machen möchte. Es gibt unterschiedliche Ansätze
 wenn es sich um eine Virtuelle Maschine handelt oder wenn ein Raspberry Pi upgedated werden soll. Es gibt hier
 leider nicht **die** Methode. Leider gibt es derzeit auch keine vollständige Systemübergreifende Backup Methode.
 Es ist also ein wenig ein Stückwerk.
 
+Plan A
+~~~~~~
 
---------------------------------
-Gedanken zu Distributionsupgrade
---------------------------------
+Die Reihenfolge ist prinzipiell folgende:
 
-Bei Linux Betriebsystemversionen gibt es tiefgreifende Änderungen, was die Systemdienste betrifft. Gab es bei
-älteren Systemen wie Debian 7 (Wheezy) oder Ubuntu 14.x noch die init-Skripte, so ist bei neuen Systemen wie
-Debian 8 (Jessie) oder Ubuntu 15 ein neuer Ansatz gefunden worden: **systemd** Die Art und Weise wie Systemunterbauten
-für SmartHomeNG laufen haben sich also grundlegend angepasst. Als **alter Linuxhase** ist das sicher mit einem
-Distributionsupgrade schnell erledigt aber dann kommen noch solche Dinge wie Umstellung von **eibd** auf **knxd** dazu.
-Es kann also sinnvoll sein ein frisch installiertes System auf Basis SmartHomeNG einem aktualisierten System
-vorzuzuiehen.
+- Unter Linux einen Dienst, der SmartHomeNG automatisch startet abschalten
+- Über das Admin-Interface via **Dienste -> Konfiguration - letzte Sicherung -> Herunterladen eine Sicherung**
+  der Konfiguration erstellen
+- SmartHomeNG selbst beenden
+- Variable Daten sichern, die sich in ``var`` befinden:
 
-In diesem Fall müssen nur die Konfigurationen vom SmartHomeNG angepasst und die smartVISU Dateien rüberkopiert werden.
-Zusätzlich sind noch die Dateien der SQLite zu migrieren.
+    - Datenbank z.B. SQLite in ``var/db`` von SmartHomeNG 
+    - Cache für die Itemwerte in ``var/cache``
+    - ggf. Logfiles
 
-Grundsätzlich empfiehlt sich, vor dem Update von SmarthomeNG auf eine aktuelle Linux-Distribution upzudaten. Für ein
-Update von Raspian Wheezy auf Jessie findet sich `hier <https://www.elektronik-kompendium.de/sites/raspberry-pi/2005051.htm>`__
-eine gute Anleitung. Zusätzlich müssen noch die `in der Komplettanleitung <https://github.com/smarthomeNG/smarthome/wiki/Komplettanleitung#smarthomeng-installieren>`__
-unter Vorbedingungen angegebenen Programme und auf der selben Seite weiter unten beschriebenen Python-Pakete
-(ephem, pyyaml, ...) installiert werden.
+Der Weitere Weg hängt davon ab ob man eine Standardinstallation gemäß Komplettanleitung vorgenommen hat oder
+ob man manuell neue Plugins angelegt hat oder sonstige Änderungen außerhalb der Konfigurationsdateien
+vorgenommen hat. Kurz: ob ein ``git pull`` funktioniert oder nicht.
+
+- Aktualisieren der Basisinstallation über ein ``git pull`` und
+  aktualisieren der Plugins im plugin Verzeichnis ebenfalls über ein ``git pull``
+
+  Falls dieser Schritt fehlschlägt, kann man auf Plan B verzweigen
+
+- Erstmaliges Starten aus dem Basisverzeichnis ``usr/local/smarthome/`` mit ``python3 bin/smarthome.py``
+  --> Die neuen benötigten Bibliotheken werden von SmartHomeNG selbständig installiert
+
+- Prüfen ob es in ``var/log/`` aktualisierte Log Dateien mit Warnungen oder Fehlern gibt.
+  Wenn SmartHomeNG gestartet ist, kann davon ausgegangen werden, das alle benötigten Bibliotheken vorhanden sind. 
+  Logs können dann über das Admin Interface überprüft werden.
+  
+  Alternativ kann auch der Inhalt von ``var/log/`` aufgelistet werden mit ``ls -la var/log/`` um Log-Dateien 
+  zu finden, die sich gerade geändert haben. Diese lassen sich dann mit ``less`` oder ``cat`` anzeigen oder
+  auch mit ``nano <Dateiname>`` innerhalb des Verzeichnisses ``var/log/`` editieren.
+
+Plan B
+~~~~~~~
+
+- Umbenennen des Basisverzeichnisses ``/usr/local/smarthome`` in z.B. ``/usr/local/smarthome.old``
+- Installation von SmartHomeNG gemäß Komplettanleitung :doc:`/installation/komplettanleitung/02_smarthomeng`
+- Wenn alles funktioniert, kann die Sicherung mit den Konfigurationsdateien zurückgespielt werden.
+- Dann SmartHomeNG wiederum beenden und die gesicherten Daten wie Datenbank, cache, logfiles, rrd etc. 
+  zurückspielen und SmartHomeNG starten
+
+Jemand der sich mit Linux und Git auskennt, kann natürlich auch direkt im Basisverzeichnis und im Pluginverzeichnis
+jeweils ein ``git pull`` ausführen und dann per Admin Interface neu starten. Das klappt prinzipiell auch, 
+nur muß man wissen was man bei einem Fehlschlag tun muß.
 
 
-----------------------------------------
+--------------------
+Betriebssystemupdate
+--------------------
+
+Jede SmartHomeNG Version erhöht die Anforderungen an die benötigte Python Version gemäß der Übersicht 
+:doc:`/installation/anforderungen` daher sollte vor dem Update von SmarthomeNG 
+das Betriebssystem aktualisiert werden.
+
+Bei **Linux** systemen ist damit ein Distributionsupgrade gemeint. Für die aktuelle SmartHomeNG 1.8 also zum Beispiel 
+ein Upgrade auf Debian Buster (10.7). Welche Debian Version welche Python Version mitbringt,
+kann im `Debian Wiki <https://wiki.debian.org/Python>`__ nachgelesen werden.
+
+Zusätzlich müssen noch die in der Komplettanleitung :doc:`/installation/komplettanleitung/02_smarthomeng`
+unter *zusätzliche Linux Pakete installieren* angegebenen Pakete installiert werden.
+
+Für Windows bietet sich eine manuelle Installation von Python 3.8 in der letzten Revision an.
+
+SmartHomeNG 1.8 oder höher wird benötigte Python Bibliotheken selbständig beim ersten Programmstart installieren.
+
+-------------------------------------------
 Update von SmarthomeNG ab v1.6 und höher
-----------------------------------------
+-------------------------------------------
 
 Wenn von einer Version v1.6 oder höher ein Update durchgeführt werden soll, gibt es eine neue Möglichkeit. Statt
 ein Update durchzuführen, kann bestehende die Konfiguration gesichert werden, eine Neuinstallation durchgeführt werden
@@ -48,12 +93,20 @@ Raspberry Pi Image verwendet.
 Wie das Sichern und Wiederherstellen der Konfiguration funktioniert, ist auf der Seite
 :doc:`/konfiguration/konfiguration_backup_restore` beschrieben.
 
+.. warning::
 
-----------------------------------------
+    Ganz ausdrücklich werden keine Daten aus dem Unterverzeichnis ``var`` gesichert.
+    Also keine Datenbank aus ``var/db`` oder ``var/rrd``, keine Logfiles aus ``log`` und auch keine Cache Daten aus ``var/cache``
+    die via Attribut ``cache: True`` befüllt werden.
+
+    Sollen diese Daten gesichert werden, so muß SmartHomeNG zuerst beendet und danach die gewünschten Dateie manuell gesichert werden.
+
+
+-------------------------------------------
 Update von SmarthomeNG ab v1.1 und höher
-----------------------------------------
+-------------------------------------------
 
-Wenn man SmarthomeNG laut der `Komplettanleitung <https://github.com/smarthomeNG/smarthome/wiki/Komplettanleitung>`__
+Wenn man SmarthomeNG laut der Komplettanleitung :doc:`/installation/komplettanleitung/02_smarthomeng`
 (mithilfe "git clone [...]") installiert hat, in das Verzeichnis "smarthome" wechseln und anschliessend
 
 .. code-block:: bash
@@ -68,9 +121,9 @@ einen Pull durchführen:
 
 .. code-block:: bash
 
-    cd plugins
-    git pull
-    cd ..
+   cd plugins
+   git pull
+   cd ..
 
    .. note::
 
@@ -154,82 +207,111 @@ Neustart von SmartHomeNG wieder einschalten. In der Komplettanleitung
 ist beschrieben, welche Schritte dafür bei Verwendung von systemd
 durchgeführt werden müssen.
 
-Möchte man vom alten ``*.conf``
-`Format der Konfigurationsdateien <https://github.com/smarthomeNG/smarthome/wiki/Configuration-Files>`__
-(die wohl absehbar auch nicht weiter unterstützt werden) auf das neue
+
+Konvertierung von \*.conf-Dateien
+----------------------------------
+
+Möchte man vom alten ``*.conf`` Format der Konfigurationsdateien
+(die ab Version 2.0 nicht weiter unterstützt werden) auf das neue
 ``*.yaml`` Format umschwenken, so kann der im Verzeichnis ``../tools``
 bereitgestellte Konverter ``conf_to_yaml_converter.py`` genutzt werden
 um das automatisch zu tun.
 
-Nacharbeiten empfehlen sich auf jeden Fall für Item Attribute deren
-Werte als String erwartet werden, die aufgrund ihrer Struktur aber als
-float eingelesen werden. Ein prominentes Beispiel sind Onewire Adressen.
+.. note::
 
-**PS:** Wer sich ein wenig mit GitHub beschäftigen möchte, dem sei
-`diese Seite <https://rogerdudler.github.io/git-guide/index.de.html>`__
-empfohlen.
+    Nacharbeiten empfehlen sich auf jeden Fall für Item Attribute deren
+    Werte als String erwartet werden, die aufgrund ihrer Struktur aber als
+    float eingelesen werden. Ein prominentes Beispiel sind Onewire Adressen:
+    Bei ``ow_addr:  28.169712030000`` wird ein float ``28.16971203`` erkannt,
+    bei ``ow_addr:  '28.169712030000'`` hingegen wird die Adresse korrekt als 
+    String ``'28.169712030000'`` erkannt mit den Nullen am Ende.
 
-Anpassen der Repositories
--------------------------
+------------------------
+Upgrade von Smarthome.py 
+------------------------
 
-Wenn man Smarthome noch mit ``git`` aus dem alten Repository installiert hat
-(z.B. wie in einer der Komplettanleitungen beschrieben), verweisen die
-Pfade noch dorthin. Man kann aber recht einfach auf das neue Repository
-von SmartHomeNG umstellen. Dazu zunächst ins Unterverzeichnis vom
-smarthome wechseln (kann auf Raspi auch anders sein, z.B.
-/usr/smarthome) auf den Stand prüfen:
+Das letzte Release von Smarthome.py wurde am 14. November 2013 veröffentlicht. 
+Zu der Zeit war *Debian Wheezy* (7.x) gerade ein halbes Jahr alt, *systemd* war 
+in den Kinderschuhen und den eibd mußte man sich selbst kopieren.
+Es gibt daher in vielen Bereichen etliche Entwicklungsschübe die es rechtfertigen
+eine vollständige Neuinstallation vorzuschlagen. Trotzdem sollte es möglich sein,
+relativ problemlos auf SmartHomeNG umzusteigen.
 
-.. code-block:: bash
+Wichtig ist zu wissen, das sich die Struktur der Datenbank geändert hat und daher
+**eine existierende SQLite Datenbank nicht weiterverwendet werden kann**.
 
-    cd /usr/local/smarthome
-    git remote -v
+Vorgehensweise 
+~~~~~~~~~~~~~~
 
-Als Anzeige erscheint im Falle des alten Repositories:
+Da nicht mehr viele User eine Umstellung vornehmen müssen und die Entwickler lange schon 
+auf SmartHomeNG umgestiegen sind, ist die folgende Beschreibung eventuell nicht ganz vollständig
+oder gegebenenfalls nicht exakt genug. Bei Fragen steht der gitter chat oder das Forum
+zur Verfügung.
+Die Vorgehensweise beim Upgrade ist prinzipiell folgende:
 
-.. code-block:: bash
+- Unter Linux automatischen Start von Smarthome.py abschalten
+- Smarthome.py selbst beenden falls noch nicht geschehen
+- Das komplette Smarthome.py Verzeichnis ``/usr/local/smarthome/`` **auf einem anderen Rechner** sichern.
+- Betriebssystem neu aufsetzen und Installation von SmartHomeNG gemäß Komplettanleitung :doc:`/installation/komplettanleitung/02_smarthomeng`
+  durchführen. SmartHomeNG sollte gestartet und via Admin Interface geprüft werden ob es fehlerfrei startet.
+- Die im vorletzten Schritt gesicherte Installation von Smarthome.py kann nun zurückgesichert werden, 
+  z.B. an ``/usr/local/smarthome.old``. Somit stehen die alten Konfigurationsdateien zur Verfügung für die Übernahme.
 
-    origin  https://github.com/mknx/smarthome (fetch)
-    origin  https://github.com/mknx/smarthome (push)
+Plugins
+~~~~~~~
 
-Jetzt werden die URLs neu gesetzt (die zweite Zeile gegebenenfalls
-entsprechend der vorhergehenden Ausgabe von git remote -v anpassen):
+Wenn das neue SmartHomeNG grundsätzlich startet, können **zunächst die Plugins** übernommen werden.
+Es bietet sich an die Plugins entweder 
 
-.. code-block:: bash
+- über das Admin Interface hinzuzufügen und zu konfigurieren wobei eine
+  parallel geöffnete ``/usr/local/smarthome.old/etc/plugins.conf`` als Referenz für die richtigen Werte ideal ist
 
-    git remote set-url origin --add https://github.com/smarthomeNG/smarthome
-    git remote set-url --delete origin  https://github.com/mknx/smarthome
-    git remote -v
+oder manuell
 
-Als Rückmeldung bekommt man nun:
+- über das Admin Interface unter Dienste --> CONF-YAML Konverter den Inhalt der ``/usr/local/smarthome.old/etc/plugins.conf`` 
+  in yaml Format umwandeln und das Ergebnis an die Datei ``/usr/local/smarthome/etc/plugins.yaml`` anhängen bzw. einarbeiten.
+  Dabei muß natürlich selbst auf Doppelungen und die Einrückebene geachtet werden. 
 
-.. code-block:: bash
+Nun sollte ein Neustart von SmartHomeNG durchgeführt und die Logdateien auf Fehler kontrolliert werden. 
+Das kann entweder über das Admin Interface geschehen oder es muß in ``/usr/local/smarthome/var/log/smarthome-warnings.log``
+geschaut werden.
 
-    origin  https://github.com/smarthomeNG/smarthome (fetch)
-    origin  https://github.com/smarthomeNG/smarthome (push)
+Eine falsche Konfiguration kann nach dem Neustart auch via Admin Interface angepasst werden. Wenn keine weiteren Fehler auftreten
+können die Items übernommen werden.
 
-Jetzt kann man mit ``git pull`` den neue Stand herunterladen. Das
-Ergebnis sieht in etwa so aus:
+Items
+~~~~~~
 
-.. code-block:: bash
+Die empfohlene Vorgehensweise für die Übernahme der Items besteht aus den Schritten
 
-    remote: Counting objects: 12, done.
-    remote: Compressing objects: 100% (10/10), done.
-    remote: Total 12 (delta 2), reused 1 (delta 1), pack-reused 0
-    Unpacking objects: 100% (12/12), done.
-    From https://github.com/smarthomeNG/smarthome
-       57c1163..8534021  develop    -> origin/develop
-    Updating 57c1163..8534021
+- kopieren der Dateien mit den Definitionen der Items aus der alten Installation ``/usr/local/smarthome.old/items/``
+  in das Verzeichnis ``/usr/local/smarthome/items/`` der neuen Installation.
+- starten des Konvertierungstools:
 
-Fehlerquellen
-~~~~~~~~~~~~~
+  .. code-block:: bash
+  
+      cd /usr/local/smarthome
+      python3 tools/conf_to_yaml_converter.py
 
-Es ist besser, das bisherige Verzeichnis ``/usr/local/smarthome``
-zunächst z.B. in ``/usr/local/smarthome.old`` umzubenennen und ein neues
-Verzeichnis ``/usr/local/smarthome`` für SmarthomeNG anzulegen. Es sind
-nur wenige Ordner, die dann einfach in die neue Version kopiert werden
-müssen (etc, items, logics...), sonst hat git später Probleme mit
-Updates.
+  Bei erfolgreichem Durchlauf des Konverters ist jetzt für jede ``*.conf`` Datei eine passende ``*.yaml`` Datei erstellt worden.
+  Wenn das überprüft wurde können die ``*.conf`` Dateien nun aus ``/usr/local/smarthome/items/`` gelöscht werden.
 
-Es kann sein, dass in der alten Version der automatische Start von
-smarthome.py anders erfolgt ist, wie jetzt in der Komplettanleitung
-beschrieben. Dann muss man die alte Startsystematik noch entfernen.
+Nun sollte wiederum ein Neustart von SmartHomeNG durchgeführt und die Logdateien auf Fehler kontrolliert werden. 
+Das kann entweder über das Admin Interface geschehen oder es muß in ``/usr/local/smarthome/var/log/smarthome-warnings.log``
+geschaut werden.
+
+Logiken
+~~~~~~~~
+
+Die empfohlene Vorgehensweise für die Übernahme der Logiken besteht aus den Schritten
+
+- kopieren der Dateien mit den Definitionen der Logiken aus der alten Installation ``/usr/local/smarthome.old/logics/``
+  in das Verzeichnis ``/usr/local/smarthome/logics/`` der neuen Installation.
+
+- über das Admin Interface unter Dienste --> CONF-YAML Konverter den Inhalt der ``/usr/local/smarthome.old/etc/logics.conf`` 
+  in yaml Format umwandeln und das Ergebnis an die Datei ``/usr/local/smarthome/etc/logics.yaml`` anhängen bzw. einarbeiten.
+  Dabei muß natürlich selbst auf Doppelungen und die Einrückebene geachtet werden. 
+
+Nun sollte wiederum ein Neustart von SmartHomeNG durchgeführt und die Logdateien auf Fehler kontrolliert werden. 
+Das kann entweder über das Admin Interface geschehen oder es muß in ``/usr/local/smarthome/var/log/smarthome-warnings.log``
+geschaut werden.

@@ -12,23 +12,20 @@ Logiken
 Einführung
 ----------
 
-Logics itself are just scripts written in Python and they reside in subdirectory ``logics/``.
-All logics will be defined in ``etc/logic.yaml``.
-The configuration file tells SmartHomeNG when to execute a certain logic script.
+Logiken in SmartHomeNG sind in Python geschriebene Skript. Sie werden im Unterordner ``logics/`` abgelegt
+und definiert in ``etc/logic.yaml``.
+Die Konfigurationsdatei ``etc/logic.yaml`` beschreibt für SmartHomeNG unter welchen Bedingungen eine bestimmte Logik auszuführen ist.
 
-The following sample configuration file defines four logic scripts for use by SmartHomeNG.
+Die folgende Beispielkonfiguration definiert 4 Logiken:
 
-* The first logic script is named ``InitSmartHomeNG`` and its source code
-  is configured to be found in ``logics/InitSmartHomeNG.py``.
-  The attribute ``crontab: init`` tells SmartHomeNG to start the script just after
-  SmartHomeNG has started.
-* The second logic script named ``Hourly`` resides in ``logics/time.py``
-  and the attribute ``cycle: 3600`` tells SmartHomeNG to call (execute) the script every 3600 seconds (one hour).
-* The third logic script named ``Gate`` resides in ``logics/gate.py`` and the attribute
-  ``watch_item: gate.alarm`` tells SmartHomeNG to call the script when item
-  value of gate.alarm changed.
-* The fourth logic thus is named ``disks`` and it's source code ``logics/disks.py``
-  will be executed every 5 minutes.
+* Die erste Logik mit Namen ``InitSmartHomeNG`` befindet sich in der Datei ``logics/InitSmartHomeNG.py``.
+  Das Attribut ``crontab: init`` weist SmartHomeNG an diese Logik direkt nach dem Start auszuführen.
+* Die zweite Logik mit dem Namen ``Hourly`` befindet sich in der Datei ``logics/time.py``
+  und das Attribut ``cycle: 3600`` weist SmartHomeNG an die Logik alle 3600 Sekunden (eine Stunde) auszuführen.
+* Die dritte Logik mit Namen ``Gate`` befindet sich in der Datei ``logics/gate.py`` und das Attribut
+  ``watch_item: gate.alarm`` weist SmartHomeNG an die Logik auszuführen, wenn der Wert des Items gate.alarm sich ändert.
+* Die vierte Logik mit Namen ``disks`` befindet sich in der Datei ``logics/disks.py``. Der crontab Eintrag weist SmartHomeNG an
+  diese Logik alle 5 Minuten auszuführen.
 
 .. code-block:: yaml
    :caption:  etc/logic.yaml
@@ -53,15 +50,15 @@ The following sample configuration file defines four logic scripts for use by Sm
          - '0,5,10,15,20,25,30,35,40,45,50,55 * * *'
        usage_warning: 500
 
-Configuration parameters
+Konfigurations Parameter
 ------------------------
 
-The following parameters can be used in `etc/logic.yaml` to configure the logic and it's behavior.
+Die folgenden Parameter können genutzt werden um eine Logik und ihre Ausführungsumstände festzulegen:
 
 watch_item
 ~~~~~~~~~~
 
-The list of items will be monitored for changes.
+Die Liste der angegebenen Items wird auf Änderungen überwacht
 
 .. code-block:: yaml
    :caption:  etc/logic.yaml
@@ -72,39 +69,37 @@ The list of items will be monitored for changes.
        - garage.alarm
 
 
-Any change of the item **house.alarm** and **garage.alarm** triggers the execution of the given logic.
-It is possible to use an asterisk * for any path part (like a regular expression):
+Jede Änderung bei den Items **house.alarm** und **garage.alarm** löst die Ausführung der angegebenen Logik aus.
+Es ist möglich einen Stern * für einen Pfadbestandteil zu setzen, ähnlich eines regulären Ausdrucks:
 
 .. code-block:: yaml
-   :caption:  Configuration in YAML syntax
 
    watch_item: '*.door'
 
-this will trigger **garage.door** and also **house.door** but *not* **house.hallway.door**
+Eine Änderung von **garage.door** oder auch **house.door** wird die Ausführung der Logik auslösen aber **nicht** 
+eine Änderung von **house.hallway.door**
 
 cycle
 ~~~~~
 
-This will trigger the given logic in a recurring way
+Sorgt für eine zyklische Ausführung der Logik
 
 .. code-block:: yaml
-   :caption:  Configuration in YAML syntax
 
    cycle: 60
 
 
-Optional use a parameter
+Optional kann ein Argument übergeben werden
 
 .. code-block:: yaml
-   :caption:  Configuration in YAML syntax
 
    cycle: 60 = 100
 
 
-This triggers the logic every 60 seconds and passes the value 100 to the logic.
-The object ``trigger['value']`` can be queried and will here result in '100'
+Dadurch wird die Logik alle 60 Sekunden ausgeführt und der Wert 100 an die Logik übergeben.
+Innerhalb der Logik kann auf den Wert über ``trigger['value']`` zugegriffen werden
 
-**Since SmartHomeNG v1.3** there are extended configuration options.
+**Seit SmartHomeNG v1.3** gibt es erweiterte Konfigurations Optionen.
 
 The value for the ``cycle duration`` can be provided as follows:
 
@@ -201,10 +196,10 @@ Items need to be accessed with parentheses, otherwise an exception will be raise
            print child_item
 
 
-Loaded Python modules
----------------------
+Bereits geladene Python Module
+------------------------------
 
-In the logic environment are several python modules already loaded:
+Innerhalb von Logiken sind folgende Python Module bereits geladen:
 
 -  sys
 -  os
@@ -215,7 +210,8 @@ In the logic environment are several python modules already loaded:
 -  Queue
 -  subprocess
 
-you could however import more modules as needed with the import statement.
+Weitere Module können mit ``import <modulname>`` zusätzlich geladen werden.
+
 
 
 Available Objects/Methods
@@ -314,6 +310,7 @@ Besides the three functions (pos, set, rise) it provides two more.
 illuminated surface at the current time + offset.
 ``sh.moon.phase(offset)`` returns the lunar phase as an integer [0-7]: 0
 = new moon, 4 = full moon, 7 = waning crescent moon
+
 
 Scheduling
 ----------

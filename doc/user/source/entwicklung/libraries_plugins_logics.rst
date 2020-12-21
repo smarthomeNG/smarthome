@@ -1,8 +1,8 @@
-Libraries für Plugins und Lokiken
-=================================
+Libraries für Plugins und Logiken
+==================================
 
-Es gibt einige Libraries (Python Module), die bei der Entwicklung von Plugins und Logiken genutzt werden kennen.
-Der Aufruf der darin bereitgestellten Funktionen ist im folgenden beschrieben:
+Es gibt einige Libraries (Python Module), die bei der Entwicklung von Plugins und Logiken genutzt werden können.
+Der Aufruf der darin bereitgestellten Funktionen ist im Folgenden beschrieben:
 
 
 .. toctree::

@@ -1,11 +1,11 @@
-Libraries
-=========
+Programm Module
+===============
 
-Aside from the main program which resides in ``bin/smarthome.py`` there are libraries supporting SmartHomeNG. If a library
-has requirements for a Python package that is not met by the standard Python installation, it has to be added to the
-**requirements.txt** file in the ../lib directory.
+Abgesehen vom Hauptprogramm das in ``bin/smarthome.py`` liegt, nutzt SmartHomeNG noch unterstützende Programm Module
+die sich im Verzeichnis ``lib/`` befinden. Sollte ein Programm Modul Bibliotheken nutzen, die nicht mit der Standard
+Installation von Python mitgeliefert werden, so müssen diese in ``lib/requirements.txt`` eingetragen werden.
 
-The description of the libraries' functions is shown here:
+Im folgenden eine Beschreibung der Programm Module von SmartHomeNG:
 
 
 .. toctree::
@@ -24,7 +24,7 @@ The description of the libraries' functions is shown here:
    /lib/translation
 
 
-The following libraries are more public. They can be used for plugin development too.
+Die folgenden Programm Module können ebenfalls für die Plugin Entwicklung verwendet und referenziert werden:
 
 
 .. toctree::

@@ -2,8 +2,8 @@ Der Core von SmartHomeNG
 ========================
 
 Der Core von SmartHomeNG besteht aus einem Haupt-Objekt welches in ``bin/smarthome.py`` definiert ist und einer
-Reihe von Libraries, die exclusiv für die Nutzung durch den Core Hilfs-Objekte implementieren.
-Die Libraries sind in dem Ordner ``../lib`` abgelegt und im Unterpunkt **Libraries** beschrieben.
+Reihe von Programm Modulen, die exclusiv für die Nutzung durch den Core Hilfs-Objekte implementieren.
+Die Programm Module sind in dem Ordner ``../lib`` abgelegt und im Unterpunkt **Programm Modulen** beschrieben.
 
 smarthome.py
 ------------
