@@ -30,6 +30,9 @@ Die Syntax ist wie folgt:
 
 
 - Expressions (eval Ausdrücke) können die gleiche Syntax nutzen wie das :doc:`eval Attribut </referenz/items/standard_attribute/eval>`.
+- Für die Nutzung in den Ausdrücken stehen zusätzlich zum Python Standard die gleichen zusätzlichen Packages zur
+  Verfügung, wie in :doc:`eval </referenz/items/standard_attribute/eval>` unter **zusätzliche Funktionen in eval Ausdrücken**
+  beschrieben.
 - Expressions können :doc:`relative Item Referenzen </referenz/items/attributes_relative_referenzen>` nutzen.
 - Auch die Item Angabe in **<item> = <expression>** kann eine relative Angabe sein.
 - Zu beachten ist, dass <item> eine reine Item Pfad Angabe ist, während in einem Ausdruck

@@ -15,6 +15,9 @@ Das Verzeichnis enthält yaml Dateien (oder Dateien im alten .conf Format) mit d
 der Szenen, die durch SmartHomeNG genutzt werden sollen. Der Name der yaml Datei kann beliebig sein,
 solange die Extension `.yaml` ist.
 
+Zu beachten ist, dass die Konfigurationsdateien für Szenen nur eingelesen werden, wenn ein Item gleichen Namens
+definiert ist und der Type dieses Items **scene** ist.
+
 .. note::
 
    Das alte Format der Konfigurationsdateien für Szenen trägt zwar die Extension .conf. Das

@@ -24,6 +24,13 @@ Das Item soll zu bestimmten Zeitpunkten aktualisiert werden:
 
    crontab: <Minute> <Stunde> <Tag> <Wochentag>
 
+Dabei sind folgende Werte zulässig:
+
+    - Minute: 0 bis 59
+    - Stunde: 0 bis 23
+    - Tag: 1 bis 31
+    - Wochentag 0 (Montag) bis 6 (Sonntag)
+
 
 Das Item soll zu bestimmten Zeitpunkten aktualisiert und auf einen bestimmten Wert gesetzt werden:
 
@@ -44,8 +51,6 @@ folgende Muster unterstützt (Beispiel jeweils ohne Anführungszeichen verwenden
 * einen Interval, z.B. "\*\/4" (immer alle 4 Minuten/Stunden/Tage/Wochetag)
 * einen Stern, z.B. "*" (jede Minuten/Stunde/Tag/Wochentag)
 
-Die numerische Angabe des Wochentages wird mit 0=Montag und 6=Sonntag
-abgebildet!
 
 Ausser diesem Muster wird noch ein weiteres Muster in Bezug auf den
 Sonnenauf- sowie Sonnenuntergang unterstützt, z.B:

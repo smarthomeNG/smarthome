@@ -96,14 +96,13 @@ Beispiel:
              - room_a.presence
              - room_b.presence
 
-Seit SmartHomeNG v1.3 wird das Python Modul
-`math <https://docs.python.org/3.4/library/math.html>`__ bereitgestellt
-und es können entsprechende Funktionen genutzt werden. Außerdem sind seit
-SmarthomeNG v1.7.3 die
-:doc:`Items-API </logiken/objekteundmethoden_item_methoden>`
-als **items** (z.B. items.return_item('bla')) und das
-:doc:`shtime Modul </logiken/objekteundmethoden_feiertage_datum_zeit>`
-mittels **shtime** (z.B. shtime.now()) verfügbar.
+zusätzliche Funktionen in eval Ausdrücken
+-----------------------------------------
+
+Bereits SmartHomeNG v1.3 wird das Python Modul `math <https://docs.python.org/3.4/library/math.html>`__
+bereitgestellt und es können entsprechende Funktionen genutzt werden. Außerdem sind seit SmarthomeNG v1.7 die
+:doc:`Items-API </logiken/objekteundmethoden_item_methoden>` als **items** (z.B. items.return_item('bla')) und das
+:doc:`shtime Modul </logiken/objekteundmethoden_feiertage_datum_zeit>` mittels **shtime** (z.B. shtime.now()) verfügbar.
 
 Beispiel:
 
@@ -111,12 +110,19 @@ Beispiel:
 
    oneitem:
      type: num
-     eval: ceil(sh.otheritem() / 60.0)
+     eval: math.ceil(sh.otheritem() / 60.0)
 
-Seit SmartHomeNG v1.3 können für **eval** auch
-:doc:`Relative Item Referenzen </referenz/items/attributes_relative_referenzen>`
-genutzt werden. Dann müssen Bezüge auf andere Items nicht mehr absolut
-angegeben werden sondern können sich relative auf andere Items beziehen.
+Aktuell stehen zusätzlich zum Python Standard Sprachumfang folgende Packages bzw. SmartHomeNG Libraries zur Nutzung
+zur Vefügung:
+
+    - **shtime** - die SmartHomeNG Library mit Zeit- und Datumsfunktionen
+    - **items** - die SmartHomeNG Library mit Funktionen zum Umgang mit Items
+    - **math** - das Python Package mit mathematischen Funktionen
+
+
+Seit SmartHomeNG v1.3 können für **eval** auch :doc:`Relative Item Referenzen </referenz/items/attributes_relative_referenzen>`
+genutzt werden. Dann müssen Bezüge auf andere Items nicht mehr absolut angegeben werden sondern können sich relative
+auf andere Items beziehen.
 
 
 .. tip::

@@ -1,30 +1,29 @@
 
 .. role:: bluesup
 
-######
+======
 Szenen
-######
+======
 
 Für die Verwendung von Szenen ist eine Konfigurationsdatei für jedes 'Szenenobjekt' im Szenenverzeichnis
-erforderlich. Diese Dateien können im alten Szenen-Conf Format (Endung '.conf') oder im
-yaml Format (Endung '.yaml') erstellt werden und müssen als Dateinamen den Item-Path des Items
-tragen in dem die Szene definiert ist und über das der Status der Szene gesteuert wird.
+erforderlich. Diese Dateien müssen als Dateinamen den Item-Path des Items tragen in dem die Szene definiert
+ist und über das der Status der Szene gesteuert wird.
 
+Seit SmartHomeNG v1.4 werden folgende Features für Szenen unterstützt:
 
-Neuerungen ab SmartHomeNG v1.4
-------------------------------
-
-Mit SmartHomeNG v1.4 kommen folgende neue Features hinzu:
-
-- Es werden Konfigurationsdateien im yaml Format unterstützt.
-- Für Szenen Stati können im neuen Dateiformat Namen vergeben werden.
+- Für Szenen Stati können Namen vergeben werden.
 - Der Ziel Item-Pfad einer Szenenaktion kann als relative Referenz angegeben werden.
-- Anstelle eines Wertes kann auch ein **eval** Ausdruck angegeben werden. In diesem Ausdruck sind auch relative Item Referenzen möglich.
-- Für Szenen Aktionen in denen ein absoluter Wert angegeben wird, wird bei Verwendung des neuen Dateiformats das Lernen (analog zu KNX Szenen) unterstützt
+- Anstelle eines Wertes kann auch ein **eval** Ausdruck angegeben werden. In diesem Ausdruck sind auch relative
+  Item Referenzen möglich.
+- Für Szenen Aktionen in denen ein absoluter Wert angegeben wird, wird bei Verwendung des neuen Dateiformats das
+  Lernen (analog zu KNX Szenen) unterstützt
 
+Das alte Dateiformat (.conf)  von smarthome.py wird weiterhin unterstützt. Allerdings gibt es in diesem Dateiformat
+keine Unterstützung für die neueren Features.
 
-Die Nutzung dieser neuen Features ist unter :doc:`Konfiguation/Konfigurationsdateien/scenes/\*.yaml <./konfigurationsdateien/scenes>`
-beschrieben.
+Die Nutzung der neuen Features ist unter :doc:`Konfiguation/Konfigurationsdateien/scenes/\*.yaml <./konfigurationsdateien/scenes>`
+beschrieben. Zu beachten ist, dass die Konfigurationsdateien für Szenen nur eingelesen werden, wenn ein Item
+gleichen Namens definiert ist und der Type dieses Items **scene** ist.
 
 
 Funktionsweise von Szenen

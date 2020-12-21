@@ -467,7 +467,7 @@ Die Struktur der Datei ist folgende:
 
 
 
-Pages from multiple sub-trees
+Seiten aus mehreren Sub-Trees
 =============================
 
 Ab SmartHomeNG v1.8 können Items aus mehreren unterschiedlichen Sub-Trees zusammen in eine Seite der
