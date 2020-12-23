@@ -8,7 +8,7 @@
 ``plugin_functions``
 --------------------
 
-Dieser Abschnitt beschreibt dir öffentlichen Funktionen, die in einem Plugin implementiert sind.
+Dieser Abschnitt beschreibt die öffentlichen Funktionen, die in einem Plugin implementiert sind.
 
 ``plugin_functions:`` enthält einen Abschnitt für jede implementierte Funktion, die öffenlich (also von außerhalb
 des Plugins aufrufbar) sein soll. Der Name des Abschnitts ist der Name der Funktion.
@@ -60,3 +60,11 @@ der Datei ``plugin.yaml`` angezeigt:
 
     Bitte beachten, dass hier ``NONE`` vollständig in Großbuchstaben geschrieben werden muss.
 
+
+Funktionen ohne Parameter
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Falls eine Plugin-Funktion keine Parameter hat, darf der Eintrag ``parameters:`` nicht in die plugin.yaml aufgenommen werden. Er entfällt ohne weitere Angaben.
+
+
+:Note: Wenn Plugin-Funktionen in einer Logik verwendet werden sollen, kann dies in der folgenden Form erfolgen: ``result = sh.plugins.return_plugin("<Plugin-Name>").<Funktionsname>(<Argumente>)``

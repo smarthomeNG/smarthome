@@ -20,8 +20,7 @@ gefunden werden:
 
 
 Weitere Informationen die zu erstellenden Methoden und ihre Parameter kann in der folgenden Kurzanleitung gefunden
-werden. Die Libraries im Verzeichnis ```./lib``stellen Funktionalitäten bereit, die nicht in ```./bin/smarthome.py``
-enthalten sind.
+werden. Die Libraries im Verzeichnis ```./lib``stellen den Kern der Funktionalitäten von smarthomeng bereit.
 
 .. toctree::
    :maxdepth: 1
@@ -31,12 +30,11 @@ enthalten sind.
    plugin_in5minutes.md
 
 
-Ein Plugin besteht im absoluten Minimum aus zwei Dateien. Alle Dateien eines Plugins befinden sich in einem
-Unterverzeichnis des Verzeichnisses ``/plugins``, welches den Namen des Plugins trägt (nur Kleinbuchstaben):
+Alle Dateien eines Plugins befinden sich in einem Unterverzeichnis des Verzeichnisses ``/plugins``, welches den Namen des Plugins trägt (nur Kleinbuchstaben). Ein Plugin besteht mindestens den folgenden zwei Dateien:
 
-+--------------------------+---------------------------------------------------------------------------------+
 | File                     | Description                                                                     |
 +==========================+=================================================================================+
++--------------------------+---------------------------------------------------------------------------------+
 | ``__init__.py``          | Der Programm Code des Plugins                                                   |
 +--------------------------+---------------------------------------------------------------------------------+
 | ``plugin.yaml``          | Die (mehrsprachige) Beschreibung der Metadaten für das Plugin                   |
@@ -57,7 +55,7 @@ Je nach Umfang und Erfordernissen sind folgende optionale Dateien hinzuzufügen:
 |                          | Dateiformats bitte in der Dokumentation des **pip** Kommandos nachlesen:        |
 |                          | (https://pip.pypa.io/en/stable/reference/pip_install/#requirements-file-format) |
 +--------------------------+---------------------------------------------------------------------------------+
-| ``user_doc.rst``         | Weitergehende Dokumentation des Plugins, die in die Anwender Dokumentation      |
+| ``user_doc.rst``         | Weitergehende Dokumentation des Plugins, die in die Anwender-Dokumentation      |
 |                          | integriert wird. Falls die Dokumentation in ``user_doc.rst`` Bilder oder andere |
 |                          | Assets enthalten soll, ist im Plugin Verzeichnis ein Verzeichnis ``assets``     |
 |                          | anzulegen, welches diese Dateien aufnimmt.                                      |
@@ -66,10 +64,10 @@ Je nach Umfang und Erfordernissen sind folgende optionale Dateien hinzuzufügen:
 |                          | (``plugin.yaml``) referenziert werden. Sie wird automatisch bei der Generierung |
 |                          | der Anwender Dokumentation von SmartHomeNG integriert.                          |
 +--------------------------+---------------------------------------------------------------------------------+
-| ``developer_doc.rst``    | Optional: Weitergehende Entwickler Dokumentation des Plugins.                   |
+| ``developer_doc.rst``    | Weitergehende Entwickler-Dokumentation des Plugins.                             |
 +--------------------------+---------------------------------------------------------------------------------+
-| ``README.rst`` oder      | README ist als Format für die Dookumentation von Plugins veraltet. Ein Großteil |
-| ``README.md``            | der Dokumentation ist in die Matadaten Dokumentation in ``plugin.yaml``         |
+| ``README.rst`` oder      | README ist als Format für die Dokumentation von Plugins veraltet. Ein Großteil  |
+| ``README.md``?           | der Dokumentation ist in die Matadaten Dokumentation in ``plugin.yaml``         |
 |                          | übergegangen. Die restliche Dokumentation sollte in ``user_doc.rst`` erfolgen.  |
 +--------------------------+---------------------------------------------------------------------------------+
 
@@ -82,7 +80,7 @@ Je nach Umfang und Erfordernissen sind folgende optionale Dateien hinzuzufügen:
    gewählt würde, würde die Navigation der Dokumentation inkonsistent werden.
 
 
-Ein Plugin kann die folgenden Unterverzeichnisse haben:
+Ein Pluginverzeichnis kann die folgenden Unterverzeichnisse haben:
 
 +--------------------------+-----------------------------------------------------------------------+
 | Directory                | Description                                                           |
@@ -104,12 +102,12 @@ Ein Plugin kann die folgenden Unterverzeichnisse haben:
 +--------------------------+-----------------------------------------------------------------------+
 | ``webif/static/img``     | Optional, falls das Webinterface Bilder enthält                       |
 +--------------------------+-----------------------------------------------------------------------+
-| ``webif/templates``      | Dieses Verzeichnis enthält die Jinja2 Templatesdes Webinterfaces und  |
+| ``webif/templates``      | Dieses Verzeichnis enthält die Jinja2 Templates des Webinterfaces und |
 |                          | solte mindestens ``index.html`` enthalten.                            |
 +--------------------------+-----------------------------------------------------------------------+
 
 
-Ein Plugin implementiert im Code eine Klasse, welche vor der ``class SmartPlugin`` abgeleitet ist. Die Methoden
+Ein Plugin implementiert im Code eine Klasse, welche von der ``class SmartPlugin`` abgeleitet ist. Die Methoden
 von ``SmartPlugin`` sind hier dokumentiert:
 
 .. toctree::
@@ -119,7 +117,7 @@ von ``SmartPlugin`` sind hier dokumentiert:
    smartplugin
 
 Plugins welche MQTT nutzen, sollten stattdessen von ``class MqttPlugin`` abgeleitet werden. ``MqttPlugin`` ist
-eine subclass von ``SmartPlugin``, die um Methoden zur MQTT Nutzung erweitert ist. Die Methoden von
+eine subclass von ``SmartPlugin``, die um Methoden zur MQTT-Nutzung erweitert ist. Die Methoden von
 ``MqttPlugin`` sind hier dokumentiert:
 
 .. toctree::
@@ -144,7 +142,7 @@ eine subclass von ``SmartPlugin``, die um Methoden zur MQTT Nutzung erweitert is
 
 
 
-Some very specific info upon some plugins can be found here:
+Weitergehende und sehr spezifische Informationen über einzelne Plugins sind hier verfügbar:
 
 .. toctree::
    :maxdepth: 1

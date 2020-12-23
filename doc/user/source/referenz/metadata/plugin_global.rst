@@ -24,7 +24,7 @@ Der globale Metadaten Abschnitt ``plugin:`` kennt die folgenden Schlüsselbegrif
     #   tester:                     # Optional: Who tests this plugin?
         state: qa-passed
         keywords: weather           # keywords, where applicable
-        documentation: https://github.com/smarthomeNG/...        # url of additional wiki page (in addition to README.md of plugin
+        documentation: https://github.com/smarthomeNG/...        # url of additional wiki page (in addition to user_doc.rst of plugin
     #    support: https://knx-user-forum.de/forum/supportforen/smarthome-py      # url of the support thread or forum
 
         version: 1.4.3
@@ -51,7 +51,7 @@ Beschreibung der Schlüsselbegriffe im Abschnitt ``plugin:``
     - ``tester:`` Optional können hier die Nutzer angegeben werden, die sich bereit erklärt haben das Plugin zu testen
     - ``state:`` Entwicklungs-Status des Plugins (gültige Werte: ``develop``, ``ready``, ``qa-passed``)
     - ``keywords:`` Liste der Schlüsselwörter die das Plugin beschreiben (durch Leerzeichen getrennt)
-    - ``documentation:`` url die auf eine weiterführende Dokumentation verweist (gemeint ist nicht die Datei user_doc.rst oder README.md)
+    - ``documentation:`` url die auf eine weiterführende Dokumentation verweist (damit sind nicht die Dateien user_doc.rst, developer_doc.rst oder die veraltete README.md gemeint)
     - ``support:`` url die auf einen Support Thread oder ein Support Forum verweist
 
     - ``version:`` VersionsNumber des Plugins. Sie wird beim Laden mit der Versionsnummer die im Code definierert ist verglichen.
