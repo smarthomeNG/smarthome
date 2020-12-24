@@ -1,15 +1,14 @@
-.. index:: Web Interface; 3rd Party Components
+.. index:: Web Interface; Drittanbieterkomponenten
 
 .. role:: redsup
 .. role:: bluesup
 
 
 
-3rd Party Components for Web Interfaces
----------------------------------------
+Komponenten von Drittanbietern für Webinterfaces
+------------------------------------------------
 
-SmartHomeNG delivers a couple of 3rd party components with the http module, which can be used to build extended, more
-complex web interfaces:
+SmartHomeNG liefert eine Reihe von Drittanbieterkomponenten mit dem http-Modul aus, welche für erweiterte und komplexere Webinterfaces wie folgt eingebunden werden können:
 
    * JQuery 3.4.1:
 
@@ -39,9 +38,6 @@ complex web interfaces:
 
       * CSS: <link rel="stylesheet" href="/gstatic/fontawesome/css/all.css" type="text/css"/>
 
- For addons, etc. that are delivered with the components, see /modules/http/webif/gstatic folder!
+Erweiterungen usw., die mit den Komponenten ausgeliefert wurden, finden sich im Ordner ``/modules/http/webif/gstatic``.
 
- If you are interested in additional "global" components, contact us. Otherwise feel free to use them in your plugin,
- as long as the Open Source license is ok.
-
-
+Für Vorschläge weiterer "globaler" Komponenten sind wir jederzeit offen. Ansonsten können diese natürlich jederzeit im eigenen Plugin eingebundn und mitgeliefert werden, solange die Opensource-Lizenz der jeweiligen Komponente das erlaubt.

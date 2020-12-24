@@ -8,27 +8,20 @@
 Interaktion des Webinterface mit dem Plugin :redsup:`new`
 ====================================================
 
-Wenn nicht nur die jeweils aktuellen Daten des Plugins dargestellt werden sollen, sondern auch Aktionen ausgelöst werden
-und Ergebnisse in das Webinterface übernommen werden sollen, müssen die dafür notwendigen Routinen zum Senden, Empfangen
-und Verarbeiten von AJAX-Kommandos implementiert werden.
+Wenn nicht nur die jeweils aktuellen Daten des Plugins dargestellt werden sollen, sondern auch Aktionen ausgelöst werden und Ergebnisse in das Webinterface übernommen werden sollen, müssen die dafür notwendigen Routinen zum Senden, Empfangen und Verarbeiten von AJAX-Kommandos implementiert werden.
 
 Dazu sind die folgenden Schritte notwendig:
 
-  - In der Klasse **WebInterface** des Plugins wird die Methode **submit()** implementiert bzw. erwritert, um die
-    vorgesehenen Daten zum empfangen, zu verarbeiten und zurückzusenden.
-  - Die DOM-Elemente, die zur Anzeige aktualisierter Werte dienen (z.B. <td>-Elemente im **headtable**-Block oder in 
-    den **bodytab?**-Blöcken), müssen auch jeweils eigene IDs zugewiesen bekommen.
-  - Im Webinterface müssen die aktiven Elemente wie Buttons und Eingabefelder implementiert und jeweils eigene IDs
-    zugewiesen bekommen.
-  - Im HTML-Template muss (mindestens) eine neue Routine für das Handling der aktiven Elemente und für den Datentransfer
-    innerhalb der Methode für das **$(document).ready()**-Event implementiert werden.
+  - In der Klasse ``WebInterface`` des Plugins muss die Methode ``submit()`` implementiert bzw. erweitert werden, um die vorgesehenen Daten zum empfangen, zu verarbeiten und zurückzusenden.
+  - Die DOM-Elemente (z.B. <td>-Elemente im ``headtable``-Block oder in den ``bodytab?``-Blöcken), welche die aktualisierten Daten anzeigen sollen, müssen jeweils eine eindeutige IDs erhalten.
+  - Im Webinterface müssen die aktiven Elemente wie Buttons und Eingabefelder implementiert werden und jeweils eindeutige IDs erhalten.
+  - Im HTML-Template muss (mindestens) eine neue Routine für das Handling der aktiven Elemente und für den Datentransfer innerhalb der Methode für das ``$(document).ready()``-Event implementiert werden.
 
 
 Die Python-Methode submit() implementieren
 ------------------------------------------
 
-Die Klasse **WebInterface** des Plugins muss eine Schnittstelle bieten, um Daten via AJAX zu empfangen und die
-verarbeiteten Daten zurückzuliefern. Dazu dient die Methode **submit()**:
+Die Klasse ``WebInterface`` des Plugins muss eine Schnittstelle bieten, um Daten via AJAX zu empfangen und die verarbeiteten Daten zurückzuliefern. Dazu dient die Methode ``submit()``:
 
 .. code-block:: PYTHON
 
@@ -61,19 +54,11 @@ verarbeiteten Daten zurückzuliefern. Dazu dient die Methode **submit()**:
                 return json.dumps(result_dict).encode('utf-8')
 
 
-Die Anzahl und die Namen der Funktionsparameter (im Beispiel nur **param1**) müssen dem Bedarf und den Definitionen
-im Webinterface entsprechen. Mehrere Variablen können einzeln (dann jeweils als eigener Parameter) oder gesammelt in
-einem dict-Objekt übergeben werden. Das muss in der weiteren Verarbeitung berücksichtigt sein.
+Die Anzahl und die Namen der Funktionsparameter (im Beispiel nur ``param1``) müssen dem Bedarf und den Definitionen im Webinterface entsprechen. Mehrere Variablen können einzeln (dann jeweils als eigener Parameter) oder gesammelt in einem dict-Objekt übergeben werden. Das muss in der weiteren Verarbeitung berücksichtigt sein.
 
-Der Block "verarbeit die Daten" ruft beispielhaft nur eine beliebige Funktion des Plugins auf, um die Daten zu
-verarbeiten und einen entsprechenden Rückgabewert zu erhalten. Hier sind beliebige zusätzliche Verarbeitungen denkbar,
-wie z.B. Überprüfung der übergebenen Werte auf Vollständigkeit und Gültigkeit, ggf. Transformation von Daten, auch
-umfangreichere Interaktionen mit dem Plugin sind möglich. Weiterhin können die Daten, die zurückgegeben werden sollen,
-formatiert und in ein dict gekapselt werden.
+Der Block mit dem Kommentar "verarbeite die Daten" ruft beispielhaft nur eine beliebige Funktion des Plugins auf, um die Daten zu verarbeiten und einen entsprechenden Rückgabewert zu erhalten. Hier sind beliebige zusätzliche Verarbeitungen denkbar, wie z.B. Überprüfung der übergebenen Werte auf Vollständigkeit und Gültigkeit, ggf. Transformation von Daten, auch umfangreichere Interaktionen mit dem Plugin sind möglich. Weiterhin können die Daten, die zurückgegeben werden sollen, formatiert und in ein dict gekapselt werden.
 
-Generell empfiehlt sich, als Rückgabewert nur ein dict anzugeben; zum Einen, weil die Daten für den Transport per JSON
-verkapselt werden, was dicts nativ übergeben kann, zum Anderen weil dicts im Javascript der Webseite als Objekte direkt
-angesprochen werden können.
+Generell empfiehlt sich, als Rückgabewert nur ein dict anzugeben; zum Einen, weil die Daten für den Transport per JSON verkapselt werden, was dicts nativ übergeben kann, zum Anderen weil dicts im Javascript der Webseite als Objekte direkt angesprochen werden können.
 
 Das dict
 
@@ -91,8 +76,7 @@ Das dict
                         "wert": "..."
                     }}
 
-kann in der Javascript-Methode dann unmittelbar angesprochen werden, wenn das dict an die Variable **data** übergeben 
-wurde:
+kann in der Javascript-Methode dann unmittelbar angesprochen werden, wenn das dict an die Variable ``data`` übergeben wurde:
 
 .. code-block:: JavaScript
 
@@ -104,7 +88,7 @@ wurde:
 IDs an DOM-Elemente zuweisen
 ----------------------------
 
-Normalerweise sieht das **headtable** wie folgt aus:
+Normalerweise sieht das ``headtable`` wie folgt aus:
 
 .. code-block:: html+jinja
 
@@ -124,8 +108,7 @@ Normalerweise sieht das **headtable** wie folgt aus:
     {% endblock headtable %}
 
 
-Tabelle in einem **bodytab?** können mit einer Schleife befüllt werden, das ist auf der Seite 
-:doc:`Webinterface mit Inhalt füllen <webinterface_filling_webinterface>` näher beschrieben:
+Tabelle in einem ``bodytab?`` können mit einer Schleife befüllt werden, das ist auf der Seite :doc:`Webinterface mit Inhalt füllen <webinterface_filling_webinterface>` näher beschrieben:
 
 
 .. code-block:: html+jinja
@@ -158,8 +141,7 @@ Tabelle in einem **bodytab?** können mit einer Schleife befüllt werden, das is
     {% endblock **bodytab1** %}
 
 
-Um das nachträgliche Zuweisen von Werten an die <td>-Elemente zu ermöglichen, muss bei diesen eine ID ergänzt werden.
-Um eindeutige IDs in den Wertetabellen sicherzustellen, verwenden wir die Variable aus der for-Schleife:
+Um das nachträgliche Zuweisen von Werten an die <td>-Elemente zu ermöglichen, muss bei diesen eine ID ergänzt werden. Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable aus der for-Schleife:
 
 
 .. code-block:: html+jinja
@@ -206,15 +188,13 @@ Um eindeutige IDs in den Wertetabellen sicherzustellen, verwenden wir die Variab
         </div>
     {% endblock **bodytab1** %}
 
-Jetzt können die DOM-Elemente über die IDs **fromip** und **<elem>_value** angesprochen werden. . Im Beispiel
-von oben wäre <elem> jeweils **kategorie1** und **kategorie2**.
+Jetzt können die DOM-Elemente über die IDs ``fromip`` und ``<elem>_value`` angesprochen werden. Im Beispiel von oben wäre <elem> jeweils ``kategorie1`` und ``kategorie2``.
 
 
 Aktive Elemente im WebInterface definieren
 ------------------------------------------
 
-Einzelne Buttons für generische Aktionen können üblicherweise im Block **buttons** definiert und unterhalb der
-Headertabelle angezeigt werden, wo standardmäßig schon die Buttons "Aktualisieren" und "Schließen" vorhanden sind.
+Einzelne Buttons für generische Aktionen können üblicherweise im Block ``button`` definiert und unterhalb der Headertabelle angezeigt werden, wo standardmäßig schon die Buttons "Aktualisieren" und "Schließen" vorhanden sind.
 
 .. code-block:: html+jinja
 
@@ -222,13 +202,11 @@ Headertabelle angezeigt werden, wo standardmäßig schon die Buttons "Aktualisie
             <button id="clear" class="btn btn-shng btn-sm" type="button">Aktion ausführen</button>
     {% endblock %}
 
-Dabei ist wichtig, dass die **id** (hier: "clear") vergeben und eindeutig im gesamten Template ist.
+Dabei ist wichtig, dass die ID (hier: "clear") vergeben und eindeutig im gesamten Template ist.
 
-Wenn nur ein Button eingefügt werden soll, ist das die einfachste Variante. Wie weiter unten beschrieben, ist für jeden
-Button, der auf diese Weise implementiert wird, eine eigene Handler-Routine erforderlich.
+Wenn nur ein Button eingefügt werden soll, ist das die einfachste Variante. Wie weiter unten beschrieben, ist für jeden Button, der auf diese Weise implementiert wird, eine eigene Handler-Routine erforderlich.
 
-Wenn mehrere Buttons dieser Art vorgesehen sind, oder z.B. in einer Wertetabelle ein Button in jeder Zeile stehen soll,
-dann bietet es sich an, statt einzelnen Button-Elementen eine Formularkonstruktion zu nutzen:
+Wenn mehrere Buttons dieser Art vorgesehen sind, oder z.B. in einer Wertetabelle ein Button in jeder Zeile stehen soll, dann bietet es sich an, statt einzelnen Button-Elementen eine Formularkonstruktion zu nutzen:
 
 .. code-block:: html+jinja
 
@@ -274,10 +252,7 @@ dann bietet es sich an, statt einzelnen Button-Elementen eine Formularkonstrukti
     {% endblock bodytab1 %}
 
 
-In der Tabellenspalte mit den Buttons wird in jeder Zeile ein Button eingefügt. Durch den Ausdruck **{{ elem }}** wird
-jedem Button der entsprechende Zeilenwert in den Button-Code eingefügt. Um die eindeutige Zuordnung sicher zu stellen,
-wird die for-Variable der Tabelle verwendet. Natürlich können auch andere Werte verwendet werden, z.B. Inhalte aus 
-dem **data**-dict. Dann muss sicher gestellt sein, dass die Werte eindeutig sind.
+In der Tabellenspalte mit den Buttons wird in jeder Zeile ein Button eingefügt. Durch den Ausdruck ``{{ elem }}`` wird jedem Button der entsprechende Zeilenwert in den Button-Code eingefügt. Um die eindeutige Zuordnung sicher zu stellen, wird die for-Variable der Tabelle verwendet. Natürlich können auch andere Werte verwendet werden, z.B. Inhalte aus dem ``data``-dict. Dann muss sicher gestellt sein, dass die Werte eindeutig sind.
 
 Die Definition der aktiven Elemente ist damit abgeschlossen.
 
@@ -285,14 +260,9 @@ Die Definition der aktiven Elemente ist damit abgeschlossen.
 Javascript-Funktion zum Handling implementieren
 -----------------------------------------------
 
-Normalerweise werden Buttons und Formulare an den Webserver gesendet, welcher daraufhin eine neue Webseite an den
-Browser schickt. Um zu verhindern, dass bei jeder Interaktion eine neue Seite geladen wird, benötigen die aktiven
-Elemente sogenannte handler-Methoden. Gleichzeitig empfangen die handler die Antwortdaten vom Plugin und fügen diese
-in die entsprechenden DOM-Elemente ein. 
+Normalerweise werden Buttons und Formulare an den Webserver gesendet, welcher daraufhin eine neue Webseite an den Browser schickt. Um zu verhindern, dass bei jeder Interaktion eine neue Seite geladen wird, benötigen die aktiven Elemente sogenannte handler-Methoden. Gleichzeitig empfangen die handler die Antwortdaten vom Plugin und fügen diese in die entsprechenden DOM-Elemente ein. 
 
-Diese handler müssen auf der Webseite im Block **pluginscripts** eingefügt werden. Falls dort noch kein Handler für das
-**$(document).ready()**-Event vorhanden ist, wird dieser mit hinzugefügt; ansonsten werden die neuen Handler in den
-document.ready-Handler eingefügt.
+Diese handler müssen auf der Webseite im Block ``pluginscripts`` eingefügt werden. Falls dort noch kein Handler für das ``$(document).ready()``-Event vorhanden ist, wird dieser mit hinzugefügt; ansonsten werden die neuen Handler in den document.ready-Handler eingefügt.
 
 
 Der Handler für das document.ready-Event sieht wie folgt aus:
@@ -363,7 +333,5 @@ Dort werden dann die Handler für die aktiven Elemente eingefügt.
     {% endblock pluginscripts %}
 
 
-In dieser Implementation ist natürlich zu beachten, dass die Werte, die das vom Plugin zurückgegeben werden, so
-strukturiert sind, dass sie hier verarbeitet werden können. Sowohl die gewählte Datenstruktur als auch die davon
-abhängige Implementation der Handler können sich erheblich voneinander unterscheiden.
+In dieser Implementation ist natürlich zu beachten, dass die Werte, die das vom Plugin zurückgegeben werden, so strukturiert sind, dass sie hier verarbeitet werden können. Sowohl die gewählte Datenstruktur als auch die davon abhängige Implementation der Handler können sich erheblich voneinander unterscheiden.
 

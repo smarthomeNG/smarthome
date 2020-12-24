@@ -1,31 +1,27 @@
-.. index:: Web Interface; Automatich Updates
+.. index:: Web Interface; Automatische Updates
 
 .. role:: redsup
 .. role:: bluesup
 
 
 
-Automatic Updates of Webinterface data :redsup:`new`
-====================================================
+Automatische Updates der Datem im Webinterface :redsup:`new`
+============================================================
 
-To update data in the web interface, the web page periodically sends AJAX requests to the plugin and processes the
-result by incorporating the new data in the DOM of the web page.
+Um die Daten im Webinterface zu aktualisieren, sendet die Webseite periodische AJAX-Anfragen an das Plugin und verarbeitet die zurückgelieferten Informationen, indem die neuen Daten in die DOM-Elemente der Webseite eingetragen werden.
 
-To implement automatic updates, the following has to be added to the web interface:
+Um automatische Updates zu implementieren, müssen die folgenden Elemente hinzugefügt werden:
 
-  - In the class **WebInterface** of the plugin, the method **get_data_html()** has to be implemented/extended to deliver
-    the needed data
-  - The DOM elements (e.g. <td> elements in the **headtable** block or in the **bodytab?** blocks that are to be updated,
-    have to have an id assigned to them
-  - int the html template, the javascript function **handleUpdatedData()** has to be implemented/extended
-  - The template variable **update_interval** has to be set to the desired interval (in milli-seconds)
+  - In der Klasse ``WebInterface`` des Plugins muss die Methode ``get_data_html()`` implementiert bzw. erweitert werden, um die gewünschen Daten zu liefern.
+  - Die DOM-Elemente (z.B. <td>-Elemente im ``headtable``-Block oder in den ``bodytab?``-Blöcken), welche die aktualisierten Daten erhalten sollen, müssen jeweils eine eindeutige ID erhalten.
+  - Im HTML-Template muss die JavaScript-Funktion ``handleUpdatedData()`` implementiert bzw. erweitert werden.
+  - Die Template-Variable ``update_interval`` muss auf das gewünschte Update-Intervall (in Millisekunden) gesetzt werden.
 
 
-Extending the Python method get_data_html()
--------------------------------------------
+Erweitern der Python-Methode get_data_html()
+--------------------------------------------
 
-The class **WebInterface** in the plugin code has to be extended to collect the data that is needed to update the web page
-and to return it as a dict:
+Die Klasse ``WebInterface`` im Plugincode muss so erweitert werden, dass sie die für das Update erforderlichen Daten zusammenstellt und als dict zurückgibt:
 
 .. code-block:: PYTHON
 
@@ -68,15 +64,13 @@ and to return it as a dict:
             return {}
 
 
-Die optionale Möglichkeit einen **dataSet** anzugeben, ist für zukünftige Erweiterungen vorgesehen. Darüber soll es
-möglich werden, Daten in unteeschiedlichen Zyklen zu aktualisieren (z.B. für Daten deren Ermittlung eine längere
-Zeit in Anspruch nimmt).
+Die optionale Möglichkeit einen ``dataSet`` anzugeben, ist für zukünftige Erweiterungen vorgesehen. Darüber soll es möglich werden, Daten in unterschiedlichen Zyklen zu aktualisieren (z.B. für Daten, deren Ermittlung eine längere Zeit in Anspruch nimmt).
 
 
-Assign IDs to the DOM elements
-------------------------------
+IDs an DOM-Elemente zuweisen
+----------------------------
 
-Usually the **headtable** looks like this:
+Normalerweise sieht das ``headtable`` wie folgt aus:
 
 .. code-block:: html+jinja
 
@@ -95,8 +89,7 @@ Usually the **headtable** looks like this:
         </table>
     {% endblock headtable %}
 
-For tables, it is essential to have an individual id for the <td> elements in every row of the table that is
-filled through the for loop during rendering:
+Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleife befüllt:
 
 .. code-block:: html+jinja
 
@@ -128,8 +121,7 @@ filled through the for loop during rendering:
     {% endblock **bodytab1** %}
 
 
-To enable setting the values of the <td> elements while the page is displayed, the td elements have to be extended
-with an id. To ensure individual ids in data tables, the id has to include the variable (named item) from the for loop:
+Um die Werte in die <td>-Elemente schreiben zu können, nachdem die Webseite erstellt wurde, müssen die <td>-Elemente jeweils mit einer ID ergänzt werden. Um sicherzustellen, dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hier: der Itemname) verwendet:
 
 .. code-block:: html+jinja
 
@@ -175,18 +167,16 @@ with an id. To ensure individual ids in data tables, the id has to include the v
         </div>
     {% endblock **bodytab1** %}
 
-Now the DOM element can be accessed through the ids **fromip** and **<item>_value**.
+Jetzt können die DOM-Elemente über die IDs ``fromip`` und ``<elem>_value`` angesprochen werden.
 
 
-Extending the Javascript function handleUpdatedData()
+Erweitern der JavaScript-Funktion handleUpdatedData()
 -----------------------------------------------------
 
-The web interface calls the plugin periodically to get updated data. When new data is received, the javascript
-function **handleUpdatedData()** of the web page is called. This function has to assign the updated data to the
-right DOM elements.
+Das Webinterface ruft regelmäßig eine Methode des Plugins auf, um aktualisierte Daten zu erhalten. Wenn die Daten empfangen wurden, werden sie an die JavaScript-Funktion ``handleUpdatedData()`` der Webseite übergeben. Diese Funktion weist dann die neuen Daten den jeweiligen DOM-Elementen zu.
 
-The function **handleUpdatedData()** is defined in the block **pluginscripts** of the html template of the web interface.
-The following example fills the data to the <td> element of **headdata** that has been mentioned above:
+Die Funktion ``handleUpdatedData()`` ist im Block ``pluginscripts`` des HTML-Templates definiert. 
+Das folgende Beispiel weist die neuen Daten dem oben vorgestellten <td>-Element des ``headtable`` zu:
 
 .. code-block:: html+jinja
 
@@ -203,7 +193,7 @@ The following example fills the data to the <td> element of **headdata** that ha
     {% endblock pluginscripts %}
 
 
-The following example fills the data to the <td> elements of all rows of **bodytab?** that has been mentioned above:
+Das nächste Beispiel befüllt dazu analog die <td>-Elemente der Zeilen in der Tabelle im ``bodytab?``:
 
 .. code-block:: html+jinja
 
@@ -222,22 +212,18 @@ The following example fills the data to the <td> elements of all rows of **bodyt
     {% endblock pluginscripts %}
 
 
-Setting the update interval
----------------------------
+Festlegen des Aktualisierungintervalls
+--------------------------------------
 
-At the top of the template file **webif/templates/index.html** you find the following line
+Zu Beginn der Templatedatei ``webif/templates/index.html`` findet sich die folgende Zeile:
 
 .. code-block:: css+jinja
 
    {% set update_interval = 0 %}
 
-Change it to the desired update interval in milli-seconds. Make sure, that the interval is longer than the time needed
-to execute the Python method **get_data_html()**. If the method only returns data that has been updated/collected by
-other Python threads, you can go down to about 1000 msec. If the Python method **get_data_html()** needs to collect
-the data when beeing called, you probably should set the update interval not below 5000 msec.
+Diese wird auf den gewünschten Wert in Millisekunden gesetzt. Dabei muss sichergestellt sein, dass das gewählte Intervall lang genug ist, dass die Python-Methode ``get_data_html()`` des Plugins die Daten liefern kann, bevor das Intervall abläuft. Wenn nur Daten zurückgegeben werden, die von anderen Routinen und Threads des Plugins bereits bereitgestellt wurden, kann ein Update-Intervall von ca. 1000 ms gewählt werden. Wenn die Python-Methode ``get_data_html()`` selbst noch weitere Routinen ausführen muss, sollte das Update-Intervall wahrscheinlich nicht kleiner als 5000 ms sein.
 
 .. warning::
 
-    Make sure, that the interval is not too short. It HAS TO BE be longer than the time needed to execute
-    the Python method **get_data_html()**.
+    Das Intervall darf nicht zu klein sein. Die Dauer **MUSS** länger sein als die notwendige Zeit zur Ausführung der Python-Methode ``get_data_html()``.
 

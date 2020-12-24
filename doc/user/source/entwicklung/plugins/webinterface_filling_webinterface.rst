@@ -4,15 +4,14 @@
 .. role:: bluesup
 
 
-Filling the webinterface with content
--------------------------------------
+Das Webinterface mit Inhalt füllen
+----------------------------------
 
-To bring the webinterface up to life, the following steps should be followed:
+Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
 
-   1. Modify the method ``index`` of the class ``WebInterface`` to hand over the needed data
-      (in the following example a list of items that have the attribute knx_dpt) to the template engine.
+   1. Die Methode ``index`` der Klasse ``WebInterface`` wird zur Übergabe der gewünschten Daten an das Template modifiziert (im folgenden Beispiel ist das eine Liste von Items, die das Attribut ``knx_dpt`` besitzen).
 
-      Modify the sample code from:
+      Der Beispielcode wird wie folgt verändert von:
 
       .. code-block:: PYTHON
 
@@ -29,7 +28,7 @@ To bring the webinterface up to life, the following steps should be followed:
              tmpl = self.tplenv.get_template('index.html')
              return tmpl.render(p=self.plugin)
 
-      to:
+      zu:
 
       .. code-block:: PYTHON
 
@@ -58,10 +57,8 @@ To bring the webinterface up to life, the following steps should be followed:
                                      items=sorted(plgitems, key=lambda k: str.lower(k['_path'])),
                                     )
 
-   2. Modify the template **webif/templates/index.html** to display the data you want.
-      To display a list of the items selected by the Python code above on the first tab of the
-      body of the webinterface, insert the following code between ``{% block bodytab1 %}`` and
-      ``{% endblock bodytab1 %}``:
+   2. Das Template ``webif/templates/index.html`` wird zur Anzeige der gewünschten Daten angepasst.
+      Um im ersten Tab des Webinterface die Items anzuzeigen, die der obige Beispielcode zusammengestellt hat, wird der folgende Code zwischen ``{% block bodytab1 %}`` und ``{% endblock bodytab1 %}`` eingefügt:
 
       .. code-block:: HTML
 
@@ -88,8 +85,4 @@ To bring the webinterface up to life, the following steps should be followed:
              </div>
          </div>
 
-   3. The logo on the topleft is automatically replaced with the logo of the **plugin type**.
-      If the webinterface should have an individaul logo, the file with the logo must be placed in
-      the directory **webif/static/img** and has to be named **plugin_logo**. It may be of type **.png**, **.jpg** or **.svg**.
-
-
+   3. Das Logo oben links auf der Seite wird automatisch durch das Logo des konfigurierten Plugin-Typs ersetzt. Wenn das Webinterface ein eigenes Logo mitbringen soll, muss das entsprechende Bild im Verzeichnis ``webif/static/img`` mit dem Namen ``plugin_logo`` abgelegt sein. Die zulässigen Dateiformate sind **.png**, **.jpg** oder **.svg**. Dabei sollte die Größe der Bilddatei die Größe des angezeigten Logos (derzeit ca. 180x150 Pixel) nicht überschreiten, um unnötige Datenübertragungen zu vermeiden.
