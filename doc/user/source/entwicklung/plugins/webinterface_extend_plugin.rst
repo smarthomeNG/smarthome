@@ -12,7 +12,7 @@ Für bestehende SmartPlugins kann die Erweiterung um ein Webinterface wie folgt 
    2. die import-Anweisungen für ``lib.smartplugin`` von
       ``from lib.model.smartplugin import SmartPlugin`` ändern zu
       ``from lib.model.smartplugin import *``
-   3. der ``__init__``-Methode des Plugins den Aufruf von ``self.init_webinterface()``hinzufügen (am Ende der Initialisierung)
+   3. der ``__init__``-Methode des Plugins den Aufruf von ``self.init_webinterface()`` hinzufügen (am Ende der Initialisierung)
    4. der Plugin-Klasse die Methode ``init_webinterface()`` aus dem Beispielplugin hinzufügen
    5. die ``WebInterface``-Klasse aus dem Beispiel-Plugin ans Ende der Plugin-Datei kopieren
 

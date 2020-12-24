@@ -6,7 +6,7 @@
 
 
 Interaktion des Webinterface mit dem Plugin :redsup:`new`
-====================================================
+=========================================================
 
 Wenn nicht nur die jeweils aktuellen Daten des Plugins dargestellt werden sollen, sondern auch Aktionen ausgelöst werden und Ergebnisse in das Webinterface übernommen werden sollen, müssen die dafür notwendigen Routinen zum Senden, Empfangen und Verarbeiten von AJAX-Kommandos implementiert werden.
 
@@ -333,5 +333,5 @@ Dort werden dann die Handler für die aktiven Elemente eingefügt.
     {% endblock pluginscripts %}
 
 
-In dieser Implementation ist natürlich zu beachten, dass die Werte, die das vom Plugin zurückgegeben werden, so strukturiert sind, dass sie hier verarbeitet werden können. Sowohl die gewählte Datenstruktur als auch die davon abhängige Implementation der Handler können sich erheblich voneinander unterscheiden.
+In der Implementation ist zu beachten, dass die Werte vom Plugin so strukturiert sind, dass sie verarbeitet werden können. Sowohl die gewählte Datenstruktur als auch die davon abhängige Implementation der Handler können sich in Struktur und Umfang erheblich vom Beispiel unterscheiden.
 

@@ -71,5 +71,8 @@ Die folgende Datei skizziert den Mindestumfang für die Plugin-Dokumentation.
     :caption: user_doc.rst
 
 .. hint::
-   Die in früheren Plugins teilweise vorhandenen ``README.md``-Dateien sind obsolet und werden zukünftig weder erwartet noch unterstützt. Die Dokumentation erfolgt nur noch in der Datei ``user_doc.rst``.
+
+   Das in früheren Versionen verwendete **README**-Format für die Dokumentation von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in **plugin.yaml** übergegangen. Die restliche Dokumentation sollte nur noch im **user_doc**-Format erfolgen.
+
+   Soweit möglich, sollten bestehende **README** im Rahmen von Aktualisierungen in entsprechende **user_doc** überführt werden.
 

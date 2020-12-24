@@ -18,11 +18,9 @@ Ein Plugin besteht aus mindestens zwei Dateien:
 
 .. hint::
 
-  Die in früheren Versionen vorhandenen Dateien README.md sind obsolet und sollten nicht weiter gepflegt bzw.
-  angelegt werden. Sie können in die ``user_doc.rst`` überführt werden.
-  Die Beschreibung der formalen Parameter erfolgt in der ``plugin.yaml``, eine darüber hinausgehende Dokumentation
-  erfolgt in der ``user_doc.rst``. Obwohl letztere nicht erforderlich ist, wird empfohlen, die entsprechende
-  Dokumentation in dieser Datei mit bereitzustellen.
+   Das in früheren Versionen verwendete **README**-Format für die Dokumentation von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in **plugin.yaml** übergegangen. Die restliche Dokumentation sollte nur noch im **user_doc**-Format erfolgen.
+
+   Soweit möglich, sollten bestehende **README** im Rahmen von Aktualisierungen in entsprechende **user_doc** überführt werden.
 
 
 Diese Dateien befinden sich in einem Unterordner des ``/plugins``-Ordners. Der Name des Unterordners entspricht dem

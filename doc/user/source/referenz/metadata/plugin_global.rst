@@ -6,8 +6,8 @@
 .. index:: Metadaten; Plugin
 .. index:: Plugin Metadaten; Globale Metadaten
 
-``plugin``
-----------
+plugin
+------
 
 Der globale Metadaten Abschnitt ``plugin:`` kennt die folgenden Schlüsselbegriffe:
 

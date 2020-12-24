@@ -5,8 +5,8 @@
 .. index:: plugin_functions; Plugin Metadaten
 .. index:: Plugin Metadaten; plugin_functions
 
-``plugin_functions``
---------------------
+plugin_functions
+----------------
 
 Dieser Abschnitt beschreibt die öffentlichen Funktionen, die in einem Plugin implementiert sind.
 
@@ -67,4 +67,9 @@ Funktionen ohne Parameter
 Falls eine Plugin-Funktion keine Parameter hat, darf der Eintrag ``parameters:`` nicht in die plugin.yaml aufgenommen werden. Er entfällt ohne weitere Angaben.
 
 
-:Note: Wenn Plugin-Funktionen in einer Logik verwendet werden sollen, kann dies in der folgenden Form erfolgen: ``result = sh.plugins.return_plugin("<Plugin-Name>").<Funktionsname>(<Argumente>)``
+Aufruf von Funktionen
+~~~~~~~~~~~~~~~~~~~~~
+
+Wenn Plugin-Funktionen in einer Logik verwendet werden sollen, kann dies in der folgenden Form erfolgen: 
+
+``result = sh.plugins.return_plugin("<Plugin-Name>").<Funktionsname>(<Argumente>)``

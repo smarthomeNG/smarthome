@@ -7,8 +7,8 @@
 .. index:: Parameter; Plugin Metadaten
 .. index:: Plugin Metadaten; Parameter
 
-``parameters``
---------------
+parameters
+----------
 
 Parameter-Metadaten werden benutzt um die Gültigkeit von Parametern zu prüfen, die im Verzeichnis ``../etc``
 konfiguriert wurden. Falls für einen Parameter ein ungültiger Wert konfiguriert wurde, wird eine Warnung im Logfile

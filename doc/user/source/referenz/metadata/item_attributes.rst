@@ -5,8 +5,8 @@
 .. index:: item_attributes; Plugin Metadaten
 .. index:: Plugin Metadaten; item_attributes
 
-``item_attributes``
--------------------
+item_attributes
+---------------
 
 Der Abschnitt ``item_attributes:`` hat für jedes definierte Item Attribut einen Unter-Abschnitt, der das Attribut genauer
 beschreibt. Der Schlüssel des Unter-Abschnitts ist der Name des Attributes. Attributnamen sollten keine

@@ -167,7 +167,7 @@ Um die Werte in die <td>-Elemente schreiben zu können, nachdem die Webseite ers
         </div>
     {% endblock **bodytab1** %}
 
-Jetzt können die DOM-Elemente über die IDs ``fromip`` und ``<elem>_value`` angesprochen werden.
+Jetzt können die DOM-Elemente über die IDs ``fromip`` und ``<item>_value`` angesprochen werden.
 
 
 Erweitern der JavaScript-Funktion handleUpdatedData()

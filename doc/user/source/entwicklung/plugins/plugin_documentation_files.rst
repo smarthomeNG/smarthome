@@ -1,10 +1,13 @@
-Dateien der Plugin-Dokumenation
-===============================
+Dateien der Plugin-Dokumentation
+================================
 
 Es gibt zwei Dokumentations-Dateien die für ein Plugin erstellt werden können (und sollten).
 
 .. hint::
-   Die in früheren Versionen dokumentierte ``README.md`` ist obsolet und wird mittlerweile weder empfohlen noch unterstützt. Soweit möglich, sollten bestehende **README** im Rahmen von Aktualisierungen in die ``user_doc.rst`` überführt werden.
+
+   Das in früheren Versionen verwendete **README**-Format für die Dokumentation von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in **plugin.yaml** übergegangen. Die restliche Dokumentation sollte nur noch im **user_doc**-Format erfolgen. 
+
+   Soweit möglich, sollten bestehende **README** im Rahmen von Aktualisierungen in entsprechende **user_doc** überführt werden.
 
 
 user_doc.rst / user_doc.md

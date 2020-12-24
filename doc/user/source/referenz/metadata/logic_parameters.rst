@@ -5,8 +5,8 @@
 .. index:: logic_parameters; Plugin Metadaten
 .. index:: Plugin Metadaten; logic_parameters
 
-``logic_parameters``
---------------------
+logic_parameters
+----------------
 
 Die Daten der Logic Parameter werden für die Generierung der Dokumentation verwendet. Außerdem werden diese
 Parameter für die Konfiguration von Logiken in der Admin GUI verwendet. Falls die konfigurierten Daten nicht gültig
