@@ -8,15 +8,21 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 20. Dezember 2020
-       (modules.websocket: Adjusted minimum shng version to 'after 1.7.2 master')
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 20. Dezember 2020
-       (smartvisu: Clean up plugin files)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 23. Dezember 2020
+       (lib.scene: Bugfix in saving learned values)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 23. Dezember 2020
+       (tasmota: Receive enrgy sensor data (voltage, current, power, power sums); ...)
 
+
+Überblick
+=========
+
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.8.x sind im
+folgenden in diesen Release Notes beschrieben.
 
 
 Unterstützte Python Versionen
-=============================
+-----------------------------
 
 Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.8 ist Python 3.6.
 (Siehe auch *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
@@ -52,6 +58,9 @@ der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
    (auch keine Security Updates) mehr geben. Der Stand wurde von den Entwicklern eingefroren und es gibt für die
    Version keinen Branch mehr im Repository.
 
+
+Änderungen am Core
+==================
 
 Bugfixes in the CORE
 --------------------
@@ -155,6 +164,11 @@ Updates in the CORE
 
   * Added handling of plugin specific attributes
 
+* lib.scene:
+
+  * Bug fix for loading learned values on startup
+  * Bugfix in saving learned values
+
 * lib.scheduler:
 
   * scheduler.change() now accepts the same values for parameter cycle as scheduler.add does
@@ -199,6 +213,24 @@ Updates in the CORE
     * added display of system pid for threads (when running under Python 3.8 and up)
     * Added further details to status on services page while SmartHomeNG is restarting
 
+    * shngAdmin:
+
+      * Switched to new menu bar
+      * Update to system properties page
+      * Updated pages under system and services menu
+      * Update to logics list and scene list and scene configuration page (basic css grid implementation)
+      * Update to logics parameter and scheduler lists (basic css grid implementation); Added parameter to
+        allow click on header of dropdown menu
+      * Changed handling of boolean value field in item tree
+      * Added tab to configure upcoming websocket module
+      * Update to system properties page
+      * Translations for new startup status; adjusted display size of log files to prevent scrolling of browser window.
+      * Better handling for exception while testing for blog articles
+      * Added gui_type 'readonly' for plugin parameters that are configured by the plugin itself
+      * implemented handling for plugin parameter 'configuration_needed'
+      * added spinner when loading information of configured plugins
+      * Modified plugin list to fit on a viewport that is only 1024 pixels wide
+
   * http:
 
     * Set maximum version of cherrypy to avoid problem with cheroot 8.4.4
@@ -222,23 +254,6 @@ Updates in the CORE
     * Changed loop.create_task() for Python 3.7
     * Improved exception handling on network hickups
 
-* shngAdmin:
-
-  * Switched to new menu bar
-  * Update to system properties page
-  * Updated pages under system and services menu
-  * Update to logics list and scene list and scene configuration page (basic css grid implementation)
-  * Update to logics parameter and scheduler lists (basic css grid implementation); Added parameter to
-    allow click on header of dropdown menu
-  * Changed handling of boolean value field in item tree
-  * Added tab to configure upcoming websocket module
-  * Update to system properties page
-  * Translations for new startup status; adjusted display size of log files to prevent scrolling of browser window.
-  * Better handling for exception while testing for blog articles
-  * Added gui_type 'readonly' for plugin parameters that are configured by the plugin itself
-  * implemented handling for plugin parameter 'configuration_needed'
-  * added spinner when loading information of configured plugins
-
 * tests:
 
   * Changed plugin test for cli to reflect change to multi-instance
@@ -246,6 +261,8 @@ Updates in the CORE
   * Added shng_status to MockSmarthome
 
 
+Änderungen bei Plugins
+======================
 
 New Plugins
 -----------
@@ -594,6 +611,11 @@ Plugin Updates and Bugfixes
 * tasmota:
 
   * Adjusted log level
+  * Receive status if tasmota relais is switched on the tasmota device
+  * after startup get relay state from tasmota telemetry data (within 5 minutes)
+  * Receive enrgy sensor data (voltage, current, power, power sums)
+  * parameter for parameter time_period
+  * added tab to webinterface to show energy data
 
 * telegram:
 
@@ -608,6 +630,7 @@ Plugin Updates and Bugfixes
 
   * **Changed item atribute name** from 'mac' to 'unifi_client_mac'
   * fix device generator mac attribute
+  * Add counter to consecutive poll failed error messages
 
 * uzsu:
 
@@ -734,6 +757,9 @@ the plugin_archive repository from where they can be downloaded if they are stil
 * visu_websocket/_pv_1_4_5
 * xbmc
 
+
+Weitere Änderungen
+==================
 
 Tools
 -----

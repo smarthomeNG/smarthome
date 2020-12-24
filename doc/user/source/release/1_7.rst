@@ -6,16 +6,6 @@ Release 1.7 - 6. April 2020
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
-.. note::
-
-    Diese Release Notes sind ein Arbeitsstand.
-
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 29. Mär 2020
-       (module admin: Added handling for enabled attribute for modules)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 28. Mär 2020
-       (Added restart of SmartHomeNG if knx plugin stalles with error 'problem unpacking length')
-
-
 
 Überblick
 =========
