@@ -163,6 +163,27 @@ noch einen Block als Schutz gegen Denial of Service Angriffe ergänzen:
            SY no;
            UA no;
        }
+       ##
+       # websocket for shng
+       ##
+       upstream websocket {
+         server 127.0.0.1:2424;
+       }
+
+       ##
+       # Basic Settings
+       ##
+       map $http_upgrade $connection_upgrade {
+         default Upgrade;
+         '' close;
+      }
+
+      sendfile on;
+      tcp_nopush on;
+      tcp_nodelay on;
+      keepalive_timeout 65;
+      types_hash_max_size 2048;
+      server_tokens off;
    [...]
        ##
        # Virtual Host Configs
@@ -187,7 +208,6 @@ NGINX mit ``sudo service nginx restart`` neu starten.
 .. code-block::  nginx
 
    server {
-       server_tokens off;
 
        ## Blocken, wenn Zugriff aus einem nicht erlaubten Land erfolgt ##
        if ($allowed_country = no) {
@@ -243,50 +263,58 @@ NGINX mit ``sudo service nginx restart`` neu starten.
 
        # Weiterleitung zu SmartHomeNG (Websocket Schnittstelle) mit Basic Auth
        location / {
-           auth_basic "Restricted Area: smartVISU";
-           auth_basic_user_file /etc/nginx/.smartvisu;
-
-           # Zugreifendes Land erlaubt?
-           if ($allowed_country = no) {
-                   return 403;
-           }
-
-           # Nur Websocket Verbindungen gegen "/" durchlassen!
-           if ($http_upgrade = websocket) {
-                   proxy_pass http://<SmartHomeNG LAN IP>:<Websocket Port>;
-           }
-           if ($http_upgrade != websocket) {
-                   return 403;
-           }
+               if ($http_upgrade != websocket) {
+                      return 404;
+               }
+               try_files /wartung.html @loc_websocket;
        }
 
        # Zugriff auf die SmartVISU mit Basic Auth
        location /smartVISU {
-           auth_basic "Restricted Area: smartVISU";
-           auth_basic_user_file /etc/nginx/.smartvisu;
-
-           # Zugreifendes Land erlaubt?
-           if ($allowed_country = no)  {
-                   return 403;
-           }
-
-           proxy_pass http://<SmartVISU Server LAN IP>/smartVISU;
-           proxy_set_header Host $host;
-           proxy_set_header X-Real-IP $remote_addr;
-           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-           proxy_set_header X-Forwarded-Proto $scheme;
+                  auth_basic "Restricted Area: smartVISU";
+                  auth_basic_user_file /etc/nginx/.smartvisu;
+                  try_files /wartung.html @loc_smartvisu;
        }
 
        # Alexa Plugin Weiterleitung
        location /alexa {
            auth_basic "Restricted Area: Alexa";
            auth_basic_user_file /etc/nginx/.alexa;
+           try_files /wartung.html @loc_alexa;
+       }
 
-           # Zugreifendes Land erlaubt?
-           if ($allowed_country = no) {
-                   return 403;
-           }
+       # Network Plugin Weiterleitung
+       location /shng {
+           auth_basic "Restricted Area: SmartHomeNG";
+           auth_basic_user_file /etc/nginx/.shng;
+           try_files /wartung.html @loc_shng;
+       }
 
+       location @loc_websocket {
+               proxy_pass http://websocket;
+               proxy_http_version 1.1;
+               proxy_set_header Upgrade $http_upgrade;
+               proxy_set_header Connection $connection_upgrade;
+               proxy_set_header Host $host;
+       }
+
+       location @loc_smartvisu {
+               proxy_pass http://<SmartHomeNG LAN IP>/$request_uri;
+               proxy_set_header Host $host;
+               proxy_set_header X-Real-IP $remote_addr;
+               proxy_set_header X_Forwarded-For $proxy_add_x_forwarded_for;
+               proxy_set_header X_Forwarded-Proto $scheme;
+       }
+
+       location @loc_smartvisu {
+               proxy_pass http://<SmartHomeNG LAN IP>/$request_uri;
+               proxy_set_header Host $host;
+               proxy_set_header X-Real-IP $remote_addr;
+               proxy_set_header X_Forwarded-For $proxy_add_x_forwarded_for;
+               proxy_set_header X_Forwarded-Proto $scheme;
+       }
+
+       location @loc_alexa {
            proxy_pass http://<SmartHomeNG LAN IP>:<Alexa Plugin Port>/;
            proxy_set_header Host $host;
            proxy_set_header X-Real-IP $remote_addr;
@@ -294,15 +322,7 @@ NGINX mit ``sudo service nginx restart`` neu starten.
            proxy_set_header X-Forwarded-Proto $scheme;
        }
 
-       # Network Plugin Weiterleitung
-       location /shng {
-           auth_basic "Restricted Area: SmartHomeNG";
-           auth_basic_user_file /etc/nginx/.shng;
-
-           if ($allowed_country = no) {
-                   return 403;
-                   break;
-           }
+       location @loc_shng {
            proxy_pass http://<SmartHomeNG LAN IP>:<Network Plugin Port>/;
            proxy_set_header Host $host;
            proxy_set_header X-Real-IP $remote_addr;
