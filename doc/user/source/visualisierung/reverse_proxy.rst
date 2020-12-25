@@ -9,7 +9,7 @@ Um einen sicheren Zugriff auf SmartHomeNG und die smartVISU von außen
 (ohne VPN) zu ermöglichen, empfiehlt es sich einen ReverseProxy mit
 Basic Authentication oder Clientzertifikaten zu nutzen. Die folgende
 Dokumentation beschreibt eine Installation von NGINX als ReverseProxy
-auf eigenständiger Hardware unter Raspbian Stretch Lite. Dieser ist
+auf eigenständiger Hardware unter Raspberry OS. Dieser ist
 bspw. auch für das Alexa Plugin oder die Nutzung von SmartHomeNG mit
 **EgiGeoZone** / **Geofency** notwendig.
 
@@ -19,7 +19,7 @@ Annahmen
 Diese Anleitung hat folgende Annahmen:
 
 * NGINX wird auf einem frisch aufgesetzten Raspberry Pi mit
-  **Raspbian Stretch Lite** installiert.
+  **Raspberry OS Debian Stretch oder Buster Lite** installiert.
 * Der Raspberry Pi dient ausschliesslich der Funktion als ReverseProxy
 * Der Standarduser heißt weiterhin **pi**
 * Eine DynDNS (o.ä.) Domain ist vorhanden und leitet auf die aktuelle Internet IP
@@ -48,14 +48,19 @@ GeoIP installieren:
 
 Über GeoIP kann mittels der anfragenden IP herausgefunden werden, aus
 welchem Land eine Anfrage kommt. Darüber lassen sich bspw. Requests aus
-Risikoländern blockieren.
+Risikoländern blockieren. Hinweis: Die GeoIP Datenbank von Maxmind wird nicht mehr
+weiter gepflegt, ist aber noch über eine alternative URL (siehe unten) abrufbar.
 
 .. code-block:: bash
 
    sudo apt-get install geoip-database libgeoip1
    cd /usr/share/GeoIP/
-   sudo wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
-   sudo gunzip GeoIP.dat.gz
+   sudo wget https://dl.miyuru.lk/geoip/maxmind/country/maxmind4.dat.gz
+   sudo gunzip maxmind4.dat.gz
+   sudo wget https://dl.miyuru.lk/geoip/maxmind/country/maxmind6.dat.gz
+   sudo gunzip maxmind6.dat.gz
+   mv /usr/share/GeoIP/maxmind4.dat /usr/share/GeoIP/GeoIP.dat
+   mv /usr/share/GeoIP/maxmind6.dat /usr/share/GeoIP/GeoIPv6.dat
 
 Let’s Encrypt Server-Zertifikate
 --------------------------------
@@ -109,7 +114,7 @@ Dort unterhalb von ``listen [::]:80 default_server;`` die Zeile
 
 .. code-block:: bash
 
-   sudo service nginx restart
+   sudo systemctl restart nginx
 
 Port 80 und Port 443 im Router jeweils auf den identischen Port am
 ReverseProxy-RaspberryPi mappen!
@@ -200,7 +205,8 @@ noch einen Block als Schutz gegen Denial of Service Angriffe ergänzen:
        client_body_timeout   10;
    }
 
-NGINX mit ``sudo service nginx restart`` neu starten.
+NGINX mit ``sudo systemctl restart nginx`` neu starten.
+
 
 /etc/nginx/conf.d/<mydomain>.<myds>.<me>.conf erstellen
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -292,51 +298,57 @@ NGINX mit ``sudo service nginx restart`` neu starten.
 
        location @loc_websocket {
                proxy_pass http://websocket;
-               proxy_http_version 1.1;
-               proxy_set_header Upgrade $http_upgrade;
-               proxy_set_header Connection $connection_upgrade;
-               proxy_set_header Host $host;
+               include /etc/nginx/headers.conf;
        }
 
        location @loc_smartvisu {
                proxy_pass http://<SmartHomeNG LAN IP>/$request_uri;
-               proxy_set_header Host $host;
-               proxy_set_header X-Real-IP $remote_addr;
-               proxy_set_header X_Forwarded-For $proxy_add_x_forwarded_for;
-               proxy_set_header X_Forwarded-Proto $scheme;
-       }
-
-       location @loc_smartvisu {
-               proxy_pass http://<SmartHomeNG LAN IP>/$request_uri;
-               proxy_set_header Host $host;
-               proxy_set_header X-Real-IP $remote_addr;
-               proxy_set_header X_Forwarded-For $proxy_add_x_forwarded_for;
-               proxy_set_header X_Forwarded-Proto $scheme;
+               include /etc/nginx/headers.conf;
        }
 
        location @loc_alexa {
            proxy_pass http://<SmartHomeNG LAN IP>:<Alexa Plugin Port>/;
-           proxy_set_header Host $host;
-           proxy_set_header X-Real-IP $remote_addr;
-           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-           proxy_set_header X-Forwarded-Proto $scheme;
+           include /etc/nginx/headers.conf;
        }
 
        location @loc_shng {
            proxy_pass http://<SmartHomeNG LAN IP>:<Network Plugin Port>/;
-           proxy_set_header Host $host;
-           proxy_set_header X-Real-IP $remote_addr;
-           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-           proxy_set_header X-Forwarded-Proto $scheme;
+           include /etc/nginx/headers.conf;
        }
    }
 
-NGINX reloaden:
-~~~~~~~~~~~~~~~
+Die Datei ``/etc/nginx/headers.conf`` muss nun entsprechend angelegt werden:
+
+.. code-block:: cfg
+
+  add_header Strict-Transport-Security "max-age=31536000; includeSubdomains" always;
+  add_header X-Cache $upstream_cache_status;
+  add_header X-Frame-Options "SAMEORIGIN" always;
+  add_header X-Xss-Protection "1; mode=block" always;
+  add_header X-Content-Type-Options "nosniff" always;
+  add_header X-Proxy-Cache $upstream_cache_status;
+
+Außerdem sollten zumindest folgende Zeilen in die Datei ``/etc/nginx/proxy_params``
+eingetragen werden:
+
+.. code-block:: cfg
+
+  proxy_http_version      1.1;
+  proxy_set_header        Host            $host;
+  proxy_set_header        X-Real-IP       $remote_addr;
+  proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header        Upgrade $http_upgrade;
+  proxy_set_header        Connection $connection_upgrade;
+  proxy_set_header        X-Forwarded-Proto $scheme;
+  proxy_set_header        X-SSL-CERT $ssl_client_escaped_cert;
+
+
+Im Anschluss muss nginx neu gestartet werden:
 
 .. code-block:: bash
 
-   /etc/init.d/nginx reload
+   sudo systemctl restart nginx
+
 
 Passwort-Files für unterschiedliche User für smartVISU, Alexa, Network Plugin erstellen
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -386,14 +398,14 @@ wird:
 
            include /etc/nginx/snippets/letsencrypt.conf;
 
-Danach den NGINX neu starten:
-
-.. code-block:: bash
-
-   /etc/init.d/nginx reload
+Danach den NGINX neu starten.
 
 Client Zertifikate erstellen (optional)
 ---------------------------------------
+
+Clientzertifikate können mittels openssl manuell erstellt werden. Etwas komfortabler
+läuft das über easy-rsa von https://github.com/OpenVPN/easy-rsa/releases
+Im Folgenden wird der Weg ohne dieses Tool beschrieben.
 
 openssl.cnf editieren
 ~~~~~~~~~~~~~~~~~~~~~
@@ -414,6 +426,8 @@ Folgende Zeilen anpassen:
    [...]
    crl = $dir/crl.pem                      # The current CRL
    private_key = $dir/private/ca.key       # The private key
+   [...]
+   default_crl_days= 365
    [...]
    default_md = sha1 # use public key default MD
 
@@ -558,6 +572,70 @@ Blöcken auch beibehalten.
 Testbar ist das Ganze, wenn es im Browser ohne Zertifikat einen 403er
 Fehler gibt und mit Zertifikat die smartVISU aufbaut.
 
+Erweiterung: LUA Script für Apple Geräte
+----------------------------------------
+
+Apple Geräte wie MacBook oder iPhone kommen mit der oben skizzierten Konfiguration
+leider nicht klar, sobald Websockets (die für die SmartVISU zwingend nötig sind)
+im Spiel sind. Daher ist hier auf ein spezielles LUA Script zurückzugreifen.
+
+.. code-block:: bash
+
+  sudo apt-get install lua5.1 luarocks liblua5.1-dev libnginx-mod-http-lua
+  git clone https://github.com/evanlabs/luacrypto.git && cd luacrypto
+  luarocks install ./rockspecs/luacrypto-git-1.rockspec
+  mkdir /usr/local/lib/lua/5.1/
+  ln -s /usr/local/lib/lua/crypto.so /usr/local/lib/lua/5.1/crypto.so
+
+Das LUA Script selbst wird in einer neuen Datei namens ``/etc/nginx/scripts/hass_access.lua``
+erstellt. In der ersten Zeile ist dabei das Passwort anzugeben, mit dem die Zertifikate
+verschlüsselt wurden.
+
+.. code-block:: lua
+
+  local HMAC_SECRET = "<SECRETKEY from OPENSSL>"
+  local crypto = require "crypto"
+
+  function ComputeHmac(msg, expires)
+    return crypto.hmac.digest("sha256", string.format("%s%d", msg, expires), HMAC_SECRET)
+  end
+
+  verify_status = ngx.var.ssl_client_verify
+
+  if verify_status == "SUCCESS" then
+    client = crypto.digest("sha256", ngx.var.ssl_client_cert)
+    expires = ngx.time() + 3600
+
+    ngx.header["Set-Cookie"] = {
+      string.format("AccessToken=%s; path=/", ComputeHmac(client, expires)),
+      string.format("ClientId=%s; path=/", client),
+      string.format("AccessExpires=%d; path=/", expires)
+    }
+    return
+  elseif verify_status == "NONE" then
+    client = ngx.var.cookie_ClientId
+    client_hmac = ngx.var.cookie_AccessToken
+    access_expires = ngx.var.cookie_AccessExpires
+
+    if client ~= nil and client_hmac ~= nil and access_expires ~= nil then
+      hmac = ComputeHmac(client, access_expires)
+
+      if hmac ~= "" and hmac == client_hmac and tonumber(access_expires) > ngx.time() then
+        return
+      end
+    end
+  end
+
+  ngx.exit(ngx.HTTP_FORBIDDEN)
+
+Schließlich muss noch folgende Zeile in der Datei /etc/nginx/conf.d/\<mydomain\>.\<myds\>.\<me\>.conf
+bei jeder Location eingetragen werden:
+
+.. code-block:: nginx
+
+  access_by_lua_file /etc/nginx/scripts/hass_access.lua;
+
+
 Erweiterung: Stärkere Diffie-Hellman-Parameter
 ----------------------------------------------
 
@@ -600,7 +678,7 @@ und NGINX neu zu starten:
 .. code-block:: bash
 
    ## NGINX neu starten
-   sudo service nginx restart
+   sudo systemctl restart nginx
 
 Die Sicherheit der eigenen https-Domain kann nun unter
 https://www.ssllabs.com/ssltest/ getestet werden. Mit den oben genannten
@@ -614,21 +692,35 @@ Wartung: Zertifikat nach 3 Monaten erneuern
 -------------------------------------------
 
 Nach 3 Monaten muss das Let’s Encrypt Serverzertifikat erneuert werden.
+Dies sollte prinzipiell automatisiert geschehen, da certbot einen entsprechenden
+cron Job erstellt.
+
 Damit das Erneuerungs-Skript funktioniert, muss Port 80 im NGINX
-freigegeben, oder (wie oben dokumentiert) auf HTTPS umgeleitet sein.
+freigegeben, oder (wie oben dokumentiert) auf HTTPS umgeleitet sein. Außerdem
+kann/soll das ini File wie folgt adaptiert werden, um nginx nach der Aktualisierung
+automatisch neu zu starten oder vorher/nachher ein Skript (z.B. zum Weiterleiten
+von Ports auf der Fritzbox oder An/Ausschalten einer Firewall) auszuführen:
 
-Die Erneuerung geht dann wie folgendermaßen:
+.. code-block:: ini
+
+  # Manage Firewall
+  #pre-hook = ufw allow http
+  #post-hook = ufw deny http
+
+  # Restart Postfix & Dovecot
+  renew-hook = systemctl restart nginx.service
+
+Eine manuelle Erneuerung geht wie folgendermaßen:
 
 .. code-block:: bash
 
-   sudo certbot certonly --rsa-key-size 4096 --webroot -w /var/www/letsencrypt -d <mydomain>.<myds>.<me>
+   sudo certbot certonly --agree-tos --rsa-key-size 4096 --webroot -w /var/www/letsencrypt -d <mydomain>.<myds>.<me>
 
-Im nun folgenden Dialog Option 2 (2: Renew & replace the cert (limit ~5
-per 7 days)) auswählen. Danach NGINX neu starten.
+Danach NGINX neu starten.
 
 .. code-block:: bash
 
-   sudo service nginx restart
+   sudo systemctl restart nginx
 
 Der Test über https://www.ssllabs.com/ssltest/ gibt nun Aufschluß über
 die Laufzeit des verlängerten Zertifikats.
