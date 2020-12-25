@@ -590,6 +590,12 @@ Der versiertere Nutzer kann sich unter
 https://mozilla.github.io/server-side-tls/ssl-config-generator/ auch
 gleich eine eigene Konfiguration generieren lassen.
 
+Wer noch mehr Sicherheit implementieren möchte, installiert sich
+https://github.com/fail2ban/fail2ban. Damit kann konfiguriert werden,
+dass IP Adressen automatisch durch die Firewall blockiert werden, sobald sie sich unbefugt
+Zugang zum Server verschaffen oder z.B. nicht existente Dateien/Ordner
+aufrufen wollen.
+
 Wartung: Zertifikat nach 3 Monaten erneuern
 -------------------------------------------
 
