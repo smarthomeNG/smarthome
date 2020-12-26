@@ -134,6 +134,9 @@ class Scheduler(threading.Thread):
 
     _pluginname_prefix = 'plugins.'     # prefix for scheduler names
 
+    _run_offset = 1                    # execution offset time for multiple jobs as discussen in issue #370
+    _last_run_time = 0                 # store last execution time for offset comparison
+
     def __init__(self, smarthome):
         threading.Thread.__init__(self, name='Scheduler')
         logger.info('Init Scheduler')
@@ -257,10 +260,17 @@ class Scheduler(threading.Thread):
                     break
 
                 if dt < now:  # run it
+
+                    # determine if 'offset' run spread time has elapsed before next run
+                    secs_since_last_run = time.time() - self._last_run_time
+                    if secs_since_last_run < self._run_offset:
+                        time.sleep(self._run_offset - secs_since_last_run)
+
                     self._runc.acquire()
                     self._runq.insert(prio, (name, obj, by, source, dest, value))
                     self._runc.notify()
                     self._runc.release()
+                    self._last_run_time = time.time()
                 else:  # put last entry back and break while loop
                     self._triggerq.insert((dt, prio), (name, obj, by, source, dest, value))
                     break
