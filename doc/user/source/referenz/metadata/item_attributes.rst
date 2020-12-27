@@ -5,11 +5,11 @@
 .. index:: item_attributes; Plugin Metadaten
 .. index:: Plugin Metadaten; item_attributes
 
-``item_attributes``
--------------------
+item_attributes
+---------------
 
 Der Abschnitt ``item_attributes:`` hat für jedes definierte Item Attribut einen Unter-Abschnitt, der das Attribut genauer
-beschreibt. Der Schlüssel des Unter-Abschnitts ist der Name des Attributes. Attribut Namen sollten keine
+beschreibt. Der Schlüssel des Unter-Abschnitts ist der Name des Attributes. Attributnamen sollten keine
 Großbuchstaben und Sonderzeichen enthalten. Sie dürfen nicht mit einer Ziffer beginnen.
 
 Die Definitionen im Abschnitt ``item_attributes:``  werden für die Gültigkeitsprüfung der konfigurierten Werte in den

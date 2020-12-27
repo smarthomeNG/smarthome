@@ -8,9 +8,9 @@ Class SmartPlugin
 =================
 
 
-The class SmartPlugin implements the base class of all smart-plugins. The implemented methods are described below.
+Die Klasse ``SmartPlugin`` implementiert die Basisklasse aller SmartPlugins. Die vorhandenen Methoden sind im Folgenden beschrieben.
 
-In addition the methods implemented in lib.utils.Utils are inherited.
+Zusätzlich werden die Methoden der Klasse ``lib.utils.Utils`` vererbt.
 
 .. autoclass:: lib.model.smartplugin.SmartPlugin
     :members:

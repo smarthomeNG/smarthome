@@ -1,41 +1,36 @@
-.. index:: New; Web Interface
+.. index:: New; Webinterface
 
 .. role:: redsup
 .. role:: bluesup
 
 
-Web Interface :bluesup:`update`
+Webinterface :bluesup:`update`
 ===============================
 
-This documentation is valid vor SmartHomeNG versions beyond v1.4.2. It does not work on v1.4.2
-and below. Web interfaces are implemented trough the http module. The http module has to be configured and must be
-running for the web interfaces to work.
+:Note: Diese Dokumentation bezieht sich auf Versionen nach v1.4.2. Sie gilt nicht für Versionen bis inklusive v1.4.2
 
-A web interface of a plugin allows to implement the diepaly of plugins data or even the configuration of a plugin
-through a browser. To reach the web interface from the admin interface, a button is displayed in the list of plugins.
+Webinterfaces werden durch das http-Modul implementiert. Dieses muss konfiguriert und gestartet sein, um Webinterfaces nutzen zu können.
 
-SmartHomeNG allows to implement a web interface in a very simple fashion. The sample plugin has a full implementation
-of a webinterface, to which only the data display ha to be added to a template file. The template engine (Jinja2)
-includes the data from Python when rendering the html page from the template.
+Das Webinterface eines Plugins erlaubt es, Plugin-Daten und -Konfiguration im Browser anzuzeigen. Der Link zum Webinterface wird im Admin UI in der Liste der aktiven Plugins angezeigt.
 
-The standard template for web interfaces has head part with the following information:
+SmartHomeNG ermöglicht die Implementation eines Webinterfaces auf sehr einfache Weise. Das Beispielplugin hat eine vollständige Implementation eines Webinterfaces. Es muss nur die Anzeige der Plugindatem im Template ergänzt werden. Die Templateengine (Jinja2) erhält die Daten von Python, wenn die Webinterface-Seite zur Laufzeit gerendert wird.
 
-  - an icon
-  - the name, version and state of the plugin
-  - a block on the right top which kan be used to display global information (parameters, ....) of the plugin
-  - an area for buttons (below the block with global information)
+Das Standardtemplate für Webinterfaces hat einen Kopfteil mit den folgenden Informationen:
 
-Following the head part, the rest of the display area is structured by up to 4 tabs, depending on the information
-to be displayed.
+  - einem Bild,
+  - Name, Version und Status des Plugins,
+  - einen Bereich rechts am oberen Rand der Webseite, der für die Anzeige von globalen Informationen oder Parametern des Plugins zur Verfügung steht,
+  - einen Bereich für Buttons unterhalb der globalen Informationen.
+
+Auf den Kopfteil folgt der Rest der Seite mit bis zu 4 Tabs, abhängig von den anzuzeigenden Informationen.
 
 
-An empty webinterface looks like this:
+Ein leeres Webinterface sieht wie folgt aus:
 
 .. image:: assets/sample_plugin_webIf.jpg
 
 
-
-Detailed description for creating webinterfaces can be found on the following pages:
+Detaillierte Informationen zur Erstellung von Webinterfaces finden sich auf den folgenden Seiten:
 
 .. toctree::
    :maxdepth: 1
@@ -45,5 +40,6 @@ Detailed description for creating webinterfaces can be found on the following pa
    webinterface_filling_webinterface
    webinterface_multilanguage
    webinterface_automatic_update
+   webinterface_plugin_interaction
    webinterface_3rdparty_components
 

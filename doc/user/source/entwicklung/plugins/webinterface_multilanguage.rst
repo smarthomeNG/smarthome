@@ -4,13 +4,12 @@
 .. role:: bluesup
 
 
-Multi-Language Support :redsup:`new`
-====================================
+Unterstützung mehrerer Sprachen :redsup:`new`
+=============================================
 
-In the template **webif/templates/index.html** text can be marked to be translated, if the used language of the
-admin interface is changed.
+Text kann im Template ``webif/templates/index.html`` als mehrsprachig deklariert werden, so dass die Webseite sich der in der Konfiguration gewählten Sprache anpasst.
 
-In the example in the section **Filling the webinterface with content**
+Im Beispiel des Abschnitts **Webinterface mit Inhalt füllen**
 
       .. code-block:: HTML
 
@@ -37,7 +36,7 @@ In the example in the section **Filling the webinterface with content**
              </div>
          </div>
 
-three column headings are marked as text to be translated if necessary. Usually the headings would look like this:
+sind die drei Spaltenüberschriften als mehrsprachig deklariert. Üblicherweise würden diese Überschriften wie folgt aussehen:
 
       .. code-block:: HTML
 
@@ -45,8 +44,7 @@ three column headings are marked as text to be translated if necessary. Usually 
          <th>Typ</th>
          <th>knx_dpt</th>
 
-To be translated the Text has to be included as stings in the function ``_( )``. For the function to be executed it has
-to be declared a variable for the templating engine by including it in ``{{  }}``. So you end up with ``{{ _('text') }}``.
+Um als mehrsprachig deklariert zu werden, muss der Text sowohl als Argument der Funktion ``_( ... )`` als auch in der Markierung für die Template-Engine ``{{ ... }}`` einschlossen sein. So wird aus 'Text' dann ``{{ _('Text') }}``.
 
       .. code-block:: HTML
 
@@ -54,5 +52,5 @@ to be declared a variable for the templating engine by including it in ``{{  }}`
          <th>{{ _('Typ') }}</th>
          <th>{{ _('knx_dpt') }}</th>
 
-Translations are covered in more detail on the page :doc:`Multi-Language Support <multilanguage>`
+Mehrsprachigkeit ist detailliert auf der Seite :doc:`Multi-Language Support <multilanguage>` beschrieben.
 

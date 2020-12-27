@@ -5,144 +5,129 @@
 .. role:: redsup
 .. role:: bluesup
 
-========================================
-Multi-Language Support :bluesup:`Update`
-========================================
+=================================================
+Unterstützung mehrerer Sprachen :bluesup:`Update`
+=================================================
 
-This documentation is valid vor SmartHomeNG versions beyond v1.4.2. It does not work on v1.4.2
-and below.
+:Note: Diese Dokumentation bezieht sich auf Versionen nach v1.4.2. Sie gilt nicht für Versionen bis inklusive v1.4.2
 
-Words or phrases in the webinterface can be marked for translation.
+Wörter oder Phrasen können im Webinterface als mehrsprachig deklariert werden, so dass sie abhängig von der in SmartHomeNG eingestellten Sprache automatisch übersetzt werden.
 
 
-Marking text for translation
-============================
+Text als mehrsprachig kennzeichnen
+==================================
 
-1. In Jinja2 templates
+1. In Jinja2-Templates
 ----------------------
 
-To mark a word or phrase for translation, it has to be part of a Jinja1 expression
-(it has to be included in ``{{ ... }}``).
+Um einen Textteil als mehrsprachig zu deklarieren, muss er Teil eines Jinja2-Ausdrucks sein (sie muss von ``{{ ... }}`` eingeschlossen werden).
 
-Within the Jinja2 expression, the word/phrase must be included in ``_( ... )``.
+Innerhalb des Jinja2-Ausdrucks muss der Textteil von ``_( ... )`` eingeschlossen sein.
 
-The word/phrase to be translated can be read from a variable or can be specified as a constant text.
-A constant text, has to be included in quotes (``'...')``.
+Der mehrsprachige Textteil kann als Stringliteral oder aus einer Variable eingebunden werden. Ein Stringliteral muss zusätzlich in Anführungszeichen ``_(' ... ')`` gesetzt werden. 
 
-So, if you have a a prompt in the web interface like this:
+Das heißt, dass ein Text im Webinterface, wie z.B.
 
 .. code-block:: html
-   :caption: Example for `plugin/webif/templates/index.html`
+   :caption: Beispiel für `plugin/webif/templates/index.html`
 
    <td class="py-1"><strong>Service für den KNX Support</strong></td>
 
-you can mark it for translation by marking it as a Jinja2 expression and the string as a
-constant string to be translated:
+durch entsprechende Markierung als mehrsprachig und als Stringliteral deklariert werden kann:
 
 .. code-block:: html
-   :caption: Example with translation markup for `plugin/webif/templates/index.html`
+   :caption: Beispiel für mehrsprachiges Markup für `plugin/webif/templates/index.html`
 
    <td class="py-1"><strong>{{ _('Service für den KNX Support') }}</strong></td>
 
 
-2. In Python code
+2. Im Python-Code
 -----------------
 
-To mark a word or phrase for translation, the function translate of the plugin has to be called:
+Um einen Textteil als mehrsprachig zu deklarieren, muss die ``translate``-Methode der Plugin-Klasse aufgerufen werden:
 
 .. code-block:: python
 
-   translated _text = self.translate('text')
+   translated_text = self.translate('text')
 
 
-How translation works
-=====================
+Wie Mehrsprachigkeit funktioniert
+=================================
 
-The translation is a multi-step process. The translation of the text (word/phrase) is:
+Die Übersetzung ist ein mehrstufiger Prozess. Dabei wird an mehreren Stellen nach dem zu übersetzenden Textteil gesucht. Die erste Fundstelle wird verwendet. Die Suchreihenfolge ist wie folgt:
 
-   1. searched for in the working language of SmartHomeNG in the plugins' translation file
-   2. If not found, the translation is searched for in the working language in the global translation file
-   3. If not found, the translation is searched for in 'English' in the plugins' translation file
-   4. If not found, the translation is searched for in 'English' in the global translation file
-   5. If not found, the text is returned unaltered. In this case, a log entry of severity INFO is
-      created, logging the missing translation.
+   1. in der Sprachdatei des Plugins (in der gewählten Sprache)
+   2. in der globalen Sprachdatei (in der gewählten Sprache)
+   3. in der Sprachdatei des Plugins (auf Englisch)
+   4. in der globalen Sprachdatei (auf Englisch)
 
-The plugins' translation file is called **locale.yaml** and is stored in the plugin's directory.
+Wenn kein Suchtreffer erfolgt, wird der Text unverändert ausgegeben. Die fehlende Übersetzung wird mit der Dringlichkeit INFO im Log vermerkt-
 
-The global translation file, which holds translations (mostly for single words) that are used by the core,
-by modules and/or in several plugins,is called **locale.yaml** too and is stored in the **bin** directory
-of SmartHomeNG.
+Die Sprachdatei des Plugins heißt ``locale.yaml`` und befindet sich im Plugin-Verzeichnis.
+
+Die globale Sprachdatei, in der überwiegend Übersetzungen für einzelne Wörter enthalten sind, die vom Core, von Modulen oder in mehreren Plugins verwendet werden, heißt ``locale.yaml`` und befindet sich im ``/bin``-Verzeichnis von SmartHomeNG.
 
 
-Adding translations/languages
-=============================
+Sprachen und Übersetzungen hinzufügen
+=====================================
 
-In the translation files, for each text to be translated a dict structure is defined in the section
-``plugin_translations:``:
+In den Sprachdateien wird für jeden zu übersetzenden Text ein dict im Abschnitt ``plugin_translations:`` aufgenommen:
 
 .. code-block:: YAML
-   :caption: Example a translation
+   :caption: Beispiel einer Übersetzung
 
    plugin_translations:
        # Translations for the plugin specially for the web interface
        'Schließen':         {'de': '=', 'en': 'Close'}
 
-The equal-sign in the translation for German signals that the key **Wert 2** is the right translation.
-It makes the translation process stop looking for translations and prevents the log entry.
+Das Gleichheitszeichen in der deutschen Übersetzung bedeutet, dass der key ``Schließen`` schon in der angegebenen Sprache ist und nicht übersetzt werden muss. In dem Fall wird nicht weiter gesucht und kein Log-Eintrag ausgegeben.
 
-Further languages can be added, using the appropriate language code, followed by the translation text:
+Weitere Sprachen können durch Hinzufügen des Sprachcodes und der jeweiligen Übersetzungen definiert werden:
 
 .. code-block:: YAML
-   :caption: Example of a translation
+   :caption: Beispiel einer Übersetzung
 
    plugin_translations:
        # Translations for the plugin specially for the web interface
        'Schließen':         {'de': '=', 'en': 'Close', 'fr': 'Fermer'}
 
 
-Using placeholders in translation strings :redsup:`Neu`
-=======================================================
+Platzhalter in Übersetzungen nutzen :redsup:`Neu`
+=================================================
 
-In the actual version of SmartHomeNG it is possible to use placeholders in translation strings. This makes it
-easier to translate complete sentences, since the structure of a sentence can differ from language to language.
+In der aktuellen Version von SmartHomeNG ist es möglich, Platzhalter in Übersetzungen zu verwenden. Das macht es einfache, vollständige Sätze zu übersetzen, da sich die Struktur des Satzes in unterschiedlichen Sprachen unterscheidet. 
 
-Translation strings can contain multiple placeholders. The placeholders and its values have to be defined as
-a Pyhon dict. The keys are the placeholders names anf the values specifiy the values to be inserted into the
-translation string.
+Übersetzungen können mehrere Platzhalter enthalten. Diese Platzhalter und ihre Werte müssen als Python-dict definiert werden. Die Schlüssel des dict sind die Namen der Platzhalter, die Werte enthalten die einzufügenden Texte für die jeweiligen Sprachen.
 
-The following example shows translation strings that contain a placeholder for the **item_id**. The name of
-the placeholder must be surrounded by curly braces (with **no** spaces between the braces and the placeholder's
-name).
+Das folgende Beispiel zeigt Übersetzungen mit Platzhaltern für ``item_id``. Der Name des Platzhalters muss von geschweiften Klammern eingeschlossen sein (**ohne** Leerzeichen zwischen Klammer und Namen).
 
 .. code-block:: YAML
-   :caption: Example of a translation with a placeholder
+   :caption: Beispiel für Übersetzungen mit Platzhaltern
 
    plugin_translations:
     'Löschauftrag für die Einträge von Item ID {item_id} in der Tabelle "log" wurde erfolgreich initiiert!':
         'de': '='
         'en': 'Deletion of data for the entries of item ID {item_id} in table "log" successfully initiated.'
 
+:Critical: TODO - hier fehlt das Platzhalter-dict {'item_id', item.id()}; wie wird das definiert?
 
-1. Defining placeholders in Jinja2 templates
---------------------------------------------
+1. Platzhalter in Jinja2-Templates
+----------------------------------
 
-If you want a translation string (like in the example above) but you want to be flexible with the service name
-and don't want to define a seperate translation string for each service you handle (e.g. KNX, enOcean, ...)
-you can do it the following way:
+Wenn ein mehrsprachiger Ausdruck (wie oben im ersten Beispiel) mit flexiblem Inhalt für den Namen des Service versehen werden soll, ohne dass für jeden Service (z.B. KNX, enOcean, ...) einzelne Übersetzungen definiert werden, kann das wie folgt erreicht werden:
 
 .. code-block:: html
 
    <td class="py-1"><strong>{{ _('Service für den {service} Support', vars={'service': 'KNX'}) }}</strong></td>
 
 
-2. Defining placeholders in Python code
----------------------------------------
+2. Platzhalter im Python-Code
+-----------------------------
 
-If a translation text contains placeholders, the self.translate method of a plugin has to be called with a
-second parameter, specifying the placeholder dict:
+Wenn ein Platzhalter in der Übersetzung enthalten ist, muss ``self.translate`` mit dem Platzhalter-dict als zweitem Argument aufgerufen werden:
 
 .. code-block:: python
 
-   translated _text = self.translate('text', {'item_id', item.id()})
+   translated_text = self.translate('text', {'item_id', item.id()})
 
 
