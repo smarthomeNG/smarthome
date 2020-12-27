@@ -80,7 +80,7 @@ In den Sprachdateien wird für jeden zu übersetzenden Text ein dict im Abschnit
        # Translations for the plugin specially for the web interface
        'Schließen':         {'de': '=', 'en': 'Close'}
 
-Das Gleichheitszeichen in der deutschen Übersetzung bedeutet, dass der key **Schließen** schon in der angegebenen Sprache ist und nicht übersetzt werden muss. In dem Fall wird nicht weiter gesucht und kein Log-Eintrag ausgegeben.
+Das Gleichheitszeichen in der deutschen Übersetzung bedeutet, dass der key ``Schließen`` schon in der angegebenen Sprache ist und nicht übersetzt werden muss. In dem Fall wird nicht weiter gesucht und kein Log-Eintrag ausgegeben.
 
 Weitere Sprachen können durch Hinzufügen des Sprachcodes und der jeweiligen Übersetzungen definiert werden:
 
@@ -99,7 +99,7 @@ In der aktuellen Version von SmartHomeNG ist es möglich, Platzhalter in Überse
 
 Übersetzungen können mehrere Platzhalter enthalten. Diese Platzhalter und ihre Werte müssen als Python-dict definiert werden. Die Schlüssel des dict sind die Namen der Platzhalter, die Werte enthalten die einzufügenden Texte für die jeweiligen Sprachen.
 
-Das folgende Beispiel zeigt Übersetzungen mit Platzhaltern für **item_id**. Der Name des Platzhalters muss von geschweiften Klammern eingeschlossen sein (**ohne** Leerzeichen zwischen Klammer und Namen).
+Das folgende Beispiel zeigt Übersetzungen mit Platzhaltern für ``item_id``. Der Name des Platzhalters muss von geschweiften Klammern eingeschlossen sein (**ohne** Leerzeichen zwischen Klammer und Namen).
 
 .. code-block:: YAML
    :caption: Beispiel für Übersetzungen mit Platzhaltern

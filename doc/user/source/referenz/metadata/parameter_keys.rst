@@ -20,8 +20,8 @@ Beschreibung der Schlüssel im Abschnitt für einen Parameter bzw. ein Attribut:
    Komplexe Datentypen:
     - ``dict`` - ein Dictionary
     - ``list`` - eine Liste bei der jedes Element vom Datentyp ``foo`` ist
-    - ``list(len)`` - eine Liste fester Länge bei der jedes Element vom Datentyp ``foo`` ist und deren Anzahl Elemente **len** ist
-    - ``list(subtype)`` - eine Liste bei der jedes Element vom Datentyp **subtype** ist :sup:`1` (z.B.: ``list(int)``
+    - ``list(len)`` - eine Liste fester Länge bei der jedes Element vom Datentyp ``foo`` ist und deren Anzahl Elemente ``len`` ist
+    - ``list(subtype)`` - eine Liste bei der jedes Element vom Datentyp ``subtype`` ist :sup:`1` (z.B.: ``list(int)``
       or ``list(ipv4)``)
     - ``list(subtype, subtype, ...)`` - eine Liste bei der jedes Element von einem angegebenen  Datentyp ist.
       Falls die Liste länger ist als die Anzahl angegebener subtypes :sup:`1`, wird der letzte angegebene subtype

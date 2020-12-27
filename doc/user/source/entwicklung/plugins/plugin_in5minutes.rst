@@ -30,9 +30,9 @@ Die Datei ``user_doc.rst`` beinhaltet zusätzliche Dokumentation zum Plugin, aus
 
 .. hint::
 
-   Das in früheren Versionen verwendete **README**-Format für die Dokumentation von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in **plugin.yaml** übergegangen. Die restliche Dokumentation sollte nur noch im **user_doc**-Format erfolgen. 
+   Das in früheren Versionen verwendete ``README``-Format für die Dokumentation von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in ``plugin.yaml`` übergegangen. Die restliche Dokumentation sollte nur noch im ``user_doc``-Format erfolgen. 
 
-   Soweit möglich, sollten bestehende **README** im Rahmen von Aktualisierungen in entsprechende **user_doc** überführt werden.
+   Soweit möglich, sollten bestehende ``README`` im Rahmen von Aktualisierungen in entsprechende ``user_doc`` überführt werden.
 
 Um das Plugin zu laden, muss es in der Konfigurationsdatei ``/etc/plugin.yaml`` eingebunden und konfiguriert werden.
 
@@ -91,7 +91,7 @@ Die Dokumentation beginnt mit dem Titel, der dem Namen des Plugins entspricht.
 
 .. important::
 
-   Die erste Überschrift der Dokumentationsdatei **user_doc** MUSS dem Kurznamen des Plugins in Kleinbuchstaben entsprechen.
+   Die erste Überschrift der Dokumentationsdatei ``user_doc`` MUSS dem Kurznamen des Plugins in Kleinbuchstaben entsprechen.
 
    Dieser Eintrag wird als Einstiegspunkt für die Navigation in der Dokumentation genutzt. Ein anderer Eintrag als Überschrift sorgt für Inkonsistenzen in den Navigationselementen.
 
@@ -146,7 +146,7 @@ Konfigurieren des Plugins in der Systemkonfiguration `/etc/plugin.yaml`
 
 Die Konfigurationsdatei ``plugin.yaml`` befindet sich im Unterordner ``etc`` der SmartHomeNG-Installation. Hier wird SmartHomeNG mitgeteilt, welche Plugins geladen werden sollen, wo sie zu finden sind und welche Optionen sie ggf. benötigen. 
 
-Dies ist ein typischer Abschnitt für ein neues Plugin. Wir nehmen an, dass das Plugin **myplugin** heißt:
+Dies ist ein typischer Abschnitt für ein neues Plugin. Wir nehmen an, dass das Plugin ``myplugin`` heißt:
 
 .. code-block:: yaml
 
