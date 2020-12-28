@@ -735,24 +735,28 @@ class Websocket(Module):
         self._series_lock.acquire()
         remove = []
         series_replys = []
-        for sid, series in self.sv_update_series[client_addr].items():
-            if (series['update'] < now) or self.sv_ser_upd_cycle > 0:
-                #self.logger.warning("update_series: {} - Processing sid={}, series={}".format(client_addr, sid, series))
-                item = self.items.return_item(series['params']['item'])
-                try:
-                    reply = item.series(**series['params'])
-                except Exception as e:
-                    self.logger.exception("Problem updating series for {0}: {1}".format(series['params'], e))
-                    remove.append(sid)
-                    continue
-                self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
-                del (reply['update'])
-                del (reply['params'])
-                if reply['series'] is not None:
-                    series_replys.append(reply)
 
-        for sid in remove:
-            del (self.sv_update_series[client_addr][sid])
+        series_entry = self.sv_update_series.get(client_addr, None)
+        if series_entry is not None:
+            for sid, series in self.sv_update_series[client_addr].items():
+                if (series['update'] < now) or self.sv_ser_upd_cycle > 0:
+                    #self.logger.warning("update_series: {} - Processing sid={}, series={}".format(client_addr, sid, series))
+                    item = self.items.return_item(series['params']['item'])
+                    try:
+                        reply = item.series(**series['params'])
+                    except Exception as e:
+                        self.logger.exception("Problem updating series for {0}: {1}".format(series['params'], e))
+                        remove.append(sid)
+                        continue
+                    self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
+                    del (reply['update'])
+                    del (reply['params'])
+                    if reply['series'] is not None:
+                        series_replys.append(reply)
+
+            for sid in remove:
+                del (self.sv_update_series[client_addr][sid])
+
         self._series_lock.release()
         return series_replys
 
