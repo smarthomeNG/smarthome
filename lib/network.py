@@ -36,11 +36,9 @@ This classes, functions and methods are mainly meant to be used by plugin develo
 import asyncio
 import ipaddress
 import logging
-import queue
 import re
 import requests
-from iowait import IOWait   ### BMX
-import select               ### should not be needed
+from iowait import IOWait   # BMX
 import socket
 import struct
 import subprocess
@@ -50,6 +48,7 @@ import time
 # Turn off ssl warnings
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
+
 
 class Network(object):
     """ This Class has some usefull static methods that you can use in your projects """
@@ -67,23 +66,28 @@ class Network(object):
         """
 
         mac = str(mac)
+        # notation without separators
         if len(mac) == 12:
             for c in mac:
-                try:
-                    if int(c, 16) > 15:
-                        return False
-                except:
+                # each digit is hex
+                if c not in '0123456789abcdefABCDEF':
                     return False
             return True
 
-        octets = re.split('[\:\-\ ]', mac)
+        # notation with separators -> 12 digits + 5 separators
+        if len(mac) != 17:
+            return False
+        octets = re.split('[: -]', mac)
+        # 6 groups...
         if len(octets) != 6:
             return False
-        for i in octets:
-            try:
-                if int(i, 16) > 255:
-                    return False
-            except:
+        for o in octets:
+            # ... of 2 digits each
+            if len(o) != 2:
+                return False
+        # and each digit is hex
+        for c in ''.join(octets):
+            if c not in '0123456789abcdefABCDEF':
                 return False
         return True
 
@@ -152,7 +156,7 @@ class Network(object):
         """
 
         try:
-            return bool(re.match("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$", string))
+            return bool(re.match("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9-]*[A-Za-z0-9])$", string))
         except TypeError:
             return False
 
@@ -292,6 +296,53 @@ class Network(object):
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
             sock.sendto(send_data, (ip, 9))
         logger.debug('Sent WOL packet to {}'.format(mac))
+
+    @staticmethod
+    def validate_inet_addr(addr, port):
+        """
+        Validates that addr:port resolve to a valid network address/port/family
+        and return resolved IP address and port
+
+        :param addr: hostname or ip address under test
+        :type addr: str
+        :param port: port number under test
+        :type port: num
+        :return: (ip_address, port, family) or (None, undef, undef) if error occurs
+        :rtype: tuple
+        """
+        logger = logging.getLogger(__name__)
+        # Test if host is an ip address or a host name
+        if addr == '' or Network.is_ip(addr):
+            # host is a valid ip address (v4 or v6)
+            ip = addr
+            if addr == '':
+                addr = 'All Ipv4/Ipv6'
+            logger.debug("'{}' is a valid IP address".format(addr))
+            if Network.is_ipv6(ip):
+                family = socket.AF_INET6
+            else:
+                family = socket.AF_INET
+        else:
+            # host is a hostname, trying to resolve to an ip address (v4 or v6)
+            logger.debug("{} is not a valid IP address, trying to resolve it as hostname".format(addr))
+            try:
+                family, sockettype, proto, canonname, socketaddr = socket.getaddrinfo(addr, None)[0]
+                # Check if resolved address is IPv4 or IPv6
+                if family == socket.AF_INET:
+                    ip, port = socketaddr
+                elif family == socket.AF_INET6:
+                    ip, port, flow_info, scope_id = socketaddr
+                else:
+                    logger.error("Unknown ip address family {}".format(family))
+                    ip = None
+                if ip is not None:
+                    logger.info("Resolved {} to {} address {}".format(addr, Network.ipver_to_string(family), ip))
+            except:
+                # Unable to resolve hostname
+                logger.error("Cannot resolve {} to a valid ip address (v4 or v6)".format(addr))
+                ip = None
+
+        return (ip, port, family)
 
 
 class Http(object):
@@ -581,38 +632,14 @@ class Tcp_client(object):
         self.__running = True
 
         self.logger.setLevel(logging.DEBUG)
-        self.logger.info("Initializing a connection to {} on TCP port {} {} autoreconnect".format(self._host, self._port, ('with' if self._autoreconnect else 'without')))
 
-        # Test if host is an ip address or a host name
-        if Network.is_ip(self._host):
-            # host is a valid ip address (v4 or v6)
-            self.logger.debug("{} is a valid IP address".format(host))
-            self._hostip = self._host
-            if Network.is_ipv6(self._host):
-                self._ipver = socket.AF_INET6
-            else:
-                self._ipver = socket.AF_INET
+        self._host = host
+        self._port = port
+        (self._hostip, self._port, self._ipver) = Network.validate_inet_addr(host, port)
+        if self._hostip is not None:
+            self.logger.info("Initializing a connection to {} on TCP port {} {} autoreconnect".format(self._host, self._port, ('with' if self._autoreconnect else 'without')))
         else:
-            # host is a hostname, trying to resolve to an ip address (v4 or v6)
-            self.logger.debug("{} is not a valid IP address, trying to resolve it as hostname".format(host))
-            try:
-                self._ipver, sockettype, proto, canonname, socketaddr = socket.getaddrinfo(host, None)[0]
-                # Check if resolved address is IPv4 or IPv6
-                if self._ipver == socket.AF_INET:  # is IPv4
-                    self._hostip, port = socketaddr
-                elif self._ipver == socket.AF_INET6:  # is IPv6
-                    self._hostip, port, flow_info, scope_id = socketaddr
-                else:
-                    # This should never happen
-                    self.logger.error("Unknown ip address family {}".format(self._ipver))
-                    self._hostip = None
-                # Print ip address on successfull resolve
-                if self._hostip is not None:
-                    self.logger.info("Resolved {} to {} address {}".format(self._host, 'IPv6' if self._ipver == socket.AF_INET6 else 'IPv4', self._hostip))
-            except:
-                # Unable to resolve hostname
-                self.logger.error("Cannot resolve {} to a valid ip address (v4 or v6)".format(self._host))
-                self._hostip = None
+            self.logger.error("Connection to {} not possible, invalid address".format(self._host))
 
     def set_callbacks(self, connected=None, receiving=None, data_received=None, disconnected=None):
         """ Set callbacks to caller for different socket events
@@ -917,8 +944,8 @@ class _Client(object):
 class Tcp_server(object):
     """ Creates a new instance of the Tcp_server class
 
-    :param interface: Remote interface name or ip address (v4 or v6). Default is '::' which listens on all IPv4 and all IPv6 addresses available.
-    :param port: Remote interface port to connect to
+    :param interface: Local interface name or ip address (v4 or v6). Default is '::' which listens on all IPv4 and all IPv6 addresses available.
+    :param port: Local interface port to connect to
     :param name: Name of this connection (mainly for logging purposes)
 
     :type interface: str
@@ -962,39 +989,235 @@ class Tcp_server(object):
         self.__running = True
 
         # Test if host is an ip address or a host name
-        if self._interface == '' or Network.is_ip(self._interface):
-            # host is a valid ip address (v4 or v6)
-            self._interfaceip = self._interface
-            if self._interface == '':
-                self._interface = 'All Ipv4/Ipv6'
-            self.logger.debug("'{}' is a valid IP address".format(self._interface))
-            if Network.is_ipv6(self._interfaceip):
-                self._ipver = socket.AF_INET6
-            else:
-                self._ipver = socket.AF_INET
-        else:
-            # host is a hostname, trying to resolve to an ip address (v4 or v6)
-            self.logger.debug("{} is not a valid IP address, trying to resolve it as hostname".format(self._interface))
-            try:
-                self._ipver, sockettype, proto, canonname, socketaddr = socket.getaddrinfo(self._interface, None)[0]
-                # Check if resolved address is IPv4 or IPv6
-                if self._ipver == socket.AF_INET:
-                    self._interfaceip, port = socketaddr
-                elif self._ipver == socket.AF_INET6:
-                    self._interfaceip, port, flow_info, scope_id = socketaddr
-                else:
-                    self.logger.error("Unknown ip address family {}".format(self._ipver))
-                    self._interfaceip = None
-                if self._interfaceip is not None:
-                    self.logger.info("Resolved {} to {} address {}".format(self._interface, ipver_to_string(self._ipver), self._hostip))
-            except:
-                # Unable to resolve hostname
-                self.logger.error("Cannot resolve {} to a valid ip address (v4 or v6)".format(self._interface))
-                self._interfaceip = None
+        (self._interfaceip, self._port, self._ipver) = Network.validate_inet_addr(interface, port)
 
-        self.__our_socket = Network.ip_port_to_socket(self._interfaceip, self._port)
-        if not self.name:
-            self.name = self.__our_socket
+        if self._interfaceip is not None:
+            self.__our_socket = Network.ip_port_to_socket(self._interfaceip, self._port)
+            if not self.name:
+                self.name = self.__our_socket
+
+    def set_callbacks(self, listening=None, incoming_connection=None, disconnected=None, data_received=None):
+        """ Set callbacks to caller for different socket events
+
+        :param connected: Called whenever a connection is established successfully
+        :param data_received: Called when data is received
+        :param disconnected: Called when a connection has been dropped for whatever reason
+
+        :type connected: function
+        :type data_received: function
+        :type disconnected: function
+        """
+        self._listening_callback = listening
+        self._incoming_connection_callback = incoming_connection
+        self._data_received_callback = data_received
+        self._disconnected_callback = disconnected
+
+    def start(self):
+        """ Start the server socket
+
+        :return: False if an error prevented us from launching a connection thread. True if a connection thread has been started.
+        :rtype: bool
+        """
+        if self._is_listening:
+            return False
+        try:
+            self.logger.info("Starting up TCP server socket {}".format(self.__our_socket))
+            self.__loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(self.__loop)
+            self.__coroutine = asyncio.start_server(self.__handle_connection, self._interfaceip, self._port)
+            self.__server = self.__loop.run_until_complete(self.__coroutine)
+
+            _name = 'TCP_Server'
+            if self.name is not None:
+                _name = self.name + '.' + _name
+
+            self.__listening_thread = threading.Thread(target=self.__listening_thread_worker, name=_name)
+            self.__listening_thread.daemon = True
+            self.__listening_thread.start()
+        except:
+            return False
+        return True
+
+    def __listening_thread_worker(self):
+        """ Runs the asyncio loop in a separate thread to not block the Tcp_server.start() method """
+        asyncio.set_event_loop(self.__loop)
+        self._is_listening = True
+        try:
+            self.__loop.run_forever()
+        except:
+            self.logger.debug('*** Error in loop.run_forever()')
+        finally:
+
+            for task in asyncio.Task.all_tasks():
+                task.cancel()
+            self.__server.close()
+            self.__loop.run_until_complete(self.__server.wait_closed())
+            self.__loop.close()
+        self._is_listening = False
+        return True
+
+    async def __handle_connection(self, reader, writer):
+        """ Handles incoming connection. One handler per client """
+        peer = writer.get_extra_info('peername')
+        socket_object = writer.get_extra_info('socket')
+        peer_socket = Network.ip_port_to_socket(peer[0], peer[1])
+
+        client = _Client(server=self, socket=socket_object, ip=peer[0], port=peer[1])
+        client.ipver = socket.AF_INET6 if Network.is_ipv6(client.ip) else socket.AF_INET
+        client.name = Network.ip_port_to_socket(client.ip, client.port)
+        client.writer = writer
+
+        self.logger.info("Incoming connection from {} on socket {}".format(peer_socket, self.__our_socket))
+        self._incoming_connection_callback and self._incoming_connection_callback(self, client)
+
+        while True:
+            try:
+                if self.mode == self.MODE_TEXT_LINE:
+                    # self.logger.debug("***")
+                    data = await reader.readline()
+                else:
+                    data = await reader.read(4096)
+            except:
+                data = None
+
+            if data and data[0] == 0xFF and client.process_iac:
+                data = client._process_IAC(data)
+            if data:
+                try:
+                    string = str.rstrip(str(data, 'utf-8'))
+                    self.logger.debug("Received '{}' from {}".format(string, client.name))
+                    self._data_received_callback and self._data_received_callback(self, client, string)
+                    client._data_received_callback and client._data_received_callback(self, client, string)
+                except:
+                    self.logger.debug("Received undecodable bytes from {}".format(client.name))
+            else:
+                try:
+                    self.__close_client(client)
+                    pass
+                finally:
+                    del client
+                return
+
+    def __close_client(self, client):
+        self.logger.info("Lost connection to client {}".format(client.name))
+        self._disconnected_callback and self._disconnected_callback(self, client)
+        client.writer.close()
+
+    def listening(self):
+        """ Returns the current listening state
+
+        :return: True if the server socket is actually listening, else False.
+        :rtype: bool
+        """
+        return self._is_listening
+
+    def send(self, client, msg):
+        """ Send a string to connected client
+
+        :param client: Client Object to send message to
+        :param msg: Message to send
+
+        :type client: network.Client
+        :type msg: string | bytes | bytearray
+
+        :return: True if message has been queued successfully.
+        :rtype: bool
+        """
+        client.send(msg)
+        return True
+
+    def disconnect(self, client):
+        """ Disconnects a specific client
+
+        :param client: Client Object to disconnect
+        :type client: network.Client
+        """
+        client.close()
+        return True
+
+    def close(self):
+        """ Closes running listening socket """
+        self.logger.info("Shutting down listening socket on interface {} port {}".format(self._interface, self._port))
+        asyncio.set_event_loop(self.__loop)
+        try:
+            active_connections = len([task for task in asyncio.Task.all_tasks() if not task.done()])
+        except:
+            active_connections = 0
+        if active_connections > 0:
+            self.logger.info('Tcp_server still has {} active connection(s), cleaning up'.format(active_connections))
+        self.__running = False
+        self.__loop.call_soon_threadsafe(self.__loop.stop)
+        while self.__loop.is_running():
+            pass
+        if self.__listening_thread and self.__listening_thread.isAlive():
+            self.__listening_thread.join()
+        self.__loop.close()
+
+
+class Udp_server(object):
+    """ Creates a new instance of the Udp_server class
+
+    This class is adapted from aioudp project by bashkirtsevich
+    https://github.com/bashkirtsevich-llc/aioudp
+
+    :param interface: Local interface name or ip address (v4 or v6). Default is '::' which listens on all IPv4 and all IPv6 addresses available.
+    :param port: Local interface port to connect to
+    :param name: Name of this connection (mainly for logging purposes)
+
+    :type interface: str
+    :type port: int
+    :type name: str
+    """
+
+# TODO:
+# the naming of some properties is not ideal, eg
+# - interface is not an interface but an ip
+# - ipver is a protocol resp. address family, not a version
+# for now I've kept the names to provide parallelity to the Tcp_server class
+# I'd like to change this - synchronously with Tcp - later on
+
+    MODE_TEXT = 1
+    MODE_TEXT_LINE = 2
+    MODE_BINARY = 3
+    MODE_FIXED_LENGTH = 4
+
+    def __init__(self, port, interface='', name=None, mode=MODE_BINARY, terminator=None):
+        self.logger = logging.getLogger(__name__)
+
+        # Public properties
+        self.name = name
+        self.mode = mode
+        self.terminator = terminator
+
+        # "Private" properties
+        self._interface = interface
+        self._port = port
+        self._is_listening = False
+        self._timeout = 1
+
+        self._interfaceip = None
+        self._ipver = socket.AF_INET
+        self._socket = None
+
+        self._listening_callback = None
+        self._incoming_connection_callback = None
+        self._data_received_callback = None
+
+        # "Secret" properties
+        self.__loop = None
+        self.__coroutine = None
+        self.__server = None
+        self.__listening_thread = None
+        self.__listening_threadlock = threading.Lock()
+        self.__running = True
+
+        # Test if host is an ip address or a host name
+        (self._interfaceip, self._port, self._ipver) = Network.validate_inet_addr(interface, port)
+
+        if self._interfaceip is not None:
+            self.__our_socket = Network.ip_port_to_socket(self._interfaceip, self._port)
+            if not self.name:
+                self.name = self.__our_socket
 
     def set_callbacks(self, listening=None, incoming_connection=None, disconnected=None, data_received=None):
         """ Set callbacks to caller for different socket events
