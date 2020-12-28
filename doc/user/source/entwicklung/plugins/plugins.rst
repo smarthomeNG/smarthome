@@ -19,25 +19,22 @@ gefunden werden:
    /dev/README.md
 
 
-Weitere Informationen die zu erstellenden Methoden und ihre Parameter kann in der folgenden Kurzanleitung gefunden
-werden. Die Libraries im Verzeichnis ```./lib``stellen Funktionalitäten bereit, die nicht in ```./bin/smarthome.py``
-enthalten sind.
+Weitere Informationen über die zu erstellenden Methoden und ihre Parameter können in der folgenden Kurzanleitung gefunden werden. Die Libraries im Verzeichnis ``/lib`` stellen den Kern der Funktionalitäten von smarthomeng bereit.
 
 .. toctree::
    :maxdepth: 1
    :titlesonly:
    :hidden:
 
-   plugin_in5minutes.md
+   plugin_in5minutes.rst
 
 
-Ein Plugin besteht im absoluten Minimum aus zwei Dateien. Alle Dateien eines Plugins befinden sich in einem
-Unterverzeichnis des Verzeichnisses ``/plugins``, welches den Namen des Plugins trägt (nur Kleinbuchstaben):
+Alle Dateien eines Plugins befinden sich in einem Unterverzeichnis des Verzeichnisses ``/plugins``, welches den Namen des Plugins trägt (nur Kleinbuchstaben). Ein Plugin besteht mindestens den folgenden zwei Dateien:
 
 +--------------------------+---------------------------------------------------------------------------------+
 | File                     | Description                                                                     |
 +==========================+=================================================================================+
-| ``__init__.py``          | Der Programm Code des Plugins                                                   |
+| ``__init__.py``          | Der Programmcode des Plugins                                                    |
 +--------------------------+---------------------------------------------------------------------------------+
 | ``plugin.yaml``          | Die (mehrsprachige) Beschreibung der Metadaten für das Plugin                   |
 +--------------------------+---------------------------------------------------------------------------------+
@@ -54,10 +51,10 @@ Je nach Umfang und Erfordernissen sind folgende optionale Dateien hinzuzufügen:
 | ``requirements.txt``     | Falls ein Plugin ein Python Package nutzt, welches nicht in der                 |
 |                          | Standardinstallation von Python enthalten ist, muss diese Anforderung in der    |
 |                          | Datei ``requirements.txt`` dokumentiert werden. (Für eine Beschreibung der      |
-|                          | Dateiformats bitte in der Dokumentation des **pip** Kommandos nachlesen:        |
+|                          | Dateiformats bitte in der Dokumentation des ``pip`` Kommandos nachlesen:        |
 |                          | (https://pip.pypa.io/en/stable/reference/pip_install/#requirements-file-format) |
 +--------------------------+---------------------------------------------------------------------------------+
-| ``user_doc.rst``         | Weitergehende Dokumentation des Plugins, die in die Anwender Dokumentation      |
+| ``user_doc.rst``         | Weitergehende Dokumentation des Plugins, die in die Anwender-Dokumentation      |
 |                          | integriert wird. Falls die Dokumentation in ``user_doc.rst`` Bilder oder andere |
 |                          | Assets enthalten soll, ist im Plugin Verzeichnis ein Verzeichnis ``assets``     |
 |                          | anzulegen, welches diese Dateien aufnimmt.                                      |
@@ -66,12 +63,16 @@ Je nach Umfang und Erfordernissen sind folgende optionale Dateien hinzuzufügen:
 |                          | (``plugin.yaml``) referenziert werden. Sie wird automatisch bei der Generierung |
 |                          | der Anwender Dokumentation von SmartHomeNG integriert.                          |
 +--------------------------+---------------------------------------------------------------------------------+
-| ``developer_doc.rst``    | Optional: Weitergehende Entwickler Dokumentation des Plugins.                   |
+| ``developer_doc.rst``    | Weitergehende Entwickler-Dokumentation des Plugins.                             |
 +--------------------------+---------------------------------------------------------------------------------+
-| ``README.rst`` oder      | README ist als Format für die Dookumentation von Plugins veraltet. Ein Großteil |
-| ``README.md``            | der Dokumentation ist in die Matadaten Dokumentation in ``plugin.yaml``         |
-|                          | übergegangen. Die restliche Dokumentation sollte in ``user_doc.rst`` erfolgen.  |
+| ``README.md``?           | Das in früheren Versionen verwendete ``README``-Format für die Dokumentation    |
+|                          | von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-  |
+|                          | Dokumentation in ``plugin.yaml`` übergegangen. Die restliche Dokumentation      |
+|                          | sollte nur noch im ``user_doc``-Format erfolgen.                                |
+|                          | Soweit möglich, sollten bestehende ``README`` im Rahmen von Aktualisierungen    |
+|                          | in entsprechende ``user_doc`` überführt werden.                                 |
 +--------------------------+---------------------------------------------------------------------------------+
+                              
 
 .. important::
 
@@ -82,7 +83,7 @@ Je nach Umfang und Erfordernissen sind folgende optionale Dateien hinzuzufügen:
    gewählt würde, würde die Navigation der Dokumentation inkonsistent werden.
 
 
-Ein Plugin kann die folgenden Unterverzeichnisse haben:
+Ein Pluginverzeichnis kann die folgenden Unterverzeichnisse haben:
 
 +--------------------------+-----------------------------------------------------------------------+
 | Directory                | Description                                                           |
@@ -104,12 +105,12 @@ Ein Plugin kann die folgenden Unterverzeichnisse haben:
 +--------------------------+-----------------------------------------------------------------------+
 | ``webif/static/img``     | Optional, falls das Webinterface Bilder enthält                       |
 +--------------------------+-----------------------------------------------------------------------+
-| ``webif/templates``      | Dieses Verzeichnis enthält die Jinja2 Templatesdes Webinterfaces und  |
+| ``webif/templates``      | Dieses Verzeichnis enthält die Jinja2 Templates des Webinterfaces und |
 |                          | solte mindestens ``index.html`` enthalten.                            |
 +--------------------------+-----------------------------------------------------------------------+
 
 
-Ein Plugin implementiert im Code eine Klasse, welche vor der ``class SmartPlugin`` abgeleitet ist. Die Methoden
+Ein Plugin implementiert im Code eine Klasse, welche von der ``class SmartPlugin`` abgeleitet ist. Die Methoden
 von ``SmartPlugin`` sind hier dokumentiert:
 
 .. toctree::
@@ -119,7 +120,7 @@ von ``SmartPlugin`` sind hier dokumentiert:
    smartplugin
 
 Plugins welche MQTT nutzen, sollten stattdessen von ``class MqttPlugin`` abgeleitet werden. ``MqttPlugin`` ist
-eine subclass von ``SmartPlugin``, die um Methoden zur MQTT Nutzung erweitert ist. Die Methoden von
+eine Unterklasse von ``SmartPlugin``, die um Methoden zur MQTT-Nutzung erweitert ist. Die Methoden von
 ``MqttPlugin`` sind hier dokumentiert:
 
 .. toctree::
@@ -144,7 +145,7 @@ eine subclass von ``SmartPlugin``, die um Methoden zur MQTT Nutzung erweitert is
 
 
 
-Some very specific info upon some plugins can be found here:
+Weitergehende und sehr spezifische Informationen über einzelne Plugins sind hier verfügbar:
 
 .. toctree::
    :maxdepth: 1

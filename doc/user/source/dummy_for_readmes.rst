@@ -10,9 +10,9 @@
 
    /admonition_arten.rst
    /dev/README.md
-   /dev/sample_plugin/README.md
-   /dev/sample_mqttplugin/README.md
    /dev/sample_module/README.md
+   /dev/sample_mqttplugin/user_doc.rst
+   /dev/sample_plugin/user_doc.rst
    /modules/admin/README.md
    /modules/http/README.md
    /modules/mqtt/README.md
@@ -32,3 +32,4 @@
    /plugins/wunderground/README_OLD.md
    /plugins/visu_smartvisu/developer_doc.md
    /plugins/visu_websocket/developer_doc.rst
+   

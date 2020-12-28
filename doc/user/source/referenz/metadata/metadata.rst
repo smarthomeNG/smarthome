@@ -9,7 +9,7 @@
 Metadaten
 =========
 
-Im folgenden ist die Struktur der Meetadaten beschrieben, die für Module und Plugins genutzt werden.
+Im folgenden ist die Struktur der Metadaten beschrieben, die für Module und Plugins genutzt werden.
 
 
 Metadaten für Module

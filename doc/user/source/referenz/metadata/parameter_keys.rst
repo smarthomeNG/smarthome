@@ -20,8 +20,8 @@ Beschreibung der Schlüssel im Abschnitt für einen Parameter bzw. ein Attribut:
    Komplexe Datentypen:
     - ``dict`` - ein Dictionary
     - ``list`` - eine Liste bei der jedes Element vom Datentyp ``foo`` ist
-    - ``list(len)`` - eine Liste fester Länge bei der jedes Element vom Datentyp ``foo`` ist und deren Anzahl Elemente **len** ist
-    - ``list(subtype)`` - eine Liste bei der jedes Element vom Datentyp *+subtype** ist :sup:`1` (z.B.: ``list(int)``
+    - ``list(len)`` - eine Liste fester Länge bei der jedes Element vom Datentyp ``foo`` ist und deren Anzahl Elemente ``len`` ist
+    - ``list(subtype)`` - eine Liste bei der jedes Element vom Datentyp ``subtype`` ist :sup:`1` (z.B.: ``list(int)``
       or ``list(ipv4)``)
     - ``list(subtype, subtype, ...)`` - eine Liste bei der jedes Element von einem angegebenen  Datentyp ist.
       Falls die Liste länger ist als die Anzahl angegebener subtypes :sup:`1`, wird der letzte angegebene subtype
@@ -56,11 +56,11 @@ Beschreibung der Schlüssel im Abschnitt für einen Parameter bzw. ein Attribut:
 
 - ``valid_list:`` Optional: Liste der erlaubten Werte für den Parameter (case sensitive)
 
-- ``valid_list_ci:*`` Optional: Liste der erlaubten Werte für den Parameter (nicht case sensitive)
+- ``valid_list_ci:`` Optional: Liste der erlaubten Werte für den Parameter (nicht case sensitive)
   Der Wert wird dem Plugin/Modul in lower case übergeben.
   Falls ``valid_list_ci`` angegeben ist, wird eine evtl spezifizierte ``valid_list`` ignoriert.
 
-- ``valid_list_description:`` Optional: Beschreibung der Werte, die in ``valid_list:`` bzw. ``valid_list_ci:*``
+- ``valid_list_description:`` Optional: Beschreibung der Werte, die in ``valid_list:`` bzw. ``valid_list_ci:``
   spezifiziert sind.
   Falls definiert, muss ``valid_list_description:`` Sub-Keys haben, um die Beschreibung in mehreren Sprachen
   (``de``, ``en``, ``fr``, ``pl``, ...) anzugeben.
@@ -70,7 +70,7 @@ Beschreibung der Schlüssel im Abschnitt für einen Parameter bzw. ein Attribut:
 - ``valid_min:`` Optional: Für die Datentypen ``int``, ``pint``, ``float``, ``pfloat``, ``num`` und  ``scene`` kann
   hier ein minimal Wert angegeben werden
 
-- ``valid_miax`` Optional: Für die Datentypen ``int``, ``pint``, ``float``, ``pfloat``, ``num`` und  ``scene`` kann
+- ``valid_max`` Optional: Für die Datentypen ``int``, ``pint``, ``float``, ``pfloat``, ``num`` und  ``scene`` kann
   hier ein maximal Wert angegeben werden
 
 - ``mandatory:`` Optional: Falls auf ``True`` gesetzt, muss dieser Wert konfiguriert werden, damit das Plugin/Modul
