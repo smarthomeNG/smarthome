@@ -321,20 +321,20 @@ class Network(object):
             return ('', port, socket.AF_INET)
         else:
             # try to resolve addr to get more info
-            logger.debug("trying to resolve {}".format(addr))
+            logger.debug(f'trying to resolve addr {addr} with port {port}')
             try:
                 family, sockettype, proto, canonname, socketaddr = socket.getaddrinfo(addr, None)[0]
                 # Check if resolved address is IPv4 or IPv6
                 if family == socket.AF_INET:
-                    ip, port = socketaddr
+                    ip, _ = socketaddr
                 elif family == socket.AF_INET6:
-                    ip, port, flow_info, scope_id = socketaddr
+                    ip, _, flow_info, scope_id = socketaddr
                 else:
                     # might be AF_UNIX or something esoteric?
                     logger.error("Unsupported address family {}".format(family))
                     ip = None
                 if ip is not None:
-                    logger.info("Resolved {} to {} address {}".format(addr, Network.ipver_to_string(family), ip))
+                    logger.info(f'Resolved {addr} to {Network.ipver_to_string(family)} address {ip}')
             except socket.gaierror:
                 # Unable to resolve hostname
                 logger.error("Cannot resolve {} to a valid ip address (v4 or v6)".format(addr))
@@ -1097,8 +1097,10 @@ class Tcp_server(object):
                 try:
                     string = str.rstrip(str(data, 'utf-8'))
                     self.logger.debug("Received '{}' from {}".format(string, client.name))
-                    self._data_received_callback and self._data_received_callback(self, client, string)
-                    client._data_received_callback and client._data_received_callback(self, client, string)
+                    if self._data_received_callback:
+                        self._data_received_callback(self, client, string)
+                    if client._data_received_callback:
+                        client._data_received_callback(self, client, string)
                 except:
                     self.logger.debug("Received undecodable bytes from {}".format(client.name))
             else:
@@ -1215,7 +1217,7 @@ class Udp_server(object):
             if not self.name:
                 self.name = self.__our_socket
         else:
-            self._running = False
+            self.__running = False
 
     def start(self):
         """ Start the server socket
@@ -1223,7 +1225,7 @@ class Udp_server(object):
         :return: False if an error prevented us from launching a connection thread. True if a connection thread has been started.
         :rtype: bool
         """
-        if not self._running:
+        if not self.__running:
             self.logger.error('UDP server not initialized, can not start.')
             return False
         if self._is_listening:
@@ -1239,11 +1241,11 @@ class Udp_server(object):
             _name = 'UDP_Server'
             if self.name is not None:
                 _name = self.name + '.' + _name
-
             self.__listening_thread = threading.Thread(target=self.__listening_thread_worker, name=_name)
             self.__listening_thread.daemon = True
             self.__listening_thread.start()
-        except:
+        except Exception as e:
+            self.logger.error(f'Error {e} setting up udp server for {self.__our_socket}')
             return False
         return True
 
@@ -1307,8 +1309,9 @@ class Udp_server(object):
         """
         Runs the asyncio loop in a separate thread to not block the Udp_server.start() method
         """
-        asyncio.set_event_loop(self.__loop)
         self._is_listening = True
+        self.logger.debug('listening thread set is_listening to True')
+        asyncio.set_event_loop(self.__loop)
         try:
             self.__loop.run_forever()
         except:
