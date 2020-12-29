@@ -36,12 +36,12 @@ Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.8
     So ist Python 3.6 die minimale Vorraussetzung zur Nutzung des neuen Websocket Moduls.
 
 
-Absolute Minimum Python Version
-===============================
+Minimum Python Version
+----------------------
 
-Die Minimum Python Version in der SmartHomeNG startet wurde auf v3.6 angehoben, da Python 3.5 im September 2020
-End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen auf einer
-der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
+Die absolute Minimum Python Version in der SmartHomeNG startet wurde auf v3.6 angehoben, da Python 3.5 im
+September 2020 End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen
+auf einer der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
 
 .. important::
 
@@ -76,6 +76,13 @@ Bugfixes in the CORE
 * lib.logutils
 
   * fix error when filters are active and logging message is just a boolean value
+
+* lib.scene:
+
+  * Bug fix for loading learned values on startup
+  * Bugfix in saving learned values
+    The file with the learned values (../scenes/<scene name>_learned.yaml) has to be deleted an the scenes
+    have to be learned in again)
 
 * lib.shpypi
 
@@ -163,11 +170,6 @@ Updates in the CORE
 * lib.plugin:
 
   * Added handling of plugin specific attributes
-
-* lib.scene:
-
-  * Bug fix for loading learned values on startup
-  * Bugfix in saving learned values
 
 * lib.scheduler:
 
@@ -781,7 +783,10 @@ Documentation
   * doc for crontab: changes samples to comply with yaml
   * Started a reference section
   * Added a Translation entry to the navigation that calls Google Tanslate to create a non German version
+  * Moved the developer documentation to a seperate section in the user documentation
 
 * Developer Documentation
 
-  * ...
+  * Moved the developer documentation to a seperate section in the user documentation
+  * Starting with SmartHomeNG v1.8 there is no seperate developer documentation any more
+

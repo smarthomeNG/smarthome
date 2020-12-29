@@ -16,9 +16,6 @@ das **smartvisu** Plugins zu konfigurieren.
    #    use_tls: True
    #    tls_cert: shng.cer
    #    tls_key: shng.key
-   #    sv_enabled: True
-   #    sv_acl: ro
-   #    sv_querydef: False
 
 
 .. code-block:: yaml
@@ -28,17 +25,20 @@ das **smartvisu** Plugins zu konfigurieren.
        plugin_name: smartvisu
    #    smartvisu_dir: /var/www/smartvisu
    #    generate_pages: True
-   #    handle_widgets: True
    #    overwrite_templates: Yes
    #    visu_style: blk
+   #    default_acl: rw
+   #    handle_widgets: True
+   #    list_deprecated_warnings: False
 
 
 Für die vollständige Dokumentation der Parameter bitte in der Dokumentation des Websocket Moduls und des
 smartVISU Plugins auf den folgenden Seiten dieser Dokumentation nachlesen:
 
-- für das **websocket** unter :doc:`../modules/websocket/README`
-- für das **smartvisu** unter :doc:`../plugins/smartvisu/README`
+- für das **websocket** unter :doc:`../konfiguration/module/module_websocket`
+- für das **smartvisu** unter :doc:`../plugins/smartvisu/user_doc`
 
 Falls die Funktionalitäten zur automatischen Generierung von smartVISU Seiten und zur Installation
 von Widgets in die smartVISU nicht benötigt werden, ist es hinreichend das Modul **websocket**
 zu konfigurieren.
+

@@ -16,7 +16,6 @@
    /modules/admin/README.md
    /modules/http/README.md
    /modules/mqtt/README.md
-   /modules/websocket/README.md
    /vorlagen/*
 
 .. toctree::
@@ -32,4 +31,3 @@
    /plugins/wunderground/README_OLD.md
    /plugins/visu_smartvisu/developer_doc.md
    /plugins/visu_websocket/developer_doc.rst
-   

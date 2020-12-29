@@ -4,8 +4,8 @@
 .. role:: redsup
 .. role:: bluesup
 
-Module mqtt :redsup:`new`
-=========================
+Module mqtt
+===========
 
 This module implements the MQTT protocol into the core of SmartHomeNG to make it usable for plugins.
 

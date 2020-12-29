@@ -25,7 +25,7 @@ Bisher existieren die folgenden Module:
    module_http
    module_admin
    module_mqtt
-   module_websocket
+   ../../referenz/module/module_websocket
 
 
 Ein Modul besteht aus mindestens zwei Dateien:

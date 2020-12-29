@@ -31,6 +31,7 @@ möglich.
    :hidden:
 
    module_http
+   module_websocket
    module_admin
    module_mqtt
 

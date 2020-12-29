@@ -26,6 +26,9 @@ Mit dem Release v1.8 ändert sich hier einiges:
 - Die Kommunikation über das Websocket Protokoll wird von einem neuen Core-Modul übernommen und das
   bisher genutzte Plugin **visu_websocket** ist nun **deprecated**. Das Plugin wird mit dem Release v1.9
   retired werden.
+- **Das smartvisu Plugin muss geladen sein**. Es aktiviert das Nutzdatenprotoll für die smartVISU im neuen Websocket
+  Modul. Wenn dieses Plugin nicht geladen ist, reagiert das Websocket Modul nicht auf Kommandos von der smartVISU.
+
 - Das Plugin zur Generierung der smartVISU Seiten **visu_smartvisu** wird durch ein neues Plugin **smartvisu**
   ersetzt, welches zusätzliche Funktionalitäten bietet. Das bisher genutzte Plugin **visu_smartvisu** ist
   nun **deprecated**. Das Plugin wird mit dem Release v1.9 retired werden.
@@ -68,6 +71,7 @@ Mit der Version 1.8 von SmartHomeNG gibt es hier einige Neuerungen.
    changes_in_1.8
    automatic_generation
    item_attributes
+   beispiel
    install_widgets
    plugin_widgets
 
