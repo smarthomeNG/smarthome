@@ -702,7 +702,9 @@ class SmartHome():
         if threading.active_count() > 1:
             header_logged = False
             for thread in threading.enumerate():
-                if thread.name != 'Main' and thread.name[0] !=  '_' and not thread.name.startswith('ThreadPoolExecutor'):
+                if thread.name != 'Main' and thread.name[0] !=  '_' \
+                    and thread.name != 'modules.websocket.websocket_server' \
+                    and not thread.name.startswith('ThreadPoolExecutor'):
                 #if thread.name != 'Main' and thread.name[0] !=  '_':
                     if not header_logged:
                         self._logger.warning("The following threads have not been terminated properly by their plugins (please report to the plugin's author):")

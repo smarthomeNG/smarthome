@@ -144,7 +144,7 @@ class Websocket(Module):
         self.logger.info("Shutting down websoocket server(s)...")
 #        self.stop_async = True
 
-        self.loop.call_soon_threadsafe(self.loop.stop)
+        #self.loop.call_soon_threadsafe(self.loop.stop)
 
         try:
             self._server_thread.join()
