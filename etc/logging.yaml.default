@@ -138,6 +138,23 @@ loggers:
         handlers: [shng_details_file]
         level: WARNING
 
+    lib.smarthome.main:
+        # Add all logging handlers that should receive the initial log lines after a startup
+        # (example below) but leave out the logging handlers that are defined in the root-logger
+        # (otherwise log entries will be doubled).
+        #
+        # 2020-12-29  11:35:34 WARNING  lib.smarthome.main   --------------------   Init SmartHomeNG 1.8.0   --------------------
+        # 2020-12-29  11:35:34 WARNING  lib.smarthome.main   Running in Python interpreter 'v3.8.3 final' in virtual environment
+        # 2020-12-29  11:35:34 WARNING  lib.smarthome.main    - on Linux-4.9.0-6-amd64-x86_64-with-glibc2.17 (pid=24407)
+        # 2020-12-29  11:35:35 WARNING  lib.smarthome.main    - Nutze Feiertage für Land 'DE', Provinz 'HH', 1 benutzerdefinierte(r) Feiertag(e) definiert
+        # 2020-12-29  11:36:54 WARNING  lib.smarthome.main   --------------------   SmartHomeNG initialization finished   --------------------
+        #
+        # logging to shng_details_file is already enabled in logger lib:
+        #handlers: [shng_develop_file]
+
+        # set to WARNING LEVEL to prevent unwanted log entries and add ONLY start and stop log-messages to further logfiles
+        level: WARNING
+
     modules:
         # Default logger for SmartHomeNG modules
         handlers: [shng_details_file]
@@ -224,17 +241,7 @@ loggers:
     # ----------------
 
     __main__:
-        # Add all logging handlers that should receive the initial log lines after a startup
-        # (example below) but leave out the logging handlers that are defined in the root-logger
-        # (otherwise log entries will be doubled).
-        #
-        # 2019-02-26  22:42:27 WARNING  __main__            --------------------   Init SmartHomeNG 1.5d.5a01c53f.develop   --------------------
-        # 2019-02-26  22:42:27 WARNING  __main__            Running in Python interpreter 'v3.6.5 final' (pid=25878) on linux platform
-        #
         handlers: [shng_details_file]
-        #handlers: [shng_details_file,shng_develop_file]
-
-        # set to WARNING LEVEL to add ONLY start and stop log-messages to further logfiles
         level: WARNING
 
 
