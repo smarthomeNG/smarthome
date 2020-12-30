@@ -21,17 +21,16 @@
 #  along with SmartHomeNG  If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
-"""
+'''
 This library contains the network classes for SmartHomeNG.
 
 New network functions and utilities are going to be implemented in this library.
 These classes, functions and methods are mainly meant to be used by plugin developers
-"""
+'''
 
+from lib.utils import Utils
 import asyncio
-import ipaddress
 import logging
-import re
 import requests
 from iowait import IOWait   # BMX
 import socket
@@ -42,177 +41,37 @@ import time
 from . import aioudp
 
 
-# Turn off ssl warnings
+# Turn off ssl warnings from urllib
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
-logging.getLogger("urllib3").setLevel(logging.WARNING)
+logging.getLogger('urllib3').setLevel(logging.WARNING)
 
 
 class Network(object):
-    """
-    This Class has some usefull static methods that you can use in your projects
-    """
+    '''
+    This Class has some useful static methods that you can use in your projects
 
-    @staticmethod
-    def is_mac(mac):
-        """
-        Validates a MAC address
 
-        :param mac: MAC address
-        :type string: str
-
-        :return: True if value is a MAC
-        :rtype: bool
-        """
-
-        mac = str(mac)
-        # notation without separators
-        if len(mac) == 12:
-            for c in mac:
-                # each digit is hex
-                if c not in '0123456789abcdefABCDEF':
-                    return False
-            return True
-
-        # notation with separators -> 12 digits + 5 separators
-        if len(mac) != 17:
-            return False
-        octets = re.split('[: -]', mac)
-        # 6 groups...
-        if len(octets) != 6:
-            return False
-        for o in octets:
-            # ... of 2 digits each
-            if len(o) != 2:
-                return False
-        # and each digit is hex
-        for c in ''.join(octets):
-            if c not in '0123456789abcdefABCDEF':
-                return False
-        return True
-
-    @staticmethod
-    def is_ip(string):
-        """
-        Checks if a string is a valid ip-address (v4 or v6)
-
-        :param string: String to check
-        :type string: str
-
-        :return: True if an ip, false otherwise.
-        :rtype: bool
-        """
-
-        return (Network.is_ipv4(string) or Network.is_ipv6(string))
-
-    @staticmethod
-    def is_ipv4(string):
-        """
-        Checks if a string is a valid ip-address (v4)
-
-        :param string: String to check
-        :type string: str
-
-        :return: True if an ip, false otherwise.
-        :rtype: bool
-        """
-
-        try:
-            ipaddress.IPv4Address(string)
-            return True
-        except ipaddress.AddressValueError:
-            return False
-
-    @staticmethod
-    def is_ipv6(string):
-        """
-        Checks if a string is a valid ip-address (v6)
-
-        :param string: String to check
-        :type string: str
-
-        :return: True if an ipv6, false otherwise.
-        :rtype: bool
-        """
-
-        try:
-            ipaddress.IPv6Address(string)
-            return True
-        except ipaddress.AddressValueError:
-            return False
-
-    @staticmethod
-    def is_hostname(string):
-        """
-        Checks if a string is a valid hostname
-
-        The hostname has is checked to have a valid format
-
-        :param string: String to check
-        :type string: str
-
-        :return: True if a hostname, false otherwise.
-        :rtype: bool
-        """
-
-        try:
-            return bool(re.match("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9])\\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9-]*[A-Za-z0-9])$", string))
-        except TypeError:
-            return False
-
-    @staticmethod
-    def get_local_ipv4_address():
-        """
-        Gets local ipv4 address of the interface with the default gateway.
-        Return '127.0.0.1' if no suitable interface is found
-
-        :return: IPv4 address as a string
-        :rtype: string
-        """
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        try:
-            s.connect(('8.8.8.8', 1))
-            IP = s.getsockname()[0]
-        except:
-            IP = '127.0.0.1'
-        finally:
-            s.close()
-        return IP
-
-    @staticmethod
-    def get_local_ipv6_address():
-        """
-        Gets local ipv6 address of the interface with the default gateway.
-        Return '::1' if no suitable interface is found
-
-        :return: IPv6 address as a string
-        :rtype: string
-        """
-        s = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
-        try:
-            s.connect(('2001:4860:4860::8888', 1))
-            IP = s.getsockname()[0]
-        except:
-            IP = '::1'
-        finally:
-            s.close()
-        return IP
+    NOTE: Some format check routines were duplicate with lib.utils. As these primarily
+          check string formats and are used for metadata parsing, they were removed here
+          to prevent duplicates.
+    '''
 
     @staticmethod
     def ip_port_to_socket(ip, port):
-        """
+        '''
         Returns an ip address plus port to a socket string.
         Format is 'ip:port' for IPv4 or '[ip]:port' for IPv6
 
         :return: Socket address / IPEndPoint as string
         :rtype: string
-        """
-        if Network.is_ipv6(ip):
-            ip = '[{}]'.format(ip)
-        return '{}:{}'.format(ip, port)
+        '''
+        if Utils.is_ipv6(ip):
+            ip = f'[{ip}]'
+        return f'{ip}:{port}'
 
     @staticmethod
     def family_to_string(family):
-        """
+        '''
         Converts a socket address family to an ip version string 'IPv4' or 'IPv6'
 
         :param family: Socket family
@@ -220,12 +79,12 @@ class Network(object):
 
         :return: 'IPv4' or 'IPv6'
         :rtype: string
-        """
+        '''
         return 'IPv6' if family == socket.AF_INET6 else 'IPv4'
 
     @staticmethod
     def ping(ip):
-        """
+        '''
         Tries to ICMP ping a host using external OS utilities. Currently IPv4 only.
 
         :param ip: IPv4 address as a string
@@ -233,18 +92,18 @@ class Network(object):
 
         :return: True if a reachable, false otherwise.
         :rtype: bool
-        """
+        '''
         logger = logging.getLogger(__name__)
-        if subprocess.call("ping -c 1 %s" % ip, shell=True, stdout=open('/dev/null', 'w'), stderr=subprocess.STDOUT) == 0:
-            logger.debug('Ping: {} is online'.format(ip))
+        if subprocess.call(f'ping -c 1 {ip}', shell=True, stdout=open('/dev/null', 'w'), stderr=subprocess.STDOUT) == 0:
+            logger.debug(f'Ping: {ip} is online')
             return True
         else:
-            logger.debug('Ping: {} is offline'.format(ip))
+            logger.debug(f'Ping: {ip} is offline')
             return False
 
     @staticmethod
     def ping_port(ip, port=80):
-        """
+        '''
         Tries to reach a given TCP port. Currently IPv4 only.
 
         :param ip: IPv4 address
@@ -255,27 +114,27 @@ class Network(object):
 
         :return: True if a reachable, false otherwise.
         :rtype: bool
-        """
+        '''
         logger = logging.getLogger(__name__)
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(2)
         if sock.connect_ex((ip, int(port))) == 0:
-            logger.debug('Ping: port {} on {} is reachable'.format(port, ip))
+            logger.debug(f'Ping: port {port} on {ip} is reachable')
             sock.close()
             return True
         else:
-            logger.debug('Ping: port {} on {} is offline or not reachable'.format(port, ip))
+            logger.debug(f'Ping: port {port} on {ip} is offline or not reachable')
             sock.close()
             return False
 
     @staticmethod
     def send_wol(mac, ip='255.255.255.255'):
-        """
+        '''
         Sends a wake on lan packet to the given mac address using ipv4 broadcast (or directed to specific ip)
 
         :param mac: Mac address to wake up (pure numbers or with any separator)
         :type mac: string
-        """
+        '''
         logger = logging.getLogger(__name__)
         if len(mac) == 12:
             pass
@@ -294,11 +153,11 @@ class Network(object):
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
             sock.sendto(send_data, (ip, 9))
-        logger.debug('Sent WOL packet to {}'.format(mac))
+        logger.debug(f'Sent WOL packet to {mac}')
 
     @staticmethod
     def validate_inet_addr(addr, port):
-        """
+        '''
         Validates that addr:port resolve to a valid network address/port/family
         and return resolved IP address and port
 
@@ -308,7 +167,7 @@ class Network(object):
         :type port: num
         :return: (ip_address, port, family) or (None, undef, undef) if error occurs
         :rtype: tuple
-        """
+        '''
         logger = logging.getLogger(__name__)
         # Test if host is empty
         if addr == '':
@@ -325,28 +184,29 @@ class Network(object):
                     ip, _, flow_info, scope_id = socketaddr
                 else:
                     # might be AF_UNIX or something esoteric?
-                    logger.error("Unsupported address family {}".format(family))
+                    logger.error(f'Unsupported address family {family}')
                     ip = None
                 if ip is not None:
                     logger.info(f'Resolved {addr} to {Network.family_to_string(family)} address {ip}')
             except socket.gaierror:
                 # Unable to resolve hostname
-                logger.error("Cannot resolve {} to a valid ip address (v4 or v6)".format(addr))
+                logger.error(f'Cannot resolve {addr} to a valid ip address (v4 or v6)')
                 ip = None
 
         return (ip, port, family)
 
 
 class Http(object):
-    """
+    '''
     Creates an instance of the Http class.
+
 
     :param baseurl: base URL used everywhere in this instance (example: http://www.myserver.tld)
     :param timeout: Set a maximum amount of seconds the class should try to establish a connection
 
     :type baseurl: str
     :type timeout: int
-    """
+    '''
     def __init__(self, baseurl='', timeout=10):
         self.logger = logging.getLogger(__name__)
 
@@ -356,7 +216,7 @@ class Http(object):
         self._session = requests.Session()
 
     def HTTPDigestAuth(self, user=None, password=None):
-        """
+        '''
         Creates a HTTPDigestAuth instance and returns it to the caller.
 
         :param user: Username
@@ -367,11 +227,11 @@ class Http(object):
 
         :return: HTTPDigestAuth object
         :rtype: HTTPDigestAuth
-        """
+        '''
         return requests.auth.HTTPDigestAuth(user, password)
 
     def post_json(self, url=None, params=None, verify=True, auth=None, json=None, files={}):
-        """
+        '''
         Launches a POST request and returns JSON answer as a dict or None on error.
 
         :param url: Optional URL to fetch from. If None (default) use baseurl given on init.
@@ -386,18 +246,18 @@ class Http(object):
 
         :return: JSON answer decoded into a dict or None on whatever error occured
         :rtype: dict | None
-        """
+        '''
         if self.__post(url=url, params=params, verify=verify, auth=auth, json=json, files=files):
             json = None
             try:
                 json = self._response.json()
             except:
-                self.logger.warning("Invalid JSON received from {} !".format(url if url else self.baseurl))
+                self.logger.warning(f'Invalid JSON received from {url if url else self.baseurl}')
             return json
         return None
 
     def get_json(self, url=None, params=None, verify=True, auth=None):
-        """
+        '''
         Launches a GET request and returns JSON answer as a dict or None on error.
 
         :param url: Optional URL to fetch from. If None (default) use baseurl given on init.
@@ -412,18 +272,18 @@ class Http(object):
 
         :return: JSON answer decoded into a dict or None on whatever error occured
         :rtype: dict | None
-        """
+        '''
         if self.__get(url=url, params=params, verify=verify, auth=auth):
             json = None
             try:
                 json = self._response.json()
             except:
-                self.logger.warning("Invalid JSON received from {} !".format(url if url else self.baseurl))
+                self.logger.warning(f'Invalid JSON received from {url if url else self.baseurl}')
             return json
         return None
 
     def get_text(self, url=None, params=None, encoding=None, timeout=None):
-        """
+        '''
         Launches a GET request and returns answer as string or None on error.
 
         :param url: Optional URL to fetch from. Default is to use baseurl given to constructor.
@@ -436,19 +296,19 @@ class Http(object):
 
         :return: Answer decoded into a string or None on whatever error occured
         :rtype: str | None
-        """
+        '''
         _text = None
         if self.__get(url=url, params=params, timeout=timeout):
             try:
                 if encoding:
                     self._response.encoding = encoding
                 _text = self._response.text
-            except:
-                self.logger.error("Successfull GET, but decoding response failed. This should never happen !")
+            except Exception as e:
+                self.logger.error(f'Successful GET, but decoding response failed. This should never happen...error was: {e}')
         return _text
 
     def download(self, url=None, local=None, params=None, verify=True, auth=None):
-        """
+        '''
         Downloads a binary file to a local path
 
         :param url: Remote file to download. Attention: Must be full url. 'baseurl' is NOT prefixed here.
@@ -465,19 +325,19 @@ class Http(object):
 
         :return: Returns true on success, else false
         :rtype: bool
-        """
+        '''
         if self.__get(url=url, params=params, verify=verify, auth=auth, stream=True):
-            self.logger.debug("Download of {} successfully completed, saving to {}".format(url, local))
+            self.logger.debug(f'Download of {url} successfully completed, saving to {local}')
             with open(str(local), 'wb') as f:
                 for chunk in self._response:
                     f.write(chunk)
             return True
         else:
-            self.logger.warning("Download error: {}".format(url))
+            self.logger.warning(f'Download error: {url}')
             return False
 
     def get_binary(self, url=None, params=None):
-        """
+        '''
         Launches a GET request and returns answer as raw binary data or None on error.
         This is usefull for downloading binary objects / files.
 
@@ -489,18 +349,18 @@ class Http(object):
 
         :return: Answer as raw binary objector None on whatever error occured
         :rtype: bytes | None
-        """
+        '''
         self.__get(url=url, params=params)
         return self._response.content
 
     def response_status(self):
-        """
+        '''
         Returns the status code (200, 404, ...) of the last executed request.
         If GET request was not possible and thus no HTTP statuscode is available the returned status code = 0.
 
         :return: Status code and text of last request
         :rtype: (int, str)
-        """
+        '''
         try:
             (code, reason) = (self._response.status_code, self._response.reason)
         except:
@@ -509,62 +369,84 @@ class Http(object):
         return (code, reason)
 
     def response_headers(self):
-        """
+        '''
         Returns a dictionary with the server return headers of the last executed request
 
         :return: Headers returned by server
         :rtype: dict
-        """
+        '''
         return self._response.headers
 
     def response_cookies(self):
-        """
+        '''
         Returns a dictionary with the cookies the server may have sent on the last executed request
 
         :return: Cookies returned by server
         :rtype: dict
-        """
+        '''
         return self._response.cookies
 
     def response_object(self):
-        """
+        '''
         Returns the raw response object for advanced ussage. Use if you know what you are doing.
         Maybe this lib can be extented to your needs instead ?
 
         :return: Reponse object as returned by underlying requests library
         :rtype: `requests.Response <http://docs.python-requests.org/en/master/user/quickstart/#response-content>`_
-        """
+        '''
         return self._response
 
     def __post(self, url=None, params=None, timeout=None, verify=True, auth=None, json=None, data=None, files={}):
+        '''
+        Send POST request. Non-documented arguments are passed on to requests.request()
+
+        :param url: URL to which to POST
+        :type url: str
+        :param data: data to submit to POST
+        :type data: dict or bytes or file
+
+        :return: True if POST was successful
+        :rtype: bool
+        '''
         url = self.baseurl + url if url else self.baseurl
         timeout = timeout if timeout else self.timeout
         data = json if json else data
-        self.logger.info("Sending POST request {} to {}".format(json, url))
+        self.logger.info(f'Sending POST request {json} to {url}')
         try:
             self._response = self._session.post(url, params=params, timeout=timeout, verify=verify, auth=auth, data=data, files=files)
-            self.logger.debug("{} Posted to URL {}".format(self.response_status(), self._response.url))
+            self.logger.debug(f'{self.response_status()} Posted to URL {self._response.url}')
         except Exception as e:
-            self.logger.warning("Error sending POST request to {}: {}".format(url, e))
+            self.logger.warning(f'Error sending POST request to {url}: {e}')
             return False
         return True
 
     def __get(self, url=None, params=None, timeout=None, verify=True, auth=None, stream=False):
+        '''
+        Send POST request. Non-documented arguments are passed on to requests.request()
+
+        :param url: URL to which to GET
+        :type url: str
+
+        :return: True if GET was successful
+        :rtype: bool
+        '''
         url = self.baseurl + url if url else self.baseurl
         timeout = timeout if timeout else self.timeout
-        self.logger.info("Sending GET request to {}".format(url))
+        self.logger.info(f'Sending GET request to {url}')
         try:
             self._response = self._session.get(url, params=params, timeout=timeout, verify=verify, auth=auth, stream=stream)
-            self.logger.debug("{} Fetched URL {}".format(self.response_status(), self._response.url))
+            self.logger.debug(f'{self.response_status()} Fetched URL {self._response.url}')
         except Exception as e:
-            self.logger.warning("Error sending GET request to {}: {}".format(url, e))
+            self.logger.warning(f'Error sending GET request to {url}: {e}')
             self._response = None
             return False
         return True
 
 
 class Tcp_client(object):
-    """ Creates a new instance of the Tcp_client class
+    '''
+    Creates a new instance of the Tcp_client class
+
 
     :param host: Remote host name or ip address (v4 or v6)
     :param port: Remote host port to connect to
@@ -585,16 +467,16 @@ class Tcp_client(object):
     :type retry_cycle: int
     :type binary: bool
     :type terminator: int | bytes | str
-    """
+    '''
 
     def __init__(self, host, port, name=None, autoreconnect=True, connect_retries=5, connect_cycle=5, retry_cycle=30, binary=False, terminator=False):
         self.logger = logging.getLogger(__name__)
 
-        # Public properties
+        # public properties
         self.name = name
         self.terminator = terminator
 
-        # "Private" properties
+        # protected properties
         self._host = host
         self._port = port
         self._autoreconnect = autoreconnect
@@ -616,7 +498,7 @@ class Tcp_client(object):
         self._disconnected_callback = None
         self._data_received_callback = None
 
-        # "Secret" properties
+        # private properties
         self.__connect_thread = None
         self.__connect_threadlock = threading.Lock()
         self.__receive_thread = None
@@ -629,12 +511,13 @@ class Tcp_client(object):
         self._port = port
         (self._hostip, self._port, self._family) = Network.validate_inet_addr(host, port)
         if self._hostip is not None:
-            self.logger.info("Initializing a connection to {} on TCP port {} {} autoreconnect".format(self._host, self._port, ('with' if self._autoreconnect else 'without')))
+            self.logger.info(f'Initializing a connection to {self._host} on TCP port {self._port} {"with" if self._autoreconnect else "without"} autoreconnect')
         else:
-            self.logger.error("Connection to {} not possible, invalid address".format(self._host))
+            self.logger.error(f'Connection to {self._host} not possible, invalid address')
 
     def set_callbacks(self, connected=None, receiving=None, data_received=None, disconnected=None):
-        """ Set callbacks to caller for different socket events
+        '''
+        Set callbacks to caller for different socket events
 
         :param connected: Called whenever a connection is established successfully
         :param data_received: Called when data is received
@@ -643,24 +526,25 @@ class Tcp_client(object):
         :type connected: function
         :type data_received: function
         :type disconnected: function
-        """
+        '''
         self._connected_callback = connected
         self._receiving_callback = receiving
         self._disconnected_callback = disconnected
         self._data_received_callback = data_received
 
     def connect(self):
-        """ Connects the socket
+        '''
+        Connects the socket
 
         :return: False if an error prevented us from launching a connection thread. True if a connection thread has been started.
         :rtype: bool
-        """
+        '''
         if self._hostip is None:  # return False if no valid ip to connect to
-            self.logger.error("No valid IP address to connect to {}".format(self._host))
+            self.logger.error(f'No valid IP address to connect to {self._host}')
             self._is_connected = False
             return False
         if self._is_connected:  # return false if already connected
-            self.logger.error("Already connected to {}, ignoring new request".format(self._host))
+            self.logger.error(f'Already connected to {self._host}, ignoring new request')
             return False
 
         self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name='TCP_Connect')
@@ -669,24 +553,26 @@ class Tcp_client(object):
         return True
 
     def connected(self):
-        """ Returns the current connection state
+        '''
+        Returns the current connection state
 
         :return: True if an active connection exists,else False.
         :rtype: bool
-        """
+        '''
         return self._is_connected
 
     def send(self, message):
-        """ Sends a message to the server. Can be a string, bytes or a bytes array.
+        '''
+        Sends a message to the server. Can be a string, bytes or a bytes array.
 
         :return: True if message has been successfully sent, else False.
         :rtype: bool
-        """
+        '''
         if not isinstance(message, (bytes, bytearray)):
             try:
                 message = message.encode('utf-8')
             except:
-                self.logger.warning("Error encoding message for client {}".format(self.name))
+                self.logger.warning(f'Error encoding message for client {self.name}')
                 return False
         try:
             if self._is_connected:
@@ -694,18 +580,21 @@ class Tcp_client(object):
             else:
                 return False
         except Exception as e:
-            self.logger.warning("No connection to {}, cannot send data {}. Error: {}".format(self._host, message, e))
+            self.logger.warning(f'No connection to {self._host}, cannot send data {message}. Error: {e}')
             return False
         return True
 
     def _connect_thread_worker(self):
+        '''
+        Thread worker to handle connection
+        '''
         if not self.__connect_threadlock.acquire(blocking=False):
-            self.logger.warning("Connection attempt already in progress for {}, ignoring new request".format(self._host))
+            self.logger.warning(f'Connection attempt already in progress for {self._host}, ignoring new request')
             return
         if self._is_connected:
-            self.logger.error("Already connected to {}, ignoring new request".format(self._host))
+            self.logger.error(f'Already connected to {self._host}, ignoring new request')
             return
-        self.logger.debug("Starting connection cycle for {}".format(self._host))
+        self.logger.debug(f'Starting connection cycle for {self._host}')
         self._connect_counter = 0
         while self.__running and not self._is_connected:
             # Try a full connect cycle
@@ -737,23 +626,29 @@ class Tcp_client(object):
             pass
 
     def _connect(self):
-        self.logger.debug("Connecting to {} using {} {} on TCP port {} {} autoreconnect".format(self._host, 'IPv6' if self._family == socket.AF_INET6 else 'IPv4', self._hostip, self._port, ('with' if self._autoreconnect else 'without')))
+        '''
+        Initiate connection
+        '''
+        self.logger.debug(f'Connecting to {self._host} using {"IPv6" if self._family == socket.AF_INET6 else "IPv4"} {self._hostip} on TCP port {self._port} {"with" if self._autoreconnect else "without"} autoreconnect')
         # Try to connect to remote host using ip (v4 or v6)
         try:
             self._socket = socket.socket(self._family, socket.SOCK_STREAM)
             self._socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
             self._socket.settimeout(5)
-            self._socket.connect(('{}'.format(self._hostip), int(self._port)))
+            self._socket.connect((f'{self._hostip}', int(self._port)))
             self._socket.settimeout(self._timeout)
             self._is_connected = True
-            self.logger.info("Connected to {} on TCP port {}".format(self._host, self._port))
+            self.logger.info(f'Connected to {self._host} on TCP port {self._port}')
         # Connection error
         except Exception as err:
             self._is_connected = False
             self._connect_counter += 1
-            self.logger.warning("TCP connection to {}:{} failed with error {}. Counter: {}/{}".format(self._host, self._port, err, self._connect_counter, self._connect_retries))
+            self.logger.warning(f'TCP connection to {self._host}:{self._port} failed {self._connect_counter}/{self._connect_retries} times, last error was: {err}')
 
     def __receive_thread_worker(self):
+        '''
+        Thread worker to handle receiving
+        '''
         waitobj = IOWait()
         waitobj.watch(self._socket, read=True)
         # BMX poller = select.poll()
@@ -804,27 +699,32 @@ class Tcp_client(object):
                     # If empty peer has closed the connection
                     else:
                         # Peer connection closed
-                        self.logger.warning("Connection closed by peer {}".format(self._host))
+                        self.logger.warning(f'Connection closed by peer {self._host}')
                         self._is_connected = False
                         # BMX poller.unregister()
                         waitobj.unwatch(self._socket)
                         self._disconnected_callback and self._disconnected_callback(self)
                         if self._autoreconnect:
-                            self.logger.debug("Autoreconnect enabled for {}".format(self._host))
+                            self.logger.debug(f'Autoreconnect enabled for {self._host}')
                             self.connect()
         self._is_receiving = False
 
     def _sleep(self, time_lapse):
+        '''
+        Sleep (at least) <time_lapse> seconds, but abort if self.__running changes to False
+        '''
         time_start = time.time()
         time_end = (time_start + time_lapse)
         while self.__running and time_end > time.time():
-            pass
+            # modified from 'pass' - this way intervals of 1 second are given up to other threads
+            # but the abort loop stays intact with a maximum of 1 second delay
+            time.sleep(1)
 
     def close(self):
-        """
+        '''
         Closes the current client socket
-        """
-        self.logger.info("Closing connection to {} on TCP port {}".format(self._host, self._port))
+        '''
+        self.logger.info(f'Closing connection to {self._host} on TCP port {self._port}')
         self.__running = False
         if self.__connect_thread is not None and self.__connect_thread.isAlive():
             self.__connect_thread.join()
@@ -833,7 +733,9 @@ class Tcp_client(object):
 
 
 class _Client(object):
-    """ Client object that represents a connected client of tcp_server
+    '''
+    Client object that represents a connected client of tcp_server
+
 
     :param server: The tcp_server passes a reference to itself to access parent methods
     :param socket: socket.Socket class used by the Client object
@@ -842,7 +744,7 @@ class _Client(object):
     :type server: tcp_server
     :type socket: function
     :type fd: int
-    """
+    '''
     def __init__(self, server=None, socket=None, ip=None, port=None):
         self.logger = logging.getLogger(__name__)
         self.name = None
@@ -859,31 +761,36 @@ class _Client(object):
 
     @property
     def socket(self):
+        '''
+        Socket getter
+        '''
         return self.__socket
 
     def set_callbacks(self, data_received=None, will_close=None):
-        """ Set callbacks for different socket events (client based)
+        '''
+        Set callbacks for different socket events (client based)
 
         :param data_received: Called when data is received
         :type data_received: function
-        """
+        '''
         self._data_received_callback = data_received
         self._will_close_callback = will_close
 
     def send(self, message):
-        """ Send a string to connected client
+        '''
+        Send a string to connected client
 
         :param msg: Message to send
         :type msg: string | bytes | bytearray
 
         :return: True if message has been queued successfully.
         :rtype: bool
-        """
+        '''
         if not isinstance(message, (bytes, bytearray)):
             try:
                 message = message.encode('utf-8')
             except:
-                self.logger.warning("Error encoding data for client {}".format(self.name))
+                self.logger.warning(f'Error encoding data for client {self.name}')
                 return False
         try:
 
@@ -895,37 +802,37 @@ class _Client(object):
         return True
 
     def send_echo_off(self):
-        """
+        '''
         Sends an IAC telnet command to ask client to turn it's echo off
-        """
+        '''
         command = bytearray([0xFF, 0xFB, 0x01])
         string = self._iac_to_string(command)
-        self.logger.debug("Sending IAC telnet command: '{}'".format(string))
+        self.logger.debug(f'Sending IAC telnet command: {string}')
         self.send(command)
 
     def send_echo_on(self):
-        """
+        '''
         Sends an IAC telnet command to ask client to turn it's echo on again
-        """
+        '''
         command = bytearray([0xFF, 0xFC, 0x01])
         string = self._iac_to_string(command)
-        self.logger.debug("Sending IAC telnet command: '{}'".format(string))
+        self.logger.debug(f'Sending IAC telnet command: {string}')
         self.send(command)
 
     def _process_IAC(self, msg):
-        """
+        '''
         Processes incomming IAC messages. Does nothing for now except logging them in clear text
-        """
+        '''
         if len(msg) >= 3:
             string = self._iac_to_string(msg[:3])
-            self.logger.debug("Received IAC telnet command: '{}'".format(string))
+            self.logger.debug(f'Received IAC telnet command: {string}')
             msg = msg[3:]
         return msg
 
     def close(self):
-        """
+        '''
         Client socket closes itself
-        """
+        '''
         self._will_close_callback and self._will_close_callback(self)
         self.set_callbacks(data_received=None, will_close=None)
         self.writer.close()
@@ -943,7 +850,9 @@ class _Client(object):
 
 
 class Tcp_server(object):
-    """ Creates a new instance of the Tcp_server class
+    '''
+    Creates a new instance of the Tcp_server class
+
 
     :param host: Local host name or ip address (v4 or v6). Default is '::' which listens on all IPv4 and all IPv6 addresses available.
     :param port: Local port to connect to
@@ -952,7 +861,7 @@ class Tcp_server(object):
     :type host: str
     :type port: int
     :type name: str
-    """
+    '''
 
     MODE_TEXT = 1
     MODE_TEXT_LINE = 2
@@ -962,12 +871,12 @@ class Tcp_server(object):
     def __init__(self, port, host='', name=None, mode=MODE_BINARY, terminator=None):
         self.logger = logging.getLogger(__name__)
 
-        # Public properties
+        # public properties
         self.name = name
         self.mode = mode
         self.terminator = terminator
 
-        # "Private" properties
+        # private properties
         self._host = host
         self._port = port
         self._is_listening = False
@@ -981,7 +890,7 @@ class Tcp_server(object):
         self._incoming_connection_callback = None
         self._data_received_callback = None
 
-        # "Secret" properties
+        # protected properties
         self.__loop = None
         self.__coroutine = None
         self.__server = None
@@ -997,7 +906,8 @@ class Tcp_server(object):
                 self.name = self.__our_socket
 
     def set_callbacks(self, listening=None, incoming_connection=None, disconnected=None, data_received=None):
-        """ Set callbacks to caller for different socket events
+        '''
+        Set callbacks to caller for different socket events
 
         :param connected: Called whenever a connection is established successfully
         :param data_received: Called when data is received
@@ -1006,22 +916,23 @@ class Tcp_server(object):
         :type connected: function
         :type data_received: function
         :type disconnected: function
-        """
+        '''
         self._listening_callback = listening
         self._incoming_connection_callback = incoming_connection
         self._data_received_callback = data_received
         self._disconnected_callback = disconnected
 
     def start(self):
-        """ Start the server socket
+        '''
+        Start the server socket
 
         :return: False if an error prevented us from launching a connection thread. True if a connection thread has been started.
         :rtype: bool
-        """
+        '''
         if self._is_listening:
             return False
         try:
-            self.logger.info("Starting up TCP server socket {}".format(self.__our_socket))
+            self.logger.info(f'Starting up TCP server socket {self.__our_socket}')
             self.__loop = asyncio.new_event_loop()
             asyncio.set_event_loop(self.__loop)
             self.__coroutine = asyncio.start_server(self.__handle_connection, self._ipaddr, self._port)
@@ -1040,9 +951,9 @@ class Tcp_server(object):
         return True
 
     def __listening_thread_worker(self):
-        """
+        '''
         Runs the asyncio loop in a separate thread to not block the Tcp_server.start() method
-        """
+        '''
         asyncio.set_event_loop(self.__loop)
         self._is_listening = True
         try:
@@ -1061,19 +972,19 @@ class Tcp_server(object):
         self._is_listening = False
 
     async def __handle_connection(self, reader, writer):
-        """
+        '''
         Handles incoming connection. One handler per client
-        """
+        '''
         peer = writer.get_extra_info('peername')
         socket_object = writer.get_extra_info('socket')
         peer_socket = Network.ip_port_to_socket(peer[0], peer[1])
 
         client = _Client(server=self, socket=socket_object, ip=peer[0], port=peer[1])
-        client.family = socket.AF_INET6 if Network.is_ipv6(client.ip) else socket.AF_INET
+        client.family = socket.AF_INET6 if Utils.is_ipv6(client.ip) else socket.AF_INET
         client.name = Network.ip_port_to_socket(client.ip, client.port)
         client.writer = writer
 
-        self.logger.info("Incoming connection from {} on socket {}".format(peer_socket, self.__our_socket))
+        self.logger.info(f'Incoming connection from {peer_socket} on socket {self.__our_socket}')
         if self._incoming_connection_callback:
             self._incoming_connection_callback(self, client)
 
@@ -1092,7 +1003,7 @@ class Tcp_server(object):
             if data:
                 try:
                     string = str.rstrip(str(data, 'utf-8'))
-                    self.logger.debug("Received '{}' from {}".format(string, client.name))
+                    self.logger.debug(f'Received "{string}" from {client.name}')
                     if self._data_received_callback:
                         self._data_received_callback(self, client, string)
                     if client._data_received_callback:
@@ -1108,55 +1019,64 @@ class Tcp_server(object):
                 return
 
     def __close_client(self, client):
-        self.logger.info("Connection to client {} closed".format(client.name))
+        '''
+        Close client connection
+
+        :param client: client object
+        :type client: lib.network._Client
+        '''
+        self.logger.info(f'Connection to client {client.name} closed')
         if self._disconnected_callback:
             self._disconnected_callback(self, client)
         client.writer.close()
 
     def listening(self):
-        """ Returns the current listening state
+        '''
+        Returns the current listening state
 
         :return: True if the server socket is actually listening, else False.
         :rtype: bool
-        """
+        '''
         return self._is_listening
 
     def send(self, client, msg):
-        """ Send a string to connected client
+        '''
+        Send a string to connected client
 
         :param client: Client Object to send message to
         :param msg: Message to send
 
-        :type client: network.Client
+        :type client: lib.network._Client
         :type msg: string | bytes | bytearray
 
         :return: True if message has been queued successfully.
         :rtype: bool
-        """
+        '''
         client.send(msg)
         return True
 
     def disconnect(self, client):
-        """ Disconnects a specific client
+        '''
+        Disconnects a specific client
 
         :param client: Client Object to disconnect
-        :type client: network.Client
-        """
+        :type client: lib.network._Client
+        '''
         client.close()
         return True
 
     def close(self):
-        """
+        '''
         Closes running listening socket
-        """
-        self.logger.info("Shutting down listening socket on host {} port {}".format(self._host, self._port))
+        '''
+        self.logger.info(f'Shutting down listening socket on host {self._host} port {self._port}')
         asyncio.set_event_loop(self.__loop)
         try:
             active_connections = len([task for task in asyncio.all_tasks(self.__loop) if not task.done()])
         except:
             active_connections = 0
         if active_connections > 0:
-            self.logger.info('Tcp_server still has {} active connection(s), cleaning up'.format(active_connections))
+            self.logger.info(f'Tcp_server still has {active_connections} active connection(s), cleaning up')
         self.__running = False
         self.__loop.call_soon_threadsafe(self.__loop.stop)
         while self.__loop.is_running():
@@ -1170,7 +1090,9 @@ class Tcp_server(object):
 
 
 class Udp_server(object):
-    """ Creates a new instance of the Udp_server class
+    '''
+    Creates a new instance of the Udp_server class
+
 
     :param host: Local hostname or ip address (v4 or v6). Default is '' which listens on all IPv4 addresses available.
     :param port: Local port to connect to
@@ -1179,7 +1101,7 @@ class Udp_server(object):
     :type host: str
     :type port: int
     :type name: str
-    """
+    '''
 
     def __init__(self, port, host='', name=None):
         self.logger = logging.getLogger(__name__)
@@ -1220,11 +1142,12 @@ class Udp_server(object):
             self.__running = False
 
     def start(self):
-        """ Start the server socket
+        '''
+        Start the server socket
 
         :return: False if an error prevented us from launching a connection thread. True if a connection thread has been started.
         :rtype: bool
-        """
+        '''
         if not self.__running:
             self.logger.error('UDP server not initialized, can not start.')
             return False
@@ -1250,27 +1173,29 @@ class Udp_server(object):
         return True
 
     def set_callbacks(self, listening=None, data_received=None):
-        """ Set callbacks to caller for different socket events
+        '''
+        Set callbacks to caller for different socket events
 
         :param data_received: Called when data is received
 
         :type data_received: function
-        """
+        '''
         self._listening_callback = listening
         self._data_received_callback = data_received
 
     def listening(self):
-        """ Returns the current listening state
+        '''
+        Returns the current listening state
 
         :return: True if the server socket is actually listening, else False.
         :rtype: bool
-        """
+        '''
         return self._is_listening
 
     def close(self):
-        """
+        '''
         Closes running listening socket
-        """
+        '''
         self.logger.info(f'Shutting down listening socket on host {self._host} port {self._port}')
         asyncio.set_event_loop(self.__loop)
         self.__running = False
@@ -1299,16 +1224,16 @@ class Udp_server(object):
         self.__loop.close()
 
     async def __start_server(self):
-        """
+        '''
         starts the actual server class
-        """
+        '''
         self.__server.run(self._ipaddr, self._port, self.__loop)
         self.__server.subscribe(self.__handle_connection)
 
     def __listening_thread_worker(self):
-        """
+        '''
         Runs the asyncio loop in a separate thread to not block the Udp_server.start() method
-        """
+        '''
         self._is_listening = True
         self.logger.debug('listening thread set is_listening to True')
         asyncio.set_event_loop(self.__loop)
@@ -1323,14 +1248,14 @@ class Udp_server(object):
         return True
 
     async def __handle_connection(self, data, addr):
-        """
+        '''
         Handles incoming connection. One handler per datagram
 
         :param data: data received from socket
         :type data: bytes
         :param addr: address info ('addr', port)
         :type addr: tuple
-        """
+        '''
         if addr:
             host, port = addr
         else:

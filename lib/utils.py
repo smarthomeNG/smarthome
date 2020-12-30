@@ -34,6 +34,7 @@ import re
 import hashlib
 import ipaddress
 import socket
+import subprocess
 
 logger = logging.getLogger(__name__)
 
@@ -94,6 +95,7 @@ class Utils(object):
         """
 
         return Utils.is_ipv4(string)
+        # later: return (Utils.is_ipv4(string) or Utils.is_ipv6(string))
 
     @staticmethod
     def is_ipv4(string):
@@ -146,15 +148,18 @@ class Utils(object):
         """
 
         try:
-            return bool(re.match("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$", string))
+            return bool(re.match("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9])\\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$", string))
         except TypeError:
             return False
 
     @staticmethod
     def get_local_ipv4_address():
         """
-        Get's local ipv4 address
-        TODO: What if more than one interface present ?
+        Get local ipv4 address of the interface with the default gateway.
+        Return '127.0.0.1' if no suitable interface is found
+        TODO:
+            - What if more than one interface present?
+            - What if 127.0.0.1 is not active?
 
         :return: IPv4 address as a string
         :rtype: string
@@ -173,7 +178,8 @@ class Utils(object):
     @staticmethod
     def get_local_ipv6_address():
         """
-        Get's local ipv6 address
+        Get local ipv6 address of the interface with the default gateway.
+        Return '::1' if no suitable interface is found
         TODO: What if more than one interface present ?
 
         :return: IPv6 address as a string
@@ -541,10 +547,7 @@ class Utils(object):
         """
         Executes a subprocess via a shell and returns the output written to stdout by this process as a string
         """
-        ## get subprocess module
-        import subprocess
-
-        ## call date command ##
+        # call date command
         p = subprocess.Popen(commandline, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 
         # Talk with date command i.e. read data from stdout and stderr. Store this info in tuple ##
@@ -556,17 +559,13 @@ class Utils(object):
     #    print("result="+str(result))
     #    print("err="+str(err))
         if wait:
-            ## Wait for date to terminate. Get return returncode ##
-            p_status = p.wait()
+            # Wait for date to terminate. Get return returncode
+            p.wait()
         return (str(result, encoding='utf-8', errors='strict'), str(err, encoding='utf-8', errors='strict'))
 
 
-
-
-
 def get_python_version():
-
-    PYTHON_VERSION = str(sys.version_info[0])+'.'+str(sys.version_info[1])+'.'+str(sys.version_info[2])+' '+str(sys.version_info[3])
+    PYTHON_VERSION = str(sys.version_info[0]) + '.' + str(sys.version_info[1]) + '.' + str(sys.version_info[2]) + ' ' + str(sys.version_info[3])
     if sys.version_info[3] != 'final':
         PYTHON_VERSION += ' '+str(sys.version_info[4])
     return PYTHON_VERSION
@@ -576,15 +575,11 @@ def execute_subprocess(commandline, wait=True):
     """
     Executes a subprocess via a shell and returns the output written to stdout by this process as a string
     """
-    ## get subprocess module
-    import subprocess
-    ## call date command ##
     p = subprocess.Popen(commandline, stdout=subprocess.PIPE, shell=True)
-    # Talk with date command i.e. read data from stdout and stderr. Store this info in tuple ##
     # Interact with process: Send data to stdin. Read data from stdout and stderr, until end-of-file is reached.
     # Wait for process to terminate. The optional input argument should be a string to be sent to the child process, or None, if no data should be sent to the child.
     (result, err) = p.communicate()
-#    logger.warning("execute_subprocess: commandline='{}', result='{}', err='{}'".format(command, result, err))
+    # logger.warning("execute_subprocess: commandline='{}', result='{}', err='{}'".format(command, result, err))
     print("err='{}'".format(err))
     if wait:
         ## Wait for date to terminate. Get return returncode ##
@@ -597,4 +592,3 @@ def running_virtual():
     # Check supports venv && virtualenv
     return (getattr(sys, 'base_prefix', sys.prefix) != sys.prefix or
             hasattr(sys, 'real_prefix'))
-
