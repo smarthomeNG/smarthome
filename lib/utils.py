@@ -55,23 +55,28 @@ class Utils(object):
         """
 
         mac = str(mac)
+        # notation without separators
         if len(mac) == 12:
             for c in mac:
-                try:
-                    if int(c, 16) > 15:
-                        return False
-                except:
+                # each digit is hex
+                if c not in '0123456789abcdefABCDEF':
                     return False
             return True
 
-        octets = re.split('[\:\-\ ]', mac)
+        # notation with separators -> 12 digits + 5 separators
+        if len(mac) != 17:
+            return False
+        octets = re.split('[: -]', mac)
+        # 6 groups...
         if len(octets) != 6:
             return False
-        for i in octets:
-            try:
-                if int(i, 16) > 255:
-                    return False
-            except:
+        for o in octets:
+            # ... of 2 digits each
+            if len(o) != 2:
+                return False
+        # and each digit is hex
+        for c in ''.join(octets):
+            if c not in '0123456789abcdefABCDEF':
                 return False
         return True
 
@@ -141,7 +146,7 @@ class Utils(object):
         """
 
         try:
-            return bool(re.match("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$", string))
+            return bool(re.match("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$", string))
         except TypeError:
             return False
 
@@ -156,7 +161,7 @@ class Utils(object):
         """
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.connect(('10.255.255.255', 1))
+            s.connect(('8.8.8.8', 1))
             IP = s.getsockname()[0]
         except:
             IP = '127.0.0.1'
