@@ -8,10 +8,10 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 23. Dezember 2020
-       (lib.scene: Bugfix in saving learned values)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 23. Dezember 2020
-       (tasmota: Receive enrgy sensor data (voltage, current, power, power sums); ...)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 30. Dezember 2020
+       (modules.admin: Added previous_change_by and previous_update_by to item ...)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 29. Dezember 2020
+       (smartvisu: Documentation update)
 
 
 Überblick
@@ -64,6 +64,10 @@ auf einer der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
 
 Bugfixes in the CORE
 --------------------
+
+* lib.daemon:
+
+  * Ensured, that pid file stays open (with a LOCK)
 
 * lib.item:
 
@@ -140,6 +144,7 @@ Updates in the CORE
   * Added further info to shng_status text
   * Added error handling for referencing not defined structs
   * on item creation type gets filled before other attributes to enable casting in attribute definitions (e.g. autotimer)
+  * Implemented previous_change_by and previous_update_by
 
 * lib.metadata:
 
@@ -193,6 +198,8 @@ Updates in the CORE
     when in foreground mode)
   * Added export of threadinfo to support tool cpuusage
   * Added support for tool cpuusage.py
+  * Added base_dir to logging on startup
+  * change cwd to base_dir on startup
 
 * lib.tools:
 
@@ -214,6 +221,7 @@ Updates in the CORE
     * Added details to information while restarting core
     * added display of system pid for threads (when running under Python 3.8 and up)
     * Added further details to status on services page while SmartHomeNG is restarting
+    * set max. version of PyJWT to 1.7.1 due to incompatibilities with new version 2.0.0
 
     * shngAdmin:
 
@@ -231,6 +239,10 @@ Updates in the CORE
       * Added gui_type 'readonly' for plugin parameters that are configured by the plugin itself
       * implemented handling for plugin parameter 'configuration_needed'
       * added spinner when loading information of configured plugins
+      * Modified plugin list to fit on a viewport that is only 1024 pixels wide
+      * Added previous_change_by and previous_update_by to item details
+      * item value string now gets html-decoded
+      * item value now gets URI-encoded on value update
       * Modified plugin list to fit on a viewport that is only 1024 pixels wide
 
   * http:
@@ -297,16 +309,28 @@ For details of the changes of the individual plugins, please refer to the docume
   * Extended functionallity compared to rtr plugin
   * Simplified configuration compared to rtr plugin
 
-* smartvisu: New plugin to replace visu_smartvisu plugin -
+* smartvisu: New plugin to replace visu_smartvisu plugin
 
   * Checks for the usage of deprecated or removed widgets while generating visu pages
   * For sv v2.9 and up templates (index.html, rooms.html from sv are used instead of templates of plugin
   * Structure of smartVISU navigation can optionally be defined in /etc/visu.yaml
   * Generates an item list for widget creator
 
+* viesmann:
+
+  * Read and write data of a Viessmann heating system
+
 
 Plugin Updates and Bugfixes
 ---------------------------
+
+* alexap3:
+
+  * bugfix for Web-IF, some improvements
+
+* alexarc4shng:
+
+  * bugfix for Web-IF, some improvements
 
 * appletv:
 
@@ -373,6 +397,7 @@ Plugin Updates and Bugfixes
   * Added mouse-over text for greyed delete button
   * corrected typos in metadata
   * disabled item delete button for first AND second item as both cannot be deleted until next value comes in
+  * Fixed an exception in method id()
 
 * dashbutton:
 
@@ -457,6 +482,10 @@ Plugin Updates and Bugfixes
   * Added definitions of the item_attributes to metadatalirc: Added definitions of the item_attributes to metadata
   * Replace connection lib by network lib and some minor tweaks.
     Problem: Version is not detected correctly. Will be fixed in next major update
+
+* luxtronic2:
+
+  * Bugfix
 
 * mailrcv:
 
@@ -662,6 +691,8 @@ Plugin Updates and Bugfixes
 
   * Changed nh_type to withings_type in plugin.yaml
   * Added english translations for BMI
+  * migrated from faulty Nokia package to withings-api package, fixed some minor stuff
+  * added Struct and one plugin function
 
 * xiaomi_vac:
 
@@ -683,6 +714,10 @@ Plugin Updates and Bugfixes
 
   * Prepare multiinstance and webinterface
   * Complete metadata in plugin.yaml
+
+* yamahayxc:
+
+  * added german user_doc.rst
 
 
 Outdated Plugins
