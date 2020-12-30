@@ -138,6 +138,8 @@ class Item():
         self.__last_update = self.__last_change
         self.__prev_change = self.__last_change
         self.__prev_update = self.__prev_change
+        self.__prev_change_by = 'N/A'
+        self.__prev_update_by = self.__prev_change_by
         self._lock = threading.Condition()
         self.__logics_to_trigger = []
         self._name = path
@@ -602,7 +604,7 @@ class Item():
         return delta.total_seconds()
 
     def _get_prev_change_by(self):
-        return 'N/A'
+        return self. __prev_change_by
 
     def _get_prev_update(self):
         return self.__prev_change
@@ -615,7 +617,7 @@ class Item():
         return delta.total_seconds()
 
     def _get_prev_update_by(self):
-        return 'N/A'
+        return self. __prev_update_by
 
     def _get_prev_value(self):
         return self.__prev_value
@@ -1295,6 +1297,8 @@ class Item():
         self.__prev_update = self.__last_update
         self.__last_update = self.__last_change
 
+        self.__prev_change_by = self.__changed_by
+        self.__prev_update_by = self.__updated_by
         self.__changed_by = "{0}:{1}".format(caller, source)
         self.__updated_by = "{0}:{1}".format(caller, source)
 
@@ -1331,6 +1335,7 @@ class Item():
         else:
             self.__prev_update = self.__last_update
             self.__last_update = self.shtime.now()
+            self.__prev_update_by = self.__updated_by
             self.__updated_by = "{0}:{1}".format(caller, source)
         self._lock.release()
 
