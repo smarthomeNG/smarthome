@@ -35,6 +35,7 @@ These classes, functions and methods are mainly meant to be used by plugin devel
 '''
 
 from lib.utils import Utils
+import re
 import asyncio
 import logging
 import requests
@@ -199,6 +200,40 @@ class Network(object):
 
         return (ip, port, family)
 
+    @staticmethod
+    def clean_uri(uri, mode='show'):
+        '''
+        Checks URIs for embedded http/https login data (http://user:pass@domain.tld...) and offers to clean it. 
+        Possible modes are:
+
+        - 'show': don't change URI (default) -> http://user:pass@domain.tld...
+        - 'mask': replace login data with '***' -> http://***:***@domain.tld...
+        - 'strip': remove login data part -> http://domain.tld...
+
+        :param uri: full URI to check and process
+        :param mode: handling mode, one of 'show', 'strip', 'mask'
+        :return: resulting URI string
+
+        :type uri: str
+        :type mode: str
+        :rtype: str
+        '''
+        # find login data
+        pattern = re.compile('http([s]?)://([^:]+:[^@]+@)')
+
+        # possible replacement modes
+        replacement = {
+            'strip': 'http\g<1>://',
+            'mask': 'http\g<1>://***:***@'
+        }
+
+        # if no change requested or no login data found, return unchanged
+        if mode not in replacement or not pattern.match(uri):
+            return uri
+
+        # return appropriately changed URI
+        return pattern.sub(replacement[mode], uri)
+
 
 class Http(object):
     '''
@@ -207,18 +242,21 @@ class Http(object):
 
     :param baseurl: base URL used everywhere in this instance (example: http://www.myserver.tld)
     :param timeout: Set a maximum amount of seconds the class should try to establish a connection
+    :param hide_login: Hide or mask login data in logged http(s) requests (see Network.clean_uri())
 
     :type baseurl: str
     :type timeout: int
+    :type hide_login: str
     '''
 
-    def __init__(self, baseurl='', timeout=10):
+    def __init__(self, baseurl='', timeout=10, hide_login='show'):
         self.logger = logging.getLogger(__name__)
 
         self.baseurl = baseurl
         self._response = None
         self.timeout = timeout
         self._session = requests.Session()
+        self._hide_login = hide_login
 
     def HTTPDigestAuth(self, user=None, password=None):
         '''
@@ -257,7 +295,7 @@ class Http(object):
             try:
                 json = self._response.json()
             except:
-                self.logger.warning(f'Invalid JSON received from {url if url else self.baseurl}')
+                self.logger.warning(f'Invalid JSON received from {Network.clean_uri(url, self._hide_login) if url else self.baseurl}')
             return json
         return None
 
@@ -283,7 +321,7 @@ class Http(object):
             try:
                 json = self._response.json()
             except:
-                self.logger.warning(f'Invalid JSON received from {url if url else self.baseurl}')
+                self.logger.warning(f'Invalid JSON received from {Network.clean_uri(url if url else self.baseurl, self._hide_login) }')
             return json
         return None
 
@@ -332,13 +370,13 @@ class Http(object):
         :rtype: bool
         '''
         if self.__get(url=url, params=params, verify=verify, auth=auth, stream=True):
-            self.logger.debug(f'Download of {url} successfully completed, saving to {local}')
+            self.logger.debug(f'Download of {Network.clean_uri(url, self._hide_login)} successfully completed, saving to {local}')
             with open(str(local), 'wb') as f:
                 for chunk in self._response:
                     f.write(chunk)
             return True
         else:
-            self.logger.warning(f'Download error: {url}')
+            self.logger.warning(f'Download error: {Network.clean_uri(url, self._hide_login)}')
             return False
 
     def get_binary(self, url=None, params=None):
@@ -416,12 +454,12 @@ class Http(object):
         url = self.baseurl + url if url else self.baseurl
         timeout = timeout if timeout else self.timeout
         data = json if json else data
-        self.logger.info(f'Sending POST request {json} to {url}')
+        self.logger.info(f'Sending POST request {json} to {Network.clean_uri(url, self._hide_login)}')
         try:
             self._response = self._session.post(url, params=params, timeout=timeout, verify=verify, auth=auth, data=data, files=files)
-            self.logger.debug(f'{self.response_status()} Posted to URL {self._response.url}')
+            self.logger.debug(f'{self.response_status()} Posted to URL {Network.clean_uri(self._response.url, self._hide_login)}')
         except Exception as e:
-            self.logger.warning(f'Error sending POST request to {url}: {e}')
+            self.logger.warning(f'Error sending POST request to {Network.clean_uri(url, self._hide_login)}: {e}')
             return False
         return True
 
@@ -437,12 +475,12 @@ class Http(object):
         '''
         url = self.baseurl + url if url else self.baseurl
         timeout = timeout if timeout else self.timeout
-        self.logger.info(f'Sending GET request to {url}')
+        self.logger.info(f'Sending GET request to {Network.clean_uri(url, self._hide_login)}')
         try:
             self._response = self._session.get(url, params=params, timeout=timeout, verify=verify, auth=auth, stream=stream)
-            self.logger.debug(f'{self.response_status()} Fetched URL {self._response.url}')
+            self.logger.debug(f'{self.response_status()} Fetched URL {Network.clean_uri(self._response.url, self._hide_login)}')
         except Exception as e:
-            self.logger.warning(f'Error sending GET request to {url}: {e}')
+            self.logger.warning(f'Error sending GET request to {Network.clean_uri(url, self._hide_login)}: {e}')
             self._response = None
             return False
         return True
