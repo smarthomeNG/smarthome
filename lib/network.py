@@ -776,6 +776,15 @@ class _Client(object):
         self._data_received_callback = data_received
         self._will_close_callback = will_close
 
+    async def __drain_writer(self):
+        '''
+        helper coroutine to ensure drain() is called, handle if called after connection lost
+        '''
+        try:
+            await self.writer.drain()
+        except ConnectionResetError:
+            pass
+
     def send(self, message):
         '''
         Send a string to connected client
@@ -795,7 +804,7 @@ class _Client(object):
         try:
 
             self.writer.write(message)
-            self.writer.drain()
+            asyncio.ensure_future(self.__drain_writer())
         except Exception as e:
             self.logger.warning(f'Error sending data to client {self.name}: {e}')
             return False
