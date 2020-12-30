@@ -157,9 +157,7 @@ class Utils(object):
         """
         Get local ipv4 address of the interface with the default gateway.
         Return '127.0.0.1' if no suitable interface is found
-        TODO:
-            - What if more than one interface present?
-            - What if 127.0.0.1 is not active?
+        TODO: What if more than one interface present? What if 127.0.0.1 is not active?
 
         :return: IPv4 address as a string
         :rtype: string
