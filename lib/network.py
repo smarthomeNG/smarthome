@@ -22,16 +22,10 @@
 #########################################################################
 
 """
-
-|  *** ATTENTION: This is early work in progress. Interfaces are subject to change. ***
-|  *** DO NOT USE IN PRODUCTION unless you know what you are doing ***
-|
-
-This library contains the future network classes for SmartHomeNG.
+This library contains the network classes for SmartHomeNG.
 
 New network functions and utilities are going to be implemented in this library.
-This classes, functions and methods are mainly meant to be used by plugin developers
-
+These classes, functions and methods are mainly meant to be used by plugin developers
 """
 
 import asyncio
@@ -168,7 +162,7 @@ class Network(object):
     @staticmethod
     def get_local_ipv4_address():
         """
-        Get's local ipv4 address of the interface with the default gateway.
+        Gets local ipv4 address of the interface with the default gateway.
         Return '127.0.0.1' if no suitable interface is found
 
         :return: IPv4 address as a string
@@ -187,7 +181,7 @@ class Network(object):
     @staticmethod
     def get_local_ipv6_address():
         """
-        Get's local ipv6 address of the interface with the default gateway.
+        Gets local ipv6 address of the interface with the default gateway.
         Return '::1' if no suitable interface is found
 
         :return: IPv6 address as a string
@@ -217,17 +211,17 @@ class Network(object):
         return '{}:{}'.format(ip, port)
 
     @staticmethod
-    def ipver_to_string(ipver):
+    def family_to_string(family):
         """
         Converts a socket address family to an ip version string 'IPv4' or 'IPv6'
 
-        :param ipver: Socket family
-        :type ipver: socket.AF_INET or socket.AF_INET6
+        :param family: Socket family
+        :type family: socket.AF_INET or socket.AF_INET6
 
         :return: 'IPv4' or 'IPv6'
         :rtype: string
         """
-        return 'IPv6' if ipver == socket.AF_INET6 else 'IPv4'
+        return 'IPv6' if family == socket.AF_INET6 else 'IPv4'
 
     @staticmethod
     def ping(ip):
@@ -334,7 +328,7 @@ class Network(object):
                     logger.error("Unsupported address family {}".format(family))
                     ip = None
                 if ip is not None:
-                    logger.info(f'Resolved {addr} to {Network.ipver_to_string(family)} address {ip}')
+                    logger.info(f'Resolved {addr} to {Network.family_to_string(family)} address {ip}')
             except socket.gaierror:
                 # Unable to resolve hostname
                 logger.error("Cannot resolve {} to a valid ip address (v4 or v6)".format(addr))
@@ -612,7 +606,7 @@ class Tcp_client(object):
         self._timeout = 1
 
         self._hostip = None
-        self._ipver = socket.AF_INET
+        self._family = socket.AF_INET
         self._socket = None
         self._connect_counter = 0
         self._binary = binary
@@ -633,7 +627,7 @@ class Tcp_client(object):
 
         self._host = host
         self._port = port
-        (self._hostip, self._port, self._ipver) = Network.validate_inet_addr(host, port)
+        (self._hostip, self._port, self._family) = Network.validate_inet_addr(host, port)
         if self._hostip is not None:
             self.logger.info("Initializing a connection to {} on TCP port {} {} autoreconnect".format(self._host, self._port, ('with' if self._autoreconnect else 'without')))
         else:
@@ -743,10 +737,10 @@ class Tcp_client(object):
             pass
 
     def _connect(self):
-        self.logger.debug("Connecting to {} using {} {} on TCP port {} {} autoreconnect".format(self._host, 'IPv6' if self._ipver == socket.AF_INET6 else 'IPv4', self._hostip, self._port, ('with' if self._autoreconnect else 'without')))
+        self.logger.debug("Connecting to {} using {} {} on TCP port {} {} autoreconnect".format(self._host, 'IPv6' if self._family == socket.AF_INET6 else 'IPv4', self._hostip, self._port, ('with' if self._autoreconnect else 'without')))
         # Try to connect to remote host using ip (v4 or v6)
         try:
-            self._socket = socket.socket(self._ipver, socket.SOCK_STREAM)
+            self._socket = socket.socket(self._family, socket.SOCK_STREAM)
             self._socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
             self._socket.settimeout(5)
             self._socket.connect(('{}'.format(self._hostip), int(self._port)))
@@ -854,7 +848,7 @@ class _Client(object):
         self.name = None
         self.ip = ip
         self.port = port
-        self.ipver = None
+        self.family = None
         self.writer = None
         self.process_iac = True
 
@@ -895,8 +889,8 @@ class _Client(object):
 
             self.writer.write(message)
             self.writer.drain()
-        except:
-            self.logger.warning("Error sending data to client {}".format(self.name))
+        except Exception as e:
+            self.logger.warning(f'Error sending data to client {self.name}: {e}')
             return False
         return True
 
@@ -951,11 +945,11 @@ class _Client(object):
 class Tcp_server(object):
     """ Creates a new instance of the Tcp_server class
 
-    :param interface: Local interface name or ip address (v4 or v6). Default is '::' which listens on all IPv4 and all IPv6 addresses available.
-    :param port: Local interface port to connect to
+    :param host: Local host name or ip address (v4 or v6). Default is '::' which listens on all IPv4 and all IPv6 addresses available.
+    :param port: Local port to connect to
     :param name: Name of this connection (mainly for logging purposes)
 
-    :type interface: str
+    :type host: str
     :type port: int
     :type name: str
     """
@@ -965,7 +959,7 @@ class Tcp_server(object):
     MODE_BINARY = 3
     MODE_FIXED_LENGTH = 4
 
-    def __init__(self, port, interface='', name=None, mode=MODE_BINARY, terminator=None):
+    def __init__(self, port, host='', name=None, mode=MODE_BINARY, terminator=None):
         self.logger = logging.getLogger(__name__)
 
         # Public properties
@@ -974,13 +968,13 @@ class Tcp_server(object):
         self.terminator = terminator
 
         # "Private" properties
-        self._interface = interface
+        self._host = host
         self._port = port
         self._is_listening = False
         self._timeout = 1
 
-        self._interfaceip = None
-        self._ipver = socket.AF_INET
+        self._ipaddr = None
+        self._family = socket.AF_INET
         self._socket = None
 
         self._listening_callback = None
@@ -992,14 +986,13 @@ class Tcp_server(object):
         self.__coroutine = None
         self.__server = None
         self.__listening_thread = None
-        self.__listening_threadlock = threading.Lock()
         self.__running = True
 
         # Test if host is an ip address or a host name
-        (self._interfaceip, self._port, self._ipver) = Network.validate_inet_addr(interface, port)
+        (self._ipaddr, self._port, self._family) = Network.validate_inet_addr(host, port)
 
-        if self._interfaceip is not None:
-            self.__our_socket = Network.ip_port_to_socket(self._interfaceip, self._port)
+        if self._ipaddr is not None:
+            self.__our_socket = Network.ip_port_to_socket(self._ipaddr, self._port)
             if not self.name:
                 self.name = self.__our_socket
 
@@ -1031,17 +1024,18 @@ class Tcp_server(object):
             self.logger.info("Starting up TCP server socket {}".format(self.__our_socket))
             self.__loop = asyncio.new_event_loop()
             asyncio.set_event_loop(self.__loop)
-            self.__coroutine = asyncio.start_server(self.__handle_connection, self._interfaceip, self._port)
+            self.__coroutine = asyncio.start_server(self.__handle_connection, self._ipaddr, self._port)
             self.__server = self.__loop.run_until_complete(self.__coroutine)
 
             _name = 'TCP_Server'
             if self.name is not None:
-                _name = self.name + '.' + _name
+                _name = f'{self.name}.{_name}'
 
             self.__listening_thread = threading.Thread(target=self.__listening_thread_worker, name=_name)
             self.__listening_thread.daemon = True
             self.__listening_thread.start()
-        except:
+        except Exception as e:
+            self.logger.error(f'Error starting server: {e}')
             return False
         return True
 
@@ -1056,14 +1050,15 @@ class Tcp_server(object):
         except:
             self.logger.debug('*** Error in loop.run_forever()')
         finally:
-
-            for task in asyncio.Task.all_tasks():
+            for task in asyncio.all_tasks(self.__loop):
                 task.cancel()
             self.__server.close()
             self.__loop.run_until_complete(self.__server.wait_closed())
-            self.__loop.close()
+            try:
+                self.__loop.close()
+            except:
+                pass
         self._is_listening = False
-        return True
 
     async def __handle_connection(self, reader, writer):
         """
@@ -1074,12 +1069,13 @@ class Tcp_server(object):
         peer_socket = Network.ip_port_to_socket(peer[0], peer[1])
 
         client = _Client(server=self, socket=socket_object, ip=peer[0], port=peer[1])
-        client.ipver = socket.AF_INET6 if Network.is_ipv6(client.ip) else socket.AF_INET
+        client.family = socket.AF_INET6 if Network.is_ipv6(client.ip) else socket.AF_INET
         client.name = Network.ip_port_to_socket(client.ip, client.port)
         client.writer = writer
 
         self.logger.info("Incoming connection from {} on socket {}".format(peer_socket, self.__our_socket))
-        self._incoming_connection_callback and self._incoming_connection_callback(self, client)
+        if self._incoming_connection_callback:
+            self._incoming_connection_callback(self, client)
 
         while True:
             try:
@@ -1101,8 +1097,8 @@ class Tcp_server(object):
                         self._data_received_callback(self, client, string)
                     if client._data_received_callback:
                         client._data_received_callback(self, client, string)
-                except:
-                    self.logger.debug("Received undecodable bytes from {}".format(client.name))
+                except Exception as e:
+                    self.logger.debug(f'Received undecodable bytes from {client.name}: {data}, resulting in error: {e}')
             else:
                 try:
                     self.__close_client(client)
@@ -1112,8 +1108,9 @@ class Tcp_server(object):
                 return
 
     def __close_client(self, client):
-        self.logger.info("Lost connection to client {}".format(client.name))
-        self._disconnected_callback and self._disconnected_callback(self, client)
+        self.logger.info("Connection to client {} closed".format(client.name))
+        if self._disconnected_callback:
+            self._disconnected_callback(self, client)
         client.writer.close()
 
     def listening(self):
@@ -1152,10 +1149,10 @@ class Tcp_server(object):
         """
         Closes running listening socket
         """
-        self.logger.info("Shutting down listening socket on interface {} port {}".format(self._interface, self._port))
+        self.logger.info("Shutting down listening socket on host {} port {}".format(self._host, self._port))
         asyncio.set_event_loop(self.__loop)
         try:
-            active_connections = len([task for task in asyncio.Task.all_tasks() if not task.done()])
+            active_connections = len([task for task in asyncio.all_tasks(self.__loop) if not task.done()])
         except:
             active_connections = 0
         if active_connections > 0:
@@ -1164,8 +1161,11 @@ class Tcp_server(object):
         self.__loop.call_soon_threadsafe(self.__loop.stop)
         while self.__loop.is_running():
             pass
-        if self.__listening_thread and self.__listening_thread.isAlive():
-            self.__listening_thread.join()
+        try:
+            if self.__listening_thread and self.__listening_thread.isAlive():
+                self.__listening_thread.join()
+        except AttributeError:  # thread can disappear between first and second condition test
+            pass
         self.__loop.close()
 
 
@@ -1314,8 +1314,8 @@ class Udp_server(object):
         asyncio.set_event_loop(self.__loop)
         try:
             self.__loop.run_forever()
-        except:
-            self.logger.debug('*** Error in loop.run_forever()')
+        except Exception as e:
+            self.logger.debug(f'*** Error in loop.run_forever(): {e}')
         finally:
             self.__server.stop()
             self.__loop.close()
