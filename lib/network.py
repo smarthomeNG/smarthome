@@ -26,6 +26,12 @@ This library contains the network classes for SmartHomeNG.
 
 New network functions and utilities are going to be implemented in this library.
 These classes, functions and methods are mainly meant to be used by plugin developers
+
+- class Network provides utility methods for network-related tasks
+- class Html provides methods for communication with resp. requests to a HTTP server
+- class Tcp_client provides a two-way TCP client implementation
+- class Tcp_server provides a TCP listener with connection / data callbacks
+- class Udp_server provides a UDP listener with data callbacks
 '''
 
 from lib.utils import Utils
@@ -51,9 +57,7 @@ class Network(object):
     This Class has some useful static methods that you can use in your projects
 
 
-    NOTE: Some format check routines were duplicate with lib.utils. As these primarily
-          check string formats and are used for metadata parsing, they were removed here
-          to prevent duplicates.
+    NOTE: Some format check routines were duplicate with lib.utils. As these primarily check string formats and are used for metadata parsing, they were removed here to prevent duplicates.
     '''
 
     @staticmethod
@@ -198,7 +202,7 @@ class Network(object):
 
 class Http(object):
     '''
-    Creates an instance of the Http class.
+    This class provides methods to simplify HTTP connections, especially to talk to HTTP servers.
 
 
     :param baseurl: base URL used everywhere in this instance (example: http://www.myserver.tld)
@@ -207,6 +211,7 @@ class Http(object):
     :type baseurl: str
     :type timeout: int
     '''
+
     def __init__(self, baseurl='', timeout=10):
         self.logger = logging.getLogger(__name__)
 
@@ -445,7 +450,7 @@ class Http(object):
 
 class Tcp_client(object):
     '''
-    Creates a new instance of the Tcp_client class
+    Provides a structured class to handle locally initiated TCP connections with two-way communication
 
 
     :param host: Remote host name or ip address (v4 or v6)
@@ -732,10 +737,10 @@ class Tcp_client(object):
             self.__receive_thread.join()
 
 
-class _Client(object):
+class ConnectionClient(object):
     '''
-    Client object that represents a connected client of tcp_server
-
+    Client object that represents a connected client returned by a Tcp_server instance on incoming connection
+    This class should normally **not be instantiated manually**, but is provided by the Tcp_server via the callbacks
 
     :param server: The tcp_server passes a reference to itself to access parent methods
     :param socket: socket.Socket class used by the Client object
@@ -745,6 +750,7 @@ class _Client(object):
     :type socket: function
     :type fd: int
     '''
+
     def __init__(self, server=None, socket=None, ip=None, port=None):
         self.logger = logging.getLogger(__name__)
         self.name = None
@@ -860,8 +866,13 @@ class _Client(object):
 
 class Tcp_server(object):
     '''
-    Creates a new instance of the Tcp_server class
+    This class provides a threaded TCP listener which dispatches connections (and possibly received data) via callbacks
 
+    NOTE: The callbacks need to expect the following arguments:
+
+    - ``incoming_connection(server, client)`` where `server` ist the `Tcp_server` instance and `client` is a `ConnectionClient` for the current connection
+    - ``data_received(server, client, data)`` where `server` ist the `Tcp_server` instance, `client` is a `ConnectionClient` for the current connection, and `data` is a string containing received data
+    - ``disconnected(server, client)`` where `server` ist the `Tcp_server` instance and `client` is a `ConnectionClient` for the closed connection
 
     :param host: Local host name or ip address (v4 or v6). Default is '::' which listens on all IPv4 and all IPv6 addresses available.
     :param port: Local port to connect to
@@ -895,7 +906,6 @@ class Tcp_server(object):
         self._family = socket.AF_INET
         self._socket = None
 
-        self._listening_callback = None
         self._incoming_connection_callback = None
         self._data_received_callback = None
 
@@ -914,7 +924,7 @@ class Tcp_server(object):
             if not self.name:
                 self.name = self.__our_socket
 
-    def set_callbacks(self, listening=None, incoming_connection=None, disconnected=None, data_received=None):
+    def set_callbacks(self, incoming_connection=None, disconnected=None, data_received=None):
         '''
         Set callbacks to caller for different socket events
 
@@ -926,7 +936,6 @@ class Tcp_server(object):
         :type data_received: function
         :type disconnected: function
         '''
-        self._listening_callback = listening
         self._incoming_connection_callback = incoming_connection
         self._data_received_callback = data_received
         self._disconnected_callback = disconnected
@@ -988,7 +997,7 @@ class Tcp_server(object):
         socket_object = writer.get_extra_info('socket')
         peer_socket = Network.ip_port_to_socket(peer[0], peer[1])
 
-        client = _Client(server=self, socket=socket_object, ip=peer[0], port=peer[1])
+        client = ConnectionClient(server=self, socket=socket_object, ip=peer[0], port=peer[1])
         client.family = socket.AF_INET6 if Utils.is_ipv6(client.ip) else socket.AF_INET
         client.name = Network.ip_port_to_socket(client.ip, client.port)
         client.writer = writer
@@ -1032,7 +1041,7 @@ class Tcp_server(object):
         Close client connection
 
         :param client: client object
-        :type client: lib.network._Client
+        :type client: lib.network.ConnectionClient
         '''
         self.logger.info(f'Connection to client {client.name} closed')
         if self._disconnected_callback:
@@ -1055,7 +1064,7 @@ class Tcp_server(object):
         :param client: Client Object to send message to
         :param msg: Message to send
 
-        :type client: lib.network._Client
+        :type client: lib.network.ConnectionClient
         :type msg: string | bytes | bytearray
 
         :return: True if message has been queued successfully.
@@ -1069,7 +1078,7 @@ class Tcp_server(object):
         Disconnects a specific client
 
         :param client: Client Object to disconnect
-        :type client: lib.network._Client
+        :type client: lib.network.ConnectionClient
         '''
         client.close()
         return True
@@ -1100,7 +1109,11 @@ class Tcp_server(object):
 
 class Udp_server(object):
     '''
-    Creates a new instance of the Udp_server class
+    This class provides a threaded UDP listener which dispatches received data via callbacks.
+
+    NOTE: The callbacks need to expect the following arguments:
+
+    - ``data_received(addr, data)`` where `addr` is a tuple with `('<remote_ip>', remote_port)` and `data` is the received data as string
 
 
     :param host: Local hostname or ip address (v4 or v6). Default is '' which listens on all IPv4 addresses available.
@@ -1127,7 +1140,6 @@ class Udp_server(object):
         self._family = socket.AF_INET
         self._socket = None
 
-        self._listening_callback = None
         self._data_received_callback = None
 
         # provide a shutdown timeout for the server loop. emergency fallback only
@@ -1181,7 +1193,7 @@ class Udp_server(object):
             return False
         return True
 
-    def set_callbacks(self, listening=None, data_received=None):
+    def set_callbacks(self, data_received=None):
         '''
         Set callbacks to caller for different socket events
 
@@ -1189,7 +1201,6 @@ class Udp_server(object):
 
         :type data_received: function
         '''
-        self._listening_callback = listening
         self._data_received_callback = data_received
 
     def listening(self):
