@@ -347,4 +347,3 @@ um das automatisch zu tun.
     Bei ``ow_addr:  28.169712030000`` wird ein float ``28.16971203`` erkannt,
     bei ``ow_addr:  '28.169712030000'`` hingegen wird die Adresse korrekt als 
     String ``'28.169712030000'`` erkannt mit den Nullen am Ende.
-

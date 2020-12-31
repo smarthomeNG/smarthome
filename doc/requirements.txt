@@ -5,3 +5,7 @@ recommonmark>=0.6.0
 ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
 ruamel.yaml>=0.15.0,<=0.15.74;python_version=='3.7'
 ruamel.yaml>=0.15.78,<=0.16.8;python_version>='3.8'
+
+# to create pdf files install also
+# rst2pdf
+# svglib
