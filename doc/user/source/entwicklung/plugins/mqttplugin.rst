@@ -9,10 +9,11 @@ Class MqttPlugin :redsup:`new`
 ==============================
 
 
-The class MqttPlugin implements the base class of all smart-plugins that use MQTT. The implemented methods are described
-below.
+Die Klasse MqttPlugin implementiert die Basisklasse aller SmartPLugins die MQTT nutzen. 
+Die vorhandenen Methoden sind im Folgenden beschrieben
 
-In addition the methods implemented in lib.utils.Utils are inherited.
+
+Zusätzlich werden die Methoden der Klasse ``lib.utils.Utils`` vererbt.
 
 .. autoclass:: lib.model.mqttplugin.MqttPlugin
     :members:

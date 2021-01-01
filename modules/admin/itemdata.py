@@ -50,7 +50,7 @@ class ItemData:
 
         :param mode:             tree (default) or list structure
         """
-        if self.items == None:
+        if self.items is None:
             self.items = Items.get_instance()
 
         items_sorted = sorted(self.items.return_items(), key=lambda k: str.lower(k['_path']), reverse=False)
@@ -100,7 +100,7 @@ class ItemData:
         """
         returns the details of an item as json structure
         """
-        if self.items == None:
+        if self.items is None:
             self.items = Items.get_instance()
 
         # self.logger.warning("item_detail_json_html: item_path = {}".format(item_path))
@@ -110,17 +110,27 @@ class ItemData:
         if item is not None:
             if item.type() is None or item.type() == '':
                 prev_value = ''
+                last_value = ''
                 value = ''
             else:
-                prev_value = item.prev_value()
+                last_value = item.property.last_value
+                if last_value is None:
+                    last_value = ''
+                prev_value = item.property.prev_value
+                if prev_value is None:
+                    prev_value = ''
                 value = item._value
 
             if isinstance(prev_value, datetime.datetime):
                 prev_value = str(prev_value)
 
+            if isinstance(last_value, datetime.datetime):
+                last_value = str(last_value)
+
             if 'str' in item.type():
                 value = html.escape(value)
                 prev_value = html.escape(prev_value)
+                last_value = html.escape(last_value)
 
             cycle = ''
             crontab = ''
@@ -136,13 +146,21 @@ class ItemData:
             if crontab == '':
                 crontab = '-'
 
-            changed_by = item.changed_by()
+            changed_by = item.property.last_change_by
             if changed_by[-5:] == ':None':
                 changed_by = changed_by[:-5]
 
-            updated_by = item.updated_by()
+            updated_by = item.property.last_update_by
             if updated_by[-5:] == ':None':
                 updated_by = updated_by[:-5]
+
+            previous_changed_by = item.property.prev_change_by
+            if previous_changed_by[-5:] == ':None':
+                previous_changed_by = previous_changed_by[:-5]
+
+            previous_updated_by = item.property.prev_update_by
+            if previous_updated_by[-5:] == ':None':
+                previous_updated_by = previous_updated_by[:-5]
 
             if str(item._cache) == 'False':
                 cache = 'off'
@@ -176,19 +194,22 @@ class ItemData:
 
             data_dict = {'path': item._path,
                          'name': item._name,
-                         'type': item.type(),
+                         'type': item.property.type,
                          'value': value,
-                         'change_age': item.age(),
-                         'update_age': item.update_age(),
-                         'last_update': str(item.last_update()),
-                         'last_change': str(item.last_change()),
+                         'change_age': item.property.last_change_age,
+                         'update_age': item.property.last_update_age,
+                         'last_update': str(item.property.last_update),
+                         'last_change': str(item.property.last_change),
                          'changed_by': changed_by,
                          'updated_by': updated_by,
+                         'last_value': last_value,
+                         'previous_change_age': item.property.prev_change_age,
+                         'previous_update_age': item.property.prev_update_age,
+                         'previous_update': str(item.property.prev_update),
+                         'previous_change': str(item.property.prev_change),
+                         'previous_change_by': previous_changed_by,
+                         'previous_update_by': previous_updated_by,
                          'previous_value': prev_value,
-                         'previous_change_age': item.prev_age(),
-                         'previous_update_age': item.prev_update_age(),
-                         'previous_update': str(item.prev_update()),
-                         'previous_change': str(item.prev_change()),
                          'enforce_updates': enforce_updates,
                          'cache': cache,
                          'eval': html.escape(self.disp_str(item._eval)),
@@ -221,6 +242,7 @@ class ItemData:
             # cast raw data to a string
             if item.type() in ['foo', 'list', 'dict']:
                 data_dict['value'] = str(item._value)
+                data_dict['last_value'] = str(last_value)
                 data_dict['previous_value'] = str(prev_value)
 
             item_data.append(data_dict)
@@ -237,6 +259,8 @@ class ItemData:
         """
         Is called by items.html when an item value has been changed
         """
+        if self.items is None:
+            self.items = Items.get_instance()
         self.logger.info("item_change_value_html: item '{}' set to value '{}'".format(item_path, value))
         item_data = []
         try:
@@ -297,5 +321,4 @@ class ItemData:
                 else:
                     on_list.append(on_eval_list)
         return on_list
-
 

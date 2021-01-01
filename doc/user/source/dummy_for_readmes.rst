@@ -10,13 +10,12 @@
 
    /admonition_arten.rst
    /dev/README.md
-   /dev/sample_plugin/README.md
-   /dev/sample_mqttplugin/README.md
    /dev/sample_module/README.md
+   /dev/sample_mqttplugin/user_doc.rst
+   /dev/sample_plugin/user_doc.rst
    /modules/admin/README.md
    /modules/http/README.md
    /modules/mqtt/README.md
-   /modules/websocket/README.md
    /vorlagen/*
 
 .. toctree::

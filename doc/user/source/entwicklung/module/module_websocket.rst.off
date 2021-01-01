@@ -21,19 +21,17 @@ API des Moduls
     :member-order: bysource
 
 
-README
-------
-
-.. literalinclude:: /modules/websocket/README.md
-    :caption: README
-
-
 Metadaten
 ---------
 
-Auskommentierte Parameter in den Metadaten sind noch nicht implementiert. Die Implementierung dieser Parameter
-wird im Rahmen der Weiterentwicklung von SmartHomeNG erfolgen:
-
 .. literalinclude:: /modules/websocket/module.yaml
     :caption: module.yaml
+
+
+Konfiguration
+-------------
+
+Konfigurationsdokumentation ist unter Konfiguration auf der Seite :doc:`../konfiguration/module/module_websocket`
+zu finden.
+
 

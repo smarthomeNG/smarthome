@@ -7,8 +7,8 @@
 .. index:: Plugin Metadaten; item_structs
 .. index:: Plugin Metadaten; structs
 
-``item_structs``
-----------------
+item_structs
+------------
 
 Der Abschnitt ``item_structs:`` erlaubt die Definition von Structure Templates, also von Sub-Trees von Items,
 die an verschiedenen Stellen in den Item Tree eingefügt werden können.

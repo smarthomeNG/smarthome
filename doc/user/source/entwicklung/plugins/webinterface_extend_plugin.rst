@@ -3,28 +3,26 @@
 .. role:: redsup
 .. role:: bluesup
 
-Extending an existing plugin
-----------------------------
+Erweitern eines bestehenden Plugins
+-----------------------------------
 
-For extending an existing smart-plugin with a webinterface, the following steps have to be followed:
+Für bestehende SmartPlugins kann die Erweiterung um ein Webinterface wie folgt durchgeführt werden:
 
-   1. Add the webif directory from the sample plugin to the plugin's directory
-   2. Change the import statement for **lib.smartplugin** from
-      ``from lib.model.smartplugin import SmartPlugin`` to
+   1. das ``webif``-Verzeichnis aus dem Beispiel in das eigene Plugin kopieren
+   2. die import-Anweisungen für ``lib.smartplugin`` von
+      ``from lib.model.smartplugin import SmartPlugin`` ändern zu
       ``from lib.model.smartplugin import *``
-   3. Add the following statement to the ``__init__`` method of the plugin: ``self.init_webinterface()``
-   4. Ad the method ``init_webinterface`` to the plugin's class (copy from sample_plugin)
-   5. Add the ``WebInterface`` class after the end of the plugin's class definition. Copy it from the sample plugin.
+   3. der ``__init__``-Methode des Plugins den Aufruf von ``self.init_webinterface()`` hinzufügen (am Ende der Initialisierung)
+   4. der Plugin-Klasse die Methode ``init_webinterface()`` aus dem Beispielplugin hinzufügen
+   5. die ``WebInterface``-Klasse aus dem Beispiel-Plugin ans Ende der Plugin-Datei kopieren
 
-Now the plugin has a functional but empty webinterface:
+Nun hat das Plugin ein funktionierendes, wenngleich leeres Webinterface:
 
 .. image:: assets/sample_plugin_webIf.jpg
 
 
-The Method **index** of the class WebInterface implements the page of the web interface. It renders the template and
-makes all data of the plugin public to the render engine (``return tmpl.render(p=self.plugin)``) as ``p``. If further
-data is needed, it has to be added to **tmpl.render()**.
+Die Methode ``index`` der Klasse ``WebInterface`` implementiert die Seitenerstellung des Webinterfaces. Es rendert das Template (``webif/templates/index.html``) und macht das Plugin für den Renderer als ``p`` verfügbar (``return tmpl.render(p=self.plugin)``). Darüber hinaus erforderliche Daten können dem Aufruf von ``tmpl.render()`` einfach angefügt werden und stehen dann im Template zur Verfügung.
 
-Now the only thing left to do, is adding the data that shall be displayed to the template file (webif/templates/index.html).
+Das Einzige, was jetzt noch verbleibt, ist die Einbindung der anzuzeigenden Daten im Template.
 
-Details kan be found in the following section (**Filling the webinterface with content**)
+Details dazu finden sich im folgenden Abschnitt. (**Das Webinterface mit Inhalt füllen**)

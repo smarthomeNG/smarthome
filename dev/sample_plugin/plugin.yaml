@@ -65,4 +65,3 @@ plugin_functions:
 
 logic_parameters:
     # Definition of logic parameters defined by this plugin (enter 'logic_parameters: NONE', if section should be empty)
-

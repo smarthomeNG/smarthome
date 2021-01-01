@@ -578,8 +578,8 @@ class Property:
         """
         return self._item._get_prev_value()
 
-    @last_value.setter
-    def last_value(self, value):
+    @prev_value.setter
+    def prev_value(self, value):
         self._ro_error()
         return
 

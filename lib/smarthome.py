@@ -219,6 +219,8 @@ class SmartHome():
         self.initialize_dir_vars()
         self.create_directories()
 
+        os.chdir(self._base_dir)
+
         self.PYTHON_VERSION = lib.utils.get_python_version()
 
         if os.name != 'nt':
@@ -316,8 +318,8 @@ class SmartHome():
         if lib.utils.running_virtual():
             virtual_text = ' in virtual environment'
         self._logger_main.warning("--------------------   Init SmartHomeNG {}   --------------------".format(self.version))
-        self._logger_main.warning("Running in Python interpreter 'v{}'{}".format(self.PYTHON_VERSION, virtual_text))
-        self._logger_main.warning(" - on {} (pid={})".format(platform.platform(), pid))
+        self._logger_main.warning(f"Running in Python interpreter 'v{self.PYTHON_VERSION}'{virtual_text}, from directory {self._base_dir}")
+        self._logger_main.warning(f" - on {platform.platform()} (pid={pid})")
 
         default_encoding = locale.getpreferredencoding() # returns cp1252 on windows
         if not (default_encoding in  ['UTF8','UTF-8']):
@@ -702,7 +704,9 @@ class SmartHome():
         if threading.active_count() > 1:
             header_logged = False
             for thread in threading.enumerate():
-                if thread.name != 'Main' and thread.name[0] !=  '_' and not thread.name.startswith('ThreadPoolExecutor'):
+                if thread.name != 'Main' and thread.name[0] !=  '_' \
+                    and thread.name != 'modules.websocket.websocket_server' \
+                    and not thread.name.startswith('ThreadPoolExecutor'):
                 #if thread.name != 'Main' and thread.name[0] !=  '_':
                     if not header_logged:
                         self._logger.warning("The following threads have not been terminated properly by their plugins (please report to the plugin's author):")

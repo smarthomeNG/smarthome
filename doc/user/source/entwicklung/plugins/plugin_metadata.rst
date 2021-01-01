@@ -5,86 +5,83 @@
 .. role:: redsup
 .. role:: bluesup
 
-Plugin Metadata :bluesup:`update`
+Plugin-Metadata :bluesup:`update`
 =================================
 
-Plugins are configured in ``etc/plugin.yaml``. The parameters are described in the README.md
-files of the plugins.
+Plugins werden in ``etc/plugin.yaml`` konfiguriert. Die Parameter sind in der ``plugin.yaml`` des jeweiligen Plugins
+beschrieben.
+
+Ein Plugin besteht aus mindestens zwei Dateien:
+
+- dem Programmcode: __init__.py
+- den Metadaten: plugin.yaml
+
+.. hint::
+
+   Das in früheren Versionen verwendete ``README``-Format für die Dokumentation von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in ``plugin.yaml`` übergegangen. Die restliche Dokumentation sollte nur noch im ``user_doc``-Format erfolgen.
+
+   Soweit möglich, sollten bestehende ``README`` im Rahmen von Aktualisierungen in entsprechende ``user_doc`` überführt werden.
 
 
-A plugin is made up of three files:
+Diese Dateien befinden sich in einem Unterordner des ``/plugins``-Ordners. Der Name des Unterordners entspricht dem
+Namen des Plugins.
 
-- The program code: __init__.py
-- The metadata: plugin.yaml
-- A short documentation: README.md
+Die **Metadaten**-Datei heißt ``/plugins/<Name des Plugins>/plugin.yaml``. Sie besteht aus sechs Abschnitten:
 
-All three files reside in a folder within the ``/plugins`` folder. The name of the folder reflects
-the name of the plugin.
+- ``plugin:`` - Gobale Metadaten des Plugins
+  Die Daten dieses Abschnitts werden verwendet, um die Kompatibilität des Plugins mit der laufenden Version von
+  SmartHomeNG zu prüfen und definieren, wie das Plugin geladen wird
 
-
-The **metadata** file is named ``/plugins/<name of the plugin>/plugin.yaml``. It has three main sections:
-
-- ``plugin:`` - Global metadata of the plugin
-  The data defined in this section is used to check if the plugin works with the running version of SmartHomeNG, and defines
-  how the plugin is loaded.
-
-  The ``description:`` data is used to generate the plugin documentation pages within this documentation. Since this
-  documentation is in english, the english description is read. If no english description is found, the german description
-  is used.
+  Die Angaben unter ``description:`` werden genutzt, um die Plugin-Seite in der SmartHomeNG-Dokumentation zu erzeugen.
+  Standardmäßig wird die deutsche Sprachversion verwendet, wenn diese nicht vorhanden ist, wird die englische genutzt.
 
 
-- ``parameters:`` - Definition of the parameters that can bei used in ``/etc/plugin.yaml`` to configure the plugin
-  The data defined in this section is used to check if configured parameters are valid.
-  The data is going to be used:
-
-  - for generating documentation pages (that way the parameter descriptions will not be needed in the README.md file)
-  - for guiding users in a graphical configuration utility
+- ``parameters:`` - Parameter, mit denen das Plugin in ``/etc/plugin.yaml`` konfiguriert wird.
+  Die Daten dieses Abschnitts werden verwendet, um die Gültigkeit der Plugin-Konfiguration zu prüfen.
 
 
-- ``item_attributes:`` - Definition of the additional attributes for items, defined by this plugin
-  The data defined in this section is used to check if configured item attributes are valid.
-  The data is going to be used:
-
-  - for generating documentation pages (that way the item attribute descriptions will not be needed in the README.md file)
-  - for guiding users in a graphical configuration utility
+- ``item_attributes`` - Item-Attribute, die durch das Plugin definiert werden
+  Die Daten dieses Abschnitts werden verwendet, um die Attribute der Item-Konfiguration auf Gültigkeit zu prüfen.
 
 
-- ``logic_parameters:`` - Definition of logic parameters that can bei used in ``/etc/logic.yaml`` to configure a logic.
-
-  - for generating documentation pages (that way the parameter descriptions will not be needed in the README.md file)
-  - for guiding users in a graphical configuration utility
+- ``item_structs:`` - Item-Strukturen, die vorgefertigte Item-Pakete des Plugins bereitstellen
 
 
-- ``plugin_functions:`` - Definition of public functions, defined by this plugin
-  The data defined in this section is used to check if configured item attributes are valid.
-  The data is going to be used:
-
-  - for generating documentation pages (that way the function descriptions will not be needed in the README.md file)
-  - **in the future** for guiding users in a graphical configuration utility (e.g. code completion in the logic editor)
+- ``logic_parameters:`` - Logik-Parameter, die in ``/etc/logic.yaml`` zur Konfiguration von Logiken genutzt werden
 
 
+- ``plugin_functions:`` - Funktionsaufrufe, die das Plugin bereitstellt
 
 
-:Note: After the completion of the implementation of metadata for plugins, the following variables in the Python code of SmartPlugins need not be set anymore. They are read from the global metadata and are automatically set in the instance of the plugin:
+Die Metadaten werden weiterhin vorgesehen
+
+  - für die automatisierte Erstellung der SmartHomeNG-Dokumentation
+  - für die Nutzung in einer grafischen Konfigurationsoberfläche
+
+
+:Note: Wenn die Implementation der Metadaten-Systematik abgeschlossen ist, werden die folgenden Variablen im Python code von SmartPlugins nicht mehr benötigt. Sie werden aus den globalen Metadaten ausgelesen und im Plugin automatisch bereitgestellt:
 
     - ALLOW_MULTIINSTANCE
     - PLUGIN_VERSION
 
-    The variable PLUGIN_VERSION should be set (even if it is not needed).
-    If it is set, the version numbers defined in __init__.py and plugin.yaml are
-    compared to ensure they match. If they don't match, an error is logged and the plugin is not loaded.
+    Es wird empfohlen, die Variable PLUGIN_VERSION trotzdem zu setzen. Dann kann durch den Vergleich der Angaben
+    in __init__.py und plugin.yaml sichergestellt werden, dass die Dateiversionen zueinander passen. Wenn das nicht 
+    der Fall ist, wird ein Fehler ausgegeben und das Laden des Plugins verhindert.
 
 
 .. hint::
 
-    To test the metadata in plugin.yaml use the tool ../tools/plugin_metadata_checker.py. This tool can check if the
-    metadata is complete and free of errors.
+    Zum Validieren der Metadaten in plugin.yaml kann das Tool /tools/plugin_metadata_checker.py genutzt werden. Dies
+    prüft die Metadaten auf Vollständigkeit und Fehlerfreiheit.
 
 
+:Note: Bei Modulen heißt der Abschnitt entsprechend ``module:`` statt ``plugin:``
 
-If writing a core module, the metadata file has a section ``module:`` instead of the section ``plugin:``
 
-The metadata file has the following sections:
+Detaillierte Beschreibung
+-------------------------
+
+Die einzelnen Abschnitte sind im Folgenden detailliert beschrieben:
 
 .. include:: /referenz/metadata/plugin_global.rst
 .. include:: /referenz/metadata/parameters.rst

@@ -1,53 +1,44 @@
-Plugin documentation files
-==========================
+Dateien der Plugin-Dokumentation
+================================
 
-There are three documentation files that can (and should) be created for a plugin.
+Es gibt zwei Dokumentations-Dateien die für ein Plugin erstellt werden können (und sollten).
 
+.. hint::
 
-README.md
----------
+   Das in früheren Versionen verwendete ``README``-Format für die Dokumentation von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in ``plugin.yaml`` übergegangen. Die restliche Dokumentation sollte nur noch im ``user_doc``-Format erfolgen. 
 
-The classic documentation file in markdown format, containing basic information how a plugin
-can be configured and used.
+   Soweit möglich, sollten bestehende ``README`` im Rahmen von Aktualisierungen in entsprechende ``user_doc`` überführt werden.
 
 
 user_doc.rst / user_doc.md
 --------------------------
 
-The **user_doc** file can be created in restructured text (rST) or markdown format. You should
-prefer the restructured text format because it is more feature rich. The user documentation should
-be written in **German**. Only it the plugin author does not speak German, the user documentation
-can be written in English. The reason for this is, that the user documentation is going to become
-multilingual at a later point in time and the translation source has to be **one** language.
+Die ``user_doc``-Datei kann in in den Dateiformaten restructured text (rST) oder markdown (md) erstellt werden. Das restructured text-Format sollte dabei bevorzugt werden, da es mehr Möglichkeiten bietet. Die Dokumentation sollte durchgängig auf Deutsch erfolgen; nur wenn der Plugin-Autor kein Deutsch spricht, kann die Dokumentation auf Englisch erfolgen. Der Grund dafür ist die vorgesehene Umstellung auf Mehrsprachenunterstützung, welche **eine** einheitliche Quellsprache erfordert.
 
-This file is dynamically integrated in the user documentation for SmartHomeNG when it is beeing built.
+Diese Datei wird im Rahmen des Build-Prozesses dynamisch in die Nutzerdokumentation von SmartHomeNG integriert, u.a. auch auf der Homepage.
 
 .. important::
 
-   The first Heading of the **user_doc.rst** / **user_doc.md** or **developer_doc.rst** / **developer_doc.md**
-   MUST be the short-name of the plugin in lower case.
+   Die erste Überschrift der Dokumentationsdateien (``user_doc`` und ``developer_doc``) MUSS dem Kurznamen des Plugins in Kleinbuchstaben entsprechen.
 
-   It is used as the entry in the navigation bar of the documentation. Choosing an other top level
-   header for these files would make the documentations navigation inconsistent.
+   Dieser Eintrag wird als Einstiegspunkt für die Navigation in der Dokumentation genutzt. Ein anderer Eintrag als Überschrift sorgt für Inkonsistenzen in den Navigationselementen.
 
 
-For example:
+Zum Beispiel:
 
-The **backend** plugin has a file **user_doc.rst**. This file is integrated in the navigation
-tree of the user documentation. The entry can be seen, if the corresponding plugin category is selected:
+Das ``backend`` Plugin beinhaltet eine Datei ``user_doc.rst``. Diese Datei ist in den Navigationsbaum der Dokumentation integriert. Dieser Eintrag wird angezeigt, wenn die entsprechende Plugin-Kategorie ausgewählt wird:
 
 .. image:: assets/backend_user_doc_tree.png
 
 
-When selecting the entry in the navigation pane, the page is displayed:
+Wenn der Eintrag im Navigationspanel ausgewählt wird, wird die Seite aufgerufen:
 
 .. image:: assets/backend_user_doc_page.png
 
 
-This page can contain images. The images should be stored in a folder named **assets** within
-the plugin folder.
+Die Dokumentation kann Bilder enthalten. Diese müssten in eim Unterordner ``assets`` des Plugin-Ordners abgelegt werden.
 
-In restructured text (rST) files, the images can then be included by the statement:
+In restructured text (rST) Dateien können Bilder mit der folgenden Anweisung eingebunden werden:
 
   .. code::
 
@@ -58,15 +49,13 @@ In restructured text (rST) files, the images can then be included by the stateme
 developer_doc.rst / developer_doc.md
 ------------------------------------
 
-The **developer_doc** file can be created in restructured text (rST) or markdown format. You
-should prefer the restructured text format because it is more feature rich. The user documentation
-should be written in **English**.
+Die ``developer_doc``-Datei kann in den Dateiformaten restructured text (rST) oder markdown (md) erstellt werden. Das restructured text-Format sollte dabei bevorzugt werden, da es mehr Möglichkeiten bietet. Die Dokumentation sollte durchgängig auf Deutsch erfolgen.
 
-This file is dynamically integrated in the developer documentation for SmartHomeNG when it is beeing built.
+Diese Datei wird im Rahmen des Build-Prozesses dynamisch in die Nutzerdokumentation von SmartHomeNG integriert, u.a. auch auf der Homepage.
 
-For example:
+Zum Beispiel:
 
-The **visu_websocket** and the **visu_smartvisu** plugins have pages for the developer documentation:
+Die Plugins ``visu_websocket`` und ``visu_smartvisu`` haben jeweils Seiten mit Dokumentation speziell für Entwickler:
 
 .. image:: assets/visu_developer_doc_tree.jpg
 

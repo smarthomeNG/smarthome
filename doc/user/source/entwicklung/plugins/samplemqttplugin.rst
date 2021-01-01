@@ -6,50 +6,48 @@
 .. role:: redsup
 .. role:: bluesup
 
-Sample Plugin using MQTT :redsup:`new`
-======================================
+Beispielplugin mit MQTT-Unterstützung :redsup:`new`
+===================================================
+
+Dieser Abschnitt zeigt ein Beispielplugin mit MQTT-Unterstützung. Es kann mit oder ohne Webinterface umgesetzt werden.
+
+Das komplette Plugin mit allen Dateien kann auf github unter https://github.com/smarthomeng/smarthome im ``/dev``-Ordner gefunden werden. 
+
+:Note: Diese Dokumentation bezieht sich auf Versionen ab v1.7.0. Sie gilt nicht für Versionen vor v1.7.0
+
+Auf dieser Seiten finden sich Dateien und Anregungen für neue Plugins, die MQTT nutzen. Das Plugin selbst besteht aus einer Datei mit Python-Code (__init__.py), einer Datei mit Metadaten (plugin.yaml) und der Dokumentation (user_doc.rst). Ein Satz Beispieldateien wird weiter unten gezeigt.
+
+Eine formatierte Version der Beispieldokumentation findet sich hier: :doc:`user_doc.rst </dev/sample_mqttplugin/user_doc>`
+
+Eine Version im Quelltext als Grundlage für eigene Dokumentationen ist unterhalb der Python-Quellcodes verfügbar.
 
 
-This section shows a sample plugin, which uses MQTT. This plugin can be implemented with or without a web interface.
-
-The complete plugins with all files (specially the plugin with web interface has some additional files) can
-be found on github (www.github.com/smarthomeng/smarthome in the /dev folder.
-
-
-This documentation is valid for SmartHomeNG versions v1.7.0 and beyond. It does not work on earlier version of SmartHomeNG.
-
-On this page you find files for writing a new plugin. The plugin consists of a file with Python
-code (__init__.py), a metadata file (plugin.yaml) and a documentation file (README.md).
-A skeleton of the three files is shown below.
-
-A formatted version of the sample README.md can be found here: :doc:`README.md </dev/sample_mqttplugin/README>`
-
-A raw version of the README.md for copy and paste can be found below the Python source code.
-
-
-The meta data file:
+Die Metadaten-Datei:
+--------------------
 
 .. literalinclude:: /dev/sample_mqttplugin/plugin.yaml
     :caption: plugin.yaml
 
 
-The source code:
+Der Quelltext:
+--------------
 
 .. literalinclude:: /dev/sample_mqttplugin/__init__.py
     :caption: __init__.py
 
 
-The Web interface (template file):
+Das Webinterface (template file):
+---------------------------------
 
-The template file has up to five content blocks to be filled with data of the plugin.
+Das Template hat bis zu fünf Inhaltsblöcke, die mit den Daten des Plugins befüllt werden können:
 
-   1. Data for the heading on the right side ``{% block headtable %}``
-   2. Tab 1 of the body of the page ``{% block bodytab1 %}``
-   3. Tab 2 of the body of the page ``{% block bodytab2 %}``
-   4. Tab 3 of the body of the page ``{% block bodytab3 %}``
-   5. Tab 4 of the body of the page ``{% block bodytab4 %}``
+   1. Kopfdaten auf der rechten Seite ``{% block headtable %}``
+   2. Tab 1 der Hauptteils der Seite ``{% block bodytab1 %}``
+   3. Tab 2 der Hauptteils der Seite ``{% block bodytab2 %}``
+   4. Tab 3 der Hauptteils der Seite ``{% block bodytab3 %}``
+   5. Tab 4 der Hauptteils der Seite ``{% block bodytab4 %}``
 
-The number of bodytab blocks that is to be displayed is defined by the template statement
+Die Anzahl der anzuzeigenden ``bodytab``-Blöcke wird mit der folgenden Anweisung festgelegt:
 ``{% set tabcount = 4 %}``
 
 .. literalinclude:: /dev/sample_mqttplugin/webif/templates/index.html
@@ -57,16 +55,24 @@ The number of bodytab blocks that is to be displayed is defined by the template 
     :caption: templates/index.html
 
 
-The multi-language support file:
+Die Datei für Mehrsprachigkeit:
+-------------------------------
 
 .. literalinclude:: /dev/sample_mqttplugin/locale.yaml
     :caption: locale.yaml
 
 
-The following file outlines the minimum documentation a plugin should have. This README file
-should be written in English.
+Die Dokumentation:
+------------------
 
-.. literalinclude:: /dev/sample_mqttplugin/README.md
-    :caption: README.md
+Die folgende Datei skizziert den Mindestumfang für die Plugin-Dokumentation. 
 
+.. literalinclude:: /dev/sample_mqttplugin/user_doc.rst
+    :caption: user_doc.rst
+
+.. hint::
+
+   Das in früheren Versionen verwendete **README**-Format für die Dokumentation von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in **plugin.yaml** übergegangen. Die restliche Dokumentation sollte nur noch im **user_doc**-Format erfolgen.
+
+   Soweit möglich, sollten bestehende **README** im Rahmen von Aktualisierungen in entsprechende **user_doc** überführt werden.
 

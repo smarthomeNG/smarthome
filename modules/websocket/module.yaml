@@ -30,7 +30,7 @@ parameters:
         type: int
         valid_min: 0
         valid_max: 65535
-        default: 3434
+        default: 2424
         description:
             de: Portnummer für die unverschlüsselte Websocket Kommunikation
             en: Port number for the unencrypted access to websockets
@@ -39,7 +39,7 @@ parameters:
         type: int
         valid_min: 0
         valid_max: 65535
-        default: 3435
+        default: 2425
         description:
             de: Portnummer für die verschlüsselte Websocket Kommunikation
             en: Port number for the encrypted access to websockets
