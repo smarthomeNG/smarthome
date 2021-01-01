@@ -114,5 +114,11 @@ lib.shtime_translations:
         'de': "Aufgerufen mit einem Parameter der nicht vom Typ 'datetime' ist: {dt1}, {dt2}"
         'en': '='
     "Called with point in time that is earlier than now: {dt}":
-        'de': 'Aufgerufen mit Zeitpunkt in der Vergangenheit'
+        'de': 'Aufgerufen mit Zeitpunkt in der Vergangenheit: {dt}'
+        'en': '='
+    "Calculating beginning of week based on year {year}, week {week} and offset {offset}":
+        'de': 'Berechne Wochenstart basierend auf Jahr {year}, Woche {week} und Offset {offset}'
+        'en': '='
+    "Calculating length of month based on year {year}, month {month}{debug_month}":
+        'de': 'Berechne Länge des Monats basierend auf Jahr {year}, Monat {month}{debug_month}'
         'en': '='
