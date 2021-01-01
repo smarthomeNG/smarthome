@@ -41,7 +41,6 @@ from lib.constants import (YAML_FILE)
 from lib.translation import translate as lib_translate
 
 
-logger = logging.getLogger(__name__)
 
 _shtime_instance = None    # Pointer to the initialized instance of the shtime class (for use by static methods)
 
@@ -58,12 +57,14 @@ class Shtime:
 
     def __init__(self, smarthome):
         self._sh = smarthome
+        self.logger = logging.getLogger(__name__)
+
         global _shtime_instance
         if _shtime_instance is not None:
             import inspect
             curframe = inspect.currentframe()
             calframe = inspect.getouterframes(curframe, 4)
-            logger.critical(self.translate("A second 'shtime' object has been created. There should only be ONE instance of class 'Shtime'!!! Called from: {callframe1} ({callframe3})").format(callframe1=calframe[1][1], callframe3=calframe[1][3]))
+            self.logger.critical(self.translate("A second 'shtime' object has been created. There should only be ONE instance of class 'Shtime'!!! Called from: {callframe1} ({callframe3})").format(callframe1=calframe[1][1], callframe3=calframe[1][3]))
 
         _shtime_instance = self
 
@@ -131,7 +132,7 @@ class Shtime:
             self.set_tzinfo(tzinfo)
             self._timezone = pytz.timezone(tz)
         else:
-            logger.warning(self.translate("Problem parsing timezone '{tz}' - Using UTC").format(tz=tz))
+            self.logger.warning(self.translate("Problem parsing timezone '{tz}' - Using UTC").format(tz=tz))
             self._timezone = pytz.timezone("UTC")
         return
 
@@ -302,7 +303,7 @@ class Shtime:
             return delta.days, delta.seconds // 3600, (delta.seconds // 60), (delta.seconds % 60)
         if resulttype == 'ds':
             return delta.days, delta.seconds
-        logger.error("_build_timediff_resulttype: Called with invalid resulttype parameter: {resulttype}".format(resulttype=resulttype))
+        self.logger.error("_build_timediff_resulttype: Called with invalid resulttype parameter: {resulttype}".format(resulttype=resulttype))
         return -1
 
 
@@ -322,11 +323,11 @@ class Shtime:
         if type(dt) is datetime.datetime:
             delta = self.now() - dt
             if delta.days < 0:
-                logger.error("time_since: "+self.translate("Called with point in time that is later than now: {dt}").format(dt=dt))
+                self.logger.error("time_since: "+self.translate("Called with point in time that is later than now: {dt}").format(dt=dt))
                 return (0, 0)
             return self._build_timediff_resulttype(delta, resulttype)
         else:
-            logger.error("time_since: "+self.translate("Called with parameter that is not of type 'datetime': {dt}").format(dt=dt))
+            self.logger.error("time_since: "+self.translate("Called with parameter that is not of type 'datetime': {dt}").format(dt=dt))
             return -1
 
 
@@ -346,11 +347,11 @@ class Shtime:
         if type(dt) is datetime:
             delta = dt - self.now()
             if delta.days < 0:
-                logger.error("time_until: "+self.translate("Called with point in time that is earlier than now: {dt}").format(dt=dt))
+                self.logger.error("time_until: "+self.translate("Called with point in time that is earlier than now: {dt}").format(dt=dt))
                 return (0, 0)
             return self._build_timediff_resulttype(delta, resulttype)
         else:
-            logger.error("time_since: "+self.translate("Called with parameter that is not of type 'datetime': {dt}").format(dt=dt))
+            self.logger.error("time_since: "+self.translate("Called with parameter that is not of type 'datetime': {dt}").format(dt=dt))
             return -1
 
 
@@ -376,7 +377,7 @@ class Shtime:
                 delta = dt1 - dt2
             return self._build_timediff_resulttype(delta, resulttype)
         else:
-            logger.error("time_since: "+self.translate("Called with parameter that is not of type 'datetime': {dt1}, {dt2}").format(dt1=dt2, dt2=dt2))
+            self.logger.error("time_since: "+self.translate("Called with parameter that is not of type 'datetime': {dt1}, {dt2}").format(dt1=dt2, dt2=dt2))
             return -1
 
 
@@ -499,15 +500,19 @@ class Shtime:
         if week is None and year is None:
             week = self.calendar_week(self.today())
             year = self.current_year()
+            month = self.current_month()
+            if month == 1 and week > 50:
+                year -= 1
+            week -= 1
         else:
             if year is None:
                 year = self.current_year()
             if week is None:
-                logger.error("beginning_of_week: "+self.translate("Week not specified"))
+                self.logger.error("beginning_of_week: "+self.translate("Week not specified"))
                 return self.today()
-        week -= 1
         #monday = datetime.datetime.strptime(f'{year}-{week}-1', "%Y-%W-%w")  # geht erst ab Python 3.6
         monday = datetime.datetime.strptime('{year}-{week}-1'.format(year=year, week=week), "%Y-%W-%w")
+
         return monday.date()
 
 
@@ -761,7 +766,7 @@ class Shtime:
             d_diff = 7 - dow_1st + dow
         d_diff += (week - 1) * 7
         date = day_1st + datetime.timedelta(days=d_diff)
-        logger.debug('dow_1st: d_diff {} -> {}'.format(d_diff, date))
+        self.logger.debug('dow_1st: d_diff {} -> {}'.format(d_diff, date))
         return date
 
 
@@ -783,7 +788,7 @@ class Shtime:
         else:
             d_diff = dow_last + 7 - dow
         date = day_last - datetime.timedelta(days=d_diff)
-        logger.debug('dow_last: d_diff {} -> {}'.format(d_diff, date))
+        self.logger.debug('dow_last: d_diff {} -> {}'.format(d_diff, date))
         return date
 
 
@@ -800,7 +805,7 @@ class Shtime:
 
         """
         cust_dict = {}
-        logger.info(self.translate('custom holiday')+' (date): {}'.format(cust_date))
+        self.logger.info(self.translate('custom holiday')+' (date): {}'.format(cust_date))
 
         for year in gen_for_years:
             d = datetime.date(year, cust_date['month'], cust_date['day'])
@@ -819,7 +824,7 @@ class Shtime:
 
         """
         cust_dict = {}
-        logger.info(self.translate('custom holiday')+' (dow): {}'.format(cust_date))
+        self.logger.info(self.translate('custom holiday')+' (dow): {}'.format(cust_date))
         month = cust_date.get('month', None)
         try:
             dow_week = int(cust_date.get('dow_week', 0))
@@ -863,7 +868,7 @@ class Shtime:
         :return: Number of valid custom holiday definitions
         """
         if self.holidays is None:
-            logger.info("_add_custom_holidays: "+self.translate("Holidays are not initialized, cannot add custom holidays"))
+            self.logger.info("_add_custom_holidays: "+self.translate("Holidays are not initialized, cannot add custom holidays"))
             return 0
 
         custom = self.config.get('custom', [])
@@ -901,7 +906,7 @@ class Shtime:
         :type cust_date: dict
         """
         if self.holidays is None:
-            logger.info("add_custom_holiday: "+self.translate("Holidays are not initialized, cannot add custom holidays"))
+            self.logger.info("add_custom_holiday: "+self.translate("Holidays are not initialized, cannot add custom holidays"))
             return
 
         # generate for range of years or a given year
@@ -919,7 +924,7 @@ class Shtime:
             self._add_holiday_by_dow(cust_date, gen_for_years)
 
         log_msg = self.translate("Custom holiday definitions defined during runtime: {cust_date}")
-        logger.warning(log_msg.format(cust_date=cust_date))
+        self.logger.warning(log_msg.format(cust_date=cust_date))
 
         return
 
@@ -973,11 +978,11 @@ class Shtime:
                 try:
                     self.holidays = holidays.CountryHoliday(country, years=self.years, prov=prov, state=state)
                 except KeyError as e:
-                    logger.error("Error initializing self.holidays: {}".format(e))
+                    self.logger.error("Error initializing self.holidays: {}".format(e))
                 try:
                     self.public_holidays = holidays.CountryHoliday(country, years=self.years, prov=prov, state=state)
                 except KeyError as e:
-                    logger.error("Error initializing self.public_holidays: {}".format(e))
+                    self.logger.error("Error initializing self.public_holidays: {}".format(e))
             else:
                 self.holidays = holidays.CountryHoliday('US', years=self.years, prov=None, state=None)
                 self.public_holidays = holidays.CountryHoliday('US', years=self.years, prov=None, state=None)
@@ -994,11 +999,11 @@ class Shtime:
                     defined_state = ", state'" + self.holidays.state + "'"
                 self.log_msg = self.translate("Using holidays for country '{country}', province '{province}'{state},{count} custom holiday(s) {defined}")
                 self.log_msg = self.log_msg.format(country=self.holidays.country, province=self.holidays.prov, state=defined_state, count=c_logcount, defined=c_logtext)
-                logger.info(self.log_msg)
+                self.logger.info(self.log_msg)
 
-                logger.info(self.translate('Defined holidays') + ':')
+                self.logger.info(self.translate('Defined holidays') + ':')
                 for ft in sorted(self.holidays):
-                    logger.info(' - {}: {}'.format(ft, self.holidays[ft]))
+                    self.logger.info(' - {}: {}'.format(ft, self.holidays[ft]))
 
         return
 
