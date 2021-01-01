@@ -730,7 +730,7 @@ class Shtime:
         elif wday == 2:
             day = "Dienstag"
         elif wday == 3:
-            day = "Mittowch"
+            day = "Mittwoch"
         elif wday == 4:
             day = "Donnerstag"
         elif wday == 5:
@@ -742,7 +742,7 @@ class Shtime:
         else:
             day = "?"
 
-        return translate(day)
+        return self.translate(day)
 
 
     def _get_nth_dow_in_month(self, dow, dow_week, year, month):
