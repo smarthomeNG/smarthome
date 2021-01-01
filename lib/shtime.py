@@ -627,7 +627,11 @@ class Shtime:
         :return: Length of year in days
         :rtype: int
         """
-        return self.length_of_month(1, year)
+        if year is None:
+            year = self.current_year()
+        year += offset
+        leap_year = True if year % 4 == 0 and (year % 100 != 0 or year % 400 == 0) else False
+        return 365 if leap_year is False else 366
 
 
     def length_of_month(self, month=None, year=None):
