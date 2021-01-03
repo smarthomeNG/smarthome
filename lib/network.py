@@ -3,7 +3,7 @@
 #########################################################################
 #  Parts Copyright 2016 C. Strassburg (lib.utils)     c.strassburg@gmx.de
 #  Copyright 2017- Serge Wagener                     serge@wagener.family
-#  Copyright 2020- Sebastian Helms
+#  Copyright 2020- Sebastian Helms                morg42 @ knx-user-forum
 #########################################################################
 #  This file is part of SmartHomeNG
 #
@@ -646,7 +646,8 @@ class Tcp_client(object):
                 if self._is_connected:
                     try:
                         self.__connect_threadlock.release()
-                        self._connected_callback and self._connected_callback(self)
+                        if self._connected_callback:
+                            self._connected_callback(self)
                         _name='TCP_Client'
                         if self.name is not None:
                             _name = self.name + '.' + _name
