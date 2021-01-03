@@ -488,7 +488,6 @@ class Item():
         :param value: raw attribute string containing duration, value (and compatibility)
         :return: cycle-dict for a call to scheduler.add
         """
-        logger.warning(f"_build_cycledict: {self._path} -> value={value}, type(value) = {type(value)}")
         try:
             result = int(value)
         except ValueError:
@@ -1093,7 +1092,6 @@ class Item():
             cycle = self._cycle
             if cycle is not None:
                 cycle = self._build_cycledict(cycle)
-                logger.warning(f"_init_start_scheduler: {self._path} -> self._cycle={self._cycle}, cycle={cycle}")
             self._sh.scheduler.add(self._itemname_prefix+self._path, self, cron=self._crontab, cycle=cycle)
 
         return
