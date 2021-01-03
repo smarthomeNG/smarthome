@@ -266,7 +266,7 @@ if __name__ == '__main__':
     # check for pid file
     if lib.daemon.check_sh_is_running(PIDFILE):
         print("SmartHomeNG already running with pid {}".format(lib.daemon.read_pidfile(PIDFILE)))
-        print("Run 'smarthome.py -s' to stop it.")
+        print("Run 'smarthome.py -s' to stop it or 'smarthome.py -r' to restart it.")
         exit()
     if MODE == 'debug':
         lib.daemon.write_pidfile(psutil.Process().pid, PIDFILE)
