@@ -198,13 +198,12 @@ class SmartHome():
         """
         Create directories used by SmartHomeNG if they don't exist
         """
-        if not os.path.exists(self._var_dir):
-            os.makedirs(self._var_dir)
-            os.makedirs(os.path.join(self._var_dir, 'backup'))
-            os.makedirs(self._cache_dir)
-            os.makedirs(os.path.join(self._var_dir, 'db'))
-            os.makedirs(os.path.join(self._var_dir, 'log'))
-            os.makedirs(os.path.join(self._var_dir, 'run'))
+        os.makedirs(self._var_dir, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'backup'), exist_ok=True)
+        os.makedirs(self._cache_dir, exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'db'), exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'log'), exist_ok=True)
+        os.makedirs(os.path.join(self._var_dir, 'run'), exist_ok=True)
 
 
     def __init__(self, MODE, extern_conf_dir=''):
