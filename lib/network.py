@@ -657,9 +657,10 @@ class Tcp_client(object):
                     except:
                         raise
                     return True
-                self._sleep(self._connect_cycle)
+                if self.__running:
+                    self._sleep(self._connect_cycle)
 
-            if self._autoreconnect:
+            if self._autoreconnect and self.__running:
                 self._sleep(self._retry_cycle)
                 self._connect_counter = 0
             else:
