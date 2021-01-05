@@ -3,7 +3,7 @@
 #########################################################################
 #  Parts Copyright 2016 C. Strassburg (lib.utils)     c.strassburg@gmx.de
 #  Copyright 2017- Serge Wagener                     serge@wagener.family
-#  Copyright 2020- Sebastian Helms                morg42 @ knx-user-forum
+#  Copyright 2020- Sebastian Helms                  morg @ knx-user-forum
 #########################################################################
 #  This file is part of SmartHomeNG
 #
