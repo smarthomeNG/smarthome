@@ -43,4 +43,4 @@ Features
 Bug Fixes
 ^^^^^^^^^
 
--  :doc:`KNX plugin </plugins/knx/README>`: fix broken knx_cache, with support from Robert@knx-user-forum
+-  :doc:`KNX plugin </plugins_doc/config/knx>`: fix broken knx_cache, with support from Robert@knx-user-forum
