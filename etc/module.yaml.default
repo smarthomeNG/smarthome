@@ -10,6 +10,14 @@ http:
 admin:
     module_name: admin
 
+websocket:
+    module_name: websocket
+    #port: 2424
+    #tls_port: 2425
+    #tls_key: myprivate.key
+    #tls_cert: myprivate.pem
+    #use_tls: true
+
 #enable, if mqtt protocol is going to be used
 #mqtt:
 #    module_name: mqtt

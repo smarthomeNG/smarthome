@@ -26,15 +26,6 @@ cli:
     update: True
     #hashed_password: 1245a9633edf47b7091f37c4d294b5be5a9936c81c5359b16d1c48337$
 
-# Bereitstellung eines Websockets zur Kommunikation zwischen SmartVISU und SmartHomeNG
-websocket:
-    plugin_name: visu_websocket
-    #ip: 0.0.0.0
-    #port: 2424
-    #tls: False
-    #wsproto: 4
-    #acl: rw
-
 #database_mysql:
 #    plugin_name: database
 #    instance: nas
@@ -56,18 +47,16 @@ websocket:
 #     host: 127.0.0.1
 #     port: 4304
 
-# Autogenerierung von Webseiten für SmartVISU
-#smartvisu:
-#    plugin_name: visu_smartvisu
-#    # '"neue" Linux Versionen (z.B. Debian > 8.x, Ubuntu > 14.x)'
-#    smartvisu_dir: /var/www/html/smartVISU
-#
-#    # nur \"alte\" Linux-Variationen
-#    # smartvisu_dir: /var/www/smartVISU
-#    # generate_pages: True
-#    # handle_widgets: True
-#    # overwrite_templates: Yes
-#    # visu_style: blk
+# Autogenerierung von Webseiten für SmartVISU UND Aktivierung des Nutzdatenprotokolls über Websocket für die smartVISU
+smartvisu_pages:
+    plugin_name: smartvisu
+    smartvisu_dir: /var/www/html/smartvisu
+    #generate_pages: True
+    #overwrite_templates: True
+    #visu_style: std
+    #default_acl: rw
+    #handle_widgets: True
+    #list_deprecated_warnings: False
 
 #stateengine:
 #    plugin_name: stateengine
