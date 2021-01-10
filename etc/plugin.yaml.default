@@ -10,13 +10,13 @@ database:
 knx:
     plugin_name: knx
     plugin_enabled: False
-    host: 127.0.0.1
-    port: 6720
-    send_time: 600    # update date/time every 600 seconds, default none
-    time_ga: 6/0/0    # default none
-    date_ga: 6/0/1    # default none
-    busmonitor: True  # log all knx messages, default false
-    readonly: True    ## don't write to knx bus, default false"
+    #host: 127.0.0.1
+    #port: 6720
+    #send_time: 600    # update date/time every 600 seconds, default none
+    #time_ga: 6/0/0    # default none
+    #date_ga: 6/0/1    # default none
+    #busmonitor: on    # log all knx messages, default off
+    #readonly: True    ## don't write to knx bus, default False
 
 cli:
     plugin_name: cli
