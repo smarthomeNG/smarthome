@@ -280,7 +280,7 @@ und bestimmten die Position eines Elementes in der Objekthierarchie.
    Damit die Änderungen wirksam werden, die mit einem Editor durchgeführt wurden, muss SmartHomeNG
    unbedingt neu gestartet werden.
    (Eine Ausnahme bildet hier nur die **logic.yaml** da es möglich ist mit
-   dem Logikeditor im Backend Plugin oder dem Logikeditor im Admin diese Logiken zur Laufzeit neu
+   dem Logikeditor im Admin Interface diese Logiken zur Laufzeit neu
    zu laden.)
 
 Im folgenden werden diese Dateien und deren Inhalt genauer beschrieben.
@@ -466,7 +466,7 @@ module.yaml
 -----------
 
 In dieser Datei sind Module konfiguriert, die von Plugins benötigt werden aber dennoch nicht zur Kernfunktionalität von SmartHomeNG gehören.
-Für die Grundkonfiguration ist dies das http Modul, das z.B. vom backend oder dem admin Interface genutzt wird.
+Für die Grundkonfiguration ist dies das http Modul, das z.B. vom Admin Interface genutzt wird.
 
 Auch hier ist kein Handlungsbedarf, die Beschreibung ist ebenfalls der Vollständigkeit halber enthalten.
 
