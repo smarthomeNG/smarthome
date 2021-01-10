@@ -76,7 +76,7 @@ Es ist möglich einen Stern * für einen Pfadbestandteil zu setzen, ähnlich ein
 
    watch_item: '*.door'
 
-Eine Änderung von **garage.door** oder auch **house.door** wird die Ausführung der Logik auslösen aber **nicht** 
+Eine Änderung von **garage.door** oder auch **house.door** wird die Ausführung der Logik auslösen aber **nicht**
 eine Änderung von **house.hallway.door**
 
 cycle
@@ -115,19 +115,22 @@ crontab
    Ausführung der Logik beim Start von SmartHomeNG
 
 * ``crontab: Minute Stunde Tag Wochentag``
-   See description of Unix crontab and some online generators for details.
+   See description of Unix crontab and some online generators for details
+
    - Minute: Wert im Bereich [0...59], oder Komma getrennte Liste, oder * (jede Minute)
    - Stunde: Wert im Bereich [0...23], oder Komma getrennte Liste, oder * (jede Stunde)
-   - Tag: Wert im Bereich [0...28], oder Komma getrennte Liste, oderr * (jeden Tag)
-     Achtung: Derzeit keine Werte für Tage größer 28 nutzen
+   - Tag: Wert im Bereich [0...28], oder Komma getrennte Liste, oder * (jeden Tag)
+
+     **Achtung**: Derzeit keine Werte für Tage größer 28 nutzen
+
    - Wochentag: Wert im Bereich [0...6] (0 = Montag), oder Komma getrennte Liste, oder * (jeden Wochentag)
 
 ``crontab: sunrise``
    Startet die Logik bei Sonnenaufgang
-   
+
 ``crontab: sunset``
    Startet die Logik bei Sonnenuntergang
-   
+
    Für Sonnenaufgang oder Sonnenuntergang können folgende Erweiterungen genutzt werden:
 
    - Ein Offsetwert zum Horizont in Grad.
@@ -166,7 +169,7 @@ prio
 
 Setzt die Priorität der Logik im Kontext des Schedulers.
 Jeder Wert zwischen ``1`` und ``10`` ist erlaubt mit ``1`` für die höchste Priorität und ``10`` die niedrigste.
-Im Normalfall ist eine Angabe der Priorität nicht notwendig, die Vorgabe für alle Logiken ohne 
+Im Normalfall ist eine Angabe der Priorität nicht notwendig, die Vorgabe für alle Logiken ohne
 Prioritätsangabe ist ``5``
 
 Andere Parameter
@@ -183,7 +186,7 @@ Das wichtigste Objekt einer Logik ist das Smarthome Objekt ``sh``.
 Über dieses Objekt kann auf alle Items, Plugins und Funktionen von SmartHomeNG
 zugegriffen werden.
 Um den Wert eines Items abzufragen kann zum Beispiel ``sh.area.itemname()`` verwendet werden.
-Um dem gleichen Item einen neuen Wert mitzugeben, kann dieser Wert als Argument 
+Um dem gleichen Item einen neuen Wert mitzugeben, kann dieser Wert als Argument
 übergeben werden ``sh.area.itemname(new\_value)``
 
 .. code-block:: python
@@ -232,19 +235,19 @@ Ausser dem Smarthome Objekt ``sh`` gibt es weitere vordefinierte Objekte und Met
 logic
 ~~~~~
 
-Dieses Objekt bietet Zugriff auf das aktuelle Logik Objekt. 
+Dieses Objekt bietet Zugriff auf das aktuelle Logik Objekt.
 Es ist möglich die Attribute wie ``crontab``, ``cycle``, etc. während der Laufzeit zu ändern.
-Die Änderungen werden aber nicht in die ``logic.yaml`` geschrieben und sind nach einem 
+Die Änderungen werden aber nicht in die ``logic.yaml`` geschrieben und sind nach einem
 Neustart von SmartHomeNG verloren.
 
 ``logic.alive``
-   Der Code ``while logic.alive:`` erzeugt eine Endlos-Schleife die bis zum Beenden 
+   Der Code ``while logic.alive:`` erzeugt eine Endlos-Schleife die bis zum Beenden
    von SmartHomeNG läuft.
 
-``logic.name``: 
+``logic.name``:
    Liefert den Namen der Logik wie in ``logic.yaml`` definiert
 
-``logic.last\_time()``: 
+``logic.last\_time()``:
    Diese Funktion liefert die letzte Ausführungszeit der Logik vor dem aktuellen Aufruf
 
 ``logic.prio``:
@@ -257,7 +260,7 @@ Neustart von SmartHomeNG verloren.
 trigger
 ~~~~~~~
 
-Das Dictionary ``trigger`` liefert Informationen zur Laufzeit der Logik 
+Das Dictionary ``trigger`` liefert Informationen zur Laufzeit der Logik
 über das Ereignis, das zum Aufruf der Logik geführt hat.
 
 ``trigger['by']``:
@@ -276,16 +279,16 @@ logger und sh.log
 -----------------
 
 Das ``logger`` Objekt wird zum Generieren von Log Mitteilungen verwendet.
-Es stellt fünf unterschiedliche Logging Einstufungen (level) bereit: 
+Es stellt fünf unterschiedliche Logging Einstufungen (level) bereit:
 ``debug``, ``info``, ``warning``, ``error`` und ``critical``.
 
 Die Angabe ``logger.info('42')`` schreibt einen Eintrag ``42`` in den zugehörigen Logger.
-Damit Logging Einträge auch in Logs auftauchen, muß in der ``logging.yaml`` 
+Damit Logging Einträge auch in Logs auftauchen, muß in der ``logging.yaml``
 eine entsprechende Logging Einstellung vorhanden sein.
 Die Grundeinstellung in der ``logging.yaml`` sorgt dafür, das die Einstufungen
 ``warning``, ``error`` und ``critical`` aufgezeichnet werden.
 
-.. attention:: 
+.. attention::
 
    Die Zeitangabe in den Log Mitteilungen beziehen sich immer auf die lokal eingestellte Zeit
 
@@ -306,7 +309,7 @@ Dieses Modul gibt Zugriff auf das Sonnenobjekt.
 Vorbedingung ist die Definition von Längen- und Breitengrad in ``smarthome.yaml``.
 
 ``sh.sun.pos([offset], [degree=False])``
-   Gibt die akuelle Position der Sonne zurück, optional einen Offset in Minuten and und 
+   Gibt die akuelle Position der Sonne zurück, optional einen Offset in Minuten and und
    ob der Rückgabe in Grad anstatt in Rad erfolgen soll
 
    ``azimut, altitude = sh.sun.pos()``:
@@ -343,7 +346,7 @@ zwei weitere Funktionen:
    liefert einen Wert im Bereich [0...100] der hellen Oberfläche zur aktuellen Zeit plus einen Offset
 
 ``sh.moon.phase(offset)``:
-   Liefert die Mondphase als Ganzzahl Wert im Bereich [0...7]: 
+   Liefert die Mondphase als Ganzzahl Wert im Bereich [0...7]:
    0 = Neumond
    4 = Vollmond
    7 = abnehmender Halbmond

@@ -39,8 +39,9 @@ extensions = [
   'sphinx.ext.ifconfig',
   'sphinx.ext.viewcode',
   'sphinx.ext.githubpages',
-  'recommonmark',
-  'rst2pdf.pdfbuilder']
+  'recommonmark']
+#  'recommonmark',
+#  'rst2pdf.pdfbuilder']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

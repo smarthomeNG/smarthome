@@ -1,5 +1,5 @@
 ==========================
-Release 1.x - tt. mmm 2020
+Release 1.x - tt. mmm 2021
 ==========================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
@@ -8,10 +8,10 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 30. Dezember 2020
-       (modules.admin: Added previous_change_by and previous_update_by to item ...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 29. Dezember 2020
-       (smartvisu: Documentation update)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 10. Januar 2021
+       (modules.websocket: Enabled smartvisu_support even if smartvisu plugin is not loaded ...)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 10. Januar 2021
+       (Added a log message to enable/configure websocket module ...)
 
 
 Überblick
@@ -76,6 +76,7 @@ Bugfixes in the CORE
   * Fixed merging structs with same attribute/item in subtree
   * Fixed relative item evaluation when usind '.property'
   * Fixed bug in referencing an attribute of grandpartent item
+  * Corrected handling of cycle attribute w/o specified value
 
 * lib.logutils
 
@@ -96,6 +97,7 @@ Bugfixes in the CORE
 * lib.shtime:
 
   * Bugfix for public holidays
+  * Bugfix for beginning_of_week() if calulating beginning for first (incomplete) week of a year
 
 * lib.smarthome
 
@@ -110,6 +112,7 @@ Updates in the CORE
 * Experimental support for running SmartHomeNG on Windows
 * add Python package 'portalocker' for os independant file locking for PID
 * Removed tests for Python 3.5
+* Changed default configuration from websocket plugin to websocket module and to new smartvisu plugin
 
 * bin.smarthome:
 
@@ -179,6 +182,7 @@ Updates in the CORE
 * lib.scheduler:
 
   * scheduler.change() now accepts the same values for parameter cycle as scheduler.add does
+  * accept also Init for crontab without deadlock
 
 * lib.shpypi:
 
@@ -200,6 +204,7 @@ Updates in the CORE
   * Added support for tool cpuusage.py
   * Added base_dir to logging on startup
   * change cwd to base_dir on startup
+  * Subdirectories of var are created even if var already exists
 
 * lib.tools:
 
@@ -303,6 +308,11 @@ For details of the changes of the individual plugins, please refer to the docume
   * Now turns device on, if brightness is set to value > 0
   * Not yet feature complete
 
+* resol:
+
+  * New plugin for Resol data logger, freshwater stations and solar control devices
+  * thanks to KHome for the initial development
+
 * rtr2:
 
   * New plugin that implements a room temperature regulator
@@ -339,6 +349,11 @@ Plugin Updates and Bugfixes
 * asterisk:
 
   * Now has extensive metadata in plugin.yaml
+
+* avdevice:
+
+  * Minor code fix
+  * webinterface add zone4, catch error when no dependson_item is given, prepare datatables view
 
 * avm:
 
@@ -413,7 +428,8 @@ Plugin Updates and Bugfixes
   * include PANEL pcb to set and get room temperature, etc.
   * fix line endings in txt files
   * fix x2_plus lineendings and update PANEL info
-  * Addes user_doc
+  * Added user_doc
+  * improve and fix example yaml (change visu_acl: r to visu_acl: ro, etc.)
 
 * easymeter:
 
@@ -432,6 +448,7 @@ Plugin Updates and Bugfixes
   * Rework for Eltako Shutter Actor FSB71
   * Add device name for custom EEPs and small improvements
   * completed metadata
+  * Encapsulated/reduced debug logs for time critical sections
 
 * garminconnect:
 
@@ -449,12 +466,22 @@ Plugin Updates and Bugfixes
 * helios:
 
   * logic uses shtime now
+  * replace visu_acl: r by visu_acl: ro in example yaml
+
+* helios_tcp:
+
+  * fix struc yaml visu_cal
 
 * hue:
 
   * Fixed a "RuntimeError: dictionary changed size during iteration" error
   * Added item attribute definitions to metadata (descriptions are still missing)
   * Replaced deprecated smartVISU widgets in widget_hue
+
+* ical:
+
+  * fix evaluation of series entries with multiple weekdays (e.g. MO, TU, WED)
+  * fix directory handling for Windows
 
 * knx:
 
@@ -476,6 +503,7 @@ Plugin Updates and Bugfixes
 * kodi:
 
   * expand valid list for kodi_item
+  * changed item type for better usability
 
 * lirc:
 
@@ -490,6 +518,10 @@ Plugin Updates and Bugfixes
 * mailrcv:
 
   * Improved error handling (IMAP exception: command: SELECT => IMAP4rev1 Server logging out)
+
+* mlgw:
+
+  * General plugin maintenance
 
 * mpd:
 
@@ -540,6 +572,7 @@ Plugin Updates and Bugfixes
 * onewire:
 
   * Removed sleep and uses threading.event(), added counter options to plugin.yaml
+  * now has user_doc, revised function, optimized logging
 
 * openweathermap:
 
@@ -602,6 +635,8 @@ Plugin Updates and Bugfixes
   * fixed default handling for param discover_cycle
   * completed metadata
   * Added missing values to valid_list for sonos_recv attribute
+  *  fixed play snipped functionality that did no longer work with new metadata default value
+  * fixed metadata
 
 * squeezebox:
 
@@ -657,6 +692,10 @@ Plugin Updates and Bugfixes
 
   * add some more logging for debug purposes and minor information
 
+* trovis:
+
+  * replace visu_acl r in example file
+
 * unifi:
 
   * **Changed item atribute name** from 'mac' to 'unifi_client_mac'
@@ -682,6 +721,9 @@ Plugin Updates and Bugfixes
 * visu_websocket:
 
   * Bugfix for series_cancel command
+  * Added attribute 'server' to 'proto' answer
+  * Added check if websocket module is loaded and configured to the same port
+  * Added a log message to enable/configure websocket module, if module is not running
 
 * webservices:
 

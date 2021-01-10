@@ -4,9 +4,9 @@ Release 0.1 - April 09th, 2011
 
 Available plugins in initial release:
 
-.. :doc:`KNX plugin </plugins/knx/README>`
-.. :doc:`CLI plugin </plugins/cli/README>`
-.. :doc:`DWD plugin </plugins/dwd/README>`
-.. :doc:`Asterisk plugin </plugins/asterisk/README>`
-.. :doc:`DMX plugin </plugins/dmx/README>`
-.. :doc:`RRD plugin </plugins/rrd/README>`
+.. :doc:`KNX plugin </plugins_doc/config/knx>`
+.. :doc:`CLI plugin </plugins_doc/config/cli>`
+.. :doc:`DWD plugin </plugins_doc/config/dwd>`
+.. :doc:`Asterisk plugin </plugins_doc/config/asterisk>`
+.. :doc:`DMX plugin </plugins_doc/config/dmx>`
+.. :doc:`RRD plugin </plugins_doc/config/rrd>`

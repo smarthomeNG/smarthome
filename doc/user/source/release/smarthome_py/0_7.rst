@@ -12,8 +12,8 @@ Features
    -  eval: see the item configuration page for an explanation for
       'eval' and 'eval\_trigger'.
 
--  :doc:`Asterisk plugin </plugins/asterisk/README>`: new function hangup(channel)
--  :doc:`iCal plugin </plugins/ical/README>`: to parse iCal files
+-  :doc:`Asterisk plugin </plugins_doc/config/asterisk>`: new function hangup(channel)
+-  :doc:`iCal plugin </plugins_doc/config/ical>`: to parse iCal files
 -  Visu Plugin:
    -  autogenerate visu pages
    -  new input type 'time'
