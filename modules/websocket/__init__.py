@@ -176,6 +176,16 @@ class Websocket(Module):
         return
 
 
+    def get_port(self):
+
+        return self.port
+
+
+    def get_tls_port(self):
+
+        return self.tls_port
+
+
     # ===============================================================================
     # Module specific code
     #
@@ -244,10 +254,16 @@ class Websocket(Module):
 
         if ssl_context:
             self.logger.info("Secure websocket server started")
-            await websockets.serve(self.handle_new_connection, ip, port, ssl=ssl_context)
+            try:
+                await websockets.serve(self.handle_new_connection, ip, port, ssl=ssl_context)
+            except OSError as e:
+                self.logger.error(f"Cannot start secure websocket server - error: {e}")
         else:
             self.logger.info("Websocket server started")
-            await websockets.serve(self.handle_new_connection, ip, port)
+            try:
+                await websockets.serve(self.handle_new_connection, ip, port)
+            except OSError as e:
+                self.logger.error(f"Cannot start websocket server - error: {e}")
 #        if self.stop_async:
 #            await websockets.close()
 
@@ -501,7 +517,7 @@ class Websocket(Module):
                             self.logger.warning("WebSocket: protocol mismatch. SmartHomeNG protocol version={0}, visu protocol version={1}".format(self.proto, proto))
                         elif proto < self.proto:
                             self.logger.warning("WebSocket: protocol mismatch. Update your client: {0}".format(client_addr))
-                        answer = {'cmd': 'proto', 'ver': self.proto, 'time': self.shtime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")}
+                        answer = {'cmd': 'proto', 'ver': self.proto, 'server': 'module.websocket', 'time': self.shtime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")}
 
                     elif command == 'identity':  # identify client
                         client = data.get('sw', 'Visu')
@@ -694,16 +710,16 @@ class Websocket(Module):
                 txt = ''
                 if self.sv_ser_upd_cycle > 0:
                     txt = " - Fixed update-cycle time"
-                self.logger.info("update_all_series: series_list={}{}".format(series_list, txt))
+                #self.logger.info("update_all_series: series_list={}{}".format(series_list, txt))
             for client_addr in series_list:
                 if (client_addr in self.sv_clients) and not (client_addr in remove):
                     self.logger.debug("update_all_series: Updating client {}...".format(client_addr))
                     websocket = self.sv_clients[client_addr]['websocket']
                     replys = await self.loop.run_in_executor(None, self.update_series, client_addr)
-                    self.logger.debug("update_all_series: Replys for client {}: {}".format(client_addr, replys))
                     for reply in replys:
+                        self.logger.info("update_all_series: reply {} - Replys for client {}: {}".format(reply, client_addr, replys))
                         try:
-                            await websocket.send(reply)
+                            await websocket.send(json.dumps(reply, default=self.json_serial))
                             self.logger.info(">SerUp {}: {}".format(websocket.remote_address, reply))
                         except (asyncio.IncompleteReadError, asyncio.connection_closed_exc) as e:
                             self.logger.error("update_all_series: Error in 'await websocket.send(reply)': {}".format(e))

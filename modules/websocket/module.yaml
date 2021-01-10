@@ -15,7 +15,7 @@ parameters:
     # Definition of parameters to be configured in etc/module.yaml
     enabled:
         type: bool
-        default: False
+        default: True
         description:
             de: 'Websocket Unterstützung aktivieren oder deaktivieren'
             en: 'Enable or disable websocket support'
