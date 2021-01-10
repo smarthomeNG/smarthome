@@ -68,8 +68,8 @@ class Websocket(Module):
         # get the parameters for the module (as defined in metadata module.yaml):
         self.logger.debug("Module '{}': Parameters = '{}'".format(self._shortname, dict(self._parameters)))
         self.ip = self.get_parameter_value('ip')
-        if self.ip == '0.0.0.0':
-            self.ip = Utils.get_local_ipv4_address()
+        #if self.ip == '0.0.0.0':
+        #    self.ip = Utils.get_local_ipv4_address()
         self.port = self.get_parameter_value('port')
         self.tls_port = self.get_parameter_value('tls_port')
         self.use_tls = self.get_parameter_value('use_tls')
