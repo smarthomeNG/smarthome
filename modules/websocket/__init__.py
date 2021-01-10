@@ -116,6 +116,9 @@ class Websocket(Module):
 
         self.loop = None    # Var to hold the event loop for asyncio
 
+        # For Release 1.8 only: Enable smartVISU protocol support even if smartvisu plugin is not loaded
+        self.set_smartvisu_support(protocol_enabled=True)
+
 
     def start(self):
         """
