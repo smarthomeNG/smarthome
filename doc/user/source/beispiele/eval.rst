@@ -15,8 +15,10 @@ Hier finden sich einige Beispiele für die Anwendung von **eval** und **eval_tri
 Bearbeiten von Werten
 ---------------------
 
-Wird einem Item ein neuer Wert zugewiesen, wird dieser erst einmal als **value** zwischengespeichert. Ist ein **eval** vorhanden, wird dies erst ausgeführt, bevor dem Item der Wert final zugewiesen wird.
-Das kann man sich für Nachbearbeitungen zu nutze machen, bspw. wenn der zugewiesene Wert zu viele Nachkommastellen hat. In folgenden Beispiel wird auf eine Nachkommastelle gerundet.
+Wird einem Item ein neuer Wert zugewiesen, wird dieser erst einmal als **value** zwischengespeichert. 
+Ist ein **eval** vorhanden, wird dies erst ausgeführt, bevor dem Item der Wert final zugewiesen wird.
+Das kann man sich für Nachbearbeitungen zu nutze machen, bspw. wenn der zugewiesene Wert zu viele
+Nachkommastellen hat. In folgenden Beispiel wird auf eine Nachkommastelle gerundet.
 
 .. code-block:: yaml
 
@@ -28,7 +30,8 @@ Das kann man sich für Nachbearbeitungen zu nutze machen, bspw. wenn der zugewie
 Wertermittung durch Datenbankabfrage
 ------------------------------------
 
-Mit Hilfe eines **eval** kann auch eine Datenbankabfrage (Plugin **database**) realisiert werden. Im folgenden Beispiel wird täglich um 0:01 Uhr das **eval** ausgeführt und der Wert ermittelt.
+Mit Hilfe eines **eval** kann auch eine Datenbankabfrage (Plugin **database**) realisiert werden. 
+Im folgenden Beispiel wird täglich um 0:01 Uhr das **eval** ausgeführt und der Wert ermittelt.
 
 .. code-block:: yaml
 
@@ -41,7 +44,8 @@ Mit Hilfe eines **eval** kann auch eine Datenbankabfrage (Plugin **database**) r
 Wert invertieren
 ----------------
 
-Mit Hilfe eines **eval** kann der Wert einfach invertiert werden. Man bedient sich wieder dem **value**, also dem "Zwischenspeicher" bevor der Wert final dem Item zugewiesen wird
+Mit Hilfe eines **eval** kann der Wert einfach invertiert werden. Man bedient sich wieder dem **value**,
+also dem "Zwischenspeicher" bevor der Wert final dem Item zugewiesen wird
 
 .. code-block:: yaml
 
@@ -53,7 +57,7 @@ Mit Hilfe eines **eval** kann der Wert einfach invertiert werden. Man bedient si
 Auslesen / Teilen eines Dictionary
 ----------------------------------
 
-Hier wird im dictonary des Item 'input' nach den Schlüsseln 'RfReceived' und 'RfKey' gesucht. Ist dieser
+Hier wird im dictionary des Item 'input' nach den Schlüsseln 'RfReceived' und 'RfKey' gesucht. Ist dieser
 gleich 4 wird, das item 'received_key4' auf True gesetzt.
 
 .. code-block:: yaml
@@ -150,7 +154,9 @@ Enumeration über Liste
             eval_trigger: ..
 
 
-Hier wird basierend auf dem Wert eines Items 'windBearing', dass die Windrichtung als Wert in Grad erhält, mit einem eval die Windrichtung bestimmt. Dazu wird aus einer Liste der Himmelsrichtungen, mit entspechender Umwandlung der Windrichtung, gewählt und dem Item zugewiesen.
+Hier wird basierend auf dem Wert eines Items 'windBearing', dass die Windrichtung als Wert in Grad erhält,
+mit einem eval die Windrichtung bestimmt. Dazu wird aus einer Liste der Himmelsrichtungen,
+mit entsprechender Umwandlung der Windrichtung, gewählt und dem Item zugewiesen.
 
 .. code-block:: yaml
 
@@ -188,7 +194,8 @@ Enumeration über Dictionary mit Lookup-Item
 Basierend auf einem numerischen Wert einen boolschen erzeugen
 -------------------------------------------------------------
 
-Hier wird basierend auf dem Wert eines num Items, der Wert für ein korrespondierendes bool-Item erzeugt. Das bool Item ist TRUE, wenn der Wert des passenden num-Items > 0 ansonsten FALSE.
+Hier wird basierend auf dem Wert eines num Items, der Wert für ein korrespondierendes bool-Item erzeugt.
+Das bool Item ist True, wenn der Wert des passenden num-Items > 0 ansonsten False.
 
 .. code-block:: yaml
 
@@ -206,9 +213,14 @@ Hier wird basierend auf dem Wert eines num Items, der Wert für ein korrespondie
 Basierend auf dem Wert eines numerischen andere Items setzen
 ------------------------------------------------------------
 
-Bei dem folgenden Beispiel werden basierend auf dem Wert des Items "Sollzustand" die Items "FolgeA", "FolgeB", "FolgeC" und "FolgeD" gesetzt.
-Änderungen des Items "Sollzustand" löst für die Folgeitems den **eval_trigger** aus und übergibt seinen Wert als "value" and diese. Im **eval** wird nun die Bedingung basierend auf "value" geprüft, und das Item entsprechend gesetzt.
-Für das Item "FolgeA" bedeutet es konkret: Ändert sich das Wert von "Sollzustand", wird die Neuberechnung des Items "FolgeA" angestoßen und der Wert von "Sollzustand" wird als "value" mit übergeben. Das eval ergibt TRUE, wenn "value" einer 2 entspricht, ansonsten FALSE.
+Bei dem folgenden Beispiel werden basierend auf dem Wert des Items "Sollzustand" die 
+Items "FolgeA", "FolgeB", "FolgeC" und "FolgeD" gesetzt.
+Änderungen des Items "Sollzustand" löst für die Folgeitems den **eval_trigger** aus 
+und übergibt seinen Wert als "value" and diese. Im **eval** wird nun die Bedingung 
+basierend auf "value" geprüft, und das Item entsprechend gesetzt.
+Für das Item "FolgeA" bedeutet es konkret: Ändert sich das Wert von "Sollzustand", 
+wird die Neuberechnung des Items "FolgeA" angestoßen und der Wert von "Sollzustand" 
+wird als "value" mit übergeben. Das eval ergibt True, wenn "value" einer 2 entspricht, ansonsten False.
 
 .. code-block:: yaml
 
@@ -239,8 +251,11 @@ Für das Item "FolgeA" bedeutet es konkret: Ändert sich das Wert von "Sollzusta
 Berechnung einer Zeitdauer in Sekunden von beliebigen datetime bis jetzt
 ------------------------------------------------------------------------
 
-In diesem Beispiel wird die Dauer eines **autotimer** mit einem **eval** aus einem **datetime** Wertes eines Hilfsitem berechnet.
-Die Berechnung des Item "laufzeit_autotimer" wird durch Änderungen im Item "enddatetime_autotimer" getriggert und berechnet die Zeitdauer in Sekunden zwischen dem Wert (datetime im ISO-format) des Items "enddatetime_autotimer" und jetzt.
+In diesem Beispiel wird die Dauer eines **autotimer** mit einem **eval** aus
+einem **datetime** Wertes eines Hilfsitem berechnet.
+Die Berechnung des Item "laufzeit_autotimer" wird durch Änderungen im Item "enddatetime_autotimer"
+getriggert und berechnet die Zeitdauer in Sekunden zwischen dem Wert (datetime im ISO-format) 
+des Items "enddatetime_autotimer" und jetzt.
 Dieser errechnete Wert wird dann als Dauer für den **autotimer** verwendet.
 
 .. code-block:: yaml
@@ -304,9 +319,11 @@ Countdown für Timer bzw. Autotimer
 
 siehe auch `Thread im knx-user-forum <https://knx-user-forum.de/forum/supportforen/smarthome-py/1403134-countdown-f%C3%BCr-timer-bzw-autotimer>`__
 
- - Item das den Bewässerungskreis (Lampe, ...) schaltet. In meinem Fall ist das das Item "Rundbeet"
- - Item über das ich in der Visu die Dauer setze
- - Item das zyklisch die Restdauer berechnet in dem es das Alter des Items zwei Ebenen höher von dem Wert des Items eine Ebene höher abzieht. Da dies ständig geschiet, wird die Häufigkeit der Berechnung über **cycle** (hier alle 10s) gesteuert.
+- Item das den Bewässerungskreis (Lampe, ...) schaltet. In meinem Fall ist das das Item "Rundbeet"
+- Item über das ich in der Visu die Dauer setze
+- Item das zyklisch die Restdauer berechnet in dem es das Alter des Items zwei Ebenen 
+  höher von dem Wert des Items eine Ebene höher abzieht. Da dies ständig geschieht,
+  wird die Häufigkeit der Berechnung über **cycle** (hier alle 10s) gesteuert.
 
 .. code-block:: yaml
 
@@ -338,8 +355,10 @@ Item mit verzögertem Status
 siehe auch `Thread im knx-user-forum <https://knx-user-forum.de/forum/supportforen/smarthome-py/1430942-item-mit-verz%C3%B6gertem-status>`__
 
 Das folgende Beispiel setzt das Item "out":
- - Wenn Item in = True wird, soll Item out = True werden
- - Wenn Item in = False wird, soll Item out in 5 Sekunden = False werden. Wird IN vor 5 Sekunden wieder True, soll out nicht False werden.
+
+- Wenn Item in = True wird, soll Item out = True werden
+- Wenn Item in = False wird, soll Item out in 5 Sekunden = False werden.
+- Wird das Item vor 5 Sekunden wieder True, soll out nicht False werden.
 
 .. code-block:: yaml
 
@@ -357,9 +376,11 @@ Konsolidieren von Itemwerten
 
 siehe auch `Thread im knx-user-forum <https://knx-user-forum.de/forum/supportforen/smarthome-py/1346543-eval-und-autotimer>`__
 
-Das folgende Beispiel zeigt, wie aus 5 Präsenzmelderrückmeldungen der Anwesenheitsstatus ermittelt werden. Die Präsenzmelder senden immer True, wenn Präsenz da ist (es wird keine False gesendet).
+Das folgende Beispiel zeigt, wie aus Rückmeldungen von 5 Präsenzmeldern der Anwesenheitsstatus ermittelt werden.
+Die Präsenzmelder senden immer True, wenn Präsenz da ist (es wird kein False gesendet).
 
-Konkret wird das Item "anwesend" 10 min nachdem der letzte Präsenzmelder ein TRUE gesendet hat. Bei jedem **eval_trigger** wird der **autotimer** neu gestartet.
+Konkret wird das Item "anwesend" 10 min nachdem der letzte Präsenzmelder ein TRUE gesendet hat. 
+Bei jedem **eval_trigger** wird der **autotimer** neu gestartet.
 
 .. code-block:: yaml
 
@@ -380,8 +401,9 @@ Item Änderung nach bestimmter Zeit
 
 siehe auch `Thread im knx-user-forum <https://knx-user-forum.de/forum/supportforen/smarthome-py/1270756-item-%C3%A4nderung-in-bestimmter-zeit-ohne-cron>`_
 
-Das Beispiel zeigt, die Ermittung einer Wertabweichung (Luftfeuchtigkeit) innerhalb einer definierten Zeit (5 min) um mehr als 5%.
+Das Beispiel zeigt, die Ermittlung einer Wertabweichung (Luftfeuchtigkeit) innerhalb einer definierten Zeit (5 min) um mehr als 5%.
 Das Wichtigste steckt im Item "Luftfeuchte.Abweichung":
+
 - es wird alle 5 Minuten mit **cycle** getriggert
 - es wird erstmal im **eval** berechnet, wie die Abweichung zum letzten gemerkten Luftfeuchte-Wert ist (und falls noch kein Wert von vor 5 Minuten da ist, bleibt es bei 0)
 - Anschließend wird der aktuelle Luftfeuchte-Wert gemerkt **on_update** (der wird dann ja in 5 Minuten wieder gebraucht).

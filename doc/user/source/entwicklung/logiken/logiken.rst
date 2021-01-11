@@ -115,14 +115,12 @@ crontab
    Ausführung der Logik beim Start von SmartHomeNG
 
 * ``crontab: Minute Stunde Tag Wochentag``
-   See description of Unix crontab and some online generators for details
+   Siehe Beschreibung von Unix crontab und Online Generatoren für Details
 
    - Minute: Wert im Bereich [0...59], oder Komma getrennte Liste, oder * (jede Minute)
    - Stunde: Wert im Bereich [0...23], oder Komma getrennte Liste, oder * (jede Stunde)
    - Tag: Wert im Bereich [0...28], oder Komma getrennte Liste, oder * (jeden Tag)
-
      **Achtung**: Derzeit keine Werte für Tage größer 28 nutzen
-
    - Wochentag: Wert im Bereich [0...6] (0 = Montag), oder Komma getrennte Liste, oder * (jeden Wochentag)
 
 ``crontab: sunrise``
@@ -135,7 +133,7 @@ crontab
 
    - Ein Offsetwert zum Horizont in Grad.
      Beispiel ``crontab: sunset-6``
-     Dazu muß in der smarthome.yaml Längen und Breitengrad eingestellt sein.
+     Dazu muss in der smarthome.yaml Längen und Breitengrad eingestellt sein.
    - Ein Offsetwert in Minuten der durch ein angehängtes m gekennzeichnet wird
      Beispiel: ``crontab: sunset-10m``
    - Eine Beschränkung der Zeit für die Ausführung
@@ -309,7 +307,7 @@ Dieses Modul gibt Zugriff auf das Sonnenobjekt.
 Vorbedingung ist die Definition von Längen- und Breitengrad in ``smarthome.yaml``.
 
 ``sh.sun.pos([offset], [degree=False])``
-   Gibt die akuelle Position der Sonne zurück, optional einen Offset in Minuten and und
+   Gibt die aktuelle Position der Sonne zurück, optional einen Offset in Minuten and und 
    ob der Rückgabe in Grad anstatt in Rad erfolgen soll
 
    ``azimut, altitude = sh.sun.pos()``:
@@ -328,7 +326,7 @@ Vorbedingung ist die Definition von Längen- und Breitengrad in ``smarthome.yaml
       Liefert ein auf UTC basierendes ``datetime`` Objekt mit dem nächsten Sonnenuntergang
 
    ``sunset_tw = sh.sun.set(-6)``:
-      Liefert ein auf UTC basierendes ``datetime`` Object mit der Zeitangabe
+      Liefert ein auf UTC basierendes ``datetime`` Objekt mit der Zeitangabe
       des nächsten Sonnenuntergangs zuzüglich der Zeit bis die Dämmerung beendet ist.
 
 ``sh.sun.rise([offset])``:
@@ -338,11 +336,10 @@ Vorbedingung ist die Definition von Längen- und Breitengrad in ``smarthome.yaml
 sh.moon
 ~~~~~~~
 
-Neben den drei Funktionen ``pos``, ``set`` und ``rise`` (wie beim Sonneobjekt) gibt es noch
+Neben den drei Funktionen ``pos``, ``set`` und ``rise`` (wie beim Objekt ``sh.sun``) gibt es noch
 zwei weitere Funktionen:
 
 ``sh.moon.light(offset)``:
-   provides a value from 0 - 100 of the illuminated surface at the current time + offset.
    liefert einen Wert im Bereich [0...100] der hellen Oberfläche zur aktuellen Zeit plus einen Offset
 
 ``sh.moon.phase(offset)``:
@@ -358,87 +355,112 @@ Scheduler
 sh.scheduler.trigger() / sh.trigger()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This global function triggers any specified logic by its name.
-``sh.trigger(name [, by] [, source] [, value] [, dt])`` ``name``
-(mandatory) defines the logic to trigger. ``by`` a name of the calling
-logic. By default its set to 'Logic'. ``source`` the reason for
-triggering. ``value`` a variable. ``dt`` timezone aware datetime object,
-which specifies the triggering time.
+Diese globale Funktion triggert eine gegebene Logik unter Angabe ihres Namens
+
+``sh.trigger(name [, by] [, source] [, value] [, dt])`` 
+   ``name``:
+      der Name der zu triggernden Funktion
+      
+   ``by``:
+      Name einer aufrufenden Logik, der Vorgabewert ist ``Logic``
+
+   ``source``:
+      der Grund für das triggern
+
+   ``value`` 
+      eine Variable
+      
+   ``dt``:
+      ein datetime Objekt das die Triggerzeit angibt (lokale Zeitzone berücksichtigt)
 
 sh.scheduler.change()
 ~~~~~~~~~~~~~~~~~~~~~
 
-This method changes some runtime options of the logics.
-``sh.scheduler.change('alarmclock', active=False)`` disables the logic
-'alarmclock'. Besides the ``active`` flag, it is possible to change:
-``cron`` and ``cycle``.
+Diese Methode ändert Optionen zur Laufzeit der Logiken. Beispiel:
 
-sh.tools object
+``sh.scheduler.change('alarmclock', active=False)`` deaktiviert die Logik ``alarmclock``
+
+Zusätzlich zum ``active`` parameter können auch ``cron`` und ``cycle`` geändert werden.
+
+sh.tools Objekt
 ---------------
 
-The ``sh.tools`` object provide some useful functions:
+Das ``sh.tools`` Objekt stellt folgende nützliche Funktionen zur Verfügung:
 
 sh.tools.ping()
 ~~~~~~~~~~~~~~~
 
-Pings a computer and returns True if the computer responds, otherwise
-False. ``sh.office.laptop(sh.tools.ping('hostname'))``
+Sendet ein Ping an einen Computer und liefert das Ergebnis. Beispiel:
+
+``sh.office.laptop(sh.tools.ping('hostname'))``
+
+setzt das Item ``office.laptop`` entsprechend der Rückmeldung ob ein Ping erfolgreich war oder nicht.
 
 sh.tools.dewpoint()
 ~~~~~~~~~~~~~~~~~~~
 
-Calculate the dewpoint for the provided temperature and humidity.
+Berechnet den Taupunkt für eine gegebene Temperatur und Feuchtigkeit. Beispiel:
+
 ``sh.office.dew(sh.tools.dewpoint(sh.office.temp(), sh.office.hum())``
+
+setzt das Item ``office.dew`` auf das Ergebnis der Taupunktberechnung der Itemwerte von ``office.temp`` und ``office.hum``
 
 sh.tools.fetch\_url()
 ~~~~~~~~~~~~~~~~~~~~~
 
-Return a website as a String or 'False' if it fails.
-``sh.tools.fetch_url('https://www.regular.com')`` Its possible to use
-'username' and 'password' to authenticate against a website.
+Liefert dem Inhalt einer Webseite als String oder ``False`` wenn ein Fehler auftritt.
+
+``sh.tools.fetch_url('https://www.regular.com')`` 
+
+Es ist möglich als Parameter den Benutzernamen und ein Password anzugeben um die Abfrage bei der zu authentifizieren.
+
 ``sh.tools.fetch_url('https://www.special.com', 'username', 'password')``
-Or change the default 'timeout' of two seconds.
+
+Weiterhin kann ein Parameter für eine Zeitüberschreitung bestimmt werden:
+
 ``sh.tools.fetch_url('https://www.regular.com', timeout=4)``
+
+bricht nach 4 Sekunden ohne Ergebnis ab
 
 sh.tools.dt2ts(dt)
 ~~~~~~~~~~~~~~~~~~
 
-Converts an datetime object to a unix timestamp.
+Wandelt ein datetime Objekt in einen Unix Zeitstempel um.
 
 sh.tools.dt2js(dt)
 ~~~~~~~~~~~~~~~~~~
 
-Converts an datetime object to a json timestamp.
+Wandelt ein datetime Objekt in einen json Zeitstempel um.
 
 
 sh.tools.rel2abs(temp, hum)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Converts the relative humidity to the absolute humidity.
+Wandelt einen relativen Feuchtigkeitswert in einen absoluten Feuchtigkeitswert um.
 
+Zugriffe auf Items
+------------------
 
-Accessing items
----------------
-
-Usage of Object ``sh`` for items is deprecated, it's better to use the Item API:
+Die Nutzung des ``sh`` Objektes für Items wird nicht weitergeführt. Es ist besser das Item API wie folgt zu nutzen:
 
 .. code:: python
 
    from lib.item import Items
    items = Items.get_instance()
 
-With ``items`` Object in place the following functions can be called:
+Mit dem ``items`` Objekt können nun die folgenden Funktionen verwendet werden:
 
 items.return_item(path)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Returns an item object for the specified path. E.g.
+Liefert ein Item Objekt für den angegebenen Pfad zurück. Beispiel:
+
 ``items.return_item('first_floor.bath')``
 
 items.return_items()
 ~~~~~~~~~~~~~~~~~~~~
 
-Returns all item objects.
+Liefert alle Item Objekte zurück
 
 .. code-block:: python
 
@@ -448,7 +470,7 @@ Returns all item objects.
 items.match_items(regex)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Returns all items matching a regular expression path and optional attribute.
+Liefert alle Item Objekte deren Pfad mit einem regulären Ausdruck gefunden wird und die optional ein bestimmtes Attribut aufweisen.
 
 .. code-block:: python
 
@@ -461,18 +483,18 @@ Returns all items matching a regular expression path and optional attribute.
 items.find_items(configattribute)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Depending on ``configattribute`` the following items will be returned:
+Abhängig von ``configattribute`` werden die folgenden Items zurückgegeben:
 
 .. table::
 
-   ======================  ====================================================
-   attribute               Ergebnis
-   ======================  ====================================================
-   ``attribute``           Only items having no instance id
-   ``attribute@``          Items with or without instance id
-   ``attribute@instance``  Items with exact match of attribute and instance id
-   ``@instance``           Items having this instance id
-   ======================  ====================================================
+   ======================  =========================================================
+   Attribut                Ergebnis
+   ======================  =========================================================
+   ``attribute``           Nur Items bei denen keine Instanz ID angegeben ist
+   ``attribute@``          Items mit oder ohne Instanz ID
+   ``attribute@instance``  Items mit einem bestimmten Attribut und einer Instanz ID
+   ``@instance``           Items mit einer bestimmten Instanz ID
+   ======================  =========================================================
 
 
 .. code:: python
@@ -483,5 +505,5 @@ Depending on ``configattribute`` the following items will be returned:
 find\_children(parentitem, configattribute):
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Returns all child items with the specified config attribute. The search for ``configattribute``
-will be exactly conducted as described in ``find_items(configattribute)`` above.
+Liefert alle Kind Item Objekte eines Elternitems mit einem gegebenen ``configattribute``.
+Die Suche nach dem ``configattribute`` wird genauso durchgeführt wie in ``find_items(configattribute)`` weiter oben.

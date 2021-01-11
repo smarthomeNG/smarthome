@@ -285,10 +285,10 @@ oder manuell
 
 - über das Admin Interface unter Dienste --> CONF-YAML Konverter den Inhalt der ``/usr/local/smarthome.old/etc/plugins.conf`` 
   in yaml Format umwandeln und das Ergebnis an die Datei ``/usr/local/smarthome/etc/plugins.yaml`` anhängen bzw. einarbeiten.
-  Dabei muß natürlich selbst auf Doppelungen und die Einrückebene geachtet werden. 
+  Dabei muss natürlich selbst auf Doppelungen und die Einrückebene geachtet werden. 
 
 Nun sollte ein Neustart von SmartHomeNG durchgeführt und die Logdateien auf Fehler kontrolliert werden. 
-Das kann entweder über das Admin Interface geschehen oder es muß in ``/usr/local/smarthome/var/log/smarthome-warnings.log``
+Das kann entweder über das Admin Interface geschehen oder es muss in ``/usr/local/smarthome/var/log/smarthome-warnings.log``
 geschaut werden.
 
 Eine falsche Konfiguration kann nach dem Neustart auch via Admin Interface angepasst werden. Wenn keine weiteren Fehler auftreten
@@ -311,7 +311,7 @@ Die empfohlene Vorgehensweise für die Übernahme der Items besteht aus den Schr
   Wenn das überprüft wurde können die ``*.conf`` Dateien nun aus ``/usr/local/smarthome/items/`` gelöscht werden.
 
 Nun sollte wiederum ein Neustart von SmartHomeNG durchgeführt und die Logdateien auf Fehler kontrolliert werden. 
-Das kann entweder über das Admin Interface geschehen oder es muß in ``/usr/local/smarthome/var/log/smarthome-warnings.log``
+Das kann entweder über das Admin Interface geschehen oder es muss in ``/usr/local/smarthome/var/log/smarthome-warnings.log``
 geschaut werden.
 
 Logiken
@@ -324,10 +324,10 @@ Die empfohlene Vorgehensweise für die Übernahme der Logiken besteht aus den Sc
 
 - über das Admin Interface unter Dienste --> CONF-YAML Konverter den Inhalt der ``/usr/local/smarthome.old/etc/logics.conf`` 
   in yaml Format umwandeln und das Ergebnis an die Datei ``/usr/local/smarthome/etc/logics.yaml`` anhängen bzw. einarbeiten.
-  Dabei muß natürlich selbst auf Doppelungen und die Einrückebene geachtet werden. 
+  Dabei muss natürlich selbst auf Doppelungen und die Einrückebene geachtet werden. 
 
 Nun sollte wiederum ein Neustart von SmartHomeNG durchgeführt und die Logdateien auf Fehler kontrolliert werden. 
-Das kann entweder über das Admin Interface geschehen oder es muß in ``/usr/local/smarthome/var/log/smarthome-warnings.log``
+Das kann entweder über das Admin Interface geschehen oder es muss in ``/usr/local/smarthome/var/log/smarthome-warnings.log``
 geschaut werden.
 
 Konvertierung von \*.conf-Dateien

@@ -40,4 +40,6 @@ SmartHomeNG liefert eine Reihe von Drittanbieterkomponenten mit dem http-Modul a
 
 Erweiterungen usw., die mit den Komponenten ausgeliefert wurden, finden sich im Ordner ``/modules/http/webif/gstatic``.
 
-Für Vorschläge weiterer "globaler" Komponenten sind wir jederzeit offen. Ansonsten können diese natürlich jederzeit im eigenen Plugin eingebundn und mitgeliefert werden, solange die Opensource-Lizenz der jeweiligen Komponente das erlaubt.
+Für Vorschläge weiterer "globaler" Komponenten sind wir jederzeit offen. 
+Ansonsten können diese natürlich jederzeit im eigenen Plugin eingebunden und mitgeliefert werden, 
+solange die Open Source-Lizenz der jeweiligen Komponente das erlaubt.

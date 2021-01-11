@@ -107,7 +107,7 @@ Jede einzelne Aktion ist durch die Keys ``item:`` , ``value:`` und ``learn:`` de
 
 Die Verwendung von Wildcards (*) in den ``item:`` Definitionen ist nicht möglich.
 
-Der Key **item** enthält den Pfad des Items, das verändert verden soll. Der Key **value** enthält
+Der Key **item** enthält den Pfad des Items, das verändert werden soll. Der Key **value** enthält
 den Wert auf den das Item gesetzt werden soll. Anstelle eines festen Wertes, kann hier auch ein
 **eval** Ausdruck angegeben werden. Der Key **learn** ist optional. Wird er nicht angegeben,
 wird der Wert False für **learn** angenommen. Außerdem wird der Wert für **learn** immer auf False

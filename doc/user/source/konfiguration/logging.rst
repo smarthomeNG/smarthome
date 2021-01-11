@@ -104,7 +104,7 @@ Früher musste in Plugins ein Logger in der Form
 
 
 in der `__init__` Methode instanziert werden. Das ist inzwischen nicht mehr notwendig. Die SmartPlugin
-Klasse erzeugt den Logger inzwischen selbt. Ein **import logging** ist nicht mehr notwendig und die
+Klasse erzeugt den Logger inzwischen selbst. Ein **import logging** ist nicht mehr notwendig und die
 Initialisierung des Loggers in der `__init__` Methode sollte auch weggelassen werden.
 
 Für die Entwickler von Logiken:
@@ -169,4 +169,4 @@ Wer eine brauchbare leicht konfigurierbare Logging Konfiguration sucht, der wird
    :hidden:
    :titlesonly:
 
-   logging_best_practices.md
+   logging_best_practices.rst

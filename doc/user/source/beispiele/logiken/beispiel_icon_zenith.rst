@@ -1,5 +1,5 @@
 
-Steuerung des dyn. Zenith-Icons
+Steuerung des dyn.zenith-Icons
 ===============================
 
 Ziel

@@ -47,7 +47,7 @@ vorgegeben werden. Das ist in SmartHomeNG analog implementiert.
 Zum Lernen der Szenenstati ist auf die Szenennummer 128 zu addieren und dieser Wert an
 die Gruppenadresse (bzw. an das Szenen-Item) zu senden. Wird auf die Gruppenadresse
 (analog hier auf das Item) ein Wert >=128 geschrieben, werden für die zur Gruppe
-gehörenden Aktoren (analog hier Items mit gesetztem learn-Flag) abgefragt und die
+gehörenden Aktoren (analog hier Items mit gesetztem Learn-Flag) abgefragt und die
 aktuellen Werte werden gespeichert. Diese Werte werden dann bei nachfolgenden Aufrufen
 der Szene (anstelle der initial gesetzten Werte) gesetzt.
 

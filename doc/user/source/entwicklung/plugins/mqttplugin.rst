@@ -9,7 +9,7 @@ Class MqttPlugin :redsup:`new`
 ==============================
 
 
-Die Klasse MqttPlugin implementiert die Basisklasse aller SmartPLugins die MQTT nutzen. 
+Die Klasse MqttPlugin implementiert die Basisklasse aller SmartPlugins die MQTT nutzen. 
 Die vorhandenen Methoden sind im Folgenden beschrieben
 
 

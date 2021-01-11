@@ -13,20 +13,27 @@ Es gibt zwei Dokumentations-Dateien die für ein Plugin erstellt werden können 
 user_doc.rst / user_doc.md
 --------------------------
 
-Die ``user_doc``-Datei kann in in den Dateiformaten restructured text (rST) oder markdown (md) erstellt werden. Das restructured text-Format sollte dabei bevorzugt werden, da es mehr Möglichkeiten bietet. Die Dokumentation sollte durchgängig auf Deutsch erfolgen; nur wenn der Plugin-Autor kein Deutsch spricht, kann die Dokumentation auf Englisch erfolgen. Der Grund dafür ist die vorgesehene Umstellung auf Mehrsprachenunterstützung, welche **eine** einheitliche Quellsprache erfordert.
+Die ``user_doc``-Datei kann in in den Dateiformaten restructured text (rST) oder markdown (md) erstellt werden. 
+Das restructured text-Format sollte dabei bevorzugt werden, da es mehr Möglichkeiten bietet. 
+Die Dokumentation sollte durchgängig auf Deutsch erfolgen; nur wenn der Plugin-Autor kein Deutsch spricht, 
+kann die Dokumentation auf Englisch erfolgen.
+Der Grund dafür ist die vorgesehene Umstellung auf Mehrsprachenunterstützung, welche **eine** einheitliche Quellsprache erfordert.
 
 Diese Datei wird im Rahmen des Build-Prozesses dynamisch in die Nutzerdokumentation von SmartHomeNG integriert, u.a. auch auf der Homepage.
 
 .. important::
 
-   Die erste Überschrift der Dokumentationsdateien (``user_doc`` und ``developer_doc``) MUSS dem Kurznamen des Plugins in Kleinbuchstaben entsprechen.
+   Die erste Überschrift der Dokumentationsdateien (``user_doc`` und ``developer_doc``) **muss** dem Kurznamen des Plugins in Kleinbuchstaben entsprechen.
 
-   Dieser Eintrag wird als Einstiegspunkt für die Navigation in der Dokumentation genutzt. Ein anderer Eintrag als Überschrift sorgt für Inkonsistenzen in den Navigationselementen.
+   Dieser Eintrag wird als Einstiegspunkt für die Navigation in der Dokumentation genutzt.
+   Ein anderer Eintrag als Überschrift sorgt für Inkonsistenzen in den Navigationselementen.
 
 
 Zum Beispiel:
 
-Das ``backend`` Plugin beinhaltet eine Datei ``user_doc.rst``. Diese Datei ist in den Navigationsbaum der Dokumentation integriert. Dieser Eintrag wird angezeigt, wenn die entsprechende Plugin-Kategorie ausgewählt wird:
+Das ``backend`` Plugin beinhaltet eine Datei ``user_doc.rst``. 
+Diese Datei ist in den Navigationsbaum der Dokumentation integriert. 
+Dieser Eintrag wird angezeigt, wenn die entsprechende Plugin-Kategorie ausgewählt wird:
 
 .. image:: assets/backend_user_doc_tree.png
 
@@ -49,7 +56,8 @@ In restructured text (rST) Dateien können Bilder mit der folgenden Anweisung ei
 developer_doc.rst / developer_doc.md
 ------------------------------------
 
-Die ``developer_doc``-Datei kann in den Dateiformaten restructured text (rST) oder markdown (md) erstellt werden. Das restructured text-Format sollte dabei bevorzugt werden, da es mehr Möglichkeiten bietet. Die Dokumentation sollte durchgängig auf Deutsch erfolgen.
+Die ``developer_doc``-Datei kann in den Dateiformaten restructured text (rST) oder markdown (md) erstellt werden.
+Das restructured text-Format sollte dabei bevorzugt werden, da es mehr Möglichkeiten bietet. Die Dokumentation sollte durchgängig auf Deutsch erfolgen.
 
 Diese Datei wird im Rahmen des Build-Prozesses dynamisch in die Nutzerdokumentation von SmartHomeNG integriert, u.a. auch auf der Homepage.
 

@@ -11,7 +11,7 @@ SmartHomeNG als Dienst einrichten :bluesup:`update`
 .. contents:: Schritte der Installation
    :local:
 
-Um SmartHomeNG als Dienst zu betreiben muß eine Startup-Datei
+Um SmartHomeNG als Dienst zu betreiben muss eine Startup-Datei
 für **systemd** erstellt werden.
 
 .. warning::

@@ -3,9 +3,11 @@ In 5 Minuten zum eigenen Plugin...
 ==================================
 
 
-Plugins sind Erweiterungen von SmartHomeNG mit zusätzlichen Funktionen. Sie sind in Python geschrieben. Um ein neues Plugin hinzuzufügen, wird der Plugin-Code und ein entsprechender Eintrag in der Konfigurationsdatei ``plugin.yaml`` benötigt.
+Plugins sind Erweiterungen von SmartHomeNG mit zusätzlichen Funktionen. Sie sind in Python geschrieben. 
+Um ein neues Plugin hinzuzufügen, wird der Plugin-Code und ein entsprechender Eintrag in der Konfigurationsdatei ``plugin.yaml`` benötigt.
 
-Eine gute Basis für ein eigenes Plugin ist das Beispielplugin, welches komplett mit allen notwendigen Dateien auf github unter https://github.com/smarthomeng/smarthome im ``/dev``-Ordner zur Verfügung steht.
+Eine gute Basis für ein eigenes Plugin ist das Beispielplugin, welches komplett 
+mit allen notwendigen Dateien auf github unter https://github.com/smarthomeng/smarthome im ``/dev``-Ordner zur Verfügung steht.
 
 
 Beschreibung des Plugins 
@@ -16,21 +18,29 @@ Beschreibung des Plugins
 
 Das Plugin wird in einem eigenen Ordner unterhalb des ``/plugins``-Ordner abgelegt. Der Name des Ordners entspricht dem Namen des Plugins in **Kleinschreibung**.
 
-Derzeit besteht ein Plugin mindestens aus drei Dateien, die alle im Pluginordner liegen. Dies sind:
+Derzeit besteht ein Plugin mindestens aus drei Dateien, die alle im Plugin Ordner liegen. Dies sind:
 
   - ``__init__.py``
   - ``plugin.yaml``
   - ``user_doc.rst``
 
-Die Datei ``__init__.py`` enthält den Python-Code des Plugins. Ab Version v1.8.0 von SmartHomeNG wird mindestens Python 3.6 vorausgesetzt.
+Die Datei ``__init__.py`` enthält den Python-Code des Plugins. 
+Ab Version v1.8.0 von SmartHomeNG wird mindestens Python 3.6 vorausgesetzt.
 
-Die Datei ``plugin.yaml`` enthält die Metadaten des Plugins. Diese geben eine formale Beschreibung des Plugins und werden verwendet, um die Dokumentation zu erstellen und das Plugin im Admin-GUI verwalten zu können.
+Die Datei ``plugin.yaml`` enthält die Metadaten des Plugins. 
+Diese geben eine formale Beschreibung des Plugins und werden verwendet, um die Dokumentation 
+zu erstellen und das Plugin im Admin-GUI verwalten zu können.
 
-Die Datei ``user_doc.rst`` beinhaltet zusätzliche Dokumentation zum Plugin, ausführlichere Beschreibungen, umfangreichere Beispiele oder Anwendungmöglichkeiten über die ``plugin.yaml`` hinaus. Auch diese Datei wird verwendet, um die Dokumentation von SmartHomeNG zu erstellen.
+Die Datei ``user_doc.rst`` beinhaltet zusätzliche Dokumentation zum Plugin, 
+ausführlichere Beschreibungen, umfangreichere Beispiele oder Anwendungsmöglichkeiten 
+über die ``plugin.yaml`` hinaus. Auch diese Datei wird verwendet, 
+um die Dokumentation von SmartHomeNG zu erstellen.
 
 .. hint::
 
-   Das in früheren Versionen verwendete ``README``-Format für die Dokumentation von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in ``plugin.yaml`` übergegangen. Die restliche Dokumentation sollte nur noch im ``user_doc``-Format erfolgen. 
+   Das in früheren Versionen verwendete ``README``-Format für die Dokumentation von Plugins ist veraltet. 
+   Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in ``plugin.yaml`` übergegangen.
+   Die restliche Dokumentation sollte nur noch im ``user_doc``-Format erfolgen. 
 
    Soweit möglich, sollten bestehende ``README`` im Rahmen von Aktualisierungen in entsprechende ``user_doc`` überführt werden.
 
@@ -44,13 +54,13 @@ Diese Datei stellt Metadaten über das Plugin in den folgenden Abschnitten berei
 
 * `plugin`  -  globale Attribute des Plugins
 * `parameters`  -  Definition der Konfigurationsoptionen in ``etc/plugin.yaml``
-* `item_attributes`  -  Definition der Item-Attribute, die durch dieses Plugin genutzt werdenthis plugin
+* `item_attributes`  -  Definition der Item-Attribute, die durch dieses Plugin genutzt werden
 * `item_structs`  -  Vorlagen für Item-Structs (Teilbäume) des Plugins
 * `logic_parameters`  -  Definition von Parametern für Logiken, soweit das Plugin diese implementiert
 * `plugin_functions`  -  Funktionen, die das Plugin für die Nutzung z.B. in Logiken bereitstellt
 
 
-Der Tyo des Plugins muss aus der folgenden Liste ausgewählt werden:
+Der Typ des Plugins muss aus der folgenden Liste ausgewählt werden:
 
 * gateway
 * interface
@@ -93,9 +103,11 @@ Die Dokumentation beginnt mit dem Titel, der dem Namen des Plugins entspricht.
 
    Die erste Überschrift der Dokumentationsdatei ``user_doc`` MUSS dem Kurznamen des Plugins in Kleinbuchstaben entsprechen.
 
-   Dieser Eintrag wird als Einstiegspunkt für die Navigation in der Dokumentation genutzt. Ein anderer Eintrag als Überschrift sorgt für Inkonsistenzen in den Navigationselementen.
+   Dieser Eintrag wird als Einstiegspunkt für die Navigation in der Dokumentation genutzt. 
+   Ein anderer Eintrag als Überschrift sorgt für Inkonsistenzen in den Navigationselementen.
 
-Die Datei sollte die folgende Struktur haben. Dabei kann im Bereich Konfiguration auf die ``plugin.yaml`` verwiesen werden, wenn keine zusätzliche Dokumentation vorgesehen ist.
+Die Datei sollte die folgende Struktur haben. Dabei kann im Bereich Konfiguration auf die 
+``plugin.yaml`` verwiesen werden, wenn keine zusätzliche Dokumentation vorgesehen ist.
 
 
 .. code-block:: rst
@@ -144,7 +156,8 @@ Die Datei sollte die folgende Struktur haben. Dabei kann im Bereich Konfiguratio
 Konfigurieren des Plugins in der Systemkonfiguration `/etc/plugin.yaml`
 -----------------------------------------------------------------------
 
-Die Konfigurationsdatei ``plugin.yaml`` befindet sich im Unterordner ``etc`` der SmartHomeNG-Installation. Hier wird SmartHomeNG mitgeteilt, welche Plugins geladen werden sollen, wo sie zu finden sind und welche Optionen sie ggf. benötigen. 
+Die Konfigurationsdatei ``plugin.yaml`` befindet sich im Unterordner ``etc`` der SmartHomeNG-Installation. 
+Hier wird SmartHomeNG mitgeteilt, welche Plugins geladen werden sollen, wo sie zu finden sind und welche Optionen sie ggf. benötigen. 
 
 Dies ist ein typischer Abschnitt für ein neues Plugin. Wir nehmen an, dass das Plugin ``myplugin`` heißt:
 
@@ -160,7 +173,9 @@ Werfen wir einen Blick auf die einzelnen Angaben:
 
 ``myplugin_instance``:
 
-Das ist der Name der tatsächlich geladenen Instanz des Plugins. Er kann frei gewählt werden. Wenn mehrere Instanzen eines Plugins geladen werden (z.B. für mehrere Geräte des gleichen Typs), wird anhand dieses Namens zwischen den Instanzen (und damit den Geräten) unterschieden.
+Das ist der Name der tatsächlich geladenen Instanz des Plugins. Er kann frei gewählt werden.
+Wenn mehrere Instanzen eines Plugins geladen werden (z.B. für mehrere Geräte des gleichen Typs),
+wird anhand dieses Namens zwischen den Instanzen (und damit den Geräten) unterschieden.
 
 ``plugin_name``:
 
@@ -168,17 +183,22 @@ Das ist der Name des Plugin, der auch für den Plugin-Ordner verwendet wurde (wi
 
 ``parameter1``:
 
-Es können mehrere Parameter definiert werden, deren Werte dem Plugin bei der Initialisierung übergeben werden. Sie können zur Konfiguration verwendet werden.
+Es können mehrere Parameter definiert werden, deren Werte dem Plugin bei der Initialisierung übergeben werden.
+Sie können zur Konfiguration verwendet werden.
 
 
 Der Plugin-Code: `__init__.py`
 ------------------------------
 
-Das Nächste ist das Plugin selbst. Der Code befindet sich in der Datei ``/plugins/myplugin/__init__.py``. Alle Plugins haben die gleiche Struktur. Der Einfachheit halber wird das oben verlinkte Beispielplugin als Grundlage verwendet.
+Das Nächste ist das Plugin selbst. Der Code befindet sich in der Datei ``/plugins/myplugin/__init__.py``.
+Alle Plugins haben die gleiche Struktur. Der Einfachheit halber wird das oben verlinkte Beispielplugin als Grundlage verwendet.
 
-Es gibt mehrere Funktionen, die erforderlich sind, damit SmartHomeNG mit dem Plugin korrekt kommunizieren kann. Die meisten davon werden vom SmartHomeNG-Scheduler aufgerufen. 
+Es gibt mehrere Funktionen, die erforderlich sind, damit SmartHomeNG mit dem Plugin korrekt kommunizieren kann.
+Die meisten davon werden vom SmartHomeNG-Scheduler aufgerufen. 
 
-Zusätzlich werden eigene Funktionen im Plugin definiert, die die eigentlichen Aufgaben ausführen. Der Scheduler kann angewiesen werden, diese zu bestimmten Zeiten oder in festgelegten Intervallen aufzurufen. Das ist näher im Abschnitt "Der Scheduler" beschrieben.
+Zusätzlich werden eigene Funktionen im Plugin definiert, die die eigentlichen Aufgaben ausführen.
+Der Scheduler kann angewiesen werden, diese zu bestimmten Zeiten oder in festgelegten Intervallen aufzurufen.
+Das ist näher im Abschnitt "Der Scheduler" beschrieben.
 
 .. hint::
    Für eine nutzbare Vorlage bitte nicht den folgenden Code, sondern das Beispielplugin (s.o.) verwenden!
@@ -288,7 +308,10 @@ Zusätzlich werden eigene Funktionen im Plugin definiert, die die eigentlichen A
 
 
 
-Zuerst werden die benötigten Module importiert und der Logger verfügbar gemacht. Diese ermöglicht es, Informationen in die Logdateien von SmartHomeNG auszugeben. Danach beginnt die Klassendefinition. Der Klassenname muss dem ``classname``-Parameter in der ``/etc/plugin.yaml`` entsprechen. Danach werden die notwendigen Funktionen definiert.
+Zuerst werden die benötigten Module importiert und der Logger verfügbar gemacht.
+Diese ermöglicht es, Informationen in die Logdateien von SmartHomeNG auszugeben. 
+Danach beginnt die Klassendefinition. Der Klassenname muss dem ``classname``-Parameter 
+in der ``/etc/plugin.yaml`` entsprechen. Danach werden die notwendigen Funktionen definiert.
 
 
 Vordefinierte Funktionen des Plugins
@@ -300,7 +323,12 @@ Vordefinierte Funktionen des Plugins
     def __init__(self, sh):
 
 
-Die ``__init__``-Funktion wird einmal aufgerufen, wenn SmartHomeNG im Rahmen der Initialisierung das Plugin lädt, bevor die Items geladen sind. Hier wird der Code eingefügt, den das Plugin zur Einrichtung benötigt. Zum Beispiel könnte ein serieller Port zur Verbindung mit einem externen Gerät vorbereitet, Dateien geöffnet, Variablen initialisiert usw. werden. Die Parameter der ``/etc/plugin.yaml`` können ausgelesen und verarbeitet oder durch Vorgabewerte ersetzt werden, wenn sie nicht konfiguriert sind.
+Die ``__init__``-Funktion wird einmal aufgerufen, wenn SmartHomeNG im Rahmen der Initialisierung
+das Plugin lädt, bevor die Items geladen sind. Hier wird der Code eingefügt, 
+den das Plugin zur Einrichtung benötigt. 
+Zum Beispiel könnte ein serieller Port zur Verbindung mit einem externen Gerät vorbereitet, 
+Dateien geöffnet, Variablen initialisiert usw. werden. Die Parameter der ``/etc/plugin.yaml`` 
+können ausgelesen und verarbeitet oder durch Vorgabewerte ersetzt werden, wenn sie nicht konfiguriert sind.
 
 Die Funktion erhält den Parameter ``sh``, die den Zugriff auf SmartHomeNG-Funktionen ermöglicht. Dieser Parameter sollte in einer Klassenvariable gesichert werden, um ihn später zur Verfügung zu haben.
 
@@ -322,9 +350,13 @@ Die ``run``-Funktion wird einmalig aufgrufen, wenn SmartHomeNG startet. Zu diese
     def stop(self):
 
 
-Diese Routinge wird aufgerufen, wenn SmartHomeNG beendet wird. Hier können Dateien und Verbindungen geschlossen werden. Es müssen alle Threads beendet werden, die das Plugin ggf. gestartet hat. Die Variable ``self.alive`` muss auf ``False`` gesetzt werden.
+Diese Routine wird aufgerufen, wenn SmartHomeNG beendet wird.
+Hier können Dateien und Verbindungen geschlossen werden.
+Es müssen alle Threads beendet werden, die das Plugin ggf. gestartet hat.
+Die Variable ``self.alive`` muss auf ``False`` gesetzt werden.
 
-Wenn ``self.alive`` auf ``False`` gesetzt ist, sollte das Plugin Änderungen an Items nicht mehr weitergeben und auch keine Daten empfangen und in Items sichern.
+Wenn ``self.alive`` auf ``False`` gesetzt ist, sollte das Plugin Änderungen an Items 
+nicht mehr weitergeben und auch keine Daten empfangen und in Items sichern.
 
 
 ----
@@ -334,7 +366,9 @@ Wenn ``self.alive`` auf ``False`` gesetzt ist, sollte das Plugin Änderungen an 
     def parse_item(self, item):
 
 
-Diese Funktion wird während des Starts für jedes Item einmal aufgerufen, wenn SmartHomeNG die Datei ``/items/items.yaml`` liest. Hier können Item-Parameter ausgelesen und entsprechende Aktionen ausgelöst werden. Wenn z.B. das folgende Item definiert ist:
+Diese Funktion wird während des Starts für jedes Item einmal aufgerufen, wenn SmartHomeNG
+die Datei ``/items/items.yaml`` liest. Hier können Item-Parameter ausgelesen und entsprechende Aktionen ausgelöst werden. 
+Wenn z.B. das folgende Item definiert ist:
 
 .. code-block:: yaml
 
@@ -359,7 +393,15 @@ dann kann mit dem folgenden Code auf den Parameter ``ivalue`` zugegriffen werden
         return None
 
 
-Hier wird geprüft, ob der Parameter ``ivalue`` im Item definiert ist. Falls ja, wird der Variable ``ad`` der Wert des Parameters zugewiesen und die Funktion ``update_item()`` zurückgegeben. Diese Funktion wird dann von SmartHomeNG jedesmal aufgerufen, wenn sich der Wert des Items ändert. Jedes Mal, wenn die Lampe z.B. per KNX ein- oder ausgeschaltet wird, wird wieder die Funktion ``update_item()`` aufgerufen. Parameterwerte sind immer Stringwerte. Auch wenn der Wert mit ``ivalue: 1`` definiert ist, wird der String "1" zurückgegeben. Wenn eine Zahl benötigt wird, muss der Wert selbst umgewandelt werden. Wenn der Parameter ``ivalue`` nicht in der Item-Konfiguration enthalten ist, wird keine Aktion ausgelöst und das Item hat keinen Einfluss auf und keine Verbindung zum Plugin.
+Hier wird geprüft, ob der Parameter ``ivalue`` im Item definiert ist. 
+Falls ja, wird der Variable ``ad`` der Wert des Parameters zugewiesen und die Funktion 
+``update_item()`` zurückgegeben. Diese Funktion wird dann von SmartHomeNG jedes mal aufgerufen, 
+wenn sich der Wert des Items ändert. Jedes Mal, wenn die Lampe z.B. per KNX ein- oder ausgeschaltet wird, 
+wird wieder die Funktion ``update_item()`` aufgerufen. Parameterwerte sind immer Stringwerte.
+Auch wenn der Wert mit ``ivalue: 1`` definiert ist, wird der String "1" zurückgegeben.
+Wenn eine Zahl benötigt wird, muss der Wert selbst umgewandelt werden. 
+Wenn der Parameter ``ivalue`` nicht in der Item-Konfiguration enthalten ist, wird keine Aktion
+ausgelöst und das Item hat keinen Einfluss auf und keine Verbindung zum Plugin.
 
 
 ----
@@ -369,7 +411,8 @@ Hier wird geprüft, ob der Parameter ``ivalue`` im Item definiert ist. Falls ja,
     def parse_logic(self, logic):
 
 
-Diese Funktion wird beim Systemstart für jede Logik aufgerufen, wenn SmartHomeNG die Datei ``/etc/logix.yaml`` liest. Hier können Logikparameter ausgelesen und Aktionen ausgeführt werden. Wenn z.B. die folgende Logik definiert ist:
+Diese Funktion wird beim Systemstart für jede Logik aufgerufen, wenn SmartHomeNG die Datei ``/etc/logic.yaml`` liest.
+Hier können Logikparameter ausgelesen und Aktionen ausgeführt werden. Wenn z.B. die folgende Logik definiert ist:
 
 .. code-block:: yaml
 
@@ -379,8 +422,8 @@ Diese Funktion wird beim Systemstart für jede Logik aufgerufen, wenn SmartHomeN
         crontab: sunrise+20m
         some_plugin_setting: send-notify
 
-
-kann das Plugin jetzt den Parameter ``some_plugin_setting`` prüfen und feststellen, ob es mit der Logik interagieren soll. Der folgende Code könnte genutzt werden, um einen Callback für die Logik einzurichten:
+kann das Plugin jetzt den Parameter ``some_plugin_setting`` prüfen und feststellen, ob es mit der
+Logik interagieren soll. Der folgende Code könnte genutzt werden, um einen Callback für die Logik einzurichten:
 
 .. code-block:: python
 
@@ -397,19 +440,17 @@ kann das Plugin jetzt den Parameter ``some_plugin_setting`` prüfen und feststel
     def update_item(self, item, caller=None, source=None, dest=None):
 
 
-Diese Funktion wird jedesmal aufgerufen, wenn sich der Wert eines Items ändert, für das der Aufruf in ``parse_item()`` eingerichtet wurde. Sie erhält die folgenden Parameter:
+Diese Funktion wird jedes mal aufgerufen, wenn sich der Wert eines Items ändert, 
+für das der Aufruf in ``parse_item()`` eingerichtet wurde. Sie erhält die folgenden Parameter:
 
 `caller`
-
-Dieser String gibt an, wer das Item geändert hat. Der Wert kann z.B. "KNX", wenn der Wert des Items vom KNX-Plugin gesetzt wurde.
+    Dieser String gibt an, wer das Item geändert hat. Der Wert kann z.B. "KNX", wenn der Wert des Items vom KNX-Plugin gesetzt wurde.
 
 `source`
-
-…
+    …
 
 `dest`
-
-…
+    …
 
 
 ----
@@ -432,7 +473,12 @@ Funktionen von SmartHomeNG
 Der Scheduler
 -------------
 
-Der Scheduler ist eine der wichtigsten Komponenten von SmartHomeNG. Es ist die zentrale Uhr, die Funktionen zu bestimmten Zeiten aufruft. Damit eigene Funktionen ausgeführt werden, müssen diese dem Scheduler bekannt gemacht werden. Dies erfolgt durch den Aufruf spezieller Funktionen. Der Scheduler ist Teil von SmartHomeNG, also muss er über die Variable angesprochen werden, die an die ``__init__``-Funktion des Plugins übergeben wurde.
+Der Scheduler ist eine der wichtigsten Komponenten von SmartHomeNG.
+Es ist die zentrale Uhr, die Funktionen zu bestimmten Zeiten aufruft. 
+Damit eigene Funktionen ausgeführt werden, müssen diese dem Scheduler bekannt gemacht werden.
+Dies erfolgt durch den Aufruf spezieller Funktionen. 
+Der Scheduler ist Teil von SmartHomeNG, also muss er über die Variable angesprochen werden,
+die an die ``__init__``-Funktion des Plugins übergeben wurde.
 
 Die wichtigste Funktion ist `add`:
 
@@ -451,7 +497,8 @@ Die wichtigste Funktion ist `add`:
                        next=None)
 
 
-``scheduler_add`` fügt dem Scheduler einen Eintrag hinzu. Es müssen mindestens ``name``, ``object`` und einer der Timing-Parameter übergeben werden.
+``scheduler_add`` fügt dem Scheduler einen Eintrag hinzu. Es müssen mindestens ``name``,
+``object`` und einer der Timing-Parameter übergeben werden.
 
 
 `name=string`
@@ -461,7 +508,9 @@ Das ist der Name, der diesem Scheduler-Eintrag gegeben wird. Er wird benötigt, 
 
 `obj=function`
 ^^^^^^^^^^^^^^
-``obj`` ist eine Funktion, die im Plugin definiert wird (ein sogenannter Callback). Diese Funktion wird vom Scheduler aufgerufen. Wenn die Funktion Parameter benötigt, können diese mit ``**kwargs`` übergeben werden (siehe weiter unten in der Beschreibung der Parameter).
+``obj`` ist eine Funktion, die im Plugin definiert wird (ein sogenannter Callback). 
+Diese Funktion wird vom Scheduler aufgerufen. Wenn die Funktion Parameter benötigt, 
+können diese mit ``**kwargs`` übergeben werden (siehe weiter unten in der Beschreibung der Parameter).
 
 
 `cron`
@@ -471,11 +520,14 @@ Das ist der Name, der diesem Scheduler-Eintrag gegeben wird. Er wird benötigt, 
 
 `cycle=int`
 ^^^^^^^^^^^
-``cycle`` ist eine Ganzzahl in Sekunden. Damit wird der Scheduler angewiesen, die Funktion ``obj`` alle `cycle` Sekunden aufzurufen. Wenn das Intervall auf 60 gesetzt wird, ruft der Scheduler die Funktion alle 60 Sekunden auf, so lange SmartHomeNG läuft.
+``cycle`` ist eine Ganzzahl in Sekunden. Damit wird der Scheduler angewiesen, 
+die Funktion ``obj`` alle ``cycle`` Sekunden aufzurufen. 
+Wenn das Intervall auf 60 gesetzt wird, ruft der Scheduler die Funktion alle 60 Sekunden auf, so lange SmartHomeNG läuft.
 
 `next=dateobject`
 ^^^^^^^^^^^^^^^^^
-``next`` fordert die einmalige Ausführung von ``obj`` zu dem Zeitpunkt an, der als Argument übergeben wird. Das Argument ist ein ``dateobject``, das z.B. mit ``datetime`` erstellt werden kann:
+``next`` fordert die einmalige Ausführung von ``obj`` zu dem Zeitpunkt an, der als Argument übergeben wird. 
+Das Argument ist ein ``dateobject``, das z.B. mit ``datetime`` erstellt werden kann:
 
 .. code-block:: python
 
@@ -545,8 +597,9 @@ Items suchen
 
 `item_path=string`
 ~~~~~~~~~~~~~~~~~~
-Der Pfad des Items, wie er in der Itemkonfiguration festgelegt ist, z.B. Ebene1.Raum4.Lampe2.
-Die Funktion gibt das Item-Objekt zurück, welches aufgerufen werden kann, um den Wert zu lesen oder zu ändern oder auf andere Eigenschaften zuzugreifen.
+Der Pfad des Items, wie er in der Item Konfiguration festgelegt ist, z.B. Ebene1.Raum4.Lampe2
+Die Funktion gibt das Item-Objekt zurück, welches aufgerufen werden kann,
+um den Wert zu lesen oder zu ändern oder auf andere Eigenschaften zuzugreifen.
 
 
 Items verändern

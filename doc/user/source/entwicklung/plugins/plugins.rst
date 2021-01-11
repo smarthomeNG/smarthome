@@ -83,7 +83,7 @@ Je nach Umfang und Erfordernissen sind folgende optionale Dateien hinzuzufügen:
    gewählt würde, würde die Navigation der Dokumentation inkonsistent werden.
 
 
-Ein Pluginverzeichnis kann die folgenden Unterverzeichnisse haben:
+Ein Plugin Verzeichnis kann die folgenden Unterverzeichnisse haben:
 
 +--------------------------+-----------------------------------------------------------------------+
 | Directory                | Description                                                           |
@@ -106,7 +106,7 @@ Ein Pluginverzeichnis kann die folgenden Unterverzeichnisse haben:
 | ``webif/static/img``     | Optional, falls das Webinterface Bilder enthält                       |
 +--------------------------+-----------------------------------------------------------------------+
 | ``webif/templates``      | Dieses Verzeichnis enthält die Jinja2 Templates des Webinterfaces und |
-|                          | solte mindestens ``index.html`` enthalten.                            |
+|                          | sollte mindestens ``index.html`` enthalten.                           |
 +--------------------------+-----------------------------------------------------------------------+
 
 
