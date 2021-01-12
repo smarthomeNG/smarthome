@@ -226,7 +226,7 @@ Modul Namen in das log (also z.B.: lib.plugin, plugins.knx, …):
        format: '%(asctime)s %(levelname)-8s %(name)-19s %(message)s'
        datefmt: '%Y-%m-%d  %H:%M:%S'
 
-Das ist hilfreicher um zu identifizieren woher die Logmessage stammt.
+Das ist hilfreicherm, um zu identifizieren, woher die Logmessage stammt.
 
 Erweiterte Konfigurationen des Loggings
 ---------------------------------------
@@ -244,13 +244,18 @@ diese eben auch zu verstecken. Hierzu wird zuerst ein Filter angelegt:
 
 .. code-block:: yaml
 
-   filter:
-       meinfilter:
-           (): lib.logutils.Filter
-           module: "[sS]tate[eE]ngineLogger"
-           name: "plugins.stateengine.licht.test"
-           msg: "(.*)Item (.*) not found!"
-           #invert: True
+    filter:
+      meinfilter:
+        (): lib.logutils.Filter
+        module: "[sS]tate[eE]ngineLogger"
+        name: "plugins.stateengine.licht.test"
+        msg: "(.*)Item (.*) not found!"
+        #invert: True
+
+      filter_startup:
+        (): lib.logutils.Filter
+        name: "lib.smarthome.main"
+        msg: ["Running in Python(.*)", " - on (.*)", " - Nutze Feiertage(.*)"]
 
 Dieser Filter muss nun beim entsprechenden Handler noch referenziert werden:
 
@@ -261,7 +266,7 @@ Dieser Filter muss nun beim entsprechenden Handler noch referenziert werden:
            class: logging.handlers.TimedRotatingFileHandler
            formatter: shng_simple
            filename: ./var/log/stateengine.log
-           filters: [meinfilter]
+           filters: [meinfilter, filter_startup]
 
 Wichtig sind dabei die eckigen Klammern, auch wenn nur ein Filter referenziert
 wird. Und ja, es können hier durch Beistrich auch mehrere Filter gelistet
@@ -277,11 +282,15 @@ werden.
 
 Dies führt dazu, dass nicht mehr alle DEBUG Informationen des Loggers vom
 Stateengine Plugin in die Datei stateengine.log geschrieben werden. Auf Grund
-des Filters werden sämtliche Einträge ignoriert, die..
+des ersten Filters "mein_filter" werden sämtliche Einträge ignoriert, die..
+
 - vom Modul StateEngine (s und e können sowohl groß, als auch klein geschrieben
 werden) stammen
 - vom Logger mit dem Namen 'plugins.stateengine.licht.test' stammen
 - am Ende der Zeile "Item <beliebiger Eintrag> not found!" beinhalten
+
+Der Filter "filter_startup" sorgt dafür, dass die standardmäßigen Medlungen zum
+Start von SmarthomeNG nicht angezeigt werden.
 
 Hätte man im Filter "invert: True" angegeben, würden alle Einträge ignoriert
 werden, die NICHT den oben genannten Kriterien entsprechen.
