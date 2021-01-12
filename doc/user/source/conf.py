@@ -77,7 +77,7 @@ shversion = shngversion.get_shng_main_version()
 # General information about the project.
 #project = u'SmartHomeNG'
 project = u'Anwenderdokumentation v'
-copyright = u'2016-2020 SmartHomeNG Team, SmartHomeNG is based on smarthome.py © Marcus Popp'
+copyright = u'2016-2021 SmartHomeNG Team, SmartHomeNG is based on smarthome.py © Marcus Popp'
 
 # The full version, including alpha/beta/rc tags.
 #release = '1.3a dev (as of 13. October 2017)'  13. October 2017 is replaced by makefile with a date in the form of '2. September 2017'

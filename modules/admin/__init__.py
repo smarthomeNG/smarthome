@@ -59,9 +59,9 @@ suburl = 'admin'
 
 
 class Admin(Module):
-    version = '1.6.0'
+    version = '1.8.0'
     longname = 'Admin module for SmartHomeNG'
-    port = 0
+    _port = 0
 
     _stop_methods = []      # list of stop methods defined by the various controllers of the admin api
 
@@ -118,19 +118,18 @@ class Admin(Module):
         if suburl != '':
             mysuburl = '/' + suburl
         ip = get_local_ipv4_address()
-        self.port = self.mod_http._port
-        # self.logger.warning('port = {}'.format(self.port))
-        self.shng_url_root = 'http://' + ip + ':' + str(self.port)         # for links mto plugin webinterfaces
+        self._port = self.mod_http._port
+        # self.logger.warning('port = {}'.format(self._port))
+        self.shng_url_root = 'http://' + ip + ':' + str(self._port)         # for links mto plugin webinterfaces
         self.url_root = self.shng_url_root + mysuburl
         self.api_url_root = self.shng_url_root + 'api'
         self.api2_url_root = self.shng_url_root + 'api2'
 
     def start(self):
         """
-        If the module needs to startup threads or uses python modules that create threads,
-        put thread creation code or the module startup code here.
+        Start the admin module
 
-        Otherwise don't enter code here
+        Initialization and startup code of the module
         """
 
         self.webif_dir = os.path.dirname(os.path.abspath(__file__)) + '/webif'
@@ -225,22 +224,31 @@ class Admin(Module):
         return
 
 
-    def add_stop_method(self, method, classname=''):
-        self.logger.info("Adding stop method of class {}".format(classname))
-        self._stop_methods.append(method)
-
-
     def stop(self):
         """
-        If the module has started threads or uses python modules that created threads,
-        put cleanup code here.
+        Stop the admin module
 
-        Otherwise don't enter code here
+        Cleanup code of the admin module
         """
+
         self.logger.info("Shutting down".format(self._shortname))
         for stop_method in self._stop_methods:
             stop_method()
         self.logger.info("Shutted down".format(self._shortname))
+
+
+    def add_stop_method(self, method, classname=''):
+        """
+        Class instances that implement their own stop() method should add those methods through this
+        Method, so the stop() methods of the admin module can stop those instances too when stopping the module.
+
+        :param method: stop-method to be added
+        :param classname: Name of the class (optional)
+        :type method: object
+        :type classname: str
+        """
+        self.logger.info("Adding stop method of class {}".format(classname))
+        self._stop_methods.append(method)
 
 
     def error_page(self, status, message, traceback, version):
@@ -260,7 +268,7 @@ class Admin(Module):
         if suburl != '':
             mysuburl = '/' + suburl
 
-        # page = '<meta http-equiv="refresh" content="0; url=http://' + ip + ':' + str(self.port) + mysuburl + '/" />'
+        # page = '<meta http-equiv="refresh" content="0; url=http://' + ip + ':' + str(self._port) + mysuburl + '/" />'
         # page = '<meta http-equiv="refresh" content="0; url=' + self.url_root + '/" />'
         page = '404: Page not found!<br>'+message
         self.logger.warning(
@@ -361,6 +369,16 @@ class WebInterface(SystemData, ItemData, PluginData):
 
 
 class WebApi(RESTResource):
+    """
+    :param webif_dir: Directory where the files of the web interface (shngadmin) are stored
+    :param module: Instance of the webif object
+    :param shng_url_root: ...
+    :param url_root: ...
+    :type webif_dir: str
+    :type module: object
+    :type shng_url_root: str
+    :type url_root: str
+    """
 
     exposed = True
 

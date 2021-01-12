@@ -773,6 +773,7 @@ in the next release. User of these plugins should switch to corresponding succee
 
   * sqlite_visu2_8 - switch to the **database** plugin
   * visu_smartvisu - switch to the **smartvisu** plugin
+  * visu_websocket - switch to the **websocket** **module**
 
 * Gateway Plugins
 

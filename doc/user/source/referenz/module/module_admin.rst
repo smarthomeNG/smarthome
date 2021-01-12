@@ -14,19 +14,47 @@ vollständige Konfiguration von SmartHomeNG.
 API des Moduls
 --------------
 
-.. module:: modules.admin
+Im folgenden werden die einzelnen APIs beschrieben.
+
+
+API des Moduls admin.rest
+-------------------------
+
+.. autoclass:: modules.admin.rest::RESTResource
     :noindex:
 
-.. module:: modules.admin.rest
-    :noindex:
+|
 
-.. automodule:: modules.admin
+API des Moduls (WebApi)
+-----------------------
+
+.. autoclass:: modules.admin::WebApi
+    :noindex:
+    :show-inheritance:
+
+|
+
+API des Moduls api_plugins
+--------------------------
+
+.. automodule:: modules.admin.api_plugins
     :members:
-    :imported-members:
     :undoc-members:
     :show-inheritance:
     :member-order: bysource
 
+|
+
+API des Moduls api_plugin
+-------------------------
+
+.. automodule:: modules.admin.api_plugin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :member-order: bysource
+
+|
 
 README
 ------

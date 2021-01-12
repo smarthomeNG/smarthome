@@ -23,7 +23,7 @@ Bisher existieren die folgenden Module:
    :titlesonly:
 
    module_http
-   module_admin
+   ../../referenz/module/module_admin
    module_mqtt
    ../../referenz/module/module_websocket
 
