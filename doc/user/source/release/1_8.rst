@@ -4,12 +4,12 @@ Release 1.8 - 15. Januar 2021
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
-.. note::
+..
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 12. Januar 2021
-       (Documentation updates)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 15. Januar 2021
+       (Merge pull request #380 from onkelandy/docu Docu update: filter logging examples)
      - Berücksichtigt sind Commits im plugins Repository bis incl. 15. Januar 2021
        (smartvisu: Added visu_acl to metadata)
 
@@ -45,7 +45,7 @@ auf einer der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
 
 .. important::
 
-   Mit dem kommenden Release 1.8 werden die unterstützten Python Versionen
+   Mit dem Release 1.8 werden die unterstützten Python Versionen
    :doc:`(wie hier beschrieben) </installation/anforderungen>` auf **Python 3.6, 3.7, 3.8** angehoben. Python 3.6
    hat eine Reihe sehr interessanter Features und Verbesserungen gebracht, die dann in SmartHomeNG genutzt
    werden können.
@@ -120,14 +120,6 @@ Updates in the CORE
   * added commandline parameter 'pip3_command' to be able to install core requirements if the
     pip3 command is not at the default location
   * streamlined bin.smarthome.py after isolating SmartHome class from bin/smarthome.py to lib.smarthome.py
-
-* Items:
-
-  * ...
-
-* Logics:
-
-  * ...
 
 * lib.db:
 
@@ -684,6 +676,11 @@ Plugin Updates and Bugfixes
     using log_change attribute
   * docu update for current.state_id etc.
   * small tweak in plugin.yaml for suspend_end/start time
+  * Improve startup log messages including ..state_name items
+  * update plugin.yaml to set start time stamp correctly (e.g. for countdown widget in smartvisu)
+  * Important re-fix of delayed action execution
+  * Improve init logging
+  * Pushed version to 1.8.0
 
 * tankerkoenig:
 
@@ -797,14 +794,6 @@ in the next release. User of these plugins should switch to corresponding succee
   * visu_smartvisu - switch to the **smartvisu** plugin
   * visu_websocket - switch to the **websocket** **module**
 
-* Gateway Plugins
-
-  * ...
-
-* Interface Plugins
-
-  * ...
-
 * Web Plugins
 
   * alexa - switch to the **alexa4p3** plugin
@@ -824,10 +813,6 @@ The following plugins are marked as *deprecated* with SmartHomeNG v1.7, because 
 
   * easymeter
   * vr100
-
-* Web Plugins
-
-  * ...
 
 Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecated*, because the new mqtt
 plugin takes over the functionality. This plugin is based on the mqtt module and the recent core.
