@@ -165,6 +165,16 @@ Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecate
 plugin takes over the functionality. This plugin is based on the mqtt module and the recent core.
 
 
+Retired Plugins
+---------------
+
+The following plugins have been retired. They had been deprecated in one of the preceding releases of SmartHomeNG.
+They have been removed from the plugins repository, but they can still be found on github. Now they reside in
+the plugin_archive repository from where they can be downloaded if they are still needed.
+
+* ...
+
+
 Weitere Änderungen
 ==================
 
@@ -177,10 +187,7 @@ Tools
 Documentation
 -------------
 
-* User Documentation
+* ...
+* ...
 
-  * ...
 
-* Developer Documentation
-
-  * ...

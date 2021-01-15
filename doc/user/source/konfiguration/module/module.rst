@@ -21,8 +21,9 @@ möglich.
 
 .. note::
 
-    Die Konfigurationsparameter der Module **http**, **admin** und **mqtt**, die in der Datei **../etc/module.yaml**
-    konfiguriert werden, können auch über das graphische Administrations-Interface geändert werden.
+    Die Konfigurationsparameter der Module **http**, **websocket**, **admin** und **mqtt**, die in der
+    Datei **../etc/module.yaml** konfiguriert werden, können auch über das graphische Administrations-Interface
+    geändert werden.
 
 
 

@@ -54,7 +54,7 @@ Datei *../etc/module.yaml*
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | Parameter               | Bemerkung                                                                                            |
 +=========================+======================================================================================================+
-| enabled                 | Websocket Unterstützung aktivieren (True) oder deaktivieren (False) - Standardwert ist False         |
+| enabled                 | Websocket Unterstützung aktivieren (True) oder deaktivieren (False) - Standardwert ist True          |
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | ip                      | IP Adresse auf der das websocket Modul aktiv sein soll - muss normalerweise nicht angegeben werden   |
 +-------------------------+------------------------------------------------------------------------------------------------------+
