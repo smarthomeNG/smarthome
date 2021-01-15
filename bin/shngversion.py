@@ -64,7 +64,6 @@ import plugins.__init__ as plugin_vers
 
 # Update auf 1.8    wg. Release
 
-
 shNG_version = '1.8.0'
 shNG_branch = 'master'
 
