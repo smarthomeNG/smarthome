@@ -126,7 +126,7 @@ class Database():
     def __init__(self, name, dbapi, connect, formatting='named'):
         """Create a new database instance
 
-        The 'name' parameter identifies the name for the database access.
+        The 'name' parameter identifies the name for the database access .
         It is also used internally to create versions table (to keep track
         if the database structure is up to date) and logging.
 
@@ -146,6 +146,7 @@ class Database():
 
         self._name = name
         self._dbapi = dbapi
+        self._dbapi_name = dbapi
         self._format_input = formatting
         self._connected = False
         self._conn = None
@@ -203,7 +204,7 @@ class Database():
         try:
             self._conn = self._dbapi.connect(**self._params)
         except Exception as e:
-            self.logger.error("Database [{}]: Could not connect to the database: {}".format(self._name, e))
+            self.logger.error("Database [{}]: Could not connect to the database using '{}': {}".format(self._name, self._dbapi_name, e))
             raise
         finally:
             self.release()
@@ -288,7 +289,8 @@ class Database():
 
     def cursor(self):
         """Create a new cursor for executing statements"""
-        return self._conn.cursor()
+        if self._conn is not None:
+            return self._conn.cursor()
 
     def execute(self, stmt, params=(), formatting=None, cur=None):
         """Execute the given statement
@@ -318,8 +320,11 @@ class Database():
         try:
             if cur == None:
                 c = self.cursor()
-                result = c.execute(stmt, args)
-                c.close()
+                if c is not None:
+                    result = c.execute(stmt, args)
+                    c.close()
+                else:
+                    result = []
                 c = None
             else:
                 result = cur.execute(stmt, args)
@@ -380,9 +385,13 @@ class Database():
         """
         if cur == None:
             c = self.cursor()
-            self.execute(stmt, params, formatting=formatting, cur=c)
-            result = c.fetchone()
-            c.close()
+            if c is None:
+                self.logger.warning(f"fetchone: No cursor defined for stmt {stmt} with params {params}")
+                result = ''
+            else:
+                self.execute(stmt, params, formatting=formatting, cur=c)
+                result = c.fetchone()
+                c.close()
         else:
             self.execute(stmt, params, formatting=formatting, cur=cur)
             result = cur.fetchone()
@@ -396,9 +405,12 @@ class Database():
         """
         if cur == None:
             c = self.cursor()
-            self.execute(stmt, params, formatting=formatting, cur=c)
-            result = c.fetchall()
-            c.close()
+            if c is not None:
+                self.execute(stmt, params, formatting=formatting, cur=c)
+                result = c.fetchall()
+                c.close()
+            else:
+                result = []
         else:
             self.execute(stmt, params, formatting=formatting, cur=cur)
             result = cur.fetchall()

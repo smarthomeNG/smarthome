@@ -10,12 +10,11 @@ Items
    :hidden:
 
    initiale_itemkonfiguration
-   standard_attribute/standard_attr
-   plugin_attribute
-   attributes_relative_referenzen
-   properties
-   funktionen
-   systemitems
+   /referenz/items/standard_attribute/standard_attribute
+   /referenz/items/plugin_attribute
+   /referenz/items/attributes_relative_referenzen
+   /referenz/items/properties
+   /referenz/items/funktionen
 
 
 Überblick
@@ -103,6 +102,6 @@ Properties und Funktionen von Items dienen dazu auf Item Informationen während 
 Sie werden in Plugins, Logiken oder eval-Ausdrücken genutzt.
 
 Viele Attribute stehen zur Laufzeit als Properties zur Verfügung und können gelesen (und zum Teil auch geschrieben) werden.
-Um herauszufinden, wie der Zugriff zur Laufzeit funktioniert, bitte auf der Seite :doc:`Properties eines Items <./properties>`
+Um herauszufinden, wie der Zugriff zur Laufzeit funktioniert, bitte auf der Seite :doc:`Properties eines Items </referenz/items/properties>`
 nachsehen.
 

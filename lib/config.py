@@ -96,7 +96,7 @@ def parse_itemsdir(itemsdir, item_conf, addfilenames=False, struct_dict={}):
     for item_file in sorted(os.listdir(itemsdir)):
         if not item_file.startswith('.'):
             if item_file.endswith(CONF_FILE) or item_file.endswith(YAML_FILE):
-                if item_file == 'logic'+YAML_FILE and itemsdir.find('lib/env/') > -1:
+                if item_file == 'logic'+YAML_FILE and itemsdir.find(os.path.join('lib','env')) > -1:
                     logger.info("parse_itemsdir: skipping logic definition file = {}".format( itemsdir+item_file ))
                 else:
                     try:

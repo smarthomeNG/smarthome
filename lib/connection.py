@@ -37,6 +37,7 @@ import threading
 import select
 import time
 import sys
+from iowait import IOWait
 
 logger = logging.getLogger(__name__)
 
@@ -89,6 +90,10 @@ class Connections(Base):
             self._epoll = select.epoll()
         elif hasattr(select, 'kqueue'):
             self._kqueue = select.kqueue()
+        else:
+            logger.debug("Init connections using IOWait")
+            self._connections_found = 0
+            self._waitobj = IOWait()
 
     def register_server(self, fileno, obj):
         if fileno == -1:
@@ -105,6 +110,9 @@ class Connections(Base):
                        flags=select.KQ_EV_ADD)
             ]
             self._kqueue.control(event, 0, 0)
+        else:
+            logger.debug("register_server: put watch on fileno {}".format(fileno))
+            self._waitobj.watch(fileno, read=True)
 
     def register_connection(self, fileno, obj):
         if fileno == -1:
@@ -120,6 +128,9 @@ class Connections(Base):
                        flags=select.KQ_EV_ADD)
             ]
             self._kqueue.control(event, 0, 0)
+        else:
+            logger.debug("register_connection: put watch on fileno {}".format(fileno))
+            self._waitobj.watch(fileno, read=True)
 
     def unregister_connection(self, fileno):
         if fileno == -1:
@@ -128,6 +139,11 @@ class Connections(Base):
         try:
             if hasattr(select, 'epoll'):
                 self._epoll.unregister(fileno)
+            elif hasattr(select, 'kqueue'):
+                pass
+            else:
+                logger.debug("unregister_connection: unwatch fileno {}".format(fileno))
+                self._waitobj.unwatch(fileno)
         except Exception as e:
             logger.error("unregister a connection with filenumber == {} for epoll failed".format(fileno))
 
@@ -163,6 +179,8 @@ class Connections(Base):
                            flags=select.KQ_EV_ADD | KQ_EV_ONESHOT)
                 ]
                 self._kqueue.control(event, 0, 0)
+            else:
+                logger.error("trigger: Operating System without epoll or kqueue is currently not supported, please report this error")
 
     def poll(self):
         time.sleep(0.0000000001)  # give epoll.modify a chance
@@ -174,108 +192,144 @@ class Connections(Base):
             logger.error("fileno -1 was found, please report to SmartHomeNG team")
             del( self._connections[-1])
 
-        for fileno in self._connections:
-            if fileno not in self._servers:
-                if hasattr(select, 'epoll'):
-                    if self._connections[fileno].outbuffer:
-                        try:
-                            self._epoll.modify(fileno, self._rw)
-                        except OSError as e:
-                            # as with python 3.6 an OSError will be raised when a socket is already closed like with a settimeout
-                            # the socket will need to be recreated then
-                            logger.error("OSError {} for epoll.modify(RW) with fileno {} for object {}, please report to SmartHomeNG team".format(e, fileno, self._connections[fileno]))
-                            # here we could try to get rid of the connection that causes the headache
-                        except PermissionError as e:
-                            logger.error("PermissionError {} for epoll.modify(RW) with fileno {} for object {}, please report to SmartHomeNG team".format(e, fileno, self._connections[fileno]))
-                            # here we could try to get rid of the connection that causes the headache
-                        except FileNotFoundError as e:
-                            logger.error("FileNotFoundError {} for epoll.modify(RW) with fileno {} for object {}, please report to SmartHomeNG team".format(e, fileno, self._connections[fileno]))
-                            # here we could try to get rid of the connection that causes the headache
-                    else:
-                        try:
-                            self._epoll.modify(fileno, self._ro)
-                        except OSError as e:
-                            # as with python 3.6 an OSError will be raised when a socket is already closed like with a settimeout
-                            # the socket will need to be recreated then
-                            logger.error("OSError {} for epoll.modify(RO) with fileno {} for object {}, please report to SmartHomeNG team".format(e, fileno, self._connections[fileno]))
-                            # here we could try to get rid of the connection that causes the headache
-                        except PermissionError as e:
-                            logger.error("PermissionError {} for epoll.modify(RO) with fileno {} for object {}, please report to SmartHomeNG team".format(e, fileno, self._connections[fileno]))
-                            # here we could try to get rid of the connection that causes the headache
-                        except FileNotFoundError as e:
-                            logger.error("FileNotFoundError {} for epoll.modify(RO) with fileno {} for object {}, please report to SmartHomeNG team".format(e, fileno, self._connections[fileno]))
-                            # here we could try to get rid of the connection that causes the headache
+        if hasattr(select, 'epoll') or hasattr(select, 'kqueue'):
+            for fileno in self._connections:
+            # Fix for: "RuntimeError: dictionary changed size during iteration"
+            #connections_keys = self._connections.keys()
+            #for fileno in connections_keys:
+                if fileno not in self._servers:
+                    if hasattr(select, 'epoll'):
+                        if self._connections[fileno].outbuffer:
+                            try:
+                                self._epoll.modify(fileno, self._rw)
+                            except OSError as e:
+                                # as with python 3.6 an OSError will be raised when a socket is already closed like with a settimeout
+                                # the socket will need to be recreated then
+                                logger.error("OSError {} for epoll.modify(RW) with fileno {} for object {}, please report to SmartHomeNG team".format(e, fileno, self._connections[fileno]))
+                                # here we could try to get rid of the connection that causes the headache
+                            except PermissionError as e:
+                                logger.error("PermissionError {} for epoll.modify(RW) with fileno {} for object {}, please report to SmartHomeNG team".format(e, fileno, self._connections[fileno]))
+                                # here we could try to get rid of the connection that causes the headache
+                            except FileNotFoundError as e:
+                                logger.error("FileNotFoundError {} for epoll.modify(RW) with fileno {} for object {}, please report to SmartHomeNG team".format(e, fileno, self._connections[fileno]))
+                                # here we could try to get rid of the connection that causes the headache
+                        else:
+                            try:
+                                self._epoll.modify(fileno, self._ro)
+                            except OSError as e:
+                                # as with python 3.6 an OSError will be raised when a socket is already closed like with a settimeout
+                                # the socket will need to be recreated then
+                                logger.error("OSError {} for epoll.modify(RO) with fileno {} for object {}, please report to SmartHomeNG team".format(e, fileno, self._connections[fileno]))
+                                # here we could try to get rid of the connection that causes the headache
+                            except PermissionError as e:
+                                logger.error("PermissionError {} for epoll.modify(RO) with fileno {} for object {}, please report to SmartHomeNG team".format(e, fileno, self._connections[fileno]))
+                                # here we could try to get rid of the connection that causes the headache
+                            except FileNotFoundError as e:
+                                logger.error("FileNotFoundError {} for epoll.modify(RO) with fileno {} for object {}, please report to SmartHomeNG team".format(e, fileno, self._connections[fileno]))
+                                # here we could try to get rid of the connection that causes the headache
 
-                elif hasattr(select, 'kqueue'):
-                    event = []
-                    if self._connections[fileno].outbuffer:
-                        event.append(select.kevent(fileno,
-                                            filter=select.KQ_FILTER_WRITE,
-                                            flags=select.KQ_EV_ADD | KQ_EV_ONESHOT))
-                    else:
-                        event.append(select.kevent(fileno,
-                                            filter=select.KQ_FILTER_READ,
-                                            flags=select.KQ_EV_ADD))
-                    self._kqueue.control(event, 0, 0)
+                    elif hasattr(select, 'kqueue'):
+                        event = []
+                        if self._connections[fileno].outbuffer:
+                            event.append(select.kevent(fileno,
+                                                filter=select.KQ_FILTER_WRITE,
+                                                flags=select.KQ_EV_ADD | KQ_EV_ONESHOT))
+                        else:
+                            event.append(select.kevent(fileno,
+                                                filter=select.KQ_FILTER_READ,
+                                                flags=select.KQ_EV_ADD))
+                        self._kqueue.control(event, 0, 0)
 
-        if hasattr(select, 'epoll'):
-            for fileno, event in self._epoll.poll(timeout=1):
-                if fileno in self._servers:
-                    server = self._servers[fileno]
-                    server.handle_connection()
-                else:
-                    if event & select.EPOLLIN:
-                        try:
-                            con = self._connections[fileno]
-                            con._in()
-                        except Exception as e:
-                            con.close()
-                            continue
-                        if event & select.EPOLLOUT:
+            if hasattr(select, 'epoll'):
+                for fileno, event in self._epoll.poll(timeout=1):
+                    if fileno in self._servers:
+                        server = self._servers[fileno]
+                        server.handle_connection()
+                    else:
+                        if event & select.EPOLLIN:
                             try:
                                 con = self._connections[fileno]
-                                con._out()
+                                con._in()
                             except Exception as e:
                                 con.close()
                                 continue
-                        if event & (select.EPOLLHUP | select.EPOLLERR):
+                            if event & select.EPOLLOUT:
+                                try:
+                                    con = self._connections[fileno]
+                                    con._out()
+                                except Exception as e:
+                                    con.close()
+                                    continue
+                            if event & (select.EPOLLHUP | select.EPOLLERR):
+                                try:
+                                    con = self._connections[fileno]
+                                    con.close()
+                                    continue
+                                except:
+                                    pass
+            elif hasattr(select, 'kqueue'):
+                for event in self._kqueue.control(None, 1):
+                    fileno = event.ident
+                    if fileno in self._servers:
+                        server = self._servers[fileno]
+                        server.handle_connection()
+                    else:
+                        if event.filter == select.KQ_FILTER_READ:
                             try:
                                 con = self._connections[fileno]
+                                con._in()
+                            except Exception as e:  # noqa
                                 con.close()
                                 continue
-                            except:
-                                pass
-        elif hasattr(select, 'kqueue'):
-            for event in self._kqueue.control(None, 1):
-                fileno = event.ident
+                            if event.filter == select.KQ_FILTER_WRITE:
+                                try:
+                                    con = self._connections[fileno]
+                                    con._out()
+                                except Exception as e:  # noqa
+                                    con.close()
+                                    continue
+                            if event.flags & select.KQ_EV_EOF:
+                                try:
+                                    con = self._connections[fileno]
+                                    con.close()
+                                    continue
+                                except:
+                                    pass
+        else:
+            # not using  epoll or kqueue
+            n_connections = len(self._connections)
+            if self._connections_found != n_connections:
+                logger.debug("lib/connection.py poll() for len(self._connections)={}".format(n_connections))
+                self._connections_found = n_connections
+
+            watched = self._waitobj.get_watched()
+            nwatched = len(watched)
+            logger.debug("iowait in alpha status with {} watched connections".format(nwatched))
+            events = self._waitobj.wait()
+            nevents = len(events)
+            logger.debug("iowait reports {} events".format(nevents))
+            for fileno, read, write in events:
+                logger.debug("event for fileno={}, read={}, write={}".format(fileno, read, write))
                 if fileno in self._servers:
                     server = self._servers[fileno]
                     server.handle_connection()
                 else:
-                    if event.filter == select.KQ_FILTER_READ:
+                    logger.debug("fileno {} not in self._servers".format(fileno))
+                    if read:
                         try:
                             con = self._connections[fileno]
                             con._in()
                         except Exception as e:  # noqa
                             con.close()
                             continue
-                        if event.filter == select.KQ_FILTER_WRITE:
+                        if write:
                             try:
                                 con = self._connections[fileno]
                                 con._out()
                             except Exception as e:  # noqa
                                 con.close()
                                 continue
-                        if event.flags & select.KQ_EV_EOF:
-                            try:
-                                con = self._connections[fileno]
-                                con.close()
-                                continue
-                            except:
-                                pass
-        else:
-            logger.exception("WARNING: no epoll/kqueue implementation available")
-            sys.exit(0)
+
 
     def close(self):
         if -1 in self._connections:

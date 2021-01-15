@@ -32,7 +32,7 @@ The result is printed to stdout
 import os
 import argparse
 
-VERSION = '1.7.2'
+VERSION = '1.7.6'
 
 print('')
 print(os.path.basename(__file__) + ' v' + VERSION + ' - Checks the care status of plugin metadata')
@@ -90,7 +90,8 @@ def get_plugintype(plgName):
     except:
         return 'None' \
                ''
-    if (code.find('(SmartPlugin') == -1) and (code.find('( SmartPlugin') == -1):
+    if (code.find('(SmartPlugin') == -1) and (code.find('( SmartPlugin') == -1) and \
+       (code.find('(MqttPlugin') == -1) and (code.find('( MqttPlugin') == -1):
         return 'Classic'
     return 'Smart'
 
@@ -103,7 +104,10 @@ def readMetadata(metaplugin, plugins_local):
     plugin_yaml = {}
     if metaplugin in plugins_local:  # pluginsyaml_local
         if os.path.isfile(metafile):
-            plugin_yaml = shyaml.yaml_load(metafile, ordered=True)
+            try:
+                plugin_yaml = shyaml.yaml_load(metafile, ordered=True)
+            except KeyboardInterrupt:
+                exit(0)
     else:
         print("There is no plugin named '" + metaplugin + "'")
         print()
@@ -115,27 +119,40 @@ def readMetadata(metaplugin, plugins_local):
 #   Functions to list plugin information
 #
 
-def list_formatted(plugin, plgvers, plgstate, plgtype, plgGlobal, plgParams, plgAttr, plgFunc='', plgLog=''):
+def list_formatted(plugin, plgvers, plgstate, plgtype, plgGlobal, plgParams, plgAttr, plgFunc='', plgLog='', list_versions=False):
     if plgstate == 'qa-passed':
         plgstate = 'qa-pass'
-    print('{plugin:<14.14} {plgvers:<8.8} {plgstate:<7.7} {plgtype:<5.5} {plgGlobal:<7.7} {plgParams:<7.7} {plgAttr:<10.10} {plgFunc:<7.7} {plgLog:<7.7}'
-          .format( plugin=plugin,
-                   plgvers=plgvers,
-                   plgstate=plgstate,
-                   plgtype=plgtype,
-                   plgGlobal=plgGlobal,
-                   plgParams=plgParams,
-                   plgAttr=plgAttr,
-                   plgFunc=plgFunc, plgLog=plgLog))
+    if not list_versions:
+        print('{plugin:<14.14} {plgvers:<8.8} {plgstate:<7.7} {plgtype:<5.5} {plgGlobal:<7.7} {plgParams:<7.7} {plgAttr:<10.10} {plgFunc:<7.7} {plgLog:<7.7}'
+              .format( plugin=plugin,
+                       plgvers=plgvers,
+                       plgstate=plgstate,
+                       plgtype=plgtype,
+                       plgGlobal=plgGlobal,
+                       plgParams=plgParams,
+                       plgAttr=plgAttr,
+                       plgFunc=plgFunc, plgLog=plgLog))
+    else:
+        print('{plugin:<14.14} {plgvers:<8.8} {plgstate:<7.7} {plgtype:<7.7} {plgShngMin:<9.9} {plgShngMax:<9.9} {plgPyMin:<9.9} {plgPyMax:<9.9}'
+              .format( plugin=plugin,
+                       plgvers=plgvers,
+                       plgstate=plgstate,
+                       plgtype=plgtype,
+                       plgShngMin=plgGlobal,
+                       plgShngMax=plgParams,
+                       plgPyMin=plgAttr,
+                       plgPyMax=plgFunc))
 
 
-def list_plugins(option):
+def list_plugins(option, suboption=None, list_versions=False):
 
     option = option.strip().lower()
+    if suboption:
+        suboption = suboption.strip().lower()
 
     plugins_local = get_local_pluginlist()
 
-    header_displayed = False;
+    header_displayed = False
     plgcount = 0
     allplgcount = 0
     priv_plgcount = 0
@@ -149,6 +166,10 @@ def list_plugins(option):
         sectionLogics = '-'
         sectionIStruct = ''
         comment = ''
+        shng_min_vers = '?'
+        shng_max_vers = '?'
+        py_min_vers = '?'
+        py_max_vers = '?'
         metadata = readMetadata(plg, plugins_local)
         if metadata == None:
             return
@@ -161,6 +182,10 @@ def list_plugins(option):
             plgstate = metadata['plugin'].get('state', '-')
             if not plgstate in ['qa-passed', 'ready', 'develop', 'deprecated']:
                 plgstate = 'INVALID'
+            shng_min_vers = str(metadata['plugin'].get('sh_minversion', '-'))
+            shng_max_vers = str(metadata['plugin'].get('sh_maxversion', '-'))
+            py_min_vers = str(metadata['plugin'].get('py_minversion', '-'))
+            py_max_vers = str(metadata['plugin'].get('py_maxversion', '-'))
         plgtype = get_plugintype(plg)
         if plgtype == 'Smart':
             if version == '-':
@@ -214,17 +239,30 @@ def list_plugins(option):
                 sectionLogics += ' (' + str(len(metadata['logic_parameters'])) + ')'
 
         if (option == 'all') or \
+           (option == 'state' and plgstate.lower() == suboption) or \
+           (option == 'state' and suboption == 'other' and (plgstate.lower() not in ['qa-passed', 'ready', 'develop', 'deprecated'])) or \
            (option == plgtype.lower()) or \
            (option == 'inc' and (plgstate == 'INVALID' or sectionPlg == MISSING_TEXT or sectionParam == MISSING_TEXT or sectionIAttr == MISSING_TEXT or sectionFunc == MISSING_TEXT or sectionLogics == MISSING_TEXT)) or \
            (option == 'compl' and (plgtype.lower() != 'classic' and sectionPlg != MISSING_TEXT and sectionParam != MISSING_TEXT and sectionIAttr != MISSING_TEXT and sectionFunc != MISSING_TEXT) and (sectionLogics != MISSING_TEXT)) or \
            (option == 'inc_para' and sectionParam == MISSING_TEXT) or (option == 'inc_attr' and sectionIAttr == MISSING_TEXT):
-            if not header_displayed:
-                ul = '-------------------------------'
-                list_formatted('',       '',        '',      'Plugin', '',     'Plugin', 'Item',    'Plugin', 'Plugin')
-                list_formatted('Plugin', 'Version', 'State', 'Type',   'Info', 'Params', 'Attrib.', 'Funct.', 'Logics')
-                list_formatted(ul, ul, ul, ul, ul, ul, ul, ul, ul)
-                header_displayed = True
-            list_formatted(plg, version, plgstate, plgtype, sectionPlg, sectionParam, sectionIAttr, sectionFunc, sectionLogics)
+            if not list_versions:
+                if not header_displayed:
+                    ul = '-------------------------------'
+                    list_formatted('',       '',        '',      'Plugin', '',     'Plugin', 'Item',    'Plugin', 'Plugin')
+                    list_formatted('Plugin', 'Version', 'State', 'Type',   'Info', 'Params', 'Attrib.', 'Funct.', 'Logics')
+                    list_formatted(ul, ul, ul, ul, ul, ul, ul, ul, ul)
+                    header_displayed = True
+                list_formatted(plg, version, plgstate, plgtype, sectionPlg, sectionParam, sectionIAttr, sectionFunc, sectionLogics)
+            else:
+#----
+                if not header_displayed:
+                    ul = '-------------------------------'
+                    list_formatted('',       '',        '',      'Plugin', 'shng',       'shng',       'Python', 'Python', list_versions=True)
+                    list_formatted('Plugin', 'Version', 'State', 'Type',   'min. Vers.', 'max. Vers.', 'min. Vers.', 'max. Vers.', list_versions=True)
+                    list_formatted(ul, ul, ul, ul, ul, ul, ul, ul, list_versions=True)
+                    header_displayed = True
+                list_formatted(plg, version, plgstate, plgtype, shng_min_vers, shng_max_vers, py_min_vers, py_max_vers, list_versions=True)
+#----
             plgcount += 1
             if plg.startswith('priv_'):
                 priv_plgcount += 1
@@ -252,10 +290,10 @@ def list_plugins(option):
 
 def disp_formatted(lbl, val):
     val = val.replace('\n', ' ')
-    print('{lbl:<18.18} {val:<55.55}'.format(lbl=lbl, val=val))
+    print('{lbl:<19.19} {val:<55.55}'.format(lbl=lbl, val=val))
     while len(val) > 55:
         val = val[55:]
-        print('{lbl:<18.18} {val:<55.55}'.format(lbl='', val=val))
+        print('{lbl:<19.19} {val:<55.55}'.format(lbl='', val=val))
 
 
 def disp_formatted2(lbl, typ, val=''):
@@ -264,6 +302,16 @@ def disp_formatted2(lbl, typ, val=''):
         val = val[48:]
         print('{lbl:<19.19}{typ:<13.13}{val:<48.48}'.format(lbl='', typ='', val=val))
 
+
+def disp_formatted3(lbl, typ, val=''):
+    print('{lbl:<22.22}{typ:<55.55}'.format(lbl=lbl, typ=typ))
+    emptyline = False
+    while len(typ) > 55:
+        emptyline = True
+        typ = typ[55:]
+        print('{lbl:<22.22}{typ:<55.55}'.format(lbl='', typ=typ))
+    if emptyline:
+        print()
 
 def display_definition(name, dict):
 
@@ -291,6 +339,20 @@ def display_definition(name, dict):
             val += ', '
         val += "valid_list=" + str(dict.get('valid_list', None))
     disp_formatted2(name, dict.get('type', 'foo'), val)
+
+
+def display_struct_definition(name, dict):
+
+    val = ''
+    val2 = ''
+    if dict.get('default', None) != None:
+        if val != '':
+            val += ', '
+        if dict.get('default', None) == 'None*':
+            val += "default=None"
+        else:
+            val += "default='" + str(dict.get('default', None)) + "'"
+    disp_formatted3(name, dict.get('name', '-'), val)
 
 
 def display_def_description(name, dict):
@@ -327,6 +389,8 @@ def display_metadata(plg, with_description):
         disp_formatted('Restartable', str(metadata['plugin'].get('restartable', '-')))
         disp_formatted('shNG min. Version', str(metadata['plugin'].get('sh_minversion', '-')))
         disp_formatted('shNG max. Version', str(metadata['plugin'].get('sh_maxversion', '-')))
+        disp_formatted('Python min. Version', str(metadata['plugin'].get('py_minversion', '-')))
+        disp_formatted('Python max. Version', str(metadata['plugin'].get('py_maxversion', '-')))
         disp_formatted('Classname', metadata['plugin'].get('classname', '-'))
 
         disp_formatted('Maintainer', metadata['plugin'].get('maintainer', '-'))
@@ -382,6 +446,22 @@ def display_metadata(plg, with_description):
                 attr_dict = metadata['item_attributes'][attr]
                 display_def_description(attr, attr_dict)
             print()
+
+    if metadata.get('item_structs', None) == None:
+        print("ERROR: Section 'item_structs' not defined in metadata")
+        print()
+    elif metadata.get('item_structs', None) == 'NONE':
+        print("Item Structs")
+        print("------------")
+        print("No item item_structs defined for this plugin")
+        print()
+    else:
+        print("Item Structs")
+        print("------------")
+        for attr in metadata.get('item_structs', None):
+            attr_dict = metadata['item_structs'][attr]
+            display_struct_definition(attr, attr_dict)
+        print()
 
     if metadata.get('plugin_functions', None) == None:
         print("ERROR: Section 'plugin_functions' not defined in metadata")
@@ -534,7 +614,6 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
         if metadata['plugin'].get('maintainer', None) == None:
             disp_warning('The maintainer of the plugin is not documented', "Add 'maintainer:' to the plugin section")
 
-
     if (plg_type != 'classic' and not list_classic):
 
         if metadata.get('plugin', None) is None:
@@ -542,6 +621,9 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
         else:
             if metadata['plugin'].get('state', None) == None:
                 disp_error('No development state given for the plugin', "Add 'state:' to the plugin section and set it to one of the following values ['develop', 'ready', 'qa-passed']", "The state'qa-passed' should only be set by the shNG core team")
+            elif not metadata['plugin'].get('state', None) in ['qa-passed', 'ready', 'develop', '-']:
+                disp_error('An invalid development state is given for the plugin', "Set'state:' to one of the followind valid values ['develop', 'ready', 'qa-passed']", "The state'qa-passed' should only be set by the shNG core team")
+
             if metadata['plugin'].get('multi_instance', None) == None:
                 disp_warning('It is not documented if wether the plugin is multi-instance capable or not', "Add 'multi_instance:' to the plugin section")
             else:
@@ -605,6 +687,15 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
                         if par_dict.get('mandatory', None) != None and par_dict.get('default', None) != None:
                             disp_error("item '{}': mandatory and default cannot be used together".format(par), "If mandatory and a default value are specified togeather, mandatory has no effect, since a value for the parameter is already specified (the default value).")
                         test_description('item attribute', par, par_dict.get('description', None))
+
+        if metadata.get('item_structs', None) != None:
+            if metadata.get('item_structs', None) != 'NONE':
+                for par in metadata.get('item_structs', None):
+                    par_dict = metadata['item_structs'][par]
+                    if not is_dict(par_dict):
+                        disp_error("Definition of item_structs '{}' is not a dict".format(par), '')
+                    else:
+                        pass
 
         if metadata.get('plugin_functions', None) != None:
             if metadata.get('plugin_functions', None) != 'NONE':
@@ -738,10 +829,11 @@ def check_plglist(option, list_classic=False):
             print("{} ({}) plugins of ".format(plgcount, plgcount+priv_plgcount), end='')
         else:
             print("{} plugins of ".format(plgcount), end='')
-    if priv_allplgcount > 0:
-        print("{} ({}) plugins total".format(allplgcount, allplgcount+priv_allplgcount))
-    else:
-        print("{} plugins total".format(allplgcount))
+    if allplgcount > 0 or allplgcount+priv_allplgcount > 0:
+        if priv_allplgcount > 0:
+            print("{} ({}) plugins total".format(allplgcount, allplgcount+priv_allplgcount))
+        else:
+            print("{} plugins total".format(allplgcount))
     print()
 
 
@@ -764,6 +856,7 @@ if __name__ == '__main__':
     group.add_argument('-la', '--list_all', action="store_true", default=False, help='list plugin information of all plugins')
     group.add_argument('-lcl', '--list_classic', action="store_true", default=False, help='list plugin information of classic plugins')
     group.add_argument('-lsm', '--list_smart', action="store_true", default=False, help='list plugin information of smart plugins')
+    group.add_argument('-lst', '--list_state', action="store_true", default=False, help='list plugin information grouped by plugin state')
     group.add_argument('-li', '--list_inc', action="store_true", default=False, help='list information of plugins with incomplete metadata')
     group.add_argument('-lc', '--list_compl', action="store_true", default=False, help='list information of plugins with complete metadata')
     group.add_argument('-lip', action="store_true", default=False, help='list info of plugins with incomplete parameter data')
@@ -775,10 +868,17 @@ if __name__ == '__main__':
     group.add_argument('-cl', '--check_list', action="store_true", default=False, help='check the metadata of all plugins')
     group.add_argument('-clc', '--check_clist', action="store_true", default=False, help='check the metadata of plugins with all metadata sections')
     group.add_argument('-cli', '--check_ilist', action="store_true", default=False, help='check the metadata of all plugins, list only incomplete plugins')
+    group.add_argument('-v', '--list_versions', action="store_true", default=False, help='list versions instead of metadata checks')
     args = parser.parse_args()
 
+    list_versions = False
+    if args.list_versions:
+        print("List Versions!")
+        list_versions = True
     try:
-        if args.list_all:
+        if args.list_versions:
+            list_plugins('all', list_versions=list_versions)
+        elif args.list_all:
             list_plugins('all')
         elif args.list_classic:
             list_plugins('classic')
@@ -792,6 +892,12 @@ if __name__ == '__main__':
             list_plugins('inc_para')
         elif args.lia:
             list_plugins('inc_attr')
+        elif args.list_state:
+            list_plugins('state', 'qa-passed')
+            list_plugins('state', 'ready')
+            list_plugins('state', 'develop')
+            list_plugins('state', 'deprecated')
+            list_plugins('state', 'other')
 
         elif args.disp_plugin:
             display_metadata(args.disp_plugin, False)

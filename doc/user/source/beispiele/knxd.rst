@@ -13,8 +13,10 @@ Hier finden sich einige Hinweise und Konfigurationsbeispiele für die Anwendung 
 Wichtig
 =======
 
-Diese Liste soll eine Sammlung von Beispielkonfigurationen verschiedenster Schnittstellen liefern. Sie ersetzt nicht die Dokumentation von knxd auf dem Git-Repository.
-Sie ist in Lieferanten und anschließend deren Schnittstellen gegliedert. Bei den Beispielen bitte bei "IP-Adresse" die IP der Schnittstelle / des Routers angeben (bspw. 192.168.178.30).
+Diese Liste soll eine Sammlung von Beispielkonfigurationen verschiedenster Schnittstellen liefern.
+Sie ersetzt nicht die Dokumentation von knxd auf dem Git-Repository.
+Sie ist in Lieferanten und anschließend deren Schnittstellen gegliedert. 
+Bei den Beispielen bitte bei "IP-Adresse" die IP der Schnittstelle / des Routers angeben (bspw. 192.168.178.30).
 
 
 Beispielkonfigurationen

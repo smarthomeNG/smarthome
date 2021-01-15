@@ -292,7 +292,7 @@ def build_pluginlist( plugin_type='all' ):
 
 def write_dummyfile(configfile_dir, namelist):
     outf_name = os.path.join(configfile_dir, 'dummy_config.rst')
-    fh_dummy = open(outf_name, "w")
+    fh_dummy = open(outf_name, "w", encoding='UTF-8')
 
     fh_dummy.write(':orphan:\n')
     fh_dummy.write('\n')
@@ -399,7 +399,7 @@ def write_configfile(plg, configfile_dir, language='de'):
     # Create rST file
     # ---------------------------------
     outf_name = os.path.join(configfile_dir, plgname+'.rst')
-    fh = open(outf_name, "w")
+    fh = open(outf_name, "w", encoding='UTF-8')
     fh.write('.. |_| unicode:: 0xA0\n')
     fh.write('\n')
 
@@ -490,7 +490,9 @@ def write_configfile(plg, configfile_dir, language='de'):
         validmax = parameter_yaml[p].get('valid_max', '')
         fh.write(' - Datentyp: '+bold(datatype)+'\n')
         if default != '':
-            fh.write(' - Standardwert: '+bold(default)+'\n')
+            default_printable = default.replace('\r', '\\r')
+            default_printable = default_printable.replace('\n', '\\n')
+            fh.write(' - Standardwert: '+bold(default_printable)+'\n')
         fh.write('\n')
         if validmin != '':
             fh.write(' - Minimalwert: ' + bold(str(validmin)) + '\n')
@@ -534,7 +536,9 @@ def write_configfile(plg, configfile_dir, language='de'):
         validmax = iattributes_yaml[a].get('valid_max', '')
         fh.write(' - Datentyp: '+bold(datatype)+'\n')
         if default != '':
-            fh.write(' - Standardwert: '+bold(default)+'\n')
+            default_printable = default.replace('\r', '\\r')
+            default_printable = default_printable.replace('\n', '\\n')
+            fh.write(' - Standardwert: '+bold(default_printable)+'\n')
         fh.write('\n')
         if validmin != '':
             fh.write(' - Minimalwert: ' + bold(str(validmin)) + '\n')
@@ -578,7 +582,9 @@ def write_configfile(plg, configfile_dir, language='de'):
         validmax = lparameter_yaml[l].get('valid_max', '')
         fh.write(' - Datentyp: '+bold(datatype)+'\n')
         if default != '':
-            fh.write(' - Standardwert: '+bold(default)+'\n')
+            default_printable = default.replace('\r', '\\r')
+            default_printable = default_printable.replace('\n', '\\n')
+            fh.write(' - Standardwert: '+bold(default_printable)+'\n')
         fh.write('\n')
         if validmin != '':
             fh.write(' - Minimalwert: '+bold(str(validmin)) + '\n')
@@ -643,7 +649,9 @@ def write_configfile(plg, configfile_dir, language='de'):
         else:
             fh.write(' - Ergebnistyp der Funktion: ' + bold(datatype) + '\n')
         if default != '':
-            fh.write(' - Standardwert: ' + bold(default) + '\n')
+            default_printable = default.replace('\r', '\\r')
+            default_printable = default_printable.replace('\n', '\\n')
+            fh.write(' - Standardwert: '+bold(default_printable)+'\n')
         fh.write('\n')
         if validmin != '':
             fh.write(' - Minimalwert: ' + bold(str(validmin)) + '\n')
@@ -671,7 +679,9 @@ def write_configfile(plg, configfile_dir, language='de'):
                 validmax = func_param_yaml[par].get('valid_max', '')
                 fh.write(' - Datentyp: ' + bold(datatype) + '\n')
                 if default != '':
-                    fh.write(' - Standardwert: ' + bold(default) + '\n')
+                    default_printable = default.replace('\r', '\\r')
+                    default_printable = default_printable.replace('\n', '\\n')
+                    fh.write(' - Standardwert: ' + bold(default_printable) + '\n')
                 fh.write('\n')
                 if validmin != '':
                     fh.write(' - Minimalwert: ' + bold(str(validmin)) + '\n')

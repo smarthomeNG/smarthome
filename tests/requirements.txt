@@ -1,0 +1,16 @@
+
+#   +--------------------------------------------------+
+#   |                 SmartHomeNG                      |
+#   |                                                  |
+#   |       Requirements to run the test cases         |
+#   |                                                  |
+#   |               INSTALL WITH:                      |
+#   | pip3 install -r tests/requirements.txt --user    |
+#   +--------------------------------------------------+
+
+# Package needed to run the tests
+pytest
+
+# required by tests of blockly plugin
+bs4
+

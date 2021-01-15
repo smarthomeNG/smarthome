@@ -279,7 +279,7 @@ class LogicsController(RESTResource):
             if os.path.isfile(pathname):
                 return False
 
-        f = open(pathname, 'w')
+        f = open(pathname, 'w', encoding='UTF-8')
         f.write(logics_code)
         f.close()
 

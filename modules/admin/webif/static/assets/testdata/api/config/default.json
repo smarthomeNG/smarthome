@@ -390,6 +390,92 @@
       }
     }
   },
+  "websocket": {
+    "data": {
+      "module_name": "websocket",
+      "port": 3434,
+      "tls_port": 3435
+    },
+    "meta": {
+      "module": {
+        "classname": "Websocket",
+        "version": "1.0.0",
+        "sh_minversion": "1.7",
+        "description": {
+          "de": "Modul zur Implementierung von Websockets",
+          "en": "Module for implementing a websocket interface",
+          "fr": "Module pour l'implémentation d'interfaces websockets"
+        }
+      },
+      "parameters": {
+        "enabled": {
+          "type": "bool",
+          "default": false,
+          "description": {
+            "de": "Websocket Unterstützung aktivieren oder deaktivieren",
+            "en": "Enable or disable websocket support"
+          }
+        },
+        "ip": {
+          "type": "ipv4",
+          "description": {
+            "de": "IP Adresse auf der das websocket Modul aktiv sein soll - muss normalerweise nicht angegeben werden",
+            "en": "IP adress on which the websocket module should operate - not needed, has only to be specified for special configurations",
+            "fr": "Adresse IP sur laquelle le module websocket devrait fonctionner - il n'est généralement pas nécessaire de la spécifier"
+          }
+        },
+        "port": {
+          "type": "int",
+          "valid_min": 0,
+          "valid_max": 65535,
+          "default": 8383,
+          "description": {
+            "de": "Portnummer für die Websockets",
+            "en": "Port number for the access to websockets",
+            "fr": "Numéro de port pour l'accès à l'interface websockets"
+          }
+        },
+        "tls_port": {
+          "type": "int",
+          "valid_min": 0,
+          "valid_max": 65535,
+          "default": 8385,
+          "description": {
+            "de": "Portnummer für die Websockets bei Nutzung von wss",
+            "en": "Port number for the access to websockets when using wss",
+            "fr": "Numéro de port pour l'accès à l'interface web si utilisation de wss"
+          }
+        },
+        "use_tls": {
+          "type": "bool",
+          "default": false,
+          "description": {
+            "de": "Auf True setzen, um Zugriffe über wss zu ermöglichen (Zertifikat muss installiert sein)",
+            "en": "Set to true to allow access over wss (certificate has to be installed)",
+            "fr": "Mettre sur 'true' pour activer les accès par https (certificats doivent être installés)"
+          }
+        },
+        "tls_cert": {
+          "type": "str",
+          "default": "shng.cer",
+          "description": {
+            "de": "Name der Zertifikatsdatei. Die Datei muss im Verzeichnis ../etc liegen",
+            "en": "Name of the certificate file. The file musst be stored in ../etc",
+            "fr": "Nom du fichier contanent les certificats. Le fichier doit se trouver dans ../etc"
+          }
+        },
+        "tls_key": {
+          "type": "str",
+          "default": "shng.key",
+          "description": {
+            "de": "Name der Datei mit dem privaten Schlüssel. Die Datei muss im Verzeichnis ../etc liegen",
+            "en": "Name of the private key file. The file musst be stored in ../etc",
+            "fr": "Nom du fichier contanent les clés privés. Le fichier doit se trouver dans ../etc"
+          }
+        }
+      }
+    }
+  },
   "admin": {
     "data": {
       "module_name": "admin",
@@ -483,6 +569,22 @@
             "en": "Size of blocks (chunks) read when displaying large logfiles",
             "fr": "Taille des morceaux lus lors de l'affichage de fichiers journaux volumineux"
           }
+        },
+        "developer_mode": {
+          "type": "bool",
+          "default": false,
+          "description": {
+            "de": "Entwickler Modus aktivieren",
+            "en": "Activate developer mode"
+          }
+        },
+        "click_dropdown_header": {
+          "type": "bool",
+          "default": false,
+          "description": {
+            "de": "Click auf Kopfeintrag von Dropdown Menüs erlauben",
+            "en": "Allow click on header of dropdown menus"
+          }
         }
       }
     }
@@ -509,6 +611,14 @@
         }
       },
       "parameters": {
+        "enabled": {
+          "type": "bool",
+          "default": false,
+          "description": {
+            "de": "MQTT Unterstützung aktivieren oder deaktivieren",
+            "en": "Enable or disable MQTT support"
+          }
+        },
         "broker_host": {
           "type": "ip",
           "default": "127.0.0.1",

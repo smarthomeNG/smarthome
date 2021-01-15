@@ -13,7 +13,7 @@ New Plugins
 -  :doc:`Samsung Smart TV Plugin </plugins/smarttv/README>`: send commands to a SmartTV device.
 -  :doc:`Solarlog Plugin </plugins/solarlog/README>`: to retrieve information from SolarLog devices.
 -  SQLite Plugin: to store the item history in a SQLite database.
--  :doc:`XBMC Plugin </plugins/xbmc/README>`: to control and monitor your XBMC.
+-  `XBMC Plugin </plugins/xbmc/README>`: to control and monitor your XBMC.
 
 Features
 ^^^^^^^^
@@ -24,17 +24,17 @@ Features
 -  `Logic <logic>`_: de-/activate logics. e.g. ``sh.scheduler.change('alarmclock', active=False)``
 -  `Logic <logic>`_: new basic methods: sh.return\_item, sh.return\_items, sh.match\_items, sh.find\_items, find\_children
 -  `Scene support <config>`_: to set multiple item values at the same time
--  `1-Wire Plugin </plugins/onewire/README>`: rewritten to support many different sensors.
+-  :doc:`1-Wire Plugin </plugins_doc/config/onewire>`: rewritten to support many different sensors.
 -  :doc:`Asterisk plugin </plugins/asterisk/README>`: adding destination support for user events
--  :doc:`CLI plugin </plugins/cli/README>`: new command 'cl' to clean the memory log of sh.py
+-  :doc:`CLI plugin </plugins_doc/config/cli>`: new command 'cl' to clean the memory log of sh.py
 -  DWD plugin: adding support for Pollen forecast
--  :doc:`KNX plugin </plugins/knx/README>`:
+-  :doc:`KNX plugin </plugins_doc/config/knx>`:
 
    -  change encoding of dpt10 to use a datetime object and send the isoweekday
    -  DPT 17 support
    -  adding support to log all packets (busmonitor)
 
--  :doc:`Mail Plugin </plugins/mail/README>`: enable sending UTF-8 mails
+-  `Mail Plugin </plugins_doc/config/mail>`: enable sending UTF-8 mails
 -  Visu Plugin:
 
    -  change url
@@ -43,4 +43,4 @@ Features
 Bug Fixes
 ^^^^^^^^^
 
--  :doc:`KNX plugin </plugins/knx/README>`: fix broken knx_cache, with support from Robert@knx-user-forum
+-  :doc:`KNX plugin </plugins_doc/config/knx>`: fix broken knx_cache, with support from Robert@knx-user-forum

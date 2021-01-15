@@ -9,15 +9,39 @@
 #   | pip3 install -r requirements/test.txt --user     |
 #   +--------------------------------------------------+
 
-flake8>=2.5.1
-pylint>=1.5.3
-coveralls>=1.1
-pytest>=3.6.0
-pytest-cov>=2.2.0
-pytest-timeout>=1.0.0
-betamax==0.5.1
-pydocstyle>=1.0.0
+# scrape information from webpages
+# e.g. blockly plugin which is in alpha stadium
 beautifulsoup4>=4.1.0
+
+# Flake8 is a Python static code analysis tool
+#flake8>=2.5.1
+
+# Pylint is a Python static code analysis tool
+# which looks for programming errors, helps enforcing a
+# coding standard, sniffs for code smells and
+# offers simple refactoring suggestions
+#pylint>=1.5.3
+
+# testing with pytest
+pytest>=3.6.0
+
+#This is a plugin which will terminate tests after a certain timeout
+#pytest-timeout>=1.0.0
+
+# This plugin for pytest produces coverage reports
+#pytest-cov>=2.2.0
+
+# coveralls.io is a service for publishing coverage stats online
+#coveralls>=1.1
+
+# Betamax intercepts every request you make and
+# attempts to find a matching request that has already been intercepted and recorded.
+# old requirement: betamax==0.5.1
+#betamax
+
+# pydocstyle is a static analysis tool for checking compliance
+# with Python docstring conventions
+#pydocstyle>=1.0.0
 
 # the following needs to be exactly the same as in requirements/base.txt
 # otherwise inconsistent requirements will occur in Travis/Tox/Testing

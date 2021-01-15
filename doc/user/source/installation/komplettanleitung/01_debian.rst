@@ -44,7 +44,7 @@ oder `UNetbootin <https://unetbootin.github.io/>`__ auf einen USB Stick
       sudo systemctl start ssh
       sudo systemctl enable ssh
 
-   den SSH server jetzt und bei zukünftigen Neustarts automatisch zu
+   den SSH Server jetzt und bei zukünftigen Neustarts automatisch zu
    zu starten.
 
 
@@ -56,6 +56,7 @@ vorgenommen werden sind:
 - Rechnername z.B. **sh**, **shmuc**, **smarthome23**, ...
 - Das **root Passwort bitte leer lassen**
 - Benutzer **smarthome** anlegen
+  (bitte gerade am Raspi ein Passwort vergeben, sonst wird SSH für den Benutzer nicht aktiviert)
 - Zeitzone (z.B. Berlin)
 - Festplatte geführt partitionieren und alles verwenden,
   Änderungen auf Platten schreiben
@@ -85,7 +86,7 @@ Wenn keine grafische Benutzeroberfläche gebraucht wird, dann bitte
 **auswählen**:
 
 -  Web Server
--  SSH Server (wird für SSH z.B. via PuTTY oder Bitvise SSH client
+-  SSH Server (wird für SSH z.B. via PuTTY oder Bitvise SSH Client
    benötigt)
 -  Standard-Systemwerkzeuge
 
@@ -110,7 +111,7 @@ Einloggen via SSH oder an der Konsole
   Putty installieren und umbenennen in Putty.exe.bak. Dann Kitty ins
   Verzeichnis vom Putty schreiben und umbenennen als Putty.exe.
   Natürlich ``<ip_des_servers>`` ersetzen durch die IP Adresse oder den
-  Namen des neuen smarthome Servers.
+  Namen des neuen SmartHomeNG Servers.
 
 Oder alternativ (z.B. bei einer virtuellen Maschine) direkt an der **Konsole** anmelden.
 
@@ -152,7 +153,7 @@ ist sicher.
    um einen Snapshot zu erstellen. Falls im weiteren etwas nicht so funktioniert
    wie erwartet, kann so neu angesetzt werden ohne alles erneut herunterladen
    zu müssen.
-   Alternativ kann der Snapshot natürlich auch nach Abschluß der Restarbeiten
+   Alternativ kann der Snapshot natürlich auch nach Abschluss der Restarbeiten
    weiter unten ausgeführt werden.
 
 .. topic:: Raspberry Pi

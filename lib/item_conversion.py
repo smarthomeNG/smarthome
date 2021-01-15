@@ -277,7 +277,7 @@ def _yaml_save_roundtrip(filename, data):
     if sdata[0] == '\n':
         sdata =sdata[1:]
 
-    with open(filename+'.yaml', 'w') as outfile:
+    with open(filename+'.yaml', 'w', encoding='utf8') as outfile:
         outfile.write( sdata )
 
 
@@ -296,7 +296,7 @@ def yaml_save(filename, data):
 
     print(", saving to '{}'".format(os.path.basename(filename)+'.yaml'))
     if store_raw_output == True:
-        with open(filename+'_raw.yaml', 'w') as outfile:
+        with open(filename+'_raw.yaml', 'w', encoding='UTF-8') as outfile:
             outfile.write( sdata )
 
     # Test if roundtrip gives the same result

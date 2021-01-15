@@ -28,15 +28,15 @@ A plugin consists of a minimum of three files (without user- and developer docum
 +--------------------------+---------------------------------------------------------------------------------+
 | File                     | Description                                                                     |
 +==========================+=================================================================================+
-| **__init__.py**          | The file containing the Python source code                                      |
+| ``__init__.py``          | The file containing the Python source code                                      |
 +--------------------------+---------------------------------------------------------------------------------+
-| **plugin.yaml**          | The file containing the metadata of the plugin                                  |
+| ``plugin.yaml``          | The file containing the metadata of the plugin                                  |
 +--------------------------+---------------------------------------------------------------------------------+
-| **locale.yaml**          | Optional, containing translation strings for the multi-language implementation  |
+| ``locale.yaml``          | Optional, containing translation strings for the multi-language implementation  |
 |                          | of a web interface                                                              |
 +--------------------------+---------------------------------------------------------------------------------+
-| **README.md** or         | A basic documentation file (in English language) - The documentation can be     |
-| **README.rst**           | written in **markdown** or **restructured text** format                         |
+| ``README.rst`` oder      | A basic documentation file (in English language) - The documentation can be     |
+| ``README.md``            | written in **markdown** or **restructured text** format                         |
 +--------------------------+---------------------------------------------------------------------------------+
 | **user_doc.rst**         | Optional, a user documentation file (in German language). It will be included   |
 |                          | in the navigation of the user documentation.                                    |
@@ -44,10 +44,10 @@ A plugin consists of a minimum of three files (without user- and developer docum
 | **developer_doc.rst**    | Optional, a developer documentation file (in English language).                 |
 |                          | It will be included in the navigation of the developer documentation            |
 +--------------------------+---------------------------------------------------------------------------------+
-| **requirements.txt**     | If the plugin has requirements in regard to Python packages that are not met by |
-|                          | the Python standard installation or through the requirements of the core/modules|
-|                          | of SmartHomeNG, they have to be defined in this file. (For a file format        |
-|                          | descriptions look at the documentation of **pip**                               |
+| **requirements.txt**     | Falls ein Plugin ein Python Package nutzt, welches nicht in der                 |
+|                          | Standardinstallation von Python enthalten ist, muss diese Anforderung in der    |
+|                          | Datei ``requirements.txt`` dokumentiert werden. (Für eine Beschreibung der      |
+|                          | Dateiformats bitte in der Dokumentation des **pip** Kommandos nachlesen:        |
 |                          | (https://pip.pypa.io/en/stable/reference/pip_install/#requirements-file-format) |
 +--------------------------+---------------------------------------------------------------------------------+
 

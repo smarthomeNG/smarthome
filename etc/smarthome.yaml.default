@@ -11,23 +11,44 @@ tz: 'Europe/Berlin'      # timezone, the example will be fine for most parts of 
 
 default_language: de     # default_language is used, where multiple languages are supported (de, if not specified)
 
-# supportded databases - db: Format: <name>:<python-module>, list of database-entries is possible
-#db:
-#  - sqlite:sqlite3
-#  - mysql:pymysql
-#module_paths: /usr/local/python/lib    # list of path-entries is possible
 
 # control type casting when assiging values to items
 # latest or compat_1.2 (compat_1.2 is default for shNG v1.3, latest is default for higher versions)
 #assign_compatibility: latest
 
+# If the standard commend PIP3 does not work when multiple Python3 versions are installed
+# enter the name or full path of the right pip command below
+#pip_command: pip3.5
+
+# Additional directory for modules - is added to sys.path (should not be needed)
+#module_paths: /usr/local/python/lib    # list of path-entries is possible
+
+# Crontab entry for schedule task in shpypi
+#shpypi_crontab: '9 5 * *'
+
+#-----------------------------------------
+# develop (might be altered for release)
+#
 
 # version 1.5 and up:
 #
 # Loggen von Warnungen, falls abgekündigte Funktionen aufgerufen werden (Standard: False)
 #deprecated_warnings: True
 
-# If the standard commend PIP3 does not work when multiple Python3 versions are installed
-# enter the name or full path of the right pip command below
-#pip_command: pip3.5
+# Change log level for logging of using undefined item attributes
+# (Attributes that are no statdard-attributes and not defined by a configured plugin)
+#undef_item_attr_loglevel_info: True
+
+# To get info which thread consumes how many cpu when using shng tool 'cpuusage.py'
+#threadinfo_export: True
+
+
+#-----------------------------------------
+# not used? - following entries are probably not used
+#
+
+# supportded databases - db: Format: <name>:<python-module>, list of database-entries is possible
+#db:
+#  - sqlite:sqlite3
+#  - mysql:pymysql
 

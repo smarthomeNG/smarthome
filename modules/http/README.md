@@ -1,4 +1,4 @@
-# Module http
+# Module http (README)
 
 This module allows plugins to implement a web interface. The API is described below. The first plugin to utilize this API is the backend plugin.
 

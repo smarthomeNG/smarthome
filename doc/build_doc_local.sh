@@ -24,7 +24,7 @@ KEEP_REPO=True
 #  FORCE_CHECKOUT=True
 #fi
 
-DOC=all
+DOC=user
 if [ "$1" == "-u" ] || [ "$2" == "-u" ] || [ "$3" == "-u" ]; then
   DOC=user
 fi

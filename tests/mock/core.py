@@ -48,7 +48,8 @@ class MockSmartHome():
     base_dir = _base_dir     # for external modules using that var (backend, ...?)
     _default_language = 'de'
 
-    _restart_on_deadlock = True
+    shng_status = {'code': 20, 'text': 'Running'}
+
     _restart_on_num_workers = 30
 
     _etc_dir = os.path.join(_base_dir, 'tests', 'resources', 'etc')
@@ -106,7 +107,10 @@ class MockSmartHome():
         if self.modules is None:
             self.with_modules_from(self._module_conf_basename)
         if self.items is None:
-            lib.item._items_instance = None
+            try:
+                lib.item.items._items_instance = None
+            except:
+                lib.item._items_instance = None
             self.items = lib.item.Items(self)
         if self.plugins is None:
             self.with_plugins_from(self._plugin_conf_basename)

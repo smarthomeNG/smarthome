@@ -33,7 +33,7 @@ Thumbs.db
 /doc/developer/source/plugins_doc
 
 # Don't check in plugins to core repository
-/plugins
+/plugins/
 
 # don't check in requirements that are built each time SHNG starts
 requirements/all.txt
@@ -54,4 +54,3 @@ requirements/conf_all.txt
 **/.vscode/
 /custom_plugins
 /priv_tools
-

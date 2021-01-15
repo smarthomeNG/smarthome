@@ -162,35 +162,65 @@ class PluginController(RESTResource):
     add.authentication_needed = True
 
 
-    def update(self, id=None):
-        self.logger.info("PluginController(): update('{}')".format(id))
+    def handle_plugin_action(self, id, action):
 
-        params = self.get_body()
-        if params is None:
-            self.logger.warning("PluginController(): update(): section '{}': Bad, add request".format(id))
-            raise cherrypy.HTTPError(status=411)
-        self.logger.info("PluginController(): update(): section '{}' = {}".format(id, params))
+        if self.plugins is None:
+            self.plugins = Plugins.get_instance()
+        plugin = self.plugins.return_plugin(id)
+        if plugin is None:
+            response = {'result': 'error', 'description': "No running plugin instance found for '{}'".format(id)}
+            return response
 
-        config_filename = self.get_config_filename()
+        response = {}
+        if action == 'start':
+            self.logger.info("PluginController.handle_plugin_action(): Starting plugin '{}'".format(id))
+            plugin.run()
+            response = {'result': 'ok'}
 
-        if self.test_for_old_config(config_filename):
-            # make it 'readonly', if plugin.conf is used
-            response = {'result': 'error', 'description': 'Updateing .CONF files is not supported'}
-        else:
-            response = {}
-            plugin_conf = shyaml.yaml_load_roundtrip(config_filename)
-            sect = plugin_conf.get(id)
-            if sect is None:
-                response = {'result': 'error', 'description': "Configuration section '{}' does not exist".format(id)}
+        elif action == 'stop':
+            self.logger.info("PluginController.handle_plugin_action(): Stopping plugin '{}'".format(id))
+            plugin.stop()
+            response = {'result': 'ok'}
+
+        return response
+
+
+    def update(self, id='', action=''):
+        self.logger.info("PluginController.update(id='{}', action='{}')".format(id, action))
+
+        if action == '':
+            # Update section for plugin in etc/plugin.yaml
+            params = self.get_body()
+            if params is None:
+                self.logger.warning("PluginController.update(): section '{}': Bad, add request".format(id))
+                raise cherrypy.HTTPError(status=411)
+            self.logger.info("PluginController.update(): section '{}' = {}".format(id, params))
+
+            config_filename = self.get_config_filename()
+
+            if self.test_for_old_config(config_filename):
+                # make it 'readonly', if plugin.conf is used
+                response = {'result': 'error', 'description': 'Updateing .CONF files is not supported'}
             else:
-                self.logger.debug("update: params = {}".format(params))
-                if params.get('config', {}).get('plugin_enabled', None) == True:
-                    del params['config']['plugin_enabled']
-                plugin_conf[id] = params.get('config', {})
-                shyaml.yaml_save_roundtrip(config_filename, plugin_conf, False)
-                response = {'result': 'ok'}
+                response = {}
+                plugin_conf = shyaml.yaml_load_roundtrip(config_filename)
+                sect = plugin_conf.get(id)
+                if sect is None:
+                    response = {'result': 'error', 'description': "Configuration section '{}' does not exist".format(id)}
+                else:
+                    self.logger.debug("update: params = {}".format(params))
+                    if params.get('config', {}).get('plugin_enabled', None) == True:
+                        del params['config']['plugin_enabled']
+                    plugin_conf[id] = params.get('config', {})
+                    shyaml.yaml_save_roundtrip(config_filename, plugin_conf, False)
+                    response = {'result': 'ok'}
+        elif action in ['start','stop']:
+            response = self.handle_plugin_action(id, action)
+        else:
+            response = {'result': 'error', 'description': "Plugin '{}': unknown action '{}'".format(id, action)}
+            self.logger.warning("PluginController.update(): " + response['description'])
 
-        self.logger.info("PluginController(): update(): response = {}".format(response))
+        self.logger.info("PluginController.update(): response = {}".format(response))
         return json.dumps(response)
 
     update.expose_resource = True

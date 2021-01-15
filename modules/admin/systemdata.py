@@ -21,10 +21,12 @@
 #########################################################################
 
 import os
+import logging
 import sys
 import socket
 import platform
-import pwd
+if os.name != 'nt':
+    import pwd
 import psutil
 import datetime
 import time
@@ -45,6 +47,10 @@ import lib.daemon
 class SystemData:
 
     def __init__(self):
+        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger('modules.admin.systemdata')
+        self.logger.debug("Systemdata.__init__()")
+
         self.os_release = {}
         self.cpu_info = {}
         self.pypi_sorted_package_list = []
@@ -218,13 +224,20 @@ class SystemData:
         arch = platform.machine()
         # node = platform.node()
         node = socket.getfqdn()
-        user = pwd.getpwuid(os.geteuid()).pw_name  # os.getlogin()
+        if os.name != 'nt':
+            user = pwd.getpwuid(os.geteuid()).pw_name  # os.getlogin()
+        else:
+            user = os.getlogin()
 
         ipv6 = Utils.get_local_ipv6_address()
         ip = Utils.get_local_ipv4_address()
 
-        space = os.statvfs(self._sh.base_dir)
-        freespace = space.f_frsize * space.f_bavail / 1024 / 1024
+        if os.name != 'nt':
+            space = os.statvfs(self._sh.base_dir)
+            freespace = space.f_frsize * space.f_bavail / 1024 / 1024
+        else:
+            space = psutil.disk_usage(self._sh.base_dir)
+            freespace = space.free / 1024 / 1024
 
         rt = Shtime.get_instance().runtime_as_dict()
         sh_runtime_seconds = rt['total_seconds']
@@ -255,12 +268,18 @@ class SystemData:
         response['uptime'] = time.mktime(datetime.datetime.now().timetuple()) - psutil.boot_time()
         response['sh_uptime'] = sh_runtime_seconds
         response['pyversion'] = pyversion
-        response['pypath'] = self._sh.python_bin
+        if self._sh.python_bin == '':
+            response['pypath'] = sys.executable
+        else:
+            response['pypath'] = self._sh.python_bin
         response['ip'] = ip
         response['ipv6'] = ipv6
-        response['pid'] = str(lib.daemon.read_pidfile(self._sh._pidfile))
+        if os.name != 'nt':
+            response['pid'] = str(lib.daemon.read_pidfile(self._sh._pidfile))
+        else:
+            response['pid'] = str(os.getpid())
 
-        self.logger.warning("admin: systeminfo_json: response = {}".format(response))
+        #self.logger.warning("admin: systeminfo_json: response = {}".format(response))
         return json.dumps(response)
 
 
@@ -298,226 +317,14 @@ class SystemData:
         :return: information about packahge requirements including PyPI information
         :rtype: json structure
         """
-        self.logger.info("pypi_json")
+        self.logger.debug("pypi_json")
 
         if self.pypi_sorted_package_list != []:
             # return list, if it already has been prepared
             self.logger.info("Returning a previously prepared PpyPI package list")
             return json.dumps(self.pypi_sorted_package_list)
 
-####
         package_list = self.shpypi.get_packagelist()
-
-        # sorted_package_list = sorted([(i['name'], i['version_installed'], i['version_available']) for i in package_list])
-        self.pypi_sorted_package_list = sorted(package_list, key=lambda k: k['sort'], reverse=False)
-        self.logger.info("pypi_json: sorted_package_list = {}".format(self.pypi_sorted_package_list))
-        self.logger.info("pypi_json: json.dumps(sorted_package_list) = {}".format(json.dumps(self.pypi_sorted_package_list)))
-
-        return json.dumps(self.pypi_sorted_package_list)
-####
-
-        # check if pypi service is reachable
-        if self.pypi_timeout <= 0:
-            pypi_available = False
-#            pypi_unavailable_message = translate('PyPI Prüfung deaktiviert')
-            pypi_unavailable_message = 'PyPI Prüfung deaktiviert'
-        else:
-            pypi_available = True
-            try:
-                import socket
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.settimeout(self.pypi_timeout)
-                #                sock.connect(('pypi.python.org', 443))
-                sock.connect(('pypi.org', 443))
-                sock.close()
-            except:
-                pypi_available = False
-#                pypi_unavailable_message = translate('PyPI nicht erreichbar')
-                pypi_unavailable_message = 'PyPI nicht erreichbar'
-
-        import pip
-        import xmlrpc
-        import pkg_resources
-        installed_packages = pkg_resources.working_set
-        # installed_packages = pip.get_installed_distributions()
-        # pypi = xmlrpc.client.ServerProxy('https://pypi.python.org/pypi')
-        pypi = xmlrpc.client.ServerProxy('https://pypi.org/pypi')
-
-        req_dict = self.get_requirements_info('base')
-        req_test_dict = self.get_requirements_info('test')
-        req_doc_dict = self.get_requirements_info('doc')
-        self.logger.info("pypi_json: req_doc_dict {}".format(req_doc_dict))
-
-        package_list = []
-
-        for dist in installed_packages:
-            package = dict()
-            package['name'] = dist.key
-            package['vers_installed'] = dist.version
-            package['is_required'] = False
-            package['is_required_for_testsuite'] = False
-            package['is_required_for_docbuild'] = False
-
-            package['vers_req_min'] = ''
-            package['vers_req_max'] = ''
-            package['vers_req_msg'] = ''
-            package['vers_req_source'] = ''
-
-            package['vers_ok'] = False
-            package['vers_recent'] = False
-            package['pypi_version'] = ''
-            package['pypi_version_ok'] = True
-            package['pypi_version_not_available_msg'] = ''
-            package['pypi_doc_url'] = ''
-
-            if pypi_available:
-                try:
-                    available = pypi.package_releases(dist.project_name)
-                    self.logger.debug(
-                        "pypi_json: pypi package: project_name {}, availabe = {}".format(dist.project_name,
-                                                                                         available))
-                    try:
-                        package['pypi_version'] = available[0]
-                    except:
-                        package['pypi_version_not_available_msg'] = '?'
-                except:
-                    package['pypi_version'] = '--'
-#                    package['pypi_version_not_available_msg'] = [translate('Keine Antwort von PyPI')]
-                    package['pypi_version_not_available_msg'] = ['Keine Antwort von PyPI']
-            else:
-                package['pypi_version_not_available_msg'] = pypi_unavailable_message
-            #            package['pypi_doc_url'] = 'https://pypi.python.org/pypi/' + dist.project_name
-            package['pypi_doc_url'] = 'https://pypi.org/pypi/' + dist.project_name
-
-            if package['name'].startswith('url'):
-                self.logger.info(
-                    "pypi_json: urllib: package['name'] = >{}<, req_dict.get(package['name'] = >{}<".format(
-                        package['name'], req_dict.get(package['name'])))
-
-            # test if package belongs to to SmartHomeNG requirements
-            if req_dict.get(package['name'], '') != '':
-                package['is_required'] = True
-                # tests for min, max versions
-                rmin, rmax, rtxt = self.check_requirement(package['name'], req_dict.get(package['name'], ''))
-                package['vers_req_source'] = req_dict.get(package['name'], '')
-                package['vers_req_min'] = rmin
-                package['vers_req_max'] = rmax
-                package['vers_req_msg'] = rtxt
-
-            if req_doc_dict.get(package['name'], '') != '':
-                package['is_required_for_docbuild'] = True
-                # tests for min, max versions
-                rmin, rmax, rtxt = self.check_requirement(package['name'], req_doc_dict.get(package['name'], ''))
-                package['vers_req_source'] = req_doc_dict.get(package['name'], '')
-                package['vers_req_min'] = rmin
-                package['vers_req_max'] = rmax
-                package['vers_req_msg'] = rtxt
-
-            if req_test_dict.get(package['name'], '') != '':
-                package['is_required_for_testsuite'] = True
-                # tests for min, max versions
-                rmin, rmax, rtxt = self.check_requirement(package['name'], req_test_dict.get(package['name'], ''))
-                package['vers_req_source'] = req_test_dict.get(package['name'], '')
-                package['vers_req_min'] = rmin
-                package['vers_req_max'] = rmax
-                package['vers_req_msg'] = rtxt
-
-            if package['is_required']:
-                package['sort'] = '1'
-            elif package['is_required_for_testsuite']:
-                package['sort'] = '2'
-            elif package['is_required_for_docbuild']:
-                package['sort'] = '3'
-            else:
-                package['sort'] = '4'
-                self.logger.debug("pypi_json: sort=4, package['name'] = >{}<".format(package['name']))
-
-            package['sort'] += package['name']
-
-            # check if installed verison is recent (compared to PyPI)
-            if package['is_required']:
-                self.logger.info("compare PyPI package {}:".format(package['name']))
-                if self.compare_versions(package['vers_installed'], package['pypi_version'], '>='):
-                    package['vers_recent'] = True
-            else:
-                self.logger.info("compare PyPI package {} (for non required):".format(package['name']))
-                if package['pypi_version'] != '':
-                    if self.compare_versions(package['vers_installed'], package['pypi_version'], '>='):
-                        package['vers_recent'] = True
-
-                        # check if installed verison is ok
-            if package['is_required'] or package['is_required_for_testsuite'] or package[
-                'is_required_for_docbuild']:
-                package['vers_ok'] = True
-                if self.compare_versions(package['vers_req_min'], package['vers_installed'], '>'):
-                    package['vers_ok'] = False
-                max = package['vers_req_max']
-                if max == '':
-                    max = '99999'
-                if self.compare_versions(max, package['vers_installed'], '<'):
-                    package['vers_ok'] = False
-                    package['vers_recent'] = False
-                if self.compare_versions(max, package['vers_installed'], '=='):
-                    package['vers_recent'] = True
-                if package['pypi_version'] != '':
-                    if self.compare_versions(package['pypi_version'], package['vers_installed'],
-                                             '<') or self.compare_versions(package['pypi_version'], max, '>'):
-                        package['pypi_version_ok'] = False
-
-            package_list.append(package)
-
-        # self.logger.warning('installed_packages: {}'.format(installed_packages))
-        self.logger.debug('req_dict: {}'.format(req_dict))
-        inst_pkgname_list = []
-        for pkg in package_list:
-            inst_pkgname_list.append(pkg['name'])
-        self.logger.debug('pkgname_list: {}'.format(inst_pkgname_list))
-        for req in req_dict:
-            if not (req in inst_pkgname_list):
-                pkg = {}
-                pkg['name'] = req
-                pkg['vers_installed'] = '-'
-                pkg['is_required'] = True
-                pkg['is_required_for_testsuite'] = False
-                pkg['is_required_for_docbuild'] = False
-                # tests for min, max versions
-                rmin, rmax, rtxt = self.check_requirement(pkg['name'], req_dict.get(pkg['name'], ''))
-                pkg['vers_req_min'] = rmin
-                pkg['vers_req_max'] = rmax
-                pkg['vers_req_msg'] = rtxt
-
-                pkg['vers_ok'] = False
-                pkg['vers_recent'] = False
-
-                pkg['sort'] = '1' + pkg['name']
-                package_list.append(pkg)
-        ###
-                if pypi_available:
-                    try:
-                        available = pypi.package_releases(pkg['name'])  # (dist.project_name)
-                        self.logger.debug(
-                            "pypi_json: pypi package: project_name {}, availabe = {}".format(pkg['name'], available))
-                        try:
-                            pkg['pypi_version'] = available[0]
-                            pkg['pypi_version_not_available_msg'] = ""
-                            pkg['pypi_version_ok'] = True
-                            pkg['pypi_doc_url'] = 'https://pypi.org/pypi/' + pkg['name']
-
-                        except:
-                            pkg['pypi_version_not_available_msg'] = '?'
-                            pkg['pypi_version_ok'] = False
-                            pkg['pypi_doc_url'] = ''
-
-                    except:
-                        pkg['pypi_version'] = '--'
-#                        pkg['pypi_version_not_available_msg'] = [translate('Keine Antwort von PyPI')]
-                        pkg['pypi_version_not_available_msg'] = ['Keine Antwort von PyPI']
-                else:
-                    pkg['pypi_version_not_available_msg'] = pypi_unavailable_message
-        ###
-
-        self.logger.debug('package_list: {}'.format(package_list))
-
 
         # sorted_package_list = sorted([(i['name'], i['version_installed'], i['version_available']) for i in package_list])
         self.pypi_sorted_package_list = sorted(package_list, key=lambda k: k['sort'], reverse=False)
@@ -878,6 +685,7 @@ class SystemData:
             if pypi_available:
                 try:
                     available = pypi.package_releases(dist.project_name)
+                    self.logger.warning("size of data: {} - data: {}".format(len(available), available))
                     try:
                         package['version_available'] = available[0]
                     except:

@@ -5,66 +5,77 @@
       "name": "CP Server (API)",
       "sort": "cp server",
       "id": "(14 threads)",
+      "native_id": "",
       "alive": "True"
     },
     {
       "name": "homematic_hm1",
       "sort": "homematic_hm1",
       "id": 139626886977280,
+      "native_id": "18234",
       "alive": "True"
     },
     {
       "name": "HTTPServer",
       "sort": "httpserver",
       "id": "(2 threads)",
+      "native_id": "",
       "alive": "True"
     },
     {
       "name": "Main",
       "sort": "main",
       "id": 139628560434240,
+      "native_id": "18235",
       "alive": "True"
     },
     {
       "name": "Scheduler",
       "sort": "scheduler",
       "id": 139628445185792,
+      "native_id": "18236",
       "alive": "True"
     },
     {
       "name": "Thread-1",
       "sort": "thread-1",
       "id": 139628436793088,
+      "native_id": "18237",
       "alive": "True"
     },
     {
       "name": "Thread-2",
       "sort": "thread-2",
       "id": 139628428400384,
+      "native_id": "18238",
       "alive": "True"
     },
     {
       "name": "Thread-23",
       "sort": "thread-23",
       "id": 139626878584576,
+      "native_id": "18239",
       "alive": "True"
     },
     {
       "name": "Thread-3",
       "sort": "thread-3",
       "id": 139628420007680,
+      "native_id": "18240",
       "alive": "True"
     },
     {
       "name": "Thread-4",
       "sort": "thread-4",
       "id": 139628411614976,
+      "native_id": "18241",
       "alive": "True"
     },
     {
       "name": "Thread-5",
       "sort": "thread-5",
       "id": 139628403222272,
+      "native_id": "18242",
       "alive": "True"
     }
   ]

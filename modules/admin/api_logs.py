@@ -146,7 +146,7 @@ class LogsController(RESTResource):
             skipcount = 0
 
             # read logfile
-            with open(os.path.join(self.log_dir, id), 'r') as lfile:
+            with open(os.path.join(self.log_dir, id), 'r', encoding='UTF-8') as lfile:
                 append_to_previous_line = False
                 loglines = []
                 lastchunk = True

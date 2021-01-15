@@ -180,9 +180,8 @@
       "classname": "Homematic",
       "sh_minversion": "",
       "sh_maxversion": ""
+    }
   },
-
-},
   {
     "pluginname": "backend",
     "configname": "backend",
@@ -191,7 +190,7 @@
     "state": "deprecated",
     "multiinstance": false,
     "instancename": "",
-    "webif_url": "",
+    "webif_url": "http://smarthomeng.fritz.box:1234/backend/",
     "blog_url": "https://www.smarthomeng.de/tag/backend",
     "parameters": [],
     "metadata": {
@@ -207,7 +206,9 @@
       "classname": "Homematic",
       "sh_minversion": "",
       "sh_maxversion": ""
-    }
+    },
+    "stoppable": false,
+    "stopped": true
   },
   {
     "pluginname": "cli",
@@ -253,7 +254,9 @@
       "classname": "Homematic",
       "sh_minversion": "",
       "sh_maxversion": ""
-    }
+    },
+    "stoppable": true,
+    "stopped": false
   },
   {
     "pluginname": "database",
@@ -298,6 +301,30 @@
       "sh_minversion": "",
       "sh_maxversion": ""
     }
+  },
+  {
+    "pluginname": "visu_smartvisu",
+    "configname": "smartvisu",
+    "version": "1.3.4",
+    "smartplugin": true,
+    "multiinstance": true,
+    "instancename": "",
+    "webif_url": "",
+    "parameters": [],
+    "metadata": {
+      "type": "system",
+      "description": "",
+      "description_long": "",
+      "keywords": "",
+      "maintainer": "msinn",
+      "tester": "",
+      "classpath": "plugins.visu_smartvisu",
+      "classname": "SmartVisu",
+      "sh_minversion": "",
+      "sh_maxversion": ""
+    },
+    "stoppable": true,
+    "stopped": true
   }
 ]
 

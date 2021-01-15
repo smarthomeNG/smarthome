@@ -14,7 +14,7 @@ System Plugins
 
    <br />
 
-System Plugins erweitern die generrelle Funktionalität von SmartHomeNG.
+System Plugins erweitern die generelle Funktionalität von SmartHomeNG.
 
 Die hier aufgeführten Plugins unterstützen nicht die Anbindung von Peripherie, sondern erweitern
 die zentralen Funktionen von SmartHomeNG. Diese Plugins sind zum Teil auch enger an den Core

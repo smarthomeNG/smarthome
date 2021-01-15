@@ -25,24 +25,6 @@ bestimmte Features anzubieten.
 Anwendungen ermöglichen (z.B. ein REST Interface).
 
 
-Voraussetzungen
-===============
-
-Dieses Modul läuft nur unter neueren SmartHomeNG-Versionen. Mindestvoraussetzung ist SmartHomeNG v1.4.
-Es benötigt Python >= 3.4, sowie das Python Package  **cherrypy**. Python-Module können
-folgendermaßen installiert werden:
-
-.. code-block:: python
-
-   sudo pip3 install cherrypy
-
-.. important::
-
-    Bitte beachten, dass die Packages für Python3 installiert sind und nicht ein älteres Python 2.7,
-    welches wahrscheinlich auch auf dem System installiert ist. Deshalb unbedingt `pip3` und nicht` pip`
-    verwenden.
-
-
 .. index:: Konfigurationsdateien; /etc/module.yaml (http)
 
 Konfiguration

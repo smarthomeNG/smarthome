@@ -27,8 +27,8 @@ import logging
 import os
 import sys
 import psutil
-import fcntl
 import errno
+import portalocker
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +46,8 @@ def daemonize(pidfile,stdin='/dev/null', stdout='/dev/null', stderr=None):
     :type stdout: string
     :type stderr: string
     """
+    if os.name == 'nt':
+        return
 
     # use stdout file if stderr is none
     if (not stderr):
@@ -113,18 +115,23 @@ def write_pidfile(pid, pidfile):
     :type pid: int
     :type pidfile: str
     """
+    if os.name == 'nt':
+        return
 
-    fd = open(pidfile, 'w+')
-    fd.write("%s" % pid)
-    fd.close()
+    with open(pidfile, 'w+') as fh:
+        fh.write("%s" % pid)
 
-    # lock pidfile:
+    global _pidfile_handle
     try:
-        fd = os.open(pidfile, os.O_RDONLY)
-        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        # don't close fd or lock is gone
-    except OSError as e:
+        _pidfile_handle = open(pidfile, 'r')
+        #print(f"_pidfile_handle = '{_pidfile_handle}'")
+        # LOCK_EX - acquire an exclusive lock
+        # LOCK_NB - non blocking
+        portalocker.lock(_pidfile_handle, portalocker.LOCK_EX | portalocker.LOCK_NB)
+    # don't close _pidfile_handle or lock is gone!!!
+    except portalocker.AlreadyLocked as e:
         print("Could not lock pid file: %d (%s)" % (e.errno, e.strerror) , file=sys.stderr)
+
 
 def read_pidfile(pidfile):
     """
@@ -160,22 +167,22 @@ def check_sh_is_running(pidfile):
     """
 
     pid = read_pidfile(pidfile)
+    #print("daemon.check_sh_is_running: pidfile={}, pid={}, psutil.pid_exists(pid)={}".format(pidfile, pid, psutil.pid_exists(pid)))
     isRunning = False
     if pid > 0 and psutil.pid_exists(pid):
+        #print("daemon.check_sh_is_running: pid={}, psutil.pid_exists(pid)={}".format(pid, psutil.pid_exists(pid)))
         try:
-            fd = os.open(pidfile, os.O_RDONLY)
-            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            fh = open(pidfile, 'r')
+            # LOCK_EX - acquire an exclusive lock
+            # LOCK_NB - non blocking
+            portalocker.lock(fh, portalocker.LOCK_EX | portalocker.LOCK_NB)
+            print("daemon.check_sh_is_running: portalocker.lock erfolgreich")
             # pidfile not locked, so sh is terminated
-        except OSError as e:
-            if (e.errno == errno.EWOULDBLOCK):
-                # pidfile is locked, so sh is running
-                isRunning = True
-            else:
-                print("Error while testing lock in pidfile %s: %d (%s)" % (pidfile, e.errno, e.strerror) , file=sys.stderr)
-                sys.exit(1)
+        except portalocker.LockException:
+            isRunning = True
         finally:
-            if fd:
-                os.close(fd)
+            if fh:
+                fh.close()
     return isRunning
 
 
@@ -190,7 +197,9 @@ def kill(pidfile, waittime=15):
     """
 
     pid = read_pidfile(pidfile)
-    if psutil.pid_exists(pid):
+    if pid == 0:
+        logger.error("A Process ID of 0 can not be killed, please kill SmartHomeNG manually")
+    elif psutil.pid_exists(pid):
         logger.warning("Stopping SmartHomeNG, please wait...")
         p = psutil.Process(pid)
         if p is not None:

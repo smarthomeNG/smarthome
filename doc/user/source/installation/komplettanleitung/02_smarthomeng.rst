@@ -10,8 +10,8 @@ SmartHomeNG installieren
 ========================
 
 SmartHomeNG ist eine in Python erstellte Anwendung. Daher muss bevor SmartHomeNG genutzt werden kann,
-Python installiert werden. Außerdem muß der git Client installert werden, um SmartHomeNG von Github
-zu installieren.
+Python installiert werden. Außerdem muß der git Client installiert werden, um SmartHomeNG von Github
+zu laden und zu installieren.
 
 
 .. contents:: Schritte der Installation
@@ -19,7 +19,7 @@ zu installieren.
 
 
 zusätzliche Linux Pakete installieren
-=====================================
+=======================================
 
 Zunächst müssen einige zusätzlichen Pakete installiert werden:
 
@@ -64,7 +64,7 @@ Weitere Python Bibliotheken installieren
 Ab Version 1.7 kann SmartHomeNG benötigte Pakete selbst nachinstallieren. Eine manuelle Installation
 ist daher nur bei älteren Versionen von SmartHomeNG notwendig. (Siehe nächster Abschnitt)
 
-Wenn SmartHomeNG in einer Python Umgebing gestartet wird in der nicht der minimale Set an Packages installiert ist,
+Wenn SmartHomeNG in einer Python Umgebung gestartet wird in der nicht der minimale Set an Packages installiert ist,
 wird dieser installiert und die Informationen werden auf die Konsole ausgegeben (da das Logging dann noch nicht
 konfiguriert werden kann). Anschließend startet SmartHomeNG neu. Das sieht folgendermaßen aus.
 
@@ -90,7 +90,7 @@ konfiguriert werden kann). Anschließend startet SmartHomeNG neu. Das sieht folg
 
     $
 
-Danach kann der Core von SmartHomeNG vollständing initialisiert werden und Ausgaben erfolgen in smarthome-warnings.log
+Danach kann der Core von SmartHomeNG vollständig initialisiert werden und Ausgaben erfolgen in smarthome-warnings.log
 
 Anschließend prüft SmartHomeNG ob die benötigten Pakete für die ladbaren Module und für die konfigurierten Plugins
 installiert sind. Falls nicht, werden diese jeweils installiert und SmartHomeNG startet sich erneut.
@@ -103,7 +103,7 @@ installiert sind. Falls nicht, werden diese jeweils installiert und SmartHomeNG 
 
 
 Python Bibliotheken installieren (für SmartHomeNG vor v1.7)
------------------------------------------------------------
+--------------------------------------------------------------
 
 Für den ersten Start müssen noch einige Python Packages nachgeladen werden.
 Im Unterordner ``requirements`` befindet sich dafür eine Datei ``base.txt``.
@@ -173,7 +173,7 @@ Das bedeutet, das SmartHomeNG nun im Hintergrund läuft und unter der Prozess ID
 
 
 Überprüfen, ob SmartHomeNG läuft
---------------------------------
+-----------------------------------
 
 Um festzustellen ob SmartHomeNG läuft, kann der folgende Befehl genutzt werden:
 
@@ -181,7 +181,7 @@ Um festzustellen ob SmartHomeNG läuft, kann der folgende Befehl genutzt werden:
 
     ps -ef|grep smarthome|grep bin
 
-Es sollte eine Zeile augegeben werden, die etwa so aussieht:
+Es sollte eine Zeile ausgegeben werden, die etwa so aussieht:
 
 .. code-block:: bash
 
@@ -248,10 +248,10 @@ ist. Nach Abschluß der Konfiguration muss SmartHomeNG neu gestartet werden. Die
 
 
 Erstmalige Konfiguration per Kommandozeile (für Fortgeschrittene)
-=================================================================
+====================================================================
 
 Die Konfiguration kann mit der graphischen Oberfläche (Administrations-Interface) oder (für Fortgeschrittene) durch
-Anpassung der Konfigurationdateien vorgenommen werden. Dieses ist hier im folgenden kurz beschrieben. Eine ausführlichere
+Anpassung der Konfigurationsdateien vorgenommen werden. Dieses ist hier im folgenden kurz beschrieben. Eine ausführlichere
 Beschreibung findet sich im Abschnitt :doc:`../../konfiguration/konfiguration` .
 
 Mit der Grundinstallation werden einige Konfigurationsdateien mitgeliefert die den gleichen Namen tragen wie die
@@ -272,7 +272,7 @@ Der Inhalt von **.yaml** Dateien ist speziell formatierter Text und sollte nur m
 bearbeitet werden, der Dateien im UTF-8 Format (ohne BOM) schreiben kann.
 (z.B. **nano**, **Notepad++**)
 
-ommentare können mit einem ``#`` begonnen werden. Die Einrückungen müssen Leerzeichen sein
+Kommentare können mit einem ``#`` begonnen werden. Die Einrückungen müssen Leerzeichen sein
 und bestimmten die Position eines Elementes in der Objekthierarchie.
 
 .. note::
@@ -280,7 +280,7 @@ und bestimmten die Position eines Elementes in der Objekthierarchie.
    Damit die Änderungen wirksam werden, die mit einem Editor durchgeführt wurden, muss SmartHomeNG
    unbedingt neu gestartet werden.
    (Eine Ausnahme bildet hier nur die **logic.yaml** da es möglich ist mit
-   dem Logikeditor im Backend Plugin oder dem Logikeditor im Admin diese Logiken zur Laufzeit neu
+   dem Logikeditor im Admin Interface diese Logiken zur Laufzeit neu
    zu laden.)
 
 Im folgenden werden diese Dateien und deren Inhalt genauer beschrieben.
@@ -289,7 +289,7 @@ smarthome.yaml
 --------------
 
 In der **smarthome.yaml** stehen die allgemeinen Konfigurationseinstellungen der SmartHomeNG Installation, wie z.B. die
-Koordinaten des Standortes. Die Koordinaten werden benötigt um unter anderem Sonnenaufgang / -untergang zu berechnen.
+Koordinaten des Standortes. Die Koordinaten werden benötigt um unter anderem Sonnenaufgang und Sonnenuntergang zu berechnen.
 Die Koordinaten für einen Standort kann man z.B. auf http://www.mapcoordinates.net/de ermitteln.
 
 .. code-block:: yaml
@@ -331,7 +331,7 @@ logging.yaml
 In der **logging.yaml** finden sich die Anweisungen, wie Ereignisse die während des Programmablaufes von
 SmartHomeNG auftreten geloggt also notiert werden sollen.
 
-Diese recht umfangreiche Datei sollte zunächst nicht geändert werden. Später kann sie angepaßt werden um
+Diese recht umfangreiche Datei sollte zunächst nicht geändert werden. Später kann sie angepasst werden um
 komplexe Ausführungsketten detailliert zu untersuchen.
 
 Zunächst ist wichtig, das in der Grundkonfiguration zwei Dateien erzeugt werden:
@@ -413,7 +413,7 @@ SmartHomeNG Instanz zugegriffen werden kann.
        -   check_same_thread:0
    # ... etc.
 
-Die Konfiguration weiterer Plugins ist auskommentiert vorhanden, um die Nutzung
+Die Konfiguration weiterer Plugins ist vorhanden aber mit Kommentaren ``#`` ausser Kraft gesetzt, um die erstmalige Nutzung
 dieser Plugins möglichst einfach zu gestalten.
 
 Wenn man jetzt bereits weiß, welche Plugins man benötigt, dann kann die default-Datei als Arbeitsgrundlage dienen
@@ -460,13 +460,14 @@ wann sie ausgeführt werden sollen und ob sie aktiv sind oder nicht.
    ex_persist:
        filename: example_persistance.py
 
-Da derzeit noch keine Logiken benötigt werden, ist auch hier kein Handlungsbedarf zum Editieren. SmartHomeNG erstellt auch hier aus der default-Datei eine logic.yaml.
+Da derzeit noch keine Logiken benötigt werden, ist auch hier kein Handlungsbedarf zum Editieren.
+SmartHomeNG erstellt auch hier aus der default-Datei eine logic.yaml.
 
 module.yaml
 -----------
 
 In dieser Datei sind Module konfiguriert, die von Plugins benötigt werden aber dennoch nicht zur Kernfunktionalität von SmartHomeNG gehören.
-Für die Grundkonfiguration ist dies das http Modul, das z.B. vom backend oder dem admin Interface genutzt wird.
+Für die Grundkonfiguration ist dies das http Modul, das z.B. vom Admin Interface genutzt wird.
 
 Auch hier ist kein Handlungsbedarf, die Beschreibung ist ebenfalls der Vollständigkeit halber enthalten.
 

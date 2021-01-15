@@ -113,7 +113,7 @@ class FilesController(RESTResource):
         self.logger.info("FilesController.get_logging_config()")
         filename = os.path.join(self.etc_dir, 'logging.yaml')
         read_data = None
-        with open(filename) as f:
+        with open(filename, encoding='UTF-8') as f:
             read_data = f.read()
         return cherrypy.lib.static.serve_file(filename, 'application/x-download',
                                  'attachment', 'logging.yaml')
@@ -135,7 +135,7 @@ class FilesController(RESTResource):
 
         filename = os.path.join(self.etc_dir, 'logging.yaml')
         read_data = None
-        with open(filename, 'w') as f:
+        with open(filename, 'w', encoding='UTF-8') as f:
             f.write(params)
 
         result = {"result": "ok"}
@@ -150,11 +150,11 @@ class FilesController(RESTResource):
         self.logger.info("FilesController.get_struct_config()")
         filename = os.path.join(self.etc_dir, 'struct.yaml')
         if not(os.path.isfile(filename)):
-            open(filename, 'a').close()
+            open(filename, 'a', encoding='UTF-8').close()
             self.logger.info("FilesController.get_struct_config(): created empty file {}".format(filename))
 
         read_data = None
-        with open(filename) as f:
+        with open(filename, encoding='UTF-8') as f:
             read_data = f.read()
         return cherrypy.lib.static.serve_file(filename, 'application/x-download',
                                  'attachment', 'struct.yaml')
@@ -176,7 +176,7 @@ class FilesController(RESTResource):
 
         filename = os.path.join(self.etc_dir, 'struct.yaml')
         read_data = None
-        with open(filename, 'w') as f:
+        with open(filename, 'w', encoding='UTF-8') as f:
             f.write(params)
 
         result = {"result": "ok"}
@@ -206,7 +206,7 @@ class FilesController(RESTResource):
         self.logger.info("FilesController.get_items_config({})".format(fn))
         filename = os.path.join(self.items_dir, fn + '.yaml')
         read_data = None
-        with open(filename) as f:
+        with open(filename, encoding='UTF-8') as f:
             read_data = f.read()
         return cherrypy.lib.static.serve_file(filename, 'application/x-download',
                                  'attachment', fn + '.yaml')
@@ -228,7 +228,7 @@ class FilesController(RESTResource):
 
         filename = os.path.join(self.items_dir, filename + '.yaml')
         read_data = None
-        with open(filename, 'w') as f:
+        with open(filename, 'w', encoding='UTF-8') as f:
             f.write(params)
 
         result = {"result": "ok"}
@@ -273,7 +273,7 @@ class FilesController(RESTResource):
         self.logger.info("FilesController.get_scenes_config({})".format(fn))
         filename = os.path.join(self.scenes_dir, fn + '.yaml')
         read_data = None
-        with open(filename) as f:
+        with open(filename, encoding='UTF-8') as f:
             read_data = f.read()
         return cherrypy.lib.static.serve_file(filename, 'application/x-download',
                                  'attachment', fn + '.yaml')
@@ -295,7 +295,7 @@ class FilesController(RESTResource):
 
         filename = os.path.join(self.scenes_dir, filename + '.yaml')
         read_data = None
-        with open(filename, 'w') as f:
+        with open(filename, 'w', encoding='UTF-8') as f:
             f.write(params)
 
         result = {"result": "ok"}
@@ -338,7 +338,7 @@ class FilesController(RESTResource):
         self.logger.info("FilesController.get_logics_config({})".format(fn))
         filename = os.path.join(self.logics_dir, fn)
         read_data = None
-        with open(filename) as f:
+        with open(filename, encoding='UTF-8') as f:
             read_data = f.read()
         return cherrypy.lib.static.serve_file(filename, 'application/x-download',
                                  'attachment', fn)
@@ -360,7 +360,7 @@ class FilesController(RESTResource):
 
         filename = os.path.join(self.logics_dir, filename)
         read_data = None
-        with open(filename, 'w') as f:
+        with open(filename, 'w', encoding='UTF-8') as f:
             f.write(params)
 
         result = {"result": "ok"}

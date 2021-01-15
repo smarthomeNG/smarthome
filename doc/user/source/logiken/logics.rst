@@ -8,9 +8,9 @@
 .. role:: blacksup
 
 
-##########################
-Logiken :greensup:`Update`
-##########################
+#######
+Logiken
+#######
 
 Logiken für SmartHomeNG sind Python Skripte. Zur Erstellung von Logiken müssen Sie über
 Kenntnisse der Programmiersprache Python verfügen.
@@ -81,7 +81,7 @@ Definierte Methoden des Logikobjekts:
 +===================+========================================================================================================+
 | logic.id()        | Diese Methode liefert dem Namen der Logik wie in **../etc/logic.yaml** angegeben.                      |
 +-------------------+--------------------------------------------------------------------------------------------------------+
-| logic.last_run()  | Diese Mathode liefert den letzten Lauf dieser Logik (vor aktuellen Lauf).                              |
+| logic.last_run()  | Diese Methode liefert den letzten Lauf dieser Logik (vor aktuellen Lauf).                              |
 +-------------------+--------------------------------------------------------------------------------------------------------+
 | logic.disable()   | Konfigurierte Logiken sind standardmäßig aktiv und werden entsprechend der Konfiguration ausgeführt.   |
 |                   | Diese Methode deaktiviert die Logik, sodass deren Ausführung unterbunden wird. (Ab SmartHomeNG v1.3)   |
@@ -241,8 +241,8 @@ Die Variable **logic.myvar** übersteht die Zeit bis zum nächsten Lauf der Logi
 nur in der Logik zur Verfügung, die sie auch definiert hat.
 
 
-Existenz einer Var sicherstellen
-================================
+Existenz einer Variablen sicherstellen
+======================================
 
 Wenn auf eine Variable zugegriffen wird bevor sie definiert wird, führt das zu einer Exception
 und der Rest der Logik wird nicht ausgeführt. Beim ersten Lauf einer Logik nach einem Neustart
@@ -294,7 +294,7 @@ der Präfix *logics.* zu verwenden:
 
    :caption: persistent, für alle Logiken zugreifbar
 
- logics.myvar = 'my Value'
+   logics.myvar = 'my Value'
 
 
 Analog zur lokalen persistenten Variable muss die Existenz folgendermaßen sichergestellt werden:
@@ -338,7 +338,7 @@ Dafür müssen Funktionen und Variablen der Funktion als Parameter übergeben we
 Übergabe für jede Variable/Funktion einzeln erfolgt oder sie können in einem Objekt übergeben werden (was die zu
 bevorzugende Methode ist.
 
-Dazu kann das Objekt **logic** genutzt werden, welches SmartHomeNG zur Verüfung stellt um Variablen zu implementieren,
+Dazu kann das Objekt **logic** genutzt werden, welches SmartHomeNG zur Verfüfung stellt um Variablen zu implementieren,
 die den Lauf der Logik "überleben" und beim nächsten Lauf dieser Logik wieder zur Verfügung stehen. Das **logic**
 Objekt ist privat. Das bedeutet, jede Logik hat ihr eigenes **logic** Objekt.
 
@@ -371,7 +371,7 @@ Das folgende Beispiel verdeutlicht das Vorgehen:
     logic.func1(1)
     logic.func2()
 
-Um aus Funktionen heraus auf das **sh** Objekt zugreifen zu können, solte auch dieses (wie im obigen Beispiel) als
+Um aus Funktionen heraus auf das **sh** Objekt zugreifen zu können, sollte auch dieses (wie im obigen Beispiel) als
 Variable im **logic** Objekt abgelegt werden.
 
 
@@ -425,14 +425,14 @@ Nutzung von MQTT in Logiken
 ===========================
 
 Die Nutzung des MQTT Protokolls in Logiken wird durch das mqtt Modul von SmartHomeNG möglich, welches ab Version 1.7
-zur Verfügung steht. Zur Nutzung muss das mqtt Modul geladen und konfiguiert sein und der konfigurierte MQTT Broker
+zur Verfügung steht. Zur Nutzung muss das mqtt Modul geladen und konfiguriert sein und der konfigurierte MQTT Broker
 muss laufen.
 
 
 Das mqtt Objekt
 ===============
 
-Um MQTT in Logiken zu nutzen, steht ein Obkekt **mqtt** zur Verfügung. Falls das mqtt Modul geladen/konfiguriert ist
+Um MQTT in Logiken zu nutzen, steht ein Objekt **mqtt** zur Verfügung. Falls das mqtt Modul geladen/konfiguriert ist
 oder keine Verbindung zum Broker besteht, ist **mqtt** **None**. In Logiken kann folgendermaßen geprüft werden, ob
 MQTT Unterstützung besteht:
 
@@ -473,7 +473,7 @@ Eine MQTT Message kann versendet werden, indem die Funktion folgendermaßen aufg
 mqtt.subscribe_topic()
 ----------------------
 
-Messages die ein bestimmtes MQTT Topic enthalten, können folgendermaßen aboniert werden:
+Messages die ein bestimmtes MQTT Topic enthalten, können folgendermaßen abonniert werden:
 
 .. code-block:: python
    :caption: subscribe_topic()
@@ -489,7 +489,7 @@ Messages die ein bestimmtes MQTT Topic enthalten, können folgendermaßen abonie
 +-------------------------+------------------------------------------------------------------------------------------------------+
 | topic                   | Topic welches aboniert werden soll.                                                                  |
 +-------------------------+------------------------------------------------------------------------------------------------------+
-| callback                | Name der Logik, welche bei Empfang des abonierten Topics getriggert werden soll. Das kann die        |
+| callback                | Name der Logik, welche bei Empfang des abonnierten Topics getriggert werden soll. Das kann die       |
 |                         | aufrufende Logik sein oder eine andere Logik. Wenn die aufrufende Logik getriggert werden soll, kann |
 |                         | hier einfach die Variable **logic.name** genutzt werden.                                             |
 +-------------------------+------------------------------------------------------------------------------------------------------+
@@ -512,14 +512,14 @@ Wenn eine als **callback** angegebene Logik getriggert wird, ist das **trigger**
 - **trigger['by']** - <topic> - Dadurch kann bestimmt werden, wie die payload zu behandeln ist, falls eine Logik die Callbacks mehrer topics erhält
 - **trigger['value']** - <payload>, wobei der Datentyp der payload dem entspricht, was in mqtt.subscribe_topic() als payload_type angegeben wurde
 
-Es können mehrere Logiken das selbe Topic abonieren. Alle Logiken die das Topic aboniert haben, werden beim Eintreffen
+Es können mehrere Logiken das selbe Topic abonnieren. Alle Logiken die das Topic abonniert haben, werden beim Eintreffen
 einer passenden MQTT Message getriggert.
 
 
 mqtt.unsubscribe_topic()
 ------------------------
 
-Ein bestehendes Abonement für Messages die ein bestimmtes MQTT Topic enthalten, kann folgendermaßen beendet werden:
+Ein bestehendes Abonnement für Messages die ein bestimmtes MQTT Topic enthalten, kann folgendermaßen beendet werden:
 
 .. code-block:: python
    :caption: unsubscribe_topic()
@@ -581,7 +581,7 @@ Hier ist eine Beispiel Logik, die sowohl Subscriptions ausführt, als auch die C
 
 .. hint::
 
-   Den **logger** müßte man nicht unbedingt an die Funktionen in der Logik übergeben, aber dann würden im Log die
+   Den **logger** müsste man nicht unbedingt an die Funktionen in der Logik übergeben, aber dann würden im Log die
    Einträge aus Funktionen innerhalb der Logik im Logfile als Modul nicht **logics.mqtt_demo** angeben, sondern
    **scheduler**.
 

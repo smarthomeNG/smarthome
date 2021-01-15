@@ -148,6 +148,7 @@ class PluginsInstalledController(RESTResource):
                                 self.plugin_data[p]['state'] = plg_data.get('state', '')
                                 self.plugin_data[p]['documentation'] = plg_data.get('documentation', '')
                                 self.plugin_data[p]['multi_instance'] = plg_data.get('multi_instance', '')
+                                self.plugin_data[p]['configuration_needed'] = plg_data.get('configuration_needed', True)
                     else:
                         self.logger.info("- no plugin.yaml: {}".format(p))
         self.logger.warning("PluginsInstalledController.read(): Plugin Liste (sollte sortiert sein), json.dumps(self.plugin_data) = '{}'".format(json.dumps(self.plugin_data)))
@@ -290,9 +291,10 @@ class PluginsInfoController(RESTResource):
 
         self.blog_urls = {}
         self._update_bloglinks_active = True
-        self._update_bloglinks_thread = threading.Thread(target=self._test_for_blog_articles,
-                                                         name="Admin: Update blog links").start()
 
+        # Start scheduler
+        self._blog_task_name = 'modules.admin.update_blog_links'
+        self._sh.scheduler.add(self._blog_task_name, self._test_for_blog_articles_task, cycle=60, offset=0)
         try:
             module.add_stop_method(self.stop, self.__class__.__name__)
         except Exception as e:
@@ -307,56 +309,58 @@ class PluginsInfoController(RESTResource):
         """
         self.logger.info("PluginsInfoController: Shutting down")
         self._update_bloglinks_active = False
+        # Stop scheduler
+        self._sh.scheduler.remove(self._blog_task_name)
+
         return
 
 
-    def _test_for_blog_articles(self):
-        while self._update_bloglinks_active:
-            self.logger.info("_test_for_blog_articles: Testing for blog articles for every configured plugin")
+    def _test_for_blog_articles_task(self):
+        """
+        Scheduler task to test if blog articles for the loaded plugins exist
+        :return:
+        """
+
+        if self.plugins == None:
+            self.plugins = Plugins.get_instance()
+        if self.plugins != None and self._sh.shng_status.get('code', 0) == 20:   # Running
+            self._sh.scheduler._scheduler[self._blog_task_name]['cycle'] = {120 * 60 : None}  # set scheduler cycle to test every 2 hours
             start = time.time()
             temp_blog_urls = {}
-            if self.plugins == None:
-                self.plugins = Plugins.get_instance()
-            if self.plugins != None:
-                try:
-                    for plugin in self.plugins.return_plugins():
-                        if not self._update_bloglinks_active:
-                            break
-                        if isinstance(plugin, SmartPlugin):
-                            plugin_name = plugin.get_shortname()
-                            if temp_blog_urls.get(plugin_name, None) is None:
-                                # add link to blog, if articles exist, that have the pluginname as a tag
-                                #   example: Blog articles with tag 'backend'
-                                #   - https://www.smarthomeng.de/tag/backend
-                                #   alternative example: Blog articles with category 'plugins' and tag 'backend'
-                                #   - https://www.smarthomeng.de/category/plugins?tag=backend
-                                temp_blog_urls[plugin_name] = 'https://www.smarthomeng.de/tag/' + plugin_name
-                                r = requests.get(temp_blog_urls[plugin_name])
-                                if r.status_code == 404:
-                                    temp_blog_urls[plugin_name] = ''
-                                elif r.status_code != 200:
-                                    self.logger.error("Received status_code {} for get-request to {}".format(r.status_code, temp_blog_urls[plugin_name]))
-                                    temp_blog_urls[plugin_name] = ''
-                            else:
-                                pass
-                except Exception as e:
-                    self.logger.exception("_test_for_blog_articles: Exception {}".format(e))
-                sleeptime = 120 * 60   # test every 2 hours
-            else:
-                sleeptime = 30
-                self.logger.debug("_test_for_blog_articles: Plugin initialization not finished")
+
+            try:
+                for plugin in self.plugins.return_plugins():
+                    if not self._update_bloglinks_active:
+                        break
+                    if isinstance(plugin, SmartPlugin):
+                        plugin_name = plugin.get_shortname()
+                        if temp_blog_urls.get(plugin_name, None) is None:
+                            # add link to blog, if articles exist, that have the pluginname as a tag
+                            #   example: Blog articles with tag 'backend'
+                            #   - https://www.smarthomeng.de/tag/backend
+                            #   alternative example: Blog articles with category 'plugins' and tag 'backend'
+                            #   - https://www.smarthomeng.de/category/plugins?tag=backend
+                            temp_blog_urls[plugin_name] = 'https://www.smarthomeng.de/tag/' + plugin_name
+                            r = requests.get(temp_blog_urls[plugin_name])
+                            if r.status_code == 404:
+                                temp_blog_urls[plugin_name] = ''
+                            elif r.status_code != 200:
+                                self.logger.error("Received status_code {} for get-request to {}".format(r.status_code, temp_blog_urls[plugin_name]))
+                                temp_blog_urls[plugin_name] = ''
+                        else:
+                            pass
+            except OSError as e:
+                if str(e).find('[Errno 101]') > -1:     # [Errno 101] Das Netzwerk ist nicht erreichbar
+                    pass
+                else:
+                    self.logger.error("_test_for_blog_articles: OSError {}".format(e))
+            except Exception as e:
+                self.logger.error("_test_for_blog_articles: Exception {}".format(e))
             self.blog_urls = temp_blog_urls
             end = time.time()
-            self.logger.info("_test_for_blog_articles: Used time: {} - blog_urls = {}".format(end-start, self.blog_urls))
-
-            max_sleepcount = sleeptime / 5
-
-            sleepcount = 0
-            while self._update_bloglinks_active and sleepcount < max_sleepcount:
-                sleepcount += 1
-                time.sleep(5)
-
-        self.logger.info("Thread '_test_for_blog_articles' exited because '_update_bloglinks_active' is False")
+            self.logger.info("_test_for_blog_articles_task: Used time: {} - blog_urls = {}".format(end - start, self.blog_urls))
+        else:
+            self.logger.debug("_test_for_blog_articles: Plugin initialization not finished")
         return
 
 

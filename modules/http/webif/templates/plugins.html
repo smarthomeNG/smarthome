@@ -22,7 +22,7 @@
                   <tbody>
                     {% for webif in webinterfaces.keys() %}
                     <tr><td class="p-2">
-                      <a class="text-shng" href="/{{ webif }}">{{ webinterfaces[webif].Webifname }}</a>
+                      <a class="text-shng" href="{{ prefix }}/{{ webif }}">{{ webinterfaces[webif].Webifname }}</a>
                     </td><td class="p-2">
                       {{ webinterfaces[webif].Description }}
                     </td></tr>

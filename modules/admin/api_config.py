@@ -46,6 +46,7 @@ class ConfigController(RESTResource):
 
         self.core_conf = shyaml.yaml_load(os.path.join(self.modules_dir, 'core', 'module.yaml'))
         self.http_conf = shyaml.yaml_load(os.path.join(self.modules_dir, 'http', 'module.yaml'))
+        self.websocket_conf = shyaml.yaml_load(os.path.join(self.modules_dir, 'websocket', 'module.yaml'))
         self.admin_conf = shyaml.yaml_load(os.path.join(self.modules_dir, 'admin', 'module.yaml'))
         self.mqtt_conf = shyaml.yaml_load(os.path.join(self.modules_dir, 'mqtt', 'module.yaml'))
 
@@ -115,13 +116,13 @@ class ConfigController(RESTResource):
             if len(self.holidays_confdata['custom']) > 5:
                 for i in range(1, 6):
                     custom = data['common']['data']['holidays_custom' + str(i)]
-                    if custom != '':
+                    if custom is not None and custom != '':
                         self.holidays_confdata['custom'][i-1] = custom
             else:
                 self.holidays_confdata['custom'] = []
                 for i in range(1, 6):
                     custom = data['common']['data']['holidays_custom' + str(i)]
-                    if custom != '':
+                    if custom is not None and custom != '':
                         self.holidays_confdata['custom'].append(custom)
 
             for i in range(1, 6):
@@ -156,6 +157,11 @@ class ConfigController(RESTResource):
             result['http'] = {}
             result['http']['data'] = self.module_confdata.get('http', {})
             result['http']['meta'] = self.http_conf
+            result['websocket'] = {}
+            result['websocket']['data'] = self.module_confdata.get('websocket', {})
+            result['websocket']['meta'] = self.websocket_conf
+            if result['websocket']['data'].get('enabled', None) is None:
+                result['websocket']['data']['enabled'] = True
             result['admin'] = {}
             result['admin']['data'] = self.module_confdata.get('admin', {})
             result['admin']['meta'] = self.admin_conf
@@ -176,6 +182,12 @@ class ConfigController(RESTResource):
         if id == 'http':
             result['data'] = self.module_confdata.get('http', {})
             result['meta'] = self.http_conf
+            self.logger.info("  - index: http = {}".format(result))
+            return json.dumps(result)
+
+        if id == 'websocket':
+            result['data'] = self.module_confdata.get('websocket', {})
+            result['meta'] = self.websocket_conf
             self.logger.info("  - index: http = {}".format(result))
             return json.dumps(result)
 
@@ -228,6 +240,18 @@ class ConfigController(RESTResource):
             self.update_configdict(self.module_confdata['http'], data, 'http')
             self.update_configdict(self.module_confdata['admin'], data, 'admin')
 
+            if self.module_confdata.get('websocket', None) is None:
+                self.module_confdata['websocket'] = {}
+                self.module_confdata['websocket']['module_name'] = 'websocket'
+            self.update_configdict(self.module_confdata['websocket'], data, 'websocket')
+            self.logger.warning("Update: self.websocket_conf = {}".format(self.websocket_conf))
+            if self.module_confdata['websocket'].get('enabled', None) is None:
+                self.module_confdata['websocket']['enabled'] = True
+            if self.module_confdata['websocket']['enabled']:
+                self.module_confdata['websocket'].pop('enabled', None)
+            #self.logger.warning("Update: ['websocket'] = {}".format(self.module_confdata['websocket']))
+            #self.logger.warning("Update: - enabled = {}".format(self.module_confdata['websocket'].get('enabled', None)))
+
             if self.module_confdata.get('mqtt', None) is None:
                 self.module_confdata['mqtt'] = {}
                 self.module_confdata['mqtt']['module_name'] = 'mqtt'
@@ -238,8 +262,7 @@ class ConfigController(RESTResource):
             if self.module_confdata['mqtt']['enabled']:
                 self.module_confdata['mqtt'].pop('enabled', None)
             self.logger.warning("Update: ['mqtt'] = {}".format(self.module_confdata['mqtt']))
-            self.logger.warning("Update: enabled = {}".format(self.module_confdata['mqtt'].get('enabled', None)))
-
+            self.logger.warning("Update: - enabled = {}".format(self.module_confdata['mqtt'].get('enabled', None)))
             shyaml.yaml_save_roundtrip(os.path.join(self.etc_dir, 'module.yaml'), self.module_confdata, create_backup=True)
 
             result = {"result": "ok"}

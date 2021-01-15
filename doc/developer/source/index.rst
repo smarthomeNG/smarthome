@@ -4,6 +4,11 @@
 SmartHomeNG
 ===========
 
+.. attention::
+
+   This documentation is to be integrated into the user documentation. Parts that are already part of the user
+   documentation and those parts that have already been moved are removed from this documentation
+
 
 Developer documentation
 =======================
@@ -40,20 +45,13 @@ any way you want and can.
    :titlesonly:
 
    User Documentation (German) <https://www.smarthomeng.de/user>
-   requirements.rst
-   install
-   build_doc
 
 
 .. toctree::
    :maxdepth: 6
    :hidden:
 
-   config
-   items
    logics
-   modules
-   plugins_all
 
 
 .. toctree::
@@ -61,9 +59,6 @@ any way you want and can.
    :hidden:
    :titlesonly:
 
-   logging
-   tools
    development
-   release/release
    genindex
    impressum

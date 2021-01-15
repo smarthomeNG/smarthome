@@ -1,4 +1,4 @@
-# Module mqtt (README.md)
+# Module mqtt (README)
 
 This module allows plugins to utilize the MQTT protocol. The API is described below.
 

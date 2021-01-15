@@ -27,6 +27,7 @@ import os
 import tempfile
 
 import bin.smarthome
+import lib.smarthome
 from lib.constants import YAML_FILE
 
 
@@ -35,39 +36,39 @@ logger = logging.getLogger(__name__)
 class SmarthomeTest(unittest.TestCase):
     def test_to_bool(self):
 
-        self.assertFalse(bin.smarthome.SmartHome.string2bool(self, None))
-        self.assertFalse(bin.smarthome.SmartHome.string2bool(self, False))
-        self.assertIsNone(bin.smarthome.SmartHome.string2bool(self, "werwer"))
-        self.assertFalse(bin.smarthome.SmartHome.string2bool(self, "No"))
-        self.assertFalse(bin.smarthome.SmartHome.string2bool(self, "0"))
-        self.assertFalse(bin.smarthome.SmartHome.string2bool(self, ""))
-        self.assertFalse(bin.smarthome.SmartHome.string2bool(self, "n"))
-        self.assertFalse(bin.smarthome.SmartHome.string2bool(self, "false"))
-        self.assertFalse(bin.smarthome.SmartHome.string2bool(self, "False"))
-        self.assertFalse(bin.smarthome.SmartHome.string2bool(self, "f"))
-        self.assertFalse(bin.smarthome.SmartHome.string2bool(self, 0))
+        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, None))
+        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, False))
+        self.assertIsNone(lib.smarthome.SmartHome.string2bool(self, "werwer"))
+        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, "No"))
+        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, "0"))
+        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, ""))
+        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, "n"))
+        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, "false"))
+        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, "False"))
+        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, "f"))
+        self.assertFalse(lib.smarthome.SmartHome.string2bool(self, 0))
 
-        self.assertTrue(bin.smarthome.SmartHome.string2bool(self,1.2))
-        self.assertTrue(bin.smarthome.SmartHome.string2bool(self,True))
-        self.assertTrue(bin.smarthome.SmartHome.string2bool(self,"yes"))
-        self.assertTrue(bin.smarthome.SmartHome.string2bool(self,"1"))
-        self.assertTrue(bin.smarthome.SmartHome.string2bool(self,"y"))
-        self.assertTrue(bin.smarthome.SmartHome.string2bool(self,"true"))
-        self.assertTrue(bin.smarthome.SmartHome.string2bool(self,"True"))
-        self.assertTrue(bin.smarthome.SmartHome.string2bool(self,"t"))
-        # self.assertTrue(bin.smarthome.SmartHome.string2bool(self,1))
+        self.assertTrue(lib.smarthome.SmartHome.string2bool(self,1.2))
+        self.assertTrue(lib.smarthome.SmartHome.string2bool(self,True))
+        self.assertTrue(lib.smarthome.SmartHome.string2bool(self,"yes"))
+        self.assertTrue(lib.smarthome.SmartHome.string2bool(self,"1"))
+        self.assertTrue(lib.smarthome.SmartHome.string2bool(self,"y"))
+        self.assertTrue(lib.smarthome.SmartHome.string2bool(self,"true"))
+        self.assertTrue(lib.smarthome.SmartHome.string2bool(self,"True"))
+        self.assertTrue(lib.smarthome.SmartHome.string2bool(self,"t"))
+        # self.assertTrue(lib.smarthome.SmartHome.string2bool(self,1))
 
     #####################################################################
     # Diplay DEPRECATED warning
     #####################################################################
     def _deprecated_warning(self, n_func=''):
         pass
-        
-         
+
+
     def testConfigInit(self):
         logger.warning('')
         logger.warning('=== Begin Smarthome Tests: testConfigInit')
-        
+
         bin.smarthome.MODE = 'unittest'		# do not daemonize, do not log
         with tempfile.TemporaryDirectory(prefix='SHNG_config.') as ext_conf:
             os.mkdir(os.path.join(ext_conf, 'etc'))
@@ -76,10 +77,10 @@ class SmarthomeTest(unittest.TestCase):
 
             for sh_config in [None, ext_conf]:
                 if sh_config is None:
-                    sh = bin.smarthome.SmartHome()
+                    sh = lib.smarthome.SmartHome(MODE=bin.smarthome.MODE)
                     conf_dir = sh.base_dir
                 else:
-                    sh = bin.smarthome.SmartHome(extern_conf_dir=sh_config)
+                    sh = lib.smarthome.SmartHome(MODE=bin.smarthome.MODE, extern_conf_dir=sh_config)
                     conf_dir = sh_config
                 logger.warning("    test with config files in folder {}".format(conf_dir))
                 base_dir = sh.base_dir
@@ -110,7 +111,7 @@ class SmarthomeTest(unittest.TestCase):
 
                 logger.warning("        check if .default files are installed")
                 configs = ['logging', 'smarthome', 'module', 'plugin']
-                
+
                 for c in configs:
                     self.assertTrue(os.path.isfile(os.path.join(_etc_dir, c + YAML_FILE)))
 

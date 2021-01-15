@@ -1,5 +1,5 @@
-Logics
-======
+Entwicklung von Logiken
+=======================
 
 
 Introduction
@@ -126,7 +126,7 @@ Like Unix crontab with the following options:
 
    -  an horizon offset in degrees e.g. crontab: sunset-6 You have to
       specify your latitude/longitude in smarthome.conf.
-   -  an offset in minutes specified by a 'm' e.g. crontab = sunset-10m
+   -  an offset in minutes specified by a 'm' e.g. crontab: sunset-10m
    -  a boundary for the execution
 
 .. code-block:: yaml

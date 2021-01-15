@@ -4,7 +4,7 @@ Plugins
 
 Das Grundsystem von SmartHomeNG kann durch den Einsatz von Plugins erweitert werden. Ein Plugin
 ist ein Zusatzmodul in einem Unterverzeichnis unterhalb des Verzeichnisses **../plugins**.
-Um ein Plugin in SmartHomeNG zu verwenden (eine Instanz des Plugins zu laden) muß eine Sektion
+Um ein Plugin in SmartHomeNG zu verwenden (eine Instanz des Plugins zu laden) muss eine Sektion
 für das gewünschte Plugin in der Datei **etc/plugin.conf** erstellt werden.
 
 Für das oft benutzte KNX-Plugin sieht das z.B. so aus:
@@ -38,7 +38,7 @@ bzw. im alten Format:
 
 
 Dabei kann der Name der **Plugin-Instanz** (Name des Abschnitts) frei gewählt werden. Es muss
-nur darauf geachtet werden, dass er eindeutig ist, also nur einmal vorkommt. Der name der Instanz
+nur darauf geachtet werden, dass er eindeutig ist, also nur einmal vorkommt. Der Name der Instanz
 sollte auch so gewählt werden, dass es zu keiner Namensgleichheit mit Top-Level Items kommt.
 
 Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
@@ -49,6 +49,10 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 | plugin_name    | Der Kurzname des Plugins, das eingebunden werden soll (Name des Verzeichnisses      |
 |                | im **../plugins** Verzeichnis). Statt des Parameters **plugin_name** konnten bisher |
 |                | auch die Parameter **class_name** und **class_path** angegeben werden.              |
++----------------+-------------------------------------------------------------------------------------+
+| plugin_enabled | Wenn dieser Parameter auf **False** gesetzt wird, wird das Plugin nicht geladen, die|
+|                | Konfiguration bleibt jedoch erhalten und die Verwendung von Item-Attributen dieses  |
+|                | Plugins in den Item Konfigurationen erzeugt keine Warnungen im Log.                 |
 +----------------+-------------------------------------------------------------------------------------+
 | class_name     | **DEPRECATED**: Name der Klasse in der Plugin Datei. Was hier einzutragen ist,      |
 |                | steht in der Dokumentation zum jeweiligen Plugin. Stattdessen ist die               |

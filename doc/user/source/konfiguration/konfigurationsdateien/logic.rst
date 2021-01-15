@@ -6,7 +6,7 @@
 logic.yaml
 ==========
 
-Logiken in SmartHomeNG sind Python Skripte (wie der Core von SmatHomeNH auch). Diese Skripte
+Logiken in SmartHomeNG sind Python Skripte (wie der Core von SmartHomeNG auch). Diese Skripte
 werden im Verzeichnis **../logics** abgelegt. Um SmartHomeNG wissen zu lassen, wann eine
 Logik gestartet werden soll und welches Python Skript dann genutzt werden soll, muss jede Logik
 in der Datei **../etc/logic.yaml** konfiguriert werden:
@@ -25,9 +25,6 @@ der Wert des Items `watch_item` ändert.
 
 .. note::
 
-   Ab SmartHomeNG v1.4 können Logiken vollständig in der graphischen Administrationsoberfläche
-   **Backend** erstellt und konfiguriert werden.
-
-   .. image:: ../assets/backend_logikliste.jpg
+   Ab SmartHomeNG v1.6 können Logiken vollständig im Admin Interface erstellt und konfiguriert werden.
 
 Details zur Konfiguration von Logiken finden sich :doc:`hier <../logiken>` .

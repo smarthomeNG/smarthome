@@ -30,6 +30,7 @@ import traceback
 import threading
 import random
 import inspect
+import copy
 
 from lib.shtime import Shtime
 from lib.item import Items
@@ -56,7 +57,7 @@ except:
 
 logger = logging.getLogger(__name__)
 
-_scheduler_instance = None    # Pointer to the initialized instance of the scheduler class (for use by static methods)
+_scheduler_instance = None    # Pointer to the initialized instance of the scheduler class  (for use by static methods)
 
 
 class _PriorityQueue:
@@ -100,7 +101,23 @@ class _PriorityQueue:
             self.lock.release()
 
     def qsize(self):
+        """
+        Returns the actual size of the queue
+        :return: Size of the queue
+        """
         return len(self.queue)
+
+    def dump(self):
+        """
+        Returns all entries of the queue as a list
+        :return: list of all queue entries
+        """
+        queue_list = []
+        self.lock.acquire()
+        for entry in self.queue:
+            queue_list.append(entry)
+        self.lock.release()
+        return queue_list
 
 
 class Scheduler(threading.Thread):
@@ -109,8 +126,9 @@ class Scheduler(threading.Thread):
     _worker_num = 5
     _worker_max = 20
     _worker_delta = 60  # wait 60 seconds before adding another worker thread
-    _scheduler = {}
-    _runq = _PriorityQueue()            # holds tuples of priority and (name, obj, by, source, dest, value) for immediate execution
+    _scheduler = {}                     # holder schedulers, key is the scheduler name. Each scheduler is stored in a dict
+                                        # (keys are 'obj', 'active', 'prio', 'next', 'value', 'cycle', 'cron')
+    _runq = _PriorityQueue()            # holds priority and a tuple of (name, obj, by, source, dest, value) for immediate execution
     _triggerq = _PriorityQueue()        # holds tuples of (datetime, priority) and (name, obj, by, source, dest, value)
                                         # to be put in the run queue when time is due
 
@@ -257,25 +275,27 @@ class Scheduler(threading.Thread):
             #     logger.critical("Scheduler: Deadlock! - Task Count to enter run queue: {}".format(task_count))
                 logger.critical("Scheduler: Deadlock!")
                 continue
-            for name in self._scheduler:
-                task = self._scheduler[name]
-                if task['next'] is not None:
-                    if task['next'] < now:
-                        self._runc.acquire()
-                        self._runq.insert(task['prio'], (name, task['obj'], 'Scheduler', None, None, task['value']))
-                        self._runc.notify()
-                        self._runc.release()
-                        task['next'] = None
-                    else:
-                        continue
-                elif not task['active']:
-                    continue
-                else:
-                    if task['cron'] is None and task['cycle'] is None:
+            try:
+                for name in self._scheduler:
+                    task = self._scheduler[name]
+                    if task['next'] is not None:
+                        if task['next'] < now:
+                            self._runc.acquire()
+                            self._runq.insert(task['prio'], (name, task['obj'], 'Scheduler', None, None, task['value']))
+                            self._runc.notify()
+                            self._runc.release()
+                            task['next'] = None
+                        else:
+                            continue
+                    elif not task['active']:
                         continue
                     else:
-                        self._next_time(name)
-            self._lock.release()
+                        if task['cron'] is None and task['cycle'] is None:
+                            continue
+                        else:
+                            self._next_time(name)
+            finally:
+                self._lock.release()
             time.sleep(0.5)
 
     def stop(self):
@@ -331,11 +351,15 @@ class Scheduler(threading.Thread):
         :param from_smartplugin:
         """
         self._lock.acquire()
-        name = self.check_caller(name, from_smartplugin)
-        logger.debug("remove scheduler entry with name:{0}".format(name))
-        if name in self._scheduler:
-            del(self._scheduler[name])
-        self._lock.release()
+        try:
+            name = self.check_caller(name, from_smartplugin)
+            logger.debug("remove scheduler entry with name:{0}".format(name))
+            if name in self._scheduler:
+                del(self._scheduler[name])
+        except:
+            logger.error("Could not remove scheduler entry for {}".format(name))
+        finally:
+            self._lock.release()
 
     def check_caller(self, name, from_smartplugin=False):
         """
@@ -375,7 +399,7 @@ class Scheduler(threading.Thread):
         :param prio: a priority with default of 3 having 1 as most important and higher numbers less important
         :param cron: a crontab entry of type string or a list of entries
         :param cycle: a time given as integer in seconds or a string with a time given in seconds and a value after an equal sign
-        :param value:
+        :param value: Value that an item should be set to or to be handed to a logic, otherwise: None
         :param offset: an optional offset for cycle. If not given, cycle start point will be varied between 10..15 seconds to prevent too many scheduler entries with the same starting times
         :param next:
         :param from_smartplugin: Only to set to True, if called from the internal method in SmartPlugin class
@@ -386,62 +410,64 @@ class Scheduler(threading.Thread):
         if self.items == None:
             self.items = Items.get_instance()
         self._lock.acquire()
-        if isinstance(cron, str):
-            cron = [cron, ]
-        if isinstance(cron, list):
-            _cron = {}
-            for entry in cron:
-                desc, __, _value = entry.partition('=')
-                desc = desc.strip()
-                if _value == '':
-                    _value = None
-                else:
-                    _value = _value.strip()
-                if desc.startswith('init'):
-                    offset = 5  # default init offset
-                    desc, op, seconds = desc.partition('+')
-                    if op:
-                        offset += int(seconds)
+        try:
+            if isinstance(cron, str):
+                cron = [cron, ]
+            if isinstance(cron, list):
+                _cron = {}
+                for entry in cron:
+                    desc, __, _value = entry.partition('=')
+                    desc = desc.strip()
+                    if _value == '':
+                        _value = None
                     else:
-                        desc, op, seconds = desc.partition('-')
+                        _value = _value.strip()
+                    if desc.lower().startswith('init'):
+                        offset = 5  # default init offset
+                        desc, op, seconds = desc.partition('+')
                         if op:
-                            offset -= int(seconds)
-                    value = _value
-                    next = self.shtime.now() + datetime.timedelta(seconds=offset)
+                            offset += int(seconds)
+                        else:
+                            desc, op, seconds = desc.partition('-')
+                            if op:
+                                offset -= int(seconds)
+                        value = _value
+                        next = self.shtime.now() + datetime.timedelta(seconds=offset)
+                    else:
+                        _cron[desc] = _value
+                if _cron == {}:
+                    cron = None
                 else:
-                    _cron[desc] = _value
-            if _cron == {}:
-                cron = None
-            else:
-                cron = _cron
-        if isinstance(cycle, int):
-            cycle = {cycle: None}
-        elif isinstance(cycle, str):
-            cycle, __, _value = cycle.partition('=')
-            try:
-                cycle = int(cycle.strip())
-            except Exception:
-                logger.warning("Scheduler: invalid cycle entry for {0} {1}".format(name, cycle))
-                return
-            if _value != '':
-                _value = _value.strip()
-            else:
-                _value = None
-            cycle = {cycle: _value}
-        if cycle is not None and offset is None:  # spread cycle jobs
-                offset = random.randint(10, 15)
-        # change name for multi instance plugins
-        if obj.__class__.__name__ == 'method':
-            if isinstance(obj.__self__, SmartPlugin):
-                if obj.__self__.get_instance_name() != '':
-                    #if not (name).startswith(self._pluginname_prefix):
-                    if not from_smartplugin:
-                        name = name +'_'+ obj.__self__.get_instance_name()
-                    logger.debug("Scheduler: Name changed by adding plugin instance name to: " + name)
-        self._scheduler[name] = {'prio': prio, 'obj': obj, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
-        if next is None:
-            self._next_time(name, offset)
-        self._lock.release()
+                    cron = _cron
+            if isinstance(cycle, int):
+                cycle = {cycle: None}
+            elif isinstance(cycle, str):
+                cycle, __, _value = cycle.partition('=')
+                try:
+                    cycle = int(cycle.strip())
+                except Exception:
+                    logger.warning("Scheduler: Invalid cycle entry for {0} {1}".format(name, cycle))
+                    return
+                if _value != '':
+                    _value = _value.strip()
+                else:
+                    _value = None
+                cycle = {cycle: _value}
+            if cycle is not None and offset is None:  # spread cycle jobs
+                    offset = random.randint(10, 15)
+            # change name for multi instance plugins
+            if obj.__class__.__name__ == 'method':
+                if isinstance(obj.__self__, SmartPlugin):
+                    if obj.__self__.get_instance_name() != '':
+                        #if not (name).startswith(self._pluginname_prefix):
+                        if not from_smartplugin:
+                            name = name +'_'+ obj.__self__.get_instance_name()
+                        logger.debug("Scheduler: Name changed by adding plugin instance name to: " + name)
+            self._scheduler[name] = {'prio': prio, 'obj': obj, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
+            if next is None:
+                self._next_time(name, offset)
+        finally:
+            self._lock.release()
 
     def get(self, name, from_smartplugin=False):
         """
@@ -473,6 +499,30 @@ class Scheduler(threading.Thread):
                                 kwargs[key] = None
                             else:
                                 kwargs[key] = _cron
+                    elif key == 'cycle':
+                        _cycle = kwargs[key]
+                        if isinstance(kwargs[key], dict):
+                            _cycle = kwargs[key]
+                        elif isinstance(kwargs[key], int):
+                            _cycle = {kwargs[key]: None}
+                        elif isinstance(kwargs[key], str):
+                            _param = kwargs[key].strip()
+                            if _param[0] == '{' and _param[-1] == '}':
+                                _param = _param[1:-1]
+                            _cycle, __, _value = _param.partition(':')
+                            try:
+                                _cycle = int(_cycle.strip())
+                            except Exception:
+                                logger.warning("scheduler.change: Invalid cycle entry for {} {}".format(name, _cycle))
+                                return
+                            if _value != '':
+                                _value = _value.strip()
+                            else:
+                                _value = None
+                            _cycle = {_cycle: _value}
+                        #logger.warning("scheduler.change: {}: {}, type = type(kwargs[key])={}".format(name, kwargs[key], type(kwargs[key])))
+                        kwargs[key] = _cycle
+                        #logger.warning("scheduler.change: {}: cycle entry {}".format(name, _cycle))
                     elif key == 'active':
                         if kwargs['active'] and not self._scheduler[name]['active']:
                             logger.info("Activating logic: {0}".format(name))

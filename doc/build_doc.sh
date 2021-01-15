@@ -26,7 +26,7 @@ if [ "$1" == "-f" ] || [ "$2" == "-f" ] || [ "$3" == "-f" ]; then
   FORCE_CHECKOUT=True
 fi
 
-DOC=all
+DOC=user
 if [ "$1" == "-u" ] || [ "$2" == "-u" ] || [ "$3" == "-u" ]; then
   DOC=user
 fi

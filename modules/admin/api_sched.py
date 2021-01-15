@@ -24,6 +24,7 @@ import os
 import logging
 import json
 import cherrypy
+import copy
 
 from .rest import RESTResource
 
@@ -39,6 +40,49 @@ class SchedulersController(RESTResource):
         return
 
 
+    def build_task_info(self, obj):
+
+        try:
+            task_type = obj.__module__
+        except:
+            task_type = '?'
+
+        try:
+            if task_type == 'lib.logic':
+                task_name = obj.name
+            elif task_type.startswith('lib.item'):
+                task_name = obj._path
+            else:
+                task_name = obj.__name__
+        except:
+            task_name = dir(obj)
+
+        if task_type == 'lib.logic':
+            task_type = 'logic'
+            task_name = "'" + task_name + "'"
+
+        elif task_type.startswith('lib.item'):
+                task_name = ''
+                task_type = ''
+
+        else:
+            if task_type.startswith('plugins.'):
+                task_name = task_type.split('.')[1] + '.' + task_name
+                task_type = 'plugin method'
+
+            if task_type == '__main__':
+                task_name = 'sh.' + task_name
+                task_type = 'main method'
+
+            if task_type.startswith('lib.'):
+                task_name = task_type.split('.')[1] + '.' + task_name
+                task_type = 'lib method'
+
+            task_name += '()'
+
+        return (task_type, task_name)
+
+
     # ======================================================================
     #  GET /api/schedulers
     #
@@ -48,6 +92,7 @@ class SchedulersController(RESTResource):
         """
         schedule_list = []
 
+        # handle all defined schedulers
         for entry in self._sh.scheduler._scheduler:
             schedule = dict()
             s = self._sh.scheduler._scheduler[entry]
@@ -75,7 +120,31 @@ class SchedulersController(RESTResource):
                     del nl[0]
                     schedule['name'] = '.'.join(nl)
 
+                (schedule['task_type'], schedule['task_name']) = self.build_task_info(s['obj'])
                 schedule_list.append(schedule)
+
+        # Handle all waiting triggers
+        triggers = self._sh.scheduler._triggerq.dump()    # returns a list
+        for trigger in triggers:
+            # trigger holds tuples of (datetime, priority) and (name, obj, by, source, dest, value)
+            #(dt, prio), (name, obj, by, source, dest, value) = self._triggerq.get()
+
+            triggerinfo = dict()
+            (dt, prio), (name, obj, by, source, dest, value) = trigger
+
+            triggerinfo['fullname'] = 'trigger.' + name
+            triggerinfo['name'] = 'trigger.' + name
+            triggerinfo['group'] = 'trigger'    # later: 'trigger'
+            triggerinfo['next'] = dt.strftime('%Y-%m-%d %H:%M:%S%z')
+            triggerinfo['cycle'] = '-'
+            triggerinfo['cron'] = '-'
+            triggerinfo['prio'] = prio
+            #triggerinfo['active'] = True
+            triggerinfo['value'] = str(value)
+            triggerinfo['by'] = by
+        #     # obj, source, dest
+            (triggerinfo['task_type'], triggerinfo['task_name']) = self.build_task_info(obj)
+            schedule_list.append(triggerinfo)
 
         schedule_list_sorted = sorted(schedule_list, key=lambda k: k['fullname'].lower())
         return json.dumps(schedule_list_sorted)

@@ -35,6 +35,7 @@ import logging
 import math
 import subprocess
 import time
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -45,14 +46,31 @@ class Tools():
         self._start = datetime.datetime.now()
 
     def ping(self, host):
-        try:
-            retcode = subprocess.call("ping -W 1 -c 1 " + host + " > /dev/null", shell=True)
-            if retcode == 0:
-                return True
-            else:
+        if os.name != 'nt':
+            try:
+                retcode = subprocess.call("ping -W 1 -c 1 " + host + " > /dev/null", shell=True)
+                if retcode == 0:
+                    return True
+                else:
+                    return False
+            except OSError:
                 return False
-        except OSError:
-            return False
+        else:
+            try:
+                ping_response = subprocess.run(["ping", host, "-n", "1"], stdout=subprocess.PIPE, timeout = 5)
+                if ping_response.returncode == 0:
+                    # need to inspect the returned output since it could be that
+                    # **destination is unreachable** anyway which does not generate an error code
+                    # as the result is a bytearray which codepage might vary between cp850, cp1252 and utf8, 
+                    # it is a quick hack to just look if ms is inside this string.
+                    # if not, it is sure that destination could not be reached
+                    if b'ms' in ping_response.stdout:
+                        return True
+                    return False
+                else:
+                    return False
+            except (OSError, subprocess.TimeoutExpired):
+                return False
 
     def dewpoint(self, t, rf):
         log = math.log((rf + 0.01) / 100)  # + 0.01 to 'cast' float

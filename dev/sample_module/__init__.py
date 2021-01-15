@@ -40,7 +40,7 @@ class SampleModule(Module):
         """
         Initialization Routine for the module
         """
-        # TO DO: Shortname anders setzen (oder warten bis der Plugin Loader es beim Laden setzt
+        # TO DO: Shortname anders setzen (oder warten bis der Module Loader es beim Laden setzt
         self._shortname = self.__class__.__name__
         self._shortname = self._shortname.lower()
 
@@ -64,7 +64,7 @@ class SampleModule(Module):
         # self._showtraceback = self.mod_http._showtraceback
 
 
-        # get the parameters for the plugin (as defined in metadata plugin.yaml):
+        # get the parameters for the module (as defined in metadata module.yaml):
         self.logger.debug("Module '{}': Parameters = '{}'".format(self._shortname, dict(self._parameters)))
         try:
             # self.broker_ip = self._parameters['broker_host']
@@ -123,9 +123,9 @@ def translate(s):
     return s
 
 
-import socket
+#import socket
 
-from lib.plugin import Plugins
-from lib.utils import Utils
+#from lib.plugin import Plugins
+#from lib.utils import Utils
 
 

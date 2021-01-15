@@ -8,6 +8,8 @@ Development
    :titlesonly:
 
    development_plugins
+
+..
    development_plugin/APIs
    development_core
 

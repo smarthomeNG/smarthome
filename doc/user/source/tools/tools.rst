@@ -18,4 +18,6 @@ hilfreich sind.
    tools_backup_restore
    tools_build_requirements
    tools_conf_to_yaml_converter
+   tools_getshngpid
+   tools_plugin_metadata_checker
 

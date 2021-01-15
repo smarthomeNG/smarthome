@@ -1,4 +1,4 @@
-# Module admin
+# Module admin (README)
 
 This module implements the administration interface for SmartHomeNG.
 
@@ -29,7 +29,7 @@ admin:
 ```
 
 
-## API of module admin
+## API des Moduls admin
 
 Im folgenden sind die einzelnen Teile des REST APIs beschrieben, 
 welches das admin Modul zur Verfügung stellt und intern nutzt.
@@ -142,7 +142,7 @@ Startet die SmartHomeNG Server Instanz neu
 
 ### Test if module admin is loaded
 
-`dummy` is a loadlable module. Therefore there is no guarantiee that it is present in every system. Before you can use this module, you have to make sure ist is loaded. You can do it by calling a method of the main smarthome object. Do it like this:
+`admin` is a loadlable module. Therefore there is no guarantiee that it is present in every system. Before you can use this module, you have to make sure ist is loaded. You can do it by calling a method of the main smarthome object. Do it like this:
 
 ```
 self.classname = self.__class__.__name__

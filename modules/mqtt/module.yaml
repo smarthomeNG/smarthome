@@ -2,7 +2,7 @@
 module:
     # Global plugin attributes
     classname: Mqtt
-    version: 1.7.2
+    version: 1.7.3
     sh_minversion: 1.6a
 #   sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)
     description:

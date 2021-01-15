@@ -59,10 +59,6 @@ class SamplePlugin(SmartPlugin):
         # Call init code of parent class (SmartPlugin)
         super().__init__()
 
-        from bin.smarthome import VERSION
-        if '.'.join(VERSION.split('.', 2)[:2]) <= '1.5':
-            self.logger = logging.getLogger(__name__)
-
         # get the parameters for the plugin (as defined in metadata plugin.yaml):
         # self.param1 = self.get_parameter_value('param1')
 
@@ -152,11 +148,8 @@ class SamplePlugin(SmartPlugin):
             self.logger.info("Update item: {}, item has been changed outside this plugin".format(item.id()))
 
             if self.has_iattr(item.conf, 'foo_itemtag'):
-                self.logger.debug(
-                    "update_item was called with item '{}' from caller '{}', source '{}' and dest '{}'".format(item,
-                                                                                                               caller,
-                                                                                                               source,
-                                                                                                               dest))
+                self.logger.debug("update_item was called with item '{}' from caller '{}', source '{}' and dest '{}'".format(item,
+                                                                                                               caller, source, dest))
             pass
 
     def poll_device(self):

@@ -32,11 +32,19 @@ except:
 
 import logging
 import os
+import pathlib
 import sys
 import fnmatch
 import datetime
+import time
 import re
 
+# to be able to run first pypi check in commandline mode
+try:
+    import requests
+    import xmltodict
+except:
+    pass
 
 from lib.utils import Utils
 from lib.constants import (YAML_FILE)
@@ -66,6 +74,7 @@ class Shpypi:
         _shpypi_instance = self
         self.req_files = Requirements_files()
 
+        self.scheduler_crontab = ['init', '7 3 * *']
 
         self.sh = sh
         if sh is None:
@@ -106,6 +115,15 @@ class Shpypi:
             return None
         else:
             return _shpypi_instance
+
+
+    def set_scheduler_crontab(self, crontab):
+        """
+        Set schedule for shpypi task
+
+        :param crontab: crontab entry for the update task for PyPI releases
+        """
+        self.scheduler_crontab = ['init', crontab]
 
 
     def get_installed_packages(self):
@@ -208,7 +226,7 @@ class Shpypi:
         return requirements_met
 
 
-    def test_core_requirements(self, logging=True):
+    def test_core_requirements(self, logging=True, pip3_command=None):
 
         # build an actual requirements file for core+modules
         # req_files = Requirements_files()
@@ -224,15 +242,15 @@ class Shpypi:
             os.remove(complete_filename)
             return 1
         else:
-            if self.install_requirements('core', logging):
+            if self.install_requirements('core', logging, pip3_command):
                 return 0
             else:
                 if logging:
                     self.logger.error("test_core_requirements: Python package requirements not met - Should terminate")
                 else:
                     # no logging, if called before logging is configured
-                    print()
-                    print("Python package requirements not met - SmartHomeNG is terminating")
+                    #print("Python package requirements not met - SmartHomeNG is terminating")
+                    pass
                 return -1
 
 
@@ -310,8 +328,41 @@ class Shpypi:
                 self.logger.info("test_conf_plugins_requirements: Python package requirements for configured plugins not met")
                 return -1
 
+    def get_pip_command(self):
+        """
+        returns the correct pip command
+        """
+        try:
+            pip_command = self.sh._pip_command
+            if logging:
+                self.logger.warning("PIP command read from smarthome.yaml: '{}'".format(pip_command))
+            return pip_command
+        except:
+            pass
 
-    def install_requirements(self, req_type, logging=True):
+        if self.sh:
+            #print("self.sh.python_bin="+self.sh.python_bin)
+            python_bin_path = os.path.split(self.sh.python_bin)[0]
+        else:
+            python_bin_path = os.path.split(sys.executable)[0]
+        print("python_bin_path={}".format(python_bin_path))
+
+        if not os.name == 'nt':
+            pip_command = os.path.join(python_bin_path, 'pip3')
+            if not os.path.isfile(pip_command):
+                python_bin_path, python_bin_executable = os.path.split(os.__file__)
+                pip_command = os.path.join(python_bin_path[:python_bin_path.find('/lib')], 'bin', ('pip' + python_bin_path[-3:]))
+                if not os.path.isfile(pip_command):
+                    # use pip3 if pip3.x does not exist
+                    pip_command = os.path.join(python_bin_path[:python_bin_path.find('/lib')], 'bin', 'pip3')
+        else:
+            pip_command = pathlib.Path(python_bin_path) / 'scripts' / 'pip.exe'
+            if not pip_command.is_file():
+                pass
+
+        return str(pip_command)
+
+    def install_requirements(self, req_type, logging=True, pip3_command=None):
         req_type_display = req_type
         if req_type == 'conf_all':
             req_type_display = 'plugin'
@@ -322,24 +373,26 @@ class Shpypi:
             print()
             print("Installing "+req_type_display+" requirements for the current user, please wait...")
 
-        if self.sh:
-            python_bin_path = os.path.split(self.sh.python_bin)[0]
+        if pip3_command:
+            pip_command = pip3_command
         else:
-            python_bin_path = os.path.split(os.environ['_'])[0]
-        pip_command = os.path.join(python_bin_path, 'pip3')
-        if not os.path.isfile(pip_command):
-            # to find the right pip command when using 'update-alternatives'
-            python_bin_path, python_bin_executable = os.path.split(os.__file__)
-            pip_command = os.path.join(python_bin_path[:python_bin_path.find('/lib')], 'bin', ('pip' + python_bin_path[-3:]))
-        try:
-            pip_command = self.sh._pip_command
-            if logging:
-                self.logger.warning("PIP command read from smarthome.yaml: '{}'".format(pip_command))
-        except: self.logger.warning("Using PIP command: '{}'".format(pip_command))
-        self.logger.info('> '+pip_command+' install -r requirements/'+req_type+'.txt --user --no-warn-script-location')
+            pip_command = self.get_pip_command()
+        self.logger.warning("> using PIP command: '{}'".format(pip_command))
+        if logging:
+            self.logger.info('> '+pip_command+' install -r requirements/'+req_type+'.txt --user --no-warn-script-location')
+        else:
+            #print('> ' + pip_command + ' install -r requirements/' + req_type + '.txt --user --no-warn-script-location')
+            pass
 
         stdout, stderr = Utils.execute_subprocess(pip_command+' install -r requirements/'+req_type+'.txt --user --no-warn-script-location')
+        ####
+        pip_log_name = os.path.join(self._sh_dir, 'var', 'log', 'pip3_outout.log')
+        with open(pip_log_name, 'w', encoding='utf8') as outfile:
+            outfile.write(stdout)
         if stderr != '':
+            pip_log_name = os.path.join(self._sh_dir, 'var', 'log', 'pip3_error.log')
+            with open(pip_log_name, 'w', encoding='utf8') as outfile:
+                outfile.write(stderr)
             if 'virtualenv' in stderr and '--user' in stderr:
                 if logging:
                     self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
@@ -363,14 +416,18 @@ class Shpypi:
             return True
         else:
             if stdout.find("Successfully installed") > -1:
-                if stderr.find("You should consider upgrading via the 'pip install --upgrade pip' command") > -1:
-                    if logging:
-                        self.logger.warning(stderr)
+                # result on windows nt:
+                # WARNING: You are using pip version 19.2.3, however version 20.2.1 is available.
+                # You should consider upgrading via the 'python -m pip install --upgrade pip' command.
+                if stderr.find("You should consider upgrading via") > -1 and stderr.find("pip install --upgrade pip") > -1:
+                    #if logging:
+                    #    self.logger.warning(stderr)
                     return True
             if logging:
                 self.logger.error(stderr)
             else:
-                print('len(stderr)='+str(len(str(stderr))))
+                #print('len(stderr)='+str(len(str(stderr))))
+                print('ERROR:')
                 print(stderr)
         return False
 
@@ -404,7 +461,7 @@ class Shpypi:
 
         req_dict = {}
         try:
-            fobj = open(file_path)
+            fobj = open(file_path, encoding='utf8')
         except:
             return req_dict
 
@@ -504,7 +561,7 @@ class Shpypi:
 
             package['vers_ok'] = False
             package['vers_recent'] = False
-            package['pypi_version'] = ''
+            package['pypi_version'] = '--'
             package['pypi_version_ok'] = True
             package['pypi_version_not_available_msg'] = ''
             package['pypi_doc_url'] = ''
@@ -528,7 +585,7 @@ class Shpypi:
 
         # process required base packages
         required_packages = self.parse_requirementsfile(os.path.join(self._sh_dir, 'requirements', 'base.txt'))
-        # self.logger.warning("get_packagelist: required_packages = {}".format(required_packages))
+        self.logger.info("get_packagelist: required_packages = {}".format(required_packages))
 
         for pkg_name in required_packages:
             if required_packages[pkg_name] != {}:   # ignore empty requirements (e.g. requirement exists only for other Python version
@@ -548,7 +605,7 @@ class Shpypi:
 
         # process installed packages
         installed_packages = self.get_installed_packages()
-        # self.logger.warning("get_packagelist: installed_packages = {}".format(installed_packages))
+        self.logger.info("get_packagelist: installed_packages = {}".format(installed_packages))
         for pkg_name in installed_packages:
             index = self.set_packagedata(pkg_name, add=True)
             if index != None:
@@ -556,12 +613,12 @@ class Shpypi:
 
                 package['vers_installed'] = installed_packages[pkg_name]
 
-        # self.logger.warning("get_packagelist: package_list = {}".format(self.package_list))
+        self.logger.info("get_packagelist: package_list = {}".format(self.package_list))
 
 
         # process required (all) packages
         required_packages = self.parse_requirementsfile(os.path.join(self._sh_dir, 'requirements', 'all.txt'))
-        # self.logger.warning("get_packagelist: required_packages = {}".format(required_packages))
+        self.logger.info("get_packagelist: required_packages = {}".format(required_packages))
 
         for pkg_name in required_packages:
             if required_packages[pkg_name] != {}:   # ignore empty requirements (e.g. requirement exists only for other Python version
@@ -581,7 +638,7 @@ class Shpypi:
 
         # process required doc-packages
         required_packages = self.parse_requirementsfile(os.path.join(self._sh_dir, 'doc', 'requirements.txt'))
-        # self.logger.warning("get_packagelist: required_doc_packages = {}".format(required_packages))
+        self.logger.info("get_packagelist: required_doc_packages = {}".format(required_packages))
 
         for pkg_name in required_packages:
             if required_packages[pkg_name] != {}:   # ignore empty requirements (e.g. requirement exists only for other Python version
@@ -602,7 +659,7 @@ class Shpypi:
 
         # process required test-packages
         required_packages = self.parse_requirementsfile(os.path.join(self._sh_dir, 'requirements', 'test.txt'))
-        # self.logger.warning("get_packagelist: required_test_packages = {}".format(required_packages))
+        self.logger.info("get_packagelist: required_test_packages = {}".format(required_packages))
 
         for pkg_name in required_packages:
             if required_packages[pkg_name] != {}:   # ignore empty requirements (e.g. requirement exists only for other Python version
@@ -623,7 +680,7 @@ class Shpypi:
         # check if pypi service is reachable
         if self.pypi_timeout <= 0:
             pypi_available = False
-            #            pypi_unavailable_message = translate('PyPI Prüfung deaktiviert')
+            # pypi_unavailable_message = translate('PyPI Prüfung deaktiviert')
             pypi_unavailable_message = 'PyPI Prüfung deaktiviert'
         else:
             pypi_available = True
@@ -631,71 +688,125 @@ class Shpypi:
                 import socket
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 sock.settimeout(self.pypi_timeout)
-                #                sock.connect(('pypi.python.org', 443))
+                # sock.connect(('pypi.python.org', 443))
                 sock.connect(('pypi.org', 443))
                 sock.close()
             except:
                 pypi_available = False
-                #                pypi_unavailable_message = translate('PyPI nicht erreichbar')
-                pypi_unavailable_message = 'PyPI nicht erreichbar'
 
-        # look for PyPI data of the packages
-        import xmlrpc
-        pypi = xmlrpc.client.ServerProxy('https://pypi.org/pypi')
-        for package in self.package_list:
-
-            ###
-            if pypi_available:
-                try:
-                    available = pypi.package_releases(package['name'])  # (dist.project_name)
-                    self.logger.debug(
-                        "pypi_json: pypi package: project_name {}, availabe = {}".format(package['name'], available))
-                    try:
-                        package['pypi_version'] = available[0]
-                        package['pypi_version_not_available_msg'] = ""
-                        package['pypi_version_ok'] = True
-                        package['pypi_doc_url'] = 'https://pypi.org/pypi/' + package['name']
-
-                    except:
-                        package['pypi_version_not_available_msg'] = '?'
-                        package['pypi_version_ok'] = False
-                        package['pypi_doc_url'] = ''
-
-                except:
-                    package['pypi_version'] = '--'
-                    #                        pkg['pypi_version_not_available_msg'] = [translate('Keine Antwort von PyPI')]
-                    package['pypi_version_not_available_msg'] = ['Keine Antwort von PyPI']
-            else:
-                package['pypi_version_not_available_msg'] = pypi_unavailable_message
-            ###
-
-            # check if installed version is ok and recent
-            if package['vers_installed'] != '-':
-                min = package['vers_req_min']
-                max = package['vers_req_max']
-                recent = package['pypi_version']
-                inst_vers = package['vers_installed']
-                if min == '*':
-                    min_met = True
-                else:
-                    min_met = self._compare_versions(min, inst_vers, '<=')
-                if max == '*':
-                    max_met = True
-                else:
-                    max_met = self._compare_versions(inst_vers, max, '<=')
-                if min_met and max_met:
-                    package['vers_ok'] = True
-                recent_met = self._compare_versions(inst_vers, recent, '==')
-                if recent_met:
-                    package['vers_recent'] = True
-                if max != '*':
-                    pypi_ok = self._compare_versions(recent, max, '<=')
-                    if not pypi_ok:
-                        package['pypi_version_ok'] = False
+        # look for PyPI release data of the packages
+        from lib.scheduler import Scheduler
+        if self.pypi_timeout > 0:
+            self.scheduler = Scheduler.get_instance()
+            self.scheduler.add('shpypi.get_releasedata', self.lookup_pypi_releasedata, cron = self.scheduler_crontab)
+        else:
+            self.lookup_pypi_releasedata(False)
 
         sorted_package_list = sorted(self.package_list, key=lambda k: k['sort'], reverse=False)
+        self.logger.info("get_packagelist: Returning sorted_package_list = {}".format(sorted_package_list))
         return sorted_package_list
 
+
+    def lookup_pypi_releasedata(self, pypi_available=True):
+        self.logger.debug("lookup_pypi_releasedata: pypi_available={}".format(pypi_available))
+        for package in self.package_list:
+            if (package['is_required'] == True) or True:
+                if pypi_available :
+                    self.get_package_releases_data(package)
+                    #scheduler.add(self, name, obj, prio=3, cron=None, cycle=None, value=None, offset=None, next=None, from_smartplugin=False):
+                    #self._sh.scheduler.add(self._itemname_prefix + self._path, self, cron=self._crontab, cycle=cycle)
+                else:
+                    self.logger.warning("get_packagelist ({}): PyPI nicht erreichbar".format(package))
+                    if package['pypi_version'] == '':
+                        package['pypi_version'] = '--'
+                    package['pypi_version_not_available_msg'] = 'PyPI nicht erreichbar'
+
+            # check if installed version is ok and recent
+            self.check_package_version_data(package)
+        return
+
+
+    def check_package_version_data(self, package):
+        # check if installed version is ok and recent
+        if package['vers_installed'] != '-':
+            min = package['vers_req_min']
+            max = package['vers_req_max']
+            recent = package['pypi_version']
+            inst_vers = package['vers_installed']
+            if min == '*':
+                min_met = True
+            else:
+                min_met = self._compare_versions(min, inst_vers, '<=')
+            if max == '*':
+                max_met = True
+            else:
+                max_met = self._compare_versions(inst_vers, max, '<=')
+            if min_met and max_met:
+                package['vers_ok'] = True
+            recent_met = self._compare_versions(inst_vers, recent, '==')
+            if recent_met:
+                package['vers_recent'] = True
+            if max != '*':
+                pypi_ok = self._compare_versions(recent, max, '<=')
+                if not pypi_ok:
+                    package['pypi_version_ok'] = False
+        return
+
+
+    def get_releasedata_frompypi(self, package):
+        """
+        Get data of available releases from pypi.org via
+        :param package:
+        :return:
+        """
+        result = []
+        try:
+            r = requests.get('https://pypi.org/rss/project/' + package + '/releases.xml')
+        except Exception as e:
+            self.logger.error("Error: {0}".format(e))
+            return result
+
+        if r.status_code == 200:
+            xmldict = xmltodict.parse(r.text)
+
+            pypi_item_list = xmldict['rss']['channel']['item']
+            if isinstance(pypi_item_list, dict):
+                pypi_item_list = [pypi_item_list]
+            for i in pypi_item_list:
+                result.append(dict(i))
+
+        return result
+
+
+    def get_package_releases_data(self, package):
+        """
+
+        :param instance:
+        :param owner:
+        :return:
+        """
+
+        version_read = False
+        while version_read == False:
+            package['pypi_version'] = '--'
+            package['pypi_version_not_available_msg'] = '?'
+            package['pypi_version_ok'] = False
+            package['pypi_doc_url'] = ''
+
+            available = self.get_releasedata_frompypi(package['name'])
+            self.logger.debug("get_package_releases_data: -> pypi package: project_name {}, availabe = {}".format(package['name'], available))
+            try:
+                package['pypi_version'] = available[0]['title']
+                package['pypi_version_not_available_msg'] = ""
+                package['pypi_version_ok'] = True
+                package['pypi_doc_url'] = 'https://pypi.org/pypi/' + package['name']
+                version_read = True
+            except:
+                pass
+
+            self.logger.debug("get_package_releases_data ({}): Version {}".format(package['name'], package['pypi_version']))
+
+        return
 
 
     def _build_sortstring(self, package):
@@ -1091,7 +1202,7 @@ class Requirements_files():
 
         package = ''.join((fname.split(os.sep))[-2:-1])
 
-        with open(fname) as ifile:
+        with open(fname, encoding='utf8') as ifile:
             for line in ifile:
                 if len(line.rstrip()) != 0:
                     #                self.setdefault(line.rstrip(), []).append('SmartHomeNG ' + package)
@@ -1228,7 +1339,7 @@ class Requirements_files():
         complete_filename = self.sh_basedir + os.sep + filename
 
         if len(packagelist_consolidated) > 0:
-            with open(complete_filename, 'w') as outfile:
+            with open(complete_filename, 'w', encoding='utf8') as outfile:
                 self._write_header(outfile, filename)
 
                 for pkg in packagelist_consolidated:
@@ -1277,4 +1388,3 @@ class Requirements_files():
         self.logger.info("create_requirementsfile: selection={}, packagelist_consolidated={}".format(selection, packagelist_consolidated))
 
         return self._write_resultfile(selection, packagelist_consolidated, requirements)
-

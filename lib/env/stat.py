@@ -44,7 +44,10 @@ sh.env.system.memory.used(sysmem_info.used, logic.lname)
 sh.env.system.memory.percent(sysmem_info.percent, logic.lname)
 
 # Load
-l1, l5, l15 = os.getloadavg()
+if os.name != 'nt':
+    l1, l5, l15 = os.getloadavg()
+else:
+    l1, l5, l15 = psutil.getloadavg()
 sh.env.system.load(round(l5, 2), logic.lname)
 
 # Diskusage

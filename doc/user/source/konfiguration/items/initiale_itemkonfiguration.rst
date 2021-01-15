@@ -1,3 +1,4 @@
+
 ===========================
 Initiale Item-Konfiguration
 ===========================
@@ -14,18 +15,17 @@ kann, hängt von den installierten Plugins ab.
 Ein kleines Beispiel: Eine Lampe soll über KNX ein- und
 ausgeschaltet werden. Dazu braucht es zwei Schritte:
 
-1)  Das **KNX Plugin** muß installiert und aktiviert werden.
+1)  Das **KNX Plugin** muss installiert und aktiviert werden.
     Das geschieht in der Datei ``./etc/plugins.yaml``.
     Typischerweise sieht der entsprechende Eintrag dann so aus:
 
     .. code-block:: yaml
 
        knx:
-          class_name: KNX
-          class_path: plugins.knx
+          plugin_name: knx
           host: 127.0.0.1
 
-2)  Die Lampe muß nun als **Item** im SmartHomeNG angelegt werden.
+2)  Die Lampe muss nun als **Item** im SmartHomeNG angelegt werden.
     Dazu wird eine Datei mit beliebigem Namen im Verzeichnis ``./items``
     mit der Endung ``.yaml`` angelegt. z.B. die Datei ``./items/Lampen.yaml``.
     In dieser Datei wird das Item angelegt indem den Name des Items gefolgt von
@@ -130,14 +130,13 @@ Ein solches Schema hat den Vorteil, dass man mit
 beispielsweise um eine Logik auszulösen.
 
 Möchte man nun das Beispiel erweitern um z.B. mit der SmartVISU die Lampe zu schalten,
-muß man zunächst das Plugin **visu_websocket** in der ``./etc/plugin.yaml``
+muss man zunächst das Plugin **visu_websocket** in der ``./etc/plugin.yaml``
 durch folgenden Eintrag aktivieren:
 
 .. code-block:: yaml
 
    visu:
-       class_name: WebSocket
-       class_path: plugins.visu_websocket
+       plugin_name: visu_websocket
 
 
 Bei den Items ist das Schlüsselwort **visu_acl** zu ergänzen mit der Berechtigungsebene für den Websocket.
@@ -161,11 +160,12 @@ das Item durch das visu_websocket Plugin.
            visu_acl: rw
 
 
-Um ein Item auf weitere Plugins reagieren zu lassen muß nun ebenfalls das gewünschte
-Plugin aktiviert werden. Wie das funktioniert und welche Schlüsselworte das Plugin kennt
-steht in der zugehörigen Readme Datei des Plugins.
+Um ein Item auf weitere Plugins reagieren zu lassen muss nun ebenfalls das gewünschte
+Plugin aktiviert werden. Im Admin Interface finden sich unter der Liste der Plugins für 
+jedes Plugin Konfigurationsinformationen und zumeist noch weiterführende Hilfe für spezielle
+Anwendungen, Links auf Support Threads im KNX User Forum oder Artikel im SmartHomeNG Blog.
 
-Um also z.B. das Dash-Button Plugin zu nutzen muß dieses nur aktiviert werden und
+Um also z.B. das Dash-Button Plugin zu nutzen muss dieses nur aktiviert werden und
 das Item einfach noch um das Dash-Button Attribut erweitert werden:
 
 .. code-block:: yaml
@@ -180,7 +180,7 @@ das Item einfach noch um das Dash-Button Attribut erweitert werden:
            dashbutton_mac:  'AC:63:B0:02:CA:12'
            dashbutton_mode: 'flip'
 
-D.h. man kann die Lampe nun via KNX, SmartVisu oder Dashbutton ein- und
+D.h. man kann die Lampe nun via KNX, SmartVISU oder Dashbutton ein- und
 ausschalten.
 
 Wie man grundsätzlich die verschiedenen Plugins in der

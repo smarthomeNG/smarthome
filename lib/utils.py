@@ -29,6 +29,7 @@ New helper-functions are going to be implemented in this library.
 
 import logging
 
+import sys
 import re
 import hashlib
 import ipaddress
@@ -558,6 +559,14 @@ class Utils(object):
 
 
 
+def get_python_version():
+
+    PYTHON_VERSION = str(sys.version_info[0])+'.'+str(sys.version_info[1])+'.'+str(sys.version_info[2])+' '+str(sys.version_info[3])
+    if sys.version_info[3] != 'final':
+        PYTHON_VERSION += ' '+str(sys.version_info[4])
+    return PYTHON_VERSION
+
+
 def execute_subprocess(commandline, wait=True):
     """
     Executes a subprocess via a shell and returns the output written to stdout by this process as a string
@@ -576,4 +585,11 @@ def execute_subprocess(commandline, wait=True):
         ## Wait for date to terminate. Get return returncode ##
         p_status = p.wait()
     return str(result, encoding='utf-8', errors='strict')
+
+
+def running_virtual():
+    """ Return if we run in a virtual environment. """
+    # Check supports venv && virtualenv
+    return (getattr(sys, 'base_prefix', sys.prefix) != sys.prefix or
+            hasattr(sys, 'real_prefix'))
 

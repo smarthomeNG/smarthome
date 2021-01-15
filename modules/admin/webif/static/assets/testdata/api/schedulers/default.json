@@ -41,6 +41,96 @@
     "value": "hoch"
   },
   {
+    "group": "logic",
+    "name": "a_testlogic3",
+    "next": "2018-07-29 01:49:37+0200",
+    "cycle": "{60: None}",
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": "true"
+  },
+  {
+    "group": "logic",
+    "name": "a_testlogic4",
+    "next": "2018-07-29 01:49:37+0200",
+    "cycle": "{60: None}",
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": "true"
+  },
+  {
+    "group": "logic",
+    "name": "a_testlogic5",
+    "next": "2018-07-29 01:49:37+0200",
+    "cycle": "{60: None}",
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": "true"
+  },
+  {
+    "group": "logic",
+    "name": "a_testlogic6",
+    "next": "2018-07-29 01:49:37+0200",
+    "cycle": "{60: None}",
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": "true"
+  },
+  {
+    "group": "logic",
+    "name": "a_testlogic7",
+    "next": "2018-07-29 01:49:37+0200",
+    "cycle": "{60: None}",
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": "true"
+  },
+  {
+    "group": "logic",
+    "name": "a_testlogic8",
+    "next": "2018-07-29 01:49:37+0200",
+    "cycle": "{60: None}",
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": "hoch"
+  },
+  {
+    "group": "logic",
+    "name": "a_testlogic9",
+    "next": "2018-07-29 01:49:37+0200",
+    "cycle": "{60: None}",
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": "runter"
+  },
+  {
+    "group": "logic",
+    "name": "a_testlogic10",
+    "next": "2018-07-29 01:49:37+0200",
+    "cycle": "{60: None}",
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": "hoch"
+  },
+  {
+    "group": "logic",
+    "name": "a_testlogic11",
+    "next": "2018-07-29 01:49:37+0200",
+    "cycle": "{60: None}",
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": "hoch"
+  },
+  {
     "group": "item",
     "name": "test.cycle.testcycle_item_new1",
     "next": "2018-07-29 01:49:28+0200",
@@ -71,6 +161,36 @@
     "value": null
   },
   {
+    "group": "item",
+    "name": "test.cycle.testcycle_item_new3",
+    "next": "2018-07-29 01:49:28+02000",
+    "cycle": "{60: ''}",
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": null
+  },
+  {
+    "group": "item",
+    "name": "test.cycle.testcycle_item_new4",
+    "next": "2018-07-29 01:49:28+02000",
+    "cycle": "{60: ''}",
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": null
+  },
+  {
+    "group": "item",
+    "name": "test.cycle.testcycle_item_new5",
+    "next": "2018-07-29 01:49:28+02000",
+    "cycle": "{60: ''}",
+    "cron": "-",
+    "prio": 3,
+    "active": true,
+    "value": null
+  },
+  {
     "group": "plugin",
     "name": "avm_fritz_wz.update",
     "next": "2018-08-01 19:32:46+0200",
@@ -78,7 +198,9 @@
     "cron": "-",
     "prio": 3,
     "active": true,
-    "value": null
+    "value": null,
+    "task_type": "plugin method",
+    "task_name": "avm._update_loop()"
   },
   {
     "group": "other",

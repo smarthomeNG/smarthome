@@ -1,0 +1,68 @@
+# Metadata for the plugin
+module:
+    # Global plugin attributes
+    classname: Websocket
+    version: 1.0.0
+    sh_minversion: 1.7.2c
+#   sh_maxversion:                  # maximum shNG version to use this module (leave empty if latest)
+#    py_minversion: 3.6             # minimum Python version to use for this module
+#    py_maxversion:                 # maximum Python version to use for this module (leave empty if latest)
+    description:
+        de: 'Modul implementiert die Websocket Kommunikation für SmartHomeNG'
+        en: 'Module implements websocket communication for SmartHomeNG'
+
+parameters:
+    # Definition of parameters to be configured in etc/module.yaml
+    enabled:
+        type: bool
+        default: True
+        description:
+            de: 'Websocket Unterstützung aktivieren oder deaktivieren'
+            en: 'Enable or disable websocket support'
+
+    ip:
+        type: ipv4
+        description:
+            de: IP Adresse auf der das websocket Modul aktiv sein soll - muss normalerweise nicht angegeben werden
+            en: IP adress on which the websocket module should operate - not needed, has only to be specified for special configurations
+            fr: Adresse IP sur laquelle le module websocket devrait fonctionner - il n'est généralement pas nécessaire de la spécifier
+    port:
+        type: int
+        valid_min: 0
+        valid_max: 65535
+        default: 2424
+        description:
+            de: Portnummer für die unverschlüsselte Websocket Kommunikation
+            en: Port number for the unencrypted access to websockets
+            fr: Numéro de port pour l'accès à l'interface websocket
+    tls_port:
+        type: int
+        valid_min: 0
+        valid_max: 65535
+        default: 2425
+        description:
+            de: Portnummer für die verschlüsselte Websocket Kommunikation
+            en: Port number for the encrypted access to websockets
+            fr: Numéro de port pour l'accès à l'interface web si utilisation de wss
+    use_tls:
+        type: bool
+        default: False
+        description:
+            de: Auf True setzen, um Zugriffe über wss:// zu ermöglichen (Zertifikat muss installiert sein)
+            en: Set to true to allow access over wss:// (certificate has to be installed)
+            fr: Mettre sur 'true' pour activer les accès par https (certificats doivent être installés)
+    tls_cert:
+        type: str
+        default: shng.cer
+        description:
+            de: Name der Zertifikatsdatei mit der Endung '.cer' oder '.pem'. Die Datei muss im Verzeichnis ../etc liegen
+            en: Name of the certificate file (with extension .cer od .pem). The file musst be stored in ../etc
+            fr: Nom du fichier contanent les certificats. Le fichier doit se trouver dans ../etc
+    tls_key:
+        type: str
+        default: shng.key
+        description:
+            de: Name der Datei mit dem privaten Schlüssel und der Endung '.key'. Die Datei muss im Verzeichnis ../etc liegen
+            en: Name of the private key file. The file musst be stored in ../etc
+            fr: Nom du fichier contanent les clés privés. Le fichier doit se trouver dans ../etc
+

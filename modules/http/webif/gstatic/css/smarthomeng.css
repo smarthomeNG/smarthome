@@ -48,7 +48,7 @@ plusIconlist-group-item.py-2.node-tree.node-selected {
 }
 
 .navBorder {
-  border-top: 1px solid #dee2e6;
+  border-top: 1px solid var(--shng-border);
   padding-top: 10px;
 }
 

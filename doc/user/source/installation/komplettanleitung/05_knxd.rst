@@ -130,16 +130,16 @@ noch installiert werden mit:
 knxd konfigurieren
 ==================
 
-Als nächstes muß die Konfiguration des knxd für die zu verwendende
-Schnittstelle angepasst werden. Dazu muß bei Systemen mit systemd die
-Datei **/etc/knxd.conf** bearbeitet werden:
+Als nächstes muss die Konfiguration des knxd für die zu verwendende
+Schnittstelle angepasst werden. Dazu wird bei Systemen mit systemd die
+Datei **/etc/knxd.conf** bearbeitet:
 
 .. code-block:: bash
 
     sudo nano /etc/knxd.conf
 
 Die Originalzeile ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -u /tmp/eib -b
-ip:"`` am besten auskommentieren und in der Zeile darunter dann die
+ip:"`` am besten mit einem ``#`` zum Kommentar machen und in der Zeile darunter dann die
 gewählten Parameter eintragen.
 
 Details zu Schnittstellen finden sich auf der `Github-Seite vom knxd <https://github.com/knxd/knxd>`__.
@@ -148,8 +148,9 @@ die Verwendung der Schnittstelle:
 
 -  IP Schnittstelle: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b ipt:<IP der knx Schnittstelle>"``
 -  IP Router: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b ip:<Multicast IP>"``
--  IP Router: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b ip:"``
+-  TP UARTS: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b tpuarts:/dev/knx"``
 -  USB-Interface: Bitte `Wiki zum knxd <https://github.com/knxd/knxd/wiki>`__ konsultieren.
+
 
 Es kann sein, das bei ``KNXD_OPTS`` hinter dem **-c** bei einigen Interfaces noch ein ``--send-delay=30`` eingefügt
 werden muß um Telegrammverlust bei hohen Lasten zu minimieren. Die 30 bedeutet dabei eine zusätzliche Wartezeit
@@ -165,12 +166,10 @@ zu vermeiden. Der Parameter **--no-tunnel-client-queuing** ist obsolet und sollt
 knxd und systemd
 ================
 
-Um die Änderungen wirksam werden zu lassen, muß der knxd die neue
-Konfiguration noch berücksichtigen dazu muß er ggf. beendet und neu
-gestartet werden. Der knxd hat dazu zwei Einträge, zum einen
-``knxd.socket`` der die normalerweise die Kommunikation über der Port
-6720 übernimmt und der ``knxd.service`` der die restlichen Aufgaben
-übernimmt.
+Um die Änderungen wirksam werden zu lassen wird der knxd neu gestartet.
+Der knxd ist im systemd zum einen über ``knxd.socket`` der die normalerweise die Kommunikation über der Port
+6720 übernimmt und den ``knxd.service`` der die restlichen Aufgaben
+übernimmt bereitgestellt. Beide müssen neu gestartet werden.
 
 Zunächst beenden des knxd:
 
@@ -199,11 +198,11 @@ Jetzt können wir den knxd starten mit
     sudo systemctl start knxd.socket
     sudo systemctl start knxd.service
 
-Auch hier ist die Reihenfolge wichtig: Starten wir erst den Service,
+Auch hier ist die Reihenfolge wichtig: Startet man erst den Service,
 werden dem knxd die Sockets nicht vom systemd übergeben.
 
 Mit den folgenden Kommandos kann geprüft werden, ob die beiden Einträge
-ordnungsgemäßt funktionieren:
+ordnungsgemäß funktionieren:
 
 .. code-block:: bash
 
@@ -229,7 +228,7 @@ Wenn alles ok ist, dann sieht das etwa so aus:
    CGroup: /system.slice/knxd.service
            └─865 /usr/bin/knxd -e 7.0.99 -E 0.0.2:8 -c -b ipt:192.168.x.y
 
-Die Funktion des knxd läßt sich z.B. testen mit einer Gruppenadresse
+Die Funktion des knxd lässt sich z.B. testen mit einer Gruppenadresse
 (hier: 1/0/170) für einen Schaltaktor mit 1 oder 0.
 
 .. code-block:: bash
@@ -237,7 +236,7 @@ Die Funktion des knxd läßt sich z.B. testen mit einer Gruppenadresse
     knxtool groupswrite ip:localhost 1/0/170 1
 
 Sollte sich jetzt nichts tun, dann gibt es irgendwo einen Fehler und
-alles muß noch einmal geprüft werden. Vielleicht ist der Neustart des
+alles muss noch einmal geprüft werden. Vielleicht ist der Neustart des
 knxd vergessen oder ein Build-Fehler übersehen worden.
 
 .. note::
@@ -248,7 +247,7 @@ knxd vergessen oder ein Build-Fehler übersehen worden.
 SmartHomeNG Plugin konfigurieren
 ================================
 
-Damit das KNX-Plugin von SmartHomeNG genutzt werden kann, muß in der
+Damit das KNX-Plugin von SmartHomeNG genutzt werden kann, muss in der
 **../etc/plugin.yaml** noch folgendes eingefügt werden:
 
 .. code-block:: yaml

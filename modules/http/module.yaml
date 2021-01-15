@@ -63,7 +63,7 @@ parameters:
         valid_max: 65535
         default: 8383
         description:
-            de: Portnummer für die Webinterfaces
+            de: Portnummer für die Webinterfaces bei Nutzung von http
             en: Port number for the access to web interfaces
             fr: Numéro de port pour l'accès à l'interface web
     tls_port:
@@ -79,21 +79,21 @@ parameters:
         type: bool
         default: False
         description:
-            de: Auf True setzen, um Zugriffe über https zu ermöglichen (Zertifikat muss installiert sein)
-            en: Set to true to allow access over https (certificate has to be installed)
+            de: Auf True setzen, um Zugriffe über https:// zu ermöglichen (Zertifikat muss installiert sein)
+            en: Set to true to allow access over https:// (certificate has to be installed)
             fr: Mettre sur 'true' pour activer les accès par https (certificats doivent être installés)
     tls_cert:
         type: str
         default: shng.cer
         description:
-            de: Name der Zertifikatsdatei. Die Datei muss im Verzeichnis ../etc liegen
+            de: Name der Zertifikatsdatei mit der Endung '.cer' oder '.pem'. Die Datei muss im Verzeichnis ../etc liegen
             en: Name of the certificate file. The file musst be stored in ../etc
             fr: Nom du fichier contanent les certificats. Le fichier doit se trouver dans ../etc
     tls_key:
         type: str
         default: shng.key
         description:
-            de: Name der Datei mit dem privaten Schlüssel. Die Datei muss im Verzeichnis ../etc liegen
+            de: Name der Datei mit dem privaten Schlüssel und der Endung '.key'. Die Datei muss im Verzeichnis ../etc liegen
             en: Name of the private key file. The file musst be stored in ../etc
             fr: Nom du fichier contanent les clés privés. Le fichier doit se trouver dans ../etc
 

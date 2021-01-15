@@ -78,7 +78,7 @@ copyright = u'2016-2020 SmartHomeNG Team, SmartHomeNG is based on smarthome.py Â
 
 if os.path.isfile(os.getcwd()+'/doc_version.flg'):
     release = '1.4.x'
-    with open(os.getcwd()+'/doc_version.flg') as f:
+    with open(os.getcwd()+'/doc_version.flg', encoding='UTF-8') as f:
         release = f.readline()
     branch = 'master'
     commit = ''

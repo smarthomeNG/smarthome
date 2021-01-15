@@ -39,7 +39,8 @@ import logging
 import queue
 import re
 import requests
-import select
+from iowait import IOWait   ### BMX
+import select               ### should not be needed
 import socket
 import struct
 import subprocess
@@ -548,7 +549,7 @@ class Tcp_client(object):
 
         # Public properties
         self.name = name
-        self.terminator = None
+        self.terminator = terminator
 
         # "Private" properties
         self._host = host
@@ -673,8 +674,8 @@ class Tcp_client(object):
                 self._socket.send(message)
             else:
                 return False
-        except:
-            self.logger.warning("No connection to {}, cannot send data {}".format(self._host, msg))
+        except Exception as e:
+            self.logger.warning("No connection to {}, cannot send data {}. Error: {}".format(self._host, message, e))
             return False
         return True
 
@@ -697,7 +698,7 @@ class Tcp_client(object):
                         self._connected_callback and self._connected_callback(self)
                         _name='TCP_Client'
                         if self.name is not None:
-                            _name += '_' + self.name
+                            _name = self.name + '.' + _name
                         self.__receive_thread = threading.Thread(target=self.__receive_thread_worker, name=_name)
                         self.__receive_thread.daemon = True
                         self.__receive_thread.start()
@@ -734,19 +735,24 @@ class Tcp_client(object):
             self.logger.warning("TCP connection to {}:{} failed with error {}. Counter: {}/{}".format(self._host, self._port, err, self._connect_counter, self._connect_retries))
 
     def __receive_thread_worker(self):
-        poller = select.poll()
-        poller.register(self._socket, select.POLLIN | select.POLLPRI | select.POLLHUP | select.POLLERR)
+        waitobj = IOWait()
+        waitobj.watch( self._socket, read=True)
+        ### BMX poller = select.poll()
+        ### BMX poller.register(self._socket, select.POLLIN | select.POLLPRI | select.POLLHUP | select.POLLERR)
         __buffer = b''
 
         self._is_receiving = True
         self._receiving_callback and self._receiving_callback(self)
         while self._is_connected and self.__running:
-            events = poller.poll(1000)
-            for fd, event in events:
-                if event & select.POLLHUP:
-                    self.logger.warning("Client socket closed")
+            ### BMX events = poller.poll(1000)
+            events = waitobj.wait(1000)     ### BMX
+            ### BMX for fd, event in events:
+            for fileno, read, write in events:  ### BMX
+                ### BMX if event & select.POLLHUP:
+                ### BMX     self.logger.warning("Client socket closed")
                 # Check if POLLIN event triggered
-                if event & (select.POLLIN | select.POLLPRI):
+                ### BMX if event & (select.POLLIN | select.POLLPRI):
+                if read:
                     msg = self._socket.recv(4096)
                     # Check if incoming message is not empty
                     if msg:
@@ -781,7 +787,8 @@ class Tcp_client(object):
                         # Peer connection closed
                         self.logger.warning("Connection closed by peer {}".format(self._host))
                         self._is_connected = False
-                        poller.unregister(self._socket)
+                        ### BMX poller.unregister()
+                        waitobj.unwatch(self._socket)
                         self._disconnected_callback and self._disconnected_callback(self)
                         if self._autoreconnect:
                             self.logger.debug("Autoreconnect enabled for {}".format(self._host))
@@ -1020,7 +1027,11 @@ class Tcp_server(object):
             self.__coroutine = asyncio.start_server(self.__handle_connection, self._interfaceip, self._port)
             self.__server = self.__loop.run_until_complete(self.__coroutine)
 
-            self.__listening_thread = threading.Thread(target=self.__listening_thread_worker, name='TCP_Server_{}'.format(self.name))
+            _name = 'TCP_Server'
+            if self.name is not None:
+                _name = self.name + '.' + _name
+
+            self.__listening_thread = threading.Thread(target=self.__listening_thread_worker, name=_name)
             self.__listening_thread.daemon = True
             self.__listening_thread.start()
         except:
@@ -1128,7 +1139,10 @@ class Tcp_server(object):
         """ Closes running listening socket """
         self.logger.info("Shutting down listening socket on interface {} port {}".format(self._interface, self._port))
         asyncio.set_event_loop(self.__loop)
-        active_connections = len([task for task in asyncio.Task.all_tasks() if not task.done()])
+        try:
+            active_connections = len([task for task in asyncio.Task.all_tasks() if not task.done()])
+        except:
+            active_connections = 0
         if active_connections > 0:
             self.logger.info('Tcp_server still has {} active connection(s), cleaning up'.format(active_connections))
         self.__running = False

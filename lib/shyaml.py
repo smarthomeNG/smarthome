@@ -110,7 +110,7 @@ def yaml_load(filename, ordered=False, ignore_notfound=False):
     y = None
 
     try:
-        with open(filename, 'r') as stream:
+        with open(filename, 'r', encoding='utf8') as stream:
             sdata = stream.read()
         sdata = sdata.replace('\n', '\n\n')
         if ordered:
@@ -202,7 +202,7 @@ def yaml_save(filename, data):
     else:
         sdata = yaml.dump(data, Dumper=yaml.SafeDumper, indent=4, width=768, allow_unicode=True, default_flow_style=False)
     sdata = _format_yaml_dump( sdata )
-    with open(filename, 'w') as outfile:
+    with open(filename, 'w', encoding='utf8') as outfile:
         outfile.write( sdata )
 
 # ==================================================================================
@@ -316,7 +316,7 @@ def yaml_load_roundtrip(filename):
     if not filename.lower().endswith('.yaml'):
         filename += YAML_FILE
     try:
-        with open(filename, 'r') as stream:
+        with open(filename, 'r', encoding='utf8') as stream:
             sdata = stream.read()
         sdata = sdata.replace('\n', '\n\n')
         y = yaml.load(sdata, yaml.RoundTripLoader)
@@ -371,7 +371,7 @@ def yaml_save_roundtrip(filename, data, create_backup=False):
         if os.path.isfile(filename):
             shutil.copy2(filename, filename+'.bak')
 
-    with open(filename, 'w') as outfile:
+    with open(filename, 'w', encoding='utf8') as outfile:
         outfile.write( sdata )
 
 

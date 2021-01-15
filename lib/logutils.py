@@ -92,6 +92,7 @@ class Filter(logging.Filter):
             record.msg = ['{}: {}'.format(i, record.msg[i]) for i in record.msg]
         if isinstance(record.msg, list):
             record.msg = ', '.join(record.msg)
+        record.msg = str(record.msg)
         for n in self.name:
             if n.match(record.name):
                 hits += 1

@@ -7,10 +7,17 @@ holidays>=0.9.11
 
 # lib.daemon:
 psutil
+portalocker
 
-# lib.network:
+# lib.connection / lib.network
+iowait
+
+# lib.network, lib.shpypi:
 #requests: Requirements update to >=2.20.0 due to CVE-2018-18074
 requests>=2.20.0
+
+# lib.shpypi
+xmltodict
 
 # the following needs to be exactly the same as in requirements/base.txt
 # otherwise inconsistent requirements will occur in Travis/Tox/Testing

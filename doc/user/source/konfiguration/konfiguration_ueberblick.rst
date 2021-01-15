@@ -9,7 +9,7 @@ Die Codebasis von SmartHomeNG ist in der Programmiersprache Python geschrieben. 
 * elegant in der Anwendung
 * objektorientiert
 * Open-Source-Software
-* plattformunabhängig (allerdings werden derzeit bei SmartHomeNG Linux-Besonderheiten genutzt so dass z.B. Windows derzeit nicht genutzt werden kann)
+* plattformunabhängig (allerdings werden derzeit bei SmartHomeNG Linux-Besonderheiten genutzt so dass z.B. Windows derzeit nur bedingt genutzt werden kann)
 * multi-threaded
 
 Wichtig für den Einsteiger ist es zu wissen, dass Python peinlich genau auf Einrückungen achtet. Etwas wie
@@ -67,37 +67,38 @@ Ein guter Editor unterstützt dann auch mit der richtigen Syntaxeinfärbung.
 Verzeichnisse in SmartHomeNG
 ----------------------------
 
-Die Verzeichnisse sind im Hauptverzeichnis von smarthome zu finden, für gewöhnlich im Verzeichnis **"/usr/local/smarthome"**.
+Die Verzeichnisse sind im Hauptverzeichnis von SmartHomeNG zu finden, für gewöhnlich im Verzeichnis `/usr/local/smarthome``.
 
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
-| Verzeichnis | Beschreibung / Inhalt                                                                                                                         |
-+=============+===============================================================================================================================================+
-|bin          | Hauptmodul von SmarthomeNG                                                                                                                    |
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
-|dev          | Grundgerüst und Infos zur Pluginentwicklung                                                                                                   |
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
-|doc          | Wird einmal die Dokumentation enthalten                                                                                                       |
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
-|etc          | enthält mindestens **smarthome.yaml**, **plugin.yaml** und **logic.yaml**. In diesen Dateien befindet sich die Konfiguration des Grundsystems |
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
-|examples     | Beispiele für Items                                                                                                                           |
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
-|items        | Items                                                                                                                                         |
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
-|lib          | Modulbibliothek für das Hauptprogramm                                                                                                         |
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
-|logics       | Jede Logik bekommt hier eine kleine Datei mit Python Code                                                                                     |
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
-|plugins      | Modulbibliothek für die Plugins. Jedes Plugin hat sein eigenes Unterverzeichnis                                                               |
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
-|scenes       | Gespeicherte Szenen                                                                                                                           |
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
-|tests        | Hilfsprogramme zum Testen von Modulen des Systems                                                                                             |
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
-|tools        | Hilfsprogramme                                                                                                                                |
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
-|var          | Daten die vom SmartHomeNG zur Laufzeit gespeichert und gelesen werden  also z.B. Logdateien, cache, sqlite Datenbank, etc.                    |
-+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Verzeichnis  | Beschreibung / Inhalt                                                                                                       |
++==============+=============================================================================================================================+
+| ``bin``      | Hauptmodul von SmarthomeNG                                                                                                  |
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
+| ``dev``      | Grundgerüst und Infos zur Pluginentwicklung                                                                                 |
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
+| ``doc``      | Wird einmal die Dokumentation enthalten                                                                                     |
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
+| ``etc``      | enthält mindestens **smarthome.yaml**, **plugin.yaml** und **logic.yaml**.                                                  |
+|              | In diesen Dateien befindet sich die Konfiguration des Grundsystems                                                          |
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
+| ``examples`` | Beispiele für Items                                                                                                         |
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
+| ``items``    | Items                                                                                                                       |
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
+| ``lib``      | Modulbibliothek für das Hauptprogramm                                                                                       |
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
+| ``logics``   | Jede Logik bekommt hier eine kleine Datei mit Python Code                                                                   |
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
+| ``plugins``  | Modulbibliothek für die Plugins. Jedes Plugin hat sein eigenes Unterverzeichnis                                             |
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
+| ``scenes``   | Gespeicherte Szenen                                                                                                         |
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
+| ``tests``    | Hilfsprogramme zum Testen von Modulen des Systems                                                                           |
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
+| ``tools``    | Hilfsprogramme                                                                                                              |
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
+| ``var``      | Daten die vom SmartHomeNG zur Laufzeit gespeichert und gelesen werden  also z.B. Logdateien, cache, sqlite Datenbank, etc.  |
++--------------+-----------------------------------------------------------------------------------------------------------------------------+
 
 
 Dateien im Verzeichnis *../etc*
@@ -136,7 +137,7 @@ angegeben werden.
 
 Außerdem kann der Datentyp einer Wertzuweisung bei der Nutzung von `autotimer` und `cycle` beeinflusst
 werden. Weiterführende Informationen gibt es im Abschnitt **Datentyp der Wertzuweisung** auf der
-Seite :doc:`items/standard_attribute/autotimer`
+Seite :doc:`/referenz/items/standard_attribute/autotimer`
 
 
 
@@ -150,36 +151,35 @@ Die Datei **plugin.yaml** enthält die Konfigurationsanweisungen für alle Plugi
 
    # plugin.yaml
    knx:
-      class_name: KNX
-      class_path: plugins.knx
+      plugin_name: knx
       host: 127.0.0.1
       port: 6720
    #   send_time: 600 # update date/time every 600 seconds, default none
    #   time_ga: 1/1/1 # default none
    #   date_ga: 1/1/2 # default none
    visu:
-       class_name: WebSocket
-       class_path: plugins.visu_websocket
+       plugin_name: visu_websocket
    cli:
-       class_name: CLI
-       class_path: plugins.cli
+       plugin_name: cli
        ip: 0.0.0.0
        update: True
    sql:
-       class_name: SQL
-       class_path: plugins.sqlite
+       plugin_name: sqlite_visu2_8
 
 
 Seit Version 1.2 (Master Branch) gibt es ein neues Plugin (Backend) für SmartHomeNG. Dabei kann
-man über einen Browser das gleiche (und mehr) erreichen, wie früher über das CLI-Plugin. Das
-Backend Plugin bindet man folgendermaßen ein:
+man über einen Browser das gleiche (und mehr) erreichen, wie früher über das CLI-Plugin.
+
+Allerdings ist das Plugin inzwischen veraltet und wird in einer der kommenden Versionen von SmartHomeNG entfernt, da
+es inzwischen ein erheblich leistungsfähigeres Administrationsinterface für SmartHomeNG gibt.
+
+Das Backend Plugin bindet man folgendermaßen ein:
 
 .. code-block:: yaml
    :caption: Auszug aus ../etc/plugin.yaml
 
    BackendServer:
-       class_name: BackendServer
-       class_path: plugins.backend
+       plugin_name: backend
        updates_allowed: True
        user: admin
        password: xxxx
@@ -190,6 +190,23 @@ Backend Plugin bindet man folgendermaßen ein:
 
 
 Die weitere Einrichtung und Konfiguration von Plugins ist unter `Plugins <plugins.html>`_ beschrieben.
+
+
+..
+   Using an older version of a plugin
+   ----------------------------------
+
+   If you are not using the newest version of the SmartHomeNG core, if may be necessary to use an
+   older version of a plugin. Some plugins come with embedded older versions. To load an older
+   version of the plugin, you have to specify the parameter `plugin_version` in the configuration
+   section of the plugin.
+
+   To find out, if a plugin comes with an older version (or versions), take a look at the plugin's
+   directory. if you find a subdirectory with the name starting with ``_pv_`` the plugin comes with
+   an older (previous) version. The rest of the folder name specifies the version number. If you
+   find a subfolder ``_pv_1_3_0``, it contains the v1.3.0 of the plugin. To load that version, just
+   add ``plugin_version: 1.3.0`` to the plugin configuration.
+
 
 
 logic.yaml
@@ -221,7 +238,7 @@ Zeiten ausgeführt werden soll. watch_item bestimmt, welche Items die Logik aufr
        - 0,5,10,15,20,25,30,35,40,45,50,55 * * *
 
 
-Detaillierte Infos zur crontab Konfiguration finden sich unter :doc:`items/standard_attribute/crontab`.
+Detaillierte Infos zur crontab Konfiguration finden sich unter :doc:`/referenz/items/standard_attribute/crontab`.
 
 Für die weitere Konfiguration von Logiken geht es unter :doc:`logiken` weiter.
 
@@ -255,7 +272,7 @@ Dateien im Verzeichnis *../items*
 Hier finden sich die Dateien mit den Items. Es ist egal, wie viele Dateien hier abgelegt wurden.
 Alle Dateien die die Endung .yaml besitzen, werden beim Start von SmartHomeNG gelesen und in die
 Struktur von SmartHomeNG eingebaut.
-Eine genaue Beschreibung des Aufbaus findet sich unter :doc:`items/standard_attribute/eval` .
+Eine genaue Beschreibung des Aufbaus findet sich unter :doc:`/referenz/items/standard_attribute/eval` .
 
 **Aus Gründen der Übersichtlichkeit macht es durchaus Sinn, die .yaml-Dateien nach Räumen oder
 nach thematischen Gesichtspunkten aufzusplitten und die jeweiligen Items dort zu parametrieren.**

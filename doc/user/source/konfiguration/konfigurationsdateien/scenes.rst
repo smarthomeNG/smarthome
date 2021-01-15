@@ -15,6 +15,9 @@ Das Verzeichnis enthält yaml Dateien (oder Dateien im alten .conf Format) mit d
 der Szenen, die durch SmartHomeNG genutzt werden sollen. Der Name der yaml Datei kann beliebig sein,
 solange die Extension `.yaml` ist.
 
+Zu beachten ist, dass die Konfigurationsdateien für Szenen nur eingelesen werden, wenn ein Item gleichen Namens
+definiert ist und der Type dieses Items **scene** ist.
+
 .. note::
 
    Das alte Format der Konfigurationsdateien für Szenen trägt zwar die Extension .conf. Das
@@ -104,7 +107,7 @@ Jede einzelne Aktion ist durch die Keys ``item:`` , ``value:`` und ``learn:`` de
 
 Die Verwendung von Wildcards (*) in den ``item:`` Definitionen ist nicht möglich.
 
-Der Key **item** enthält den Pfad des Items, das verändert verden soll. Der Key **value** enthält
+Der Key **item** enthält den Pfad des Items, das verändert werden soll. Der Key **value** enthält
 den Wert auf den das Item gesetzt werden soll. Anstelle eines festen Wertes, kann hier auch ein
 **eval** Ausdruck angegeben werden. Der Key **learn** ist optional. Wird er nicht angegeben,
 wird der Wert False für **learn** angenommen. Außerdem wird der Wert für **learn** immer auf False

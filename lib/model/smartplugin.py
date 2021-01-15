@@ -26,6 +26,7 @@ from lib.model.smartobject import SmartObject
 
 from lib.shtime import Shtime
 from lib.module import Modules
+import lib.shyaml as shyaml
 from lib.utils import Utils
 from lib.translation import translate as lib_translate
 import logging
@@ -42,12 +43,13 @@ class SmartPlugin(SmartObject, Utils):
 
     ALLOW_MULTIINSTANCE = None
 
-    __instance = ''     #: Name of this instance of the plugin
-    _sh = None          #: Variable containing a pointer to the main SmartHomeNG object; is initialized during loading of the plugin; :Warning: Don't change it
-    _configname = ''    #: Configname of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
-    _shortname = ''     #: Shortname of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
-    _classname = ''     #: Classname of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
-    shtime = None       #: Variable containing a pointer to the SmartHomeNG time handling object; is initialized during loading of the plugin; :Warning: Don't change it
+    __instance = ''       #: Name of this instance of the plugin
+    _sh = None            #: Variable containing a pointer to the main SmartHomeNG object; is initialized during loading of the plugin; :Warning: Don't change it
+    _configfilename = ''  #: Configfilename of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
+    _configname = ''      #: Configname of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
+    _shortname = ''       #: Shortname of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
+    _classname = ''       #: Classname of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
+    shtime = None         #: Variable containing a pointer to the SmartHomeNG time handling object; is initialized during loading of the plugin; :Warning: Don't change it
 
     _pluginname_prefix = 'plugins.'
 
@@ -331,6 +333,62 @@ class SmartPlugin(SmartObject, Utils):
 #        :rtype: bool
 #        """
 #        return (self.get_parameter_value(key) is not None)
+
+
+    def update_config_section(self, param_dict):
+        """
+        Update the config section of ../etc/plugin.yaml
+
+        :param param_dict: dict with the pareters that should be updated
+
+        :return:
+        """
+        param_names = list(self.metadata.parameters.keys())
+        self.logger.debug("update_config_section: Beginning to update section '{}' of ../etc/plugin.yaml".format(self._configname))
+        self.logger.debug("update_config_section: valid parameter names to update = {}".format(param_names))
+        self.logger.info("update_config_section: Config file = '{}', update data = {}".format(self._configfilename, param_dict))
+
+        # read plugin.yaml
+        plugin_conf = shyaml.yaml_load_roundtrip(self._configfilename)
+        sect = plugin_conf.get(self._configname)
+        if sect is None:
+            self.logger.error("update_config_section: Config section '{}' not found in ../etc/plugin.yaml".format(self._configname))
+            return
+
+        parameters_changed = False
+        for param in param_dict:
+            if param in param_names:
+                self.logger.info("update_config_section: Changing Parameter '{}' -> type = '{}' from '{}' to '{}'".format(param, self.metadata.parameters[param]['type'], sect.get(param, None), param_dict[param]))
+                if param_dict[param] == '' or param_dict[param] == {} or param_dict[param] == []:
+                    del sect[param]
+                else:
+                    sect[param] = param_dict[param]
+                parameters_changed = True
+            else:
+                self.logger.error("update_config_section: Invalid parameter '{}' specified for update".format(param, param_dict[param]))
+
+        self.logger.debug("update_config_section: Config section content = '{}'".format(sect))
+        # write plugin.yaml
+        if parameters_changed:
+            shyaml.yaml_save_roundtrip(self._configfilename, plugin_conf, True)
+        self.logger.debug("update_config_section: Finished updating section '{}' of ../etc/plugin.yaml".format(self._configname))
+        return
+
+#---
+#plugin_conf = shyaml.yaml_load_roundtrip(config_filename)
+#sect = plugin_conf.get(id)
+#if sect is None:
+#    response = {'result': 'error', 'description': "Configuration section '{}' does not exist".format(id)}
+#else:
+#    self.logger.debug("update: params = {}".format(params))
+#    if params.get('config', {}).get('plugin_enabled', None) == True:
+#        del params['config']['plugin_enabled']
+#    plugin_conf[id] = params.get('config', {})
+#    shyaml.yaml_save_roundtrip(config_filename, plugin_conf, False)
+#    response = {'result': 'ok'}
+
+
+#---
 
 
     def get_loginstance(self):

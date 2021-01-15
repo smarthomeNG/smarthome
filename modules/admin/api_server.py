@@ -123,13 +123,16 @@ class ServerController(RESTResource):
         response['websocket_host'] = self.module.websocket_host
         response['websocket_port'] = self.module.websocket_port
         response['log_chunksize'] = self.module.log_chunksize
+        response['developer_mode'] = self.module.developer_mode
+        response['click_dropdown_header'] = self.module.click_dropdown_header
+
         response['daemon_knx'] = self.get_knx_daemon()
         response['daemon_ow'] = self.get_1wire_daemon()
         response['daemon_mqtt'] = self.get_mqtt_daemon()
         response['daemon_node_red'] = self.get_node_red_daemon()
         response['last_backup'] = backup.get_lastbackuptime()
         # response['pid'] = str(lib.daemon.read_pidfile(self._sh._pidfile))
-        self.logger.info("ServerController.onfo(): response = {}".format(response))
+        self.logger.info("ServerController.info(): response = {}".format(response))
         return json.dumps(response)
 
 
@@ -142,19 +145,20 @@ class ServerController(RESTResource):
         # knxd_socket = get_process_info("systemctl status knxd.socket")
 
         daemon = 'SERVICES.INACTIVE'
-        if get_process_info("ps cax|grep eibd") != '':
-            daemon = 'eibd'
-        if get_process_info("ps cax|grep knxd") != '':
-            if daemon != 'SERVICES.INACTIVE':
-                daemon += ' and knxd'
-            else:
-                daemon = 'knxd'
-                # get version of installed knx daemon (knxd v0.14.30 outputs version to stderr instead of stdout)
-                wrk = get_process_info("knxd -l?V|grep knxd", append_error=True)
-                wrk = wrk.split()
-                wrk = wrk[1].split(':')
-                if wrk != []:
-                    daemon += ' v' + wrk[0]
+        if os.name != 'nt':
+            if get_process_info("ps cax|grep eibd") != '':
+                daemon = 'eibd'
+            if get_process_info("ps cax|grep knxd") != '':
+                if daemon != 'SERVICES.INACTIVE':
+                    daemon += ' and knxd'
+                else:
+                    daemon = 'knxd'
+                    # get version of installed knx daemon (knxd v0.14.30 outputs version to stderr instead of stdout)
+                    wrk = get_process_info("knxd -l?V|grep knxd", append_error=True)
+                    wrk = wrk.split()
+                    wrk = wrk[1].split(':')
+                    if wrk != []:
+                        daemon += ' v' + wrk[0]
         return daemon
 
 
@@ -163,8 +167,14 @@ class ServerController(RESTResource):
         Tests it 1wire are running
         """
         daemon = 'SERVICES.INACTIVE'
-        if get_process_info("ps cax|grep owserver") != '':
-            daemon = 'owserver'
+        if os.name != 'nt':
+            if get_process_info("ps cax|grep owserver") != '':
+                daemon = 'owserver'
+                # get version of installed owserver
+                wrk = get_process_info("owserver -V|grep 'owserver version'", append_error=True)
+                wrk = wrk.split()
+                if wrk != []:
+                    daemon += ' v' + wrk[2]
         return daemon
 
 
@@ -173,14 +183,15 @@ class ServerController(RESTResource):
         Tests it 1wire are running
         """
         daemon = 'SERVICES.INACTIVE'
-        # test id mqtt broker is running
-        if get_process_info("ps cax|grep mosquitto") != '':
-            daemon = 'mosquitto'
-            # get version of installed mosquitto broker
-            wrk = get_process_info("/usr/sbin/mosquitto -h|grep version")
-            wrk = wrk.split()
-            if wrk != []:
-                daemon += ' v' + wrk[2]
+        if os.name != 'nt':
+            # test id mqtt broker is running
+            if get_process_info("ps cax|grep mosquitto") != '':
+                daemon = 'mosquitto'
+                # get version of installed mosquitto broker
+                wrk = get_process_info("/usr/sbin/mosquitto -h|grep version")
+                wrk = wrk.split()
+                if wrk != []:
+                    daemon += ' v' + wrk[2]
         return daemon
 
 
@@ -189,13 +200,14 @@ class ServerController(RESTResource):
         Tests it 1wire are running
         """
         daemon = 'SERVICES.INACTIVE'
-        if get_process_info("ps cax|grep node-red") != '':
-            daemon = 'node-red'
-            # get version of installed node-red
-            wrk = get_process_info("node-red --help|grep Node-RED")
-            wrk = wrk.split()
-            if wrk != []:
-                daemon += ' ' + wrk[1]
+        if os.name != 'nt':
+            if get_process_info("ps cax|grep node-red") != '':
+                daemon = 'node-red'
+                # get version of installed node-red
+                wrk = get_process_info("node-red --help|grep Node-RED")
+                wrk = wrk.split()
+                if wrk != []:
+                    daemon += ' ' + wrk[1]
         return daemon
 
 

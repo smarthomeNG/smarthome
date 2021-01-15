@@ -27,12 +27,12 @@ Standard Parameter
 +------------------+-----------------------------------------------------------------------------------------------+
 | crontab          | **Optional**: String oder Liste von Strings, die einen crontab Eintrag darstellen. Der Syntax |
 |                  | des Parameters entspricht dem Syntax des **crontab** Attributes von Items.  Details dazu      |
-|                  | stehen :doc:`hier <./items/standard_attribute/crontab>` .                                     |
+|                  | stehen :doc:`hier </referenz/items/standard_attribute/crontab>` .                             |
 +------------------+-----------------------------------------------------------------------------------------------+
 | cycle            | **Optional**: Angabe einer Zykluszeit, die angibt, in welchem Zeitabstand die Logik           |
 |                  | periodisch ausgelöst werden soll. Der Syntax des Parameters entspricht dem Syntax des         |
 |                  | **cycle** Attributes von Items. Details dazu stehen                                           |
-|                  | :doc:`hier <./items/standard_attribute/cycle>` .                                              |
+|                  | :doc:`hier </referenz/items/standard_attribute/cycle>` .                                      |
 +------------------+-----------------------------------------------------------------------------------------------+
 | prio             | **Optional**: Angabe einer Priorität für die Logik. Die Priorität kommt nur bei Logiken zum   |
 |                  | Einsatz, die ein Schedule haben, bei denen also der Paramter **crontab** oder **cycle**       |

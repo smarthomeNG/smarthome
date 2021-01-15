@@ -152,7 +152,7 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     now = shtime.now()
     logger.info("get_backup_timestamp: now = '{}'".format(now))
 
-    fd = open(os.path.join(backup_dir, 'last_backup'), 'w+')
+    fd = open(os.path.join(backup_dir, 'last_backup'), 'w+', encoding='UTF-8')
     fd.write("%s" % now)
     fd.close()
 
@@ -169,7 +169,7 @@ def get_lastbackuptime():
 
     try:
         if os.path.isfile(os.path.join(backup_dir, 'last_backup')):
-            fd = open(os.path.join(backup_dir, 'last_backup'), 'r')
+            fd = open(os.path.join(backup_dir, 'last_backup'), 'r', encoding='UTF-8')
             line = fd.readline()
             fd.close()
             return line

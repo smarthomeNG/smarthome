@@ -11,10 +11,10 @@ New Plugins
 ^^^^^^^^^^^
 
 -  DWD Plugin: fetch weather warnings and forecasts from Deutscher Wetterdienst (DWD).
--  :doc:`Mail Plugin </plugins/mail/README>`: sending (SMTP) and receiving (IMAP) mail.
--  :doc:`RRD Plugin </plugins/rrd/README>`: build round robin databases.
--  :doc:`Russound Plugin </plugins/russound/README>`: control a Russound audio device with RIO over TCP.
--  :doc:`Snom Plugin </plugins/snom/README>`: to handle snom VOIP phones.
+-  `Mail Plugin </plugins_doc/config/mail>`: sending (SMTP) and receiving (IMAP) mail.
+-  :doc:`RRD Plugin </plugins_doc/config/rrd>`: build round robin databases.
+-  :doc:`Russound Plugin </plugins_doc/config/russound>`: control a Russound audio device with RIO over TCP.
+-  :doc:`Snom Plugin </plugins_doc/config/snom>`: to handle snom VOIP phones.
 
 Features
 ^^^^^^^^
@@ -27,10 +27,10 @@ Features
    -  sh.find\_items('config\_string'), sh.find\_children(self, parent,
       'config\_string')
 
--  :doc:`Asterisk plugin </plugins/asterisk/README>`: Call Log and mailbox count
--  :doc:`CLI plugin </plugins/cli/README>`: adding 'rl' to reload and 'rr' to reload and run logic
--  :doc:`KNX plugin </plugins/knx/README>`: DPT 16 support
--  :doc:`Network plugin </plugins/network/README>`: adding a simple http interface
+-  :doc:`Asterisk plugin </plugins_doc/config/asterisk>`: Call Log and mailbox count
+-  :doc:`CLI plugin </plugins_doc/config/cli>`: adding 'rl' to reload and 'rr' to reload and run logic
+-  :doc:`KNX plugin </plugins_doc/config/knx>`: DPT 16 support
+-  :doc:`Network plugin </plugins_doc/config/network>`: adding a simple http interface
 -  Visu plugin:
 
    -  `smartVISU` support: to generate pages for and communicate with this visualisation framework.
@@ -45,9 +45,9 @@ Features
 Bug Fixes
 ^^^^^^^^^
 
--  :doc:`KNX plugin </plugins/knx/README>`: ``knx_init`` / ``knx_cache`` could not work if first connection attempt failed
+-  :doc:`KNX plugin </plugins_doc/config/knx>`: ``knx_init`` / ``knx_cache`` could not work if first connection attempt failed
 
    -  dpt 10, 11, 16 handling fix
 
--  :doc:`Onewire plugin </plugins/onewire/README>`: improve error handling
+-  :doc:`Onewire plugin </plugins_doc/config/onewire>`: improve error handling
 -  Workaround for urllib2 memory leakage

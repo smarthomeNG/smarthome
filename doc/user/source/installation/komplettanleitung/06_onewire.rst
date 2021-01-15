@@ -80,7 +80,7 @@ sonst der Fall wäre. Mit tcp6 wiederum könnte das Smarthome.py derzeit
 nichts anfangen.
 
 Bei der Installation werden ``owserver`` und ``owhttp`` automatisch gestartet.
-Nach der Konfigurationsänderung muß der ``owserver`` neu gestartet werden:
+Nach der Konfigurationsänderung wird der ``owserver`` neu gestartet:
 
 .. code-block:: bash
 
@@ -92,7 +92,7 @@ SmartHomeNG Plugin konfigurieren
 
 Die Konfiguration des Plugins erfolgt über das Admin Interface (Siehe Abschnitt Konfiguration).
 
-Alternativ kann die Konfiguration des Onewire-Plugin natürlich auch ber die Konfigurationsdatei
+Alternativ kann die Konfiguration des Onewire-Plugin natürlich auch über die Konfigurationsdatei
 **../etc/plugin.yaml** erfolgen. Dazu muss dort noch folgendes eingefügt werden:
 
 .. code-block:: yaml

@@ -60,10 +60,11 @@ oder im `Chat auf gitter.im <https://gitter.im/smarthomeNG/smarthome>`_ .
    tools/tools.rst
    fehlersuche
    faq
-   Entwickler Dokumentation (Englisch) <https://www.smarthomeng.de/developer>
+   referenz/referenz
+   entwicklung/entwicklung
    release/release
    genindex
    impressum
    datenschutz
-
+   English translation of this documentation <https://translate.google.com/translate?hl=&sl=de&tl=en&u=https://www.smarthomeng.de/dev/user/>
 

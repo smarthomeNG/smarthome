@@ -83,8 +83,8 @@ lib.shtime_translations:
     'custom holiday':        {'de': 'benutzerdefinierter Feiertag', 'en': '='}
     "Week not specified":    {'de': 'Woche nicht angegeben', 'en': '='}
 
-    "Using holidays for country '{country}', province '{province}', state '{state}',{count} custom holiday definitions(s) {defined}":
-        'de': "Nutze Feiertage für Land '{country}', Provinz '{province}', State '{state}',{count} benutzerdefinierte Feiertagsdefinition(en) {defined}"
+    "Using holidays for country '{country}', province '{province}'{state},{count} custom holiday(s) {defined}":
+        'de': "Nutze Feiertage für Land '{country}', Provinz '{province}'{state},{count} benutzerdefinierte(r) Feiertag(e) {defined}"
         'en': '='
     "Holidays are not initialized, cannot add custom holidays":
         'de': "Feiertage sind nicht initialisiert, benutzerdefinierte Feiertage können nicht hinzugefügt werden"

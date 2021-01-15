@@ -39,13 +39,13 @@ im Abschnitt **Konfiguration/Plugins** zu finden.
 Referenzierung eines Plugins in der Konfiguration
 -------------------------------------------------
 
-Bis zu SmartHomeNG v1.3 wurde ein Plugin in der Konfiguration über zwei Parameter ``class_name``
-und ``class_path`` referenziert.
-
-Ab v1.4 ist es möglich, das Plugin über den einzigen Parameter ``plugin_name`` zu spezifizieren.
+Ab v1.4 ist es Standard, das Plugin über den einzigen Parameter ``plugin_name`` zu spezifizieren.
 Dabei ist der Wert der Wert des früheren Parameters ``class_path`` ohne den Präfix ``plugins.``,
 also der Name des Plugin Verzeichnisses. Da alle Plugins im Verzeichnis **../plugins** liegen, ist
 **plugins.** redundante Information.
+
+Bis zu SmartHomeNG v1.3 wurde ein Plugin in der Konfiguration über zwei Parameter ``class_name``
+und ``class_path`` referenziert.
 
 Wenn das Plugin eine Metadaten Definition enthält (was fast alle Plugins tun), so gibt es keine
 Notwendigkeit den Parameter ``class_name`` anzugeben. Diese Information wird dann den Metadaten

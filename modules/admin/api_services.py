@@ -81,7 +81,7 @@ class ServicesController(RESTResource):
 
     def strip_empty_lines(self, txt):
         """
-        Remove \r from text and remove exessive empty lines from end
+        Remove \\r from text and remove exessive empty lines from end
         """
         txt = txt.replace('\r', '').rstrip()
         while txt.endswith('\n'):
@@ -100,14 +100,17 @@ class ServicesController(RESTResource):
         # set up environment for calculating eval-expression
         sh = self._sh
         shtime = Shtime.get_instance()
+        items = Items.get_instance()
+        import math
 
         eval_code = eval_code.replace('\r', '').replace('\n', ' ').replace('  ', ' ').strip()
         if relative_to == '':
             expanded_code = eval_code
         else:
-            rel_to_item = sh.return_item(relative_to)
+            rel_to_item = items.return_item(relative_to)
             if rel_to_item is not None:
                 expanded_code = rel_to_item.get_stringwithabsolutepathes(eval_code, 'sh.', '(')
+                expanded_code = rel_to_item.get_stringwithabsolutepathes(expanded_code, 'sh.', '.property')
             else:
                 expanded_code = "Error: Item {} does not exist!".format(relative_to)
         try:
@@ -158,7 +161,7 @@ class ServicesController(RESTResource):
             # Test if the loaded data items with 'struct' attribute
             config = collections.OrderedDict()
             self.items = Items.get_instance()
-            struct_dict = self.items._struct_definitions
+            struct_dict = self.items.structs._struct_definitions
             shconfig.search_for_struct_in_items(ydata, struct_dict, config)
             self.logger.info("ydata = {}".format(ydata))
             self.logger.info("config = {}".format(config))
@@ -325,4 +328,3 @@ class ServicesController(RESTResource):
 
     update.expose_resource = True
     update.authentication_needed = True
-

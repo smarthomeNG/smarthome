@@ -92,8 +92,8 @@
 	{% set start_tab = tabcount %}
 {% endif %}
 
-{% if tabcount > 4 %}
-	{% set tabcount = 4 %}
+{% if tabcount > 6 %}
+	{% set tabcount = 6 %}
 {% endif %}
 {% if tabcount < 1 %}
 	{% set tabcount = 1 %}
@@ -112,6 +112,12 @@
 {% if tab4title is not defined %}
 	{% set tab4title = "<strong>" ~ p.get_shortname() ~ "</strong> tab4" %}
 {% endif %}
+{% if tab5title is not defined %}
+	{% set tab5title = "<strong>" ~ p.get_shortname() ~ "</strong> tab5" %}
+{% endif %}
+{% if tab6title is not defined %}
+	{% set tab6title = "<strong>" ~ p.get_shortname() ~ "</strong> tab6" %}
+{% endif %}
 
 
 <div class="container-fluid" style="position: sticky;background-color: white;top:  180px;z-index: 8;">
@@ -129,29 +135,45 @@
 		{% if tabcount > 3 %}
 			<li id="tab_4" class="nav-item"><a class="text-dark nav-link {% if start_tab==4 %}active{% endif %}" data-toggle="tab" href="#bodytab_4">{{ tab4title }}</a></li>
 		{% endif %}
+		{% if tabcount > 4 %}
+			<li id="tab_5" class="nav-item"><a class="text-dark nav-link {% if start_tab==5 %}active{% endif %}" data-toggle="tab" href="#bodytab_5">{{ tab5title }}</a></li>
+		{% endif %}
+		{% if tabcount > 5 %}
+			<li id="tab_6" class="nav-item"><a class="text-dark nav-link {% if start_tab==6 %}active{% endif %}" data-toggle="tab" href="#bodytab_6">{{ tab6title }}</a></li>
+		{% endif %}
 	</ul>
 </div>
 
 <div style="margin-left: 10px; margin-right: 10px;" class="tab-content">
 
-	<div id="bodytab_1" class="tab-pane {% if start_tab==1 %}active{% endif %}" role="tabpanel">
+	<div id="bodytab_1" class="tab-pane {% if start_tab==1 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab1 %}
 		{% endblock bodytab1 %}
 	</div>
 
-	<div id="bodytab_2" class="tab-pane {% if start_tab==2 %}active{% endif %}" role="tabpanel">
+	<div id="bodytab_2" class="tab-pane {% if start_tab==2 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab2 %}
 		{% endblock bodytab2 %}
 	</div>
 
-	<div id="bodytab_3" class="tab-pane {% if start_tab==3 %}active{% endif %}" role="tabpanel">
+	<div id="bodytab_3" class="tab-pane {% if start_tab==3 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab3 %}
 		{% endblock bodytab3 %}
 	</div>
 
-	<div id="bodytab_4" class="tab-pane {% if start_tab==3 %}active{% endif %}" role="tabpanel">
+	<div id="bodytab_4" class="tab-pane {% if start_tab==4 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab4 %}
 		{% endblock bodytab4 %}
+	</div>
+
+	<div id="bodytab_5" class="tab-pane {% if start_tab==5 %}in active{% endif %}" role="tabpanel">
+		{% block bodytab5 %}
+		{% endblock bodytab5 %}
+	</div>
+
+	<div id="bodytab_6" class="tab-pane {% if start_tab==6 %}in active{% endif %}" role="tabpanel">
+		{% block bodytab6 %}
+		{% endblock bodytab6 %}
 	</div>
 </div>
 
