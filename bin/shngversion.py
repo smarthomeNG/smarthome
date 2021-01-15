@@ -63,7 +63,7 @@ import plugins.__init__ as plugin_vers
 # Update auf 1.7.2c wg. SmartPlugin Erweiterung: Update etc/plugin.yaml section
 
 
-shNG_version = '1.7.2c'
+shNG_version = '1.8.0a'
 shNG_branch = 'develop'
 
 # ---------------------------------------------------------------------------------
