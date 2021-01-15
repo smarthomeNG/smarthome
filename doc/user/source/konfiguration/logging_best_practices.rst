@@ -252,21 +252,21 @@ diese eben auch zu verstecken. Hierzu wird zuerst ein Filter angelegt:
         msg: "(.*)Item (.*) not found!"
         #invert: True
 
-      filter_startup:
+      filter_ical_plugin:
         (): lib.logutils.Filter
-        name: "lib.smarthome.main"
-        msg: ["Running in Python(.*)", " - on (.*)", " - Nutze Feiertage(.*)"]
+        name: "plugins.ical"
+        msg: ["problem parsing(.*)duplicate UID", "Could not download online(.*)"]
 
 Dieser Filter muss nun beim entsprechenden Handler noch referenziert werden:
 
 .. code-block:: yaml
 
    handlers:
-       stateengine_file:
+       filtered_file:
            class: logging.handlers.TimedRotatingFileHandler
            formatter: shng_simple
-           filename: ./var/log/stateengine.log
-           filters: [meinfilter, filter_startup]
+           filename: ./var/log/filtered_file.log
+           filters: [meinfilter, filter_ical_plugin]
 
 Wichtig sind dabei die eckigen Klammern, auch wenn nur ein Filter referenziert
 wird. Und ja, es können hier durch Beistrich auch mehrere Filter gelistet
@@ -276,12 +276,12 @@ werden.
 .. code-block:: yaml
 
    loggers:
-        plugins.stateengine:
-            handlers: [stateengine_file]
+        plugins:
+            handlers: [filtered_file]
             level: DEBUG
 
-Dies führt dazu, dass nicht mehr alle DEBUG Informationen des Loggers vom
-Stateengine Plugin in die Datei stateengine.log geschrieben werden. Auf Grund
+Dies führt dazu, dass sowohl der Logger vom Stateengine Plugin als auch einige Einträge
+vom ical Plugin gefiltert in die Datei filtered_file.log geschrieben werden. Auf Grund
 des ersten Filters "mein_filter" werden sämtliche Einträge ignoriert, die..
 
 - vom Modul StateEngine (s und e können sowohl groß, als auch klein geschrieben
@@ -289,8 +289,8 @@ werden) stammen
 - vom Logger mit dem Namen 'plugins.stateengine.licht.test' stammen
 - am Ende der Zeile "Item <beliebiger Eintrag> not found!" beinhalten
 
-Der Filter "filter_startup" sorgt dafür, dass die standardmäßigen Medlungen zum
-Start von SmarthomeNG nicht angezeigt werden.
+Der Filter "filtered_file" sorgt dafür, dass die entsprechenden zwei Meldungen vom iCal
+Plugin nicht angezeigt werden.
 
 Hätte man im Filter "invert: True" angegeben, würden alle Einträge ignoriert
 werden, die NICHT den oben genannten Kriterien entsprechen.
