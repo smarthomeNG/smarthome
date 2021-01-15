@@ -277,7 +277,8 @@ werden.
 
 Dies führt dazu, dass nicht mehr alle DEBUG Informationen des Loggers vom
 Stateengine Plugin in die Datei stateengine.log geschrieben werden. Auf Grund
-des Filters werden sämtliche Einträge ignoriert, die..
+des Filters werden sämtliche Einträge ignoriert, die:
+
 - vom Modul StateEngine (s und e können sowohl groß, als auch klein geschrieben
 werden) stammen
 - vom Logger mit dem Namen 'plugins.stateengine.licht.test' stammen
