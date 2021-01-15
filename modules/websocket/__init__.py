@@ -78,7 +78,7 @@ class Websocket(Module):
 
         # parameters for smartVISU handling are initialized by the smartvisu plugin
         #self.sv_enabled = self.get_parameter_value('sv_enabled')
-        #self.sv_acl = self.get_parameter_value('sv_acl')
+        #self.sv_acl = self.get_parameter_value('default_acl')
         #self.sv_querydef = self.get_parameter_value('sv_querydef')
         #self.sv_ser_upd_cycle = self.get_parameter_value('sv_ser_upd_cycle')
         self.sv_enabled = False
@@ -452,6 +452,7 @@ class Websocket(Module):
                 command = data.get("cmd", '')
                 protocol = 'wss' if websocket.secure else 'ws '
                 # self.logger.warning("{} <CMD  : '{}'   -   from {}".format(protocol, data, client_addr))
+                self.logger.info(f"{client_addr} snt '{data}'")
                 answer = {"error": "unhandled command"}
 
                 try:
@@ -460,7 +461,9 @@ class Websocket(Module):
                         value = data['val']
                         item = self.items.return_item(path)
                         if item is not None:
-                            item_acl = item.conf.get('acl', None)
+                            item_acl = item.conf.get('visu_acl', None)
+                            if item_acl is None or item_acl == '':
+                                item_acl = item.conf.get('acl', None)
                             if item_acl is None:
                                 item_acl = self.sv_acl
                             if item_acl != 'ro':
@@ -553,6 +556,7 @@ class Websocket(Module):
                     self.logger.exception("visu_protocol Exception {}".format(e))
 
                 if answer != {}:
+                    # if an answer should be send, it is done here
                     try:
                         await websocket.send(reply)
                         self.logger.info("visu >REPLY: '{}'   -   to {}".format(answer, websocket.remote_address))
