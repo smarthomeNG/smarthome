@@ -96,10 +96,10 @@ Plugin und Logik Entwicklung
 Für die Entwickler von Plugins:
 
 Früher musste in Plugins ein Logger in der Form
+
 .. code-block:: python
 
    import logging
-
    self.logger = logging.getLogger(__name__)
 
 
