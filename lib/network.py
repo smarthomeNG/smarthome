@@ -203,7 +203,7 @@ class Network(object):
     @staticmethod
     def clean_uri(uri, mode='show'):
         '''
-        Checks URIs for embedded http/https login data (http://user:pass@domain.tld...) and offers to clean it. 
+        Checks URIs for embedded http/https login data (http://user:pass@domain.tld...) and offers to clean it.
         Possible modes are:
 
         - 'show': don't change URI (default) -> http://user:pass@domain.tld...
@@ -223,8 +223,8 @@ class Network(object):
 
         # possible replacement modes
         replacement = {
-            'strip': 'http\g<1>://',
-            'mask': 'http\g<1>://***:***@'
+            'strip': 'http\\g<1>://',
+            'mask': 'http\\g<1>://***:***@'
         }
 
         # if no change requested or no login data found, return unchanged
@@ -294,7 +294,7 @@ class Http(object):
             json = None
             try:
                 json = self._response.json()
-            except:
+            except Exception:
                 self.logger.warning(f'Invalid JSON received from {Network.clean_uri(url, self._hide_login) if url else self.baseurl}')
             return json
         return None
@@ -320,7 +320,7 @@ class Http(object):
             json = None
             try:
                 json = self._response.json()
-            except:
+            except Exception:
                 self.logger.warning(f'Invalid JSON received from {Network.clean_uri(url if url else self.baseurl, self._hide_login) }')
             return json
         return None
@@ -406,7 +406,7 @@ class Http(object):
         '''
         try:
             (code, reason) = (self._response.status_code, self._response.reason)
-        except:
+        except Exception:
             code = 0
             reason = 'Unable to complete GET request'
         return (code, reason)
@@ -614,7 +614,7 @@ class Tcp_client(object):
         if not isinstance(message, (bytes, bytearray)):
             try:
                 message = message.encode('utf-8')
-            except:
+            except Exception:
                 self.logger.warning(f'Error encoding message for client {self.name}')
                 return False
         try:
@@ -648,13 +648,13 @@ class Tcp_client(object):
                         self.__connect_threadlock.release()
                         if self._connected_callback:
                             self._connected_callback(self)
-                        _name='TCP_Client'
+                        _name = 'TCP_Client'
                         if self.name is not None:
                             _name = self.name + '.' + _name
                         self.__receive_thread = threading.Thread(target=self.__receive_thread_worker, name=_name)
                         self.__receive_thread.daemon = True
                         self.__receive_thread.start()
-                    except:
+                    except Exception:
                         raise
                     return True
                 if self.__running:
@@ -667,7 +667,7 @@ class Tcp_client(object):
                 break
         try:
             self.__connect_threadlock.release()
-        except:
+        except Exception:
             pass
 
     def _connect(self):
@@ -844,7 +844,7 @@ class ConnectionClient(object):
         if not isinstance(message, (bytes, bytearray)):
             try:
                 message = message.encode('utf-8')
-            except:
+            except Exception:
                 self.logger.warning(f'Error encoding data for client {self.name}')
                 return False
         try:
@@ -1016,7 +1016,7 @@ class Tcp_server(object):
         self._is_listening = True
         try:
             self.__loop.run_forever()
-        except:
+        except Exception:
             self.logger.debug('*** Error in loop.run_forever()')
         finally:
             for task in asyncio.all_tasks(self.__loop):
@@ -1025,7 +1025,7 @@ class Tcp_server(object):
             self.__loop.run_until_complete(self.__server.wait_closed())
             try:
                 self.__loop.close()
-            except:
+            except Exception:
                 pass
         self._is_listening = False
 
@@ -1053,7 +1053,7 @@ class Tcp_server(object):
                     data = await reader.readline()
                 else:
                     data = await reader.read(4096)
-            except:
+            except Exception:
                 data = None
 
             if data and data[0] == 0xFF and client.process_iac:
@@ -1131,7 +1131,7 @@ class Tcp_server(object):
         asyncio.set_event_loop(self.__loop)
         try:
             active_connections = len([task for task in asyncio.all_tasks(self.__loop) if not task.done()])
-        except:
+        except Exception:
             active_connections = 0
         if active_connections > 0:
             self.logger.info(f'Tcp_server still has {active_connections} active connection(s), cleaning up')
