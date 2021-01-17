@@ -560,7 +560,7 @@ class Websocket(Module):
                     try:
                         await websocket.send(reply)
                         self.logger.info("visu >REPLY: '{}'   -   to {}".format(answer, websocket.remote_address))
-                    except (asyncio.IncompleteReadError, asyncio.connection_closed_exc) as e:
+                    except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                         self.logger.error("smartVISU_protocol_v4: Error in 'await websocket.send(reply)': {}".format(e))
                     except Exception as e:
                         self.logger.exception("smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {}".format(e))
@@ -569,6 +569,7 @@ class Websocket(Module):
             if not str(e).startswith('code = 1006'):
                 self.logger.error("smartVISU_protocol_v4 exception: {}".format(e))
 
+        # Remove client from monitoring dict and from dict of active clients
         del(self.sv_monitor_items[client_addr])
         try:
             del(self.sv_clients[client_addr])
@@ -724,16 +725,20 @@ class Websocket(Module):
                     websocket = self.sv_clients[client_addr]['websocket']
                     replys = await self.loop.run_in_executor(None, self.update_series, client_addr)
                     for reply in replys:
-                        self.logger.info("update_all_series: reply {} - Replys for client {}: {}".format(reply, client_addr, replys))
-                        try:
-                            await websocket.send(json.dumps(reply, default=self.json_serial))
-                            self.logger.info(">SerUp {}: {}".format(websocket.remote_address, reply))
-                        except (asyncio.IncompleteReadError, asyncio.connection_closed_exc) as e:
-                            self.logger.error("update_all_series: Error in 'await websocket.send(reply)': {}".format(e))
-                        except Exception as e:
-                            self.logger.exception("update_all_series: Exception in 'await websocket.send(reply)': {}".format(e))
+                        if (client_addr in self.sv_clients) and not (client_addr in remove):
+                            self.logger.info("update_all_series: reply {} - Replys for client {}: {}".format(reply, client_addr, replys))
+                            try:
+                                await websocket.send(json.dumps(reply, default=self.json_serial))
+                                self.logger.info(">SerUp {}: {}".format(websocket.remote_address, reply))
+                            except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
+                                self.logger.error("update_all_series: Error in 'await websocket.send(reply)': {}".format(e))
+                            except Exception as e:
+                                self.logger.exception("update_all_series: Exception in 'await websocket.send(reply)': {}".format(e))
+                        else:
+                            self.logger.info("update_all_series: Client {} is not active any more #1".format(client_addr))
+                            pass
                 else:
-                    self.logger.info("update_all_series: Client {} is not active any more".format(client_addr))
+                    self.logger.info("update_all_series: Client {} is not active any more #2".format(client_addr))
                     remove.append(client_addr)
 
             # Remove series for clients that are not connected any more
@@ -934,8 +939,12 @@ class Websocket(Module):
                     self.logger.info(">LogUp {}: {}".format(self.client_address(websocket), msg))
                     await websocket.send(msg)
                 except Exception as e:
-                    if not str(e).startswith('code = 1006'):
+                    if not str(e).startswith(('code = 1005', 'code = 1006')):
                         self.logger.exception("Error in 'await websocket.send(data)': {}".format(e))
+                    elif str(e).startswith('code = 1005'):
+                        self.logger.warning("Error in 'await websocket.send(data)': {}".format(e))
+                    else:
+                        self.logger.info("Error in 'await websocket.send(data)': {}".format(e))
             else:
                 self.logger.info("update_log: Client {} is not active any more".format(client_addr))
                 remove.append(client_addr)
