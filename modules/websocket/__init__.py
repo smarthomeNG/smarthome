@@ -46,7 +46,7 @@ from lib.utils import Utils
 
 
 class Websocket(Module):
-    version = '1.0.0'
+    version = '1.0.1'
     longname = 'Websocket module for SmartHomeNG'
     port = 0
 
@@ -560,7 +560,7 @@ class Websocket(Module):
                     try:
                         await websocket.send(reply)
                         self.logger.info("visu >REPLY: '{}'   -   to {}".format(answer, websocket.remote_address))
-                    except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
+                    except (asyncio.IncompleteReadError, websocket.connection_closed) as e:
                         self.logger.error("smartVISU_protocol_v4: Error in 'await websocket.send(reply)': {}".format(e))
                     except Exception as e:
                         self.logger.exception("smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {}".format(e))
@@ -730,7 +730,7 @@ class Websocket(Module):
                             try:
                                 await websocket.send(json.dumps(reply, default=self.json_serial))
                                 self.logger.info(">SerUp {}: {}".format(websocket.remote_address, reply))
-                            except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
+                            except (asyncio.IncompleteReadError, websocket.connection_closed) as e:
                                 self.logger.error("update_all_series: Error in 'await websocket.send(reply)': {}".format(e))
                             except Exception as e:
                                 self.logger.exception("update_all_series: Exception in 'await websocket.send(reply)': {}".format(e))
@@ -849,7 +849,7 @@ class Websocket(Module):
 
     async def update_visu(self):
         """
-        Async task to update the visu(s) if items have changed
+        Async task to update the visu(s) if items have changed or an url command has been issued
         """
         while not self.janus_queue:
             await asyncio.sleep(1)
@@ -872,8 +872,20 @@ class Websocket(Module):
                         await self.update_log(log_entry)
                     except Exception as e:
                         self.logger.error("update_visu: Error in 'await self.update_log(...)': {}".format(e))
+                elif queue_entry[0] == 'command':
+                    # send command to visu (e.g. url command)
+                    command = queue_entry[1]
+                    client_addr = queue_entry[2]
+                    websocket = self.sv_clients[client_addr]['websocket']
+                    try:
+                        await websocket.send(command)
+                        self.logger.warning(f"visu >command: '{command}'   -   to {client_addr}")
+                    except (asyncio.IncompleteReadError, websocket.connection_closed) as e:
+                        self.logger.error("smartVISU_protocol_v4: Error in 'await websocket.send(url-command)': {}".format(e))
+                    except Exception as e:
+                        self.logger.exception("smartVISU_protocol_v4: Exception in 'await websocket.send(url-command)': {}".format(e))
                 else:
-                    self.logger.error("update_visu: Unkonwn queueentry type '{}'".format(queue_entry[0]))
+                    self.logger.error("update_visu: Unknown queueentry type '{}'".format(queue_entry[0]))
 
     async def update_item(self, item_name, item_value, source):
         """
@@ -1088,4 +1100,17 @@ class Websocket(Module):
 
         return
 
+
+    def set_visu_url(self, url, clientip=''):
+        """
+        Tell the websocket client (visu) to load a specific url
+        """
+        for client_addr in self.sv_clients:
+            ip, _, port = client_addr.partition(':')
+
+            if (clientip == '') or (clientip == ip):
+                command = json.dumps({'cmd': 'url', 'url': url})
+                self.janus_queue.sync_q.put(['command', command, client_addr])
+
+        return True
 
