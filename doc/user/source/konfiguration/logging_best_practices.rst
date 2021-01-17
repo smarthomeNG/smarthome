@@ -108,13 +108,14 @@ Die beiden Handler die Logfiles schreiben, sind als rotierende Handler
 ausgelegt, die in eigenen Dateien die Logeinträge der letzten sieben
 Tage aufheben.
 
-   **Note**: Die Rotation der Logfiles erfolgt um Mitternacht GMT, also
+.. note::
+
+   Die Rotation der Logfiles erfolgt um Mitternacht GMT, also
    nicht unbedingt um Mitternacht lokaler Zeit.
 
-..
-
-   **Note**: Die Änderungen in der Konfiguration werden erst bei einem
+   Die Änderungen in der Konfiguration werden erst bei einem
    Neustart von SmartHomeNG wirksam.
+   
 
 Konfiguration zusätzlicher Logausgaben
 --------------------------------------
