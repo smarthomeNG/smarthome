@@ -190,6 +190,11 @@ class Websocket(Module):
         return self.tls_port
 
 
+    def get_use_tls(self):
+
+        return self.use_tls
+
+
     # ===============================================================================
     # Module specific code
     #
@@ -1121,3 +1126,28 @@ class Websocket(Module):
 
         return True
 
+
+    def get_visu_client_info(self):
+        """
+        Get client info for web interface of smartvisu plugin
+        :return:
+        """
+        client_list = []
+
+        for client_addr in self.sv_clients:
+            ip, _, port = client_addr.partition(':')
+
+            infos = {}
+            infos['ip'] = ip
+            infos['port'] = port
+            websocket = self.sv_clients[client_addr]['websocket']
+            infos['protocol'] = 'wss' if websocket.secure else 'ws'
+            infos['sw'] = self.sv_clients[client_addr]['sw']
+            infos['swversion'] = self.sv_clients[client_addr]['ver']
+            infos['hostname'] = self.sv_clients[client_addr]['hostname']
+            infos['browser'] = self.sv_clients[client_addr]['browser']
+            infos['browserversion'] = self.sv_clients[client_addr]['bver']
+
+            client_list.append(infos)
+
+        return client_list
