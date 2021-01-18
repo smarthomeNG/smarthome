@@ -60,7 +60,7 @@ Zugriff auf die SmartVISU testen
 ================================
 
 Mit einem Browser kann nun erstmals auf die SmartVISU zugegriffen werden: Hierbei ist ``<ip-des-servers>`` natürlich
-mit der IP oder dem Hostnamen deines SmartVISU Servers ersetzen: ``http://<ip-des-servers>/smartVISU``.
+mit der IP oder dem Hostnamen deines SmartVISU Servers ersetzen: ``http://<ip-des-servers>/smartvisu``.
 Bei **Checking your configuration** sollte alles mit einem grünen Haken versehen sein. Falls nicht, sind die
 entsprechenden Änderungen vorzunehmen **bevor man weiter macht**.
 
