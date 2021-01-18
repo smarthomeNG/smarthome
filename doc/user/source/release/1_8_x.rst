@@ -1,6 +1,6 @@
-==========================
-Release 1.x - tt. mmm 2021
-==========================
+============================
+Release 1.8.x - tt. mmm 2021
+============================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
@@ -8,17 +8,18 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. ...
-       (...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. ...
-       (...)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 18. Januar 2021
+       (modules.websocket: Handled closing code 1005; Added json serialization for class decimal.Decimal)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 18. Januar 2021
+       (Handled exception when trying to read configuration from smartVISU that is not configured)
 
 
 Überblick
 =========
 
-Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.8.x sind im
-folgenden in diesen Release Notes beschrieben.
+Dieses ist ein Bugfix-Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.8 sind im
+folgenden in diesen Release Notes beschrieben. Für die vollständigen Änderungen der Version 1.8
+bitte die Release Notes der Version 1.8 zu Rate ziehen.
 
 
 Unterstützte Python Versionen
@@ -63,6 +64,15 @@ Bugfixes in the CORE
 
 * ...
 
+* Modules:
+
+  * websocket:
+
+    * Fixed exception while module tried to update series data to a connection that had been closed
+    * Handled closing code 1005
+    * Added json serialization for class decimal.Decimal
+
+
 
 Updates in the CORE
 -------------------
@@ -78,11 +88,12 @@ Updates in the CORE
   * ...
 
 * lib....:
+
 * Modules:
 
-  * ...:
+  * websocket:
 
-    * ...
+    * Added function to smartVISU payload protocol that allows sending of url command to smartVISU
 
 * Plugins:
 
@@ -104,9 +115,39 @@ For details of the changes of the individual plugins, please refer to the docume
 Plugin Updates
 --------------
 
-* <name>:
+* alexarc4shng:
 
-  * ...
+  * Updated metadata: Changed item attribute alexa_cmd_XX to item_attribute_prefix
+
+* database:
+
+  * Fix in id()
+
+* knx:
+
+  * fix encoding of dpt5999
+
+* oerationlog:
+
+  * Fixed parameter handling
+  * Adjusted version number in metadata
+
+* neato:
+
+  * Increased minimum SHNG version to 1.8 as WebIf uses function update_config_section
+
+* smartvisu:
+
+  * Added function url() to set displayed page on smartVISU
+  * Handled exception when trying to read configuration from smartVISU that is not configured
+
+* sonos:
+
+  * Upgrade plugin base software to SoCo version 0.21. https://github.com/SoCo/SoCo/releases/tag/v0.21
+
+* yamahayxc:
+
+  * added missing item attributes
 
 
 Outdated Plugins
@@ -187,7 +228,7 @@ Tools
 Documentation
 -------------
 
-* ...
+* Corrected typos and small documentation updates
 * ...
 
 
