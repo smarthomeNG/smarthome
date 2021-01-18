@@ -25,6 +25,7 @@ import janus
 import pathlib
 import ssl
 import threading
+import decimal
 import websockets
 
 import time
@@ -289,8 +290,8 @@ class Websocket(Module):
                 await self.counter_sync(websocket)
 
         except Exception as e:
-            if str(e) != "code = 1006 (connection closed abnormally [internal]), no reason":
-                print("Exeption: {}".format(e))
+            # connection has been ended or not established in payload protocol
+            self.logger.info("handle_new_connection - Connection to {} has been terminated in payload protocol or couldn't be established".format(e))
         finally:
             await self.unregister(websocket)
         return
@@ -422,8 +423,11 @@ class Websocket(Module):
     def json_serial(self, obj):
         """JSON serializer for objects not serializable by default json code"""
 
+        if isinstance(obj, decimal.Decimal):
+            return float(obj)
         if isinstance(obj, (datetime, date)):
             return obj.isoformat()
+
         raise TypeError("Type %s not serializable" % type(obj))
 
 
@@ -566,8 +570,10 @@ class Websocket(Module):
                         self.logger.exception("smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {}".format(e))
 
         except Exception as e:
-            if not str(e).startswith('code = 1006'):
+            if not str(e).startswith(('code = 1005', 'code = 1006')):
                 self.logger.error("smartVISU_protocol_v4 exception: {}".format(e))
+            else:
+                self.logger.info("smartVISU_protocol_v4 error: {}".format(e))
 
         # Remove client from monitoring dict and from dict of active clients
         del(self.sv_monitor_items[client_addr])
@@ -931,8 +937,11 @@ class Websocket(Module):
                     self.logger.info("visu >MONIT: '{}'   -   to {}".format(msg, self.client_address(websocket)))
                     await websocket.send(msg)
                 except Exception as e:
-                    if not str(e).startswith('code = 1006'):
-                        self.logger.exception("Error in 'await websocket.send(data)': {}".format(e))
+                    if not str(e).startswith(('code = 1005', 'code = 1006')):
+                        self.logger.exception("update_item - Error in 'await websocket.send(data)': {}".format(e))
+                    else:
+                        self.logger.info("update_item - Error in 'await websocket.send(data)': {}".format(e))
+
         return
 
     async def update_log(self, log_entry):
@@ -952,11 +961,9 @@ class Websocket(Module):
                     await websocket.send(msg)
                 except Exception as e:
                     if not str(e).startswith(('code = 1005', 'code = 1006')):
-                        self.logger.exception("Error in 'await websocket.send(data)': {}".format(e))
-                    elif str(e).startswith('code = 1005'):
-                        self.logger.warning("Error in 'await websocket.send(data)': {}".format(e))
+                        self.logger.exception("update_log - Error in 'await websocket.send(data)': {}".format(e))
                     else:
-                        self.logger.info("Error in 'await websocket.send(data)': {}".format(e))
+                        self.logger.info("update_log - Error in 'await websocket.send(data)': {}".format(e))
             else:
                 self.logger.info("update_log: Client {} is not active any more".format(client_addr))
                 remove.append(client_addr)
