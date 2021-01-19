@@ -9,11 +9,31 @@ Core
 Weitere Loglevel einführen
 --------------------------
 
+Siehe auch https://github.com/smarthomeNG/smarthome/issues/384
+
 * SYSINFO (bzw. SHNGINFO)   -   Für allgemeine Informationen, die bisher als WARNING geloggt werden
 * INFO_L2   -   um einen höheren INFO Level zu haben, damit man nur "wichtigere" INFOs loggen kann
 * INFO_L3   -   evtl. um einen höheren INFO Level zu haben, damit man nur "wichtige" INFOs loggen kann
 
 Evtl. auch weitere DEBUG Level (DEBUG_L2, DEBUG_L3)?
+
+Diese Loglevel sollten auch in Plugins und Logiken zur Verfügung stehen. Evtl. mit der Ausnahme von SHNGINFO, welcher
+evtl. dem Core vorbehalten sein solle. Dafür könnte man noch einen Level wie PLGINFO o.ä. einführen, der unterhalb
+von SHNGINFO liegt.
+
+Evtl in folgender Abstufung:
+
+* 50 - CRITICAL
+* 40 - ERROR
+* 30 - WARNING
+* 27 - SHNGINFO  (für den Core)
+* 25 - SYSINFO   (für Plugins und Logiken)
+* 23 - INFO_L3
+* 22 - INFO_L2
+* 20 - INFO
+* 13 - DEBUG_L3
+* 12 - DEBUG_L2
+* 10 - DEBUG
 
 |
 
