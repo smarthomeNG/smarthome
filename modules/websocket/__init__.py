@@ -569,10 +569,9 @@ class Websocket(Module):
                     try:
                         await websocket.send(reply)
                         self.logger.info("visu >REPLY: '{}'   -   to {}".format(answer, websocket.remote_address))
-                    except (asyncio.IncompleteReadError, websocket.connection_closed) as e:
-                        self.logger.error("smartVISU_protocol_v4: Error in 'await websocket.send(reply)': {}".format(e))
+                    #except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                     except Exception as e:
-                        self.logger.exception("smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {}".format(e))
+                        self.logger.error("smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {}".format(e))
 
         except Exception as e:
             if not str(e).startswith(('code = 1005', 'code = 1006')):
@@ -741,10 +740,9 @@ class Websocket(Module):
                             try:
                                 await websocket.send(json.dumps(reply, default=self.json_serial))
                                 self.logger.info(">SerUp {}: {}".format(websocket.remote_address, reply))
-                            except (asyncio.IncompleteReadError, websocket.connection_closed) as e:
-                                self.logger.error("update_all_series: Error in 'await websocket.send(reply)': {}".format(e))
+                            # except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                             except Exception as e:
-                                self.logger.exception("update_all_series: Exception in 'await websocket.send(reply)': {}".format(e))
+                                self.logger.error("update_all_series: Exception in 'await websocket.send(reply)': {}".format(e))
                         else:
                             self.logger.info("update_all_series: Client {} is not active any more #1".format(client_addr))
                             pass
@@ -891,10 +889,9 @@ class Websocket(Module):
                     try:
                         await websocket.send(command)
                         self.logger.warning(f"visu >command: '{command}'   -   to {client_addr}")
-                    except (asyncio.IncompleteReadError, websocket.connection_closed) as e:
-                        self.logger.error("smartVISU_protocol_v4: Error in 'await websocket.send(url-command)': {}".format(e))
+                    # except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                     except Exception as e:
-                        self.logger.exception("smartVISU_protocol_v4: Exception in 'await websocket.send(url-command)': {}".format(e))
+                        self.logger.error("smartVISU_protocol_v4: Exception in 'await websocket.send(url-command)': {}".format(e))
                 else:
                     self.logger.error("update_visu: Unknown queueentry type '{}'".format(queue_entry[0]))
 
@@ -1143,7 +1140,7 @@ class Websocket(Module):
             websocket = self.sv_clients[client_addr]['websocket']
             infos['protocol'] = 'wss' if websocket.secure else 'ws'
             infos['sw'] = self.sv_clients[client_addr]['sw']
-            infos['swversion'] = self.sv_clients[client_addr]['ver']
+            infos['swversion'] = self.sv_clients[client_addr].get('ver','')
             infos['hostname'] = self.sv_clients[client_addr]['hostname']
             infos['browser'] = self.sv_clients[client_addr]['browser']
             infos['browserversion'] = self.sv_clients[client_addr]['bver']
