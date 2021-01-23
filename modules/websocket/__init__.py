@@ -742,7 +742,8 @@ class Websocket(Module):
                                 self.logger.info(">SerUp {}: {}".format(websocket.remote_address, reply))
                             # except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                             except Exception as e:
-                                self.logger.error("update_all_series: Exception in 'await websocket.send(reply)': {}".format(e))
+                                self.logger.info("update_all_series: Exception in 'await websocket.send(reply)': {}".format(e))
+                                remove.append(client_addr)
                         else:
                             self.logger.info("update_all_series: Client {} is not active any more #1".format(client_addr))
                             pass
