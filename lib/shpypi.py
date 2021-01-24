@@ -763,7 +763,7 @@ class Shpypi:
         try:
             r = requests.get('https://pypi.org/rss/project/' + package + '/releases.xml')
         except Exception as e:
-            self.logger.error("Error: {0}".format(e))
+            self.logger.info("get_releasedata_frompypi: Error: {0}".format(e))
             return result
 
         if r.status_code == 200:
