@@ -119,7 +119,10 @@ if core_reqs == 0:
     python_bin = sys.executable
     if ' ' in python_bin:
         python_bin = '"'+python_bin+'"'
-    command = python_bin + ' ' + os.path.join(BASE, 'bin', 'smarthome.py')
+    command = [python_bin, os.path.join(BASE, 'bin', 'smarthome.py')]
+    # if started with -f then stay in foreground
+    if args.foreground:
+        command.append('-f')
     try:
         p = subprocess.Popen(command, shell=True)
     except subprocess.SubprocessError as e:
