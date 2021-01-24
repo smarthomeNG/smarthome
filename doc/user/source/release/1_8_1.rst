@@ -1,5 +1,5 @@
 ===============================
-Release 1.8.x - tt. Januar 2021
+Release 1.8.1 - tt. Januar 2021
 ===============================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
@@ -41,7 +41,17 @@ Bugfixes in the CORE
 
   * Fix for ephem exception
 
+* lib.shpypi:
+
+  * Adjusted loglevel
+
 * Modules:
+
+  * admin:
+
+    * rest:
+
+      * Adjusted loglevel
 
   * websocket:
 
