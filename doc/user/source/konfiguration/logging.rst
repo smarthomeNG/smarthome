@@ -64,7 +64,7 @@ Die einzelnen Konfigurationseinträge haben die folgende Bedeutung:
 |                 | - name: Loggername (z.B. lib.item)                                                                 |
 |                 | - module: Loggermodul, va. bei Plugins u.U. relevant (z.B. item)                                   |
 |                 | - timestamp: Uhrzeit/Datum (z.B. "23:00")                                                          |
-|                 | - msg: Der tatsächliche Logeintrag (z.B. "Result = (.\*) \(for attribute 'eval'\)")                |
+|                 | - msg: Der tatsächliche Logeintrag als RegEx, z.B. "Result = (.\*) \(for attribute 'eval'\)"       |
 |                 | Durch die Angabe von invert: True werden NUR die passenden Messages geloggt und sonst nichts.      |
 |                 | Ein Beispiel ist unter :doc:`Logging - Best Practices <logging_best_practices>` zu finden.         |
 +-----------------+----------------------------------------------------------------------------------------------------+
@@ -96,10 +96,10 @@ Plugin und Logik Entwicklung
 Für die Entwickler von Plugins:
 
 Früher musste in Plugins ein Logger in der Form
+
 .. code-block:: python
 
    import logging
-
    self.logger = logging.getLogger(__name__)
 
 
@@ -160,8 +160,8 @@ und
 Best Practices
 ==============
 
-Wer eine brauchbare leicht konfigurierbare Logging Konfiguration sucht, der wird hier
-:doc:`Logging - Best Practices <logging_best_practices>` fündig.
+Wer eine brauchbare leicht konfigurierbare Logging Konfiguration oder Beispiele zum Nutzen
+von RegEx Ausdrücken sucht, der wird hier :doc:`Logging - Best Practices <logging_best_practices>` fündig.
 
 
 .. toctree::

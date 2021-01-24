@@ -10,9 +10,9 @@
 SmartHomeNG [1] is a software that serves a basis for home automation. It interconnects multiple devices using plugins to access their specific interfaces.
 This file contains basic information about the basic directories of SmartHomeNG.
 
-Developer documentation ([english](https://www.smarthomeNG.de/dev)) and user documentation ([german](https://www.smarthomeNG.de/user)) can be found on [www.smarthomeNG.de](https://www.smarthomeNG.de)
+Developer documentation ([part of the user documentation](https://www.smarthomeng.de/user/entwicklung/entwicklung.html)) and user documentation ([german](https://www.smarthomeNG.de/user)) can be found on [www.smarthomeNG.de](https://www.smarthomeNG.de)
 
-Additional information / documentation can be found in the [SmartHomeNG Wiki](https://github.com/smarthomeNG/smarthome/wiki). The Wiki is written in german for the greatest part.
+Additional information can be found in the [SmartHomeNG Wiki](https://github.com/smarthomeNG/smarthome/wiki).
 
 ## Used Tools
 

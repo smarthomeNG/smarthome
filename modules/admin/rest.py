@@ -337,7 +337,7 @@ class RESTResource:
                     # self.logger.info("REST_dispatch: Authentication needed for {} ({})".format(method, str(m).split()[2]))
                     token_valid, error_text = self.REST_test_jwt_token()
                     if not token_valid:
-                        self.logger.warning("REST_dispatch_execute: Authentication failed for {} ({})".format(method, str(m).split()[2]))
+                        self.logger.info("REST_dispatch_execute(): Authentication failed for {} ({})".format(method, str(m).split()[2]))
                         response = {'result': 'error', 'description': error_text}
                         return json.dumps(response)
 
