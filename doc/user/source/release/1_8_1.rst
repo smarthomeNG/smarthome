@@ -2,16 +2,7 @@
 Release 1.8.1 - 24. Januar 2021
 ===============================
 
-Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
-
-.. note::
-
-    Diese Release Notes sind ein Arbeitsstand.
-
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 24. Januar 2021
-       (modules.admin.rest: Adjusted loglevel)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 24. Januar 2021
-       (knx: Added xml2dict to requirements)
+Dieses ist ein Bugfix Release für SmartHomeNG v1.8
 
 
 Überblick
@@ -106,7 +97,7 @@ Plugin Updates
   * fix encoding of dpt5999
   * use xmltodict instead of lxml to prevent install problems on special hardware (CPUs)
 
- * luxtronic2:
+* luxtronic2:
 
   * Added valid values to lux2 attribute according to forum post https://knx-user-forum.de/forum/supportforen/smarthome-py/27461-neues-plugin-luxtronic2-wärmepumpen-von-alphainnotec-siemens-etc?p=1604934#post1604934
   * Adjusted version number to 1.3.2
@@ -151,10 +142,12 @@ Plugin Updates
   * Allow relative item declaration for se_manual_logitem
   * Fix log for age condition
   * urgent re-fix of suspend struct
+  * Fix web interface
 
 * yamahayxc:
 
   * added missing item attributes
+  * Fixed error in metadata
 
 |
 

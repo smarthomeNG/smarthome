@@ -5,6 +5,9 @@ Ideen für das Release 1.9
 Core
 ====
 
+Ideen für neue Funktionalitäten im Core
+
+|
 
 Weitere Loglevel einführen
 --------------------------
@@ -81,9 +84,22 @@ Websocket Nutzdaten Protokoll für shngadmin
 Plugins
 =======
 
+Ideen für neue Plugins oder die Erweiterung bestehender Plugins
+
+|
+
 rtr2
 ----
 
 * PID Regler implementieren
 * Korrektur Faktoren (Kp, Ki, Kd) über Items setzbar machen
 
+|
+
+smartvisu
+---------
+
+* Weitere Möglichkeiten für generierte Seiten implementieren
+
+  * weitere Blöcke (z.B.: Doppelte Breite, feste Höhe, nicht zuklappbar, maximierbar, ...)
+  * Seiten ohne Navigation ermöglichen
