@@ -62,9 +62,13 @@ import plugins.__init__ as plugin_vers
 # Update auf 1.7.2b wg. Einführung von valid_list_ci in den Metadaten
 # Update auf 1.7.2c wg. SmartPlugin Erweiterung: Update etc/plugin.yaml section
 
+# Update auf 1.8    wg. Release
+# Update auf 1.8a   wg. Kennzeichnung des Stands als "nach dem v1.8 Release"
 
-shNG_version = '1.8.0a'
-shNG_branch = 'develop'
+# Update auf 1.8.1  wg. Release
+
+shNG_version = '1.8.1'
+shNG_branch = 'master'
 
 # ---------------------------------------------------------------------------------
 FileBASE = None
