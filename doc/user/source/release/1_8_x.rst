@@ -1,6 +1,6 @@
-============================
-Release 1.8.x - tt. mmm 2021
-============================
+===============================
+Release 1.8.x - tt. Januar 2021
+===============================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
@@ -8,10 +8,10 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 18. Januar 2021
-       (modules.websocket: Handled closing code 1005; Added json serialization for class decimal.Decimal)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 18. Januar 2021
-       (Handled exception when trying to read configuration from smartVISU that is not configured)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 20. Januar 2021
+       (Merge pull request #386 from MatzIT/DocuFixes)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 24. Januar 2021
+       (knx: Added xml2dict to requirements)
 
 
 Überblick
@@ -22,39 +22,14 @@ folgenden in diesen Release Notes beschrieben. Für die vollständigen Änderung
 bitte die Release Notes der Version 1.8 zu Rate ziehen.
 
 
-Unterstützte Python Versionen
------------------------------
-
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.8 ist Python 3.6.
-(Siehe auch *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
-
-..
-    Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.8 nicht mehr unter älteren Python Versionen läuft,
-    sondern das SmartHomeNG nicht mehr mit älteren Python Versionen getestet wird und das gemeldete Fehler mit älteren
-    Python Versionen nicht mehr zu Buxfixen führen.
-
-    Es werden jedoch zunehmend Features eingesetzt, die erst ab Python 3.6 zur Verfügung stehen.
-    So ist Python 3.6 die minimale Vorraussetzung zur Nutzung des neuen Websocket Moduls.
-
-
 Minimum Python Version
 ----------------------
 
-Die absolute Minimum Python Version in der SmartHomeNG startet wurde auf v3.6 angehoben, da Python 3.5 im
-September 2020 End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen
-auf einer der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
+Die absolute Minimum Python Version in der SmartHomeNG startet wurde mit SmartHomeNG v1.8 auf v3.6 angehoben,
+da Python 3.5 im September 2020 End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation
+wird jedoch empfohlen auf einer der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
 
-.. important::
-
-   Mit dem kommenden Release 1.8 werden die unterstützten Python Versionen
-   :doc:`(wie hier beschrieben) </installation/anforderungen>` auf **Python 3.6, 3.7, 3.8** angehoben. Python 3.6
-   hat eine Reihe sehr interessanter Features und Verbesserungen gebracht, die dann in SmartHomeNG genutzt
-   werden können.
-
-   Sollten solche neuen Features in den Core Einzug halten, wird die **Absolute Minimum Python Version** auf 3.6
-   angehoben werden. Sollten die Features nur in Plugins genutzt werden, so können nur solche Plugins nicht genutzt
-   werden, wenn eine ältere Python Version als 3.6 eingesetzt wird.
-
+|
 
 Änderungen am Core
 ==================
@@ -62,7 +37,9 @@ auf einer der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
 Bugfixes in the CORE
 --------------------
 
-* ...
+* lib.env:
+
+  * Fix for ephem exception
 
 * Modules:
 
@@ -71,46 +48,25 @@ Bugfixes in the CORE
     * Fixed exception while module tried to update series data to a connection that had been closed
     * Handled closing code 1005
     * Added json serialization for class decimal.Decimal
+    * Changed error handling on some occasions
+    * Fix for terminating series updates when the websocket connection has been closed
 
-
+|
 
 Updates in the CORE
 -------------------
-
-* ...
-
-* Items:
-
-  * ...
-
-* Logics:
-
-  * ...
-
-* lib....:
 
 * Modules:
 
   * websocket:
 
     * Added function to smartVISU payload protocol that allows sending of url command to smartVISU
+    * Added Support needed for web interface of smartvisu plugin
 
-* Plugins:
-
-  * ...
-
+|
 
 Änderungen bei Plugins
 ======================
-
-New Plugins
------------
-
-For details of the changes of the individual plugins, please refer to the documentation of the respective plugin.
-
-* <Name>: ...
-
-
 
 Plugin Updates
 --------------
@@ -118,117 +74,86 @@ Plugin Updates
 * alexarc4shng:
 
   * Updated metadata: Changed item attribute alexa_cmd_XX to item_attribute_prefix
+  * Rearranged sections in metadata to standard order
+
+* casambi:
+
+  * Made plugin restartable
+  * Fixed subsequent errors on invalid networkID (if API key is no longer valid)
 
 * database:
 
   * Fix in id()
 
+* homematic:
+
+  * During initialization of plugin no sensor states are read any more to prevent possible
+    storm on homematic wireless connections which could result in 'Generic error (UNREACH)'
+    error logged by pyhomematic.
+
 * knx:
 
   * fix encoding of dpt5999
+  * use xmltodict instead of lxml to prevent install problems on special hardware (CPUs)
+
+ * luxtronic2:
+
+  * Added valid values to lux2 attribute according to forum post https://knx-user-forum.de/forum/supportforen/smarthome-py/27461-neues-plugin-luxtronic2-wärmepumpen-von-alphainnotec-siemens-etc?p=1604934#post1604934
+  * Adjusted version number to 1.3.2
+
+* neato:
+
+  * Increased minimum SHNG version to 1.8 as WebIf uses function update_config_section
 
 * oerationlog:
 
   * Fixed parameter handling
   * Adjusted version number in metadata
 
-* neato:
+* prowl:
 
-  * Increased minimum SHNG version to 1.8 as WebIf uses function update_config_section
+  * added item attributes (send on item change), cleanup, ...
+
+* resol:
+
+  * catched another exception
 
 * smartvisu:
 
   * Added function url() to set displayed page on smartVISU
   * Handled exception when trying to read configuration from smartVISU that is not configured
+  * Added web interface
+  * Copying of files (generated pasges and item-masterfile) is only done, if the smartVISU is already configured
 
 * sonos:
 
-  * Upgrade plugin base software to SoCo version 0.21. https://github.com/SoCo/SoCo/releases/tag/v0.21
+  * Named sonos subscription autoRenew thread
+  * Named additional sonos EventServerThread
+  * Upgraded base framework to SoCo version 0.21.1 https://github.com/SoCo/SoCo/releases/tag/v0.21.1
+  * Disabled auto renew option for event subscriptions
+  * Added minimum python version to metadata
+  * Fixed proper display of speaker IDs in thread names
+
+
+* stateengine:
+
+  * Provide new version of suspend struct as state_suspend_dynamic and reintroduce old suspend struct
+  * Allow relative item declaration for se_manual_logitem
+  * Fix log for age condition
+  * urgent re-fix of suspend struct
 
 * yamahayxc:
 
   * added missing item attributes
 
-
-Outdated Plugins
-----------------
-
-The following plugins were already marked in version v1.6 as *deprecated*. This means that the plugins
-are still working, but are not developed further anymore and are removed from the release of SmartHomeNG
-in the next release. User of these plugins should switch to corresponding succeeding plugins.
-
-* System Plugins
-
-  * sqlite - switch to the **database** plugin
-  * sqlite_visu2_8 - switch to the **database** plugin
-
-* Gateway Plugins
-
-  * tellstick - classic Plugin, not used according to survey in knx-user-forum
-
-* Interface Plugins
-
-  * netio230b - classic plugin, not used according to survey in knx-user-forum
-  * smawb - classic plugin, not used according to survey in knx-user-forum
-
-* Web Plugins
-
-  * alexa - switch to the **alexa4p3** plugin
-  * boxcar - classic Plugin, not used according to survey in knx-user-forum
-  * mail - switch to the **mailsend** and **mailrcv** plugin
-  * openenergymonitor - classic plugin, not used according to survey in knx-user-forum
-  * wunderground - the free API is not provided anymore by Wunderground
-
-
-The following plugins are marked as *deprecated* with SmartHomeNG v1.7, because neither user nor tester have been found:
-
-* Gateway Plugins
-
-  * ecmd
-  * elro
-  * iaqstick
-  * snom
-  * tellstick
-
-* Interface Plugins
-
-  * easymeter
-  * netio230b
-  * smawb
-  * vr100
-
-* Web Plugins
-
-  * boxcar
-  * nma
-
-Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecated*, because the new mqtt
-plugin takes over the functionality. This plugin is based on the mqtt module and the recent core.
-
-
-Retired Plugins
----------------
-
-The following plugins have been retired. They had been deprecated in one of the preceding releases of SmartHomeNG.
-They have been removed from the plugins repository, but they can still be found on github. Now they reside in
-the plugin_archive repository from where they can be downloaded if they are still needed.
-
-* ...
-
+|
 
 Weitere Änderungen
 ==================
-
-Tools
------
-
-* ...
-
 
 Documentation
 -------------
 
 * Corrected typos and small documentation updates
-* ...
 
 
