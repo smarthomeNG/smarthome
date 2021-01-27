@@ -157,14 +157,16 @@ class Utils(object):
         """
         Get local ipv4 address of the interface with the default gateway.
         Return '127.0.0.1' if no suitable interface is found
-        TODO: What if more than one interface present? What if 127.0.0.1 is not active?
+        NOTE: if more than one IP addresses are available and no external
+        gateway is configured, thie method returns one of the configured
+        addresses, but not deterministically.
 
         :return: IPv4 address as a string
         :rtype: string
         """
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.connect(('8.8.8.8', 1))
+            s.connect(('10.255.255.255', 1))
             IP = s.getsockname()[0]
         except:
             IP = '127.0.0.1'
@@ -178,14 +180,13 @@ class Utils(object):
         """
         Get local ipv6 address of the interface with the default gateway.
         Return '::1' if no suitable interface is found
-        TODO: What if more than one interface present ?
 
         :return: IPv6 address as a string
         :rtype: string
         """
         try:
             s = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
-            s.connect(('2001:4860:4860::8888', 1))
+            s.connect(('fda2:ffff:ffff:ffff:ffff:ffff:ffff:ffff', 1))
             IP = s.getsockname()[0]
         except:
             IP = '::1'

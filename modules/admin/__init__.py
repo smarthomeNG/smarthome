@@ -22,9 +22,9 @@
 
 import os
 import logging
-import json
 import cherrypy
 
+from lib.utils import Utils
 
 from lib.model.module import Module
 from lib.module import Modules
@@ -88,7 +88,7 @@ class Admin(Module):
             self.mod_http = Modules.get_instance().get_module('http')  # try/except to handle running in a core version that does not support modules
         except:
             self.mod_http = None
-        if self.mod_http == None:
+        if self.mod_http is None:
             self.logger.error(
                 "Module '{}': Not initializing - Module 'http' has to be loaded BEFORE this module".format(
                     self._shortname))
@@ -117,7 +117,7 @@ class Admin(Module):
         mysuburl = ''
         if suburl != '':
             mysuburl = '/' + suburl
-        ip = get_local_ipv4_address()
+        ip = Utils.get_local_ipv4_address()
         self.port = self.mod_http._port
         # self.logger.warning('port = {}'.format(self.port))
         self.shng_url_root = 'http://' + ip + ':' + str(self.port)         # for links mto plugin webinterfaces
@@ -224,11 +224,9 @@ class Admin(Module):
 
         return
 
-
     def add_stop_method(self, method, classname=''):
         self.logger.info("Adding stop method of class {}".format(classname))
         self._stop_methods.append(method)
-
 
     def stop(self):
         """
@@ -237,11 +235,10 @@ class Admin(Module):
 
         Otherwise don't enter code here
         """
-        self.logger.info("Shutting down".format(self._shortname))
+        self.logger.info("{} shutting down ".format(self._shortname))
         for stop_method in self._stop_methods:
             stop_method()
-        self.logger.info("Shutted down".format(self._shortname))
-
+        self.logger.info("{} shut down ".format(self._shortname))
 
     def error_page(self, status, message, traceback, version):
         """
@@ -255,18 +252,17 @@ class Admin(Module):
         :return: page to display (a redirect)
         :rtype: str
         """
-        ip = get_local_ipv4_address()
-        mysuburl = ''
-        if suburl != '':
-            mysuburl = '/' + suburl
+        # ip = Utils.get_local_ipv4_address()
+        # mysuburl = ''
+        # if suburl != '':
+        #     mysuburl = '/' + suburl
 
         # page = '<meta http-equiv="refresh" content="0; url=http://' + ip + ':' + str(self.port) + mysuburl + '/" />'
         # page = '<meta http-equiv="refresh" content="0; url=' + self.url_root + '/" />'
-        page = '404: Page not found!<br>'+message
+        page = '404: Page not found!<br>' + message
         self.logger.warning(
             "error_page: status = {}, message = {}".format(status, message))
         return page
-
 
     def _error_page(self, status, message, traceback, version):
         """
@@ -285,7 +281,7 @@ class Admin(Module):
         :rtype: str
 
         """
-        show_traceback = True
+        # show_traceback = True
         errno = status.split()[0]
         result = '<link rel="stylesheet" href="/gstatic/bootstrap/css/bootstrap.min.css" type="text/css"/>'
         result += '<link rel="stylesheet" href="/gstatic/css/smarthomeng.css" type="text/css"/>'
@@ -296,7 +292,7 @@ class Admin(Module):
         result += '</h1><br/>'
         result += '<h3>' + message + '</h3><br/>'
 
-        if (self._showtraceback == False) or (errno == '404'):
+        if not self._showtraceback or (errno == '404'):
             traceback = ''
         else:
             traceback = traceback.replace('\n', '<br>&nbsp;&nbsp;')
@@ -314,33 +310,10 @@ class Admin(Module):
 
         return result
 
-def get_local_ipv4_address():
-    """
-    Get's local ipv4 address of the interface with the default gateway.
-    Return '127.0.0.1' if no suitable interface is found
 
-    :return: IPv4 address as a string
-    :rtype: string
-    """
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.connect(('8.8.8.8', 1))
-        IP = s.getsockname()[0]
-    except:
-        IP = '127.0.0.1'
-    finally:
-        s.close()
-    return IP
-
-
+# TODO: brauchen wir das? Ist nirgendwo referenziert, tut anscheinend auch nix
 def translate(s):
     return s
-
-
-import socket
-
-from lib.plugin import Plugins
-from lib.utils import Utils
 
 
 class WebInterface(SystemData, ItemData, PluginData):
@@ -399,9 +372,6 @@ class WebApi(RESTResource):
 
         return
 
-
     @cherrypy.expose(['home', ''])
     def index(self):
         return "Give SmartHomeNG a REST."
-
-
