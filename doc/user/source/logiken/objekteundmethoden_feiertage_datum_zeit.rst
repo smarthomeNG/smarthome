@@ -47,7 +47,7 @@ Die Funktionen für Feiertags- und Wochenend-Handling sind folgende:
 +-------------------------------------------+---------------------------------------------------------------------------+
 | shtime.is_public_holiday(date)            | Liefert **True**, falls das Datum ein gesetzlicher Feiertag ist           |
 +-------------------------------------------+---------------------------------------------------------------------------+
-| shtime.holiday_name(date, as_list=False)  | Liefert den Namen des Feiertags, falls das Datum ein Feriertag ist.       |
+| shtime.holiday_name(date, as_list=False)  | Liefert den Namen des Feiertags, falls das Datum ein Feiertag ist.        |
 |                                           | Wenn mehrere Feiertage auf das selbe Datum fallen, werden sie Komma-      |
 |                                           | getrennt zurück geleifert. Falls **as_list** auf **True** gesetzt wird,   |
 |                                           | ist das Ergebnis kein String, sondern eine Liste mit den Feiertagsnamen.  |

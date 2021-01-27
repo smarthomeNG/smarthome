@@ -385,9 +385,13 @@ class Database():
         """
         if cur == None:
             c = self.cursor()
-            self.execute(stmt, params, formatting=formatting, cur=c)
-            result = c.fetchone()
-            c.close()
+            if c is None:
+                self.logger.warning(f"fetchone: No cursor defined for stmt {stmt} with params {params}")
+                result = ''
+            else:
+                self.execute(stmt, params, formatting=formatting, cur=c)
+                result = c.fetchone()
+                c.close()
         else:
             self.execute(stmt, params, formatting=formatting, cur=cur)
             result = cur.fetchone()

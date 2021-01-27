@@ -141,6 +141,18 @@ def get_description(section_dict, maxlen=70, lang='en'):
     return lines
 
 
+def get_version(section_dict, maxlen=8):
+    version = section_dict.get('version', '')
+    if version != '':
+        version = 'v'+version
+
+    import textwrap
+    lines = textwrap.wrap(version, maxlen, break_long_words=False)
+    if lines == []:
+        lines.append('')
+    return lines
+
+
 def get_maintainer(section_dict, maxlen=20):
     maint = section_dict.get('maintainer', '')
 
@@ -216,6 +228,7 @@ def build_pluginlist( plugin_type='all' ):
                         if section_dict.get('type').lower() in plugin_types:
                             plgtype = section_dict.get('type').lower()
                             plg_dict['name'] = metaplugin.lower()
+                            plg_dict['version'] = get_version(section_dict)
                             plg_dict['type'] = plgtype
                             plg_dict['desc'] = get_description(section_dict, 85, language)
                             plg_dict['maint'] = get_maintainer(section_dict, 15)
@@ -233,6 +246,7 @@ def build_pluginlist( plugin_type='all' ):
 
                 if (plgtype == type_unclassified) and (plugin_yaml != ''):
                     plg_dict['name'] = metaplugin.lower()
+                    plg_dict['version'] = get_version(section_dict)
                     plg_dict['type'] = type_unclassified
                     plg_dict['desc'] = get_description(section_dict, 85, language)
                     plg_dict['maint'] = get_maintainer(section_dict, 15)
@@ -246,6 +260,7 @@ def build_pluginlist( plugin_type='all' ):
             else:
                 plgtype = type_unclassified
                 plg_dict['name'] = metaplugin.lower()
+                plg_dict['version'] = ''
                 plg_dict['type'] = type_unclassified
                 plg_dict['desc'] = ['No metadata (plugin.yaml) was provided for this plugin!']
                 plg_dict['maint'] = ['']
@@ -355,12 +370,12 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
         fh.write('.. table:: \n')
         fh.write('   :widths: grid\n')
         fh.write('\n')
-        fh.write('   +-'+ '-'*65 +'-+-'+ '-'*165 +'-+-----------------+-----------------+\n')
+        fh.write('   +-'+ '-'*65 +'-+-' + '-'*8 +'-+-' +  '-'*165 +'-+-----------------+-----------------+\n')
         if language == 'de':
-            fh.write('   | {p:<65.65} | {b:<165.165} | Maintainer      | Tester          |\n'.format(p='Plugin', b='Beschreibung'))
+            fh.write('   | {p:<65.65} | Version  | {b:<165.165} | Maintainer      | Tester          |\n'.format(p='Plugin', b='Beschreibung'))
         else:
-            fh.write('   | {p:<65.65} | {b:<165.165} | Maintainer      | Tester          |\n'.format(p='Plugin', b='Description'))
-        fh.write('   +='+ '='*65 +'=+=' + '='*165 + '=+=================+=================+\n')
+            fh.write('   | {p:<65.65} | Version  | {b:<165.165} | Maintainer      | Tester          |\n'.format(p='Plugin', b='Description'))
+        fh.write('   +='+ '='*65 +'=+=' + '='*8 +'=+=' + '='*165 + '=+=================+=================+\n')
         for plg in plglist:
             plg_readme_link = ':doc:`'+plg['name']+' </plugins/'+plg['name']+'/README.md>`'
             plg_readme_link = ':doc:`'+plg['name']+' <../plugins/'+plg['name']+'/README>`'
@@ -374,15 +389,15 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
                     plg_readme_link = plg['name']
 
 #            fh.write('   | {plg:<65.65} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg=plg['name'], desc=plg['desc'][0], maint=plg['maint'][0], test=plg['test'][0]))
-            fh.write('   | {plg:<65.65} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg=plg_readme_link, desc=plg['desc'][0], maint=plg['maint'][0], test=plg['test'][0]))
+            fh.write('   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg=plg_readme_link, vers=plg['version'][0], desc=plg['desc'][0], maint=plg['maint'][0], test=plg['test'][0]))
             for l in range(1, len(plg['desc'])):
-                fh.write('   | {plg:<65.65} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', desc=plg['desc'][l], maint=plg['maint'][l], test=plg['test'][l]))
+                fh.write('   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=plg['desc'][l], maint=plg['maint'][l], test=plg['test'][l]))
             if plg['doc'] != '':
                 if language == 'de':
                     plg['doc'] = "`"+plg['name']+" zusätzliche Infos <"+plg['doc']+">`_"
                 else:
                     plg['doc'] = "`"+plg['name']+" additional info <"+plg['doc']+">`_"
-                fh.write('   | {plg:<65.65} | - {desc:<163.163} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', desc=plg['doc'], maint='', test=''))
+                fh.write('   | {plg:<65.65} | {vers:<8.8} | - {desc:<163.163} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=plg['doc'], maint='', test=''))
             if plg['sup'] != '':
 #                if plg['doc'] != '':
 #                    fh.write('   | {plg:<65.65} |   {desc:<163.163} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', desc='', maint='', test=''))
@@ -390,8 +405,8 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
                     plg['sup'] = "`"+plg['name']+" Unterstützung <"+plg['sup']+">`_"
                 else:
                     plg['sup'] = "`"+plg['name']+" support <"+plg['sup']+">`_"
-                fh.write('   | {plg:<65.65} | - {desc:<163.163} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', desc=plg['sup'], maint='', test=''))
-            fh.write('   +-'+ '-'*65 +'-+-'+ '-'*165 +'-+-----------------+-----------------+\n')
+                fh.write('   | {plg:<65.65} | {vers:<8.8} | - {desc:<163.163} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=plg['sup'], maint='', test=''))
+            fh.write('   +-'+ '-'*65 +'-+-' + '-'*8 + '-+-' + '-'*165 +'-+-----------------+-----------------+\n')
         fh.write('\n')
         fh.write('\n')
 

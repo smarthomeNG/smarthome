@@ -195,8 +195,9 @@
     "TYPE": "Datatype",
     "STRUCT": "Contains structure(s)",
     "UPDATE INFORMATION": "Update Information",
-    "LAST CHANGE": "Last change",
+    "LAST VALUE": "Last value",
     "LAST UPDATE": "Last update",
+    "LAST CHANGE": "Last change",
     "UPDATE AGE": "Time since last update",
     "CHANGE AGE": "Time since last change",
     "UPDATE BY": "Updated by",
@@ -206,6 +207,10 @@
     "PREVIOUS CHANGE": "Previous change",
     "PREVIOUS UPDATE AGE": "Time since previous update",
     "PREVIOUS CHANGE AGE": "Time since previous change",
+    "PREVIOUS UPDATE BY": "Previous update by",
+    "PREVIOUS CHANGE BY": "Previous change by",
+
+
     "EVALUATION AND TRIGGER": "Evaluation and triggers",
     "PLUGIN SPECIFIC CONFIGURATION": "Plugin specific configuration",
     "CONNECTED LOGICS": "Connected logics",

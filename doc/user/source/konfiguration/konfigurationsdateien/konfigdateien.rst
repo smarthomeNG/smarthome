@@ -32,7 +32,7 @@ Genaueres bitte unter :doc:`../../tools/tools` nachlesen.
 Verzeichnisse
 =============
 
-Im folgenden sind die Verzeichnisse beschrieben, in denen Konfigurationsdateien abgelagt werden.
+Im folgenden sind die Verzeichnisse beschrieben, in denen Konfigurationsdateien abgelegt werden.
 
 
 Verzeichnis *../etc*

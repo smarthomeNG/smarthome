@@ -66,5 +66,5 @@ Beschreibung der Schlüsselbegriffe im Abschnitt ``plugin:``
     - ``restartable:`` Is the Plugin Restart bzw. Reload fählg?  (gültige Werte: ``True``, ``False``, ``unknown``)
     - ``classname:`` Name der Python Klasse die das Plugin implementiert un die zum Start des Plugins initialisiert wird
 
-    - ``classpath:`` **Wird normalerweise nicht angegeben** - Nur angeben, wenn das Plugin außerhalb des ``../plugins`` Verzeichnisses gespeichert ist,
+    - ``classpath:`` **Wird normalerweise nicht angegeben** - Nur angeben, wenn das Plugin außerhalb des ``/plugins`` Verzeichnisses gespeichert ist,
 

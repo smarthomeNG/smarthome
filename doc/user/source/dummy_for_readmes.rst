@@ -2,6 +2,7 @@
 
 .. This file is only created to suppress Sphinx warnings about README.md files not beeing included in any toctree.
 
+
 .. toctree::
    :maxdepth: 2
    :glob:
@@ -16,7 +17,7 @@
    /modules/admin/README.md
    /modules/http/README.md
    /modules/mqtt/README.md
-   /modules/websocket/README.md
+   /ideen_kommendes_release.rst
    /vorlagen/*
 
 .. toctree::
@@ -32,4 +33,3 @@
    /plugins/wunderground/README_OLD.md
    /plugins/visu_smartvisu/developer_doc.md
    /plugins/visu_websocket/developer_doc.rst
-   

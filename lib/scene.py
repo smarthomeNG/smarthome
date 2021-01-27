@@ -154,13 +154,16 @@ class Scenes():
         Save learned values for the scene to a file to make them persistant
         """
         logger.info("Saving learned values for scene {}:".format(scene))
+        logger.info(" -> from dict self._learned_values {}:".format(self._learned_values))
         learned_dict = {}
         for key in self._learned_values:
             lvalue = self._learned_values[key]
             kl = key.split('#')
-            fkey = kl[1]+'#'+kl[2]
-            learned_dict[fkey] = lvalue
-            logger.debug(" - Saving value {} for state/ditem {}".format(lvalue, fkey))
+            if kl[0] == scene:
+                fkey = kl[1]+'#'+kl[2]
+                learned_dict[fkey] = lvalue
+                logger.debug(" - Saving value {} for state/ditem {}".format(lvalue, fkey))
+        logger.info(" -> to dict learned_dict {}:".format(learned_dict))
         scene_learnfile = os.path.join(self._scenes_dir, scene+'_learned')
         yaml.yaml_save(scene_learnfile+'.yaml', learned_dict)
         return
@@ -172,6 +175,8 @@ class Scenes():
         """
         scene_learnfile = os.path.join(self._scenes_dir, scene+'_learned')
         learned_dict = yaml.yaml_load(scene_learnfile+'.yaml', ordered=False, ignore_notfound=True)
+        logger.info("Loading learned values for scene {} from file {}:".format(scene, scene_learnfile))
+        logger.info(" -> loaded dict learned_dict {}:".format(learned_dict))
         if learned_dict is not None:
             if learned_dict != {}:
                 logger.info("Loading learned values for scene {}".format(scene))
@@ -180,6 +185,8 @@ class Scenes():
                 lvalue = learned_dict[fkey]
                 self._learned_values[key] = lvalue
                 logger.debug(" - Loading value {} for state/ditem {}".format(lvalue, key))
+
+        logger.info(" -> to dict self._learned_values {}:".format(self._learned_values))
         return
 
 

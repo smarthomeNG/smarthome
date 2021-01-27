@@ -53,7 +53,7 @@ Structs und Sub-Structs, alle Deklarationen sind gleichwertig und können nach B
 
 
 Wird nun das main_struct1 in einem Item namens test1 referenziert,
-ergibt sich dadurch beim Laden von SmarthomeNG folgende Struktur. Zu beachten ist hier vorallem, dass
+ergibt sich dadurch beim Laden von SmarthomeNG folgende Struktur. Zu beachten ist hier vor allem, dass
 
 - item_in_struct den Typ bool erhält, weil hier das übergeordnete struct wegen der Regel "first wins" gewinnt.
 - eval_trigger des item_in_struct nicht zur Liste wird, weil keine Einträge als solche definiert sind.
@@ -78,7 +78,7 @@ ergibt sich dadurch beim Laden von SmarthomeNG folgende Struktur. Zu beachten is
 
 
 Beim Einbinden von main_struct2 in das item test2 ergibt sich beim Laden von SmarthomeNG folgende Struktur.
-Zu beachten ist hier vorallem, dass
+Zu beachten ist hier vor allem, dass
 
 - item_in_struct den Typ num erhält, weil hier das sub-struct wegen der Regel "first wins" gewinnt.
 - eval_trigger des item_in_struct nicht zur Liste wird, weil das sub-struct keine Liste deklariert hat.

@@ -169,12 +169,12 @@ und ``Reed2`` angepasst werden:
                  - ..Reed1
                  - ..Reed2
 
-``..<item>`` referenziert hierbei ein sister-Item. Es ist darauf zu
+``..<item>`` referenziert hierbei ein Geschwister-Item. Es ist darauf zu
 achten, dass dort wo Items über ``sh.<item>()`` angesprochen werden (wie
 im ``eval`` Attribut) dann drei statt der erwarteten zwei Punkte stehen.
 
-Ausführliche Informationen zur relativen Item Adressierung sind auf :doc:`relative Itemreferenzen </referenz/items/attributes_relative_referenzen>`
-zu finden.
+Ausführliche Informationen zur relativen Item Adressierung sind unter
+:doc:`relative Itemreferenzen </referenz/items/attributes_relative_referenzen>` zu finden.
 
 Das Beispiel ließe sich noch weiter vereinfachen, indem die Einträge durch **structs** referenziert werden. Detaillierte
 Informationen hierzu gibt es auf :doc:`structs (Item Strukturen) </konfiguration/item_structs>`
@@ -209,7 +209,7 @@ und ``env.location.night`` zugreifen.
 Beispiele
 ---------
 
-Nutzung mit neuen (zusätzlichen) items
+Nutzung mit neuen (zusätzlichen) Items
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: yaml

@@ -60,8 +60,8 @@ Zugriff auf die SmartVISU testen
 ================================
 
 Mit einem Browser kann nun erstmals auf die SmartVISU zugegriffen werden: Hierbei ist ``<ip-des-servers>`` natürlich
-mit der IP oder dem Hostnamen deines SmartVISU Servers ersetzen: ``http://<ip-des-servers>/smartVISU``.
-Bei **Checking your configuration** sollte alles mit einem grünen Häckchen versehen sein. Falls nicht, sind die
+mit der IP oder dem Hostnamen deines SmartVISU Servers ersetzen: ``http://<ip-des-servers>/smartvisu``.
+Bei **Checking your configuration** sollte alles mit einem grünen Haken versehen sein. Falls nicht, sind die
 entsprechenden Änderungen vorzunehmen **bevor man weiter macht**.
 
 Über den Knopf **Config** kommt man ins SmartVISU Interface direkt auf die Config Seite.
@@ -75,7 +75,7 @@ eingeben, denn diese Adresse wird vom Client Browser benutzt
 (Javascripts) um aktuelle Daten über einen Websocket direkt von
 SmartHomeNG abzufragen.
 
-Im Tab **Interfaces** muß noch die anzuzeigende Visu Seite eingestellt
+Im Tab **Interfaces** muss noch die anzuzeigende Visu Seite eingestellt
 werden. Dort kann unter anderem gewählt werden zwischen verschiedenen
 Demoseiten.
 
@@ -85,7 +85,7 @@ Um die Einstellungen zu sichern bitte **Save** auswählen.
 Eigene Visu Seiten anlegen
 ==========================
 
-Um mit der SmartVISU eine eigene Visu anzulegen, muß innerhalb des Ordners ``pages`` der SmartVISU ein neues
+Um mit der SmartVISU eine eigene Visu anzulegen, muss innerhalb des Ordners ``pages`` der SmartVISU ein neues
 Verzeichnis angelegt werden, in dem dann die eigenen Seiten z.B. für Räume oder Funktionsbereich abgelegt werden.
 Es existiert im Ordner ``pages`` bereits ein Unterordner ``_template``. Dieser wird als Basis der neuen Visu einfach
 kopiert ``cp _template <meineneuevisu>``. Für ``<meineneuevisu>`` sollte **nicht smarthome** gewählt werden
@@ -94,10 +94,11 @@ könnten sonst einfach von SmartHomeNG überschrieben werden.
 
 Die Dateien für die SmartVISU sind einfache HTML Dateien. Die einzelnen Bedienelemente wie Buttons, Flips,
 Werteanzeigen (sogenannte Widgets) sind Makros die mit der Makrosprache **TWIG** definiert sind.
-Die HTML können auf eigene Bedürfnisse beliebig angepasst werden. Im einzelnen ist das zar auf der veralteten
-`Projektseite smartVISU <http://www.smartvisu.de/>`__ nachzulesen, es wird aber empfohlen die entsprechende
-Dokumentation nachzuinstallieren (siehe unten). Die durch die SmartVISU generierten HTML Seiten sind zwar responsiv
-aber durchweg statisch. Die Kommunikation zwischen SmartHomeNG und der SmartVISU erfolgt über ein Websocket Plugin
+Die HTML können auf eigene Bedürfnisse beliebig angepasst werden. 
+Im einzelnen ist das zwar auf der veralteten `Projektseite smartVISU <http://www.smartvisu.de/>`__ nachzulesen,
+es wird aber empfohlen die entsprechende Dokumentation nachzuinstallieren (siehe unten). 
+Die durch die SmartVISU generierten HTML Seiten sind zwar responsiv aber durchweg statisch. 
+Die Kommunikation zwischen SmartHomeNG und der SmartVISU erfolgt über ein Websocket Plugin
 für SmartHomeNG und JavaScript Code der in der HTML Seite eingebunden wird. Der Javascript Code manipuliert dann
 aufgrund der via Websocket übermittelten Daten von Items in SmartHomeNG dynamisch den Inhalt der Webseite (DOM).
 

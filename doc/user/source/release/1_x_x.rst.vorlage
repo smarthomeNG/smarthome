@@ -1,6 +1,6 @@
-===========================
-Release 1.x - tt. mmm 2020
-===========================
+==========================
+Release 1.x - tt. mmm 2021
+==========================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
@@ -14,9 +14,15 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
        (...)
 
 
+Überblick
+=========
+
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.8.x sind im
+folgenden in diesen Release Notes beschrieben.
+
 
 Unterstützte Python Versionen
-=============================
+-----------------------------
 
 Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.8 ist Python 3.6.
 (Siehe auch *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
@@ -30,12 +36,12 @@ Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.8
     So ist Python 3.6 die minimale Vorraussetzung zur Nutzung des neuen Websocket Moduls.
 
 
-Absolute Minimum Python Version
-===============================
+Minimum Python Version
+----------------------
 
-Die Minimum Python Version in der SmartHomeNG startet wurde auf v3.6 angehoben, da Python 3.5 im September 2020
-End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen auf einer
-der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
+Die absolute Minimum Python Version in der SmartHomeNG startet wurde auf v3.6 angehoben, da Python 3.5 im
+September 2020 End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen
+auf einer der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
 
 .. important::
 
@@ -48,6 +54,9 @@ der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
    angehoben werden. Sollten die Features nur in Plugins genutzt werden, so können nur solche Plugins nicht genutzt
    werden, wenn eine ältere Python Version als 3.6 eingesetzt wird.
 
+
+Änderungen am Core
+==================
 
 Bugfixes in the CORE
 --------------------
@@ -80,6 +89,8 @@ Updates in the CORE
   * ...
 
 
+Änderungen bei Plugins
+======================
 
 New Plugins
 -----------
@@ -154,13 +165,29 @@ Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecate
 plugin takes over the functionality. This plugin is based on the mqtt module and the recent core.
 
 
+Retired Plugins
+---------------
+
+The following plugins have been retired. They had been deprecated in one of the preceding releases of SmartHomeNG.
+They have been removed from the plugins repository, but they can still be found on github. Now they reside in
+the plugin_archive repository from where they can be downloaded if they are still needed.
+
+* ...
+
+
+Weitere Änderungen
+==================
+
+Tools
+-----
+
+* ...
+
+
 Documentation
 -------------
 
-* User Documentation
+* ...
+* ...
 
-  * ...
 
-* Developer Documentation
-
-  * ...

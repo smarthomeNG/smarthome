@@ -65,13 +65,14 @@ Wenn kein Suchtreffer erfolgt, wird der Text unverändert ausgegeben. Die fehlen
 
 Die Sprachdatei des Plugins heißt ``locale.yaml`` und befindet sich im Plugin-Verzeichnis.
 
-Die globale Sprachdatei, in der überwiegend Übersetzungen für einzelne Wörter enthalten sind, die vom Core, von Modulen oder in mehreren Plugins verwendet werden, heißt ``locale.yaml`` und befindet sich im ``/bin``-Verzeichnis von SmartHomeNG.
+Die globale Sprachdatei, in der überwiegend Übersetzungen für einzelne Wörter enthalten sind, die vom Core, 
+von Modulen oder in mehreren Plugins verwendet werden, heißt ``locale.yaml`` und befindet sich im ``/bin``-Verzeichnis von SmartHomeNG.
 
 
 Sprachen und Übersetzungen hinzufügen
 =====================================
 
-In den Sprachdateien wird für jeden zu übersetzenden Text ein dict im Abschnitt ``plugin_translations:`` aufgenommen:
+In den Sprachdateien wird für jeden zu übersetzenden Text ein dictionary im Abschnitt ``plugin_translations:`` aufgenommen:
 
 .. code-block:: YAML
    :caption: Beispiel einer Übersetzung
@@ -80,7 +81,8 @@ In den Sprachdateien wird für jeden zu übersetzenden Text ein dict im Abschnit
        # Translations for the plugin specially for the web interface
        'Schließen':         {'de': '=', 'en': 'Close'}
 
-Das Gleichheitszeichen in der deutschen Übersetzung bedeutet, dass der key **Schließen** schon in der angegebenen Sprache ist und nicht übersetzt werden muss. In dem Fall wird nicht weiter gesucht und kein Log-Eintrag ausgegeben.
+Das Gleichheitszeichen in der deutschen Übersetzung bedeutet, dass der key ``Schließen`` schon in
+der angegebenen Sprache ist und nicht übersetzt werden muss. In dem Fall wird nicht weiter gesucht und kein Log-Eintrag ausgegeben.
 
 Weitere Sprachen können durch Hinzufügen des Sprachcodes und der jeweiligen Übersetzungen definiert werden:
 
@@ -95,11 +97,16 @@ Weitere Sprachen können durch Hinzufügen des Sprachcodes und der jeweiligen Ü
 Platzhalter in Übersetzungen nutzen :redsup:`Neu`
 =================================================
 
-In der aktuellen Version von SmartHomeNG ist es möglich, Platzhalter in Übersetzungen zu verwenden. Das macht es einfache, vollständige Sätze zu übersetzen, da sich die Struktur des Satzes in unterschiedlichen Sprachen unterscheidet. 
+In der aktuellen Version von SmartHomeNG ist es möglich, Platzhalter in Übersetzungen zu verwenden.
+Das macht es einfache, vollständige Sätze zu übersetzen, da sich die Struktur des Satzes in unterschiedlichen Sprachen unterscheidet. 
 
-Übersetzungen können mehrere Platzhalter enthalten. Diese Platzhalter und ihre Werte müssen als Python-dict definiert werden. Die Schlüssel des dict sind die Namen der Platzhalter, die Werte enthalten die einzufügenden Texte für die jeweiligen Sprachen.
+Übersetzungen können mehrere Platzhalter enthalten. Diese Platzhalter und ihre Werte müssen
+als Python Dictionary definiert werden. Die Schlüssel des Dictionary sind die Namen der Platzhalter, 
+die Werte enthalten die einzufügenden Texte für die jeweiligen Sprachen.
 
-Das folgende Beispiel zeigt Übersetzungen mit Platzhaltern für **item_id**. Der Name des Platzhalters muss von geschweiften Klammern eingeschlossen sein (**ohne** Leerzeichen zwischen Klammer und Namen).
+Das folgende Beispiel zeigt Übersetzungen mit Platzhaltern für ``item_id``. 
+Der Name des Platzhalters muss von geschweiften Klammern eingeschlossen sein 
+(**ohne** Leerzeichen zwischen Klammer und Namen).
 
 .. code-block:: YAML
    :caption: Beispiel für Übersetzungen mit Platzhaltern
@@ -109,12 +116,14 @@ Das folgende Beispiel zeigt Übersetzungen mit Platzhaltern für **item_id**. De
         'de': '='
         'en': 'Deletion of data for the entries of item ID {item_id} in table "log" successfully initiated.'
 
-:Critical: TODO - hier fehlt das Platzhalter-dict {'item_id', item.id()}; wie wird das definiert?
+:Critical: TODO - hier fehlt das Platzhalter Dictionary {'item_id', item.id()}; wie wird das definiert?
 
 1. Platzhalter in Jinja2-Templates
 ----------------------------------
 
-Wenn ein mehrsprachiger Ausdruck (wie oben im ersten Beispiel) mit flexiblem Inhalt für den Namen des Service versehen werden soll, ohne dass für jeden Service (z.B. KNX, enOcean, ...) einzelne Übersetzungen definiert werden, kann das wie folgt erreicht werden:
+Wenn ein mehrsprachiger Ausdruck (wie oben im ersten Beispiel) mit flexiblem Inhalt für den
+Namen des Service versehen werden soll, ohne dass für jeden Service (z.B. KNX, enOcean, ...) 
+einzelne Übersetzungen definiert werden, kann das wie folgt erreicht werden:
 
 .. code-block:: html
 
@@ -124,10 +133,8 @@ Wenn ein mehrsprachiger Ausdruck (wie oben im ersten Beispiel) mit flexiblem Inh
 2. Platzhalter im Python-Code
 -----------------------------
 
-Wenn ein Platzhalter in der Übersetzung enthalten ist, muss ``self.translate`` mit dem Platzhalter-dict als zweitem Argument aufgerufen werden:
+Wenn ein Platzhalter in der Übersetzung enthalten ist, muss ``self.translate`` mit dem Platzhalter Dictionary als zweitem Argument aufgerufen werden:
 
 .. code-block:: python
 
    translated_text = self.translate('text', {'item_id', item.id()})
-
-

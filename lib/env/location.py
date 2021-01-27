@@ -22,13 +22,13 @@ if sh.sun:
         sh.env.location.sunset(sunset, logic.lname)
     except Exception as e:
         logger.error("ephem error while calculating sun set: {}".format(e))
-
-    azimut_set_radians, elevation_set_radians = sh.sun.pos(dt=sunset)
-    azimut_set_degrees, elevation_set_degrees = sh.sun.pos(dt=sunset, degree=True)
-    sh.env.location.sunset.azimut.degrees(round(azimut_set_degrees, 2), logic.lname)
-    sh.env.location.sunset.elevation.degrees(round(elevation_set_degrees, 2), logic.lname)
-    sh.env.location.sunset.azimut.radians(round(azimut_set_radians,2), logic.lname)
-    sh.env.location.sunset.elevation.radians(round(elevation_set_radians,2), logic.lname)
+    else:
+        azimut_set_radians, elevation_set_radians = sh.sun.pos(dt=sunset)
+        azimut_set_degrees, elevation_set_degrees = sh.sun.pos(dt=sunset, degree=True)
+        sh.env.location.sunset.azimut.degrees(round(azimut_set_degrees, 2), logic.lname)
+        sh.env.location.sunset.elevation.degrees(round(elevation_set_degrees, 2), logic.lname)
+        sh.env.location.sunset.azimut.radians(round(azimut_set_radians,2), logic.lname)
+        sh.env.location.sunset.elevation.radians(round(elevation_set_radians,2), logic.lname)
 
     # moved into sunpos.py
     # # setting altitude/azimut

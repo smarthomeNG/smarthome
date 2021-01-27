@@ -23,11 +23,11 @@ Von der Kommandozeile wird ein Backup erstellt, indem SmartHomeNG mit der Option
 gestartet wird. Das zip-Archiv mit dem Backup wird im Verzeichnis **/var/backup** abgelegt und hat den Namen
 **shng_config_backup.zip**.
 
-Wenn beim Backup der Dateiname den Zeitpunkt des Backups enhalten soll, muss SmartHomeNG mit der Option **-cbt** bzw.
+Wenn beim Backup der Dateiname den Zeitpunkt des Backups enthalten soll, muss SmartHomeNG mit der Option **-cbt** bzw.
 **--create_backup_t** aufgerufen werden. Dann wird der Dateiname um Datum und Zeit der Erstellung des Backups ergänzt.
 Der Dateiname hat dann die Form **shng_config_backup_YYYY-MM-TT_hh-mm-ss.zip**.
 
-Die Sicherung von der Kommandozeile aus kann durchgeführt werden, während eine Inzanz von SmartHomeNG läuft. Es ist
+Die Sicherung von der Kommandozeile aus kann durchgeführt werden, während eine Instanz von SmartHomeNG läuft. Es ist
 nicht notwendig ein laufendes SmartHomeNG vorher zu beenden.
 
 .. note::
@@ -47,7 +47,7 @@ Zum Wiederherstellen eines Konfigurations-Backups von der Kommandozeile, muss da
 **/var/restore** gelegt werden. Es darf einen beliebigen Namen tragen und muss die einzige Datei in diesem Verzeichnis
 sein. Anschließend muss SmartHomeNG mit der Option **-rb** bzw. **--restore_backup** gestartet werden.
 
-Die Wiederherstellung von der Kommandozeile aus kann durchgeführt werden, während eine Inzanz von SmartHomeNG läuft.
+Die Wiederherstellung von der Kommandozeile aus kann durchgeführt werden, während eine Instanz von SmartHomeNG läuft.
 Es ist nicht notwendig ein laufendes SmartHomeNG vorher zu beenden. Allerdings muss nach der Wiederherstellung die
 laufende Instanz beendet und neu gestartet werden, damit die wiederhergestellte Konfiguration verwendet wird.
 

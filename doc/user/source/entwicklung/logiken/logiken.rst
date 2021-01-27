@@ -76,7 +76,7 @@ Es ist möglich einen Stern * für einen Pfadbestandteil zu setzen, ähnlich ein
 
    watch_item: '*.door'
 
-Eine Änderung von **garage.door** oder auch **house.door** wird die Ausführung der Logik auslösen aber **nicht** 
+Eine Änderung von **garage.door** oder auch **house.door** wird die Ausführung der Logik auslösen aber **nicht**
 eine Änderung von **house.hallway.door**
 
 cycle
@@ -101,48 +101,55 @@ Innerhalb der Logik kann auf den Wert über ``trigger['value']`` zugegriffen wer
 
 **Seit SmartHomeNG v1.3** gibt es erweiterte Konfigurations Optionen.
 
-The value for the ``cycle duration`` can be provided as follows:
+Die Zeitspanne für die zyklische Ausführung kann auf zwei Arten angegeben werden:
 
-1. a number defining the duration in seconds, can be optionally followed by an ``s``
-2. a number follows by an ``m`` to define the duration in minutes
+1. Eine Zahl die die Zeitspanne in Sekunden angibt, kann optional mit einem ``s`` gekennzeichnet werden oder
+2. eine Zahl gefolgt von ``m`` die eine Zeitspanne in Minuten angibt
 
 crontab
 ~~~~~~~
 
-Like Unix crontab with the following options:
+Ähnlich wie Unix crontab mit den folgenden Optionen:
 
 * ``crontab: init``
-   Run the logic during the start of SmartHomeNG.
+   Ausführung der Logik beim Start von SmartHomeNG
 
-* ``crontab: minute hour day wday``
-   See description of Unix crontab and some online generators for details.
-   -  minute: single value from 0 to 59, or comma separated list, or * (every minute)
-   -  hour: single value from 0 to 23, or comma separated list, or * (every hour)
-   -  day: single value from 0 to 28, or comma separated list, or * (every day)
-   Please note: dont use days greater than 28 in the moment.
-   -  wday: weekday, single value from 0 to 6 (0 = Monday), or comma separated list, or * (every day)
+* ``crontab: Minute Stunde Tag Wochentag``
+   Siehe Beschreibung von Unix crontab und Online Generatoren für Details
+
+   - Minute: Wert im Bereich [0...59], oder Komma getrennte Liste, oder * (jede Minute)
+   - Stunde: Wert im Bereich [0...23], oder Komma getrennte Liste, oder * (jede Stunde)
+   - Tag: Wert im Bereich [0...28], oder Komma getrennte Liste, oder * (jeden Tag)
+     **Achtung**: Derzeit keine Werte für Tage größer 28 nutzen
+   - Wochentag: Wert im Bereich [0...6] (0 = Montag), oder Komma getrennte Liste, oder * (jeden Wochentag)
 
 ``crontab: sunrise``
-   Runs the logic at every sunrise. Use ``sunset`` to run
-   at sunset. For sunset / sunrise you could provide:
+   Startet die Logik bei Sonnenaufgang
 
-   -  an horizon offset in degrees e.g. crontab: sunset-6 You have to
-      specify your latitude/longitude in smarthome.conf.
-   -  an offset in minutes specified by a 'm' e.g. crontab: sunset-10m
-   -  a boundary for the execution
+``crontab: sunset``
+   Startet die Logik bei Sonnenuntergang
+
+   Für Sonnenaufgang oder Sonnenuntergang können folgende Erweiterungen genutzt werden:
+
+   - Ein Offsetwert zum Horizont in Grad.
+     Beispiel ``crontab: sunset-6``
+     Dazu muss in der smarthome.yaml Längen und Breitengrad eingestellt sein.
+   - Ein Offsetwert in Minuten der durch ein angehängtes m gekennzeichnet wird
+     Beispiel: ``crontab: sunset-10m``
+   - Eine Beschränkung der Zeit für die Ausführung
+
+   .. code-block:: yaml
+      :caption:  Konfiguration mit YAML Syntax
+
+       crontab: '17:00<sunset'        # Sonnenuntergang, aber nicht vor 17:00 Uhr (lokaler Zeit)
+       crontab: sunset<20:00          # Sonnenuntergang, aber nicht nach 20:00 (lokaler Zeit)
+       crontab: '17:00<sunset<20:00'  # Sonnenuntergang, zwischen 17:00 Uhr und 20:00 Uhr
+       crontab: '15 * * * = 50'       # Ruft die Logik mit dem Wert ``50`` auf, also nach Aufruf der Logik hat ``trigger['value']`` den Wert ``50``
+
+Mehrere crontab Einträge können auch als Liste angegeben werden:
 
 .. code-block:: yaml
-   :caption:  Configuration in YAML syntax
-
-    crontab: '17:00<sunset'        # sunset, but not bevor 17:00 (locale time)
-    crontab: sunset<20:00          # sunset, but not after 20:00 (locale time)
-    crontab: '17:00<sunset<20:00'  # sunset, beetween 17:00 and 20:00
-    crontab: '15 * * * = 50'       # Calls the logic with trigger['value'] # == 50
-
-Combine several options with ``|``:
-
-.. code-block:: yaml
-   :caption:  Configuration in YAML syntax
+   :caption:  Konfiguration mit YAML Syntax
 
    crontab:
      - init = start
@@ -152,30 +159,33 @@ Combine several options with ``|``:
 enabled
 ~~~~~~~
 
-``enabled`` can be set to False to disable the execution of the logic after loading. The status
-of the logic (enabled/disabled) can be controlled via the plugins ``backend`` or ``cli``
+``enabled`` kann auf ``False`` gesetzt werden um die Ausführung der Logik auszusetzen
+Der Ausführungsstatus der Logik kann über das CLI-Plugin oder das Admin Interface gesetzt werden
 
 prio
 ~~~~
 
-Sets the priority of the logic script within the execution context of the scheduler.
-Any value between 1 to 10 is allowed where 1 has the highest priority and 10 the lowest.
-Usually you don't need to specify a priority. The default priority is 5.
+Setzt die Priorität der Logik im Kontext des Schedulers.
+Jeder Wert zwischen ``1`` und ``10`` ist erlaubt mit ``1`` für die höchste Priorität und ``10`` die niedrigste.
+Im Normalfall ist eine Angabe der Priorität nicht notwendig, die Vorgabe für alle Logiken ohne
+Prioritätsangabe ist ``5``
 
-Other parameters
+Andere Parameter
 ~~~~~~~~~~~~~~~~
 
-Other parameters could be accessed from the the logic with self.parameter_name.
-Like in the first example script for the fourth logic the attribute ``usage_warning: 500``
+Weitere Parameter können innerhalb der Logik mit ``self.parameter_name`` abgefragt werden.
+Im ersten Beispiel ist für die vierte definierte Logik ein Parameter ``usage_warning: 500`` angelegt worden.
 
 
-Basic Structure of a logic script
----------------------------------
+Grundstruktur einer Logik
+-------------------------
 
-The most important object is the smarthome object ``sh``.
-Using this object all items, plugins and basic functions of SmartHomeNG can be accessed.
-To query an item's value call: ``sh.area.item()``
-To set a new value just specify it as argument sh.area.item(new\_value).
+Das wichtigste Objekt einer Logik ist das Smarthome Objekt ``sh``.
+Über dieses Objekt kann auf alle Items, Plugins und Funktionen von SmartHomeNG
+zugegriffen werden.
+Um den Wert eines Items abzufragen kann zum Beispiel ``sh.area.itemname()`` verwendet werden.
+Um dem gleichen Item einen neuen Wert mitzugeben, kann dieser Wert als Argument
+übergeben werden ``sh.area.itemname(new\_value)``
 
 .. code-block:: python
 
@@ -184,9 +194,10 @@ To set a new value just specify it as argument sh.area.item(new\_value).
    if not sh.living_room.light():
        sh.living_room.light('on')
 
-Items need to be accessed with parentheses, otherwise an exception will be raised
+Auf Items muß unter Nutzung von Klammern ``()`` zugegridden werden sonst wird eine Ausnahme
+erzeugt.
 
-``sh`` can be used to iterate over the item objects:
+``sh`` kann genutzt werden um über alle Items durchzulaufen:
 
 .. code-block:: python
 
@@ -214,191 +225,242 @@ Weitere Module können mit ``import <modulname>`` zusätzlich geladen werden.
 
 
 
-Available Objects/Methods
--------------------------
+Vorhandene Objekte und Methoden
+-------------------------------
 
-Beside the 'sh' object other important predefined objects are available.
+Ausser dem Smarthome Objekt ``sh`` gibt es weitere vordefinierte Objekte und Methoden innerhalb von Logiken
 
 logic
 ~~~~~
 
-This object provides access to the current logic object. It is possible
-to change logic attributes (crontab, cycle, ...) during runtime. They
-will be lost after restarting SmartHomeNG. ``while logic.alive:``
-creates an endless loop. This way SmartHomeNG could stop the loop at
-shutdown. Next section (trigger) describes the special function
-``logic.trigger()``. Predefined attributs of the logic object:
+Dieses Objekt bietet Zugriff auf das aktuelle Logik Objekt.
+Es ist möglich die Attribute wie ``crontab``, ``cycle``, etc. während der Laufzeit zu ändern.
+Die Änderungen werden aber nicht in die ``logic.yaml`` geschrieben und sind nach einem
+Neustart von SmartHomeNG verloren.
 
--  logic.name: with the name of the logic as specified in logic.conf
--  logic.last\_time(): this function provides the last run of this logic
-   (before the recent one)
--  logic.prio: read and set of the current priority of this logic.
+``logic.alive``
+   Der Code ``while logic.alive:`` erzeugt eine Endlos-Schleife die bis zum Beenden
+   von SmartHomeNG läuft.
 
-logic.trigger()
-~~~~~~~~~~~~~~~
+``logic.name``:
+   Liefert den Namen der Logik wie in ``logic.yaml`` definiert
 
-Equal to ``sh.trigger()``, but it triggers only the current logic. This
-function is useful to run the logic (again) at a specified time.
+``logic.last\_time()``:
+   Diese Funktion liefert die letzte Ausführungszeit der Logik vor dem aktuellen Aufruf
+
+``logic.prio``:
+   Lesen und setzen der Priorität dieser Logik
+
+``logic.trigger()``:
+   Wie ``sh.trigger()``, aber triggert nur die aktuelle Logik. Diese Funktion ist nützlich
+   um die Logik zu einem späteren Zeitpunkt (noch einmal) auszuführen
 
 trigger
 ~~~~~~~
 
-``trigger`` is a runtime environment for the logic, which provides some
-information about the event that triggered the logic.
+Das Dictionary ``trigger`` liefert Informationen zur Laufzeit der Logik
+über das Ereignis, das zum Aufruf der Logik geführt hat.
 
-It is a dictionary which can be used by: ``trigger['by']``,
-``trigger['source']``, ``trigger['dest']`` and ``trigger['value']``.
+``trigger['by']``:
+   Ursprung
 
-logger and sh.log
+``trigger['source']``
+   Quelle
+
+``trigger['dest']``:
+   Ziel
+
+``trigger['value']``:
+   Wert
+
+logger und sh.log
 -----------------
 
-This object is useful to generate log messages. It provides five
-different log levels: debug, info, warning, error, critical.
-logger.level(str) e.g. logger.info('42'). The log messages are stored in
-the log file and the latest 50 entries are also in 'sh.log' available.
-So its possible to access the messages by plugins (visu) and logics.
-Attention: the datetime in every log entry is the timezone aware
-localtime.
+Das ``logger`` Objekt wird zum Generieren von Log Mitteilungen verwendet.
+Es stellt fünf unterschiedliche Logging Einstufungen (level) bereit:
+``debug``, ``info``, ``warning``, ``error`` und ``critical``.
 
-.. code-block:: python
+Die Angabe ``logger.info('42')`` schreibt einen Eintrag ``42`` in den zugehörigen Logger.
+Damit Logging Einträge auch in Logs auftauchen, muß in der ``logging.yaml``
+eine entsprechende Logging Einstellung vorhanden sein.
+Die Grundeinstellung in der ``logging.yaml`` sorgt dafür, das die Einstufungen
+``warning``, ``error`` und ``critical`` aufgezeichnet werden.
 
-   # a simple loop over the log messages
-   for entry in sh.log:
-       print(entry) # remark: if SmartHomeNG is run in daemon mode output by 'print' is not visible.
+.. attention::
 
+   Die Zeitangabe in den Log Mitteilungen beziehen sich immer auf die lokal eingestellte Zeit
 
-SmartHomeNG methods to use
---------------------------
+SmartHomeNG Methoden
+--------------------
 
-sh.now and sh.utcnow
+sh.now und sh.utcnow
 ~~~~~~~~~~~~~~~~~~~~
 
-These two functions return a timezone-aware datetime object. Its
-possible to compute with different timezones. sh.tzinfo() and
-sh.utcinfo() address a local and the UTC timezone.
+Diese beiden Funktionen geben ein ``datetime`` Objekt zurück das die lokale Zeitzone berücksichtigt.
+Es ist möglich mit anderen Zeitzonen zu rechnen.
+``sh.tzinfo()`` und ``sh.utcinfo()`` geben die lokale Zeitzone und die UTC Zeitzone zurück.
 
 sh.sun
 ~~~~~~
 
-This module provides access to parameters of the sun. In order to use
-this module, it is required to specify the latitude (e.g. lat = 51.1633)
-and longitude (e.g. lon = 10.4476) in the smarthome.conf file!
+Dieses Modul gibt Zugriff auf das Sonnenobjekt.
+Vorbedingung ist die Definition von Längen- und Breitengrad in ``smarthome.yaml``.
 
-.. code-block:: python
+``sh.sun.pos([offset], [degree=False])``
+   Gibt die aktuelle Position der Sonne zurück, optional einen Offset in Minuten and und 
+   ob der Rückgabe in Grad anstatt in Rad erfolgen soll
 
-   # sh.sun.pos([offset], [degree=False]) specifies an optional minute offset and if the return values should be degrees instead of the default radians.
-   azimut, altitude = sh.sun.pos() # return the current sun position
-   azimut, altitude = sh.sun.pos(degree=True) # return the current sun position in degrees
-   azimut, altitude = sh.sun.pos(30) # return the sun position 30 minutes
-                                     # in the future.
+   ``azimut, altitude = sh.sun.pos()``:
+      liefert die aktuelle Position der Sonne
 
-   # sh.sun.set([offset]) specifies a degree offset.
-   sunset = sh.sun.set() # Returns a utc! based datetime object with the next
-                         # sunset.
-   sunset_tw = sh.sun.set(-6) # Would return the end of the twilight.
+   ``azimut, altitude = sh.sun.pos(degree=True)``:
+       liefert die aktuelle Position der Sonne in Grad
 
-   # sh.sun.rise([offset]) specifies a degree offset.
-   sunrise = sh.sun.rise() # Returns a utc! based datetime object with the next
-                           # sunrise.
-   sunrise_tw = sh.sun.rise(-6) # Would return the start of the twilight.
+   ``azimut, altitude = sh.sun.pos(30)``
+      liefert die Position, die die Sonne in 30 Minuten haben wird
+
+``sh.sun.set([offset])``:
+   Gibt den nächsten Sonnenuntergang zurück, optional mit einem Offset in Grad.
+
+   ``sunset = sh.sun.set()``:
+      Liefert ein auf UTC basierendes ``datetime`` Objekt mit dem nächsten Sonnenuntergang
+
+   ``sunset_tw = sh.sun.set(-6)``:
+      Liefert ein auf UTC basierendes ``datetime`` Objekt mit der Zeitangabe
+      des nächsten Sonnenuntergangs zuzüglich der Zeit bis die Dämmerung beendet ist.
+
+``sh.sun.rise([offset])``:
+   Gibt analog zu ``set`` den nächsten Sonnenaufgang zurück, optional mit einem Offset in Grad.
+
 
 sh.moon
 ~~~~~~~
 
-Besides the three functions (pos, set, rise) it provides two more.
-``sh.moon.light(offset)`` provides a value from 0 - 100 of the
-illuminated surface at the current time + offset.
-``sh.moon.phase(offset)`` returns the lunar phase as an integer [0-7]: 0
-= new moon, 4 = full moon, 7 = waning crescent moon
+Neben den drei Funktionen ``pos``, ``set`` und ``rise`` (wie beim Objekt ``sh.sun``) gibt es noch
+zwei weitere Funktionen:
+
+``sh.moon.light(offset)``:
+   liefert einen Wert im Bereich [0...100] der hellen Oberfläche zur aktuellen Zeit plus einen Offset
+
+``sh.moon.phase(offset)``:
+   Liefert die Mondphase als Ganzzahl Wert im Bereich [0...7]:
+   0 = Neumond
+   4 = Vollmond
+   7 = abnehmender Halbmond
 
 
-Scheduling
-----------
+Scheduler
+---------
 
 sh.scheduler.trigger() / sh.trigger()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This global function triggers any specified logic by its name.
-``sh.trigger(name [, by] [, source] [, value] [, dt])`` ``name``
-(mandatory) defines the logic to trigger. ``by`` a name of the calling
-logic. By default its set to 'Logic'. ``source`` the reason for
-triggering. ``value`` a variable. ``dt`` timezone aware datetime object,
-which specifies the triggering time.
+Diese globale Funktion triggert eine gegebene Logik unter Angabe ihres Namens
+
+``sh.trigger(name [, by] [, source] [, value] [, dt])`` 
+   ``name``:
+      der Name der zu triggernden Funktion
+      
+   ``by``:
+      Name einer aufrufenden Logik, der Vorgabewert ist ``Logic``
+
+   ``source``:
+      der Grund für das triggern
+
+   ``value`` 
+      eine Variable
+      
+   ``dt``:
+      ein datetime Objekt das die Triggerzeit angibt (lokale Zeitzone berücksichtigt)
 
 sh.scheduler.change()
 ~~~~~~~~~~~~~~~~~~~~~
 
-This method changes some runtime options of the logics.
-``sh.scheduler.change('alarmclock', active=False)`` disables the logic
-'alarmclock'. Besides the ``active`` flag, it is possible to change:
-``cron`` and ``cycle``.
+Diese Methode ändert Optionen zur Laufzeit der Logiken. Beispiel:
 
-sh.tools object
+``sh.scheduler.change('alarmclock', active=False)`` deaktiviert die Logik ``alarmclock``
+
+Zusätzlich zum ``active`` parameter können auch ``cron`` und ``cycle`` geändert werden.
+
+sh.tools Objekt
 ---------------
 
-The ``sh.tools`` object provide some useful functions:
+Das ``sh.tools`` Objekt stellt folgende nützliche Funktionen zur Verfügung:
 
 sh.tools.ping()
 ~~~~~~~~~~~~~~~
 
-Pings a computer and returns True if the computer responds, otherwise
-False. ``sh.office.laptop(sh.tools.ping('hostname'))``
+Sendet ein Ping an einen Computer und liefert das Ergebnis. Beispiel:
+
+``sh.office.laptop(sh.tools.ping('hostname'))``
+
+setzt das Item ``office.laptop`` entsprechend der Rückmeldung ob ein Ping erfolgreich war oder nicht.
 
 sh.tools.dewpoint()
 ~~~~~~~~~~~~~~~~~~~
 
-Calculate the dewpoint for the provided temperature and humidity.
+Berechnet den Taupunkt für eine gegebene Temperatur und Feuchtigkeit. Beispiel:
+
 ``sh.office.dew(sh.tools.dewpoint(sh.office.temp(), sh.office.hum())``
+
+setzt das Item ``office.dew`` auf das Ergebnis der Taupunktberechnung der Itemwerte von ``office.temp`` und ``office.hum``
 
 sh.tools.fetch\_url()
 ~~~~~~~~~~~~~~~~~~~~~
 
-Return a website as a String or 'False' if it fails.
-``sh.tools.fetch_url('https://www.regular.com')`` Its possible to use
-'username' and 'password' to authenticate against a website.
+Liefert dem Inhalt einer Webseite als String oder ``False`` wenn ein Fehler auftritt.
+
+``sh.tools.fetch_url('https://www.regular.com')`` 
+
+Es ist möglich als Parameter den Benutzernamen und ein Password anzugeben um die Abfrage bei der zu authentifizieren.
+
 ``sh.tools.fetch_url('https://www.special.com', 'username', 'password')``
-Or change the default 'timeout' of two seconds.
+
+Weiterhin kann ein Parameter für eine Zeitüberschreitung bestimmt werden:
+
 ``sh.tools.fetch_url('https://www.regular.com', timeout=4)``
+
+bricht nach 4 Sekunden ohne Ergebnis ab
 
 sh.tools.dt2ts(dt)
 ~~~~~~~~~~~~~~~~~~
 
-Converts an datetime object to a unix timestamp.
+Wandelt ein datetime Objekt in einen Unix Zeitstempel um.
 
 sh.tools.dt2js(dt)
 ~~~~~~~~~~~~~~~~~~
 
-Converts an datetime object to a json timestamp.
+Wandelt ein datetime Objekt in einen json Zeitstempel um.
 
 
 sh.tools.rel2abs(temp, hum)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Converts the relative humidity to the absolute humidity.
+Wandelt einen relativen Feuchtigkeitswert in einen absoluten Feuchtigkeitswert um.
 
+Zugriffe auf Items
+------------------
 
-Accessing items
----------------
-
-Usage of Object ``sh`` for items is deprecated, it's better to use the Item API:
+Die Nutzung des ``sh`` Objektes für Items wird nicht weitergeführt. Es ist besser das Item API wie folgt zu nutzen:
 
 .. code:: python
 
    from lib.item import Items
    items = Items.get_instance()
 
-With ``items`` Object in place the following functions can be called:
+Mit dem ``items`` Objekt können nun die folgenden Funktionen verwendet werden:
 
 items.return_item(path)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Returns an item object for the specified path. E.g.
+Liefert ein Item Objekt für den angegebenen Pfad zurück. Beispiel:
+
 ``items.return_item('first_floor.bath')``
 
 items.return_items()
 ~~~~~~~~~~~~~~~~~~~~
 
-Returns all item objects.
+Liefert alle Item Objekte zurück
 
 .. code-block:: python
 
@@ -408,7 +470,7 @@ Returns all item objects.
 items.match_items(regex)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Returns all items matching a regular expression path and optional attribute.
+Liefert alle Item Objekte deren Pfad mit einem regulären Ausdruck gefunden wird und die optional ein bestimmtes Attribut aufweisen.
 
 .. code-block:: python
 
@@ -421,18 +483,18 @@ Returns all items matching a regular expression path and optional attribute.
 items.find_items(configattribute)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Depending on ``configattribute`` the following items will be returned:
+Abhängig von ``configattribute`` werden die folgenden Items zurückgegeben:
 
 .. table::
 
-   ======================  ====================================================
-   attribute               Ergebnis
-   ======================  ====================================================
-   ``attribute``           Only items having no instance id
-   ``attribute@``          Items with or without instance id
-   ``attribute@instance``  Items with exact match of attribute and instance id
-   ``@instance``           Items having this instance id
-   ======================  ====================================================
+   ======================  =========================================================
+   Attribut                Ergebnis
+   ======================  =========================================================
+   ``attribute``           Nur Items bei denen keine Instanz ID angegeben ist
+   ``attribute@``          Items mit oder ohne Instanz ID
+   ``attribute@instance``  Items mit einem bestimmten Attribut und einer Instanz ID
+   ``@instance``           Items mit einer bestimmten Instanz ID
+   ======================  =========================================================
 
 
 .. code:: python
@@ -443,5 +505,5 @@ Depending on ``configattribute`` the following items will be returned:
 find\_children(parentitem, configattribute):
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Returns all child items with the specified config attribute. The search for ``configattribute``
-will be exactly conducted as described in ``find_items(configattribute)`` above.
+Liefert alle Kind Item Objekte eines Elternitems mit einem gegebenen ``configattribute``.
+Die Suche nach dem ``configattribute`` wird genauso durchgeführt wie in ``find_items(configattribute)`` weiter oben.

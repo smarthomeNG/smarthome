@@ -34,7 +34,7 @@ Logik Editor
 
 Der Logik Editor ermöglicht es Logiken zu erstellen oder zu ändern, sowie die Parameter zu konfigurieren, welche
 die Ausführung der Logik steuern. Der Logik Editor wird durch einen Klick auf den entsprechenden Dateinamen in
-der Liste der Logiken oder durch dern Button **Neue Logik** gestartet.
+der Liste der Logiken oder durch den Button **Neue Logik** gestartet.
 
 
 Code Editor
@@ -59,7 +59,7 @@ für die Logik konfiguriert werden.
 Cycle
 ~~~~~
 
-Hier kann angegeben werden, alle wievil Sekunden die Logik getriggert werden soll.
+Hier kann angegeben werden, nach wieviel Sekunden die Logik getriggert werden soll.
 
 
 Crontab

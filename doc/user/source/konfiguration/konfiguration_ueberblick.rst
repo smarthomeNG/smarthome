@@ -9,7 +9,7 @@ Die Codebasis von SmartHomeNG ist in der Programmiersprache Python geschrieben. 
 * elegant in der Anwendung
 * objektorientiert
 * Open-Source-Software
-* plattformunabhängig (allerdings werden derzeit bei SmartHomeNG Linux-Besonderheiten genutzt so dass z.B. Windows derzeit nicht genutzt werden kann)
+* plattformunabhängig (allerdings werden derzeit bei SmartHomeNG Linux-Besonderheiten genutzt so dass z.B. Windows derzeit nur bedingt genutzt werden kann)
 * multi-threaded
 
 Wichtig für den Einsteiger ist es zu wissen, dass Python peinlich genau auf Einrückungen achtet. Etwas wie
@@ -67,7 +67,7 @@ Ein guter Editor unterstützt dann auch mit der richtigen Syntaxeinfärbung.
 Verzeichnisse in SmartHomeNG
 ----------------------------
 
-Die Verzeichnisse sind im Hauptverzeichnis von smarthome zu finden, für gewöhnlich im Verzeichnis `/usr/local/smarthome``.
+Die Verzeichnisse sind im Hauptverzeichnis von SmartHomeNG zu finden, für gewöhnlich im Verzeichnis `/usr/local/smarthome``.
 
 +--------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Verzeichnis  | Beschreibung / Inhalt                                                                                                       |

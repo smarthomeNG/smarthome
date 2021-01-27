@@ -18,9 +18,9 @@ Ein Plugin besteht aus mindestens zwei Dateien:
 
 .. hint::
 
-   Das in früheren Versionen verwendete **README**-Format für die Dokumentation von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in **plugin.yaml** übergegangen. Die restliche Dokumentation sollte nur noch im **user_doc**-Format erfolgen.
+   Das in früheren Versionen verwendete ``README``-Format für die Dokumentation von Plugins ist veraltet. Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in ``plugin.yaml`` übergegangen. Die restliche Dokumentation sollte nur noch im ``user_doc``-Format erfolgen.
 
-   Soweit möglich, sollten bestehende **README** im Rahmen von Aktualisierungen in entsprechende **user_doc** überführt werden.
+   Soweit möglich, sollten bestehende ``README`` im Rahmen von Aktualisierungen in entsprechende ``user_doc`` überführt werden.
 
 
 Diese Dateien befinden sich in einem Unterordner des ``/plugins``-Ordners. Der Name des Unterordners entspricht dem
@@ -28,7 +28,7 @@ Namen des Plugins.
 
 Die **Metadaten**-Datei heißt ``/plugins/<Name des Plugins>/plugin.yaml``. Sie besteht aus sechs Abschnitten:
 
-- ``plugin:`` - Gobale Metadaten des Plugins
+- ``plugin:`` - Globale Metadaten des Plugins
   Die Daten dieses Abschnitts werden verwendet, um die Kompatibilität des Plugins mit der laufenden Version von
   SmartHomeNG zu prüfen und definieren, wie das Plugin geladen wird
 

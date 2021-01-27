@@ -11,7 +11,7 @@
 Falls ein Plugin eine Reihe von Items definiert, deren vollständiger Name erst zur Konfigurationszeit bekannt ist,
 werden diese Items durch ihren Namens-Anfang (Präfix) definiert. Diese Art von Item Definition (und damit auch dieser
 Abschnitt der Metadaten) soll nur genutzt werden, wenn es unbedingt notwendig ist, wie zum Beispiel beim
-**stateengine** Plugin.
+``stateengine`` Plugin.
 
 
 Der ``item_attribute_prefixes:`` Abschnitt definiert die Items ansonsten analog zum Abschnitt ``item_attributes``.

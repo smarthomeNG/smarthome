@@ -38,5 +38,5 @@ generierten Python Code (Dateiendung **.py**).
 
 Für weitere Details zur Konfiguration von Logiken, bitte die Seite :doc:`Logiken </konfiguration/logiken>` im Abschnitt Konfiguration lesen.
 
-Für Details zur Erstellung von Logiken, bitte den Abschitt :doc:`Logiken </logiken/logics>` dieser Dokumentation lesen.
+Für Details zur Erstellung von Logiken, bitte den Abschnitt :doc:`Logiken </logiken/logics>` dieser Dokumentation lesen.
 

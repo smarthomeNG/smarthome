@@ -4,7 +4,7 @@ Plugins
 
 Das Grundsystem von SmartHomeNG kann durch den Einsatz von Plugins erweitert werden. Ein Plugin
 ist ein Zusatzmodul in einem Unterverzeichnis unterhalb des Verzeichnisses **../plugins**.
-Um ein Plugin in SmartHomeNG zu verwenden (eine Instanz des Plugins zu laden) muß eine Sektion
+Um ein Plugin in SmartHomeNG zu verwenden (eine Instanz des Plugins zu laden) muss eine Sektion
 für das gewünschte Plugin in der Datei **etc/plugin.conf** erstellt werden.
 
 Für das oft benutzte KNX-Plugin sieht das z.B. so aus:
@@ -38,7 +38,7 @@ bzw. im alten Format:
 
 
 Dabei kann der Name der **Plugin-Instanz** (Name des Abschnitts) frei gewählt werden. Es muss
-nur darauf geachtet werden, dass er eindeutig ist, also nur einmal vorkommt. Der name der Instanz
+nur darauf geachtet werden, dass er eindeutig ist, also nur einmal vorkommt. Der Name der Instanz
 sollte auch so gewählt werden, dass es zu keiner Namensgleichheit mit Top-Level Items kommt.
 
 Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:

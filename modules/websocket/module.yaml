@@ -2,8 +2,8 @@
 module:
     # Global plugin attributes
     classname: Websocket
-    version: 1.0.0
-    sh_minversion: 1.7.2c
+    version: 1.0.1
+    sh_minversion: 1.8.0
 #   sh_maxversion:                  # maximum shNG version to use this module (leave empty if latest)
 #    py_minversion: 3.6             # minimum Python version to use for this module
 #    py_maxversion:                 # maximum Python version to use for this module (leave empty if latest)
@@ -15,7 +15,7 @@ parameters:
     # Definition of parameters to be configured in etc/module.yaml
     enabled:
         type: bool
-        default: False
+        default: True
         description:
             de: 'Websocket Unterstützung aktivieren oder deaktivieren'
             en: 'Enable or disable websocket support'
@@ -30,7 +30,7 @@ parameters:
         type: int
         valid_min: 0
         valid_max: 65535
-        default: 3434
+        default: 2424
         description:
             de: Portnummer für die unverschlüsselte Websocket Kommunikation
             en: Port number for the unencrypted access to websockets
@@ -39,7 +39,7 @@ parameters:
         type: int
         valid_min: 0
         valid_max: 65535
-        default: 3435
+        default: 2425
         description:
             de: Portnummer für die verschlüsselte Websocket Kommunikation
             en: Port number for the encrypted access to websockets

@@ -5,7 +5,7 @@ Es gibt einige APIs um auf die verschiedenen Objekte (oder Objekt Hierarchien) v
 Diese Programmier Interfaces können nützlich sein, wenn man Plugins entwickelt.
 
 Die APIs sind als Libraries implementiert und im Ordner ../lib gespeichert.
-Die Beschreibung ihrerer Funktionalität ist hier beschrieben:
+Die Beschreibung ihrer Funktionalität ist hier beschrieben:
 
 
 .. toctree::

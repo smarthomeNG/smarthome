@@ -17,7 +17,7 @@ Interface Plugins
 Ein Interface Plugin ermöglicht die Kommunikation mir einem einzelnen Device je Plugin Instanz.
 Dies geschieht durch direkte Kommunikation mit einem einzelnen Device. Falls das Plugin in der
 Lage ist in mehreren Instanzen parallel zu laufen, kann die Kommunikation mit mehreren Devices
-daddurch ermöglicht werden, dass je Device eine eigene Instanz des Plugins konfiguriert wird.
+dadurch ermöglicht werden, dass je Device eine eigene Instanz des Plugins konfiguriert wird.
 
 |br|
 |br|

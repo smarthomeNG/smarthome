@@ -34,7 +34,7 @@ ausführbar gemacht werden:
    chmod 755 build_doc.sh
 
 
-Die Python Packages, die für den Bau der Dokumentation menötigt werden, müssen installiert werden:
+Die Python Packages, die für den Bau der Dokumentation benötigt werden, müssen installiert werden:
 
 .. code-block:: bash
 
@@ -48,7 +48,7 @@ Der eigentliche Bau der Dokumentation erfolgt mit dem folgenden Befehl:
    ./build_doc.sh
 
 
-Dieses Sktipt erzeugt einen Unterordner **work** in welchem der eigentliche Build Prozess abläuft und die
+Dieses Skript erzeugt einen Unterordner **work** in welchem der eigentliche Build Prozess abläuft und die
 Ergebnisse gespeichert werden.
 
 Nachdem das Skript beendet ist, ist die Anwender Dokumentation im Ordner
@@ -59,7 +59,7 @@ gespeichert und die Entwickler Dokumentation ist im Ordner
 
   /usr/local/smarthome/doc/build_doc/work/doc/developer/build/html
 
-gespeichert. Jede dieser beiden Dokumentationen kann durch öffenen der zugehörigen index.html
+gespeichert. Jede dieser beiden Dokumentationen kann durch öffnen der zugehörigen index.html
 im Browser getrachtet werden.
 
 
@@ -71,7 +71,7 @@ Das Skript build_doc.sh einige Optionen die hilfreich sind, wenn die Dokumentati
 werden soll.
 
 Wenn das Build Skript ein zweiter mal gestartet wird, wird die Dokumentation aus den Dateien gebaut, die bereits
-bei einem voangegangenen Bau aus github ausgecheckt wurden. Wenn die Dateien erneut ausgecheckt werden sollen, muss
+bei einem vorangegangenen Bau aus github ausgecheckt wurden. Wenn die Dateien erneut ausgecheckt werden sollen, muss
 das Skript build_doc.sh mit der Option **-f** aufgerufen werden. (-f = force checkout)
 
 Falls nur eine Dokumentation gebaut werden soll (**user** oder **developer**), muss das Skript mit den

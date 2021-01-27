@@ -24,6 +24,7 @@ import asyncio
 import janus
 import ssl
 import threading
+import decimal
 import websockets
 
 import time
@@ -44,7 +45,7 @@ from lib.shtime import Shtime
 
 
 class Websocket(Module):
-    version = '1.0.0'
+    version = '1.0.1'
     longname = 'Websocket module for SmartHomeNG'
     port = 0
 
@@ -115,6 +116,9 @@ class Websocket(Module):
 
         self.loop = None    # Var to hold the event loop for asyncio
 
+        # For Release 1.8 only: Enable smartVISU protocol support even if smartvisu plugin is not loaded
+        self.set_smartvisu_support(protocol_enabled=True)
+
     def start(self):
         """
         If the module needs to startup threads or uses python modules that create threads,
@@ -141,7 +145,7 @@ class Websocket(Module):
         self.logger.info("Shutting down websoocket server(s)...")
 #        self.stop_async = True
 
-        self.loop.call_soon_threadsafe(self.loop.stop)
+        #self.loop.call_soon_threadsafe(self.loop.stop)
 
         try:
             self._server_thread.join()
@@ -170,6 +174,18 @@ class Websocket(Module):
         # self.stop()
         # self.start()
         return
+
+    def get_port(self):
+
+        return self.port
+
+    def get_tls_port(self):
+
+        return self.tls_port
+
+    def get_use_tls(self):
+
+        return self.use_tls
 
     # ===============================================================================
     # Module specific code
@@ -239,10 +255,16 @@ class Websocket(Module):
 
         if ssl_context:
             self.logger.info("Secure websocket server started")
-            await websockets.serve(self.handle_new_connection, ip, port, ssl=ssl_context)
+            try:
+                await websockets.serve(self.handle_new_connection, ip, port, ssl=ssl_context)
+            except OSError as e:
+                self.logger.error(f"Cannot start secure websocket server - error: {e}")
         else:
             self.logger.info("Websocket server started")
-            await websockets.serve(self.handle_new_connection, ip, port)
+            try:
+                await websockets.serve(self.handle_new_connection, ip, port)
+            except OSError as e:
+                self.logger.error(f"Cannot start websocket server - error: {e}")
 #        if self.stop_async:
 #            await websockets.close()
 
@@ -264,8 +286,8 @@ class Websocket(Module):
                 await self.counter_sync(websocket)
 
         except Exception as e:
-            if str(e) != "code = 1006 (connection closed abnormally [internal]), no reason":
-                print("Exeption: {}".format(e))
+            # connection has been ended or not established in payload protocol
+            self.logger.info("handle_new_connection - Connection to {} has been terminated in payload protocol or couldn't be established".format(e))
         finally:
             await self.unregister(websocket)
         return
@@ -387,8 +409,11 @@ class Websocket(Module):
     def json_serial(self, obj):
         """JSON serializer for objects not serializable by default json code"""
 
+        if isinstance(obj, decimal.Decimal):
+            return float(obj)
         if isinstance(obj, (datetime, date)):
             return obj.isoformat()
+
         raise TypeError("Type %s not serializable" % type(obj))
 
     async def smartVISU_protocol_v4(self, websocket):
@@ -416,6 +441,7 @@ class Websocket(Module):
                 command = data.get("cmd", '')
                 protocol = 'wss' if websocket.secure else 'ws '
                 # self.logger.warning("{} <CMD  : '{}'   -   from {}".format(protocol, data, client_addr))
+                self.logger.info(f"{client_addr} snt '{data}'")
                 answer = {"error": "unhandled command"}
 
                 try:
@@ -424,7 +450,9 @@ class Websocket(Module):
                         value = data['val']
                         item = self.items.return_item(path)
                         if item is not None:
-                            item_acl = item.conf.get('acl', None)
+                            item_acl = item.conf.get('visu_acl', None)
+                            if item_acl is None or item_acl == '':
+                                item_acl = item.conf.get('acl', None)
                             if item_acl is None:
                                 item_acl = self.sv_acl
                             if item_acl != 'ro':
@@ -484,7 +512,7 @@ class Websocket(Module):
                             self.logger.warning("WebSocket: protocol mismatch. SmartHomeNG protocol version={0}, visu protocol version={1}".format(self.proto, proto))
                         elif proto < self.proto:
                             self.logger.warning("WebSocket: protocol mismatch. Update your client: {0}".format(client_addr))
-                        answer = {'cmd': 'proto', 'ver': self.proto, 'time': self.shtime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")}
+                        answer = {'cmd': 'proto', 'ver': self.proto, 'server': 'module.websocket', 'time': self.shtime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")}
 
                     elif command == 'identity':  # identify client
                         client = data.get('sw', 'Visu')
@@ -517,18 +545,21 @@ class Websocket(Module):
                     self.logger.exception("visu_protocol Exception {}".format(e))
 
                 if answer != {}:
+                    # if an answer should be send, it is done here
                     try:
                         await websocket.send(reply)
                         self.logger.info("visu >REPLY: '{}'   -   to {}".format(answer, websocket.remote_address))
-                    except (asyncio.IncompleteReadError, asyncio.connection_closed_exc) as e:
-                        self.logger.error("smartVISU_protocol_v4: Error in 'await websocket.send(reply)': {}".format(e))
+                    #except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                     except Exception as e:
-                        self.logger.exception("smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {}".format(e))
+                        self.logger.error("smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {}".format(e))
 
         except Exception as e:
-            if not str(e).startswith('code = 1006'):
+            if not str(e).startswith(('code = 1005', 'code = 1006')):
                 self.logger.error("smartVISU_protocol_v4 exception: {}".format(e))
+            else:
+                self.logger.info("smartVISU_protocol_v4 error: {}".format(e))
 
+        # Remove client from monitoring dict and from dict of active clients
         del(self.sv_monitor_items[client_addr])
         try:
             del(self.sv_clients[client_addr])
@@ -674,23 +705,27 @@ class Websocket(Module):
                 txt = ''
                 if self.sv_ser_upd_cycle > 0:
                     txt = " - Fixed update-cycle time"
-                self.logger.info("update_all_series: series_list={}{}".format(series_list, txt))
+                #self.logger.info("update_all_series: series_list={}{}".format(series_list, txt))
             for client_addr in series_list:
                 if (client_addr in self.sv_clients) and not (client_addr in remove):
                     self.logger.debug("update_all_series: Updating client {}...".format(client_addr))
                     websocket = self.sv_clients[client_addr]['websocket']
                     replys = await self.loop.run_in_executor(None, self.update_series, client_addr)
-                    self.logger.debug("update_all_series: Replys for client {}: {}".format(client_addr, replys))
                     for reply in replys:
-                        try:
-                            await websocket.send(reply)
-                            self.logger.info(">SerUp {}: {}".format(websocket.remote_address, reply))
-                        except (asyncio.IncompleteReadError, asyncio.connection_closed_exc) as e:
-                            self.logger.error("update_all_series: Error in 'await websocket.send(reply)': {}".format(e))
-                        except Exception as e:
-                            self.logger.exception("update_all_series: Exception in 'await websocket.send(reply)': {}".format(e))
+                        if (client_addr in self.sv_clients) and not (client_addr in remove):
+                            self.logger.info("update_all_series: reply {} - Replys for client {}: {}".format(reply, client_addr, replys))
+                            try:
+                                await websocket.send(json.dumps(reply, default=self.json_serial))
+                                self.logger.info(">SerUp {}: {}".format(websocket.remote_address, reply))
+                            # except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
+                            except Exception as e:
+                                self.logger.info("update_all_series: Exception in 'await websocket.send(reply)': {}".format(e))
+                                remove.append(client_addr)
+                        else:
+                            self.logger.info("update_all_series: Client {} is not active any more #1".format(client_addr))
+                            pass
                 else:
-                    self.logger.info("update_all_series: Client {} is not active any more".format(client_addr))
+                    self.logger.info("update_all_series: Client {} is not active any more #2".format(client_addr))
                     remove.append(client_addr)
 
             # Remove series for clients that are not connected any more
@@ -714,24 +749,28 @@ class Websocket(Module):
         self._series_lock.acquire()
         remove = []
         series_replys = []
-        for sid, series in self.sv_update_series[client_addr].items():
-            if (series['update'] < now) or self.sv_ser_upd_cycle > 0:
-                # self.logger.warning("update_series: {} - Processing sid={}, series={}".format(client_addr, sid, series))
-                item = self.items.return_item(series['params']['item'])
-                try:
-                    reply = item.series(**series['params'])
-                except Exception as e:
-                    self.logger.exception("Problem updating series for {0}: {1}".format(series['params'], e))
-                    remove.append(sid)
-                    continue
-                self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
-                del (reply['update'])
-                del (reply['params'])
-                if reply['series'] is not None:
-                    series_replys.append(reply)
 
-        for sid in remove:
-            del (self.sv_update_series[client_addr][sid])
+        series_entry = self.sv_update_series.get(client_addr, None)
+        if series_entry is not None:
+            for sid, series in self.sv_update_series[client_addr].items():
+                if (series['update'] < now) or self.sv_ser_upd_cycle > 0:
+                    #self.logger.warning("update_series: {} - Processing sid={}, series={}".format(client_addr, sid, series))
+                    item = self.items.return_item(series['params']['item'])
+                    try:
+                        reply = item.series(**series['params'])
+                    except Exception as e:
+                        self.logger.exception("Problem updating series for {0}: {1}".format(series['params'], e))
+                        remove.append(sid)
+                        continue
+                    self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
+                    del (reply['update'])
+                    del (reply['params'])
+                    if reply['series'] is not None:
+                        series_replys.append(reply)
+
+            for sid in remove:
+                del (self.sv_update_series[client_addr][sid])
+
         self._series_lock.release()
         return series_replys
 
@@ -793,7 +832,7 @@ class Websocket(Module):
 
     async def update_visu(self):
         """
-        Async task to update the visu(s) if items have changed
+        Async task to update the visu(s) if items have changed or an url command has been issued
         """
         while not self.janus_queue:
             await asyncio.sleep(1)
@@ -816,8 +855,19 @@ class Websocket(Module):
                         await self.update_log(log_entry)
                     except Exception as e:
                         self.logger.error("update_visu: Error in 'await self.update_log(...)': {}".format(e))
+                elif queue_entry[0] == 'command':
+                    # send command to visu (e.g. url command)
+                    command = queue_entry[1]
+                    client_addr = queue_entry[2]
+                    websocket = self.sv_clients[client_addr]['websocket']
+                    try:
+                        await websocket.send(command)
+                        self.logger.warning(f"visu >command: '{command}'   -   to {client_addr}")
+                    # except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
+                    except Exception as e:
+                        self.logger.error("smartVISU_protocol_v4: Exception in 'await websocket.send(url-command)': {}".format(e))
                 else:
-                    self.logger.error("update_visu: Unkonwn queueentry type '{}'".format(queue_entry[0]))
+                    self.logger.error("update_visu: Unknown queueentry type '{}'".format(queue_entry[0]))
 
     async def update_item(self, item_name, item_value, source):
         """
@@ -863,8 +913,11 @@ class Websocket(Module):
                     self.logger.info("visu >MONIT: '{}'   -   to {}".format(msg, self.client_address(websocket)))
                     await websocket.send(msg)
                 except Exception as e:
-                    if not str(e).startswith('code = 1006'):
-                        self.logger.exception("Error in 'await websocket.send(data)': {}".format(e))
+                    if not str(e).startswith(('code = 1005', 'code = 1006')):
+                        self.logger.exception("update_item - Error in 'await websocket.send(data)': {}".format(e))
+                    else:
+                        self.logger.info("update_item - Error in 'await websocket.send(data)': {}".format(e))
+
         return
 
     async def update_log(self, log_entry):
@@ -883,8 +936,10 @@ class Websocket(Module):
                     self.logger.info(">LogUp {}: {}".format(self.client_address(websocket), msg))
                     await websocket.send(msg)
                 except Exception as e:
-                    if not str(e).startswith('code = 1006'):
-                        self.logger.exception("Error in 'await websocket.send(data)': {}".format(e))
+                    if not str(e).startswith(('code = 1005', 'code = 1006')):
+                        self.logger.exception("update_log - Error in 'await websocket.send(data)': {}".format(e))
+                    else:
+                        self.logger.info("update_log - Error in 'await websocket.send(data)': {}".format(e))
             else:
                 self.logger.info("update_log: Client {} is not active any more".format(client_addr))
                 remove.append(client_addr)
@@ -1022,3 +1077,41 @@ class Websocket(Module):
                 self.janus_queue.sync_q.put(['log', log_data])
 
         return
+
+    def set_visu_url(self, url, clientip=''):
+        """
+        Tell the websocket client (visu) to load a specific url
+        """
+        for client_addr in self.sv_clients:
+            ip, _, port = client_addr.partition(':')
+
+            if (clientip == '') or (clientip == ip):
+                command = json.dumps({'cmd': 'url', 'url': url})
+                self.janus_queue.sync_q.put(['command', command, client_addr])
+
+        return True
+
+    def get_visu_client_info(self):
+        """
+        Get client info for web interface of smartvisu plugin
+        :return:
+        """
+        client_list = []
+
+        for client_addr in self.sv_clients:
+            ip, _, port = client_addr.partition(':')
+
+            infos = {}
+            infos['ip'] = ip
+            infos['port'] = port
+            websocket = self.sv_clients[client_addr]['websocket']
+            infos['protocol'] = 'wss' if websocket.secure else 'ws'
+            infos['sw'] = self.sv_clients[client_addr]['sw']
+            infos['swversion'] = self.sv_clients[client_addr].get('ver','')
+            infos['hostname'] = self.sv_clients[client_addr]['hostname']
+            infos['browser'] = self.sv_clients[client_addr]['browser']
+            infos['browserversion'] = self.sv_clients[client_addr]['bver']
+
+            client_list.append(infos)
+
+        return client_list

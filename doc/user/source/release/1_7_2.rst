@@ -1,7 +1,7 @@
 :tocdepth: 2
 
 =============================
-Release 1.7.2 - 23. June 2020
+Release 1.7.2 - 23. Juni 2020
 =============================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.

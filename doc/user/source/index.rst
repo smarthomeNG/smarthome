@@ -27,12 +27,6 @@ Diese Dokumentation reflektiert das aktuelle Release:
 - **Version des Core**: |release|
 - **Version der Plugins**: |version|
 
-Die Entwickler-Dokumentation (für Entwickler von Plugins und den Core von SmartHomeNG), sowie
-die READMEs der Plugins sind in Englisch gehalten.
-
-Die Anwenderdokumentation steht auf Deutsch zur Verfügung. Die Entwicklerdokumentation hingegen, ist in Englisch
-verfasst.
-
 Hilfe zu SmartHomeNG gibt es im `Supportforum im KNX-User-Forum <https://knx-user-forum.de/forum/supportforen/smarthome-py>`_
 oder im `Chat auf gitter.im <https://gitter.im/smarthomeNG/smarthome>`_ .
 

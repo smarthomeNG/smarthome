@@ -138,6 +138,8 @@ class Item():
         self.__last_update = self.__last_change
         self.__prev_change = self.__last_change
         self.__prev_update = self.__prev_change
+        self.__prev_change_by = 'N/A'
+        self.__prev_update_by = self.__prev_change_by
         self._lock = threading.Condition()
         self.__logics_to_trigger = []
         self._name = path
@@ -486,12 +488,15 @@ class Item():
         :param value: raw attribute string containing duration, value (and compatibility)
         :return: cycle-dict for a call to scheduler.add
         """
-        time, value, compat = split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT)
-        time = self._cast_duration(time)
-        value = self._castvalue_to_itemtype(value, compat)
-        cycle = {time: value}
-        return cycle
-
+        try:
+            result = int(value)
+        except ValueError:
+            time, value, compat = split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT)
+            time = self._cast_duration(time)
+            value = self._castvalue_to_itemtype(value, compat)
+            cycle = {time: value}
+            result = cycle
+        return result
 
     """
     --------------------------------------------------------------------------------------------
@@ -602,7 +607,7 @@ class Item():
         return delta.total_seconds()
 
     def _get_prev_change_by(self):
-        return 'N/A'
+        return self. __prev_change_by
 
     def _get_prev_update(self):
         return self.__prev_change
@@ -615,7 +620,7 @@ class Item():
         return delta.total_seconds()
 
     def _get_prev_update_by(self):
-        return 'N/A'
+        return self. __prev_update_by
 
     def _get_prev_value(self):
         return self.__prev_value
@@ -1295,6 +1300,8 @@ class Item():
         self.__prev_update = self.__last_update
         self.__last_update = self.__last_change
 
+        self.__prev_change_by = self.__changed_by
+        self.__prev_update_by = self.__updated_by
         self.__changed_by = "{0}:{1}".format(caller, source)
         self.__updated_by = "{0}:{1}".format(caller, source)
 
@@ -1331,6 +1338,7 @@ class Item():
         else:
             self.__prev_update = self.__last_update
             self.__last_update = self.shtime.now()
+            self.__prev_update_by = self.__updated_by
             self.__updated_by = "{0}:{1}".format(caller, source)
         self._lock.release()
 

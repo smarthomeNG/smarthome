@@ -5,14 +5,16 @@
 
 
 
-Automatische Updates der Datem im Webinterface :redsup:`new`
+Automatische Updates der Daten im Webinterface :redsup:`new`
 ============================================================
 
-Um die Daten im Webinterface zu aktualisieren, sendet die Webseite periodische AJAX-Anfragen an das Plugin und verarbeitet die zurückgelieferten Informationen, indem die neuen Daten in die DOM-Elemente der Webseite eingetragen werden.
+Um die Daten im Webinterface zu aktualisieren, sendet die Webseite periodische AJAX-Anfragen
+an das Plugin und verarbeitet die zurückgelieferten Informationen,
+indem die neuen Daten in die DOM-Elemente der Webseite eingetragen werden.
 
 Um automatische Updates zu implementieren, müssen die folgenden Elemente hinzugefügt werden:
 
-  - In der Klasse ``WebInterface`` des Plugins muss die Methode ``get_data_html()`` implementiert bzw. erweitert werden, um die gewünschen Daten zu liefern.
+  - In der Klasse ``WebInterface`` des Plugins muss die Methode ``get_data_html()`` implementiert bzw. erweitert werden, um die gewünschten Daten zu liefern.
   - Die DOM-Elemente (z.B. <td>-Elemente im ``headtable``-Block oder in den ``bodytab?``-Blöcken), welche die aktualisierten Daten erhalten sollen, müssen jeweils eine eindeutige ID erhalten.
   - Im HTML-Template muss die JavaScript-Funktion ``handleUpdatedData()`` implementiert bzw. erweitert werden.
   - Die Template-Variable ``update_interval`` muss auf das gewünschte Update-Intervall (in Millisekunden) gesetzt werden.
@@ -21,7 +23,7 @@ Um automatische Updates zu implementieren, müssen die folgenden Elemente hinzug
 Erweitern der Python-Methode get_data_html()
 --------------------------------------------
 
-Die Klasse ``WebInterface`` im Plugincode muss so erweitert werden, dass sie die für das Update erforderlichen Daten zusammenstellt und als dict zurückgibt:
+Die Klasse ``WebInterface`` im Plugin Code muss so erweitert werden, dass sie die für das Update erforderlichen Daten zusammenstellt und als Dictionary zurückgibt:
 
 .. code-block:: PYTHON
 
@@ -64,7 +66,9 @@ Die Klasse ``WebInterface`` im Plugincode muss so erweitert werden, dass sie die
             return {}
 
 
-Die optionale Möglichkeit einen ``dataSet`` anzugeben, ist für zukünftige Erweiterungen vorgesehen. Darüber soll es möglich werden, Daten in unterschiedlichen Zyklen zu aktualisieren (z.B. für Daten, deren Ermittlung eine längere Zeit in Anspruch nimmt).
+Die optionale Möglichkeit einen ``dataSet`` anzugeben, ist für zukünftige Erweiterungen vorgesehen.
+Darüber soll es möglich werden, Daten in unterschiedlichen Zyklen zu aktualisieren 
+(z.B. für Daten, deren Ermittlung eine längere Zeit in Anspruch nimmt).
 
 
 IDs an DOM-Elemente zuweisen
@@ -121,7 +125,9 @@ Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleif
     {% endblock **bodytab1** %}
 
 
-Um die Werte in die <td>-Elemente schreiben zu können, nachdem die Webseite erstellt wurde, müssen die <td>-Elemente jeweils mit einer ID ergänzt werden. Um sicherzustellen, dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hier: der Itemname) verwendet:
+Um die Werte in die <td>-Elemente schreiben zu können, nachdem die Webseite erstellt wurde,
+müssen die <td>-Elemente jeweils mit einer ID ergänzt werden. Um sicherzustellen,
+dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hier: der Item Name) verwendet:
 
 .. code-block:: html+jinja
 
@@ -173,7 +179,9 @@ Jetzt können die DOM-Elemente über die IDs ``fromip`` und ``<item>_value`` ang
 Erweitern der JavaScript-Funktion handleUpdatedData()
 -----------------------------------------------------
 
-Das Webinterface ruft regelmäßig eine Methode des Plugins auf, um aktualisierte Daten zu erhalten. Wenn die Daten empfangen wurden, werden sie an die JavaScript-Funktion ``handleUpdatedData()`` der Webseite übergeben. Diese Funktion weist dann die neuen Daten den jeweiligen DOM-Elementen zu.
+Das Webinterface ruft regelmäßig eine Methode des Plugins auf, um aktualisierte Daten zu erhalten.
+Wenn die Daten empfangen wurden, werden sie an die JavaScript-Funktion ``handleUpdatedData()``
+der Webseite übergeben. Diese Funktion weist dann die neuen Daten den jeweiligen DOM-Elementen zu.
 
 Die Funktion ``handleUpdatedData()`` ist im Block ``pluginscripts`` des HTML-Templates definiert. 
 Das folgende Beispiel weist die neuen Daten dem oben vorgestellten <td>-Element des ``headtable`` zu:
@@ -212,8 +220,8 @@ Das nächste Beispiel befüllt dazu analog die <td>-Elemente der Zeilen in der T
     {% endblock pluginscripts %}
 
 
-Festlegen des Aktualisierungintervalls
---------------------------------------
+Festlegen des Aktualisierungsintervalls
+---------------------------------------
 
 Zu Beginn der Templatedatei ``webif/templates/index.html`` findet sich die folgende Zeile:
 

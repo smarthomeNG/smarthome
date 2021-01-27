@@ -4,13 +4,13 @@ Scheduler Methoden
 sh.scheduler.trigger() / sh.trigger()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Diese globale Funktion triggert eine Logic durch die Angabe ihres Namens.
+Diese globale Funktion triggert eine Logik durch die Angabe ihres Namens.
 
 .. code-block:: python
 
    sh.trigger(name [, by] [, source] [, value] [, dt])
 
-- `name` (die Angabe von ist Pflicht) defniert die zu triggernde Logik.
+- `name` (die Angabe von ist Pflicht) definiert die zu triggernde Logik.
 - `by` Name der aufrufenden Logik
 - `source` der eigentliche Grund für das Auslösen der Logik
 - `value` Wert (des auslösenden Items)
