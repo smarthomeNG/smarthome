@@ -119,10 +119,20 @@ if core_reqs == 0:
     python_bin = sys.executable
     if ' ' in python_bin:
         python_bin = '"'+python_bin+'"'
+# TODO Morg: keep original command line arguments?
+    # if we didn't change the working dir (yet), for example...
+    # command = [python_bin] + sys.argv
     command = [python_bin, os.path.join(BASE, 'bin', 'smarthome.py')]
-    # if started with -f then stay in foreground
-    if args.foreground:
-        command.append('-f')
+
+    # if started with parameter to stay in foreground, don't fork
+    if args.foreground or args.interactive or args.debug:
+        try:
+            # function call doesn't return; this process is replaced by the new one
+            os.execv(python_bin, [python_bin] + sys.argv)
+        except OSError as e:
+            print(f'Restart command {command} failed with error {e}')
+            exit(0)
+
     try:
         p = subprocess.Popen(command, shell=True)
     except subprocess.SubprocessError as e:
@@ -201,7 +211,13 @@ if __name__ == '__main__':
 
     lib.backup.make_backup_directories(BASE)
 
-    if args.interactive:
+# TODO Morg: need to do this first, so interactive console can resume - hopefully?
+    if args.restart:
+        time.sleep(5)
+        lib.daemon.kill(PIDFILE, 30)
+# TODO Morg: add code to adjust MODE setting based on inofficial parameters
+        pass
+    elif args.interactive:
         MODE = 'interactive'
         import code
         import rlcompleter  # noqa
@@ -236,10 +252,6 @@ if __name__ == '__main__':
     elif args.stop:
         lib.daemon.kill(PIDFILE, 30)
         exit(0)
-    elif args.restart:
-        time.sleep(5)
-        lib.daemon.kill(PIDFILE, 30)
-        pass
     elif args.debug:
         MODE = 'debug'
     elif args.quiet:

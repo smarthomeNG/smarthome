@@ -214,6 +214,9 @@ class SmartHome():
         self._logger = logging.getLogger(__name__)
         self._logger_main = logging.getLogger(__name__ + '.main')
 
+        # keep for checking on restart command
+        self._mode = MODE
+
         self.initialize_vars()
         self.initialize_dir_vars()
         self.create_directories()
@@ -386,6 +389,7 @@ class SmartHome():
 
         #############################################################
         # Check Time
+# TODO Morg: why hardcoded check? any added value by this? -> remove?
         while datetime.date.today().isoformat() < '2016-03-16':  # XXX update date
             time.sleep(5)
             self._logger.info("Waiting for updated time.")
@@ -530,7 +534,7 @@ class SmartHome():
             conf_basename = self._log_conf_basename
         #fo = open(conf_basename + YAML_FILE, 'r')
         doc = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
-        if doc == None:
+        if doc is None:
             print()
             print("ERROR: Invalid logging configuration in file 'logging.yaml'")
             exit(1)
@@ -727,6 +731,9 @@ class SmartHome():
     def restart(self, source=''):
         """
         This method is used to restart the python interpreter and SmartHomeNG
+
+        If SmartHomeNG was started in one of the foreground modes (-f, -i, -d),
+        this will break the behaviour and daemonize.
         """
         if self.shng_status['code'] == 30:
             self._logger.warning("Another RESTART is issued, while SmartHomeNG is restarting. Reason: "+source)
@@ -739,6 +746,7 @@ class SmartHome():
             python_bin = sys.executable
             if ' ' in python_bin:
                 python_bin = '"'+python_bin+'"'
+# TODO Morg: add inofficial parameter to transport original MODE setting
             command = python_bin + ' ' + os.path.join(self._base_dir, 'bin', 'smarthome.py') + ' -r'
             self._logger.info("Restart command = '{}'".format(command))
             try:
