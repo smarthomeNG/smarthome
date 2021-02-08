@@ -23,9 +23,9 @@ Bisher existieren die folgenden Module:
    :titlesonly:
 
    module_http
-   module_admin
+   ../../referenz/module/module_admin
    module_mqtt
-   module_websocket
+   ../../referenz/module/module_websocket
 
 
 Ein Modul besteht aus mindestens zwei Dateien:

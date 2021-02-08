@@ -99,7 +99,7 @@ auf die Freigaben zugreifen können kann von der Version her höher gesetzt werd
 Näheres dazu
 `hier <https://www.samba.org/samba/docs/man/manpages-3/smb.conf.5.html>`__
 
-Nun muß der User smarthome noch bekannt gemacht werden mit
+Nun muss der User ``smarthome`` noch bekannt gemacht werden mit
 ``sudo smbpasswd -a smarthome``.
 
 Im Windows Explorer sollten nun via

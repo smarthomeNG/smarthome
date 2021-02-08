@@ -868,7 +868,7 @@ if __name__ == '__main__':
     group.add_argument('-cl', '--check_list', action="store_true", default=False, help='check the metadata of all plugins')
     group.add_argument('-clc', '--check_clist', action="store_true", default=False, help='check the metadata of plugins with all metadata sections')
     group.add_argument('-cli', '--check_ilist', action="store_true", default=False, help='check the metadata of all plugins, list only incomplete plugins')
-    group.add_argument('-v', '--list_versions', action="store_true", default=False, help='list versions instead od metadata checks')
+    group.add_argument('-v', '--list_versions', action="store_true", default=False, help='list versions instead of metadata checks')
     args = parser.parse_args()
 
     list_versions = False

@@ -11,7 +11,7 @@ Systemkonfiguration
 Die Grundkonfiguration findet im Menü **System** durch Auswahl von **Konfiguration** statt.
 
 Essentiell ist die Konfiguration der ersten vier Parameter. Falls diese Parameter nicht richtig konfiguriert sind,
-liefern Funktionen zu Sonnensnatd, Monstand und Uhrzeit falsche ergebnisse.
+liefern Funktionen zu Sonnenstand, Mondstand und Uhrzeit falsche Ergebnisse.
 
 Die anderen Parameter der Systemkonfiguration können anfangs unverändert bleiben.
 
@@ -37,13 +37,13 @@ konfiguriert. Hierzu werden folgende Informationen eingegeben:
 
 - das zu berücksichtigende Land angegeben (als englischsprachiger Name des Landes oder vorzugsweise als zwei-
   bzw. drei-stellige Abkürzung (DE, AT, CH, FRA, LU, BE, UK, ...)
-- zu berücksichtigende(s) Provinz/Bundesland für reginonale Feiertage. Wird dieses Feld nicht konfiguriert, werden
+- zu berücksichtigende(s) Provinz/Bundesland für regionale Feiertage. Wird dieses Feld nicht konfiguriert, werden
   nur die landesweit gültigen Feiertage berücksichtigt
 - den zu berücksichtigenden **State** innerhalb des Landes. **State** wird nur für die USA und Brasilien genutzt
 
 In den Feldern darunter holidays_custom) können bei Bedarf Regeln für benutzerdefinierte Feiertage hinterlegt werden.
 Im Screenshot ist als Beispiel der Sysadmin Day (Tag der Systemadministratoren) definiert, der jedes Jahr am letzten
-Freitag im July begangen wird.
+Freitag im Juli begangen wird.
 
 Für Details zur Definition benutzerspezifischer Feiertage bitte den Abschnitt **Konfigurationsdateien**, **Holidays**
 dieser Dokumentation konsultieren.

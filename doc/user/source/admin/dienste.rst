@@ -47,7 +47,7 @@ Auf diesem Tab können folgende Funktionen ausgelöst werden:
   wird die in dem Zip Archiv gesicherte Konfiguration wiederhergestellt. Als Vorsichtsmaßnahme wird vor Beginn der
   Wiederherstellung ein Backup der aktuellen Konfiguration vorgenommen. Dieses verbleibt auf dem SmartHomeNG Server
   um im Notfall die aktuelle Konfiguration wiederherstellen zu können, falls die hochgeladene Datei nicht die gewünschte
-  Konfiguration enthielt. Dieses Backup wird im Verzeichnis ../var/backup abgelegt unt trägt den Dateinamen
+  Konfiguration enthielt. Dieses Backup wird im Verzeichnis ../var/backup abgelegt und trägt den Dateinamen
   shng_config_backup_before_restore_<Jahr>-<Monat>-<Tag>-<Stunde>-<Minuten>.zip
 
 
@@ -103,7 +103,7 @@ YAML Interpreter interpretierte und aufbereitete Ausdruck angezeigt.
 CONF-YAML Konverter
 ===================
 
-Der CONF-YAML Konverter dient dazu, Sippets die im alten CONF Format vorliegen in das YAML Format zu konvertieren.
+Der CONF-YAML Konverter dient dazu, Snippets die im alten CONF Format vorliegen in das YAML Format zu konvertieren.
 
 .. image:: assets/services-yamlconverter.jpg
    :class: screenshot

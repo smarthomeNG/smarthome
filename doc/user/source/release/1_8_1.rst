@@ -1,0 +1,162 @@
+===============================
+Release 1.8.1 - 24. Januar 2021
+===============================
+
+Dieses ist ein Bugfix Release für SmartHomeNG v1.8
+
+
+Überblick
+=========
+
+Dieses ist ein Bugfix-Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.8 sind im
+folgenden in diesen Release Notes beschrieben. Für die vollständigen Änderungen der Version 1.8
+bitte die Release Notes der Version 1.8 zu Rate ziehen.
+
+
+Minimum Python Version
+----------------------
+
+Die absolute Minimum Python Version in der SmartHomeNG startet wurde mit SmartHomeNG v1.8 auf v3.6 angehoben,
+da Python 3.5 im September 2020 End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation
+wird jedoch empfohlen auf einer der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
+
+|
+
+Änderungen am Core
+==================
+
+Bugfixes in the CORE
+--------------------
+
+* lib.env:
+
+  * Fix for ephem exception
+
+* lib.shpypi:
+
+  * Adjusted loglevel
+
+* Modules:
+
+  * admin:
+
+    * rest:
+
+      * Adjusted loglevel
+
+  * websocket:
+
+    * Fixed exception while module tried to update series data to a connection that had been closed
+    * Handled closing code 1005
+    * Added json serialization for class decimal.Decimal
+    * Changed error handling on some occasions
+    * Fix for terminating series updates when the websocket connection has been closed
+
+|
+
+Updates in the CORE
+-------------------
+
+* Modules:
+
+  * websocket:
+
+    * Added function to smartVISU payload protocol that allows sending of url command to smartVISU
+    * Added Support needed for web interface of smartvisu plugin
+
+|
+
+Änderungen bei Plugins
+======================
+
+Plugin Updates
+--------------
+
+* alexarc4shng:
+
+  * Updated metadata: Changed item attribute alexa_cmd_XX to item_attribute_prefix
+  * Rearranged sections in metadata to standard order
+
+* casambi:
+
+  * Made plugin restartable
+  * Fixed subsequent errors on invalid networkID (if API key is no longer valid)
+
+* database:
+
+  * Fix in id()
+
+* homematic:
+
+  * During initialization of plugin no sensor states are read any more to prevent possible
+    storm on homematic wireless connections which could result in 'Generic error (UNREACH)'
+    error logged by pyhomematic.
+
+* knx:
+
+  * fix encoding of dpt5999
+  * use xmltodict instead of lxml to prevent install problems on special hardware (CPUs)
+
+* luxtronic2:
+
+  * Added valid values to lux2 attribute according to forum post https://knx-user-forum.de/forum/supportforen/smarthome-py/27461-neues-plugin-luxtronic2-wärmepumpen-von-alphainnotec-siemens-etc?p=1604934#post1604934
+  * Adjusted version number to 1.3.2
+
+* neato:
+
+  * Increased minimum SHNG version to 1.8 as WebIf uses function update_config_section
+
+* oerationlog:
+
+  * Fixed parameter handling
+  * Adjusted version number in metadata
+
+* prowl:
+
+  * added item attributes (send on item change), cleanup, ...
+
+* resol:
+
+  * catched another exception
+
+* smartvisu:
+
+  * Added function url() to set displayed page on smartVISU
+  * Handled exception when trying to read configuration from smartVISU that is not configured
+  * Added web interface
+  * Copying of files (generated pasges and item-masterfile) is only done, if the smartVISU is already configured
+
+* sonos:
+
+  * Named sonos subscription autoRenew thread
+  * Named additional sonos EventServerThread
+  * Upgraded base framework to SoCo version 0.21.1 https://github.com/SoCo/SoCo/releases/tag/v0.21.1
+  * Disabled auto renew option for event subscriptions
+  * Added minimum python version to metadata
+  * Fixed proper display of speaker IDs in thread names
+
+
+* stateengine:
+
+  * Provide new version of suspend struct as state_suspend_dynamic and reintroduce old suspend struct
+  * Allow relative item declaration for se_manual_logitem
+  * Fix log for age condition
+  * urgent re-fix of suspend struct
+  * Fix web interface
+
+* yamahayxc:
+
+  * added missing item attributes
+  * Fixed error in metadata
+
+|
+
+Weitere Änderungen
+==================
+
+Documentation
+-------------
+
+* Corrected typos and small documentation updates
+
+

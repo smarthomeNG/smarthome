@@ -121,14 +121,17 @@ def write_pidfile(pid, pidfile):
     with open(pidfile, 'w+') as fh:
         fh.write("%s" % pid)
 
+    global _pidfile_handle
     try:
-        fh = open(pidfile, 'r')
+        _pidfile_handle = open(pidfile, 'r')
+        #print(f"_pidfile_handle = '{_pidfile_handle}'")
         # LOCK_EX - acquire an exclusive lock
         # LOCK_NB - non blocking
-        portalocker.lock(fh, portalocker.LOCK_EX | portalocker.LOCK_NB)
-    # don't close fh or lock is gone
-    except portalocker.AlreadyLocked:
+        portalocker.lock(_pidfile_handle, portalocker.LOCK_EX | portalocker.LOCK_NB)
+    # don't close _pidfile_handle or lock is gone!!!
+    except portalocker.AlreadyLocked as e:
         print("Could not lock pid file: %d (%s)" % (e.errno, e.strerror) , file=sys.stderr)
+
 
 def read_pidfile(pidfile):
     """
@@ -164,6 +167,7 @@ def check_sh_is_running(pidfile):
     """
 
     pid = read_pidfile(pidfile)
+    #print("daemon.check_sh_is_running: pidfile={}, pid={}, psutil.pid_exists(pid)={}".format(pidfile, pid, psutil.pid_exists(pid)))
     isRunning = False
     if pid > 0 and psutil.pid_exists(pid):
         #print("daemon.check_sh_is_running: pid={}, psutil.pid_exists(pid)={}".format(pid, psutil.pid_exists(pid)))
@@ -172,7 +176,7 @@ def check_sh_is_running(pidfile):
             # LOCK_EX - acquire an exclusive lock
             # LOCK_NB - non blocking
             portalocker.lock(fh, portalocker.LOCK_EX | portalocker.LOCK_NB)
-            #print("daemon.check_sh_is_running: portalocker.lock erfolgreich")
+            print("daemon.check_sh_is_running: portalocker.lock erfolgreich")
             # pidfile not locked, so sh is terminated
         except portalocker.LockException:
             isRunning = True

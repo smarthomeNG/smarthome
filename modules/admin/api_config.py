@@ -246,11 +246,11 @@ class ConfigController(RESTResource):
             self.update_configdict(self.module_confdata['websocket'], data, 'websocket')
             self.logger.warning("Update: self.websocket_conf = {}".format(self.websocket_conf))
             if self.module_confdata['websocket'].get('enabled', None) is None:
-                self.module_confdata['websocket']['enabled'] = False
+                self.module_confdata['websocket']['enabled'] = True
             if self.module_confdata['websocket']['enabled']:
                 self.module_confdata['websocket'].pop('enabled', None)
-            self.logger.warning("Update: ['websocket'] = {}".format(self.module_confdata['websocket']))
-            self.logger.warning("Update: - enabled = {}".format(self.module_confdata['websocket'].get('enabled', None)))
+            #self.logger.warning("Update: ['websocket'] = {}".format(self.module_confdata['websocket']))
+            #self.logger.warning("Update: - enabled = {}".format(self.module_confdata['websocket'].get('enabled', None)))
 
             if self.module_confdata.get('mqtt', None) is None:
                 self.module_confdata['mqtt'] = {}

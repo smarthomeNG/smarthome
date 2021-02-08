@@ -162,7 +162,7 @@ struct bei selbst definierte Item-Struktur-Templates
 Anwendung
 ---------
 
-Eigens definierte Item-Struktur-Templates werden in der Konfigurationdatei **../etc/struct.yaml** abgelegt.
+Eigens definierte Item-Struktur-Templates werden in der Konfigurationsdatei **../etc/struct.yaml** abgelegt.
 
 Hierbei gibt die oberste Ebene den Namen der Templates an. Darunter können Item-Strukturen definiert werden, wie man es
 auch in der Item Definition in den items.yaml Dateien machen würde. Das folgende Beispiel zeigt die Definition von zwei
@@ -244,7 +244,10 @@ entsteht im Item-Tree die selbe Struktur, als wenn man folgendes direkt in die i
             ...
 
 
-Beim Einfügen der Struktur bleibt das Attribut **struct** erhalten, so dass man zur Laufzeit sehen kann, dass die Struktur zumindest in Teilen aus einem Template stammt. Die Definition des Attributes **name** aus dem Template wird durch die Angabe aus der Datei items/item.yaml ersetzt. Das **individual_item** wird an die Struktur des Templates angefügt.
+Beim Einfügen der Struktur bleibt das Attribut **struct** erhalten, so dass man zur Laufzeit sehen kann, 
+dass die Struktur zumindest in Teilen aus einem Template stammt.
+Die Definition des Attributes **name** aus dem Template wird durch die Angabe aus der Datei items/item.yaml ersetzt. 
+Das **individual_item** wird an die Struktur des Templates angefügt.
 (Siehe :doc:`Konfigurationsdateien/struct.yaml </konfiguration/konfigurationsdateien/struct>`)
 
 
