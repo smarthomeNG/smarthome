@@ -148,8 +148,10 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
 
     #logger.warning("- backup_dir = {}".format(backup_dir))
 
-    #shtime = Shtime.get_instance()
-    shtime = Shtime(None)
+    shtime = Shtime.get_instance()
+    if shtime == None:
+        shtime = Shtime(None)
+
     now = shtime.now()
     logger.info("get_backup_timestamp: now = '{}'".format(now))
 

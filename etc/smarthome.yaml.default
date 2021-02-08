@@ -26,6 +26,10 @@ default_language: de     # default_language is used, where multiple languages ar
 # Crontab entry for schedule task in shpypi
 #shpypi_crontab: '9 5 * *'
 
+# Stem for name of configuration backup files
+#backup_name_stem: myinstallation
+
+
 #-----------------------------------------
 # develop (might be altered for release)
 #

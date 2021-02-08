@@ -18,5 +18,6 @@
   "daemon_ow": "SERVICES.INACTIVE",
   "daemon_mqtt": "SERVICES.INACTIVE",
   "daemon_node_red": "SERVICES.INACTIVE",
+  "backup_stem": "teststem",
   "last_backup": "2020-05-16 12:40:52.461331+02:00"
 }

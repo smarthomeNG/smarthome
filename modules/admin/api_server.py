@@ -130,6 +130,11 @@ class ServerController(RESTResource):
         response['daemon_ow'] = self.get_1wire_daemon()
         response['daemon_mqtt'] = self.get_mqtt_daemon()
         response['daemon_node_red'] = self.get_node_red_daemon()
+        response['backup_stem'] = ''
+        try:
+            response['backup_stem'] = self._sh._backup_name_stem
+        except:
+            pass
         response['last_backup'] = backup.get_lastbackuptime()
         # response['pid'] = str(lib.daemon.read_pidfile(self._sh._pidfile))
         self.logger.info("ServerController.info(): response = {}".format(response))
