@@ -193,9 +193,9 @@ class Network(object):
                     ip = None
                 if ip is not None:
                     logger.info(f'Resolved {addr} to {Network.family_to_string(family)} address {ip}')
-            except socket.gaierror:
+            except socket.gaierror as e:
                 # Unable to resolve hostname
-                logger.error(f'Cannot resolve {addr} to a valid ip address (v4 or v6)')
+                logger.error(f'Cannot resolve {addr} to a valid ip address (v4 or v6): {e}')
                 ip = None
 
         return (ip, port, family)
