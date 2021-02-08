@@ -1140,11 +1140,11 @@ class Websocket(Module):
             infos['port'] = port
             websocket = self.sv_clients[client_addr]['websocket']
             infos['protocol'] = 'wss' if websocket.secure else 'ws'
-            infos['sw'] = self.sv_clients[client_addr]['sw']
+            infos['sw'] = self.sv_clients[client_addr].get('sw', '')
             infos['swversion'] = self.sv_clients[client_addr].get('ver','')
-            infos['hostname'] = self.sv_clients[client_addr]['hostname']
-            infos['browser'] = self.sv_clients[client_addr]['browser']
-            infos['browserversion'] = self.sv_clients[client_addr]['bver']
+            infos['hostname'] = self.sv_clients[client_addr].get('hostname', '')
+            infos['browser'] = self.sv_clients[client_addr].get('browser', '')
+            infos['browserversion'] = self.sv_clients[client_addr].get('bver', '')
 
             client_list.append(infos)
 
