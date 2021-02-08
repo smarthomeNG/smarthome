@@ -37,6 +37,8 @@ struct_merge_lists = True
 
 class Structs():
 
+    struct_merge_lists = True
+
     _struct_definitions = collections.OrderedDict()    # definitions of item structures
 
     def __init__(self):
