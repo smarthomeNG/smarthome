@@ -787,7 +787,8 @@ class Shpypi:
         """
 
         version_read = False
-        while version_read == False:
+        reads = 0
+        while (version_read == False) and (reads < 10):
             package['pypi_version'] = '--'
             package['pypi_version_not_available_msg'] = '?'
             package['pypi_version_ok'] = False
@@ -795,6 +796,7 @@ class Shpypi:
 
             available = self.get_releasedata_frompypi(package['name'])
             self.logger.debug("get_package_releases_data: -> pypi package: project_name {}, availabe = {}".format(package['name'], available))
+            reads += 1
             try:
                 package['pypi_version'] = available[0]['title']
                 package['pypi_version_not_available_msg'] = ""
@@ -806,6 +808,8 @@ class Shpypi:
 
             self.logger.debug("get_package_releases_data ({}): Version {}".format(package['name'], package['pypi_version']))
 
+        if reads >= 10:
+            self.logger.warning("get_package_releases_data: pypi.org returned no data for package {package['name']}")
         return
 
 
