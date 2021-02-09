@@ -244,7 +244,7 @@ class ConfigController(RESTResource):
                 self.module_confdata['websocket'] = {}
                 self.module_confdata['websocket']['module_name'] = 'websocket'
             self.update_configdict(self.module_confdata['websocket'], data, 'websocket')
-            self.logger.warning("Update: self.websocket_conf = {}".format(self.websocket_conf))
+            self.logger.info("Update: self.websocket_conf = {}".format(self.websocket_conf))
             if self.module_confdata['websocket'].get('enabled', None) is None:
                 self.module_confdata['websocket']['enabled'] = True
             if self.module_confdata['websocket']['enabled']:
@@ -256,13 +256,13 @@ class ConfigController(RESTResource):
                 self.module_confdata['mqtt'] = {}
                 self.module_confdata['mqtt']['module_name'] = 'mqtt'
             self.update_configdict(self.module_confdata['mqtt'], data, 'mqtt')
-            self.logger.warning("Update: self.mqtt_conf = {}".format(self.mqtt_conf))
+            self.logger.info("Update: self.mqtt_conf = {}".format(self.mqtt_conf))
             if self.module_confdata['mqtt'].get('enabled', None) is None:
                 self.module_confdata['mqtt']['enabled'] = False
             if self.module_confdata['mqtt']['enabled']:
                 self.module_confdata['mqtt'].pop('enabled', None)
-            self.logger.warning("Update: ['mqtt'] = {}".format(self.module_confdata['mqtt']))
-            self.logger.warning("Update: - enabled = {}".format(self.module_confdata['mqtt'].get('enabled', None)))
+            self.logger.info("Update: ['mqtt'] = {}".format(self.module_confdata['mqtt']))
+            self.logger.info("Update: - enabled = {}".format(self.module_confdata['mqtt'].get('enabled', None)))
             shyaml.yaml_save_roundtrip(os.path.join(self.etc_dir, 'module.yaml'), self.module_confdata, create_backup=True)
 
             result = {"result": "ok"}
