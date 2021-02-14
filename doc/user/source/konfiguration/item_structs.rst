@@ -223,25 +223,26 @@ entsteht im Item-Tree die selbe Struktur, als wenn man folgendes direkt in die i
     :caption: items/items.yaml
 
     my_tree:
-        name: Geänderter Name für meine komplexen Daten
-        struct: my_struct_01
+        my_complex_data:
+            name: Geänderter Name für meine komplexen Daten
+            #struct: my_struct_01
 
-        item_01:
-            name: Erstes Item
-            type: num
-            ...
-        item_02:
-            name: Zweites Item
-            type: bool
-            ...
-            subitem:
-                name: Sub-Item
+            item_01:
+                name: Erstes Item
+                type: num
+                ...
+            item_02:
+                name: Zweites Item
+                type: bool
+                ...
+                subitem:
+                    name: Sub-Item
+                    type: str
+                    ...
+            individual_item:
+                name: Individuelles Item
                 type: str
                 ...
-        individual_item:
-            name: Individuelles Item
-            type: str
-            ...
 
 
 Beim Einfügen der Struktur bleibt das Attribut **struct** erhalten, so dass man zur Laufzeit sehen kann, 
@@ -265,10 +266,10 @@ SmartHomeNG löst alle Unterstrukturreferenzen vor dem Laden des Item Trees auf,
 
   Wenn Unterstrukturdefinitionen aufgelöst werden, gibt es zwei Unterschiede zu der Art und Weise,
   wie Item Definitionen geladen werden. Die Unterschiede treten nur dann zutage, wenn Strukturen / Unterstrukturen
-  Attribute re-definieren. (Siehe hierzu auch folgende Kaptiel und :doc:`Konfiguration/structs </konfiguration/item_structs>`)
+  Attribute re-definieren. (Siehe hierzu auch folgende Kapitel und :doc:`Konfiguration/structs </konfiguration/item_structs>`)
 
 
-Re-Definieren von Attributen (außer list-Atrributen)
+Re-Definieren von Attributen (außer list-Attributen)
 ----------------------------------------------------
 
 Beim Definieren von Items ist es möglich, dasselbe Attribut für ein Item in mehreren Item YAML-Dateien zu definieren.
