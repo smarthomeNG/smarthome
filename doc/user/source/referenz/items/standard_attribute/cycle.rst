@@ -10,7 +10,8 @@ der verknüpften Logik oder Eval-Funktion).
 .. code-block:: yaml
 
    item:
-       cycle: 10
+       type: num
+       cycle: 10 = 0
        enforce_updates: 'true'
 
 ruft das Item alle 10 Sekunden auf und sorgt dadurch für das triggern
@@ -18,17 +19,18 @@ von verknüpften Logiken und/oder Eval-Funktionen. Dazu muss
 ``enforce_updates`` auf ``true``\ stehen, damit das Triggern erfolgt,
 auch wenn sich der Wert des Items nicht ändert.
 
-.. code-block:: yaml
-
-   item:
-       type: num
-       cycle: 10 = 0
-   #    enforce_updates: true
-
-setzt alle 10 Sekunden den Wert des Items auf 0. Wenn mit diesem Item
+Gleichzeitig wird bei jedem Aufruf von ``cycle``, also hier alle 10 Sekunden, der Wert des Items auf 0 gesetzt. Wenn mit diesem Item
 Logiken und/oder Eval-Funktionen verknüpft sind, muss
 ``enforce_updates`` auf ``true``\ stehen, damit das Triggern erfolgt,
 auch wenn sich der Wert des Items nicht ändert.
+
+.. hint:
+
+  Die Syntax ``cycle: 10 = None`` versucht, den Wert ``None`` zuzuweisen und nicht,
+  wie bei ``eval``, den Wert des Items nicht zu verändern.
+
+  Die Zuweisung von ``None`` zu einem `num` oder `bool`-Item erzeugt eine Warnung, weil ``None`` nicht in `num` oder `bool` konvertiert werden kann. Wenn das Item den Typ `str` hat, wird der Wert ``"None"`` zugewiesen!
+
 
 Bitte beachten: `Datentyp der
 Wertzuweisung <#datentyp-der-wertzuweisung>`__
