@@ -748,7 +748,7 @@ class SmartPlugin(SmartObject, Utils):
         except:
             self.mod_http = None
         if self.mod_http == None:
-            self.logger.error("Plugin '{}': Not initializing the web interface".format(self.get_shortname()))
+            self.logger.warning("Module 'http' not loaded. Not initializing the web interface for the plugin")
             return False
 
         # set application configuration for cherrypy
