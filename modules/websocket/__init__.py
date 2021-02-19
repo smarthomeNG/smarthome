@@ -571,7 +571,7 @@ class Websocket(Module):
                         self.logger.info("visu >REPLY: '{}'   -   to {}".format(answer, websocket.remote_address))
                     #except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                     except Exception as e:
-                        self.logger.error("smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {}".format(e))
+                        self.logger.warning("smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {} - reply = {}".format(e, reply))
 
         except Exception as e:
             if not str(e).startswith(('code = 1005', 'code = 1006')):
