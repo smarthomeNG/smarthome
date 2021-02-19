@@ -26,8 +26,7 @@ auch wenn sich der Wert des Items nicht ändert.
 
 .. hint:
 
-  Die Syntax ``cycle: 10 = None`` versucht, den Wert ``None`` zuzuweisen und nicht,
-  wie bei ``eval``, den Wert des Items nicht zu verändern.
+  Die Syntax ``cycle: 10 = None`` funktioniert nicht so, wie das bei ``eval: None`` funktioniert. Es gibt keine Möglichkeit, mit ``cycle`` nur zu triggern, aber keinen neuen Wert zuzuweisen.
 
   Die Zuweisung von ``None`` zu einem `num` oder `bool`-Item erzeugt eine Warnung, weil ``None`` nicht in `num` oder `bool` konvertiert werden kann. Wenn das Item den Typ `str` hat, wird der Wert ``"None"`` zugewiesen!
 
