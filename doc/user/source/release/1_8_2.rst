@@ -10,8 +10,8 @@ Dieses ist ein Bugfix Release für SmartHomeNG v1.8
 
      - Berücksichtigt sind Commits im smarthome Repository bis incl. 20. Feb 2021
        (Merge pull request #394 from onkelandy/network...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. ...
-       (...)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 4. Feb 2021
+       (onewire plugin: update list with ow_sensor entries)
 
 
 Überblick
@@ -128,11 +128,33 @@ Updates in the CORE
 Plugin Updates
 --------------
 
-* ...:
+* dlms:
 
-* ...:
+  * updated plugin.yaml to use list instead of str
 
-  * ...
+* mailrvc:
+
+  * small fix in docu
+
+* mpd:
+
+  * bugfixes in plugin.yaml
+
+* onewire:
+
+  * update list with ow_sensor entries
+
+* sonos:
+
+  * Added dpt3 attributes to plugin metadata
+
+* stateengine:
+
+  * Removed old type definition for item attribute se_use
+  * Removed further duplicate definitions in item attribute se_use
+  * provide possibility for lower log level (for developement purposes)
+  * Implement se_released_by feature including docu
+  * bump to version 1.8.2
 
 |
 
