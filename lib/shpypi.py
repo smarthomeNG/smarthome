@@ -780,15 +780,17 @@ class Shpypi:
 
     def get_package_releases_data(self, package):
         """
+        Get version/release data from pypi.org for a specific package
 
         :param instance:
         :param owner:
         :return:
         """
+        max_tries = 5       # number of times getting version data from pypi.org is tried
 
         version_read = False
         reads = 0
-        while (version_read == False) and (reads < 10):
+        while (version_read == False) and (reads < max_tries):
             package['pypi_version'] = '--'
             package['pypi_version_not_available_msg'] = '?'
             package['pypi_version_ok'] = False
@@ -808,8 +810,8 @@ class Shpypi:
 
             self.logger.debug("get_package_releases_data ({}): Version {}".format(package['name'], package['pypi_version']))
 
-        if reads >= 10:
-            self.logger.warning("get_package_releases_data: pypi.org returned no data for package {package['name']}")
+        if reads >= max_tries:
+            self.logger.info("get_package_releases_data: pypi.org returned no data for package {package['name']}")
         return
 
 
