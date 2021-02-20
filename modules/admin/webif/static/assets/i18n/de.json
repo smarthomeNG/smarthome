@@ -501,7 +501,7 @@
   "False": "Nein",
 
   "CONFIGURATION": "Konfiguration",
-  "RESTART FOR CHANGES": "Änderungen werden erst nach einem Neustart von SmartHomeNG wirksam",
+  "RESTART FOR CHANGES": "Änderungen werden erst nach einem Neustart von SmartHomeNG wirksam - Nach dem Neustart ein Reload der Admin GUI durchführen",
   "RESTART LOGIC FOR CHANGES": "Änderungen werden erst nach einem Neustart der Logik wirksam",
 
   "LINEBREAK": "Umbruch"
