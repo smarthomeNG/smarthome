@@ -66,7 +66,7 @@ class Orb():
         self._obs.long = str(lon)
         self._obs.lat = str(lat)
         if elev:
-            self._obs.elevation = int(elev)
+            self._obs.elevation = float(elev)
         if orb == 'sun':
             self._orb = ephem.Sun()
         elif orb == 'moon':

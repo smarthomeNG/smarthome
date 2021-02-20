@@ -424,8 +424,8 @@ class SmartHome():
         else:
             if not hasattr(self, '_elev'):
                 self._elev = None
-            self.sun = lib.orb.Orb('sun', self._lon, self._lat, float(self._elev))
-            self.moon = lib.orb.Orb('moon', self._lon, self._lat, float(self._elev))
+            self.sun = lib.orb.Orb('sun', self._lon, self._lat, self._elev)
+            self.moon = lib.orb.Orb('moon', self._lon, self._lat, self._elev)
 
 
     def get_defaultlanguage(self):
