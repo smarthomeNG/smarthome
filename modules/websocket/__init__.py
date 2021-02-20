@@ -517,7 +517,7 @@ class Websocket(Module):
                         if name in self.logs:
                             answer = {'cmd': 'log', 'name': name, 'log': self.logs[name].export(num), 'init': 'y'}
                         else:
-                            self.logger.warning("Client {0} requested invalid log: {1}".format(self.addr, name))
+                            self.logger.warning("Client {0} requested invalid log: {1}".format(client_addr, name))
                         if client_addr not in self.sv_monitor_logs:
                             self.sv_monitor_logs[client_addr] = []
                         if name not in self.sv_monitor_logs[client_addr]:
