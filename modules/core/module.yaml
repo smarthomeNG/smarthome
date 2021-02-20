@@ -83,6 +83,13 @@ parameters:
             en: 'Advanced: Log warnings, if functions/methods are used which are flaged as deprecated'
             fr: "Avancé: Enregistrer les avertissements si des fonctions / méthodes sont utilisées qui sont affichées comme obsolètes"
 
+    backup_name_stem:
+        # Stem for name of configuration backup files
+        type: str
+        description:
+            de: "Falls mehrere Instanzen von SmartHomeNG gesichert werden sollen, kann es hilfreich sein, dem Namen der jeweiligen Sicherungsdatei einen Namens-Stamm voran zu stellen."
+            en: "If backing up multiple instances of SmartHomeNG it can be useful to define a stem for the name of the backup file"
+
     holidays_country:
         type: str
         default: DE
