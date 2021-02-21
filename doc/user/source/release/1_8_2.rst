@@ -71,7 +71,11 @@ Bugfixes in the CORE
 
   * fix host resolve
 
- * lib.plugin:
+* lib.orb:
+
+  * Fixed bug that surfaced if elevation was given with decimals instead of an integer
+
+* lib.plugin:
 
   * Log text adjusted
 
