@@ -212,7 +212,8 @@ class SmartHome():
         """
         self.shng_status = {'code': 0, 'text': 'Initalizing'}
         self._logger = logging.getLogger(__name__)
-        self._logger_main = logging.getLogger(__name__ + '.main')
+        #self._logger_main = logging.getLogger(__name__ + '.main')
+        self._logger_main = logging.getLogger(__name__)
 
         self.initialize_vars()
         self.initialize_dir_vars()
@@ -316,9 +317,9 @@ class SmartHome():
         virtual_text = ''
         if lib.utils.running_virtual():
             virtual_text = ' in virtual environment'
-        self._logger_main.warning("--------------------   Init SmartHomeNG {}   --------------------".format(self.version))
-        self._logger_main.warning(f"Running in Python interpreter 'v{self.PYTHON_VERSION}'{virtual_text}, from directory {self._base_dir}")
-        self._logger_main.warning(f" - on {platform.platform()} (pid={pid})")
+        self._logger_main.shnginfo("--------------------   Init SmartHomeNG {}   --------------------".format(self.version))
+        self._logger_main.shnginfo(f"Running in Python interpreter 'v{self.PYTHON_VERSION}'{virtual_text}, from directory {self._base_dir}")
+        self._logger_main.shnginfo(f" - on {platform.platform()} (pid={pid})")
 
         default_encoding = locale.getpreferredencoding() # returns cp1252 on windows
         if not (default_encoding in  ['UTF8','UTF-8']):
@@ -377,7 +378,7 @@ class SmartHome():
 
 
         self.shtime._initialize_holidays()
-        self._logger_main.warning(" - " + self.shtime.log_msg)
+        self._logger_main.shnginfo(" - " + self.shtime.log_msg)
 
         # Add Signal Handling
 #        signal.signal(signal.SIGHUP, self.reload_logics)
@@ -521,11 +522,40 @@ class SmartHome():
                 if os.path.isfile(default):
                     shutil.copy2(default, conf_basename + YAML_FILE)
 
+    def addLoggingLevel(self, description, value):
+        """
+        Adds a new Logging level to the standard python logging
+
+        :param description: appearance within logs SYSINFO
+        :type description: string
+        :param value: numeric value for the logging level
+        :type value: int
+        :param tocall: function name to call for a log with the given level
+        :type tocall: String, optional, if not given  description will be used with lower case
+
+        no error checking is performed here for typos, already existing levels or functions
+        """
+
+        def logForLevel(self, message, *args, **kwargs):
+            if self.isEnabledFor(value):
+                self._log(value, message, args, **kwargs)
+
+        def logToRoot(message, *args, **kwargs):
+            logging.log(value, message, *args, **kwargs)
+
+        logging.addLevelName(value, description)
+        setattr(logging, description, value)
+        setattr(logging.getLoggerClass(), description.lower(), logForLevel)
+        setattr(logging, description.lower(), logToRoot)
+        return
+
 
     def init_logging(self, conf_basename='', MODE='default'):
         """
         This function initiates the logging for SmartHomeNG.
         """
+        self.addLoggingLevel('SHNGINFO', 31)
+
         if conf_basename == '':
             conf_basename = self._log_conf_basename
         #fo = open(conf_basename + YAML_FILE, 'r')
@@ -665,7 +695,7 @@ class SmartHome():
         # Main Loop
         #############################################################
         self.shng_status = {'code': 20, 'text': 'Running'}
-        self._logger_main.warning("--------------------   SmartHomeNG initialization finished   --------------------")
+        self._logger_main.shnginfo("--------------------   SmartHomeNG initialization finished   --------------------")
 
         while self.alive:
             try:
@@ -714,7 +744,7 @@ class SmartHome():
 #            if header_logged:
 #                self._logger.warning("SmartHomeNG stopped")
 #        else:
-        self._logger_main.warning("--------------------   SmartHomeNG stopped   --------------------")
+        self._logger_main.shnginfo("--------------------   SmartHomeNG stopped   --------------------")
 
         self.shng_status = {'code': 33, 'text': 'Stopped'}
 
@@ -734,7 +764,7 @@ class SmartHome():
             self.shng_status = {'code': 30, 'text': 'Restarting'}
             if source != '':
                 source = ', initiated by ' + source
-            self._logger_main.warning("--------------------   SmartHomeNG restarting" + source + "   --------------------")
+            self._logger_main.shnginfo("--------------------   SmartHomeNG restarting" + source + "   --------------------")
             # python_bin could contain spaces (at least on windows)
             python_bin = sys.executable
             if ' ' in python_bin:
