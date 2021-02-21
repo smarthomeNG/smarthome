@@ -22,6 +22,11 @@ Möglichkeiten des Nesting von structs erweitern.
 
 |
 
+lib.network
+-----------
+
+|
+
 Logiken: Zusätzlichen Trigger „shutdown“
 ----------------------------------------
 
@@ -33,6 +38,18 @@ Items: User Attribute implementieren
 ------------------------------------
 
 Attribute, die User nutzen wollen, die aber in keinem Plugin definiert sind.
+
+|
+
+Items: Hinzufügen von Items während der Laufzeit
+------------------------------------------------
+
+|
+
+Items: Einzelne Attribute während der Laufzeit ändern
+-----------------------------------------------------
+
+* eval Ausdruck während der Laufzeit änderbar machen
 
 |
 

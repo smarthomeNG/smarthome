@@ -1,17 +1,8 @@
 ================================
-Release 1.8.2 - xx. Februar 2021
+Release 1.8.2 - 21. Februar 2021
 ================================
 
 Dieses ist ein Bugfix Release für SmartHomeNG v1.8
-
-.. note::
-
-    Diese Release Notes sind ein Arbeitsstand.
-
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 20. Feb 2021
-       (Merge pull request #394 from onkelandy/network...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 20. Feb 2021
-       (shelly: Missing webif file added)
 
 
 Überblick
