@@ -133,14 +133,14 @@ class Items():
         self.structs.add_struct_definition(plugin_name, struct_name, struct)
 
 
-    def return_struct_definitions(self):
+    def return_struct_definitions(self, all=True):
         """
         Return all loaded structure template definitions
 
         :return:
         :rtype: dict
         """
-        return self.structs.return_struct_definitions()
+        return self.structs.return_struct_definitions(all)
 
 
     def load_itemdefinitions(self, env_dir, items_dir, etc_dir, plugins_dir):

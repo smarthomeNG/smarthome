@@ -44,9 +44,7 @@ das für den **Apache2** Webserver zugänglich ist:
     chmod g+rws smartvisu/
     cd smartvisu
     git clone git://github.com/Martin-Gleiss/smartvisu.git .
-    # Apache2 Zugriff erlauben
-    sudo find . -type d -exec chmod g+rwsx {} +
-    sudo find . -type f -exec chmod g+r {} +
+    bash setpermissions
 
 Bitte auf den **Punkt** am Ende des **git clone** Kommandos achten!
 
@@ -94,10 +92,10 @@ könnten sonst einfach von SmartHomeNG überschrieben werden.
 
 Die Dateien für die SmartVISU sind einfache HTML Dateien. Die einzelnen Bedienelemente wie Buttons, Flips,
 Werteanzeigen (sogenannte Widgets) sind Makros die mit der Makrosprache **TWIG** definiert sind.
-Die HTML können auf eigene Bedürfnisse beliebig angepasst werden. 
+Die HTML können auf eigene Bedürfnisse beliebig angepasst werden.
 Im einzelnen ist das zwar auf der veralteten `Projektseite smartVISU <http://www.smartvisu.de/>`__ nachzulesen,
-es wird aber empfohlen die entsprechende Dokumentation nachzuinstallieren (siehe unten). 
-Die durch die SmartVISU generierten HTML Seiten sind zwar responsiv aber durchweg statisch. 
+es wird aber empfohlen die entsprechende Dokumentation nachzuinstallieren (siehe unten).
+Die durch die SmartVISU generierten HTML Seiten sind zwar responsiv aber durchweg statisch.
 Die Kommunikation zwischen SmartHomeNG und der SmartVISU erfolgt über ein Websocket Plugin
 für SmartHomeNG und JavaScript Code der in der HTML Seite eingebunden wird. Der Javascript Code manipuliert dann
 aufgrund der via Websocket übermittelten Daten von Items in SmartHomeNG dynamisch den Inhalt der Webseite (DOM).

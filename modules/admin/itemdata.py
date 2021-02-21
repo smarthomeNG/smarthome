@@ -171,6 +171,11 @@ class ItemData:
             else:
                 enforce_updates = 'on'
 
+            if str(item._enforce_change) == 'False':
+                enforce_change = 'off'
+            else:
+                enforce_change = 'on'
+
             item_conf_sorted = collections.OrderedDict(sorted(item.conf.items(), key=lambda t: str.lower(t[0])))
             if item_conf_sorted.get('sv_widget', '') != '':
                 item_conf_sorted['sv_widget'] = html.escape(item_conf_sorted['sv_widget'])
@@ -211,6 +216,7 @@ class ItemData:
                          'previous_update_by': previous_updated_by,
                          'previous_value': prev_value,
                          'enforce_updates': enforce_updates,
+                         'enforce_change': enforce_change,
                          'cache': cache,
                          'eval': html.escape(self.disp_str(item._eval)),
                          'trigger': self.disp_str(item._trigger),

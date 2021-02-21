@@ -517,7 +517,7 @@ class Websocket(Module):
                         if name in self.logs:
                             answer = {'cmd': 'log', 'name': name, 'log': self.logs[name].export(num), 'init': 'y'}
                         else:
-                            self.logger.warning("Client {0} requested invalid log: {1}".format(self.addr, name))
+                            self.logger.warning("Client {0} requested invalid log: {1}".format(client_addr, name))
                         if client_addr not in self.sv_monitor_logs:
                             self.sv_monitor_logs[client_addr] = []
                         if name not in self.sv_monitor_logs[client_addr]:
@@ -571,7 +571,7 @@ class Websocket(Module):
                         self.logger.info("visu >REPLY: '{}'   -   to {}".format(answer, websocket.remote_address))
                     #except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                     except Exception as e:
-                        self.logger.error("smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {}".format(e))
+                        self.logger.warning("smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {} - reply = {}".format(e, reply))
 
         except Exception as e:
             if not str(e).startswith(('code = 1005', 'code = 1006')):
@@ -1140,11 +1140,11 @@ class Websocket(Module):
             infos['port'] = port
             websocket = self.sv_clients[client_addr]['websocket']
             infos['protocol'] = 'wss' if websocket.secure else 'ws'
-            infos['sw'] = self.sv_clients[client_addr]['sw']
+            infos['sw'] = self.sv_clients[client_addr].get('sw', '')
             infos['swversion'] = self.sv_clients[client_addr].get('ver','')
-            infos['hostname'] = self.sv_clients[client_addr]['hostname']
-            infos['browser'] = self.sv_clients[client_addr]['browser']
-            infos['browserversion'] = self.sv_clients[client_addr]['bver']
+            infos['hostname'] = self.sv_clients[client_addr].get('hostname', '')
+            infos['browser'] = self.sv_clients[client_addr].get('browser', '')
+            infos['browserversion'] = self.sv_clients[client_addr].get('bver', '')
 
             client_list.append(infos)
 

@@ -58,7 +58,7 @@ class ItemsController(RESTResource):
         if id == 'structs':
             # /api/items/structs
             self.logger.info("ItemsController.root(): item_name = {}".format(id))
-            result = self.items.return_struct_definitions()
+            result = self.items.return_struct_definitions(all=False)
 
             return json.dumps(result)
 

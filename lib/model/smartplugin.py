@@ -358,11 +358,31 @@ class SmartPlugin(SmartObject, Utils):
         parameters_changed = False
         for param in param_dict:
             if param in param_names:
-                self.logger.info("update_config_section: Changing Parameter '{}' -> type = '{}' from '{}' to '{}'".format(param, self.metadata.parameters[param]['type'], sect.get(param, None), param_dict[param]))
-                if param_dict[param] == '' or param_dict[param] == {} or param_dict[param] == []:
-                    del sect[param]
+                if self.metadata.parameters[param]['type'] == 'num':
+                    if param_dict[param] == '':
+                        this_param = ''
+                    else:
+                        this_param = float(param_dict[param])
+                elif self.metadata.parameters[param]['type'] == 'int':
+                    if param_dict[param] == '':
+                        this_param = ''
+                    else:
+                        try:
+                            this_param = int(float(param_dict[param]))
+                            #this_param = int(param_dict[param])
+                        except:
+                            self.logger.error(f"update_config_section: Parameter {param} -> Cannot convert '{param_dict[param]}' to type 'int'" )
+                            #self.logger.warning("update_config_section: Changing Parameter '{}' -> type = '{}' from '{}' to '{}'".format(param, self.metadata.parameters[param]['type'], sect.get(param, None), this_param))
                 else:
-                    sect[param] = param_dict[param]
+                    this_param = param_dict[param]
+                self.logger.info("update_config_section: Changing Parameter '{}' -> type = '{}' from '{}' to '{}'".format(param, self.metadata.parameters[param]['type'], sect.get(param, None), this_param))
+                if param_dict[param] == '' or param_dict[param] == {} or param_dict[param] == []:
+                    try:
+                        del sect[param]
+                    except KeyError:
+                        pass
+                else:
+                    sect[param] = this_param
                 parameters_changed = True
             else:
                 self.logger.error("update_config_section: Invalid parameter '{}' specified for update".format(param, param_dict[param]))
@@ -728,7 +748,7 @@ class SmartPlugin(SmartObject, Utils):
         except:
             self.mod_http = None
         if self.mod_http == None:
-            self.logger.error("Plugin '{}': Not initializing the web interface".format(self.get_shortname()))
+            self.logger.warning("Module 'http' not loaded. Not initializing the web interface for the plugin")
             return False
 
         # set application configuration for cherrypy

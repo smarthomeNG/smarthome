@@ -304,11 +304,11 @@ class Metadata():
                         if len(listparam) > 0:
                             listparam2 = []
                             for i in range(0,len(listparam)):
-                                if listparam[i] in META_DATA_TYPES:
-                                    listparam2.append(listparam[i])
+                                if listparam[i].strip() in META_DATA_TYPES:
+                                    listparam2.append(listparam[i].strip())
                                 else:
                                     listparam2.append(FOO)
-                                    logger.error(self._log_premsg+"definition = '{}': Invalid subtype '{}' specified, using '{}' instead".format(definition, listparam[i], FOO))
+                                    logger.error(self._log_premsg+"definition = '{}': Invalid subtype '{}' specified, using '{}' instead (META_DATA_TYPES={})".format(definition, listparam[i], FOO, META_DATA_TYPES))
                             listparam = listparam2
 
                         definition_dict[definition]['listtype'] = listparam

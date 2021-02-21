@@ -37,6 +37,8 @@ struct_merge_lists = True
 
 class Structs():
 
+    struct_merge_lists = True
+
     _struct_definitions = collections.OrderedDict()    # definitions of item structures
 
     def __init__(self):
@@ -212,14 +214,28 @@ class Structs():
                 self._struct_definitions[struct_name] = struct
 
 
-    def return_struct_definitions(self):
+    def return_struct_definitions(self, all=True):
         """
         Return all loaded structure template definitions
 
         :return:
         :rtype: dict
         """
-        return self._struct_definitions
+        result = {}
+        for struct in self._struct_definitions:
+            try:
+                plg_name, struct_name = struct.split('.')
+            except:
+                plg_name = ''
+                struct_name = struct
+            if struct_name.startswith('_'):
+                self.logger.info(f"return_struct_definitions: Internal struct {struct}")
+                if all:
+                    result[struct] = self._struct_definitions[struct]
+            else:
+                result[struct] = self._struct_definitions[struct]
+
+        return result
 
 
     def load_struct_definitions(self, etc_dir):

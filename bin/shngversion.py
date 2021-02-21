@@ -66,8 +66,11 @@ import plugins.__init__ as plugin_vers
 # Update auf 1.8a   wg. Kennzeichnung des Stands als "nach dem v1.8 Release"
 
 # Update auf 1.8.1  wg. Release
+# Update auf 1.8.1a wg. Kennzeichnung des Stands als "nach dem v1.8.1 Release"
 
-shNG_version = '1.8.1'
+# Update auf 1.8.2  wg. Release
+
+shNG_version = '1.8.2'
 shNG_branch = 'master'
 
 # ---------------------------------------------------------------------------------

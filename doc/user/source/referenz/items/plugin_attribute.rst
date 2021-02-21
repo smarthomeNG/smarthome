@@ -38,6 +38,7 @@ Beispiele für Kürzel, die kennzeichnen zu welchem Plugin die jeweiligen Attrib
 .. index:: Vererbung von Attributen
 .. role:: redsup
 
+
 Vererbung von Attributen :bluesup:`update`
 ------------------------------------------
 
@@ -53,16 +54,16 @@ den Wert aus einem übergeordneten Item zu erben. Dieser Mechanismus funktionier
 plugin-spezifischen Attributen. Hierbei kann ein Attribut mit dem Wert eines Attributes eines
 übergeordneten Items belegt werden.
 
-Es kann die übergeordete Ebene (Eltern / Großeltern) das Attribut der Ebene angebeben werden. Dabei wird
+Es kann die übergeordnete Ebene (Eltern / Großeltern) das Attribut der Ebene angegeben werden. Dabei wird
 als Wert eines Attributes folgender Platzhalter eingetragen: :code:`<Ebene>:<Attribut>`
 
 .. attention::
 
    Zwischen Ebene und Doppelpunkt, sowie zwischen Doppelpunkt und Attribut dürfen keine Leerzeichen angegeben werden.
 
-Die :code:`<Ebene>` kann die Werte :code:`..` und :code:`...` für Eltern- bzw. Großeltern Item.
-Für :code:`<Attribut>` kann der Name des Attributes aus der übergeordenten Ebene angebeben werden oder
-:code:`.` um aus der übergeordenten Ebene das Attribut mit dem Selben Namen zu referenzieren.
+Die :code:`<Ebene>` kann die Werte :code:`..` und :code:`...` für Parent- bzw. Grandparent-Item annehmen.
+Für :code:`<Attribut>` kann der Name des Attributes aus der übergeordneten Ebene angegeben werden oder
+:code:`.` um aus der übergeordneten Ebene das Attribut mit dem gleichen Namen zu referenzieren.
 
 
 Um den Wert eines Attributes (mit gleichem Namen) von dem übergeordnetem Item (Parent-Item) zu erben, muss
@@ -85,7 +86,7 @@ in der Konfiguration das Attribut mit dem Wert :code:`..:.` konfiguriert werden:
           hm_function: LOW_BAT
 
 
-In diesem Beispiel siht man, dass die HomeMatic Adresse des Devices nur einmal angegeben werden muss.
+In diesem Beispiel sieht man, dass die HomeMatic Adresse des Devices nur einmal angegeben werden muss.
 Der Vorteil wird besonders sichtbar, wenn man mehrere Fenstergriffe hat. Dann kann man diesen Block
 einfach kopieren und muss nur dem Item einen neuen Namen geben (z.B. fenstergriff_bad) und die
 **hm_adress** an einer Stelle abzuändern.

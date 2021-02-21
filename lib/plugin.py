@@ -664,7 +664,7 @@ class PluginWrapper(threading.Thread):
                 logger.debug("set plugin {0} instance to {1}".format(name, instance ))
                 self.get_implementation()._set_instance_name(instance)
         else:
-            logger.error("Plugins: Plugin '{}' initialization failed, plugin not loaded".format(classpath.split('.')[1]))
+            logger.error("Plugin '{}' initialization failed, plugin not loaded".format(classpath.split('.')[1]))
 
 
     def run(self):

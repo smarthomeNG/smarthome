@@ -501,7 +501,7 @@
   "False": "False",
 
   "CONFIGURATION": "Configuration",
-  "RESTART FOR CHANGES": "Restart SmartHomeNG for changes to take effect",
+  "RESTART FOR CHANGES": "Restart SmartHomeNG for changes to take effect - Reload Admin GUI after restart",
   "RESTART LOGIC FOR CHANGES": "Restart the logic for changes to take effect",
 
   "LINEBREAK": "Line Break"

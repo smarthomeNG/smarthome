@@ -102,7 +102,19 @@ class AuthController(RESTResource):
             payload['ttl'] = 7*24
             payload['name'] = 'Autologin'
             payload['admin'] = True
-            response['token'] = jwt.encode(payload, self.jwt_secret, algorithm='HS256').decode('utf-8')
+
+            #up to pyJWT 1.7.1:
+            #response['token'] = jwt.encode(payload, self.jwt_secret, algorithm='HS256').decode('utf-8')
+            jwt_token = jwt.encode(payload, self.jwt_secret, algorithm='HS256')
+            if isinstance(jwt_token, str):
+                # For PyJWT >= 2.0.0a1
+                response['token'] = jwt_token
+            elif isinstance(jwt_token, bytes):
+                # For PyJWT <= 1.7.1
+                response['token'] = jwt_token.decode('utf-8')
+            else:
+                self.logger.error("AuthController.authenticate(): jwt_token is of unsupported type {}".format(type(jwt_token)))
+
             self.logger.info("AuthController.authenticate(): Autologin")
             self.logger.info("AuthController.authenticate(): payload = {}".format(payload))
         else:

@@ -609,9 +609,9 @@ class Tcp_client(object):
                 # Print ip address on successfull resolve
                 if self._hostip is not None:
                     self.logger.info("Resolved {} to {} address {}".format(self._host, 'IPv6' if self._ipver == socket.AF_INET6 else 'IPv4', self._hostip))
-            except:
+            except Exception as err:
                 # Unable to resolve hostname
-                self.logger.error("Cannot resolve {} to a valid ip address (v4 or v6)".format(self._host))
+                self.logger.error("Cannot resolve {} to a valid ip address (v4 or v6). Error: {}".format(self._host, err))
                 self._hostip = None
 
     def set_callbacks(self, connected=None, receiving=None, data_received=None, disconnected=None):
@@ -986,10 +986,10 @@ class Tcp_server(object):
                     self.logger.error("Unknown ip address family {}".format(self._ipver))
                     self._interfaceip = None
                 if self._interfaceip is not None:
-                    self.logger.info("Resolved {} to {} address {}".format(self._interface, ipver_to_string(self._ipver), self._hostip))
-            except:
+                    self.logger.info("Resolved {} to {} address {}".format(self._interface, Network.ipver_to_string(self._ipver), self._interfaceip))
+            except Exception as err:
                 # Unable to resolve hostname
-                self.logger.error("Cannot resolve {} to a valid ip address (v4 or v6)".format(self._interface))
+                self.logger.error("Cannot resolve {} to a valid ip address (v4 or v6). Error: {}".format(self._interface, err))
                 self._interfaceip = None
 
         self.__our_socket = Network.ip_port_to_socket(self._interfaceip, self._port)

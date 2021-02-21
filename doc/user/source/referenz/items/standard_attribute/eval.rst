@@ -253,3 +253,5 @@ den Ausdruck **sh.self.prev_value()** zugegriffen werden.
    Wenn man jedoch ein Item nur verändern möchte wenn die **if** Bedingung erfüllt ist und sonst
    unverändert lassen möchte, muss als **else** Zweig der Ausdruck **else None** angegeben werden.
    **None** bewirkt, dass das Item unverändert bleibt, und somit auch keine Trigger ausgelöst werden.
+
+   Diese Art, per ``None`` Werte nicht zuzuweisen, funktioniert **nur** bei ``eval``; bei anderen Attributen wie z.B. ``cycle`` kann dies nicht genutzt werden.

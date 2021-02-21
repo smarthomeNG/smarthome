@@ -45,7 +45,7 @@ class MqttPlugin(SmartPlugin):
         except:
             self.mod_mqtt = None
         if self.mod_mqtt == None:
-            self.logger.error("Module MQTT could not be initialized. The plugin is not starting")
+            self.logger.error("Module 'mqtt' not loaded. The plugin is not starting")
             self._init_complete = False
             return False
 
