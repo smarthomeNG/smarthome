@@ -95,13 +95,9 @@ Bugfixes in the CORE
     * Allowd application/x-zip-compressed for restore from windows client; enforce_change added to item details
     * Added optional stem to backup filename
     * fixed shtime problem introduced to lib.backup in 1.8.1 release
-    * api_config:
-
-      * Adjusted log levels
-
-    * shngadmin:
-
-      * Added hint to reload shngadmin after changing systemconfig and restart
+    * api_config: Adjusted log levels
+    * auth: Work around a breaking change in PyJWT 2.0.0a1
+    * shngadmin: Added hint to reload shngadmin after changing systemconfig and restart
 
   * core:
 
@@ -112,17 +108,6 @@ Bugfixes in the CORE
     * fixed typo
     * Fix in sv payload protocol, if client info isn't received propperly
     * Loglevel adjusted
-
-|
-
-Updates in the CORE
--------------------
-
-* Modules:
-
-  * websocket:
-
-    * ...
 
 |
 
