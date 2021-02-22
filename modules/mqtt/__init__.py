@@ -169,6 +169,7 @@ class Mqtt(Module):
             # return
             pass
 
+ 
     def start(self):
         """
         This method starts the mqtt module
@@ -186,6 +187,7 @@ class Mqtt(Module):
         except:
             self.logger.warning("Unable to set name for paho thread")
 
+
     def stop(self):
         """
         This method stops the mqtt module
@@ -197,6 +199,7 @@ class Mqtt(Module):
         self.logger.debug("MQTT client loop stopped")
         self._disconnect_from_broker()
         # self.alive = False
+
 
     # ----------------------------------------------------------------------------------------
     #  methods to handle the broker connection
@@ -231,6 +234,7 @@ class Mqtt(Module):
             self.logger.warning("MQTT broker can not be reached. No messages are sent/received until the broker can be reached")
         return
 
+
     def _network_connect_to_broker(self, from_init=False):
         """
         Esteblish network connect to broker
@@ -254,6 +258,7 @@ class Mqtt(Module):
         self._network_connected_to_broker = True
         return True
 
+
     def _disconnect_from_broker(self):
         """
         Stop all communication with MQTT broker
@@ -275,6 +280,7 @@ class Mqtt(Module):
         self._connected = False
         self._client.disconnect()
 
+
     def _log_brokerinfo(self, payload):
         """
         Log info about broker connection
@@ -286,6 +292,7 @@ class Mqtt(Module):
             address = self.broker_hostname + ' (' + str(self.broker_ip)+':'+str(self.broker_port) + ')'
         self.logger.info("Connected to broker '{}' at address {}".format( str(payload), address ))
 
+
     def broker_uptime(self):
         """
         Return formatted uptime of broker
@@ -295,6 +302,7 @@ class Mqtt(Module):
         except:
             return '-'
 
+
     def get_broker_info(self):
         """
         Return the collected broker information
@@ -303,6 +311,7 @@ class Mqtt(Module):
         :rtype: dict
         """
         return (self._broker, self.broker_monitoring)
+
 
     def get_broker_config(self):
         """
@@ -324,6 +333,7 @@ class Mqtt(Module):
         broker_config['qos'] = self.qos
         # broker_config['acl'] = self.acl
         return broker_config
+
 
     # ----------------------------------------------------------------------------------------
     #  methods to handle mqtt
@@ -348,6 +358,7 @@ class Mqtt(Module):
         self._subscribed_topics[topic][subscription_source]['bool_values'] = bool_values
         self.logger.info("_add_subscription_definition: {} '{}' is subscribing to topic '{}'".format(subscriber_type, subscription_source, topic))
         return
+
 
     def subscribe_topic(self, source, topic, callback=None, qos=None, payload_type='str', item_type=None, bool_values=None):
         """
@@ -420,6 +431,7 @@ class Mqtt(Module):
                 self._subscribed_topics_lock.release()
         return
 
+
     def unsubscribe_topic(self, source, topic):
         """
         method to unsubscribe from a topic
@@ -458,6 +470,7 @@ class Mqtt(Module):
 
         return
 
+
     def _trigger_logic(self, subscription_dict, topic, payload):
         """
         This method is called by on_mqtt_message to trigger the right logic
@@ -481,6 +494,7 @@ class Mqtt(Module):
             subscription_found = True
 
         return subscription_found
+
 
     def _callback_to_plugin(self, plugin_name, subscription_dict, topic, payload, qos, retain):
         """
@@ -512,6 +526,7 @@ class Mqtt(Module):
             self.logger.error("_callback_to_plugin: callback for plugin '{}' not defined".format(plugin_name))
 
         return subscription_found
+
 
     def _on_mqtt_message(self, client, userdata, message):
         """
@@ -573,6 +588,7 @@ class Mqtt(Module):
 
     # ----------------------------------------------------------------------------------------
 
+
     def _get_qos_forTopic(self, item):
         """
         Return the configured QoS for a topic/item as an integer
@@ -585,9 +601,11 @@ class Mqtt(Module):
             qos = self.qos
         return int(qos)
 
+
     def _on_mqtt_log(self, client, userdata, level, buf):
         # self.logger.info("_on_log: {}".format(buf))
         return
+
 
     def _subscribe_broker_infos(self):
         """
@@ -610,6 +628,7 @@ class Mqtt(Module):
             self._client.subscribe('$SYS/broker/load/messages/sent/5min', qos=0)
             self._client.subscribe('$SYS/broker/load/messages/sent/15min', qos=0)
         return
+
 
     def _handle_broker_infos(self, message):
 
@@ -645,6 +664,7 @@ class Mqtt(Module):
         self.logger.debug("_handle_broker_infos: $SYS/broker info = '{}'".format(self._broker))
         return True
 
+
     def _unsubscribe_broker_infos(self):
         """
         Unsubscribe from broker's infos
@@ -666,6 +686,7 @@ class Mqtt(Module):
             self._client.unsubscribe('$SYS/broker/load/messages/sent/5min')
             self._client.unsubscribe('$SYS/broker/load/messages/sent/15min')
         return
+
 
     def _on_connect(self, client, userdata, flags, rc):
         """
@@ -696,12 +717,14 @@ class Mqtt(Module):
         else:
             self.logger.warning(msg)
 
+
     def _on_disconnect(self, client, userdata, rc):
         """
         Callback function called on disconnect
         """
         self.logger.info("Disconnection returned result '{}' ".format(rc))
         return
+
 
     # ---------------------------------------------------------------------------------
     # Following functions build the interface for other plugins which want to use MQTT
@@ -728,6 +751,7 @@ class Mqtt(Module):
             self.logger.info("_get_caller_type: inspect.stack()[2][1] = '{}', split = {}".format(caller, split))
 
         return source_type
+
 
     def publish_topic(self, source, topic, payload, qos=None, retain=False, bool_values=None):
         """
@@ -762,6 +786,7 @@ class Mqtt(Module):
             self.logger.error("{}: Publish exception '{}'".format(inspect.stack()[0][3], e))
             return False
         return True
+
 
     # ----------------------------------------------------------------------------------------
     #  casting methods
@@ -826,6 +851,7 @@ class Mqtt(Module):
             self.logger.warning("cast_from_mqtt: Casting '{}' to '{}' is not implemented".format(raw_data, datatype))
             data = raw_data
         return data
+
 
     def cast_to_mqtt(self, data, bool_values=None):
         """
