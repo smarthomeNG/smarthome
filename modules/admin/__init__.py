@@ -119,7 +119,7 @@ class Admin(Module):
             mysuburl = '/' + suburl
         ip = Utils.get_local_ipv4_address()
         self._port = self.mod_http._port
-        # self.logger.warning('port = {}'.format(self.port))
+        # self.logger.warning('port = {}'.format(self._port))
         self.shng_url_root = 'http://' + ip + ':' + str(self._port)         # for links mto plugin webinterfaces
         self.url_root = self.shng_url_root + mysuburl
         self.api_url_root = self.shng_url_root + 'api'
