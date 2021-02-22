@@ -325,7 +325,7 @@ class Websocket(Module):
         Print info about connection/disconnection of users
         """
         if not websocket.remote_address:
-            self.logger.infp("USER {}: {} - local port: {}".format(action, 'with SSL connection', websocket.port))
+            self.logger.info("USER {}: {} - local port: {}".format(action, 'with SSL connection', websocket.port))
         else:
             self.logger.info("USER {}: {} - local port: {}".format(action, websocket.remote_address, websocket.port))
 
