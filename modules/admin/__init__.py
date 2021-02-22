@@ -228,10 +228,10 @@ class Admin(Module):
 
         """
 
-        self.logger.info("shutting down".format(self._shortname))
+        self.logger.info(f"Shutting down {self._shortname}")
         for stop_method in self._stop_methods:
             stop_method()
-        self.logger.info("{} shut down ".format(self._shortname))
+        self.logger.info(f"{self._shortname} shut down ")
 
     def add_stop_method(self, method, classname=''):
         """
@@ -318,8 +318,8 @@ class Admin(Module):
         return result
 
 
-# TODO: brauchen wir das? Ist nirgendwo referenziert, tut anscheinend auch nix
 def translate(s):
+    # needed for Admin UI
     return s
 
 
