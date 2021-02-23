@@ -22,7 +22,7 @@
 import threading
 
 from lib.module import Modules
-from lib.model.smartplugin import *
+from lib.model.smartplugin import SmartPlugin
 from lib.shtime import Shtime
 
 

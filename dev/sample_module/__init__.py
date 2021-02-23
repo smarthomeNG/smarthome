@@ -22,17 +22,21 @@
 
 import os
 import logging
-import json
-import cherrypy
+# import json
+# import cherrypy
 
 
 from lib.model.module import Module
 from lib.module import Modules
 from lib.shtime import Shtime
+from lib.utils import Utils
+# from lib.plugin import Plugins
+
+# import socket
 
 
 class SampleModule(Module):
-    version = '1.7.0'
+    version = '1.0.0'
     longname = '... module for SmartHomeNG'
     port = 0
 
@@ -47,7 +51,7 @@ class SampleModule(Module):
         self.logger = logging.getLogger(__name__)
         self._sh = sh
         self.shtime = Shtime.get_instance()
-        self.logger.debug("Module '{}': Initializing".format(self._shortname))
+        self.logger.debug(f"Module '{self._shortname}': Initializing")
 
 
         # Test if http module is loaded (if the module uses http)
@@ -65,17 +69,17 @@ class SampleModule(Module):
 
 
         # get the parameters for the module (as defined in metadata module.yaml):
-        self.logger.debug("Module '{}': Parameters = '{}'".format(self._shortname, dict(self._parameters)))
+        self.logger.debug(f"Module '{self._shortname}': Parameters = '{dict(self._parameters)}'")
         try:
             # self.broker_ip = self._parameters['broker_host']
             pass
         except KeyError as e:
             self.logger.critical(
-                "Module '{}': Inconsistent module (invalid metadata definition: {} not defined)".format(self._shortname, e))
+                f"Module '{self._shortname}': Inconsistent module (invalid metadata definition: {e} not defined)")
             self._init_complete = False
             return
 
-        ip = get_local_ipv4_address()
+        ip = Utils.get_local_ipv4_address()
 
 
     def start(self):
@@ -99,33 +103,7 @@ class SampleModule(Module):
         pass
 
 
-
-def get_local_ipv4_address():
-    """
-    Get's local ipv4 address of the interface with the default gateway.
-    Return '127.0.0.1' if no suitable interface is found
-
-    :return: IPv4 address as a string
-    :rtype: string
-    """
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.connect(('8.8.8.8', 1))
-        IP = s.getsockname()[0]
-    except:
-        IP = '127.0.0.1'
-    finally:
-        s.close()
-    return IP
-
-
 def translate(s):
+    # needed for AdminUI
     return s
-
-
-#import socket
-
-#from lib.plugin import Plugins
-#from lib.utils import Utils
-
 

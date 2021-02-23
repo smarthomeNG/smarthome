@@ -29,7 +29,7 @@ import logging
 import json
 
 from lib.module import Modules
-from lib.model.mqttplugin import *
+from lib.model.mqttplugin import MqttPlugin, SmartPluginWebIf
 from lib.item import Items
 
 
@@ -66,7 +66,7 @@ class Shelly(MqttPlugin):
         # Initialization code goes here
         self.shelly_items = []              # to hold item information for web interface
 
-         # if plugin should start even without web interface
+        # if plugin should start even without web interface
         self.init_webinterface()
 
         return
@@ -112,7 +112,7 @@ class Shelly(MqttPlugin):
                         can be sent to the knx with a knx write function within the knx plugin.
         """
         if self.has_iattr(item.conf, 'shelly_id'):
-            self.logger.debug("parsing item: {0}".format(item.id()))
+            self.logger.debug(f"parsing item: {item}")
 
             shelly_id = self.get_iattr_value(item.conf, 'shelly_id').upper()
             shelly_type = self.get_iattr_value(item.conf, 'shelly_type').lower()
@@ -125,7 +125,7 @@ class Shelly(MqttPlugin):
             # subscribe to topic for relay state
             topic = 'shellies/' + shelly_type + '-' + shelly_id + '/relay/' + shelly_relay
             payload_type = item.property.type
-            bool_values = ['off','on']
+            bool_values = ['off', 'on']
             self.add_subscription(topic, payload_type, bool_values, item=item)
 
             return self.update_item
@@ -153,12 +153,12 @@ class Shelly(MqttPlugin):
         :param source: if given it represents the source
         :param dest: if given it represents the dest
         """
-        self.logger.info("update_item: {}".format(item.id()))
+        self.logger.info(f"update_item: {item}")
 
         if self.alive and caller != self.get_shortname():
             # code to execute if the plugin is not stopped
             # and only, if the item has not been changed by this this plugin:
-            self.logger.info("update_item: {}, item has been changed outside this plugin".format(item.id()))
+            self.logger.info(f"update_item: {item}, item has been changed outside this plugin")
 
             # publish topic with new relay state
             shelly_id = self.get_iattr_value(item.conf, 'shelly_id').upper()
@@ -167,7 +167,7 @@ class Shelly(MqttPlugin):
             if not shelly_relay:
                 shelly_relay = '0'
             topic = 'shellies/' + shelly_type + '-' + shelly_id + '/relay/' + shelly_relay + '/command'
-            self.publish_topic(topic, item(), item, bool_values=['off','on'])
+            self.publish_topic(topic, item(), item, bool_values=['off', 'on'])
 
     # -----------------------------------------------------------------------
 
@@ -186,7 +186,7 @@ class Shelly(MqttPlugin):
             return False
 
         import sys
-        if not "SmartPluginWebIf" in list(sys.modules['lib.model.smartplugin'].__dict__):
+        if "SmartPluginWebIf" not in list(sys.modules['lib.model.smartplugin'].__dict__):
             self.logger.warning("Web interface needs SmartHomeNG v1.5 and up. Not initializing the web interface")
             return False
 
