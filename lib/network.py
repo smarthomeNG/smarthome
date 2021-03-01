@@ -55,8 +55,7 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 
 class Network(object):
     """
-    This Class has some useful static methods that you can use in your projects
-
+    Provide useful static methods that you can use in your projects.
 
     NOTE: Some format check routines were duplicate with lib.utils. As these primarily check string formats and are used for metadata parsing, they were removed here to prevent duplicates.
     """
@@ -64,10 +63,11 @@ class Network(object):
     @staticmethod
     def ip_port_to_socket(ip, port):
         """
-        Returns an ip address plus port to a socket string.
+        Return an ip address plus port to a socket string.
+
         Format is 'ip:port' for IPv4 or '[ip]:port' for IPv6
 
-        :return: Socket address / IPEndPoint as string
+        :return: Socket address / IP endpoint as string
         :rtype: string
         """
         if Utils.is_ipv6(ip):
@@ -77,7 +77,7 @@ class Network(object):
     @staticmethod
     def family_to_string(family):
         """
-        Converts a socket address family to an ip version string 'IPv4' or 'IPv6'
+        Convert a socket address family to an ip version string 'IPv4' or 'IPv6'.
 
         :param family: Socket family
         :type family: socket.AF_INET or socket.AF_INET6
@@ -90,7 +90,7 @@ class Network(object):
     @staticmethod
     def ping(ip):
         """
-        Tries to ICMP ping a host using external OS utilities. Currently IPv4 only.
+        Try to ICMP ping a host using external OS utilities. IPv4 only.
 
         :param ip: IPv4 address as a string
         :type ip: string
@@ -109,7 +109,7 @@ class Network(object):
     @staticmethod
     def ping_port(ip, port=80):
         """
-        Tries to reach a given TCP port. Currently IPv4 only.
+        Try to reach a given TCP port. IPv4 only.
 
         :param ip: IPv4 address
         :param port: Port number
@@ -117,7 +117,7 @@ class Network(object):
         :type ip: string
         :type port: int
 
-        :return: True if a reachable, false otherwise.
+        :return: True if reachable, false otherwise.
         :rtype: bool
         """
         logger = logging.getLogger(__name__)
@@ -135,7 +135,7 @@ class Network(object):
     @staticmethod
     def send_wol(mac, ip='255.255.255.255'):
         """
-        Sends a wake on lan packet to the given mac address using ipv4 broadcast (or directed to specific ip)
+        Send a wake on lan packet to the given mac address using ipv4 broadcast (or directed to specific ip).
 
         :param mac: Mac address to wake up (pure numbers or with any separator)
         :type mac: string
@@ -163,8 +163,7 @@ class Network(object):
     @staticmethod
     def validate_inet_addr(addr, port):
         """
-        Validates that addr:port resolve to a valid network address/port/family
-        and return resolved IP address and port
+        Validate that addr:port resolve properly and return resolved IP address and port.
 
         :param addr: hostname or ip address under test
         :type addr: str
@@ -203,12 +202,13 @@ class Network(object):
     @staticmethod
     def clean_uri(uri, mode='show'):
         """
-        Checks URIs for embedded http/https login data (http://user:pass@domain.tld...) and offers to clean it.
+        Check URIs for embedded http/https login data (http://user:pass@domain.tld...) and clean it.
+
         Possible modes are:
 
-        - 'show': don't change URI (default) -> http://user:pass@domain.tld...
-        - 'mask': replace login data with '***' -> http://***:***@domain.tld...
-        - 'strip': remove login data part -> http://domain.tld...
+        - 'show': don't change URI (default) -> ``http://user:pass@domain.tld...``
+        - 'mask': replace login data with ``***`` -> ``http://***:***@domain.tld...``
+        - 'strip': remove login data part -> ``http://domain.tld...``
 
         :param uri: full URI to check and process
         :param mode: handling mode, one of 'show', 'strip', 'mask'
@@ -237,12 +237,11 @@ class Network(object):
 
 class Http(object):
     """
-    This class provides methods to simplify HTTP connections, especially to talk to HTTP servers.
-
+    Provide methods to simplify HTTP connections, especially to talk to HTTP servers.
 
     :param baseurl: base URL used everywhere in this instance (example: http://www.myserver.tld)
     :param timeout: Set a maximum amount of seconds the class should try to establish a connection
-    :param hide_login: Hide or mask login data in logged http(s) requests (see Network.clean_uri())
+    :param hide_login: Hide or mask login data in logged http(s) requests (see ``Network.clean_uri()``)
 
     :type baseurl: str
     :type timeout: int
@@ -260,7 +259,7 @@ class Http(object):
 
     def HTTPDigestAuth(self, user=None, password=None):
         """
-        Creates a HTTPDigestAuth instance and returns it to the caller.
+        Create a HTTPDigestAuth instance and returns it to the caller.
 
         :param user: Username
         :param password: Password
@@ -275,7 +274,7 @@ class Http(object):
 
     def post_json(self, url=None, params=None, verify=True, auth=None, json=None, files={}):
         """
-        Launches a POST request and returns JSON answer as a dict or None on error.
+        Launch a POST request and return JSON answer as a dict or None on error.
 
         :param url: Optional URL to fetch from. If None (default) use baseurl given on init.
         :param params: Optional dict of parameters to add to URL query string.
@@ -301,7 +300,7 @@ class Http(object):
 
     def get_json(self, url=None, params=None, verify=True, auth=None):
         """
-        Launches a GET request and returns JSON answer as a dict or None on error.
+        Launch a GET request and return JSON answer as a dict or None on error.
 
         :param url: Optional URL to fetch from. If None (default) use baseurl given on init.
         :param params: Optional dict of parameters to add to URL query string.
@@ -327,7 +326,7 @@ class Http(object):
 
     def get_text(self, url=None, params=None, encoding=None, timeout=None):
         """
-        Launches a GET request and returns answer as string or None on error.
+        Launch a GET request and return answer as string or None on error.
 
         :param url: Optional URL to fetch from. Default is to use baseurl given to constructor.
         :param params: Optional dict of parameters to add to URL query string.
@@ -352,7 +351,7 @@ class Http(object):
 
     def download(self, url=None, local=None, params=None, verify=True, auth=None):
         """
-        Downloads a binary file to a local path
+        Download a binary file to a local path.
 
         :param url: Remote file to download. Attention: Must be full url. 'baseurl' is NOT prefixed here.
         :param local: Local file to save
@@ -381,8 +380,9 @@ class Http(object):
 
     def get_binary(self, url=None, params=None):
         """
-        Launches a GET request and returns answer as raw binary data or None on error.
-        This is usefull for downloading binary objects / files.
+        Launch a GET request and return answer as raw binary data or None on error.
+
+        This is useful for downloading binary objects / files.
 
         :param url: Optional URL to fetch from. Default is to use baseurl given to constructor.
         :param params: Optional dict of parameters to add to URL query string.
@@ -398,11 +398,13 @@ class Http(object):
 
     def response_status(self):
         """
-        Returns the status code (200, 404, ...) of the last executed request.
-        If GET request was not possible and thus no HTTP statuscode is available the returned status code = 0.
+        Return the status code (200, 404, ...) of the last executed request.
+
+        If GET request was not possible and thus no HTTP statuscode is available,
+        the returned status code is 0.
 
         :return: Status code and text of last request
-        :rtype: (int, str)
+        :rtype: tuple(int, str)
         """
         try:
             (code, reason) = (self._response.status_code, self._response.reason)
@@ -413,7 +415,7 @@ class Http(object):
 
     def response_headers(self):
         """
-        Returns a dictionary with the server return headers of the last executed request
+        Return a dictionary with the server return headers of the last executed request.
 
         :return: Headers returned by server
         :rtype: dict
@@ -422,7 +424,7 @@ class Http(object):
 
     def response_cookies(self):
         """
-        Returns a dictionary with the cookies the server may have sent on the last executed request
+        Return a dictionary with the cookies the server may have sent on the last executed request.
 
         :return: Cookies returned by server
         :rtype: dict
@@ -431,8 +433,7 @@ class Http(object):
 
     def response_object(self):
         """
-        Returns the raw response object for advanced ussage. Use if you know what you are doing.
-        Maybe this lib can be extented to your needs instead ?
+        Return the raw response object for advanced ussage.
 
         :return: Reponse object as returned by underlying requests library
         :rtype: `requests.Response <http://docs.python-requests.org/en/master/user/quickstart/#response-content>`_
@@ -441,7 +442,7 @@ class Http(object):
 
     def __post(self, url=None, params=None, timeout=None, verify=True, auth=None, json=None, data=None, files={}):
         """
-        Send POST request. Non-documented arguments are passed on to requests.request()
+        Send POST request. Non-documented arguments are passed on to requests.request().
 
         :param url: URL to which to POST
         :type url: str
@@ -465,7 +466,7 @@ class Http(object):
 
     def __get(self, url=None, params=None, timeout=None, verify=True, auth=None, stream=False):
         """
-        Send POST request. Non-documented arguments are passed on to requests.request()
+        Send POST request. Non-documented arguments are passed on to requests.request().
 
         :param url: URL to which to GET
         :type url: str
@@ -488,8 +489,7 @@ class Http(object):
 
 class Tcp_client(object):
     """
-    Provides a structured class to handle locally initiated TCP connections with two-way communication
-
+    Structured class to handle locally initiated TCP connections with two-way communication.
 
     :param host: Remote host name or ip address (v4 or v6)
     :param port: Remote host port to connect to
@@ -560,7 +560,7 @@ class Tcp_client(object):
 
     def set_callbacks(self, connected=None, receiving=None, data_received=None, disconnected=None):
         """
-        Set callbacks to caller for different socket events
+        Set callbacks to caller for different socket events.
 
         :param connected: Called whenever a connection is established successfully
         :param data_received: Called when data is received
@@ -577,7 +577,7 @@ class Tcp_client(object):
 
     def connect(self):
         """
-        Connects the socket
+        Connect the socket.
 
         :return: False if an error prevented us from launching a connection thread. True if a connection thread has been started.
         :rtype: bool
@@ -597,7 +597,7 @@ class Tcp_client(object):
 
     def connected(self):
         """
-        Returns the current connection state
+        Return the current connection state.
 
         :return: True if an active connection exists,else False.
         :rtype: bool
@@ -606,7 +606,7 @@ class Tcp_client(object):
 
     def send(self, message):
         """
-        Sends a message to the server. Can be a string, bytes or a bytes array.
+        Send a message to the server. Can be a string, bytes or a bytes array.
 
         :return: True if message has been successfully sent, else False.
         :rtype: bool
@@ -629,7 +629,7 @@ class Tcp_client(object):
 
     def _connect_thread_worker(self):
         """
-        Thread worker to handle connection
+        Thread worker to handle connection.
         """
         if not self.__connect_threadlock.acquire(blocking=False):
             self.logger.warning(f'Connection attempt already in progress for {self._host}, ignoring new request')
@@ -672,7 +672,7 @@ class Tcp_client(object):
 
     def _connect(self):
         """
-        Initiate connection
+        Initiate connection.
         """
         self.logger.debug(f'Connecting to {self._host} using {"IPv6" if self._family == socket.AF_INET6 else "IPv4"} {self._hostip} on TCP port {self._port} {"with" if self._autoreconnect else "without"} autoreconnect')
         # Try to connect to remote host using ip (v4 or v6)
@@ -692,25 +692,17 @@ class Tcp_client(object):
 
     def __receive_thread_worker(self):
         """
-        Thread worker to handle receiving
+        Thread worker to handle receiving.
         """
         waitobj = IOWait()
         waitobj.watch(self._socket, read=True)
-        # BMX poller = select.poll()
-        # BMX poller.register(self._socket, select.POLLIN | select.POLLPRI | select.POLLHUP | select.POLLERR)
         __buffer = b''
 
         self._is_receiving = True
         self._receiving_callback and self._receiving_callback(self)
         while self._is_connected and self.__running:
-            # BMX events = poller.poll(1000)
             events = waitobj.wait(1000)     # BMX
-            # BMX for fd, event in events:
             for fileno, read, write in events:  # BMX
-                # BMX if event & select.POLLHUP:
-                # BMX     self.logger.warning("Client socket closed")
-                # Check if POLLIN event triggered
-                # BMX if event & (select.POLLIN | select.POLLPRI):
                 if read:
                     msg = self._socket.recv(4096)
                     # Check if incoming message is not empty
@@ -746,7 +738,6 @@ class Tcp_client(object):
                         # Peer connection closed
                         self.logger.warning(f'Connection closed by peer {self._host}')
                         self._is_connected = False
-                        # BMX poller.unregister()
                         waitobj.unwatch(self._socket)
                         self._disconnected_callback and self._disconnected_callback(self)
                         if self._autoreconnect:
@@ -756,7 +747,10 @@ class Tcp_client(object):
 
     def _sleep(self, time_lapse):
         """
-        Sleep (at least) <time_lapse> seconds, but abort if self.__running changes to False
+        Sleep (at least) <time_lapse> seconds, but abort if self.__running changes to False.
+
+        :param time_lapse: wait time in seconds
+        :type time: int
         """
         time_start = time.time()
         time_end = (time_start + time_lapse)
@@ -767,7 +761,7 @@ class Tcp_client(object):
 
     def close(self):
         """
-        Closes the current client socket
+        Close the current client socket.
         """
         self.logger.info(f'Closing connection to {self._host} on TCP port {self._port}')
         self.__running = False
@@ -779,7 +773,8 @@ class Tcp_client(object):
 
 class ConnectionClient(object):
     """
-    Client object that represents a connected client returned by a Tcp_server instance on incoming connection
+    Client object that represents a connected client returned by a Tcp_server instance on incoming connection.
+
     This class should normally **not be instantiated manually**, but is provided by the Tcp_server via the callbacks
 
     :param server: The tcp_server passes a reference to itself to access parent methods
@@ -808,13 +803,13 @@ class ConnectionClient(object):
     @property
     def socket(self):
         """
-        Socket getter
+        Socket getter.
         """
         return self.__socket
 
     def set_callbacks(self, data_received=None, will_close=None):
         """
-        Set callbacks for different socket events (client based)
+        Set callbacks for different socket events (client based).
 
         :param data_received: Called when data is received
         :type data_received: function
@@ -824,7 +819,7 @@ class ConnectionClient(object):
 
     async def __drain_writer(self):
         """
-        helper coroutine to ensure drain() is called, handle if called after connection lost
+        Ensure drain() is called.
         """
         try:
             await self.writer.drain()
@@ -833,7 +828,7 @@ class ConnectionClient(object):
 
     def send(self, message):
         """
-        Send a string to connected client
+        Send a string to connected client.
 
         :param msg: Message to send
         :type msg: string | bytes | bytearray
@@ -858,7 +853,7 @@ class ConnectionClient(object):
 
     def send_echo_off(self):
         """
-        Sends an IAC telnet command to ask client to turn it's echo off
+        Send an IAC telnet command to ask client to turn its echo off.
         """
         command = bytearray([0xFF, 0xFB, 0x01])
         string = self._iac_to_string(command)
@@ -867,7 +862,7 @@ class ConnectionClient(object):
 
     def send_echo_on(self):
         """
-        Sends an IAC telnet command to ask client to turn it's echo on again
+        Send an IAC telnet command to ask client to turn its echo on again.
         """
         command = bytearray([0xFF, 0xFC, 0x01])
         string = self._iac_to_string(command)
@@ -876,7 +871,9 @@ class ConnectionClient(object):
 
     def _process_IAC(self, msg):
         """
-        Processes incomming IAC messages. Does nothing for now except logging them in clear text
+        Process incomming IAC messages.
+
+        NOTE: Does nothing for now except logging them in clear text
         """
         if len(msg) >= 3:
             string = self._iac_to_string(msg[:3])
@@ -886,9 +883,10 @@ class ConnectionClient(object):
 
     def close(self):
         """
-        Client socket closes itself
+        Close client socket.
         """
-        self._will_close_callback and self._will_close_callback(self)
+        if self._will_close_callback:
+            self._will_close_callback(self)
         self.set_callbacks(data_received=None, will_close=None)
         self.writer.close()
         return True
@@ -906,13 +904,13 @@ class ConnectionClient(object):
 
 class Tcp_server(object):
     """
-    This class provides a threaded TCP listener which dispatches connections (and possibly received data) via callbacks
+    Threaded TCP listener which dispatches connections (and possibly received data) via callbacks.
 
     NOTE: The callbacks need to expect the following arguments:
 
-    - ``incoming_connection(server, client)`` where `server` ist the `Tcp_server` instance and `client` is a `ConnectionClient` for the current connection
-    - ``data_received(server, client, data)`` where `server` ist the `Tcp_server` instance, `client` is a `ConnectionClient` for the current connection, and `data` is a string containing received data
-    - ``disconnected(server, client)`` where `server` ist the `Tcp_server` instance and `client` is a `ConnectionClient` for the closed connection
+    - ``incoming_connection(server, client)`` where ``server`` ist the ``Tcp_server`` instance and ``client`` is a ``ConnectionClient`` for the current connection
+    - ``data_received(server, client, data)`` where ``server`` ist the ``Tcp_server`` instance, ``client`` is a ``ConnectionClient`` for the current connection, and ``data`` is a string containing received data
+    - ``disconnected(server, client)`` where ``server`` ist the ``Tcp_server`` instance and ``client`` is a ``ConnectionClient`` for the closed connection
 
     :param host: Local host name or ip address (v4 or v6). Default is '::' which listens on all IPv4 and all IPv6 addresses available.
     :param port: Local port to connect to
@@ -966,7 +964,7 @@ class Tcp_server(object):
 
     def set_callbacks(self, incoming_connection=None, disconnected=None, data_received=None):
         """
-        Set callbacks to caller for different socket events
+        Set callbacks to caller for different socket events.
 
         :param connected: Called whenever a connection is established successfully
         :param data_received: Called when data is received
@@ -982,7 +980,7 @@ class Tcp_server(object):
 
     def start(self):
         """
-        Start the server socket
+        Start the server socket.
 
         :return: False if an error prevented us from launching a connection thread. True if a connection thread has been started.
         :rtype: bool
@@ -1010,7 +1008,7 @@ class Tcp_server(object):
 
     def __listening_thread_worker(self):
         """
-        Runs the asyncio loop in a separate thread to not block the Tcp_server.start() method
+        Run the asyncio loop in a separate thread to not block the Tcp_server.start() method.
         """
         asyncio.set_event_loop(self.__loop)
         self._is_listening = True
@@ -1031,7 +1029,9 @@ class Tcp_server(object):
 
     async def __handle_connection(self, reader, writer):
         """
-        Handles incoming connection. One handler per client
+        Handle incoming connection.
+
+        Each client gets its own handler.
         """
         peer = writer.get_extra_info('peername')
         socket_object = writer.get_extra_info('socket')
@@ -1078,7 +1078,7 @@ class Tcp_server(object):
 
     def __close_client(self, client):
         """
-        Close client connection
+        Close client connection.
 
         :param client: client object
         :type client: lib.network.ConnectionClient
@@ -1090,7 +1090,7 @@ class Tcp_server(object):
 
     def listening(self):
         """
-        Returns the current listening state
+        Return the current listening state.
 
         :return: True if the server socket is actually listening, else False.
         :rtype: bool
@@ -1099,7 +1099,7 @@ class Tcp_server(object):
 
     def send(self, client, msg):
         """
-        Send a string to connected client
+        Send a string to connected client.
 
         :param client: Client Object to send message to
         :param msg: Message to send
@@ -1115,7 +1115,7 @@ class Tcp_server(object):
 
     def disconnect(self, client):
         """
-        Disconnects a specific client
+        Disconnect a specific client.
 
         :param client: Client Object to disconnect
         :type client: lib.network.ConnectionClient
@@ -1125,7 +1125,7 @@ class Tcp_server(object):
 
     def close(self):
         """
-        Closes running listening socket
+        Close running listening socket.
         """
         self.logger.info(f'Shutting down listening socket on host {self._host} port {self._port}')
         asyncio.set_event_loop(self.__loop)
@@ -1149,12 +1149,11 @@ class Tcp_server(object):
 
 class Udp_server(object):
     """
-    This class provides a threaded UDP listener which dispatches received data via callbacks.
+    Threaded UDP listener which dispatches received data via callbacks.
 
     NOTE: The callbacks need to expect the following arguments:
 
-    - ``data_received(addr, data)`` where `addr` is a tuple with `('<remote_ip>', remote_port)` and `data` is the received data as string
-
+    - ``data_received(addr, data)`` where ``addr`` is a tuple with ``('<remote_ip>', remote_port)`` and ``data`` is the received data as string
 
     :param host: Local hostname or ip address (v4 or v6). Default is '' which listens on all IPv4 addresses available.
     :param port: Local port to connect to
@@ -1204,7 +1203,7 @@ class Udp_server(object):
 
     def start(self):
         """
-        Start the server socket
+        Start the server socket.
 
         :return: False if an error prevented us from launching a connection thread. True if a connection thread has been started.
         :rtype: bool
@@ -1235,7 +1234,7 @@ class Udp_server(object):
 
     def set_callbacks(self, data_received=None):
         """
-        Set callbacks to caller for different socket events
+        Set callbacks to caller for different socket events.
 
         :param data_received: Called when data is received
 
@@ -1245,7 +1244,7 @@ class Udp_server(object):
 
     def listening(self):
         """
-        Returns the current listening state
+        Return the current listening state.
 
         :return: True if the server socket is actually listening, else False.
         :rtype: bool
@@ -1254,7 +1253,7 @@ class Udp_server(object):
 
     def close(self):
         """
-        Closes running listening socket
+        Close running listening socket.
         """
         self.logger.info(f'Shutting down listening socket on host {self._host} port {self._port}')
         asyncio.set_event_loop(self.__loop)
@@ -1285,14 +1284,14 @@ class Udp_server(object):
 
     async def __start_server(self):
         """
-        starts the actual server class
+        Start the actual server class.
         """
         self.__server.run(self._ipaddr, self._port, self.__loop)
         self.__server.subscribe(self.__handle_connection)
 
     def __listening_thread_worker(self):
         """
-        Runs the asyncio loop in a separate thread to not block the Udp_server.start() method
+        Run the asyncio loop in a separate thread to not block the Udp_server.start() method.
         """
         self._is_listening = True
         self.logger.debug('listening thread set is_listening to True')
@@ -1309,7 +1308,9 @@ class Udp_server(object):
 
     async def __handle_connection(self, data, addr):
         """
-        Handles incoming connection. One handler per datagram
+        Handle incoming connection.
+
+        As UDP is stateless, each datagram creates a new handler.
 
         :param data: data received from socket
         :type data: bytes
