@@ -29,6 +29,7 @@ import cherrypy
 from lib.model.module import Module
 from lib.module import Modules
 from lib.shtime import Shtime
+from lib.Utils import Utils
 
 
 class SampleModule(Module):
@@ -49,7 +50,6 @@ class SampleModule(Module):
         self.shtime = Shtime.get_instance()
         self.logger.debug("Module '{}': Initializing".format(self._shortname))
 
-
         # Test if http module is loaded (if the module uses http)
         # try:
         #     self.mod_http = Modules.get_instance().get_module('http')  # try/except to handle running in a core version that does not support modules
@@ -63,7 +63,6 @@ class SampleModule(Module):
         #
         # self._showtraceback = self.mod_http._showtraceback
 
-
         # get the parameters for the module (as defined in metadata module.yaml):
         self.logger.debug("Module '{}': Parameters = '{}'".format(self._shortname, dict(self._parameters)))
         try:
@@ -75,8 +74,7 @@ class SampleModule(Module):
             self._init_complete = False
             return
 
-        ip = get_local_ipv4_address()
-
+        ip = Utils.get_local_ipv4_address()  # remove line if `ip` unused
 
     def start(self):
         """
@@ -86,7 +84,6 @@ class SampleModule(Module):
         Otherwise don't enter code here
         """
         pass
-
 
     def stop(self):
         """
@@ -99,33 +96,5 @@ class SampleModule(Module):
         pass
 
 
-
-def get_local_ipv4_address():
-    """
-    Get's local ipv4 address of the interface with the default gateway.
-    Return '127.0.0.1' if no suitable interface is found
-
-    :return: IPv4 address as a string
-    :rtype: string
-    """
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.connect(('8.8.8.8', 1))
-        IP = s.getsockname()[0]
-    except:
-        IP = '127.0.0.1'
-    finally:
-        s.close()
-    return IP
-
-
 def translate(s):
     return s
-
-
-#import socket
-
-#from lib.plugin import Plugins
-#from lib.utils import Utils
-
-

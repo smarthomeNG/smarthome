@@ -84,8 +84,8 @@ class MockSmartHome():
 
 
     def __init__(self):
-        VERSION = '1.7a.'
-        VERSION += '0.man'
+        VERSION = '1.8.'
+        VERSION += '2a.man'
         self.version = VERSION
         self.python_bin = os.environ.get('_','')
         self.__logs = {}

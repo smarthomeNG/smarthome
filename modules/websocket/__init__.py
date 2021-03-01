@@ -22,7 +22,6 @@
 
 import asyncio
 import janus
-import pathlib
 import ssl
 import threading
 import decimal
@@ -69,7 +68,7 @@ class Websocket(Module):
         # get the parameters for the module (as defined in metadata module.yaml):
         self.logger.debug("Module '{}': Parameters = '{}'".format(self._shortname, dict(self._parameters)))
         self.ip = self.get_parameter_value('ip')
-        #if self.ip == '0.0.0.0':
+        # if self.ip == '0.0.0.0':
         #    self.ip = Utils.get_local_ipv4_address()
         self.port = self.get_parameter_value('port')
         self.tls_port = self.get_parameter_value('tls_port')
@@ -78,10 +77,10 @@ class Websocket(Module):
         self.tls_key = self.get_parameter_value('tls_key')
 
         # parameters for smartVISU handling are initialized by the smartvisu plugin
-        #self.sv_enabled = self.get_parameter_value('sv_enabled')
-        #self.sv_acl = self.get_parameter_value('default_acl')
-        #self.sv_querydef = self.get_parameter_value('sv_querydef')
-        #self.sv_ser_upd_cycle = self.get_parameter_value('sv_ser_upd_cycle')
+        # self.sv_enabled = self.get_parameter_value('sv_enabled')
+        # self.sv_acl = self.get_parameter_value('default_acl')
+        # self.sv_querydef = self.get_parameter_value('sv_querydef')
+        # self.sv_ser_upd_cycle = self.get_parameter_value('sv_ser_upd_cycle')
         self.sv_enabled = False
         self.sv_acl = 'deny'
         self.sv_querydef = False
@@ -137,7 +136,6 @@ class Websocket(Module):
             self.logger.error("Websocket Server: Cannot start server - Error: {}".format(e))
         return
 
-
     def stop(self):
         """
         If the module has started threads or uses python modules that created threads,
@@ -148,7 +146,7 @@ class Websocket(Module):
         self.logger.info("Shutting down websoocket server(s)...")
 #        self.stop_async = True
 
-        #self.loop.call_soon_threadsafe(self.loop.stop)
+        # self.loop.call_soon_threadsafe(self.loop.stop)
 
         try:
             self._server_thread.join()
@@ -157,7 +155,6 @@ class Websocket(Module):
             pass
         time.sleep(10)
         return
-
 
     def set_smartvisu_support(self, protocol_enabled=False, default_acl='ro', query_definitions=False, series_updatecycle=0):
         """
@@ -172,11 +169,11 @@ class Websocket(Module):
         self.sv_querydef = query_definitions
         self.sv_ser_upd_cycle = series_updatecycle
         self.logger.info(f"set_smartvisu_support: Set to protocol_enabled={protocol_enabled}, default_acl={default_acl}, query_definitions={query_definitions}, series_updatecycle={series_updatecycle}")
-        #self.sv_config = {'enabled': self.sv_enabled, 'acl': self.sv_acl, 'query_def': self.sv_querydef, 'upd_cycle': self.sv_ser_upd_cycle}
-        #self.logger.warning(f"sv_config {self.sv_config}")
+        # self.sv_config = {'enabled': self.sv_enabled, 'acl': self.sv_acl, 'query_def': self.sv_querydef, 'upd_cycle': self.sv_ser_upd_cycle}
+        # self.logger.warning(f"sv_config {self.sv_config}")
 
-        #self.stop()
-        #self.start()
+        # self.stop()
+        # self.start()
         return
 
 
@@ -278,7 +275,6 @@ class Websocket(Module):
 
         return
 
-
     async def handle_new_connection(self, websocket, path):
         """
         Wait for incoming connection and handle the request
@@ -301,7 +297,6 @@ class Websocket(Module):
             await self.unregister(websocket)
         return
 
-
     async def register(self, websocket):
         """
         Register a new incoming connection
@@ -310,7 +305,6 @@ class Websocket(Module):
         await self.log_connection_event('added', websocket)
         return
 
-
     async def unregister(self, websocket):
         """
         Unregister an incoming connection
@@ -318,7 +312,6 @@ class Websocket(Module):
         self.USERS.remove(websocket)
         await self.log_connection_event('removed', websocket)
         return
-
 
     async def log_connection_event(self, action, websocket):
         """
@@ -334,7 +327,6 @@ class Websocket(Module):
             self.logger.debug("- user: {}   path: {}    secure: {}".format(u.remote_address, u.path, u.secure))
         return
 
-
     """
     ===============================================================================
     =
@@ -347,22 +339,18 @@ class Websocket(Module):
     def state_event(self):
         return json.dumps({"type": "state", **self.STATE})
 
-
     def users_event(self):
         return json.dumps({"type": "users", "count": len(self.USERS)})
-
 
     async def notify_state(self):
         if self.USERS:  # asyncio.wait doesn't accept an empty list
             message = self.state_event()
             await asyncio.wait([user.send(message) for user in self.USERS])
 
-
     async def notify_users(self):
         if self.USERS:  # asyncio.wait doesn't accept an empty list
             message = self.users_event()
             await asyncio.wait([user.send(message) for user in self.USERS])
-
 
     async def counter_sync(self, websocket):
         await self.notify_users()
@@ -395,7 +383,7 @@ class Websocket(Module):
     """
 
     # variables for smartVISU protocol
-    #monitor = {'item': [], 'rrd': [], 'log': []}
+    # monitor = {'item': [], 'rrd': [], 'log': []}
     sv_monitor_items = {}
     sv_monitor_logs = {}
     sv_clients = {}
@@ -420,10 +408,8 @@ class Websocket(Module):
                 await asyncio.sleep(1)
         return
 
-
     def client_address(self, websocket):
         return websocket.remote_address[0] + ':' + str(websocket.remote_address[1])
-
 
     def json_serial(self, obj):
         """JSON serializer for objects not serializable by default json code"""
@@ -435,10 +421,9 @@ class Websocket(Module):
 
         raise TypeError("Type %s not serializable" % type(obj))
 
-
     async def smartVISU_protocol_v4(self, websocket):
 
-        #items = []
+        # items = []
 
         self.logs = self._sh.return_logs()
         self._sh.add_event_listener(['log'], self.update_visulog)
@@ -449,7 +434,7 @@ class Websocket(Module):
         self.sv_clients[client_addr]['websocket'] = websocket
         self.sv_clients[client_addr]['sw'] = 'Visu'
         self.logger.info("smartVISU_protocol_v4: Client {} started".format(client_addr))
-        #client_addr = websocket.remote_address[0] + ':' + str(websocket.remote_address[1])
+        # client_addr = websocket.remote_address[0] + ':' + str(websocket.remote_address[1])
         await self.get_shng_class_instances()
 
         if not self.janus_queue:
@@ -461,7 +446,7 @@ class Websocket(Module):
                 command = data.get("cmd", '')
                 protocol = 'wss' if websocket.secure else 'ws '
                 # self.logger.warning("{} <CMD  : '{}'   -   from {}".format(protocol, data, client_addr))
-                self.logger.info(f"{client_addr} snt '{data}'")
+                self.logger.info(f"{client_addr} sent '{data}'")
                 answer = {"error": "unhandled command"}
 
                 try:
@@ -613,7 +598,7 @@ class Websocket(Module):
                             item_acl = self.sv_acl
                         if item_acl != 'deny':
                             items.append([path, item()])
-                        if not self.update_visuitem in item.get_method_triggers():
+                        if self.update_visuitem not in item.get_method_triggers():
                             item.add_method_trigger(self.update_visuitem)
                     else:
                         self.logger.error("prepare_monitor: No item '{}' found".format(path))
@@ -650,7 +635,6 @@ class Websocket(Module):
         self.logger.info("Client {0} new monitored items are {1}".format(client_addr, newmonitor_items))
         return answer
 
-
     async def prepare_series(self, data, client_addr):
         """
         Prepare the return of series data
@@ -677,7 +661,7 @@ class Websocket(Module):
         if item is not None:
             if hasattr(item, 'series'):
                 try:
-                    #reply = item.series(series, start, end, count)
+                    # reply = item.series(series, start, end, count)
                     reply = await self.loop.run_in_executor(None, item.series, series, start, end, count)
                 except Exception as e:
                     self.logger.error("Problem fetching series for {0}: {1} - Wrong sqlite/database plugin?".format(path, e))
@@ -700,7 +684,6 @@ class Websocket(Module):
                     self.logger.warning("Client {0} requested invalid series: {1}.".format(client_addr, path))
         return answer
 
-
     def set_periodic_series_updates(self, reply, client_addr):
         """
         -> blocking method - called via run_in_executor()
@@ -711,7 +694,6 @@ class Websocket(Module):
         self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
         self._series_lock.release()
         return
-
 
     async def update_all_series(self):
         """
@@ -763,12 +745,11 @@ class Websocket(Module):
                 # wait for 10 seconds before running update loop again (loop gets update cycle from database plugin)
                 await asyncio.sleep(10)
 
-
     def update_series(self, client_addr):
         """
         -> blocking method - called via run_in_executor()
         """
-        websocket = self.sv_clients[client_addr]['websocket']
+        # websocket = self.sv_clients[client_addr]['websocket']
         now = self.shtime.now()
         self._series_lock.acquire()
         remove = []
@@ -778,7 +759,7 @@ class Websocket(Module):
         if series_entry is not None:
             for sid, series in self.sv_update_series[client_addr].items():
                 if (series['update'] < now) or self.sv_ser_upd_cycle > 0:
-                    #self.logger.warning("update_series: {} - Processing sid={}, series={}".format(client_addr, sid, series))
+                    # self.logger.warning("update_series: {} - Processing sid={}, series={}".format(client_addr, sid, series))
                     item = self.items.return_item(series['params']['item'])
                     try:
                         reply = item.series(**series['params'])
@@ -797,7 +778,6 @@ class Websocket(Module):
 
         self._series_lock.release()
         return series_replys
-
 
     async def cancel_series(self, data, client_addr):
         """
@@ -828,7 +808,7 @@ class Websocket(Module):
         self.logger.info("Series cancelation: path={}, series={}, start={}, end={}, count={}".format(path, series, start, end, count))
         item = self.items.return_item(path)
         try:
-            #reply = item.series(series, start, end, count)
+            # reply = item.series(series, start, end, count)
             reply = await self.loop.run_in_executor(None, item.series, series, start, end, count)
             self.logger.info("cancel_series: reply={}".format(reply))
             self.logger.info("cancel_series: self.sv_update_series={}".format(self.sv_update_series))
@@ -837,7 +817,6 @@ class Websocket(Module):
         else:
             answer = await self.loop.run_in_executor(None, self.cancel_periodic_series_updates, reply, path, client_addr)
         return answer
-
 
     def cancel_periodic_series_updates(self, reply, path, client_addr):
         """
@@ -855,7 +834,6 @@ class Websocket(Module):
             answer = {'cmd': 'series_cancel', 'error': "No series for path {} found in list".format(path)}
         self._series_lock.release()
         return answer
-
 
     async def update_visu(self):
         """
@@ -901,14 +879,14 @@ class Websocket(Module):
         send JSON data with new value of an item
         """
         items = []
-        #self.logger.warning("update_item: self.monitor['item']")
+        # self.logger.warning("update_item: self.monitor['item']")
         items_list = list(self.sv_monitor_items.keys())
         for client_addr in items_list:
             websocket = self.sv_clients[client_addr]['websocket']
             for candidate in self.sv_monitor_items[client_addr]:
 
                 try:
-                    #self.logger.debug("Send update to Client {0} for candidate {1} and item_name {2}?".format(client_addr, candidate, item_name))
+                    # self.logger.debug("Send update to Client {0} for candidate {1} and item_name {2}?".format(client_addr, candidate, item_name))
                     path_parts = candidate.split('.property.')
                     if path_parts[0] != item_name:
                         continue
@@ -933,7 +911,7 @@ class Websocket(Module):
                 except:
                     pass
 
-            if len(items): # only send an update if item/value pairs found to be send
+            if len(items):  # only send an update if item/value pairs found to be send
                 data = {'cmd': 'item', 'items': items}
                 msg = json.dumps(data, default=self.json_serial)
                 try:
@@ -977,7 +955,6 @@ class Websocket(Module):
 
         return
 
-
     async def request_logic(self, data, client_addr):
         """
         Request logic (trigger, enable, disable)
@@ -998,18 +975,17 @@ class Websocket(Module):
                         self.logger.info("Client {0} enabled logic {1}".format(client_addr, name))
                         self.logics.enable_logic(name)
                         # non-persistant enable
-                        #self.visu_logics[name].enable()
+                        # self.visu_logics[name].enable()
                     else:
                         self.logger.info("Client {0} disabled logic {1}".format(client_addr, name))
                         self.logics.disable_logic(name)
                         # non-persistant disable
-                        #self.visu_logics[name].disable()
+                        # self.visu_logics[name].disable()
             else:
                 self.logger.warning("Client {0} requested logic without visu-access: {1}".format(client_addr, name))
         else:
             self.logger.warning("Client {0} requested invalid logic: {1}".format(client_addr, name))
         return
-
 
     async def request_list_items(self, path, client_addr):
         """
@@ -1020,12 +996,12 @@ class Websocket(Module):
         for i in self._sh.return_items():
             include = False
             #            if i.get('visu_acl', '').lower() != 'no':
-            if (path == '') and (not '.' in i._path):
+            if (path == '') and ('.' not in i._path):
                 include = True
             else:
                 if i._path.startswith(path + '.'):
                     p = i._path[len(path + '.'):]
-                    if not '.' in p:
+                    if '.' not in p:
                         include = True
             if include:
                 myitem = collections.OrderedDict()
@@ -1037,7 +1013,6 @@ class Websocket(Module):
         response = collections.OrderedDict([('cmd', 'list_items'), ('items', myitems)])
         self.logger.info("Requested a list of defined items: {}".format(response))
         return response
-
 
     async def request_list_logics(self, enabled, client_addr):
         """
@@ -1058,10 +1033,9 @@ class Websocket(Module):
                     if (not enabled) or (logic_def['enabled'] == 1):
                         logiclist.append(logic_def)
 
-        response = collections.OrderedDict([('cmd','list_logics'), ('logics',logiclist)])
+        response = collections.OrderedDict([('cmd', 'list_logics'), ('logics', logiclist)])
         self.logger.info("Requested a list of defined logics: {}".format(response))
         return response
-
 
     # ===============================================================================
     # Thread based (sync) methods of smartVISU support
@@ -1082,10 +1056,9 @@ class Websocket(Module):
         if self.janus_queue:
             # if queue has been created from the async side
             self.janus_queue.sync_q.put(['item', item_data])
-            #self.logger.warning("update_visuitem: item={}, value={}, caller={}, source={}".format(item_data[0], item_data[1], item_data[2], item_data[3]))
+            # self.logger.warning("update_visuitem: item={}, value={}, caller={}, source={}".format(item_data[0], item_data[1], item_data[2], item_data[3]))
 
         return
-
 
     def update_visulog(self, event, data):
         """

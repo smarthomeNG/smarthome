@@ -28,7 +28,7 @@
 import threading
 import logging
 import json
-#import os
+# import os
 import platform
 import socket    # for gethostbyname
 import inspect
@@ -37,7 +37,6 @@ import datetime
 import paho.mqtt.client as mqtt
 
 from lib.model.module import Module
-from lib.module import Modules
 from lib.shtime import Shtime
 from lib.utils import Utils
 from lib.scheduler import Scheduler
@@ -67,7 +66,6 @@ class Mqtt(Module):
         self._sh = sh
         self.shtime = Shtime.get_instance()
         self.logger.debug("Module '{}': Initializing".format(self._shortname))
-
 
         # get the parameters for the plugin (as defined in metadata plugin.yaml):
         self.logger.debug("Module '{}': Parameters = '{}'".format(self._shortname, dict(self._parameters)))
@@ -106,17 +104,16 @@ class Mqtt(Module):
             self.broker_hostname = ''
 
         # handle last_will and birth topic configuration
-        if (self.last_will_topic != '') and (self.last_will_topic [-1] == '/'):
+        if (self.last_will_topic != '') and (self.last_will_topic[-1] == '/'):
             self.last_will_topic = self.last_will_topic[:-1]
         if self.birth_topic == '':
             self.birth_topic = self.last_will_topic
         else:
-            if self.birth_topic [-1] == '/':
+            if self.birth_topic[-1] == '/':
                 self.birth_topic = self.birth_topic[:-1]
 
         # if self.items_topic_prefix [-1] != '/':
         #     self.items_topic_prefix = self.items_topic_prefix + '/'
-
 
         if self.password == '':
             self.password = None
@@ -152,7 +149,6 @@ class Mqtt(Module):
 
         self.logicpayloadtypes = {}  # payload types for subscribed topics for triggering logics
 
-
         # ONLY used for multiinstance handling of plugins?
         # # needed because self.set_attr_value() can only set but not add attributes
         # self.at_instance_name = self.get_instance_name()
@@ -173,10 +169,7 @@ class Mqtt(Module):
             # return
             pass
 
-
-        ip = _get_local_ipv4_address()
-
-
+ 
     def start(self):
         """
         This method starts the mqtt module
@@ -220,14 +213,13 @@ class Mqtt(Module):
         self.logger.info("Connecting to broker '{}:{}'. Starting mqtt client '{}'".format(self.broker_ip, self.broker_port, clientname))
         self._client = mqtt.Client(client_id=clientname)
 
-
         # set testament, if configured
         if (self.last_will_topic != '') and (self.last_will_payload != ''):
             retain = False
             if (self.birth_topic != '') and (self.birth_payload != ''):
                 retain = True
             self._client.will_set(self.last_will_topic, self.last_will_payload, self.qos, retain=retain)
-            self.logger.debug("- Last will set to topic '{}' and payload '{}' with retain set to '{}'".format(self.last_will_topic,self.last_will_payload, retain))
+            self.logger.debug("- Last will set to topic '{}' and payload '{}' with retain set to '{}'".format(self.last_will_topic, self.last_will_payload, retain))
 
         if self.username != '':
             self._client.username_pw_set(self.username, self.password)
@@ -394,14 +386,14 @@ class Mqtt(Module):
 
         source_type = self._get_caller_type()
         self.logger.debug("'{}()' - called from {} by '{}()'".format(inspect.stack()[0][3], source_type, inspect.stack()[1][3]))
-        #self.logger.debug("subscribe_topic: inspect.stack()[2][3] = '{}', inspect.stack()[3][3] = '{}'".format(inspect.stack()[2][3], inspect.stack()[3][3]))
+        # self.logger.debug("subscribe_topic: inspect.stack()[2][3] = '{}', inspect.stack()[3][3] = '{}'".format(inspect.stack()[2][3], inspect.stack()[3][3]))
 
-        if qos == None:
+        if qos is None:
             qos = self.qos
 
         if bool_values:
-            if not (isinstance(bool_values, list) and len(bool_values)==2):
-                self.logger.warning("subscribe_topic: topic '{}', source '{}': Invalid bool_values specified ('{}') - Ignoring bool_values".format( topic, source, bool_values))
+            if not (isinstance(bool_values, list) and len(bool_values) == 2):
+                self.logger.warning("subscribe_topic: topic '{}', source '{}': Invalid bool_values specified ('{}') - Ignoring bool_values".format(topic, source, bool_values))
 
         if not payload_type.lower() in ['str', 'num', 'bool', 'list', 'dict', 'scene', 'bytes']:
             self.logger.warning("Invalid payload-datatype '{}' specified for {} '{}', ignored".format(payload_type, source_type, callback))
@@ -527,7 +519,7 @@ class Mqtt(Module):
         if plugin:
             self.logger.info("_callback_to_plugin: Using topic '{}', payload '{}' (type {}) for callback to plugin '{}' {}".format(topic, payload, datatype, plugin_name, plugin))
 
-            #self._sh.logics.trigger_logic(logic, source='mqtt', by=topic, value=payload)
+            #s elf._sh.logics.trigger_logic(logic, source='mqtt', by=topic, value=payload)
             plugin(topic, payload, qos, retain)
             subscription_found = True
         else:
@@ -545,7 +537,7 @@ class Mqtt(Module):
         :param message:   an instance of MQTTMessage.
                           This is a class with members topic, payload, qos, retain.
         """
-        self.logger.debug( "_on_mqtt_message: RECEIVED topic '{}', payload '{}, QoS '{}', retain '{}'".format(message.topic, message.payload, message.qos, message.retain))
+        self.logger.debug("_on_mqtt_message: RECEIVED topic '{}', payload '{}, QoS '{}', retain '{}'".format(message.topic, message.payload, message.qos, message.retain))
 
         # lock
         self._subscribed_topics_lock.acquire()
@@ -587,15 +579,15 @@ class Mqtt(Module):
 
         finally:
             # unlock
-            #self._subscribed_topics_lock.release()
+            # self._subscribed_topics_lock.release()
             pass
 
         if not subscription_found:
             if not self._handle_broker_infos(message):
                 self.logger.error("_on_mqtt_message: Received topic '{}', payload '{}', QoS '{}', retain '{}' WITHOUT matching item/logic".format( message.topic, message.payload, message.qos, message.retain))
 
-
     # ----------------------------------------------------------------------------------------
+
 
     def _get_qos_forTopic(self, item):
         """
@@ -672,6 +664,7 @@ class Mqtt(Module):
         self.logger.debug("_handle_broker_infos: $SYS/broker info = '{}'".format(self._broker))
         return True
 
+
     def _unsubscribe_broker_infos(self):
         """
         Unsubscribe from broker's infos
@@ -710,19 +703,20 @@ class Mqtt(Module):
             # subscribe to topics to listen for items
             for topic in self._subscribed_topics:
                 item = self._subscribed_topics[topic]
-                self._client.subscribe(topic, qos=self._get_qos_forTopic(item) )
-                self.logger.info("Listening on topic '{}' for item '{}'".format( topic, item.id() ))
+                self._client.subscribe(topic, qos=self._get_qos_forTopic(item))
+                self.logger.info("Listening on topic '{}' for item '{}'".format(topic, item.id()))
 
             self.logger.info("self._subscribed_topics = {}".format(self._subscribed_topics))
 
             return
 
-        msg = "Connection returned result '{}': {} (client={}, userdata={}, self._client={})".format( str(rc), mqtt.connack_string(rc), client, userdata, self._client )
+        msg = "Connection returned result '{}': {} (client={}, userdata={}, self._client={})".format(str(rc), mqtt.connack_string(rc), client, userdata, self._client)
         if rc == 5:
             self.logger.error(msg)
             self._disconnect_from_broker()
         else:
             self.logger.warning(msg)
+
 
     def _on_disconnect(self, client, userdata, rc):
         """
@@ -730,7 +724,6 @@ class Mqtt(Module):
         """
         self.logger.info("Disconnection returned result '{}' ".format(rc))
         return
-
 
 
     # ---------------------------------------------------------------------------------
@@ -777,14 +770,14 @@ class Mqtt(Module):
 
         source_type = self._get_caller_type()
         self.logger.info("'{}()' - called from {} by '{}()'".format(inspect.stack()[0][3], source_type, inspect.stack()[1][3]))
-        #self.logger.info("inspect.stack()[1][1] = '{}', split = {}".format(inspect.stack()[1][1], inspect.stack()[1][1].split('/')))
+        # self.logger.info("inspect.stack()[1][1] = '{}', split = {}".format(inspect.stack()[1][1], inspect.stack()[1][1].split('/')))
 
         if not self._connected:
             return False
 
-        if qos == None:
+        if qos is None:
             qos = self.qos
-        self.logger.info("{} '{}' is publishing topic '{}' with payload '{}' (qos={}, retain={})".format(source_type, source, topic, payload, qos, retain ))
+        self.logger.info("{} '{}' is publishing topic '{}' with payload '{}' (qos={}, retain={})".format(source_type, source, topic, payload, qos, retain))
         payload = self.cast_to_mqtt(payload, bool_values)
         try:
             self._client.publish(topic=topic, payload=payload, qos=qos, retain=retain)
@@ -899,25 +892,3 @@ class Mqtt(Module):
         except Exception as e:
             self.logger.error("cast_to_mqtt: Cast exception'{}'".format(e))
         return payload_data
-
-
-
-# ----------------------------------------------------------------------------------------
-
-def _get_local_ipv4_address():
-    """
-    Get's local ipv4 address of the interface with the default gateway.
-    Return '127.0.0.1' if no suitable interface is found
-
-    :return: IPv4 address as a string
-    :rtype: string
-    """
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.connect(('8.8.8.8', 1))
-        IP = s.getsockname()[0]
-    except:
-        IP = '127.0.0.1'
-    finally:
-        s.close()
-    return IP
