@@ -402,16 +402,11 @@ class Mqtt(Module):
         if not self._subscribed_topics.get(topic, None):
             # self.logger.info("subscribe_topic: No MQTT Subscription to topic '{}' exists yet, adding topic".format(topic))
             self.logger.info("subscribe_topic: Adding topic '{}'".format(topic))
-            # lock
-            self._subscribed_topics_lock.acquire()
-            try:
+            with self._subscribed_topics_lock:
                 # add topic
                 self._subscribed_topics[topic] = {}
                 # add subscription definition
                 self._add_subscription_definition(topic, source, source_type, callback, payload_type, bool_values)
-            finally:
-                # unlock
-                self._subscribed_topics_lock.release()
 
             # subscribe to topic
             try:
@@ -421,14 +416,9 @@ class Mqtt(Module):
                 self.logger.critical("subscribe_topic: mqtt module tried to subscribe to topic '{}' for callback {}, exception: {}".format(topic, callback, e))
         else:
             self.logger.info("subscribe_topic: A MQTT Subscription to topic '{}' already exists".format(topic))
-            # lock
-            self._subscribed_topics_lock.acquire()
-            try:
+            with self._subscribed_topics_lock:
                 # add subscription definition
                 self._add_subscription_definition(topic, source, source_type, callback, payload_type, bool_values)
-            finally:
-                # unlock
-                self._subscribed_topics_lock.release()
         return
 
 
@@ -455,18 +445,13 @@ class Mqtt(Module):
             return
 
         self.logger.info("unsubscribe_topic: Subscription to topic '{}' for '{}' is removed".format(topic, source))
-        # lock
-        self._subscribed_topics_lock.acquire()
-        try:
+        with self._subscribed_topics_lock:
             # delete subscription-source for this topic
             del self._subscribed_topics[topic][source]
             if self._subscribed_topics[topic] == {}:
                 # unsubscribe on broker, if no source is subscribing the topic any more
                 del self._subscribed_topics[topic]
                 self._client.unsubscribe(topic)
-        finally:
-            # unlock
-            self._subscribed_topics_lock.release()
 
         return
 
@@ -539,48 +524,40 @@ class Mqtt(Module):
         """
         self.logger.debug("_on_mqtt_message: RECEIVED topic '{}', payload '{}, QoS '{}', retain '{}'".format(message.topic, message.payload, message.qos, message.retain))
 
-        # lock
-        self._subscribed_topics_lock.acquire()
-        subscibed_topics = list(self._subscribed_topics.keys())
-        # unlock
-        self._subscribed_topics_lock.release()
-
-        try:
-            # look for subscriptions to the received topic
-            subscription_found = False
-            for topic in subscibed_topics:
+        with self._subscribed_topics_lock:
+            subscibed_topics = list(self._subscribed_topics.keys())
+    
+        # look for subscriptions to the received topic
+        subscription_found = False
+        for topic in subscibed_topics:
+            topics_equal = False
+            if (topic.find('+') != -1) or (topic.find('#') != -1):
                 topics_equal = False
-                if (topic.find('+') != -1) or (topic.find('#') != -1):
-                    topics_equal = False
-                    wc_topic = topic.split('/')
-                    msg_topic = message.topic.split('/')
+                wc_topic = topic.split('/')
+                msg_topic = message.topic.split('/')
 
-                    equal = False
-                    if (len(wc_topic) == len(msg_topic)) or (wc_topic[len(wc_topic)-1] == '#' and (len(wc_topic) <= len(msg_topic))):
-                        equal = True
-                        for i in range(len(wc_topic)):
-                            if not (wc_topic[i] == msg_topic[i] or wc_topic[i] == '+' or wc_topic[i] == '#'):
-                                equal = False
-                        if equal:
-                            topics_equal = True
+                equal = False
+                if (len(wc_topic) == len(msg_topic)) or (wc_topic[len(wc_topic)-1] == '#' and (len(wc_topic) <= len(msg_topic))):
+                    equal = True
+                    for i in range(len(wc_topic)):
+                        if not (wc_topic[i] == msg_topic[i] or wc_topic[i] == '+' or wc_topic[i] == '#'):
+                            equal = False
+                    if equal:
+                        topics_equal = True
 
-                if (topic == message.topic) or topics_equal:
-                    topic_dict = self._subscribed_topics[topic]
+            if (topic == message.topic) or topics_equal:
+                topic_dict = self._subscribed_topics[topic]
 
-                    for subscription in topic_dict:
-                        self.logger.debug("_on_mqtt_message: subscription '{}': {}".format(subscription, topic_dict[subscription]))
-                        subscriber_type = topic_dict[subscription].get('subscriber_type', None)
-                        if subscriber_type == 'plugin':
-                            subscription_found = self._callback_to_plugin(subscription, topic_dict[subscription], message.topic, message.payload, message.qos, message.retain)
-                        elif subscriber_type == 'logic':
-                            subscription_found = self._trigger_logic(topic_dict[subscription], message.topic, message.payload)
-                        else:
-                            self.logger.error("_on_mqtt_message: received topic for unknown subscriber_type '{}'".format(subscriber_type))
+                for subscription in topic_dict:
+                    self.logger.debug("_on_mqtt_message: subscription '{}': {}".format(subscription, topic_dict[subscription]))
+                    subscriber_type = topic_dict[subscription].get('subscriber_type', None)
+                    if subscriber_type == 'plugin':
+                        subscription_found = self._callback_to_plugin(subscription, topic_dict[subscription], message.topic, message.payload, message.qos, message.retain)
+                    elif subscriber_type == 'logic':
+                        subscription_found = self._trigger_logic(topic_dict[subscription], message.topic, message.payload)
+                    else:
+                        self.logger.error("_on_mqtt_message: received topic for unknown subscriber_type '{}'".format(subscriber_type))
 
-        finally:
-            # unlock
-            # self._subscribed_topics_lock.release()
-            pass
 
         if not subscription_found:
             if not self._handle_broker_infos(message):
