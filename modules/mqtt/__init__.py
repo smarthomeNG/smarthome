@@ -445,13 +445,17 @@ class Mqtt(Module):
             return
 
         self.logger.info("unsubscribe_topic: Subscription to topic '{}' for '{}' is removed".format(topic, source))
+        needUnsubscribe = False
         with self._subscribed_topics_lock:
             # delete subscription-source for this topic
             del self._subscribed_topics[topic][source]
             if self._subscribed_topics[topic] == {}:
-                # unsubscribe on broker, if no source is subscribing the topic any more
+                # unsubscribe on broker needed, if no source is subscribing the topic any more
                 del self._subscribed_topics[topic]
-                self._client.unsubscribe(topic)
+                needUnsubscribe = True
+        if needUnsubscribe:
+            # Unsubscribe without lock (to avoid deadlock)
+            self._client.unsubscribe(topic)
 
         return
 
