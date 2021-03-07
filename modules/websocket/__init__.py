@@ -129,7 +129,8 @@ class Websocket(Module):
         """
         _name = 'modules.' + self.get_fullname() + '.websocket_server'
         try:
-            self._server_thread = threading.Thread(target=self._ws_server_thread, name=_name).start()
+            self._server_thread = threading.Thread(target=self._ws_server_thread, name=_name)
+            self._server_thread.start()
             self.logger.info("Starting websocket server(s)...")
         except Exception as e:
             self.conn = None
@@ -146,14 +147,14 @@ class Websocket(Module):
         self.logger.info("Shutting down websoocket server(s)...")
 #        self.stop_async = True
 
-        # self.loop.call_soon_threadsafe(self.loop.stop)
+        self.loop.call_soon_threadsafe(self.loop.stop)
 
         try:
             self._server_thread.join()
             self.logger.info("Websocket Server(s): Stopped")
-        except:
+        except Exception as err:
+            self.logger.info("Stopping websocket error: {}".format(err))
             pass
-        time.sleep(10)
         return
 
     def set_smartvisu_support(self, protocol_enabled=False, default_acl='ro', query_definitions=False, series_updatecycle=0):
