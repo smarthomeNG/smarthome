@@ -6,7 +6,6 @@ import dateutil.tz
 import logging
 
 import lib.config
-import lib.connection
 
 import lib.item
 import lib.plugin
@@ -98,7 +97,6 @@ class MockSmartHome():
             self.shtime = Shtime.get_instance()
 
         self.scheduler = MockScheduler()
-        self.connections = lib.connection.Connections()
 
         if self.shtime is None:
             lib.shtime._shtime_instance = self.shtime = Shtime(self)
