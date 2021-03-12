@@ -9,7 +9,6 @@ The description of their functions is shown here:
    :maxdepth: 4
    :titlesonly:
 
-   /lib/connection
    /lib/db
    /lib/logutils
    /lib/network
