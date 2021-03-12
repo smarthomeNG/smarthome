@@ -9,7 +9,7 @@ holidays>=0.9.11
 psutil
 portalocker
 
-# lib.connection / lib.network
+# lib.network
 iowait
 
 # lib.network, lib.shpypi:

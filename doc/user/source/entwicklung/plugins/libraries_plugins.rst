@@ -7,7 +7,6 @@ Die folgenden Programm Module können ebenfalls für die Plugin Entwicklung verw
    :maxdepth: 4
    :titlesonly:
 
-   /lib/connection
    /lib/db
    /lib/logutils
    /lib/network
