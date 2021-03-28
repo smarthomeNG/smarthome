@@ -627,11 +627,17 @@ def write_configfile(plg, configfile_dir, language='de'):
                 if fp != '':
                     fp += ', '
                 fp += par
-                if func_param_yaml[par].get('default', None) != None:
-                    default = str(func_param_yaml[par].get('default', None))
-                    if func_param_yaml[par].get('type', 'foo') == 'str':
-                        default = " '" + default + "'"
-                    fp += '=' + default
+                if func_param_yaml[par] != None and isinstance(func_param_yaml[par], dict):
+                    if func_param_yaml[par].get('default', None) != None:
+                        default = str(func_param_yaml[par].get('default', None))
+                        if func_param_yaml[par].get('type', 'foo') == 'str':
+                            default = " '" + default + "'"
+                        fp += '=' + default
+                else:
+                    print(f"\n\nFEHLER: Ungültige Plugin-Funktion:")
+                    print(f"Plugin: {plgname}")
+                    print(f"par   : {par}\n")
+                    print(f"func_param_yaml: {func_param_yaml}\n")
 
         write_heading(fh, f + '('+fp+')', 2)
         fh.write('\n')

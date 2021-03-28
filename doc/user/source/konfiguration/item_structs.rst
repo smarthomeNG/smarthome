@@ -92,7 +92,7 @@ Um nun die ganzen Items für die Wettervorhersage anzulegen, muss nur noch für 
     :caption: items/item.yaml
 
     outside:
-        my_weather:
+        local_weather:
             struct: darksky.weather
 
 
@@ -286,10 +286,12 @@ Grundsätzlich werden alle Attribute zu einem Item, dass in mehreren Item YAML-D
 .. note::
 
     Gibt es eine Attributdefinition an mehreren Stellen, gelten folgende Regeln:
+
      - Beim Lesen der Item Definition gewinnt die Attributdefinition, welche zuletzt eingelesen wird. Regel: **"last wins"**
      - In Struktur- /Unterstrukturdefinitionen gewinnt die zuerst eingelesene Attributdefinition. Regel: **"first wins"**
      - Wenn ein Attribut in einem struct-Template und in den Item Definitionen definiert wird, "gewinnt" die Angabe aus der
        Item Definition. Regel: **"Item wins"**
+
 
 Beim Auflösen von Unterstrukturen gewinnt die Definition der Struktur der oberen Ebene, wenn das Attribut
 in der Struktur der oberen Ebene vor dem **struct**-Attribut definiert ist. Dies ermöglicht ein "Überschreiben"
@@ -301,13 +303,15 @@ Re-Definieren von list-Attributen
 ----------------------------------
 
 Das Verhalten bei Re-Definieren von list-Attributen ist abhängig von der Anwendung. Zu unterscheiden gilt, ob es
+
   - ein struct in einem Item ist, oder
   - ein sub-struct in einem struct.
 
 .. note::
     Gibt es eine Attributdefinition mit Listen an mehreren Stellen, gelten folgende Regeln:
-      - Bei structs/substructs werden Listen immer gemergt.
-      - Bei Items/structs nur, wenn dort Am Anfang einer der Spezialeinträge steht.
+
+     - Bei structs/substructs werden Listen immer gemergt.
+     - Bei Items/structs nur, wenn dort Am Anfang einer der Spezialeinträge steht.
 
 
 Verhalten bei struct in einem Item
@@ -319,6 +323,7 @@ miteinander verbunden werden. Dabei wird die Liste aus dem **struct** Template a
 angehängt.
 
 Dazu müssen folgende Voraussetzungen erfüllt sein:
+
   - Das zu mergende Attribut MUSS vor dem **struct** Attribut definiert werden
   - Das zu mergende Attribut MUSS im Item als Liste definiert sein
   - Das zu mergende Attribut MUSS im Item als ersten Eintrag **merge\*** oder **merge_unique\*** enthalten
@@ -338,22 +343,21 @@ Attributdefinitionen eingelesen werden.
 Verwendung mehrerer Dateien
 ===========================
 
-Wenn structs in der Datei ../etc/struct.yaml definiert werden, ist der Name der geladenen struct zur Laufzeit identisch
+Wenn structs in der Datei **../etc/struct.yaml** definiert werden, ist der Name der geladenen struct zur Laufzeit identisch
 mit dem Namen, der in der Datei definiert wurde.
 
-Wenn eine Datei in einer Datei nach dem Namensschema ../etc/struct_*.yaml definiert wird, wird dem Namen
+Wenn eine Datei in einer Datei nach dem Namensschema **../etc/struct_*.yaml** definiert wird, wird dem Namen
 der struct ein Präfix vorangestellt, um Namensdoppelungen zu vermeiden. Der Präfix ist der auf **struct_**
-folgende Teil des Dateinamens.
-
-Wenn also eine struct mit dem Namem **individual_struct** in der Datei mit dem Namen ../etc/struct_test.yaml
-definiert wird, wird als Präfix für die Herkunft **test** vorangestellt. Der struct Name wäre also **test.*individual_struct**.
+folgende Teil des Dateinamens. Wenn also eine struct mit dem Namem **individual_struct** in der Datei mit dem Namen
+../etc/struct_ **test**.yaml definiert wird, wird als Präfix für die Herkunft **test** vorangestellt. Der struct Name wäre
+also **test.individual_struct**.
 
 Das könnte jedoch zu Namenskonflikten führen, falls hierbei der Name eines Plugins verwendet wird.
-Falls z.B. eine struct in einer Datei ../etc/struct_stateengine.yaml definiert wird, könnte es zu
-Namenskonflikten mit den structs kommen, die durch das Plugin definiert sind. Deshalb wird ein weiterer
+Falls z.B. eine struct in einer Datei ../etc/struct_**stateengine**.yaml definiert wird, könnte es zu
+Namenskonflikten mit den structs kommen, die durch das stateengine Plugin definiert sind. Deshalb wird ein weiterer
 Präfix **my** dem struct Namen vorangestellt, um Namenskonflikte mit structs aus Plugins auszuschließen.
 
-Die struct **individual_struct** in der Datei mit dem Namen ../etc/struct_test.yaml definiert wurde,
+Die struct **individual_struct** in der Datei mit dem Namen ../etc/struct_ **test** .yaml definiert wurde,
 trägt zur Laufzeit also den Namen **my.test.individual_struct**. Unter diesem Namen muss sie auch in
 Item Definitionen referenzeirt werden.
 
