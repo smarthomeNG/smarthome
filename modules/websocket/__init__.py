@@ -129,7 +129,8 @@ class Websocket(Module):
         """
         _name = 'modules.' + self.get_fullname() + '.websocket_server'
         try:
-            self._server_thread = threading.Thread(target=self._ws_server_thread, name=_name).start()
+            self._server_thread = threading.Thread(target=self._ws_server_thread, name=_name)
+            self._server_thread.start()
             self.logger.info("Starting websocket server(s)...")
         except Exception as e:
             self.conn = None
@@ -144,16 +145,14 @@ class Websocket(Module):
         Otherwise don't enter code here
         """
         self.logger.info("Shutting down websoocket server(s)...")
-#        self.stop_async = True
-
-        # self.loop.call_soon_threadsafe(self.loop.stop)
+        self.loop.call_soon_threadsafe(self.loop.stop)
 
         try:
             self._server_thread.join()
             self.logger.info("Websocket Server(s): Stopped")
-        except:
+        except Exception as err:
+            self.logger.info("Stopping websocket error: {}".format(err))
             pass
-        time.sleep(10)
         return
 
     def set_smartvisu_support(self, protocol_enabled=False, default_acl='ro', query_definitions=False, series_updatecycle=0):
@@ -195,8 +194,6 @@ class Websocket(Module):
     # ===============================================================================
     # Module specific code
     #
-
-#    stop_async = False
 
     def _ws_server_thread(self):
         """
@@ -270,8 +267,6 @@ class Websocket(Module):
                 await websockets.serve(self.handle_new_connection, ip, port)
             except OSError as e:
                 self.logger.error(f"Cannot start websocket server - error: {e}")
-#        if self.stop_async:
-#            await websockets.close()
 
         return
 
@@ -668,9 +663,8 @@ class Websocket(Module):
                 else:
                     if 'update' in reply:
                         await self.loop.run_in_executor(None, self.set_periodic_series_updates, reply, client_addr)
-                        #     self._series_lock.acquire()
-                        #     self.sv_update_series[reply['sid']] = {'update': reply['update'], 'params': reply['params']}
-                        #     self._series_lock.release()
+                        #     with self._series_lock:
+                        #           self.sv_update_series[reply['sid']] = {'update': reply['update'], 'params': reply['params']}
                         del (reply['update'])
                         del (reply['params'])
                     if reply['series'] is not None:
@@ -688,11 +682,10 @@ class Websocket(Module):
         """
         -> blocking method - called via run_in_executor()
         """
-        self._series_lock.acquire()
-        if self.sv_update_series.get(client_addr, None) is None:
-            self.sv_update_series[client_addr] = {}
-        self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
-        self._series_lock.release()
+        with self._series_lock:
+            if self.sv_update_series.get(client_addr, None) is None:
+                self.sv_update_series[client_addr] = {}
+            self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
         return
 
     async def update_all_series(self):
@@ -751,32 +744,31 @@ class Websocket(Module):
         """
         # websocket = self.sv_clients[client_addr]['websocket']
         now = self.shtime.now()
-        self._series_lock.acquire()
-        remove = []
-        series_replys = []
+        with self._series_lock:
+            remove = []
+            series_replys = []
 
-        series_entry = self.sv_update_series.get(client_addr, None)
-        if series_entry is not None:
-            for sid, series in self.sv_update_series[client_addr].items():
-                if (series['update'] < now) or self.sv_ser_upd_cycle > 0:
-                    # self.logger.warning("update_series: {} - Processing sid={}, series={}".format(client_addr, sid, series))
-                    item = self.items.return_item(series['params']['item'])
-                    try:
-                        reply = item.series(**series['params'])
-                    except Exception as e:
-                        self.logger.exception("Problem updating series for {0}: {1}".format(series['params'], e))
-                        remove.append(sid)
-                        continue
-                    self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
-                    del (reply['update'])
-                    del (reply['params'])
-                    if reply['series'] is not None:
-                        series_replys.append(reply)
+            series_entry = self.sv_update_series.get(client_addr, None)
+            if series_entry is not None:
+                for sid, series in self.sv_update_series[client_addr].items():
+                    if (series['update'] < now) or self.sv_ser_upd_cycle > 0:
+                        # self.logger.warning("update_series: {} - Processing sid={}, series={}".format(client_addr, sid, series))
+                        item = self.items.return_item(series['params']['item'])
+                        try:
+                            reply = item.series(**series['params'])
+                        except Exception as e:
+                            self.logger.exception("Problem updating series for {0}: {1}".format(series['params'], e))
+                            remove.append(sid)
+                            continue
+                        self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
+                        del (reply['update'])
+                        del (reply['params'])
+                        if reply['series'] is not None:
+                            series_replys.append(reply)
 
-            for sid in remove:
-                del (self.sv_update_series[client_addr][sid])
+                for sid in remove:
+                    del (self.sv_update_series[client_addr][sid])
 
-        self._series_lock.release()
         return series_replys
 
     async def cancel_series(self, data, client_addr):
@@ -822,17 +814,16 @@ class Websocket(Module):
         """
         -> blocking method - called via run_in_executor()
         """
-        self._series_lock.acquire()
-        try:
-            del (self.sv_update_series[client_addr][reply['sid']])
-            if self.sv_update_series[client_addr] == {}:
-                del (self.sv_update_series[client_addr])
-            self.logger.info("Series cancelation: Series updates for path {} canceled".format(path))
-            answer = {'cmd': 'series_cancel', 'result': "Series updates for path {} canceled".format(path)}
-        except:
-            self.logger.warning("Series cancelation: No series for path {} found in list".format(path))
-            answer = {'cmd': 'series_cancel', 'error': "No series for path {} found in list".format(path)}
-        self._series_lock.release()
+        with self._series_lock:
+            try:
+                del (self.sv_update_series[client_addr][reply['sid']])
+                if self.sv_update_series[client_addr] == {}:
+                    del (self.sv_update_series[client_addr])
+                self.logger.info("Series cancelation: Series updates for path {} canceled".format(path))
+                answer = {'cmd': 'series_cancel', 'result': "Series updates for path {} canceled".format(path)}
+            except:
+                self.logger.warning("Series cancelation: No series for path {} found in list".format(path))
+                answer = {'cmd': 'series_cancel', 'error': "No series for path {} found in list".format(path)}
         return answer
 
     async def update_visu(self):
