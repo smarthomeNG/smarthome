@@ -349,15 +349,15 @@ mit dem Namen, der in der Datei definiert wurde.
 Wenn eine Datei in einer Datei nach dem Namensschema **../etc/struct_*.yaml** definiert wird, wird dem Namen
 der struct ein Präfix vorangestellt, um Namensdoppelungen zu vermeiden. Der Präfix ist der auf **struct_**
 folgende Teil des Dateinamens. Wenn also eine struct mit dem Namem **individual_struct** in der Datei mit dem Namen
-../etc/struct_ **test**.yaml definiert wird, wird als Präfix für die Herkunft **test** vorangestellt. Der struct Name wäre
+../etc/**struct_test**.yaml definiert wird, wird als Präfix für die Herkunft **test** vorangestellt. Der struct Name wäre
 also **test.individual_struct**.
 
 Das könnte jedoch zu Namenskonflikten führen, falls hierbei der Name eines Plugins verwendet wird.
-Falls z.B. eine struct in einer Datei ../etc/struct_**stateengine**.yaml definiert wird, könnte es zu
-Namenskonflikten mit den structs kommen, die durch das stateengine Plugin definiert sind. Deshalb wird ein weiterer
+Falls z.B. eine struct in einer Datei ../etc/**struct_stateengine**.yaml definiert wird, könnte es zu
+Namenskonflikten mit den structs kommen, die durch das **stateengine Plugin** definiert sind. Deshalb wird ein weiterer
 Präfix **my** dem struct Namen vorangestellt, um Namenskonflikte mit structs aus Plugins auszuschließen.
 
-Die struct **individual_struct** in der Datei mit dem Namen ../etc/struct_ **test** .yaml definiert wurde,
+Die struct **individual_struct** in der Datei mit dem Namen ../etc/**struct_test**.yaml definiert wurde,
 trägt zur Laufzeit also den Namen **my.test.individual_struct**. Unter diesem Namen muss sie auch in
 Item Definitionen referenzeirt werden.
 
