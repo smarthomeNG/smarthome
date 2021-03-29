@@ -27,6 +27,14 @@ Demzufolge können die Item-Struktur-Templates an zwei verschiedenen Stellen def
  - der Nutzer kann die Strukturen in der Konfigurationsdatei ../etc/struct.yaml definieren
  - Autoren von Plugins können die Strukturen in den Metadaten des Plugins definieren. Beim Start von SmartHomeNG stehen die dann die Strukturen aller konfigurierten Plugins zur Verfügung.
 
+.. note::
+
+    Ab SmartHomeNG v1.9 können Item-Struktur-Template Definitionen auf mehrere Dateien verteilt werden.
+
+    Außer der Datei **struct.yaml** im Verzeichnis ../etc können weitere Dateien angelegt werden.
+    Deren Name muss mit **struct_** beginnen. Der danach folgende Teil des Dateinamens wird dabei dem
+    struct Namen als Prefix vorangestellt, um Namensdopplungen vorzubeugen.
+
 Um eine doppelte Namensvergabe zu vermeiden, wird bei der Nutzung den structs, die in Plugins definiert wurden, der
 Name des Plugins vorangestellt. Wenn z.B. die struct **weather** genutzt werden soll, die im Plugin **darksky**
 definiert wurde, so muss als Referenz **darksky.weather** angegeben werden.
@@ -84,7 +92,7 @@ Um nun die ganzen Items für die Wettervorhersage anzulegen, muss nur noch für 
     :caption: items/item.yaml
 
     outside:
-        my_weather:
+        local_weather:
             struct: darksky.weather
 
 
@@ -166,12 +174,12 @@ Eigens definierte Item-Struktur-Templates werden in der Konfigurationsdatei **..
 
 Hierbei gibt die oberste Ebene den Namen der Templates an. Darunter können Item-Strukturen definiert werden, wie man es
 auch in der Item Definition in den items.yaml Dateien machen würde. Das folgende Beispiel zeigt die Definition von zwei
-Strukturen (**my_struct_01** und **my_struct_02**):
+Strukturen (**individual_struct_01** und **individual_struct_02**):
 
 .. code-block:: yaml
     :caption: etc/struct.yaml
 
-    my_struct_01:
+    individual_struct_01:
         name: Name der erste eigenen Item Struktur
 
         item_01:
@@ -188,7 +196,7 @@ Strukturen (**my_struct_01** und **my_struct_02**):
                 ...
 
 
-    my_struct_02:
+    individual_struct_02:
         name: Name der zweiten eigenen Item Struktur
         type: bool
 
@@ -209,7 +217,7 @@ Wenn jetzt in der Item Definition diese Strukturen referenziert werden:
     my_tree:
         my_complex_data:
             name: Geänderter Name für meine komplexen Daten
-            struct: my_struct_01
+            struct: individual_struct_01
 
             individual_item:
                 name: Individuelles Item
@@ -225,7 +233,7 @@ entsteht im Item-Tree die selbe Struktur, als wenn man folgendes direkt in die i
     my_tree:
         my_complex_data:
             name: Geänderter Name für meine komplexen Daten
-            #struct: my_struct_01
+            #struct: individual_struct_01
 
             item_01:
                 name: Erstes Item
@@ -245,9 +253,9 @@ entsteht im Item-Tree die selbe Struktur, als wenn man folgendes direkt in die i
                 ...
 
 
-Beim Einfügen der Struktur bleibt das Attribut **struct** erhalten, so dass man zur Laufzeit sehen kann, 
+Beim Einfügen der Struktur bleibt das Attribut **struct** erhalten, so dass man zur Laufzeit sehen kann,
 dass die Struktur zumindest in Teilen aus einem Template stammt.
-Die Definition des Attributes **name** aus dem Template wird durch die Angabe aus der Datei items/item.yaml ersetzt. 
+Die Definition des Attributes **name** aus dem Template wird durch die Angabe aus der Datei items/item.yaml ersetzt.
 Das **individual_item** wird an die Struktur des Templates angefügt.
 (Siehe :doc:`Konfigurationsdateien/struct.yaml </konfiguration/konfigurationsdateien/struct>`)
 
@@ -278,10 +286,12 @@ Grundsätzlich werden alle Attribute zu einem Item, dass in mehreren Item YAML-D
 .. note::
 
     Gibt es eine Attributdefinition an mehreren Stellen, gelten folgende Regeln:
+
      - Beim Lesen der Item Definition gewinnt die Attributdefinition, welche zuletzt eingelesen wird. Regel: **"last wins"**
      - In Struktur- /Unterstrukturdefinitionen gewinnt die zuerst eingelesene Attributdefinition. Regel: **"first wins"**
      - Wenn ein Attribut in einem struct-Template und in den Item Definitionen definiert wird, "gewinnt" die Angabe aus der
        Item Definition. Regel: **"Item wins"**
+
 
 Beim Auflösen von Unterstrukturen gewinnt die Definition der Struktur der oberen Ebene, wenn das Attribut
 in der Struktur der oberen Ebene vor dem **struct**-Attribut definiert ist. Dies ermöglicht ein "Überschreiben"
@@ -293,13 +303,15 @@ Re-Definieren von list-Attributen
 ----------------------------------
 
 Das Verhalten bei Re-Definieren von list-Attributen ist abhängig von der Anwendung. Zu unterscheiden gilt, ob es
+
   - ein struct in einem Item ist, oder
   - ein sub-struct in einem struct.
 
 .. note::
     Gibt es eine Attributdefinition mit Listen an mehreren Stellen, gelten folgende Regeln:
-      - Bei structs/substructs werden Listen immer gemergt.
-      - Bei Items/structs nur, wenn dort Am Anfang einer der Spezialeinträge steht.
+
+     - Bei structs/substructs werden Listen immer gemergt.
+     - Bei Items/structs nur, wenn dort Am Anfang einer der Spezialeinträge steht.
 
 
 Verhalten bei struct in einem Item
@@ -311,6 +323,7 @@ miteinander verbunden werden. Dabei wird die Liste aus dem **struct** Template a
 angehängt.
 
 Dazu müssen folgende Voraussetzungen erfüllt sein:
+
   - Das zu mergende Attribut MUSS vor dem **struct** Attribut definiert werden
   - Das zu mergende Attribut MUSS im Item als Liste definiert sein
   - Das zu mergende Attribut MUSS im Item als ersten Eintrag **merge\*** oder **merge_unique\*** enthalten
@@ -325,6 +338,28 @@ Verhalten bei sub-struct in struct
 Bei der Neudefinition von Attributen, bei denen es sich um Listen handelt, erfolgt kein "Überschreiben". Stattdessen
 werden die Listen zusammengefügt. Die Reihenfolge der Listeneinträge wird durch die Reihenfolge bestimmt, in der die
 Attributdefinitionen eingelesen werden.
+
+
+Verwendung mehrerer Dateien
+===========================
+
+Wenn structs in der Datei **../etc/struct.yaml** definiert werden, ist der Name der geladenen struct zur Laufzeit identisch
+mit dem Namen, der in der Datei definiert wurde.
+
+Wenn eine Datei in einer Datei nach dem Namensschema **../etc/struct_*.yaml** definiert wird, wird dem Namen
+der struct ein Präfix vorangestellt, um Namensdoppelungen zu vermeiden. Der Präfix ist der auf **struct_**
+folgende Teil des Dateinamens. Wenn also eine struct mit dem Namem **individual_struct** in der Datei mit dem Namen
+../etc/**struct_test**.yaml definiert wird, wird als Präfix für die Herkunft **test** vorangestellt. Der struct Name wäre
+also **test.individual_struct**.
+
+Das könnte jedoch zu Namenskonflikten führen, falls hierbei der Name eines Plugins verwendet wird.
+Falls z.B. eine struct in einer Datei ../etc/**struct_stateengine**.yaml definiert wird, könnte es zu
+Namenskonflikten mit den structs kommen, die durch das **stateengine Plugin** definiert sind. Deshalb wird ein weiterer
+Präfix **my** dem struct Namen vorangestellt, um Namenskonflikte mit structs aus Plugins auszuschließen.
+
+Die struct **individual_struct** in der Datei mit dem Namen ../etc/**struct_test**.yaml definiert wurde,
+trägt zur Laufzeit also den Namen **my.test.individual_struct**. Unter diesem Namen muss sie auch in
+Item Definitionen referenzeirt werden.
 
 
 Beispiele

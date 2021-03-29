@@ -29,10 +29,8 @@ import logging
 from lib.model.module import Module
 from lib.module import Modules
 from lib.shtime import Shtime
-from lib.utils import Utils
-# from lib.plugin import Plugins
+from lib.Utils import Utils
 
-# import socket
 
 
 class SampleModule(Module):
@@ -53,7 +51,6 @@ class SampleModule(Module):
         self.shtime = Shtime.get_instance()
         self.logger.debug(f"Module '{self._shortname}': Initializing")
 
-
         # Test if http module is loaded (if the module uses http)
         # try:
         #     self.mod_http = Modules.get_instance().get_module('http')  # try/except to handle running in a core version that does not support modules
@@ -67,7 +64,6 @@ class SampleModule(Module):
         #
         # self._showtraceback = self.mod_http._showtraceback
 
-
         # get the parameters for the module (as defined in metadata module.yaml):
         self.logger.debug(f"Module '{self._shortname}': Parameters = '{dict(self._parameters)}'")
         try:
@@ -79,8 +75,7 @@ class SampleModule(Module):
             self._init_complete = False
             return
 
-        ip = Utils.get_local_ipv4_address()
-
+        ip = Utils.get_local_ipv4_address()  # remove line if `ip` unused
 
     def start(self):
         """
@@ -90,7 +85,6 @@ class SampleModule(Module):
         Otherwise don't enter code here
         """
         pass
-
 
     def stop(self):
         """
@@ -106,4 +100,3 @@ class SampleModule(Module):
 def translate(s):
     # needed for AdminUI
     return s
-

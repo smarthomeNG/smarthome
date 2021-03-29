@@ -2,6 +2,15 @@ env:
 
     location:
 
+        lat:
+            type: num
+
+        lon:
+            type: num
+
+        elev:
+            type: num
+
         day:
             type: bool
 

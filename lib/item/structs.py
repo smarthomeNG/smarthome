@@ -238,6 +238,37 @@ class Structs():
         return result
 
 
+    def load_struct_definitions_from_file(self, etc_dir, fn, key_prefix):
+        """
+        Loads struct definitions from a file
+
+        :param etc_dir: path to etc directory of SmartHomeNG
+        :param fn: filename to load struct definition(s) from
+        :param key_prefix: prefix to be used when adding struct(s) to loaded definitions
+        """
+        if key_prefix == '':
+            self.logger.info(f"Loading struct file '{fn}' without key-prefix")
+        else:
+            self.logger.info(f"Loading struct file '{fn}' with key-prefix '{key_prefix}'")
+
+        # Read in item structs from ../etc/struct.yaml
+        struct_definitions = shyaml.yaml_load(os.path.join(etc_dir, fn), ordered=True, ignore_notfound=True)
+
+        # if valid struct definition file etc/struct.yaml ist found
+        if struct_definitions is not None:
+            if isinstance(struct_definitions, collections.OrderedDict):
+                for key in struct_definitions:
+                    if fn == 'struct.yaml':
+                        struct_name = key
+                    else:
+                        struct_name = key_prefix + '.' + key
+                    self.add_struct_definition('', struct_name, struct_definitions[key])
+            else:
+                self.logger.error(f"load_itemdefinitions(): Invalid content in {fn}: struct_definitions = '{struct_definitions}'")
+
+        return
+
+
     def load_struct_definitions(self, etc_dir):
 
         # --------------------------------------------------------------------
@@ -245,18 +276,20 @@ class Structs():
         #
         # structs are merged into the item tree in lib.config
         #
-        # structs are read in from metadata file of plugins while loading plugins
-        # and from ../etc/struct.yaml
+        # - plugin-structs are read in from metadata file of plugins while loading plugins
+        # - other structs are read in from ../etc/struct.yaml by this procedure
+        # - further structs are read in from ../etc/struct_<prefix>.yaml by this procedure
         #
-        # Read in item structs from ../etc/struct.yaml
-        struct_definitions = shyaml.yaml_load(os.path.join(etc_dir, 'struct.yaml'), ordered=True, ignore_notfound=True)
-        if struct_definitions is not None:
-            if isinstance(struct_definitions, collections.OrderedDict):
-                for key in struct_definitions:
-                    self.add_struct_definition('', key, struct_definitions[key])
-            else:
-                self.logger.error("load_itemdefinitions(): Invalid content in struct.yaml: struct_definitions = '{}'".format(struct_definitions))
+        self.load_struct_definitions_from_file(etc_dir, 'struct.yaml', '')
 
+        # look for further struct files
+        fl = os.listdir(etc_dir)
+        for fn in fl:
+            if fn.startswith('struct_') and fn.endswith('.yaml'):
+                key_prefix = 'my.' + fn[7:-5]
+                self.load_struct_definitions_from_file(etc_dir, fn, key_prefix)
+
+        # Resolve struct references in structs and fill in the content of the struct
         self.fill_nested_structs()
 
         # for Testing: Save structure of joined item structs

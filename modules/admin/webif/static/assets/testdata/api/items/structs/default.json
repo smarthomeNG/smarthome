@@ -357,7 +357,7 @@
       }
     }
   },
-  "my_stateengine": {
+  "my.se.stateengine": {
     "name": "Vorlage-Struktur für einen Zustandsautomaten",
     "rules": {
       "name": "Regeln für den Zustandsautomaten",
@@ -377,7 +377,7 @@
       "cache": true
     }
   },
-  "my_stateengine2": {
+  "my.se.stateengine2": {
     "name": "Vorlage-Struktur 2 für einen Zustandsautomaten",
     "rules": {
       "name": "Regeln für den Zustandsautomaten",
