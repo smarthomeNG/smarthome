@@ -765,9 +765,9 @@ class Tcp_client(object):
         """
         self.logger.info(f'Closing connection to {self._host} on TCP port {self._port}')
         self.__running = False
-        if self.__connect_thread is not None and self.__connect_thread.isAlive():
+        if self.__connect_thread is not None and self.__connect_thread.is_alive():
             self.__connect_thread.join()
-        if self.__receive_thread is not None and self.__receive_thread.isAlive():
+        if self.__receive_thread is not None and self.__receive_thread.is_alive():
             self.__receive_thread.join()
 
 
@@ -1140,7 +1140,7 @@ class Tcp_server(object):
         while self.__loop.is_running():
             pass
         try:
-            if self.__listening_thread and self.__listening_thread.isAlive():
+            if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
         except AttributeError:  # thread can disappear between first and second condition test
             pass
@@ -1276,7 +1276,7 @@ class Udp_server(object):
         time.sleep(0.5)
 
         try:
-            if self.__listening_thread and self.__listening_thread.isAlive():
+            if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
         except AttributeError:  # thread can disappear between first and second condition test
             pass
