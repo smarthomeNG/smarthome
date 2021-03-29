@@ -12,12 +12,12 @@ plugin:
 #    documentation: https://github.com/smarthomeNG/smarthome/wiki/CLI-Plugin        # url of documentation (wiki) page
 #    support: https://knx-user-forum.de/forum/supportforen/smarthome-py
 
-    version: 1.7.1                  # Plugin version (must match the version specified in __init__.py)
-    sh_minversion: 1.5              # minimum shNG version to use this plugin
+    version: 1.0.0                  # Plugin version (must match the version specified in __init__.py)
+    sh_minversion: 1.8              # minimum shNG version to use this plugin
 #    sh_maxversion:                 # maximum shNG version to use this plugin (leave empty if latest)
 #    py_minversion: 3.6             # minimum Python version to use for this plugin
 #    py_maxversion:                 # maximum Python version to use for this plugin (leave empty if latest)
-    multi_instance: False           # plugin supports multi instance
+    multi_instance: false           # plugin supports multi instance
     restartable: unknown
     classname: SamplePlugin         # class containing the plugin
 
@@ -45,7 +45,7 @@ parameters:
     param3:
         type: str
         # If 'mandatory' is specified, a 'default' attribute must not be specified
-        mandatory: True
+        mandatory: true
         description:
             de: 'Demo Parameter der angegeben werden muss'
             en: 'Demonstration parameter which has to be specified'
