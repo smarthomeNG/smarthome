@@ -21,6 +21,8 @@
 
 
 import asyncio
+from asyncio.tasks import Task
+from typing import List
 import janus
 import ssl
 import threading
@@ -85,6 +87,7 @@ class Websocket(Module):
         self.sv_acl = 'deny'
         self.sv_querydef = False
         self.sv_ser_upd_cycle = 0
+        self._servers : List[websockets.WebSocketServer] = []
 
         self.ssl_context = None
         if self.use_tls:
@@ -144,7 +147,7 @@ class Websocket(Module):
 
         Otherwise don't enter code here
         """
-        self.logger.info("Shutting down websoocket server(s)...")
+        self.logger.info("Shutting down websocket server(s)...")
         self.loop.call_soon_threadsafe(self.loop.stop)
 
         try:
@@ -210,7 +213,7 @@ class Websocket(Module):
             self.loop.create_task(self.ws_server(self.ip, self.port))
         else:
             self.loop.create_task(self.ws_server(self.ip, self.port), name='ws_server')
-        # self.loop.ensure_future(self.ws_server(self.ip, self.port))
+
         if self.ssl_context is not None:
             if python_version == '3.6':
                 self.loop.ensure_future(self.ws_server(self.ip, self.tls_port, self.ssl_context))
@@ -218,8 +221,6 @@ class Websocket(Module):
                 self.loop.create_task(self.ws_server(self.ip, self.tls_port, self.ssl_context))
             else:
                 self.loop.create_task(self.ws_server(self.ip, self.tls_port, self.ssl_context), name='wss_server')
-
-            # self.loop.ensure_future(self.ws_server(self.ip, self.tls_port, self.ssl_context))
 
         if python_version == '3.6':
             self.loop.ensure_future(self.update_visu())
@@ -231,23 +232,27 @@ class Websocket(Module):
             self.loop.create_task(self.update_visu(), name='update_visu')
             self.loop.create_task(self.update_all_series(), name='update_all_series')
 
-        # self.loop.ensure_future(self.update_visu())
-        # self.loop.ensure_future(self.update_all_series())
-
         try:
             self.loop.run_forever()
         finally:
-            self.logger.warning("_ws_server_thread: finally")
-            try:
-                self.loop.run_until_complete(self.loop.shutdown_asyncgens())
-            except:
-                self.logger.warning("_ws_server_thread: finally *1")
-            self.logger.warning("_ws_server_thread: finally *1x")
-            try:
-                self.loop.close()
-            except:
-                self.logger.warning("_ws_server_thread: finally *2")
-            self.logger.warning("_ws_server_thread: finally *2x")
+            self.logger.debug("_ws_server_thread: finally")
+            # Close all servers to allow proper network termination
+            if self._servers:
+                for server in self._servers:
+                    server.close()
+                pending = [self.loop.create_task(server.wait_closed()) for server in self._servers]
+                self.loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+
+            # Simply cancel the rest
+            pending = asyncio.all_tasks(loop = self.loop)
+            if pending:
+                for task in pending:
+                    task.cancel()
+                self.loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+            self.loop.run_until_complete(self.loop.shutdown_asyncgens())
+            self.loop.close()
+        self.logger.debug("_ws_server_thread: finished")
+
 
     USERS = set()
 
@@ -258,13 +263,13 @@ class Websocket(Module):
         if ssl_context:
             self.logger.info("Secure websocket server started")
             try:
-                await websockets.serve(self.handle_new_connection, ip, port, ssl=ssl_context)
+                self._servers.append(await websockets.serve(self.handle_new_connection, ip, port, ssl=ssl_context))
             except OSError as e:
                 self.logger.error(f"Cannot start secure websocket server - error: {e}")
         else:
             self.logger.info("Websocket server started")
             try:
-                await websockets.serve(self.handle_new_connection, ip, port)
+                self._servers.append(await websockets.serve(self.handle_new_connection, ip, port))
             except OSError as e:
                 self.logger.error(f"Cannot start websocket server - error: {e}")
 
