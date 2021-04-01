@@ -53,7 +53,13 @@ KEY_THRESHOLD = 'threshold'
 KEY_AUTOTIMER = 'autotimer'
 KEY_ON_UPDATE = 'on_update'
 KEY_ON_CHANGE = 'on_change'
-KEY_LOG_CHANGE = 'log_change'
+
+KEY_LOG_CHANGE =  'log_change'
+KEY_LOG_LEVEL =   'log_level'
+KEY_LOG_TEXT =    'log_text'
+KEY_LOG_MAPPING = 'log_mapping'
+KEY_LOG_RULES =   'log_rules'
+
 KEY_STRUCT = 'struct'
 KEY_REMARK = 'remark'
 

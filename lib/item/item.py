@@ -29,6 +29,7 @@ import os
 import copy
 import json
 import threading
+import ast
 
 import time             # for calls to time in eval
 import math             # for calls to math in eval
@@ -41,8 +42,9 @@ from lib.plugin import Plugins
 from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE, KEY_CACHE, KEY_CYCLE, KEY_CRONTAB, KEY_EVAL,
                            KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_REMARK, KEY_INSTANCE,
                            KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM, KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE,
-                           KEY_LOG_CHANGE, KEY_THRESHOLD,
-                           KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST)
+                           KEY_LOG_CHANGE, KEY_LOG_LEVEL, KEY_LOG_TEXT, KEY_LOG_MAPPING, KEY_LOG_RULES,
+                           KEY_THRESHOLD, KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST)
+from lib.utils import Utils
 
 from .property import Property
 from .helpers import *
@@ -132,6 +134,11 @@ class Item():
         self._on_change_dest_var_unexp = []	# -> KEY_ON_CHANGE destination var (with unexpanded item reference)
         self._log_change = None
         self._log_change_logger = None
+        self._log_level = None
+        self._log_level_name = None
+        self._log_mapping = {}
+        self._log_rules = {}
+        self._log_text = None
         self._fading = False
         self._items_to_trigger = []
         self.__last_change = self.shtime.now()
@@ -226,13 +233,52 @@ class Item():
                         logger.warning("Item __init__: {}: Invalid trigger_condition specified! Must be a list".format(self._path))
                 elif attr in [KEY_ON_CHANGE, KEY_ON_UPDATE]:
                     self._process_on_xx_list(attr, value)
+
+                elif attr in [KEY_LOG_LEVEL]:
+                    if value != '':
+                        level = value.upper()
+                        level_name = level
+                        if Utils.is_int(level):
+                            level = int(level)
+                            level_name = logging.getLevelName(level)
+                        if logging.getLevelName(level) == 'Level ' + str(level):
+                            logger.warning(f"Item {self._path}: Invalid loglevel '{value}' defined in attribute '{KEY_LOG_LEVEL}' - Level 'INFO' will be used instead")
+                            setattr(self, '_log_level_name', 'INFO')
+                            setattr(self, '_log_level', logging.getLevelName('INFO'))
+                        else:
+                            setattr(self, '_log_level_name', level_name)
+                            setattr(self, '_log_level', logging.getLevelName(level_name))
                 elif attr in [KEY_LOG_CHANGE]:
                     if value != '':
                         setattr(self, '_log_change', value)
                         self._log_change_logger = logging.getLogger('items.'+value)
                         # set level to make logger appear in internal list of loggers (if not configured by logging.yaml)
                         if self._log_change_logger.level == 0:
-                            self._log_change_logger.setLevel('INFO')
+                            if self._log_level == 'DEBUG':
+                                self._log_change_logger.setLevel('DEBUG')
+                            else:
+                                self._log_change_logger.setLevel('INFO')
+                        if self._log_level is None:
+                            setattr(self, '_log_level_name', 'INFO')
+                            setattr(self, '_log_level', logging.getLevelName('INFO'))
+                elif attr in [KEY_LOG_MAPPING]:
+                    if value != '':
+                        try:
+                            value_dict = ast.literal_eval(value)
+                            setattr(self, '_log_mapping', value_dict)
+                        except Exception as e:
+                            logger.warning(f"Item {self._path}: Invalid data for attribute '{KEY_LOG_MAPPING}': {value} - Exception: {e}")
+                elif attr in [KEY_LOG_RULES]:
+                    if value != '':
+                        try:
+                            value_dict = ast.literal_eval(value)
+                            setattr(self, '_log_rules', value_dict)
+                        except Exception as e:
+                            logger.warning(f"Item {self._path}: Invalid data for attribute '{KEY_LOG_RULES}': {value} - Exception: {e}")
+                elif attr in [KEY_LOG_TEXT]:
+                    if value != '':
+                        setattr(self, '_log_text', value)
+
                 elif attr == KEY_AUTOTIMER:
                     time, value, compat = split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT)
                     timeitem = None
@@ -1253,19 +1299,86 @@ class Item():
                 self._run_on_xxx(self._path, value, on_change_dest, on_change_eval, 'On_Change')
 
 
+    def _log_build_standardtext(self, value, caller, source=None, dest=None):
+
+        log_src = ''
+        if source is not None:
+            log_src += ' (' + source + ')'
+        log_dst = ''
+        if dest is not None:
+            log_dst += ', dest: ' + dest
+        txt = f"Item Change: {self._path} = {value}  -  caller: {caller}{log_src}{log_dst}"
+        return txt
+
+
+    def _log_build_text(self, value, caller, source=None, dest=None):
+
+        # value
+        # caller
+        # source
+        # dest
+        name = self._name
+        age = self._get_last_change_age()
+        pname = self.__parent._name
+        id = self._path
+        pid = self.__parent._path
+        mvalue = self._log_mapping.get(value, value)
+        lowlimit = self._log_rules.get('lowlimit', None)
+        highlimit = self._log_rules.get('highlimit', None)
+
+        #text_vars = {'value': value, 'caller': caller, 'source': source, 'dest': dest,
+        #             'name': self._name, 'age': self._get_last_change_age(), 'id': self._path,
+        #             'pname': self.__parent._name, 'pid': self.__parent._path}
+        #logger.warning(f"_log_build_text: text_vars={text_vars}")
+        #txt = self._log_text.format(**text_vars)
+
+        try:
+            #logger.warning(f"self._log_text: {self._log_text}, type={type(self._log_text)}")
+            txt = eval(f"f'{self._log_text}'")
+        except Exception as e:
+            logger.error(f"{id}: Invalid log_text template ' {self._log_text}' - (Exception: {e})")
+            txt = self._log_text
+        return txt
+
+
     def _log_on_change(self, value, caller, source=None, dest=None):
         """
         Write log, if Item has attribute log_change set
         :return:
         """
         if self._log_change_logger is not None:
-            log_src = ''
-            if source is not None:
-                log_src += ' (' + source + ')'
-            log_dst = ''
-            if dest is not None:
-                log_dst += ', dest: ' + dest
-            self._log_change_logger.info("Item Change: {} = {}  -  caller: {}{}{}".format(self._path, value, caller, log_src, log_dst))
+            filter_list = self._log_rules.get('filter', [])
+
+            if self._type == 'num':
+                low_limit =  self._log_rules.get('lowlimit', None)
+                if low_limit:
+                    if low_limit > float(value):
+                        return
+                high_limit =  self._log_rules.get('highlimit', None)
+                if high_limit:
+                    if high_limit <= float(value):
+                        return
+                if filter_list != []:
+                    if not float(value) in filter_list:
+                        return
+            else:
+                if filter_list != []:
+                    if not value in filter_list:
+                        return
+
+            if self._log_text is None:
+                txt = self._log_build_standardtext(value, caller, source, dest)
+            else:
+                txt = self._log_build_text(value, caller, source, dest)
+
+            # log_src = ''
+            # if source is not None:
+            #     log_src += ' (' + source + ')'
+            # log_dst = ''
+            # if dest is not None:
+            #     log_dst += ', dest: ' + dest
+            #self._log_change_logger.log(self._log_level, "Item Change: {} = {}  -  caller: {}{}{}".format(self._path, value, caller, log_src, log_dst))
+            self._log_change_logger.log(self._log_level, txt)
 
 
     def __trigger_logics(self, source_details=None):
