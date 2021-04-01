@@ -30,7 +30,6 @@ Logiken verwendet werden:
    :maxdepth: 5
    :titlesonly:
 
-   /lib/connection
    /lib/db
    /lib/logutils
    /lib/network

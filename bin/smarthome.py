@@ -137,12 +137,12 @@ elif core_reqs == -1:
 # Import SmartHomeNG Modules
 #####################################################################
 #import lib.config
-#import lib.connection
 import lib.daemon
 #import lib.item
 #import lib.log
 #import lib.logic
 #import lib.module
+#import lib.network
 #import lib.plugin
 #import lib.scene
 #import lib.scheduler

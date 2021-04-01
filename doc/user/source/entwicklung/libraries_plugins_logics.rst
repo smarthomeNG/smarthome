@@ -9,7 +9,6 @@ Der Aufruf der darin bereitgestellten Funktionen ist im Folgenden beschrieben:
    :maxdepth: 4
    :titlesonly:
 
-   /lib/connection
    /lib/db
    /lib/logutils
    /lib/network

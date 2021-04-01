@@ -22,8 +22,8 @@
 
 import os
 import logging
-import json
-import cherrypy
+# import json
+# import cherrypy
 
 
 from lib.model.module import Module
@@ -32,8 +32,9 @@ from lib.shtime import Shtime
 from lib.Utils import Utils
 
 
+
 class SampleModule(Module):
-    version = '1.7.0'
+    version = '1.0.0'
     longname = '... module for SmartHomeNG'
     port = 0
 
@@ -48,7 +49,7 @@ class SampleModule(Module):
         self.logger = logging.getLogger(__name__)
         self._sh = sh
         self.shtime = Shtime.get_instance()
-        self.logger.debug("Module '{}': Initializing".format(self._shortname))
+        self.logger.debug(f"Module '{self._shortname}': Initializing")
 
         # Test if http module is loaded (if the module uses http)
         # try:
@@ -64,13 +65,13 @@ class SampleModule(Module):
         # self._showtraceback = self.mod_http._showtraceback
 
         # get the parameters for the module (as defined in metadata module.yaml):
-        self.logger.debug("Module '{}': Parameters = '{}'".format(self._shortname, dict(self._parameters)))
+        self.logger.debug(f"Module '{self._shortname}': Parameters = '{dict(self._parameters)}'")
         try:
             # self.broker_ip = self._parameters['broker_host']
             pass
         except KeyError as e:
             self.logger.critical(
-                "Module '{}': Inconsistent module (invalid metadata definition: {} not defined)".format(self._shortname, e))
+                f"Module '{self._shortname}': Inconsistent module (invalid metadata definition: {e} not defined)")
             self._init_complete = False
             return
 
@@ -97,4 +98,5 @@ class SampleModule(Module):
 
 
 def translate(s):
+    # needed for AdminUI
     return s

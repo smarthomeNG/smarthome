@@ -7,7 +7,7 @@
 #  https://www.smarthomeNG.de
 #  https://knx-user-forum.de/forum/supportforen/smarthome-py
 #
-#  Sample plugin for new plugins to run with SmartHomeNG version 1.5 and
+#  Sample plugin for new plugins to run with SmartHomeNG version 1.8 and
 #  upwards.
 #
 #  SmartHomeNG is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@
 #
 #########################################################################
 
-from lib.model.smartplugin import *
+from lib.model.smartplugin import SmartPlugin
 from lib.item import Items
 
 from .webif import WebInterface
@@ -39,9 +39,13 @@ class SamplePlugin(SmartPlugin):
     """
     Main class of the Plugin. Does all plugin specific stuff and provides
     the update functions for the items
+
+    HINT: Please have a look at the SmartPlugin class to see which
+    class properties and methods (class variables and class functions)
+    are already available!
     """
 
-    PLUGIN_VERSION = '1.7.1'    # (must match the version specified in plugin.yaml), use '1.0.0' for your initial plugin Release
+    PLUGIN_VERSION = '1.0.0'    # (must match the version specified in plugin.yaml), use '1.0.0' for your initial plugin Release
 
     def __init__(self, sh):
         """
@@ -115,10 +119,11 @@ class SamplePlugin(SmartPlugin):
                         can be sent to the knx with a knx write function within the knx plugin.
         """
         if self.has_iattr(item.conf, 'foo_itemtag'):
-            self.logger.debug("parse item: {}".format(item))
+            self.logger.debug(f"parse item: {item}")
 
         # todo
         # if interesting item for sending values:
+        #   self._itemlist.append(item)
         #   return self.update_item
 
     def parse_logic(self, logic):
@@ -145,11 +150,10 @@ class SamplePlugin(SmartPlugin):
         if self.alive and caller != self.get_shortname():
             # code to execute if the plugin is not stopped
             # and only, if the item has not been changed by this this plugin:
-            self.logger.info("Update item: {}, item has been changed outside this plugin".format(item.id()))
+            self.logger.info(f"Update item: {item}, item has been changed outside this plugin")
 
             if self.has_iattr(item.conf, 'foo_itemtag'):
-                self.logger.debug("update_item was called with item '{}' from caller '{}', source '{}' and dest '{}'".format(item,
-                                                                                                               caller, source, dest))
+                self.logger.debug(f"update_item was called with item {item} from caller {caller}, source {source} and dest {dest}")
             pass
 
     def poll_device(self):
@@ -175,5 +179,3 @@ class SamplePlugin(SmartPlugin):
         #     # the source should be included when updating the the value:
         #     item(device_value, self.get_shortname(), source=device_source_id)
         pass
-
-
