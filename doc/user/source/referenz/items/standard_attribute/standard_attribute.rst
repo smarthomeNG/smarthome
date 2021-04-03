@@ -74,7 +74,7 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                 | vom Typ **dict** erfolgen soll, muss unbedingt darauf geachtet werden, dass            |
 |                 | der angegebene Wert in Anführungszeichen gesetzt wird, damit yaml nicht den            |
 |                 | Wert nicht als Datenstruktur interpretiert.                                            |
-|                 | (Also folgendermaßen: **initial_value**: "{'k1': 'v1', 'k2': 'v2'}" )                  |
+|                 | (Also folgendermaßen: ``initial_value: "{'k1': 'v1', 'k2': 'v2'}"`` )                  |
 +-----------------+----------------------------------------------------------------------------------------+
 | log_change      | Ermöglicht das Loggen jeder Veränderung des Item-Wertes. **log_change** muss dazu den  |
 |                 | Namen des zu verwendeten Loggers enthalten. In **logging.yaml** muss der Logger als    |
@@ -88,7 +88,7 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 | log_text        | Ermöglicht es einen eigenen Text für den Logeintrag festzulegen. **log_text** kann     |
 |                 | dabei eine Reihe von Variablen und eval-Ausdrücken enthalten. **Ab SmartHomeNG v1.9**  |
 |                 | Unterstützt werden folgende Variablen: value, caller, source, dest, id, name, age,     |
-|                 | pid, pname, mvalue, lowlimit, highlimit                                                |
+|                 | lvalue, mvalue, pid, pname, mvalue, lowlimit, highlimit                                |
 |                 |                                                                                        |
 |                 | **Achtung:** log_text darf keine Single-Quotes (``'``) enthalten!                      |
 |                 | Falls es aufgrund des YAML Syntaxes notwendig kann der gesamte String für log_text     |

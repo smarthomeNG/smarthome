@@ -1317,6 +1317,8 @@ class Item():
         # caller
         # source
         # dest
+        lvalue = self.property.last_value
+        mlvalue = self._log_mapping.get(lvalue, lvalue)
         name = self._name
         age = self._get_last_change_age()
         pname = self.__parent._name
