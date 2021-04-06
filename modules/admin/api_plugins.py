@@ -28,6 +28,7 @@ import collections
 import requests
 import time
 import threading
+from random import randrange
 
 import lib.shyaml as shyaml
 import lib.config
@@ -324,7 +325,7 @@ class PluginsInfoController(RESTResource):
         if self.plugins == None:
             self.plugins = Plugins.get_instance()
         if self.plugins != None and self._sh.shng_status.get('code', 0) == 20:   # Running
-            self._sh.scheduler._scheduler[self._blog_task_name]['cycle'] = {120 * 60 : None}  # set scheduler cycle to test every 2 hours
+            self._sh.scheduler._scheduler[self._blog_task_name]['cycle'] = {120 * 60 + randrange(60) : None}  # set scheduler cycle to test every 2 hours
             start = time.time()
             temp_blog_urls = {}
 
@@ -349,6 +350,7 @@ class PluginsInfoController(RESTResource):
                                 temp_blog_urls[plugin_name] = ''
                         else:
                             pass
+                        time.sleep(1)
             except OSError as e:
                 if str(e).find('[Errno 101]') > -1:     # [Errno 101] Das Netzwerk ist nicht erreichbar
                     pass
