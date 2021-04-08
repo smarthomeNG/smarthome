@@ -146,6 +146,7 @@ class Websocket(Module):
         """
         self.logger.info("Shutting down websoocket server(s)...")
         self.loop.call_soon_threadsafe(self.loop.stop)
+        time.sleep(5)
 
         try:
             self._server_thread.join()
@@ -237,17 +238,23 @@ class Websocket(Module):
         try:
             self.loop.run_forever()
         finally:
-            self.logger.warning("_ws_server_thread: finally")
+            #self.logger.warning("_ws_server_thread: finally")
             try:
-                self.loop.run_until_complete(self.loop.shutdown_asyncgens())
-            except:
-                self.logger.warning("_ws_server_thread: finally *1")
-            self.logger.warning("_ws_server_thread: finally *1x")
+                self.loop.shutdown_asyncgens()
+                #if python_version >= '3.9':
+                #    self.loop.shutdown_default_executor()
+                #time.sleep(3)
+                #self.logger.notice(f"dir(self.loop): {dir(self.loop)}")
+                #self.logger.notice(f"all_tasks: {self.loop.Task.all_tasks()}")
+                #self.loop.run_until_complete(self.loop.shutdown_asyncgens())
+            except Exception as e:
+                self.logger.warning(f"_ws_server_thread: finally *1 - Exception {e}")
+            #self.logger.warning("_ws_server_thread: finally *1x")
             try:
                 self.loop.close()
-            except:
-                self.logger.warning("_ws_server_thread: finally *2")
-            self.logger.warning("_ws_server_thread: finally *2x")
+            except Exception as e:
+                self.logger.warning(f"_ws_server_thread: finally *2 - Exception {e}")
+            #self.logger.warning("_ws_server_thread: finally *2x")
 
     USERS = set()
 
@@ -420,7 +427,7 @@ class Websocket(Module):
 
         # items = []
 
-        self.logs = self._sh.return_logs()
+        self.logs = self._sh.logs.return_logs()
         self._sh.add_event_listener(['log'], self.update_visulog)
 
         client_addr = self.client_address(websocket)
