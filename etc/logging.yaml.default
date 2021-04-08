@@ -59,7 +59,8 @@ handlers:
         # The TimedRotatingFileHandler seperates the logentries by day and
         # keeps the entries of the last seven days in seperate files.
         #
-        class: logging.handlers.TimedRotatingFileHandler
+        #class: logging.handlers.TimedRotatingFileHandler
+        (): lib.log.ShngTimedRotatingFileHandler
         formatter: shng_simple
         level: WARNING
         utc: false
@@ -75,7 +76,7 @@ handlers:
         # The TimedRotatingFileHandler seperates the logentries by day and
         # keeps the entries of the last seven days in seperate files.
         #
-        class: logging.handlers.TimedRotatingFileHandler
+        (): lib.log.ShngTimedRotatingFileHandler
         formatter: shng_simple
         level: DEBUG
         utc: false
@@ -93,7 +94,7 @@ handlers:
     #    # The TimedRotatingFileHandler seperates the logentries by day and
     #    # keeps the entries of the last seven days in seperate files.
     #    #
-    #    class: logging.handlers.TimedRotatingFileHandler
+    #    (): lib.log.ShngTimedRotatingFileHandler
     #    formatter: shng_detail
     #    level: DEBUG
     #    utc: false
@@ -106,7 +107,7 @@ handlers:
     #shng_busmonitor_file:
     #    # This handler must be enabled when busmonitor logging from the knx plugin should be used.
     #    #
-    #    class: logging.handlers.TimedRotatingFileHandler
+    #    (): lib.log.ShngTimedRotatingFileHandler
     #    formatter: shng_busmonitor
     #    level: DEBUG
     #    when: midnight
@@ -117,7 +118,7 @@ handlers:
     #shng_items_file:
     #    # This handler is an example for logging item-value changes to a seperate log file
     #    #
-    #    class: logging.handlers.TimedRotatingFileHandler
+    #    (): lib.log.ShngTimedRotatingFileHandler
     #    formatter: shng_items
     #    when: midnight
     #    backupCount: 7

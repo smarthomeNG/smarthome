@@ -106,6 +106,7 @@ class Filter(logging.Filter):
         #invert is True: show record if all of the given parameters match
         return True if hits < total and not self.invert else True if hits >= total and self.invert else False
 
+
 class DuplicateFilter(object):
     """
     This class builds a filter to be used in logging.yaml to configure logging
