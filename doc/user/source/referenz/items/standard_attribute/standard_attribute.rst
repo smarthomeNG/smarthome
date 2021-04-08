@@ -41,9 +41,9 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                 | Ab SmartHomeNG v1.3 wurden die Konfigurationsmöglichkeiten erweitert                   |
 |                 | (siehe :doc:`autotimer <./autotimer>`).                                                |
 +-----------------+----------------------------------------------------------------------------------------+
-| cache           | Wenn 'Yes', dann wird der Wert des Items zwischengespeichert und beim                  |
-|                 | erneuten Start von SmartHomeNG wird der alte Wert aus dem Zwischenspeicher             |
-|                 | geladen (vergleichbar mit dem Permanentspeicher vom HS)                                |
+| cache           | Wenn das Attribut auf **True** (oder 'Yes') gesetzt wird, dann wird der Wert des Items |
+|                 | zwischengespeichert und beim erneuten Start von SmartHomeNG wird der alte Wert aus dem |
+|                 | Zwischenspeicher geladen (vergleichbar mit dem Permanentspeicher vom HS)               |
 +-----------------+----------------------------------------------------------------------------------------+
 | crontab         | Die Evaluierung des Items findet zu angegebenen Zeitpunkten statt (siehe               |
 |                 | Beschreibung unten)                                                                    |
@@ -88,7 +88,7 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 | log_text        | Ermöglicht es einen eigenen Text für den Logeintrag festzulegen. **log_text** kann     |
 |                 | dabei eine Reihe von Variablen und eval-Ausdrücken enthalten. **Ab SmartHomeNG v1.9**  |
 |                 | Unterstützt werden folgende Variablen: value, caller, source, dest, id, name, age,     |
-|                 | lvalue, mvalue, pid, pname, mvalue, lowlimit, highlimit                                |
+|                 | mvalue, lvalue, mlvalue, pid, pname, lowlimit, highlimit                               |
 |                 |                                                                                        |
 |                 | **Achtung:** log_text darf keine Single-Quotes (``'``) enthalten!                      |
 |                 | Falls es aufgrund des YAML Syntaxes notwendig kann der gesamte String für log_text     |

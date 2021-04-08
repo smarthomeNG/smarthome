@@ -89,6 +89,24 @@ Eintrag im Handler **file:** erfolgen. Der Eintrag `level: WARNING` führt dazu,
 Handler **file:** nur Ausgaben für Fehler und Warnungen erfolgen. INFO und DEBUG Ausgaben erfolgen
 dann nur noch über den zusätzlichen Handler.
 
+|
+
+Logging Handler
+===============
+
+Zusätzlich zu den Logging Handlern, die im Standard Logging Modul von Python definiert, bringt SmartHomeNG weitere
+Handler mit, die bei der Konfiguration in ../etc/logging.yaml verwendet werden können.
+
+Die Beschreibung dieser Handler ist im Referenz Abschnitt unter Logging zu finden:
+
+.. toctree::
+
+.. toctree::
+   :maxdepth: 4
+   :titlesonly:
+
+   /referenz/logging/logging_handler
+
 
 Plugin und Logik Entwicklung
 ============================
@@ -147,7 +165,7 @@ und
 .. code-block:: yaml
    :caption: ../etc/logging.yaml
 
-    ...
+    ...-
 
     logger:
         items_<Logger-Name>:
@@ -166,7 +184,6 @@ von RegEx Ausdrücken sucht, der wird hier :doc:`Logging - Best Practices <loggi
 
 .. toctree::
    :maxdepth: 4
-   :hidden:
    :titlesonly:
 
    logging_best_practices.rst

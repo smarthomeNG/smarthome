@@ -23,6 +23,7 @@ Bisher existieren die folgenden Module:
    module_admin
    module_mqtt
    module_websocket
+   module_metadata
 
 
 Die Konfiguration der Module ist im Abschnitt :doc:`Konfiguration </konfiguration/module/module>` dieser

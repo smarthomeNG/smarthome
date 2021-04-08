@@ -5,8 +5,8 @@
 .. index:: item_attribute_prefixes; Plugin Metadaten
 .. index:: Plugin Metadaten; item_attribute_prefixes
 
-``item_attribute_prefixes``
----------------------------
+item_attribute_prefixes
+-------------------------
 
 Falls ein Plugin eine Reihe von Items definiert, deren vollständiger Name erst zur Konfigurationszeit bekannt ist,
 werden diese Items durch ihren Namens-Anfang (Präfix) definiert. Diese Art von Item Definition (und damit auch dieser

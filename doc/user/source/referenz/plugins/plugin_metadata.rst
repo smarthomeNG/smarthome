@@ -21,10 +21,9 @@ Plugins trägt (nur in Kleinbuchstaben).
 
 Die **Metadaten** Datei eines Plugins heißt ``/plugins/<name of the plugin>/plugin.yaml``. Die bis zu sieben
 Abschnitte, die im folgenden beschrieben sind.
-additional sections:
 
 - ``plugin:`` - Globale Metadaten des Plugins
-- ``parameters:`` - Definition der Parameter, welche zur Konfiguration des Pluginsin der Datei ``../etc/plugin.yaml``
+- ``parameters:`` - Definition der Parameter, welche zur Konfiguration des Plugins in der Datei ``../etc/plugin.yaml``
   benutzt werden können
 - ``item_attributes:`` - Definition der Item Attribute, die durch das Plugin genutzt/unterstützt werden
 - ``item_structs:`` - Definition von Item Strukturen, welche im Zusammenhang mit dem Plugin genutzt werden können
@@ -34,18 +33,22 @@ additional sections:
 - ``plugin_functions:`` - Beschreibung öffentlicher Funktionen des Plugins, die durch Logiken oder andere Plugins
   genutzt werden können
 
+|
 
-.. include:: /referenz/metadata/plugin_global.rst
+Für Plugins werden die folgenden Abschnitte in der Metadaten Datei ``plugin.yaml`` des jeweiligen Plugins genutzt:
 
-.. include:: /referenz/metadata/parameters.rst
+.. toctree::
+   :maxdepth: 4
+   :titlesonly:
 
-.. include:: /referenz/metadata/item_attributes.rst
+   /referenz/metadata/plugin_global
+   /referenz/metadata/parameters
+   /referenz/metadata/item_attributes
+   /referenz/metadata/item_structs
+   /referenz/metadata/item_attribute_prefixes
+   /referenz/metadata/logic_parameters
+   /referenz/metadata/plugin_functions
 
-.. include:: /referenz/metadata/item_structs.rst
+|
 
-.. include:: /referenz/metadata/item_attribute_prefixes.rst
-
-.. include:: /referenz/metadata/logic_parameters.rst
-
-.. include:: /referenz/metadata/plugin_functions.rst
 

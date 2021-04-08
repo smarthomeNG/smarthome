@@ -23,4 +23,4 @@ können.
    module/module
    plugins/plugins
    metadata/metadata
-
+   logging/logging
