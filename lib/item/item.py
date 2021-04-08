@@ -1320,19 +1320,13 @@ class Item():
         lvalue = self.property.last_value
         mlvalue = self._log_mapping.get(lvalue, lvalue)
         name = self._name
-        age = self._get_last_change_age()
+        age = round(self._get_last_change_age(), 2)
         pname = self.__parent._name
         id = self._path
         pid = self.__parent._path
         mvalue = self._log_mapping.get(value, value)
         lowlimit = self._log_rules.get('lowlimit', None)
         highlimit = self._log_rules.get('highlimit', None)
-
-        #text_vars = {'value': value, 'caller': caller, 'source': source, 'dest': dest,
-        #             'name': self._name, 'age': self._get_last_change_age(), 'id': self._path,
-        #             'pname': self.__parent._name, 'pid': self.__parent._path}
-        #logger.warning(f"_log_build_text: text_vars={text_vars}")
-        #txt = self._log_text.format(**text_vars)
 
         try:
             #logger.warning(f"self._log_text: {self._log_text}, type={type(self._log_text)}")
