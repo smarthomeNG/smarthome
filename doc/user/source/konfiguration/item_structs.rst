@@ -53,8 +53,8 @@ die Template Strukturen in der Reihenfolge angewendet, in der sie in der Liste a
             - mein_wetter2
             - ....
 
-struct bei Plugins
-==================
+struct-Templates in Plugins
+===========================
 
 Anwendung
 ---------
@@ -164,8 +164,8 @@ Das kann man auch in der Administrationsoberfläche sehen.
 
 
 
-struct bei selbst definierte Item-Struktur-Templates
-====================================================
+selbst definierte struct-Templates
+==================================
 
 Anwendung
 ---------
@@ -340,8 +340,8 @@ werden die Listen zusammengefügt. Die Reihenfolge der Listeneinträge wird durc
 Attributdefinitionen eingelesen werden.
 
 
-Verwendung mehrerer Dateien
-===========================
+Verwendung mehrerer Definitionsdateien
+======================================
 
 Wenn structs in der Datei **../etc/struct.yaml** definiert werden, ist der Name der geladenen struct zur Laufzeit identisch
 mit dem Namen, der in der Datei definiert wurde.
@@ -358,8 +358,8 @@ Namenskonflikten mit den structs kommen, die durch das **stateengine Plugin** de
 Präfix **my** dem struct Namen vorangestellt, um Namenskonflikte mit structs aus Plugins auszuschließen.
 
 Die struct **individual_struct** in der Datei mit dem Namen ../etc/**struct_test**.yaml definiert wurde,
-trägt zur Laufzeit also den Namen **my.test.individual_struct**. Unter diesem Namen muss sie auch in
-Item Definitionen referenzeirt werden.
+trägt zur Laufzeit also den Namen **my.test.individual_struct**. Unter diesem Namen wird sie in der Admin GUI
+angezeigt und muss auch so in Item Definitionen referenziert werden.
 
 
 Beispiele

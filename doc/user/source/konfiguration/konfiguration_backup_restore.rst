@@ -30,7 +30,7 @@ Der Dateiname hat dann die Form **shng_config_backup_YYYY-MM-TT_hh-mm-ss.zip**.
 Die Sicherung von der Kommandozeile aus kann durchgeführt werden, während eine Instanz von SmartHomeNG läuft. Es ist
 nicht notwendig ein laufendes SmartHomeNG vorher zu beenden.
 
-.. note::
+.. attention::
 
    Es werden keine Konfigurationsdateien des alten .CONF Formats gesichert, sondern ausschließlich YAML Dateien.
 
@@ -65,16 +65,16 @@ Beim sichern werden folgende Daten in das zip-Archiv übernommen:
   - /etc/plugin.yaml
   - /etc/smarthome.yaml
   - /etc/struct.yaml
+  - /etc/struct\_\*.yaml
   - /etc/\*.cer
   - /etc/\*.key
   - /items - alle .yaml Dateien
   - /logic - alle .yaml Dateien
   - /scenes - alle .yaml Dateien
 
-.. warning::
+.. attention::
 
-    Zertifikats- und Key Dateien (\*.cer, \*.key) für tls/https werden in SmartHomeNG v1.6 und v1.6.1 NICHT gesichert.
-    Dieses erfolgt erst in höheren Releases.
+    Zertifikats- und Key Dateien (\*.cer, \*.key) für tls/https werden erst ab SmartHomeNG v1.7 gesichert.
 
 
 Falls SmartHomeNG mit der Option **-c** bzw. **--config_dir** gestartet wurde, so wird dieses beim Sichern und
@@ -83,8 +83,12 @@ Wiederherstellen berücksichtigt.
 
 .. warning::
 
-    Ganz ausdrücklich werden keine Daten aus dem Unterverzeichnis ``var`` gesichert.
-    Also keine Datenbank aus ``var/db`` oder ``var/rrd``, keine Logfiles aus ``log`` und auch keine Cache Daten aus ``var/cache``
-    die via Attribut ``cache: True`` befüllt werden.
+    Es werden nur **Konfigurationsdaten** gesichert.
 
-    Sollen diese Daten gesichert werden, so muß SmartHomeNG zuerst beendet und danach die gewünschten Dateie manuell gesichert werden.
+    Ganz ausdrücklich werden **keine** Daten aus dem Unterverzeichnis ``var`` gesichert.
+    Also keine Datenbank aus ``var/db`` oder ``var/rrd``, keine Logfiles aus ``log`` und auch keine Cache Daten
+    aus ``var/cache`` die via Attribut ``cache: True`` befüllt werden.
+
+    Sollen diese Daten gesichert werden, so muß SmartHomeNG zuerst beendet und danach die gewünschten Dateie manuell
+    gesichert werden.
+

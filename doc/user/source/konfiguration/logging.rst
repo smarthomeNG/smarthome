@@ -91,13 +91,14 @@ dann nur noch über den zusätzlichen Handler.
 
 |
 
-Logging Handler
-===============
+Logging Handler und Filter
+==========================
 
-Zusätzlich zu den Logging Handlern, die im Standard Logging Modul von Python definiert, bringt SmartHomeNG weitere
-Handler mit, die bei der Konfiguration in ../etc/logging.yaml verwendet werden können.
+Zusätzlich zu den Logging Handlern, die im Standard Logging Modul von Python definiert, bringt
+SmartHomeNG weitere Handler und Filter mit, die bei der Konfiguration in ../etc/logging.yaml verwendet werden
+können.
 
-Die Beschreibung dieser Handler ist im Referenz Abschnitt unter Logging zu finden:
+Die Beschreibung dieser Handler und Filter ist im Referenz Abschnitt unter Logging zu finden:
 
 .. toctree::
 
@@ -106,6 +107,7 @@ Die Beschreibung dieser Handler ist im Referenz Abschnitt unter Logging zu finde
    :titlesonly:
 
    /referenz/logging/logging_handler
+   /referenz/logging/logging_filter
 
 
 Plugin und Logik Entwicklung
