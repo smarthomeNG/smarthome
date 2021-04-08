@@ -346,7 +346,10 @@ class PluginsInfoController(RESTResource):
                             if r.status_code == 404:
                                 temp_blog_urls[plugin_name] = ''
                             elif r.status_code != 200:
-                                self.logger.notice("www.smarthomeng.de sent status_code {} for get-request to {}".format(r.status_code, temp_blog_urls[plugin_name]))
+                                if r.status_code in [500, 503]:
+                                    self.logger.info("www.smarthomeng.de sent status_code {} for get-request to {}".format(r.status_code, temp_blog_urls[plugin_name]))
+                                else:
+                                    self.logger.notice("www.smarthomeng.de sent status_code {} for get-request to {}".format(r.status_code, temp_blog_urls[plugin_name]))
                                 temp_blog_urls[plugin_name] = ''
                         else:
                             pass
