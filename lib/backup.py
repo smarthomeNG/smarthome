@@ -24,6 +24,7 @@ This library creates a zip file with the configuration of SmartHomeNG.
 """
 
 import copy
+import glob
 import logging
 import zipfile
 import shutil
@@ -123,7 +124,12 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     backup_file(backupzip, source_dir, arc_dir, 'module.yaml')
     backup_file(backupzip, source_dir, arc_dir, 'plugin.yaml')
     backup_file(backupzip, source_dir, arc_dir, 'smarthome.yaml')
+
     backup_file(backupzip, source_dir, arc_dir, 'struct.yaml')
+    struct_files = glob.glob(os.path.join( etc_dir, 'struct_*.yaml'))
+    for pn in struct_files:
+        fn = os.path.split(pn)[1]
+        backup_file(backupzip, source_dir, arc_dir, fn)
 
     # backup certificate files from /etc
     backup_directory(backupzip, etc_dir, '.cer')
