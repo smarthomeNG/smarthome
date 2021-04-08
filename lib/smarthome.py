@@ -26,7 +26,6 @@
 #########################################################################
 #
 # TO DO:
-# - Isolate Logging (MemLog, etc.) to lib module
 # - remove all remarks with old code (that has been moved to lib modules)
 #
 #########################################################################
@@ -108,23 +107,6 @@ from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE)
 # Classes
 #####################################################################
 
-class _LogHandler(logging.StreamHandler):
-    """
-    LogHandler used by MemLog
-    """
-    def __init__(self, log, shtime):
-        logging.StreamHandler.__init__(self)
-        self._log = log
-        self._shtime = shtime
-
-    def emit(self, record):
-        try:
-            self.format(record)
-            timestamp = datetime.datetime.fromtimestamp(record.created, self._shtime.tzinfo())
-            self._log.add([timestamp, record.threadName, record.levelname, record.message])
-        except Exception:
-            self.handleError(record)
-
 class SmartHome():
     """
     SmartHome ist the main class of SmartHomeNG. All other objects can be addressed relative to
@@ -159,8 +141,6 @@ class SmartHome():
         self.plugin_start_complete = False
 
         self._smarthome_conf_basename = None
-        self._log_buffer = 50
-        self.__logs = {}
         self.__event_listeners = {}
         self.__all_listeners = []
         self.modules = []
@@ -218,6 +198,7 @@ class SmartHome():
         self.initialize_vars()
         self.initialize_dir_vars()
         self.create_directories()
+        self.logs = lib.log.Logs(self)   # initialize object for memory logs
 
         os.chdir(self._base_dir)
 
@@ -522,31 +503,53 @@ class SmartHome():
                 if os.path.isfile(default):
                     shutil.copy2(default, conf_basename + YAML_FILE)
 
-    def addLoggingLevel(self, description, value):
-        """
-        Adds a new Logging level to the standard python logging
+    # def addLoggingLevel(self, description, value):
+    #     """
+    #     Adds a new Logging level to the standard python logging
+    #
+    #     :param description: appearance within logs SYSINFO
+    #     :type description: string
+    #     :param value: numeric value for the logging level
+    #     :type value: int
+    #     :param tocall: function name to call for a log with the given level
+    #     :type tocall: String, optional, if not given  description will be used with lower case
+    #
+    #     no error checking is performed here for typos, already existing levels or functions
+    #     """
+    #
+    #     def logForLevel(self, message, *args, **kwargs):
+    #         if self.isEnabledFor(value):
+    #             self._log(value, message, args, **kwargs)
+    #
+    #     def logToRoot(message, *args, **kwargs):
+    #         logging.log(value, message, *args, **kwargs)
+    #
+    #     logging.addLevelName(value, description)
+    #     setattr(logging, description, value)
+    #     setattr(logging.getLoggerClass(), description.lower(), logForLevel)
+    #     setattr(logging, description.lower(), logToRoot)
+    #     return
 
-        :param description: appearance within logs SYSINFO
-        :type description: string
-        :param value: numeric value for the logging level
-        :type value: int
-        :param tocall: function name to call for a log with the given level
-        :type tocall: String, optional, if not given  description will be used with lower case
+    def loadLoggingConfig(self, config_dict):
 
-        no error checking is performed here for typos, already existing levels or functions
-        """
+        #self.addLoggingLevel('NOTICE', 31)
+        self.logs.addLoggingLevel('NOTICE', 31)
 
-        def logForLevel(self, message, *args, **kwargs):
-            if self.isEnabledFor(value):
-                self._log(value, message, args, **kwargs)
-
-        def logToRoot(message, *args, **kwargs):
-            logging.log(value, message, *args, **kwargs)
-
-        logging.addLevelName(value, description)
-        setattr(logging, description, value)
-        setattr(logging.getLoggerClass(), description.lower(), logForLevel)
-        setattr(logging, description.lower(), logToRoot)
+        if config_dict == None:
+            print()
+            print("ERROR: Invalid logging configuration in file 'logging.yaml'")
+            print()
+            exit(1)
+        self.logging_config = config_dict
+        try:
+            logging.config.dictConfig(config_dict)
+        except Exception as e:
+            #self._logger_main.error(f"Invalid logging configuration in file 'logging.yaml' - Exception: {e}")
+            print()
+            print("ERROR: Invalid logging configuration in file 'logging.yaml'")
+            print(f"       Exception: {e}")
+            print()
+            exit(1)
         return
 
 
@@ -554,19 +557,11 @@ class SmartHome():
         """
         This function initiates the logging for SmartHomeNG.
         """
-        self.addLoggingLevel('NOTICE', 31)
-
         if conf_basename == '':
             conf_basename = self._log_conf_basename
-        #fo = open(conf_basename + YAML_FILE, 'r')
         doc = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
-        if doc == None:
-            print()
-            print("ERROR: Invalid logging configuration in file 'logging.yaml'")
-            exit(1)
-        self.logging_config = doc
-        logging.config.dictConfig(doc)
-        #fo.close()
+        self.loadLoggingConfig(doc)
+
         if MODE == 'interactive':  # remove default stream handler
             logging.getLogger().disabled = True
         elif MODE == 'verbose':
@@ -575,21 +570,26 @@ class SmartHome():
             logging.getLogger().setLevel(logging.DEBUG)
         elif MODE == 'quiet':
             logging.getLogger().setLevel(logging.WARNING)
-#       log_file.doRollover()
+        return
 
 
     def initMemLog(self):
         """
-        This function initializes all needed datastructures to use the (old) memlog plugin
-        """
+        This function initializes all needed datastructures to use the 'env.core.log' mem-logger and
+        the (old) memlog plugin
 
-        self.log = lib.log.Log(self, 'env.core.log', ['time', 'thread', 'level', 'message'], maxlen=self._log_buffer)
+        It adds the handler log_mem (based on the custom lib.log.ShngMemLogHandler) to the root logger
+        It logs all WARNINGS from all (old) mem-loggers to the root Logger
+        """
+        log_mem = lib.log.ShngMemLogHandler('env.core.log', maxlen=50)
+        log_mem.setLevel(logging.WARNING)
+
         _logdate = "%Y-%m-%d %H:%M:%S"
         _logformat = "%(asctime)s %(levelname)-8s %(threadName)-12s %(message)s"
         formatter = logging.Formatter(_logformat, _logdate)
-        log_mem = _LogHandler(self.log, self.shtime)
-        log_mem.setLevel(logging.WARNING)
         log_mem.setFormatter(formatter)
+
+        # add handler to root logger
         logging.getLogger('').addHandler(log_mem)
 
 
@@ -802,33 +802,6 @@ class SmartHome():
 #        for child in self.__children:
 #            yield child
         return self.items.get_toplevel_items()
-
-
-    #################################################################
-    # Log Methods
-    #################################################################
-    """
-    SmartHomeNG internally keeps a list of logs which can be extended
-    Currently these logs are created by several plugins
-    (plugins memlog, operationlog and visu_websocket) and initMemLog function of SmartHomeNG
-    """
-    def add_log(self, name, log):
-        """
-        Adds a log to the list of logs
-
-        :param name: Name of log
-        :param log: Log object, essentially an object based of a double ended queue
-        """
-        self.__logs[name] = log
-
-    def return_logs(self):
-        """
-        Function to the list of logs
-
-        :return: List of logs
-        :rtype: list
-        """
-        return self.__logs
 
 
     #################################################################

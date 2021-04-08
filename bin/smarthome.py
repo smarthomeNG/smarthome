@@ -54,6 +54,7 @@ import locale
 # https://stackoverflow.com/questions/31469707/changing-the-locale-preferred-encoding-in-python-3-in-windows
 
 
+
 #####################################################################
 # Read command line arguments
 #####################################################################

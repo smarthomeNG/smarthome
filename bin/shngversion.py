@@ -71,8 +71,9 @@ import plugins.__init__ as plugin_vers
 # Update auf 1.8.2  wg. Release
 # Update auf 1.8.2a wg. Kennzeichnung des Stands als "nach dem v1.8.2 Release"
 # Update auf 1.8.2b wg. Erweiterung des Item Loggings"
+# Update auf 1.8.2c wg. Wegen Anpassungen an mem-logging / lib.log"
 
-shNG_version = '1.8.2b'
+shNG_version = '1.8.2c'
 shNG_branch = 'develop'
 
 # ---------------------------------------------------------------------------------
