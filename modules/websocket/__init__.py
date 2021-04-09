@@ -501,14 +501,16 @@ class Websocket(Module):
                         num = 10
                         if 'max' in data:
                             num = int(data['max'])
+                        #self.logger.notice(f"command == 'log': data={data}")
+                        #self.logger.notice(f"command == 'log': self.logs={self.logs}")
                         if name in self.logs:
                             answer = {'cmd': 'log', 'name': name, 'log': self.logs[name].export(num), 'init': 'y'}
                         else:
                             self.logger.warning("Client {0} requested invalid log: {1}".format(client_addr, name))
-                        if client_addr not in self.sv_monitor_logs:
-                            self.sv_monitor_logs[client_addr] = []
-                        if name not in self.sv_monitor_logs[client_addr]:
-                            self.sv_monitor_logs[client_addr].append(name)
+                            if client_addr not in self.sv_monitor_logs:
+                                self.sv_monitor_logs[client_addr] = []
+                            if name not in self.sv_monitor_logs[client_addr]:
+                                self.sv_monitor_logs[client_addr].append(name)
 
                     elif command == 'ping':
                         answer = {'cmd': 'pong'}
@@ -854,6 +856,7 @@ class Websocket(Module):
                     log_entry = queue_entry[1]
                     # log_entry: dict {'name', 'log'}
                     #            log is a list and contains dicts: {'time', 'thread', 'level', 'message'}
+                    #self.logger.info(f"update_visu: queue_entry = {queue_entry}")
                     try:
                         await self.update_log(log_entry)
                     except Exception as e:
@@ -936,7 +939,7 @@ class Websocket(Module):
                 log_entry['cmd'] = 'log'
                 msg = json.dumps(log_entry, default=self.json_serial)
                 try:
-                    self.logger.info(">LogUp {}: {}".format(self.client_address(websocket), msg))
+                    #self.logger.notice(">LogUp {}: {}".format(self.client_address(websocket), msg))
                     await websocket.send(msg)
                 except Exception as e:
                     if not str(e).startswith(('code = 1005', 'code = 1006')):
