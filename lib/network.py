@@ -548,7 +548,7 @@ class Tcp_client(object):
         self.__receive_threadlock = threading.Lock()
         self.__running = True
 
-        self.logger.setLevel(logging.DEBUG)
+        #self.logger.setLevel(logging.DEBUG)   # Das sollte hier NICHT gesetzt werden, sondern in etc/logging.yaml im Logger lib.network konfiguriert werden!
 
         self._host = host
         self._port = port
