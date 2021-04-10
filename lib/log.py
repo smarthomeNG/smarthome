@@ -32,6 +32,19 @@ import collections
 logs_instance = None
 
 
+def listloggers():
+    rootlogger = logging.getLogger()
+    print(rootlogger)
+    for h in rootlogger.handlers:
+        print('     %s' % h)
+
+    for nm, lgr in logging.Logger.manager.loggerDict.items():
+        print('+ [%-20s] %s ' % (nm, lgr))
+        if not isinstance(lgr, logging.PlaceHolder):
+            for h in lgr.handlers:
+                print('     %s' % h)
+
+
 class Logs():
 
     _logs = {}
@@ -108,7 +121,7 @@ class Log(collections.deque):
     #####################################################################
 
 
-    def __init__(self, smarthome, name, mapping, maxlen=40):
+    def __init__(self, smarthome, name, mapping, maxlen=40, handler=None):
         """
         Class to implement a log
         This is based on a double ended queue. New entries are appended left and old ones are popped right.
@@ -134,6 +147,7 @@ class Log(collections.deque):
         self._sh = logs_instance._sh
         self._name = name
         self._maxlen = maxlen
+        self.handler = handler
         # Add this log to dict of defined memory logs
         logs_instance.add_log(name, self)
 
@@ -285,17 +299,25 @@ class ShngMemLogHandler(logging.StreamHandler):
     """
     LogHandler used by MemLog
     """
-    def __init__(self, logname='?', maxlen=35):
-        logging.StreamHandler.__init__(self)
+    def __init__(self, logname='undefined', maxlen=35, level=logging.NOTSET):
+        super().__init__()
+        self.setLevel(level)
 
-        #self.log = Log(self, 'env.core.log', ['time', 'thread', 'level', 'message'], maxlen=self._log_buffer)
-        self._log = Log(self, logname, ['time', 'thread', 'level', 'message'], maxlen=maxlen)
+        if self.get_name() is None:
+            # for 'env.core.log' memory logger
+            self.set_name('_shng_root_memory')
+
+        #logs_instance.logger.info(f"ShngMemLogHandler.__init__(): logname={logname}, self={self}, handlername={self.get_name()}, level={self.level}, levelname={logging.getLevelName(self.level)}, maxlen={maxlen}")
+
+        self._log = Log(self, logname, ['time', 'thread', 'level', 'message'], maxlen=maxlen, handler=self)
 
         self._shtime = logs_instance._sh.shtime
-        # Dummy baseFileName for output in priv_develop (and later shngadmin)
+        # Dummy baseFileName for output in shngadmin (and priv_develop plugin)
         self.baseFilename = "'" + self._log._name + "'"
 
     def emit(self, record):
+        #logs_instance.logger.info(f"ShngMemLogHandler.emit() #1: logname={self._log._name}, handlername={self.get_name()}, level={self.level}, record.levelno={record.levelno}, record.levelname={record.levelname}, record={record}")
+        #logs_instance.logger.info(f"ShngMemLogHandler.emit() #2: self={self}, handlers={logging._handlers.data}")
         try:
             self.format(record)
             timestamp = datetime.datetime.fromtimestamp(record.created, self._shtime.tzinfo())

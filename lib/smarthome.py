@@ -503,44 +503,17 @@ class SmartHome():
                 if os.path.isfile(default):
                     shutil.copy2(default, conf_basename + YAML_FILE)
 
-    # def addLoggingLevel(self, description, value):
-    #     """
-    #     Adds a new Logging level to the standard python logging
-    #
-    #     :param description: appearance within logs SYSINFO
-    #     :type description: string
-    #     :param value: numeric value for the logging level
-    #     :type value: int
-    #     :param tocall: function name to call for a log with the given level
-    #     :type tocall: String, optional, if not given  description will be used with lower case
-    #
-    #     no error checking is performed here for typos, already existing levels or functions
-    #     """
-    #
-    #     def logForLevel(self, message, *args, **kwargs):
-    #         if self.isEnabledFor(value):
-    #             self._log(value, message, args, **kwargs)
-    #
-    #     def logToRoot(message, *args, **kwargs):
-    #         logging.log(value, message, *args, **kwargs)
-    #
-    #     logging.addLevelName(value, description)
-    #     setattr(logging, description, value)
-    #     setattr(logging.getLoggerClass(), description.lower(), logForLevel)
-    #     setattr(logging, description.lower(), logToRoot)
-    #     return
 
     def loadLoggingConfig(self, config_dict):
-
-        #self.addLoggingLevel('NOTICE', 31)
-        self.logs.addLoggingLevel('NOTICE', 31)
 
         if config_dict == None:
             print()
             print("ERROR: Invalid logging configuration in file 'logging.yaml'")
             print()
             exit(1)
+
         self.logging_config = config_dict
+        self.logs.addLoggingLevel('NOTICE', 31)
         try:
             logging.config.dictConfig(config_dict)
         except Exception as e:
@@ -550,6 +523,7 @@ class SmartHome():
             print(f"       Exception: {e}")
             print()
             exit(1)
+
         return
 
 
@@ -560,6 +534,7 @@ class SmartHome():
         if conf_basename == '':
             conf_basename = self._log_conf_basename
         doc = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
+
         self.loadLoggingConfig(doc)
 
         if MODE == 'interactive':  # remove default stream handler
@@ -581,9 +556,9 @@ class SmartHome():
         It adds the handler log_mem (based on the custom lib.log.ShngMemLogHandler) to the root logger
         It logs all WARNINGS from all (old) mem-loggers to the root Logger
         """
-        log_mem = lib.log.ShngMemLogHandler('env.core.log', maxlen=50)
-        log_mem.setLevel(logging.WARNING)
+        log_mem = lib.log.ShngMemLogHandler('env.core.log', maxlen=50, level=logging.WARNING)
 
+        # define formatter for 'env.core.log' log
         _logdate = "%Y-%m-%d %H:%M:%S"
         _logformat = "%(asctime)s %(levelname)-8s %(threadName)-12s %(message)s"
         formatter = logging.Formatter(_logformat, _logdate)
