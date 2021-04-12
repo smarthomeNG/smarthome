@@ -108,7 +108,7 @@ class SampleMqttPlugin(MqttPlugin):
                         can be sent to the knx with a knx write function within the knx plugin.
         """
         if self.has_iattr(item.conf, 'foo_itemid'):
-            self.logger.debug(f"parse item: {item}")
+            self.logger.debug(f"parse item: {item.property.path}")
 
             # subscribe to topic for relay state
             # mqtt_id = self.get_iattr_value(item.conf, 'foo_itemid').upper()
@@ -154,10 +154,10 @@ class SampleMqttPlugin(MqttPlugin):
         if self.alive and caller != self.get_shortname():
             # code to execute if the plugin is not stopped
             # and only, if the item has not been changed by this this plugin:
-            self.logger.info(f"Update item: {item}, item has been changed outside this plugin")
+            self.logger.info(f"Update item: {item.property.path}, item has been changed outside this plugin")
 
             if self.has_iattr(item.conf, 'foo_itemtag'):
                 self.logger.debug(
-                    f"update_item was called with item {item} from caller {caller}, source {source} and dest {dest}")
+                    f"update_item was called with item {item.property.path} from caller {caller}, source {source} and dest {dest}")
             pass
 

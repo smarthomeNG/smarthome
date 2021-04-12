@@ -98,6 +98,7 @@ In der Datei ``../etc/logging.yaml`` wird der **ShngMemLogHandler** im Abschnitt
             (): lib.log.ShngMemLogHandler
             logname: mem_heiz
             maxlen: 60
+            level: INFO
 
 
 **ShngMemLogHandler** hat zwei Parameter:
@@ -106,6 +107,7 @@ In der Datei ``../etc/logging.yaml`` wird der **ShngMemLogHandler** im Abschnitt
       angesprochen werden kann.
     - ``maxlen:`` - Legt fest, wie viele Einträge ein Memory Log aufnehmen kann, bevor der älteste Eintrag
       gelöscht wird.
+    - ``level:`` - Legt den minmalen Log Level fest, der in das Memory Log geschrieben wird
 
 |
 
