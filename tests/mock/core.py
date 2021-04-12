@@ -5,6 +5,8 @@ import datetime
 import dateutil.tz
 import logging
 
+import bin.shngversion
+
 import lib.config
 
 import lib.item
@@ -83,9 +85,12 @@ class MockSmartHome():
 
 
     def __init__(self):
-        VERSION = '1.8.'
-        VERSION += '2a.man'
-        self.version = VERSION
+        #VERSION = '1.8.'
+        #VERSION += '2c.man'
+        #self.version = VERSION
+
+        self.version = bin.shngversion.shNG_version
+
         self.python_bin = os.environ.get('_','')
         self.__logs = {}
 #        self.__item_dict = {}
