@@ -69,6 +69,7 @@ class Shtime:
         _shtime_instance = self
 
         self._starttime = datetime.datetime.now()
+        self.log_msg = ""   # is overwritten in _initialize_holidays() if no error occurs
 
         # set default timezone to UTC
 #        global TZ
