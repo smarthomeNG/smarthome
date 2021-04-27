@@ -22,7 +22,16 @@ in der Navigationsleiste.
    Hinweise auf weitere Plugins, die sich nicht im SmartHomeNG Repository befinden, sind auf der 
    entsprechenden `Wiki Seite <https://github.com/smarthomeNG/smarthome/wiki/Plugins-außerhalb-des-SmartHomeNG-Repository>`_ zu finden.
 
-Die Plugins sind in die folgenden Kategorien unterteilt:
+Die Plugins sind Kategorien unterteilt, die von der Interaktion mit bzw. Ansteuerung von externen Geräten oder Diensten ableiten.
+
+   - keine Anbindung von Geräten/Diensten: **System-Plugin**
+   - Ansteuerung eines Gerätes je Plugin-Instanz: **Interface-Plugin**
+   - Ansteuerung mehrerer Geräte je Plugin-Instanz: **Gateway-Plugin**
+   - reine Unterstützung von Übertragungsprotokollen: **Protokoll-Plugin**
+   - Anbindung von Internet-Diensten: **Web/Cloud-Plugin**
+
+
+Die Plugins und die jeweiligen Beschreibungen sind auf den folgenden Seiten aufgelistet:
 
 .. toctree::
    :maxdepth: 1
