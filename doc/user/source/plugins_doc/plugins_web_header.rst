@@ -14,7 +14,7 @@ Web/Cloud Plugins
 
    <br />
 
-Ein Web- oder Cloud-Plugin implementiert den Zugriff zu lokalen Netzwerk Services oder zu
+Ein Web- (oder Cloud-) Plugin implementiert den Zugriff zu lokalen Netzwerk-Services oder zu
 Internet Services.
 
 |br|
