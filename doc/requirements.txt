@@ -1,11 +1,29 @@
-sphinx>=3.0
+sphinx>=3.0,<4
 sphinx-rtd-theme
-recommonmark>=0.6.0
+
+# create tabs for content for alternative ways to use like | Linux | MacOS | Windows |
+# https://sphinx-tabs.readthedocs.io/en/latest/
+sphinx-tabs
+
+# the following extensions create collapsible parts of documentation
+# sphinx-panels seem to be most extensive
+#sphinx-togglebutton
+#sphinx-toolbox
+#sphinx-panels  https://sphinx-panels.readthedocs.io/en/latest/
+
+# recommonmark is marked deprecated as of April 30th, 2021
+#recommonmark>=0.6.0
+# the replacement to support Markdown like Readme.md is MyST
+# see at https://www.sphinx-doc.org/en/master/usage/markdown.html and
+# at https://myst-parser.readthedocs.io/en/latest/using/intro.html for a primer on MyST
+myst-parser
 
 ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
 ruamel.yaml>=0.15.0,<=0.15.74;python_version=='3.7'
 ruamel.yaml>=0.15.78,<=0.16.8;python_version>='3.8'
 
-# to create pdf files install also
+# to create pdf files it would be needed to install also
 # rst2pdf
 # svglib
+# but there is no fully working lib to convert svg to pdf currently so we can
+# not create pdf files at the moment

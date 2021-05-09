@@ -61,92 +61,92 @@ Bitte auf den **Punkt** am Ende des ersten **git clone** Kommandos achten!
 Weitere Python Bibliotheken installieren
 ========================================
 
-Ab Version 1.7 kann SmartHomeNG benötigte Pakete selbst nachinstallieren. Eine manuelle Installation
-ist daher nur bei älteren Versionen von SmartHomeNG notwendig. (Siehe nächster Abschnitt)
+.. tabs::
 
-Wenn SmartHomeNG in einer Python Umgebung gestartet wird in der nicht der minimale Set an Packages installiert ist,
-wird dieser installiert und die Informationen werden auf die Konsole ausgegeben (da das Logging dann noch nicht
-konfiguriert werden kann). Anschließend startet SmartHomeNG neu. Das sieht folgendermaßen aus.
+   .. tab:: SmartHomeNG ab v1.7
 
-.. code-block:: bash
+      SmartHomeNG kann benötigte Pakete selbst nachinstallieren.
 
-    $ python3 bin/smarthome.py
+      Wenn SmartHomeNG in einer Python Umgebung gestartet wird in der nicht der minimale Set an Packages installiert ist,
+      wird dieser installiert und die Informationen werden auf die Konsole ausgegeben (da das Logging dann noch nicht
+      konfiguriert werden kann). Anschließend startet SmartHomeNG neu. Das sieht folgendermaßen aus.
 
-    test_requirements: 'ephem' not installed. Minimum v3.7 needed
-    test_requirements: 'holidays' not installed. Minimum v0.9.11 needed
-    test_requirements: 'psutil' not installed, any version needed
-    test_requirements: 'python-dateutil' not installed. Minimum v2.5.3 needed
-    test_requirements: 'requests' not installed. Minimum v2.20.0 needed
-    test_requirements: 'ruamel.yaml' not installed. Minimum v0.13.7 needed
+      .. code-block:: bash
 
-    Installing core requirements for the current user, please wait...
-    Running in a virtualenv environment,
-    installing core requirements only to actual virtualenv, please wait...
+         $ python3 bin/smarthome.py
 
-    core requirements installed
+         test_requirements: 'ephem' not installed. Minimum v3.7 needed
+         test_requirements: 'holidays' not installed. Minimum v0.9.11 needed
+         test_requirements: 'psutil' not installed, any version needed
+         test_requirements: 'python-dateutil' not installed. Minimum v2.5.3 needed
+         test_requirements: 'requests' not installed. Minimum v2.20.0 needed
+         test_requirements: 'ruamel.yaml' not installed. Minimum v0.13.7 needed
 
-    Starting SmartHomeNG again...
-    Daemon PID 4024
+         Installing core requirements for the current user, please wait...
+         Running in a virtualenv environment,
+         installing core requirements only to actual virtualenv, please wait...
 
-    $
+         core requirements installed
 
-Danach kann der Core von SmartHomeNG vollständig initialisiert werden und Ausgaben erfolgen in smarthome-warnings.log
+         Starting SmartHomeNG again...
+         Daemon PID 4024
 
-Anschließend prüft SmartHomeNG ob die benötigten Pakete für die ladbaren Module und für die konfigurierten Plugins
-installiert sind. Falls nicht, werden diese jeweils installiert und SmartHomeNG startet sich erneut.
+         $
 
-.. note::
+      Danach kann der Core von SmartHomeNG vollständig initialisiert werden und Ausgaben erfolgen in smarthome-warnings.log
 
-    Dieser Mechanismus sorgt auch dafür, dass Pakete die von später konfigurierten Plugins benötigt werden, automatisch
-    nachinstalliert werden.
+      Anschließend prüft SmartHomeNG ob die benötigten Pakete für die ladbaren Module und für die konfigurierten Plugins
+      installiert sind. Falls nicht, werden diese jeweils installiert und SmartHomeNG startet sich erneut.
+
+      .. note::
+
+         Dieser Mechanismus sorgt auch dafür, dass Pakete die von später konfigurierten Plugins benötigt werden, automatisch
+         nachinstalliert werden.
+
+   .. tab:: SmartHomeNG vor v1.7 
+
+      Für den ersten Start müssen noch einige Python Packages nachgeladen werden.
+      Im Unterordner ``requirements`` befindet sich dafür eine Datei ``base.txt``.
+      In dieser Datei stehen die von SmartHomeNG grundlegend benötigten Bibliotheken.
+      Diese können wie folgt installiert werden:
+
+      .. code-block:: bash
+
+         cd /usr/local/smarthome
+         pip3 install -r requirements/base.txt --user
+
+      .. attention::
+
+          In früheren Beschreibungen wurde die globale Installation von Python Packages mit dem sudo Kommando
+          beschrieben:
+
+             sudo pip3 install -r requirements/base.txt
+
+          Dieses funktioniert unter Debian Buster **NICHT** mehr. Zumindest unter Buster **muss** die Installation
+          für den entsprechenden User mit **--user** erfolgen (wie oben beschrieben).
 
 
+      .. note::
 
-Python Bibliotheken installieren (für SmartHomeNG vor v1.7)
---------------------------------------------------------------
+          Falls mehrere Python3 Versionen installiert sind, kann es zu Problemen kommen, da pip die Bibliotheken immer nur
+          in eine der installierten Python 3 Versionen installiert.
 
-Für den ersten Start müssen noch einige Python Packages nachgeladen werden.
-Im Unterordner ``requirements`` befindet sich dafür eine Datei ``base.txt``.
-In dieser Datei stehen die von SmartHomeNG grundlegend benötigten Bibliotheken.
-Diese können wie folgt installiert werden:
+          Um sicherzustellen, dass die Bibliotheken in die Python3 Version installiert werden, muss pip3 aus genau dieser
+          Python3 Umgebung aufgerufen werden.
 
-.. code-block:: bash
+          Um das sicherzustellen, ist statt
 
-   cd /usr/local/smarthome
-   pip3 install -r requirements/base.txt --user
+          .. code-block:: bash
 
-.. attention::
+              pip3 install -r requirements/base.txt --user
 
-    In früheren Beschreibungen wurde die globale Installation von Python Packages mit dem sudo Kommando
-    beschrieben:
+          der folgende Befehl auszuführen:
 
-       sudo pip3 install -r requirements/base.txt
+          .. code-block:: bash
 
-    Dieses funktioniert unter Debian Buster **NICHT** mehr. Zumindest unter Buster **muss** die Installation
-    für den entsprechenden User mit **--user** erfolgen (wie oben beschrieben).
+              <python used to start SmartHomeNG> -m pip3 install -r requirements/base.txt --user
 
-
-.. note::
-
-    Falls mehrere Python3 Versionen installiert sind, kann es zu Problemen kommen, da pip die Bibliotheken immer nur
-    in eine der installierten Python 3 Versionen installiert.
-
-    Um sicherzustellen, dass die Bibliotheken in die Python3 Version installiert werden, muss pip3 aus genau dieser
-    Python3 Umgebung aufgerufen werden.
-
-    Um das sicherzustellen, ist statt
-
-    .. code-block:: bash
-
-        pip3 install -r requirements/base.txt --user
-
-    der folgende Befehl auszuführen:
-
-    .. code-block:: bash
-
-        <python used to start SmartHomeNG> -m pip3 install -r requirements/base.txt --user
-
-Jetzt ist SmartHomeNG installiert und kann konfiguriert werden.
+      Jetzt ist SmartHomeNG installiert und kann konfiguriert werden.
 
 
 Erstmaliger Start von SmartHomeNG
@@ -215,8 +215,6 @@ Initiale Konfiguration per GUI
 
 Zur Konfiguration per GUI muss SmartHomeNG laufen. Der Start wurde in den vorangegangenen Schritten durchgeführt
 und es wurde getestet ob SmartHomeNG läuft.
-
-
 
 
 
@@ -490,4 +488,3 @@ Admin Interface
 
 Die weitere Konfiguration kann auch über die GUI erfolgen, wie im Abschnitt `SmartHomeNG konfigurieren <#smarthomeng-konfigurieren>`__
 beschrieben.
-

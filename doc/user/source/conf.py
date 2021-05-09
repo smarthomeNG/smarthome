@@ -39,14 +39,20 @@ extensions = [
   'sphinx.ext.ifconfig',
   'sphinx.ext.viewcode',
   'sphinx.ext.githubpages',
-  'recommonmark']
-#  'recommonmark',
+  'sphinx_tabs.tabs',
+  'myst_parser']
 #  'rst2pdf.pdfbuilder']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
-from recommonmark.parser import CommonMarkParser
+# Markdown Support via MyST
+# without the following, we will get warnings from Parsing old Readme.md as described in
+# https://myst-parser.readthedocs.io/en/latest/using/howto.html#suppress-warnings
+suppress_warnings = ["myst.header"]
+
+# Not used any more
+#from recommonmark.parser import CommonMarkParser
 
 # for autostructify
 #import recommonmark

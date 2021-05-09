@@ -44,6 +44,8 @@ Passende Editoren für Python und YAML Dateien sind z.B.
 | Windows     | `Notepad++ <http://www.notepad-plus-plus.org>`_                       |
 |             |                                                                       |
 |             | `Atom <http://www.atom.io>`_                                          |
+|             |                                                                       |
+|             | `Visual Studio Code <https://code.visualstudio.com>`_                 |
 +-------------+-----------------------------------------------------------------------+
 | Mac         | `BBEdit <https://www.barebones.com/products/bbedit/download.html>`_   |
 |             |                                                                       |
