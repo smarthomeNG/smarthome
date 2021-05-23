@@ -144,7 +144,7 @@ class Orb():
         if not doff == 0:
             doff = self._avoid_neverup(dt, date_utc, doff)
         self._obs.horizon = str(doff)
-        if doff != 0:
+        if not doff == 0:
             next_rising = self._obs.next_rising(self._orb, use_center=center).datetime()
         else:
             next_rising = self._obs.next_rising(self._orb).datetime()
@@ -171,7 +171,7 @@ class Orb():
         if not doff == 0:
             doff = self._avoid_neverup(dt, date_utc, doff)
         self._obs.horizon = str(doff)
-        if doff != 0:
+        if not doff == 0:
             next_setting = self._obs.next_setting(self._orb, use_center=center).datetime()
         else:
             next_setting = self._obs.next_setting(self._orb).datetime()
@@ -181,7 +181,7 @@ class Orb():
     def pos(self, offset=None, degree=False, dt=None):
         """
         Calculates the position of either sun or moon
-        :param offset:  given in minutesA, shifts the time of calculation by some minutes back or forth
+        :param offset:  given in minutes, shifts the time of calculation by some minutes back or forth
         :param degree:  if True: return the position of either sun or moon from the observer as degrees, otherwise as radians
         :param dt:      time for which the position needs to be calculated
         :return:        a tuple with azimuth and elevation

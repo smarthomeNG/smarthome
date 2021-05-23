@@ -106,55 +106,125 @@ Die Zeitspanne für die zyklische Ausführung kann auf zwei Arten angegeben werd
 1. Eine Zahl die die Zeitspanne in Sekunden angibt, kann optional mit einem ``s`` gekennzeichnet werden oder
 2. eine Zahl gefolgt von ``m`` die eine Zeitspanne in Minuten angibt
 
-crontab
-~~~~~~~
+.. role:: bluesup
 
-Ähnlich wie Unix crontab mit den folgenden Optionen:
+crontab :bluesup:`Update`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* ``crontab: init``
-   Ausführung der Logik beim Start von SmartHomeNG
+.. Der Inhalt der Beschreibung von crontab wurde aus referenz/items/standard_attribute/crontab.rst 1:1 kopiert
 
-* ``crontab: Minute Stunde Tag Wochentag``
-   Siehe Beschreibung von Unix crontab und Online Generatoren für Details
+Es gibt drei verschiedene Parametersätze für ein Crontab Attribut:
 
-   - Minute: Wert im Bereich [0...59], oder Komma getrennte Liste, oder * (jede Minute)
-   - Stunde: Wert im Bereich [0...23], oder Komma getrennte Liste, oder * (jede Stunde)
-   - Tag: Wert im Bereich [0...28], oder Komma getrennte Liste, oder * (jeden Tag)
-     **Achtung**: Derzeit keine Werte für Tage größer 28 nutzen
-   - Wochentag: Wert im Bereich [0...6] (0 = Montag), oder Komma getrennte Liste, oder * (jeden Wochentag)
+.. tabs::
 
-``crontab: sunrise``
-   Startet die Logik bei Sonnenaufgang
+      .. tab:: init
+         Das Item wird zum Start von SmarthomeNG aktualisiert und triggert
+         dadurch unter Umständen eine zugewiesene Logik:
 
-``crontab: sunset``
-   Startet die Logik bei Sonnenuntergang
+         .. code-block:: yaml
 
-   Für Sonnenaufgang oder Sonnenuntergang können folgende Erweiterungen genutzt werden:
+            crontab: init
 
-   - Ein Offsetwert zum Horizont in Grad.
-     Beispiel ``crontab: sunset-6``
-     Dazu muss in der smarthome.yaml Längen und Breitengrad eingestellt sein.
-   - Ein Offsetwert in Minuten der durch ein angehängtes m gekennzeichnet wird
-     Beispiel: ``crontab: sunset-10m``
-   - Eine Beschränkung der Zeit für die Ausführung
+         Hier kann auch zusätzlich ein Offset angegeben werden um den
+         tatsächlichen Zeitpunkt zu verschieben:
 
-   .. code-block:: yaml
-      :caption:  Konfiguration mit YAML Syntax
+         .. code-block:: yaml
 
-       crontab: '17:00<sunset'        # Sonnenuntergang, aber nicht vor 17:00 Uhr (lokaler Zeit)
-       crontab: sunset<20:00          # Sonnenuntergang, aber nicht nach 20:00 (lokaler Zeit)
-       crontab: '17:00<sunset<20:00'  # Sonnenuntergang, zwischen 17:00 Uhr und 20:00 Uhr
-       crontab: '15 * * * = 50'       # Ruft die Logik mit dem Wert ``50`` auf, also nach Aufruf der Logik hat ``trigger['value']`` den Wert ``50``
+            crontab: init+10    # 10 Sekunden nach Start
 
-Mehrere crontab Einträge können auch als Liste angegeben werden:
+      .. tab:: Zeitpunkte
+
+         Das Item soll zu bestimmten Zeitpunkten aktualisiert werden.
+         Die Schreibweise ist an Linux Crontab angelehnt, entspricht diesem aber nicht genau.
+         Es gibt je nach Parameteranzahl 3 Varianten:
+
+         * ``crontab: <Minute> <Stunde> <Tag> <Wochentag>``
+         * ``crontab: <Minute> <Stunde> <Tag> <Monat> <Wochentag>``
+         * ``crontab: <Sekunde> <Minute> <Stunde> <Tag> <Monat> <Wochentag>``
+
+         Dabei sind je nach Variante folgende Werte zulässig:
+
+         * Sekunde: ``0`` bis ``59``
+         * Minute: ``0`` bis ``59``
+         * Stunde: ``0`` bis ``23``
+         * Tag: ``1`` bis ``31``
+         * Monat: 1 bis 12  oder ``jan`` bis ``dec``
+         * Wochentag ``0`` bis ``6``   oder ``mon``, ``tue``, ``wed``, ``thu``, ``fri``, ``sat``, ``sun``
+
+         Alle Parameter müssen durch ein Leerzeichen getrennt sein und innerhalb eines Parameters
+         darf kein zusätzliches Leerzeichen vorhanden sein, sonst kann der Parametersatz nicht ausgewertet werden.
+
+         Im folgenden Beispiel wird jeden Tag um 23:59 ein Trigger erzeugt und der Wert 70 gesetzt.
+
+         .. code-block:: yaml
+
+            crontab: 59 23 * * = 70
+
+         Für jede dieser Zeiteinheiten (Minuten, Stunde, Tag, Wochentag) werden
+         folgende Muster unterstützt (Beispiel jeweils ohne Anführungszeichen verwenden):
+
+         * eine einzelne Zahl, z.B. ``8`` → immer zur/zum 8. Sekunde/Minute/Stunde/Tag/Wochentag
+         * eine Liste von Zahlen, z.B. ``2,8,16`` → immer zur/zum 2., 8. und 16. Sekunde/Minute/Stunde/Tag/Monat/Wochentag
+         * ein Wertebereich, z.B. ``1-5`` → immer zwischen dem/der 1. und 5. Sekunde/Minute/Stunde/Tag/Monat/Wochentag
+         * einen Interval, z.B. ``\*\/4`` → immer alle 4 Sekunden/Minuten/Stunden/Tage/Wochentage
+         * einen Stern, z.B. ``*`` → jede Sekunde/Minute/Stunde/Tag/Monat/Wochentag
+
+      .. tab:: Zeitpunkte bezogen auf Aufgang von Sonne oder Mond 
+
+         Nach dem Muster ``[H:M<](sunrise|sunset|moonrise|moonset)[+|-][offset][<H:M] (<day> <month> <weekday>)`` kann ein Triggerpunkt bezogen 
+         auf Sonne oder Mond berechnet werden:
+
+         * ``sunrise`` → immer zum Sonnenaufgang
+         * ``sunset`` → immer zum Sonnenuntergang
+         * ``sunrise`` und untere Begrenzung → ``06:00<sunrise`` zum Sonnenaufgang, frühestens um 6 Uhr
+         * ``sunrise`` und obere Begrenzung →  ``sunrise<09:00`` zum Sonnenaufgang, spätestens um 6 Uhr
+         * ``sunset``  und obere und untere Begrenzung → ``17:00<sunset<20:00`` zum Sonnenuntergang, frühestens um 17:00 und spätestens um 20:00 Uhr
+         * ``sunrise`` und Minuten-Offset → ``sunrise+10m`` 10 Minuten nach Sonnenaufgang
+         * ``sunset``  und Minuten-Offset → ``sunset-10m`` 10 Minuten vor Sonnenuntergang
+         * ``sunset`` und Grad-Offset → ``sunset+6`` Sonnenuntergang wenn Sonne 6 Grad am Horizont erreicht
+
+         Soll die erweiterte Variante mit Angabe von Tag, Monat und Wochentag genutzt werden, so müssen immer alle Parameter angegeben werden.
+         Die Zusatzangaben müssen dann durch einen Leerschritt getrennt werden.
+         Sofern Zusatzangaben vorhanden sind, werden sie UND verknüpft. Das folgende Beispiel würde einen Triggerzeitpunkt festlegen für den nächsten
+         Sonnenuntergang der an einem 24. Dezember stattfindet und ein Sonntag ist. (das wäre am 24.Dezember 2023)
+
+         .. code-block:: yaml
+
+            crontab: sunset 24 12 sun
+
+         Das Item soll zu einem bestimmten Sonnenstand aktualisiert werden:
+
+         .. code-block:: yaml
+
+            crontab: sunrise-10m
+            crontab: sunset+6
+            crontab: sunset
+
+
+Sämtliche Optionen können in einer \*.yaml durch Listenbildung erstellt werden. Im Admin Interface können die einzelnen Parametersätze durch `` | `` getrennt werden.
+
+Durch Anhängen eines ``= value`` wird der entsprechende Wert ``value`` mitgesendet. 
+Das Beispiel setzt den Wert des Items täglich um Mitternacht auf ``20``:
+
 
 .. code-block:: yaml
-   :caption:  Konfiguration mit YAML Syntax
 
    crontab:
-     - init = start
-     - sunrise-2
-     - '0 5 * *'
+      - 0 0 * * = 20
+      - sunrise
+
+Möchte man einen Wert im Minutentakt aktualisieren, ist es notwendig den Ausdruck ``* * * *`` unter Anführungszeichen zu setzen.
+
+.. code-block:: yaml
+
+   crontab: '* * * * = 1'
+
+Folgendes Beispiel zeigt wie alle 15 Sekunden der Wert ``42`` gesendet wird:
+
+.. code-block:: yaml
+
+   crontab: '*/15 * * * * * = 42'
+
 
 enabled
 ~~~~~~~

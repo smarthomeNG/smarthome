@@ -95,7 +95,7 @@ import lib.translation
 from lib.shtime import Shtime
 import lib.shyaml
 from lib.shpypi import Shpypi
-
+from lib.triggertimes import TriggerTimes
 from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE)
 
 #import bin.shngversion
@@ -581,6 +581,11 @@ class SmartHome():
         self.shng_status = {'code': 10, 'text': 'Starting'}
 
         threading.currentThread().name = 'Main'
+
+        #############################################################
+        # Prepare TriggerTimes for Scheduler
+        #############################################################
+        self.triggertimes = TriggerTimes(self)
 
         #############################################################
         # Start Scheduler
