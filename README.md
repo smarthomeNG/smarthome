@@ -4,15 +4,43 @@
 
 ![Github Tag](https://img.shields.io/github/v/release/smarthomeng/smarthome?sort=semver)
 ![Made with Python](https://img.shields.io/badge/made%20with-python-blue.svg)
-[![Build Status on TravisCI](https://travis-ci.org/smarthomeNG/smarthome.svg?branch=develop)](https://travis-ci.org/smarthomeNG/smarthome)
+[![Build Status on TravisCI](https://travis-ci.com/smarthomeNG/smarthome.svg?branch=master)](https://travis-ci.com/smarthomeNG/smarthome)
 [![Join the chat at https://gitter.im/smarthomeNG/smarthome](https://badges.gitter.im/smarthomeNG/smarthome.svg)](https://gitter.im/smarthomeNG/smarthome?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+SmartHomeNG [1] ist eine Software die eine Basis für eine Heimautomation bereitstellt. Über Plugins können spezielle Schnittstellen angesprochen und damit die Funktionalität des Gesamtsystems erweitert werden.
+
+Auf der ([Webseite des Projektes](https://www.smarthomeNG.de)) kann eine [Benutzerdokumentation](https://www.smarthomeNG.de) eingesehen werden.
+
+Ein [Wiki](https://github.com/smarthomeNG/smarthome/wiki) existiert zumeist in deutscher Sprache.
+
+Die Kernfunktionalität wird alle 6-9 Monate in einem Release erweitert und freigegeben.
+
+## Benutzte Werkzeuge
+
+| Werkzeug | beschreibung |
+| ---     | :--- |
+| <a href="https://www.jetbrains.com/?from=SmartHomeNG"><img src="https://smarthomeng.de/images/pycharm-logo.png" width="80" height="70"></a> | SmartHomeNG wird mit der Pycharm IDE entwickelt. |
+| <a href="https://www.jetbrains.com/?from=SmartHomeNG"><img src="https://smarthomeng.de/images/webstorm-logo.png" width="70" height="70"></a> | Das Admin Interface von SmartHomeNG wird mit WebStorm IDE entwickelt. |
+
+## Aktueller Status der Entwicklung
+
+[![Aktuelle Entwicklung](https://travis-ci.com/smarthomeNG/smarthome.svg?branch=develop)](https://travis-ci.com/smarthomeNG/smarthome)
+
+
+---
+
+# SmartHomeNG and other languages
+
 SmartHomeNG [1] is a software that serves as a basis for home automation. It interconnects multiple devices using plugins to access their specific interfaces.
-This file contains basic information about the root directories of SmartHomeNG.
 
 User documentation ([german](https://www.smarthomeNG.de/user)) and developer documentation ([part of the user documentation](https://www.smarthomeng.de/user/entwicklung/entwicklung.html)) can be found on [www.smarthomeNG.de](https://www.smarthomeNG.de)
 
 Additional information can be found in the [SmartHomeNG Wiki](https://github.com/smarthomeNG/smarthome/wiki).
+
+It is possible to read the documentation with [Google's translation service](https://translate.google.com/translate?hl=&sl=de&tl=en&u=https://www.smarthomeng.de/dev/user/) in other languages as well.
+
+This readme file contains basic information about the root directories of SmartHomeNG for an overview.
+
 
 ## Used Tools
 
