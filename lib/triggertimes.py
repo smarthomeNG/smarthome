@@ -920,6 +920,8 @@ class Skytime(TriggerTime):
                                     logger.error('Wrong syntax: {self._triggertime}. Should be [H:M<](skyevent)[+|-][offset][<H:M]')
                                     return get_invalid_time()
                                 if dmax < eventtime:
+                                    eventtime = dmax
+                                else:
                                     searchtime = searchtime.replace(hour=0, minute=0, second=0) + datetime.timedelta(days=1)
                                     continue
                             searchtime = eventtime
