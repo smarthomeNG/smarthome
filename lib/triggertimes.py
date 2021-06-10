@@ -882,7 +882,7 @@ class Skytime(TriggerTime):
                 if month is not None:
                     if not em:
                         # if not an exact match for month then set starttime to earliest of next month
-                        searchtime = searchtime.replace(month=month, day=1, hour=0, minute=0, second=0)
+                        searchtime = searchtime.replace(month=month, day=1, hour=0, minute=0, second=0, microsecond=0)
                     day, em = Crontab.get_next_in_sorted_list(searchtime.day, self.day_range, 1, calendar.monthrange(year, month)[1])
                     if day is not None:
                         if not em:
@@ -902,11 +902,24 @@ class Skytime(TriggerTime):
                             else:
                                 logger.error(f'No function found to get next skyevent time for {self._triggertime}')
                                 return get_invalid_time()
+                            
+                            # eventtime will contain the next time e.g. a sunset will take place
+                            # thus 
+                            #  - searchtime must be smaller than eventtime and 
+                            #  - eventtime might be one or more day(s) later
 
+                            # if the dates differ then it must be certain that the new date adheres to the
+                            # constraints of the day range.
+                            if eventtime.date() > searchtime.date():
+                                logger.debug(f"eventtime ({eventtime.date()}) is at least a day later than current searchtime ({searchtime}), skip to eventtime's early morning")
+                                searchtime = eventtime.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=Skytime.sh.shtime.tzinfo())
+                                continue # need to start over for a matching date
+
+                            # eventtime and searchtime have the same date
                             # now check time limits if given
                             if self.h_min is not None and self.m_min is not None:
                                 try:
-                                    dmin = eventtime.replace(hour=(self.h_min), minute=(self.m_min), second=0, tzinfo=Skytime.sh.shtime.tzinfo())
+                                    dmin = eventtime.replace(hour=self.h_min, minute=self.m_min, second=0, microsecond=0,  tzinfo=Skytime.sh.shtime.tzinfo())
                                 except Exception:
                                     logger.error('Wrong syntax: {self._triggertime}. Should be [H:M<](skyevent)[+|-][offset][<H:M]')
                                     return get_invalid_time()
@@ -915,28 +928,35 @@ class Skytime(TriggerTime):
 
                             if self.h_max is not None and self.m_max is not None:
                                 try:
-                                    dmax = eventtime.replace(hour=self.h_max, minute=(self.m_max), second=0, tzinfo=Skytime.sh.shtime.tzinfo())
+                                    dmax = eventtime.replace(hour=self.h_max, minute=self.m_max, second=0, microsecond=0, tzinfo=Skytime.sh.shtime.tzinfo())
+                                    logger.debug(f"searchtime={searchtime}, eventtime={eventtime}, dmax={dmax}")
                                 except Exception:
                                     logger.error('Wrong syntax: {self._triggertime}. Should be [H:M<](skyevent)[+|-][offset][<H:M]')
                                     return get_invalid_time()
+
+                                # the time offset for the event might be a higher negative number
+                                # in this case it could be that dmax is way below the searchtime
+                                if dmax < searchtime:
+                                    # in this case we need to look the next day again
+                                    searchtime = searchtime.replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)
+                                    continue
+
                                 if dmax < eventtime:
                                     eventtime = dmax
-                                else:
-                                    searchtime = searchtime.replace(hour=0, minute=0, second=0) + datetime.timedelta(days=1)
-                                    continue
+                            # next trigger time found!
                             searchtime = eventtime
                             break
                             #------------------------------
                         else: # weekday not found, proceed at next day early morning
-                            searchtime = searchtime.replace(hour=0, minute=0, second=0) + datetime.timedelta(days=1)
+                            searchtime = searchtime.replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)
                             continue
                     else: # day not found, start at beginning of next month
                         advance_days = calendar.monthrange(year, searchtime.month)[1]
-                        searchtime = searchtime.replace(day=1, hour=0, minute=0, second=0) + datetime.timedelta(days=advance_days)
+                        searchtime = searchtime.replace(day=1, hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=advance_days)
                         continue
                 else:
                     # goto next month, set hour, minute and second to 0, set day to 1
-                    searchtime = searchtime.replace(year=searchtime.year+1, month=1, day=1, hour=0, minute=0, second=0)
+                    searchtime = searchtime.replace(year=searchtime.year+1, month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
                     continue
 
             # successful
