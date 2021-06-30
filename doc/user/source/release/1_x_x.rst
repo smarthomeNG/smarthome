@@ -8,7 +8,7 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. ...
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 29. April 2021
        (...)
      - Berücksichtigt sind Commits im plugins Repository bis incl. ...
        (...)
@@ -61,13 +61,21 @@ auf einer der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
 Bugfixes in the CORE
 --------------------
 
-* ...
+* Fixes in lib.network
+* Fixes in lib.utils
+
+* Fixes in modules.mqtt
+* Fixes in modules.websocket
+
+* modules.websocket: Bugfix for smartVISU payload protocol (command 'log')
+* create var/log directory prior recording output from pip
 
 
 Updates in the CORE
 -------------------
 
-* ...
+* Removed references to lib.connection
+* etc.logging.yaml.default: Changes to new logging handlers
 
 * Items:
 
@@ -77,16 +85,46 @@ Updates in the CORE
 
   * ...
 
-* lib....:
+lib.backup:
+
+  * Added new struct files of ../etc directory to configuration backup
+
+lib.env.location:
+
+  * Added lat, lon and elev settings from smarthome.yaml to items
+
+* lib.item:
+
+  * Added loading of structs from multiple files (etc/struct_xyz.yaml) in addition to loading from etc/struct.yaml
+  * Extended functionallity for item logging (incl. shngadmin and documentation)
+
+* lib.network:
+
+  * first udp server implementation
+  * Removed setting of loglevel for logger lib.network (should be defined in etc/logging.yaml)
+
+* lib.smarthome:
+
+  * Added loglevel NOTICE
+
 * Modules:
 
-  * ...:
+  * admin:
 
-    * ...
+    * Display of structs in shngadmin is now sorted and grouped by plugin
+    * Randomized calls to find blog articles on smarthomeng.de
+
+  * websocket:
+
+    * Changes to memory logging in core
 
 * Plugins:
 
   * ...
+
+* tests:
+
+  * mock.core: Read core version from bin.shngversion.py
 
 
 Änderungen bei Plugins
