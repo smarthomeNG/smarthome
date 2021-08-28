@@ -337,7 +337,7 @@ class SmartHome():
         base_reqs = self.shpypi.test_base_requirements(self)
         if base_reqs == 0:
             self.restart('SmartHomeNG (Python package installation)')
-            exit(5)    # exit code 5 -> for systemctl to restart ShamrtHomeNG
+            exit(5)    # exit code 5 -> for systemctl to restart SmartHomeNG
         elif base_reqs == -1:
             self._logger.critical("Python package requirements for modules are not met and unable to install base requirements")
             self._logger.critical("Do you have multiple Python3 Versions installed? Maybe PIP3 looks into a wrong Python environment. Try to configure pip_command in etc/smarthome.yaml")
@@ -347,7 +347,7 @@ class SmartHome():
         plugin_reqs = self.shpypi.test_conf_plugins_requirements(self._plugin_conf_basename, self._plugins_dir)
         if plugin_reqs == 0:
             self.restart('SmartHomeNG (Python package installation)')
-            exit(5)    # exit code 5 -> for systemctl to restart ShamrtHomeNG
+            exit(5)    # exit code 5 -> for systemctl to restart SmartHomeNG
         elif plugin_reqs == -1:
             self._logger.critical("Python package requirements for configured plugins are not met and unable to install those requirements")
             self._logger.critical("Do you have multiple Python3 Versions installed? Maybe PIP3 looks into a wrong Python environment. Try to configure pip_command in etc/smarthome.yaml")
@@ -730,7 +730,7 @@ class SmartHome():
         lib.daemon.remove_pidfile(PIDFILE)
 
         logging.shutdown()
-        exit(5)  # exit code 5 -> for systemctl to restart ShamrtHomeNG
+        exit(5)  # exit code 5 -> for systemctl to restart SmartHomeNG
 
 
     def restart(self, source=''):
@@ -752,7 +752,7 @@ class SmartHome():
             self._logger.info("Restart command = '{}'".format(command))
             try:
                 p = subprocess.Popen(command, shell=True)
-                exit(5)  # exit code 5 -> for systemctl to restart ShamrtHomeNG
+                exit(5)  # exit code 5 -> for systemctl to restart SmartHomeNG
             except subprocess.SubprocessError as e:
                 self._logger.error("Restart command '{}' failed with error {}".format(command,e))
 
