@@ -58,13 +58,15 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
                                     )
 
    2. Das Template ``webif/templates/index.html`` wird zur Anzeige der gewünschten Daten angepasst.
-      Um im ersten Tab des Webinterface die Items anzuzeigen, die der obige Beispielcode zusammengestellt hat, wird der folgende Code zwischen ``{% block bodytab1 %}`` und ``{% endblock bodytab1 %}`` eingefügt:
+      Um im ersten Tab des Webinterface die Items anzuzeigen, die der obige Beispielcode zusammengestellt hat, wird der folgende Code zwischen ``{% block bodytab1 %}`` und ``{% endblock bodytab1 %}`` eingefügt. Es ist sicherzustellen, dass korrekter HTML Code
+      für die Tabellen genutzt wird, ua. durch Nutzen der Tags ``<thead>`` und ``<tbody>``
+      sowie der jeweiligen End-Tags. Außerdem muss jeder Tabelle eine einzigartige ID vergeben werden.
 
       .. code-block:: HTML
 
          <div class="table-responsive" style="margin-left: 3px; margin-right: 3px;" class="row">
              <div class="col-sm-12">
-                 <table class="table table-striped table-hover pluginList">
+                 <table id="maintable" class="table table-striped table-hover pluginList">
                      <thead>
                          <tr>
                              <th>{{ _('Item') }}</th>
@@ -85,4 +87,29 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
              </div>
          </div>
 
-   3. Das Logo oben links auf der Seite wird automatisch durch das Logo des konfigurierten Plugin-Typs ersetzt. Wenn das Webinterface ein eigenes Logo mitbringen soll, muss das entsprechende Bild im Verzeichnis ``webif/static/img`` mit dem Namen ``plugin_logo`` abgelegt sein. Die zulässigen Dateiformate sind **.png**, **.jpg** oder **.svg**. Dabei sollte die Größe der Bilddatei die Größe des angezeigten Logos (derzeit ca. 180x150 Pixel) nicht überschreiten, um unnötige Datenübertragungen zu vermeiden.
+   3. Folgender Script Code muss zwischen ``{% block pluginscripts %}`` und
+      ``{% endblock pluginscripts %}`` eingefügt werden, um ein Filtern und Sortieren
+      der Tabellen zu ermöglichen.
+      Der Code ``$('#maintable').DataTable( { "paging": false, fixedHeader: true } );``
+      muss für jede Tabelle, für die Filtern/Sortieren ermöglicht werden soll, kopiert werden.
+      Dabei ist sicher zu stellen, dass die ID (#maintable) jeweils richtig angepasst wird:
+
+      .. code-block:: HTML
+
+          <script>
+              $(document).ready( function () {
+              try
+                {
+                $('#maintable').DataTable( {
+                  "paging": false,
+                  fixedHeader: true
+                  } );
+                }
+              catch (e)
+                {
+                console.log("Datatable JS not loaded, showing standard table without reorder option")
+                }
+                  });
+          </script>
+
+   4. Das Logo oben links auf der Seite wird automatisch durch das Logo des konfigurierten Plugin-Typs ersetzt. Wenn das Webinterface ein eigenes Logo mitbringen soll, muss das entsprechende Bild im Verzeichnis ``webif/static/img`` mit dem Namen ``plugin_logo`` abgelegt sein. Die zulässigen Dateiformate sind **.png**, **.jpg** oder **.svg**. Dabei sollte die Größe der Bilddatei die Größe des angezeigten Logos (derzeit ca. 180x150 Pixel) nicht überschreiten, um unnötige Datenübertragungen zu vermeiden.
