@@ -61,13 +61,15 @@ To bring the webinterface up to life, the following steps should be followed:
    2. Modify the template **webif/templates/index.html** to display the data you want.
       To display a list of the items selected by the Python code above on the first tab of the
       body of the webinterface, insert the following code between ``{% block bodytab1 %}`` and
-      ``{% endblock bodytab1 %}``:
+      ``{% endblock bodytab1 %}``. Make sure to use correct HTML code for the tables
+      including ``<thead>`` and ``<tbody>`` tags with the corresponding end tags
+      and to set a unique table id for every table.
 
       .. code-block:: HTML
 
          <div class="table-responsive" style="margin-left: 3px; margin-right: 3px;" class="row">
              <div class="col-sm-12">
-                 <table class="table table-striped table-hover pluginList">
+                 <table id="maintable" class="table table-striped table-hover pluginList">
                      <thead>
                          <tr>
                              <th>{{ _('Item') }}</th>
@@ -88,8 +90,30 @@ To bring the webinterface up to life, the following steps should be followed:
              </div>
          </div>
 
-   3. The logo on the topleft is automatically replaced with the logo of the **plugin type**.
+   3. Add the following script code between ``{% block pluginscripts %}`` and
+      ``{% endblock pluginscripts %}`` to enable filtering and sorting of the tables.
+      The code ``$('#maintable').DataTable( { "paging": false, fixedHeader: true } );``
+      has to be copied for every table using the sort/filter feature!
+      Make sure to adapt the table id (#maintable) accordingly:
+
+      .. code-block:: HTML
+
+          <script>
+              $(document).ready( function () {
+              try
+                {
+                $('#maintable').DataTable( {
+                  "paging": false,
+                  fixedHeader: true
+                  } );
+                }
+              catch (e)
+                {
+                console.log("Datatable JS not loaded, showing standard table without reorder option")
+                }
+                  });
+          </script>
+
+   4. The logo on the topleft is automatically replaced with the logo of the **plugin type**.
       If the webinterface should have an individaul logo, the file with the logo must be placed in
       the directory **webif/static/img** and has to be named **plugin_logo**. It may be of type **.png**, **.jpg** or **.svg**.
-
-
