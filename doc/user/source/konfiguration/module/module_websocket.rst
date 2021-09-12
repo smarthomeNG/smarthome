@@ -14,7 +14,12 @@ Dieses Modul erlaubt es SmartHomeNG über das Websocket Protokoll zu kommunizier
 setzt z.B. das Nutzdaten Protokoll für die Kommunikation mit der smartVISU auf.
 
 Es wird sowohl das unverschlüsselte (ws://) Protokoll unterstützt, als auch die verschlüsselte Variante (wss://). Beide
-Varianten können parallel genutzt werden.
+Varianten können parallel genutzt werden. 
+.. note::
+    Browser nutzen bei http-Verbindungen ws:// und bei https-Verbindungen automatisch wss://
+    Allerdings muss dabei beachtet werden, dass die SmartVisu keine unabhängige Konfiguration 
+    der Ports für ws:// und wss:// unterstützt.  Das bedeutet, dass man entweder auf allen Clients http/ws ODER https/wss nutzen.
+    Eine Alternative ist eine Client-Spezifische Konfiguration (cookie) in der Smartvisu.
 
 
 Anforderungen
@@ -44,6 +49,11 @@ Datei *../etc/module.yaml*
        # port: 2424
        # tls_port: 2425
 
+.. note::
+    Das Zertifikat muss ohne Passphrase erstellt werden (bei der Frage nach der Passphrase einfach Enter drücken). Zudem muss der "Common Name" 
+    mit dem Hostname der später verwendet wird (z.B. meinServer.fritz.box, oder meinServer, oder 192.178.178.2) über einstimmen. Das Zertifikat
+    und der Key können mit diesem Kommando erzeugt werden:
+    :code:`openssl req -newkey rsa:2048 -nodes -keyout shng.key -x509 -days 365 -out shng.cer`
 
 .. note::
 
