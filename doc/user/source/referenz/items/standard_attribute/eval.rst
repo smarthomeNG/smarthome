@@ -241,7 +241,7 @@ Wenn in **eval** Ausdrücken in **on_change** oder **on_update** Attributen auf 
 des Items zugegriffen werden soll, muss dazu die Item Funktion **prev_value()** oder das
 Item Property **property.last_value** genutzt werden.
 Auf den alten Wert des aktuellen Items kann ohne die Angabe der vollständigen Item Pfades durch
-den Ausdruck **sh.self.prev_value()** zugegriffen werden.
+den Ausdruck **sh..self.prev_value()** zugegriffen werden.
 
 
 .. attention::
