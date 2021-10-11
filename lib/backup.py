@@ -133,6 +133,8 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
 
     # backup certificate files from /etc
     backup_directory(backupzip, etc_dir, '.cer')
+    backup_directory(backupzip, etc_dir, '.pem')
+
     backup_directory(backupzip, etc_dir, '.key')
 
     # backup files from /items
