@@ -97,6 +97,7 @@ import lib.shyaml
 from lib.shpypi import Shpypi
 from lib.triggertimes import TriggerTimes
 from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE)
+import lib.userfunctions as uf
 
 #import bin.shngversion
 #MODE = 'default'
@@ -563,6 +564,12 @@ class SmartHome():
         self._logger.info("Init loadable Modules")
         self.modules = lib.module.Modules(self, configfile=self._module_conf_basename)
         self.modules.start()
+
+        #############################################################
+        # Init user-functions
+        #############################################################
+        uf.init_lib(self.getBaseDir())
+        uf.import_user_modules()
 
         #############################################################
         # Init Item-Wrapper

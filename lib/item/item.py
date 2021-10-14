@@ -1182,6 +1182,9 @@ class Item():
                     shtime = self.shtime
                     items = _items_instance
                     import math
+                    import lib.userfunctions as uf
+                    # uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
+
                     cond = eval(self._trigger_condition)
                     logger.warning("Item {}: Condition result '{}' evaluating trigger condition {}".format(self._path, cond, self._trigger_condition))
                 except Exception as e:
@@ -1202,6 +1205,9 @@ class Item():
                 shtime = self.shtime
                 items = _items_instance
                 import math
+                import lib.userfunctions as uf
+                # uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
+
                 try:
                     #logger.warning("Item {}: Evaluating item value {}".format(self._path, self._eval))
                     value = eval(self._eval)
@@ -1238,6 +1244,8 @@ class Item():
         shtime = self.shtime
         items = _items_instance
         import math
+        import lib.userfunctions as uf
+        #uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
 
         logger.info("Item {}: '{}' evaluating {} = {}".format(self._path, attr, on_dest, on_eval))
 

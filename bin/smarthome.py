@@ -153,6 +153,7 @@ import lib.backup
 #import lib.translation
 #import lib.shyaml
 
+import lib.userfunctions as uf
 from lib.smarthome import SmartHome
 
 
@@ -198,6 +199,9 @@ if __name__ == '__main__':
         extern_conf_dir = os.path.normpath(args.config_dir)
 
     lib.backup.make_backup_directories(BASE)
+
+    uf.init_lib()
+    #uf.import_user_modules()
 
     if args.interactive:
         MODE = 'interactive'
