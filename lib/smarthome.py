@@ -192,13 +192,12 @@ class SmartHome():
         """
         self.shng_status = {'code': 0, 'text': 'Initalizing'}
         self._logger = logging.getLogger(__name__)
-        #self._logger_main = logging.getLogger(__name__ + '.main')
         self._logger_main = logging.getLogger(__name__)
+        self.logs = lib.log.Logs(self)   # initialize object for memory logs
 
         self.initialize_vars()
         self.initialize_dir_vars()
         self.create_directories()
-        self.logs = lib.log.Logs(self)   # initialize object for memory logs
 
         os.chdir(self._base_dir)
 
@@ -301,6 +300,8 @@ class SmartHome():
         self._logger_main.notice("--------------------   Init SmartHomeNG {}   --------------------".format(self.version))
         self._logger_main.notice(f"Running in Python interpreter 'v{self.PYTHON_VERSION}'{virtual_text}, from directory {self._base_dir}")
         self._logger_main.notice(f" - on {platform.platform()} (pid={pid})")
+        if logging.getLevelName('NOTICE') == 31:
+            self._logger_main.notice(f" - Loglevel NOTICE is set to value {logging.getLevelName('NOTICE')} because handler of root logger is set to level WARNING or higher  -  Set level of handler '{self.logs.root_handler_name}' to 'NOTICE'!")
 
         default_encoding = locale.getpreferredencoding() # returns cp1252 on windows
         if not (default_encoding in  ['UTF8','UTF-8']):
@@ -375,10 +376,6 @@ class SmartHome():
         #############################################################
         # Catching Exceptions
         sys.excepthook = self._excepthook
-
-        #############################################################
-        # Setting debug level and adding memory handler
-        self.initMemLog()
 
         # test if a valid locale is set in the operating system
         if os.name != 'nt':
@@ -503,38 +500,15 @@ class SmartHome():
                     shutil.copy2(default, conf_basename + YAML_FILE)
 
 
-    def loadLoggingConfig(self, config_dict):
-
-        if config_dict == None:
-            print()
-            print("ERROR: Invalid logging configuration in file 'logging.yaml'")
-            print()
-            exit(1)
-
-        self.logging_config = config_dict
-        self.logs.addLoggingLevel('NOTICE', 31)
-        try:
-            logging.config.dictConfig(config_dict)
-        except Exception as e:
-            #self._logger_main.error(f"Invalid logging configuration in file 'logging.yaml' - Exception: {e}")
-            print()
-            print("ERROR: Invalid logging configuration in file 'logging.yaml'")
-            print(f"       Exception: {e}")
-            print()
-            exit(1)
-
-        return
-
-
     def init_logging(self, conf_basename='', MODE='default'):
         """
         This function initiates the logging for SmartHomeNG.
         """
         if conf_basename == '':
             conf_basename = self._log_conf_basename
-        doc = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
+        conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
 
-        self.loadLoggingConfig(doc)
+        self.logs.configure_logging(conf_dict)
 
         if MODE == 'interactive':  # remove default stream handler
             logging.getLogger().disabled = True
@@ -545,26 +519,6 @@ class SmartHome():
         elif MODE == 'quiet':
             logging.getLogger().setLevel(logging.WARNING)
         return
-
-
-    def initMemLog(self):
-        """
-        This function initializes all needed datastructures to use the 'env.core.log' mem-logger and
-        the (old) memlog plugin
-
-        It adds the handler log_mem (based on the custom lib.log.ShngMemLogHandler) to the root logger
-        It logs all WARNINGS from all (old) mem-loggers to the root Logger
-        """
-        log_mem = lib.log.ShngMemLogHandler('env.core.log', maxlen=50, level=logging.WARNING)
-
-        # define formatter for 'env.core.log' log
-        _logdate = "%Y-%m-%d %H:%M:%S"
-        _logformat = "%(asctime)s %(levelname)-8s %(threadName)-12s %(message)s"
-        formatter = logging.Formatter(_logformat, _logdate)
-        log_mem.setFormatter(formatter)
-
-        # add handler to root logger
-        logging.getLogger('').addHandler(log_mem)
 
 
     #################################################################
