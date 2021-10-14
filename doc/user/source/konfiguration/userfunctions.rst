@@ -37,7 +37,6 @@ Wenn nach dem erstellen dieser Datei SmartHomeNG neu gestartet wird, sieht man i
 importiert wird:
 
 .. code:: text
-   :caption: /usr/local/smarthome/var/log/smarthome-warnings.log
 
    2021-10-14  20:07:08 NOTICE   lib.smarthome        --------------------   Init SmartHomeNG 1.8.2d.b81166c3.develop   --------------------
    2021-10-14  20:07:08 NOTICE   lib.smarthome        Running in Python interpreter 'v3.8.3 final' in virtual environment, from directory /usr/local/shng_dev
@@ -51,7 +50,7 @@ Nun kann man die in der Datei definierten Funktionen nutzen. Allen Userfunctions
 dem Namen der Datei voranzustellen. Die Funktion **zweiundvierzig** ist also als **uf.anhalter.zweiundvierzig()**
 aufzurufen.  In der Admin GUI im eval Syntax Checker sieht das denn folgendermaßen aus:
 
-.. image:: _static/img/uf_eval_checker1.jpg
+.. image:: ../_static/img/uf_eval_checker1.jpg
    :class: screenshot
 
 Analog können die Funtionen in **eval** Attributen in Item Definitionen und in Logiken aufgerufen werden.
