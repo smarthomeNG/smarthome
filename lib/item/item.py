@@ -406,7 +406,10 @@ class Item():
                 # Write item value to log, if Item has attribute log_change set
                 self._log_on_change(self._value, 'Init', 'Cache', None)
             except Exception as e:
-                logger.warning("Item {}: problem reading cache: {}".format(self._path, e))
+                if str(e).startswith('[Errno 2]'):
+                    logger.info("Item {}: No cached value: {}".format(self._path, e))
+                else:
+                    logger.warning("Item {}: Problem reading cache: {}".format(self._path, e))
 
         #############################################################
         # Cache write/init
@@ -414,7 +417,7 @@ class Item():
         if self._cache:
             if not os.path.isfile(self._cache):
                 cache_write(self._cache, self._value)
-                logger.warning("Item {}: Created cache for item: {}".format(self._cache, self._cache))
+                logger.notice("Created cache for item: {} in file {}".format(self._cache, self._cache))
 
         #############################################################
         # Plugins
