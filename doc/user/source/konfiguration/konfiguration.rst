@@ -33,6 +33,7 @@ vornehmen möchten
    logiken.rst
    logging.rst
    szenen.rst
+   userfunctions.rst
    konfiguration_backup_restore
 
 

@@ -10,6 +10,8 @@ Eine vollständige Übersicht der Änderungen ist den den :doc:`Release Notes </
   - **Item Logging**: Funktionalität stark erweitert (kann das operationslog Plugin ersetzen)
   - **Logging**: Es gibt einen Handler, der beim rotieren der Log Dateien die File-Extension erhält
   - **Logging**: Es gibt einen Handler, der beim Logging den Zugriff auf die memory Logs von SmartHomeNG erlaubt
+  - **Userfunctions**: Es können Python Funktionen definiert werden, die in eval Statements und Logiken verwendet
+    werden können
 
 Details zu den genannten Punkten sind in den Abschnitten :doc:`Konfiguration </konfiguration/konfiguration>`
 bzw. :doc:`Referenz </referenz/referenz>` zu finden.
