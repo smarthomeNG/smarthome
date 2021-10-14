@@ -2,11 +2,12 @@
 .. index:: Konfiguration
 
 .. role:: bluesup
+.. role:: greensup
 .. role:: redsup
 
-=============
-Konfiguration
-=============
+================================
+Konfiguration :greensup:`Update`
+================================
 
 Für Einsteiger ist auf jeden Fall die Konfiguration über die GUI zu empfehlen.
 

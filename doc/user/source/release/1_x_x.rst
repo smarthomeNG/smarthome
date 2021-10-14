@@ -89,6 +89,7 @@ Updates in the CORE
 lib.backup:
 
   * Added new struct files of ../etc directory to configuration backup
+  * Added *.pem to backup of certificate files
 
 lib.env.location:
 
@@ -107,6 +108,10 @@ lib.env.location:
 * lib.smarthome:
 
   * Added loglevel NOTICE
+
+* lib.userfunctions
+
+  * New library, that implements userfuncations for eval-statements and logics
 
 * Modules:
 
