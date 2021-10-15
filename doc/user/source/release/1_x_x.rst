@@ -89,7 +89,7 @@ Updates in the CORE
 * lib.backup:
 
   * Added new struct files of ../etc directory to configuration backup
-  * Added *.pem to backup of certificate files
+  * Added \*.pem to backup of certificate files
 
 lib.env.location:
 

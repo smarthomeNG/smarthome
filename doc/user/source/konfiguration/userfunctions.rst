@@ -8,7 +8,8 @@ Userfunctions :redsup:`Neu`
 ===========================
 
 Ab Version 1.9 von SmartHomeNG ist die Möglichkeit implementiert, benutzerdefinierte Funktionen (Userfunctions) zu
-schreiben und in eval Statements sowie in Logiken zu verwenden.
+schreiben und in eval Statements sowie in Logiken zu verwenden. Diese Funktionen können zur Laufzeit verändert und
+neu geladen werden.
 
 Die Python Dateien mit den Funktionen müssen dazu im Verzeichnis **../functions** abgelegt werden. Es sind normale
 Python Dateien, die mehrere Funktionen enthalten können. Als formale Anforderung sind nur Informationen zur Version
@@ -56,13 +57,5 @@ aus:
 
 Analog können die Funtionen in **eval** Attributen in Item Definitionen und in Logiken aufgerufen werden.
 
+Weitere Details zu Userfunctions sind im Abschnitt :doc:`Referenz </referenz/userfunctions/userfunctions>` zu finden.
 
-Reload von Userfunctions
-========================
-
-Benutzerdefinierte Funktionen können während der Laufzeit von SmartHomeNG verändert und neu geladen werden.
-Bis die Admin GUI dafür eine dedizierte Funktionalität zur Verfügung stellt, kann man über den **eval Syntax Checker**
-die Funktionen neu laden. Um die Datei des obigen Beispiels neu zu laden, muss man **uf.reload('anhalter')** eingeben
-und **Prüfen** klicken.
-
-Man kann auch alle benutzerdefinierte Dateien neu laden, indem man **uf.reload_all()** eingibt und **Prüfen** klickt.

@@ -24,3 +24,4 @@ können.
    plugins/plugins
    metadata/metadata
    logging/logging
+   userfunctions/userfunctions

@@ -60,11 +60,6 @@ def init_lib(shng_base_dir=None):
     _user_modules = sorted(user_modules)
 
 
-def get_uf_dir():
-
-    return _func_dir
-
-
 def import_user_modules():
 
     import importlib
@@ -91,19 +86,35 @@ def import_user_modules():
         _logger.notice(f'Importing userfunctions uf.{m} v{_uf_version} - {_uf_description}')
 
 
+def get_uf_dir():
+
+    return _func_dir
+
+
 def reload(userlib):
+
     import importlib
-    _logger.notice(f'Reloading userfunctions uf.{userlib}')
-    exec( f"importlib.reload({userlib})")
+
+    if userlib in _user_modules:
+        _logger.notice(f'Reloading userfunctions uf.{userlib}')
+        exec( f"importlib.reload({userlib})")
+        return True
+    else:
+        _logger.error(f'uf.reload: Userfunction uf.{userlib} do not exist')
+        return False
 
 
 def reload_all():
 
     if _user_modules == []:
         _logger.warning(f'No userfunctions are loaded, nothing to reload')
+        return False
     else:
+        result = True
         for lib in _user_modules:
-            reload(lib)
+            if not reload(lib):
+                result = False
+        return result
 
 
 def list_userlib_files():
