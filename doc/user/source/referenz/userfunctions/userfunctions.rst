@@ -115,7 +115,7 @@ Damit die Funktionen unabhängig von der Item Struktur der aktuellen SmartHomeNG
 Parameter übergeben werden. Dadurch können Dateien mit Userfunctions einfach an andere Anwender weiter gegeben
 werden:
 
-.. code yaml
+.. code:: yaml
 
    test_item:
        type: num
@@ -151,7 +151,7 @@ kann die Userfunction so geschrieben werden, dass sie die Item Struktur kennt un
 Statt mehrere Items als einzelne Parameter zu übergeben, braucht dann nur das Smarthome-Objekt übergeben zu werden.
 Das folgende Beispiel zeigt beide Varianten (übergabe der Item Werte und Referenzierung über das Smarthome-Objekt).
 
-.. code yaml
+.. code:: yaml
 
    test_item:
        # Übergabe der Item Werte
@@ -182,7 +182,7 @@ Das folgende Beispiel zeigt beide Varianten (übergabe der Item Werte und Refere
 
 kann das Smarthome-Objekt übergeben werden. Das würde dann folgendermaßen aussehen:
 
-.. code yaml
+.. code:: yaml
 
    test_item:
        # Übergabe des Smarthome-Objektes sh
