@@ -51,7 +51,7 @@ userfunctions) gefolgt von dem Namen der Datei voranzustellen. Die Funktion **zw
 **uf.anhalter.zweiundvierzig()** aufzurufen.  In der Admin GUI im eval Syntax Checker sieht das denn folgendermaßen
 aus:
 
-.. image:: /_static/img/uf_eval_checker1.jpg
+.. image:: assets/uf_eval_checker1.jpg
    :class: screenshot
 
 Analog können die Funtionen in **eval** Attributen in Item Definitionen und in Logiken aufgerufen werden.
