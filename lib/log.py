@@ -63,7 +63,7 @@ class Logs():
 
         # if logger 'lib.smarthome' is not defined or no level is defined for it,
         # define logger with level 'NOTICE'
-        if config_dict['loggers']['lib.smarthome'].get('level', None) is None:
+        if config_dict['loggers'].get('lib.smarthome', None) is None:
             config_dict['loggers']['lib.smarthome'] = {}
         if config_dict['loggers']['lib.smarthome'].get('level', None) is None:
             config_dict['loggers']['lib.smarthome']['level'] = 'NOTICE'
