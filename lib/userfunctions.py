@@ -45,7 +45,7 @@ def init_lib(shng_base_dir=None):
         base_dir = shng_base_dir
         #_logger.notice("lib.userfunctions wurde initialisiert")
     else:
-        _logger.warning('lib.userfunctions wurde außerhalb von SmartHomeNG initialisiert')
+        #_logger.warning('lib.userfunctions wurde außerhalb von SmartHomeNG initialisiert')
         base_dir = os.getcwd()
 
     _func_dir = os.path.join(base_dir, _uf_subdir)
