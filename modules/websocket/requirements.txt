@@ -1,3 +1,0 @@
-# modules: websocket
-websockets>=8.1
-janus>=0.5.0
