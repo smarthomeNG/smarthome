@@ -60,15 +60,18 @@ def init_lib(shng_base_dir=None):
     _user_modules = sorted(user_modules)
 
 
-def import_user_modules():
+def import_user_module(m):
 
     import importlib
 
-    for m in _user_modules:
-        modulename = _uf_subdir + '.' + m
+    modulename = _uf_subdir + '.' + m
 
-        exec( f"globals()['{m}']=importlib.import_module('{modulename}')" )
-
+    try:
+        exec(f"globals()['{m}']=importlib.import_module('{modulename}')")
+    except Exception as e:
+        _logger.error(f"Error importing userfunctions '{m}': {e}")
+        return False
+    else:
         global _uf_version
         _uf_version = '?.?.?'
         try:
@@ -84,6 +87,13 @@ def import_user_modules():
             exec( f"{m}._DESCRIPTION = _uf_description" )
 
         _logger.notice(f'Importing userfunctions uf.{m} v{_uf_version} - {_uf_description}')
+        return True
+
+
+def import_user_modules():
+
+    for m in _user_modules:
+        import_user_module(m)
 
 
 def get_uf_dir():
@@ -96,9 +106,23 @@ def reload(userlib):
     import importlib
 
     if userlib in _user_modules:
-        _logger.notice(f'Reloading userfunctions uf.{userlib}')
-        exec( f"importlib.reload({userlib})")
-        return True
+        try:
+            exec( f"importlib.reload({userlib})")
+        except Exception as e:
+            if str(e) == f"name '{userlib}' is not defined":
+                _logger.warning(f"Error reloading userfunctions '{userlib}': Module is not loaded, trying to newly import userfunctions '{userlib}' instead")
+                if import_user_module(userlib):
+                    return True
+                else:
+                    # _logger.error(f"Error importing userfunctions '{userlib}")
+                    return False
+            else:
+                _logger.error(f"Error reloading userfunctions '{userlib}': {e} - old version of '{userlib}' is still active")
+                return False
+
+        else:
+            _logger.notice(f'Reloaded userfunctions uf.{userlib}')
+            return True
     else:
         _logger.error(f'uf.reload: Userfunction uf.{userlib} do not exist')
         return False
