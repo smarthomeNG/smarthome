@@ -26,6 +26,8 @@ This library imports modules with user-functions to be used in eval statements a
 import os
 import logging
 
+from lib.translation import translate
+
 _logger = logging.getLogger(__name__)
 
 
@@ -43,15 +45,13 @@ def import_user_module(m):
 
     :return: True, if import was successful
     """
-
-    import importlib
-
     modulename = _uf_subdir + '.' + m
 
+    import importlib
     try:
         exec(f"globals()['{m}']=importlib.import_module('{modulename}')")
     except Exception as e:
-        _logger.error(f"Error importing userfunctions '{m}': {e}")
+        _logger.error(translate("Error importing userfunctions from '{module}': {error}", {'module': m, 'error': e}))
         return False
     else:
         global _uf_version
@@ -68,7 +68,8 @@ def import_user_module(m):
         except:
             exec( f"{m}._DESCRIPTION = _uf_description" )
 
-        _logger.notice(f"Imported userfunctions from '{m}' v{_uf_version} - {_uf_description}")
+        _logger.notice(translate("Imported userfunctions from '{mmodule}' v{version} - {description}", {'module': m, 'version':_uf_version, 'description': _uf_description}))
+
         return True
 
 
@@ -84,9 +85,7 @@ def init_lib(shng_base_dir=None):
 
     if shng_base_dir is not None:
         base_dir = shng_base_dir
-        #_logger.notice("lib.userfunctions wurde initialisiert")
     else:
-        #_logger.warning('lib.userfunctions wurde außerhalb von SmartHomeNG initialisiert')
         base_dir = os.getcwd()
 
     _func_dir = os.path.join(base_dir, _uf_subdir)
@@ -120,28 +119,27 @@ def reload(userlib):
             exec( f"importlib.reload({userlib})")
         except Exception as e:
             if str(e) == f"name '{userlib}' is not defined":
-                _logger.warning(f"Error reloading userfunctions '{userlib}': Module is not loaded, trying to newly import userfunctions '{userlib}' instead")
+                _logger.warning(translate("Error reloading userfunctions '{module}': Module is not loaded, trying to newly import userfunctions '{module}' instead", {'module': userlib}))
                 if import_user_module(userlib):
                     return True
                 else:
-                    # _logger.error(f"Error importing userfunctions '{userlib}")
                     return False
             else:
-                _logger.error(f"Error reloading userfunctions '{userlib}': {e} - old version of '{userlib}' is still active")
+                _logger.error(translate("Error reloading userfunctions '{module}': {error} - old version of '{module}' is still active", {'module': userlib, 'error': e}))
                 return False
 
         else:
-            _logger.notice(f'Reloaded userfunctions uf.{userlib}')
+            _logger.notice(translate("Reloaded userfunctions '{module}'", {'module': userlib}))
             return True
     else:
-        _logger.error(f'uf.reload: Userfunction uf.{userlib} do not exist')
+        _logger.error(translate("Reload: Userfunctions '{module}' do not exist", {'module': userlib}))
         return False
 
 
 def reload_all():
 
     if _user_modules == []:
-        _logger.warning(f'No userfunctions are loaded, nothing to reload')
+        _logger.warning(translate('No userfunctions are loaded, nothing to reload'))
         return False
     else:
         result = True
