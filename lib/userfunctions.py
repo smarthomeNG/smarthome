@@ -29,38 +29,20 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-_uf_subdir = 'etc'
 _uf_subdir = 'functions'
 
 _func_dir = None
 _user_modules = []
 
 
-def init_lib(shng_base_dir=None):
-
-    global _func_dir
-    global _user_modules
-
-    if shng_base_dir is not None:
-        base_dir = shng_base_dir
-        #_logger.notice("lib.userfunctions wurde initialisiert")
-    else:
-        #_logger.warning('lib.userfunctions wurde außerhalb von SmartHomeNG initialisiert')
-        base_dir = os.getcwd()
-
-    _func_dir = os.path.join(base_dir, _uf_subdir)
-
-    user_modules = []
-    if os.path.isdir(_func_dir):
-        wrk = os.listdir(_func_dir)
-        for f in wrk:
-            if f.endswith('.py'):
-                user_modules.append(f.split(".")[0])
-
-    _user_modules = sorted(user_modules)
-
-
 def import_user_module(m):
+    """
+    Import a module with userfunctions
+
+    :param m: name of module to import from <shng_base_dir>/functions
+
+    :return: True, if import was successful
+    """
 
     import importlib
 
@@ -86,14 +68,42 @@ def import_user_module(m):
         except:
             exec( f"{m}._DESCRIPTION = _uf_description" )
 
-        _logger.notice(f'Importing userfunctions uf.{m} v{_uf_version} - {_uf_description}')
+        _logger.notice(f"Imported userfunctions from '{m}' v{_uf_version} - {_uf_description}")
         return True
 
 
-def import_user_modules():
+def init_lib(shng_base_dir=None):
+    """
+    Initialize userfunctions module
 
+    :param shng_base_dir: Base dir of SmartHomeNG installation
+    """
+
+    global _func_dir
+    global _user_modules
+
+    if shng_base_dir is not None:
+        base_dir = shng_base_dir
+        #_logger.notice("lib.userfunctions wurde initialisiert")
+    else:
+        #_logger.warning('lib.userfunctions wurde außerhalb von SmartHomeNG initialisiert')
+        base_dir = os.getcwd()
+
+    _func_dir = os.path.join(base_dir, _uf_subdir)
+
+    user_modules = []
+    if os.path.isdir(_func_dir):
+        wrk = os.listdir(_func_dir)
+        for f in wrk:
+            if f.endswith('.py'):
+                user_modules.append(f.split(".")[0])
+
+    _user_modules = sorted(user_modules)
+
+    # Import all modules with userfunctions from <shng_base_dir>/functions
     for m in _user_modules:
         import_user_module(m)
+    return
 
 
 def get_uf_dir():

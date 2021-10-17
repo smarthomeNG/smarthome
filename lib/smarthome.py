@@ -566,10 +566,9 @@ class SmartHome():
         self.modules.start()
 
         #############################################################
-        # Init user-functions
+        # Init and import user-functions
         #############################################################
         uf.init_lib(self.getBaseDir())
-        uf.import_user_modules()
 
         #############################################################
         # Init Item-Wrapper

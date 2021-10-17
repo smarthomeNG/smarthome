@@ -103,7 +103,6 @@ class ServicesController(RESTResource):
         items = Items.get_instance()
         import math
         import lib.userfunctions as uf
-        #uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
 
 
         eval_code = eval_code.replace('\r', '').replace('\n', ' ').replace('  ', ' ').strip()
