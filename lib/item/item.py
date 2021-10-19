@@ -1557,7 +1557,7 @@ class Item():
         return self.__methods_to_trigger
 
 
-    def timer(self, time, value, auto=False, compat=ATTRIB_COMPAT_DEFAULT):
+    def timer(self, time, value, auto=False, compat=ATTRIB_COMPAT_DEFAULT, source=None):
         time = self._cast_duration(time)
         value = self._castvalue_to_itemtype(value, compat)
         if auto:
@@ -1566,7 +1566,10 @@ class Item():
         else:
             caller = 'Timer'
         next = self.shtime.now() + datetime.timedelta(seconds=time)
-        self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': value, 'caller': caller}, next=next)
+        if source is None:
+            self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': value, 'caller': caller}, next=next)
+        else:
+            self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': value, 'caller': caller, 'source': source}, next=next)
 
 
     def remove_timer(self):
