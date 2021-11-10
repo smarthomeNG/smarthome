@@ -28,6 +28,8 @@ import logging
 import os.path
 import csv
 
+from lib.translation import translate
+
 from lib.item import Items
 from lib.logic import Logics
 
@@ -60,18 +62,28 @@ class Scenes():
             import inspect
             curframe = inspect.currentframe()
             calframe = inspect.getouterframes(curframe, 2)
-            logger.critical("A second 'scenes' object has been created. There should only be ONE instance of class 'Scenes'!!! Called from: {} ({})".format(calframe[1][1], calframe[1][3]))
+            logger.critical(translate("A second 'scenes' object has been created. There should only be ONE instance of class 'Scenes'!!! Called from: {frame1} ({frame2})", {'frame1': calframe[1][1], 'frame2': calframe[1][3]}))
 
         _scenes_instance = self
 
         self.items = Items.get_instance()
         self.logics = Logics.get_instance()
 
+        self._load_scenes()
+        return
+
+
+    def _load_scenes(self):
+        """
+        Load defined scenes with learned values from ../scene directory
+
+        :return:
+        """
         self._scenes = {}
         self._learned_values = {}
-        self._scenes_dir = smarthome._scenes_dir
+        self._scenes_dir = self._sh._scenes_dir
         if not os.path.isdir(self._scenes_dir):
-            logger.warning("Directory scenes not found. Ignoring scenes.".format(self._scenes_dir))
+            logger.warning(translate("Directory '{scenes_dir}' not found. Ignoring scenes.", {'scenes_dir': self._scenes_dir}))
             return
 
         self._learned_values = {}
@@ -95,9 +107,10 @@ class Scenes():
                                                               action.get('item', ''), str(action.get('value', '')),
                                                               action.get('learn', ''), scene_file_yaml[state].get('name', ''))
                                     else:
-                                        logger.warning("Scene {}, state {}: action '{}' is not a dict".format(item, state, action))
+                                        logger.warning(translate("Scene {scene}, state {state}: action '{action}' is not a dict", {'scene': item, 'state': state, 'action': action}))
                             else:
-                                logger.warning("Scene {}, state {}: actions are not a list".format(item, state))
+                                logger.warning(translate("Scene {scene}, state {state}: actions are not a list", {'scene': item, 'state': state}))
+
                     self._load_learned_values(str(item.id()))
                 else:
                     # Trying to read conf file with scene definition
@@ -112,9 +125,11 @@ class Scenes():
                                     continue
                                 self._add_scene_entry(item, row[0], row[1], row[2])
                     except Exception as e:
-                        logger.warning("Problem reading scene file {0}: No .yaml or .conf file found with this name".format(self.scene_file))
+                        logger.warning(translate("Problem reading scene file {file}: No .yaml or .conf file found with this name", {'file': self.scene_file}))
                         continue
                 item.add_method_trigger(self._trigger)
+
+        return
 
 
     def _eval(self, value):
@@ -136,7 +151,7 @@ class Scenes():
         try:
             rvalue = eval(value)
         except Exception as e:
-            logger.warning(" - Problem evaluating: {} - {}".format(value, e))
+            logger.warning(" - " + translate("Problem evaluating: {value} - {exception}", {'value': value, 'exception': e}))
             return value
         return rvalue
 
@@ -245,7 +260,7 @@ class Scenes():
             if Utils.is_int(state):
                 state = int(state)
             else:
-                logger.error("Invalid state '{}' for scene {}".format(state, item.id()))
+                logger.error(translate("Invalid state '{state}' for scene {scene}", {'state': state, 'scene': item.id()}))
                 return
 
             if (state >= 0) and (state < 64):
@@ -255,7 +270,7 @@ class Scenes():
                 # learn state
                 self._trigger_learnstate(item, state&127, caller, source, dest)
             else:
-                logger.error("Invalid state '{}' for scene {}".format(state, item.id()))
+                logger.error(translate("Invalid state '{state}' for scene {scene}", {'state': state, 'scene': item.id()}))
 
 
     def _add_scene_entry(self, item, state, ditemname, value, learn=False, name=''):
@@ -277,13 +292,13 @@ class Scenes():
         if learn:
             rvalue = self._eval(value)
             if str(rvalue) != value:
-                logger.warning("_add_scene_entry - Learn set to 'False', because '{}' != '{}'".format(rvalue, value))
+                logger.warning(translate("_add_scene_entry - " + "Learn set to 'False', because '{rvalue}' != '{value}'", {'rvalue': rvalue, 'value': value}))
                 learn = False
 
         if ditem is None:
             ditem = self.logics.return_logic(ditemname)
             if ditem is None:
-                logger.warning("Could not find item or logic '{}' specified in {}".format(ditemname, self.scene_file))
+                logger.warning(translate("Could not find item or logic '{ditemname}' specified in {file}", {'ditemname': ditemname, 'file': self.scene_file}))
                 return
 
         if item.id() in self._scenes:
@@ -365,7 +380,7 @@ class Scenes():
         try:
             return self._scenes[scenename][action][0][2]
         except:
-            logger.warning("get_scene_action_name: unable to get self._scenes['{}']['{}'][0][2] <- {}".format(scenename, action, self._scenes[scenename][action][0]))
+            logger.warning(translate("get_scene_action_name: " + "unable to get self._scenes['{scenename}']['{action}'][0][2] <- {res}", {'scenename': scenename, 'action': action, 'res': self._scenes[scenename][action][0]}))
             return ''
 
     def return_scene_value_actions(self, name, state):
@@ -385,3 +400,14 @@ class Scenes():
             action_list.append(return_action)
         return action_list
 
+
+    def reload_scenes(self):
+        """
+        Reload defined scenes with learned values from ../scene directory
+
+        :return:
+        """
+
+        self._load_scenes()
+        logger.notice(translate("Reloaded all scenes"))
+        return True
