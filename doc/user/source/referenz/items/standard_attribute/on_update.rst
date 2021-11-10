@@ -43,7 +43,7 @@ Die Syntax ist wie folgt:
   Attributs den vorangegangenen Wert des Items. Wenn im **on_update** Ausdruck auf den vorangegangenen
   Wert des Items zugegriffen werden soll, geht das mit der Item-Methode **prev_value()** oder dem
   Item Property **property.last_value**. Um das Item selbst zu adressieren kann am einfachsten
-  die relative Adressierung mittels **sh.self.prev_value()** eingesetzt werden.
+  die relative Adressierung mittels **sh..self.prev_value()** eingesetzt werden.
 
 .. attention::
 
@@ -109,7 +109,7 @@ Wenn in **eval** Ausdrücken in **on_change** oder **on_update** Attributen auf 
 des Items zugegriffen werden soll, muss dazu die Item Funktion **prev_value()** oder
 das Item Property **property.last_value** genutzt werden.
 Auf den alten Wert des aktuellen Items kann ohne die Angabe des vollständigen Item Pfades durch
-den Ausdruck **sh.self.prev_value()** zugegriffen werden.
+den Ausdruck **sh..self.prev_value()** zugegriffen werden.
 
 
 .. attention::

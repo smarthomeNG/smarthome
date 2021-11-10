@@ -75,6 +75,29 @@ global_translations:
     'Letztes Update':        {'de': '=', 'en': 'Last Update', 'fr': ''}
     'Letzter Change':        {'de': '=', 'en': 'Last Change', 'fr': ''}
 
+    #Translations for lib.userfunctions:
+    "Imported userfunctions from '{mmodule}' v{version} - {description}":
+        'de': "Userfunctions importiert aus '{module}' v{version} - {description}"
+        'en': '='
+    "Error importing userfunctions from '{module}': {error}":
+        'de': "Fehler beim importieren von Userfunctions aus '{module}': {error}"
+        'en': '='
+    "Error reloading userfunctions '{module}': Module is not loaded, trying to newly import userfunctions '{module}' instead":
+        'de': "Fehler beim Reload von Userfunctions '{module}': Modul ist nicht geladen, versuche stattdessen Userfunctions '{module}' neu zu importieren"
+        'en': '='
+    "Error reloading userfunctions '{module}': {error} - old version of '{module}' is still active":
+        'de': "Fehler beim Reload von userfunctions '{module}': {error} - alte Version von '{module}' ist noch aktiv"
+        'en': '='
+    "Reloaded userfunctions '{module}'":
+        'de': "Userfunctions '{module}' neu geladen"
+        'en': '='
+    "Reload: Userfunctions '{module}' do not exist":
+        'de': "Userfunctions '{module}' existieren nicht"
+        'en': '='
+    "No userfunctions are loaded, nothing to reload":
+        'de': "Es existieren keine Userfunctions, es gibt nichts für einen Reload"
+        'en': '='
+
 
 lib.shtime_translations:
     'defined':               {'de': 'definiert', 'en': '='}
@@ -116,3 +139,4 @@ lib.shtime_translations:
     "Called with point in time that is earlier than now: {dt}":
         'de': 'Aufgerufen mit Zeitpunkt in der Vergangenheit'
         'en': '='
+

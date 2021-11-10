@@ -44,6 +44,8 @@ from dateutil.tz import tzutc
 import gc  # noqa
 import os
 import math
+import lib.userfunctions as uf
+
 import types
 import subprocess
 

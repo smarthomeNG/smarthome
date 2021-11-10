@@ -2,7 +2,7 @@
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
 # Copyright 2016-2021   Martin Sinn                         m.sinn@gmx.de
-# Copyright 2012-2013   Marcus Popp                        marcus@popp.mx
+# Parts Copyright 2013  Marcus Popp                        marcus@popp.mx
 #########################################################################
 #  This file is part of SmartHomeNG.
 #
@@ -32,22 +32,10 @@ import collections
 logs_instance = None
 
 
-def listloggers():
-    rootlogger = logging.getLogger()
-    print(rootlogger)
-    for h in rootlogger.handlers:
-        print('     %s' % h)
-
-    for nm, lgr in logging.Logger.manager.loggerDict.items():
-        print('+ [%-20s] %s ' % (nm, lgr))
-        if not isinstance(lgr, logging.PlaceHolder):
-            for h in lgr.handlers:
-                print('     %s' % h)
-
-
 class Logs():
 
     _logs = {}
+    root_handler_name = ''
 
 
     def __init__(self, sh):
@@ -65,7 +53,54 @@ class Logs():
         return
 
 
-    def addLoggingLevel(self, description, value):
+    def configure_logging(self, config_dict):
+
+        if config_dict == None:
+            print()
+            print("ERROR: Invalid logging configuration in file 'logging.yaml'")
+            print()
+            exit(1)
+
+        # if logger 'lib.smarthome' is not defined or no level is defined for it,
+        # define logger with level 'NOTICE'
+        if config_dict['loggers'].get('lib.smarthome', None) is None:
+            config_dict['loggers']['lib.smarthome'] = {}
+        if config_dict['loggers']['lib.smarthome'].get('level', None) is None:
+            config_dict['loggers']['lib.smarthome']['level'] = 'NOTICE'
+
+        try:
+            root_handler_name = config_dict['root']['handlers'][0]
+            root_handler = config_dict['handlers'][ root_handler_name ]
+            root_handler_level = root_handler.get('level', None)
+            self.root_handler_name = root_handler_name
+        except:
+            root_handler_level = '?'
+
+        if root_handler_level.upper() in ['NOTICE', 'INFO', 'DEBUG']:
+            notice_level = 29
+        else:
+            notice_level = 31
+
+        self.add_logging_level('NOTICE', notice_level)
+        try:
+            logging.config.dictConfig(config_dict)
+        except Exception as e:
+            #self._logger_main.error(f"Invalid logging configuration in file 'logging.yaml' - Exception: {e}")
+            print()
+            print("ERROR: Invalid logging configuration in file 'logging.yaml'")
+            print(f"       Exception: {e}")
+            print()
+            exit(1)
+
+        #self.logger.notice(f"Logs.configure_logging: Level NOTICE = {notice_level} / root_handler_level={root_handler_level}")
+
+        # Initialize MemLog Handler to output root log entries to smartVISU
+        self.initMemLog()
+
+        return
+
+
+    def add_logging_level(self, description, value):
         """
         Adds a new Logging level to the standard python logging
 
@@ -93,6 +128,27 @@ class Logs():
         return
 
 
+    def initMemLog(self):
+        """
+        This function initializes all needed datastructures to use the 'env.core.log' mem-logger and
+        the (old) memlog plugin
+
+        It adds the handler log_mem (based on the custom lib.log.ShngMemLogHandler) to the root logger
+        It logs all WARNINGS from all (old) mem-loggers to the root Logger
+        """
+        log_mem = ShngMemLogHandler('env.core.log', maxlen=50, level=logging.WARNING)
+
+        # define formatter for 'env.core.log' log
+        _logdate = "%Y-%m-%d %H:%M:%S"
+        _logformat = "%(asctime)s %(levelname)-8s %(threadName)-12s %(message)s"
+        formatter = logging.Formatter(_logformat, _logdate)
+        log_mem.setFormatter(formatter)
+
+        # add handler to root logger
+        logging.getLogger('').addHandler(log_mem)
+        return
+
+
 
 
     def add_log(self, name, log):
@@ -114,47 +170,41 @@ class Logs():
         """
         return self._logs
 
+# -------------------------------------------------------------------------------
 
 class Log(collections.deque):
-    #####################################################################
-    # Copyright 2012-2013   Marcus Popp                    marcus@popp.mx
-    #####################################################################
-
 
     def __init__(self, smarthome, name, mapping, maxlen=40, handler=None):
         """
-        Class to implement a log
-        This is based on a double ended queue. New entries are appended left and old ones are popped right.
+        Class to implement a memory log
 
-
-        As of version 1.7a develop this is used in core at bin/smarthome.py and
+        As of shng version 1.7a develop this is used in core at bin/smarthome.py and
         in plugins memlog, operationlog and visu_websocket
 
-        :param smarthome: the SmartHomeNG main object
-        :param name: a descriptive name for the log
+        :param smarthome: Dummy, for backwart compatibility
+        :param name: name of the the log (used in cli plugin and smartVISU)
         :param mapping: Kind of a headline for the entry which can be anything
             e.g. mappings can be [time, thread, level, message ] and log entry is a
 
-        :param maxlen: maximum length of the log, defaults to 50
+        :param maxlen: maximum length of the memory log, defaults to 40
+        :param handler: Python LoggingHandler that created this instance of a memory log
         """
         collections.deque.__init__(self, maxlen=maxlen)
         if (mapping is None) or (mapping == []):
             self.mapping = ['time', 'thread', 'level', 'message']
         else:
             self.mapping = mapping
-        #self.update_hooks = []     # nowhere else found, maybe not needed any more
-        #self._sh = smarthome
+
         self._sh = logs_instance._sh
         self._name = name
-        self._maxlen = maxlen
         self.handler = handler
         # Add this log to dict of defined memory logs
         logs_instance.add_log(name, self)
 
     def add(self, entry):
         """
-        Just adds a log entry to the left side of the queue. If the queue already holds maxlen
-        entries, the rightmost will be discarded automatically.
+        Adds a log entry to the memory log. If the log already has reached the maximum length, the oldest
+        entry is removed from the log automatically.
         """
         self.appendleft(entry)
         for listener in self._sh.return_event_listeners('log'):
@@ -162,13 +212,21 @@ class Log(collections.deque):
 
     def last(self, number):
         """
-        Returns the last ``number`` entries of the log
+        Returns the newest entries of the log
+
+        :param number: Number of entries to return
+
+        :return: List of log entries
         """
         return(list(self)[-number:])
 
     def export(self, number):
         """
-        Returns up to ``number`` entries from the log and prepares them together with the mapping
+        Returns the newest entries of the log and prepares them with the mapping
+
+        :param number: Number of entries to return
+
+        :return: List of log entries
         """
         return [dict(zip(self.mapping, x)) for x in list(self)[:number]]
 

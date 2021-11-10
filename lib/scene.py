@@ -32,6 +32,7 @@ from lib.item import Items
 from lib.logic import Logics
 
 from lib.utils import Utils
+from lib.shtime import Shtime
 import lib.shyaml as yaml
 
 logger = logging.getLogger(__name__)
@@ -126,7 +127,12 @@ class Scenes():
         :return: evaluated value or None
         :rtype: type of evaluated expression or None
         """
-        sh = self._sh  # noqa
+        sh = self._sh
+        shtime = Shtime.get_instance()
+        items = Items.get_instance()
+        import math
+        import lib.userfunctions as uf
+
         try:
             rvalue = eval(value)
         except Exception as e:
