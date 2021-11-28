@@ -48,6 +48,7 @@ class LoggersController(RESTResource):
         self.logging_levels[50] = 'CRITICAL'
         self.logging_levels[40] = 'ERROR'
         self.logging_levels[30] = 'WARNING'
+        self.logging_levels[29] = 'NOTICE'
         self.logging_levels[20] = 'INFO'
         self.logging_levels[10] = 'DEBUG'
         self.logging_levels[0] = 'NOTSET'
@@ -154,7 +155,8 @@ class LoggersController(RESTResource):
         active = {}
         active_logger = logging.getLogger(loggername)
         active['disabled'] = active_logger.disabled
-        active['level'] = self.logging_levels[active_logger.level]
+        #active['level'] = self.logging_levels[active_logger.level]
+        active['level'] = self.logging_levels.get(active_logger.level, 'UNKNOWN_'+str(active_logger.level))
         active['filters'] = active_logger.filters
 
         hl = []
