@@ -101,6 +101,17 @@ Der Name des Loggers im obigen Beispiel ist **functions.anhalter**:
    2021-10-15  10:12:29 WARNING  functions.anhalter   Die Userfunction 'zweiundvierzig' wurde aufgerufen
 
 
+Damit aus Funktionen ein Logging mit Leveln kleiner als WARNING erfolgt, muss in der Logging Konfiguration
+../etc/logging.yaml ein entsprechender Logger für **functions** ergänzt werden:
+
+.. code:: yaml
+
+   loggers:
+       functions:
+           handlers: [shng_details_file]
+           level: INFO
+
+
 Nutzung von Item Werten
 =======================
 
