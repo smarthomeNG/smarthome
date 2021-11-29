@@ -53,6 +53,7 @@ class FilesController(RESTResource):
 
         self.etc_dir = self._sh._etc_dir
         self.items_dir = self._sh._items_dir
+        self.functions_dir = self._sh._functions_dir
         self.scenes_dir = self._sh._scenes_dir
         self.logics_dir = self._sh._logic_dir
         self.extern_conf_dir = self._sh._extern_conf_dir
@@ -318,6 +319,32 @@ class FilesController(RESTResource):
 
 
     # ======================================================================
+    #  /api/files/functions
+    #
+    def get_functions_filelist(self):
+
+        list = os.listdir( self.functions_dir )
+        filelist = []
+        for filename in list:
+            if filename.endswith('.py'):
+                filelist.append(filename)
+
+        self.logger.info("filelist = {}".format(filelist))
+        self.logger.info("filelist.sort() = {}".format(filelist.sort()))
+        return json.dumps(sorted(filelist))
+
+    def get_functions_config(self, fn):
+
+        self.logger.info("FilesController.get_functions_config({})".format(fn))
+        filename = os.path.join(self.functions_dir, fn + '.py')
+        read_data = None
+        with open(filename, encoding='UTF-8') as f:
+            read_data = f.read()
+        return cherrypy.lib.static.serve_file(filename, 'application/x-download',
+                                 'attachment', fn + '.py')
+
+
+    # ======================================================================
     #  /api/files/logics
     #
     def get_logics_filelist(self):
@@ -519,6 +546,12 @@ class FilesController(RESTResource):
         elif id == 'scenes':
             cherrypy.response.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate, no-store'
             return self.get_scenes_config(filename)
+
+        elif (id == 'functions' and filename == ''):
+            return self.get_functions_filelist()
+        elif id == 'functions':
+            cherrypy.response.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate, no-store'
+            return self.get_functions_config(filename)
 
         elif (id == 'logics' and filename == ''):
             return self.get_logics_filelist()
