@@ -285,10 +285,10 @@
     "handlers": [
       "shng_details_file"
     ],
-    "level": "WARNING",
+    "level": "NOTICE",
     "active": {
       "disabled": false,
-      "level": "WARNING",
+      "level": "NOTICE",
       "filters": [],
       "handlers": [
         "TimedRotatingFileHandler"
@@ -605,7 +605,7 @@
       ]
     }
   },
-  "__main__": {
+  "lib.smarthome": {
     "handlers": [
       "shng_details_file",
       "shng_develop_file",
@@ -616,10 +616,10 @@
       "q21_phones_file",
       "shng_stateengine_file"
     ],
-    "level": "WARNING",
+    "level": "NOTICE",
     "active": {
       "disabled": false,
-      "level": "WARNING",
+      "level": "UNKNOWN_31",
       "filters": [],
       "handlers": [
         "TimedRotatingFileHandler",

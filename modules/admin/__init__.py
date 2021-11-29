@@ -382,6 +382,7 @@ class WebApi(RESTResource):
         self.plugins.info = PluginsInfoController(self.module, self.shng_url_root)
         self.plugins.logicparams = PluginsLogicParametersController(self.module)
         self.scenes = ScenesController(self.module)
+        self.scenes.reload = ScenesReloadController(self.module)
         self.schedulers = SchedulersController(self.module)
         self.server = ServerController(self.module)
         self.services = ServicesController(self.module)

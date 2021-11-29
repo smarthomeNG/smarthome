@@ -134,6 +134,10 @@ loggers:
     # The following default loggers should not be changed. If additional logging
     # is required, a logger for the specific lib, module or plugin shoud be added.
     #
+    functions:
+        handlers: [shng_details_file]
+        level: INFO
+
     lib:
         # Default logger for SmartHomeNG libraries
         handlers: [shng_details_file]
