@@ -96,6 +96,20 @@ class ItemData:
 
     # -----------------------------------------------------------------------------------
 
+    def escape_complex_value(self, value):
+
+        wrk = str(value)
+        if wrk == '':
+            return wrk
+        wrk = wrk.replace('&', '&amp;')
+        wrk = wrk.replace('>', '&gt;')
+        wrk = wrk.replace('<', '&lt;')
+        try:
+            return str(ast.literal_eval(wrk))
+        except:
+            self.logger.error(f"escape_complex_value: cannot handle value = '{wrk}'")
+            return ''
+
     @cherrypy.expose
     def item_detail_json_html(self, item_path):
         """
@@ -258,14 +272,9 @@ class ItemData:
 
             # cast list/dict data to a string
             if item.type() in ['list', 'dict']:
-                #data_dict['value'] = str(item._value)
-                wrk = str(item._value)
-                wrk = wrk.replace('&', '&amp;')
-                wrk = wrk.replace('>', '&gt;')
-                wrk = wrk.replace('<', '&lt;')
-                data_dict['value'] = str(ast.literal_eval(wrk))
-                data_dict['last_value'] = str(last_value)
-                data_dict['previous_value'] = str(prev_value)
+                data_dict['value'] = self.escape_complex_value(item._value)
+                data_dict['last_value'] = self.escape_complex_value(last_value)
+                data_dict['previous_value'] = self.escape_complex_value(prev_value)
 
 
             item_data.append(data_dict)
