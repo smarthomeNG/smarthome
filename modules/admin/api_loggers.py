@@ -101,7 +101,8 @@ class LoggersController(RESTResource):
 
         loggerlist = []
         try:
-            for l in logging.Logger.manager.loggerDict:
+            wrk_loggerDict = logging.Logger.manager.loggerDict
+            for l in wrk_loggerDict:
                 lg = logging.Logger.manager.loggerDict[l]
 
                 try:
