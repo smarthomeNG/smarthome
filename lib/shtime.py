@@ -873,6 +873,8 @@ class Shtime:
             return 0
 
         custom = self.config.get('custom', [])
+        if custom is None:
+            custom = []
         count = 0
         if len(custom) > 0:
             for entry in custom:
@@ -956,6 +958,7 @@ class Shtime:
         self.holidays.append(cust_dict)
         return
 
+# {"dow": 5, "dow_week": "last", "month": 7, "name": "Sysadmin day"}
 
     def _initialize_holidays(self):
         """
