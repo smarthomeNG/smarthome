@@ -177,6 +177,6 @@ lib.shtime_translations:
     "Calculating beginning of week based on year {year}, week {week} and offset {offset}":
          'de': 'Berechne Wochenstart basierend auf Jahr {year}, Woche {week} und Offset {offset}'
          'en': '='
-     "Calculating length of month based on year {year}, month {month}{debug_month}":
+    "Calculating length of month based on year {year}, month {month}{debug_month}":
          'de': 'Berechne Länge des Monats basierend auf Jahr {year}, Monat {month}{debug_month}'
          'en': '='
