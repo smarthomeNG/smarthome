@@ -620,7 +620,9 @@ class Tcp_client(object):
                 return False
         try:
             if self._is_connected:
-                self._socket.send(message)
+                bytes_sent = self._socket.send(message)
+                if bytes_sent != len(message):
+                    self.logger.warning(f'Error sending message {message} to host {self._host}: message truncated, sent {bytes_sent} of {len(message)} bytes')
             else:
                 return False
         except Exception as e:
