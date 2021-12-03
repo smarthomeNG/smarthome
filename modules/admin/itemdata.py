@@ -23,6 +23,7 @@ import datetime
 import collections
 import html
 import json
+import ast
 
 import cherrypy
 
@@ -94,6 +95,20 @@ class ItemData:
         return item_data, len(item_data)+count_sum
 
     # -----------------------------------------------------------------------------------
+
+    def escape_complex_value(self, value):
+
+        wrk = str(value)
+        if wrk == '':
+            return wrk
+        wrk = wrk.replace('&', '&amp;')
+        wrk = wrk.replace('>', '&gt;')
+        wrk = wrk.replace('<', '&lt;')
+        try:
+            return str(ast.literal_eval(wrk))
+        except:
+            self.logger.error(f"escape_complex_value: cannot handle value = '{wrk}'")
+            return ''
 
     @cherrypy.expose
     def item_detail_json_html(self, item_path):
@@ -250,13 +265,19 @@ class ItemData:
                 data_dict['struct'] = item._struct
 
             # cast raw data to a string
-            if item.type() in ['foo', 'list', 'dict']:
+            if item.type() in ['foo']:
                 data_dict['value'] = str(item._value)
                 data_dict['last_value'] = str(last_value)
                 data_dict['previous_value'] = str(prev_value)
 
+            # cast list/dict data to a string
+            if item.type() in ['list', 'dict']:
+                data_dict['value'] = self.escape_complex_value(item._value)
+                data_dict['last_value'] = self.escape_complex_value(last_value)
+                data_dict['previous_value'] = self.escape_complex_value(prev_value)
+
+
             item_data.append(data_dict)
-            # self.logger.warning("details: item_data = {}".format(item_data))
             return json.dumps(item_data)
         else:
             self.logger.error("Requested item '{}' is None, check if item really exists.".format(item_path))

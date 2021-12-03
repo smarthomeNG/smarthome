@@ -31,6 +31,7 @@ import dateutil
 import pytz
 from dateutil.tz import tzlocal
 from dateutil import parser
+import dateutil.relativedelta
 import json
 import logging
 import os
@@ -463,7 +464,7 @@ class Shtime:
         else:
             raise TypeError(self.translate("Cannot convert type '{key}' to datetime").format(key=type(key)))
         if isinstance(key, datetime.datetime) and key.tzinfo is None:
-            key =  self._timezone.localize(key)
+            key = self._timezone.localize(key)
         return key
 
 
@@ -484,52 +485,57 @@ class Shtime:
         return key
 
 
-    def beginning_of_week(self, week=None, year=None):
+    def beginning_of_week(self, week=None, year=None, offset=0):
         """
         Calculates the date of the beginning of a given week
 
         If no week and no year are specified, the beginning of the current week is calculated
 
-        :param week: week to use for calculation
+        :param week: calender week to use for calculation
         :param year: year to use for calculation
+        :param offset: negative number for previous weeks, positive for future ones
         :type week: int
         :type year: int
+        :type offset: int
 
-        :return: date the monday of given week
+        :return: date the monday of given calender week
         :rtype: datetime.date
         """
+        month = self.current_month()
         if week is None and year is None:
             week = self.calendar_week(self.today())
             year = self.current_year()
-            month = self.current_month()
             if month == 1 and week > 50:
                 year -= 1
-            week -= 1
         else:
-            if year is None:
-                year = self.current_year()
             if week is None:
                 self.logger.error("beginning_of_week: "+self.translate("Week not specified"))
                 return self.today()
-        #monday = datetime.datetime.strptime(f'{year}-{week}-1', "%Y-%W-%w")  # geht erst ab Python 3.6
-        monday = datetime.datetime.strptime('{year}-{week}-1'.format(year=year, week=week), "%Y-%W-%w")
+            if year is None:
+                year = self.current_year()
+                if month == 1 and week > 50:
+                    year -= 1
+        self.logger.debug(self.translate("Calculating beginning of week based on year {year}, week {week} and offset {offset}").format(year=year, week=week, offset=offset))
+        week_beginning = datetime.datetime.strptime('{year}-{week}-1'.format(year=year, week=week), "%G-%V-%u") + dateutil.relativedelta.relativedelta(weeks=offset)
 
-        return monday.date()
+        return week_beginning.date()
 
-
-    def beginning_of_month(self, month=None, year=None):
+    def beginning_of_month(self, month=None, year=None, offset=0):
         """
         Calculates the date of the beginning of a given month
 
         This method is used to make code more readable
+
 
         If no month is specified, the current month is used
         If no year is specified, the current year is used
 
         :param month: month to use for calculation
         :param year: year to use for calculation
+        :param offset: negative number for previous months, positive for future ones
         :type month: int
         :type year: int
+        :type offset: int
 
         :return: date the first day of given month
         :rtype: datetime.date
@@ -538,10 +544,12 @@ class Shtime:
             month = self.current_month()
         if year is None:
             year = self.current_year()
-        return datetime.date(year, month, 1)
+        month_beginning = datetime.date(year, month, 1) + dateutil.relativedelta.relativedelta(months=offset)
+
+        return month_beginning
 
 
-    def beginning_of_year(self, year=None):
+    def beginning_of_year(self, year=None, offset=0):
         """
          Calculates the date of the beginning of a given year
 
@@ -550,22 +558,28 @@ class Shtime:
          If no year is specified, the current year is used
 
          :param year: year to use for calculation
+         :param offset: negative number for previous years, positive for future ones
          :type year: int
+         :type offset: int
 
          :return: date the first day of given year
          :rtype: datetime.date
-         """
-        return self.beginning_of_month(1, year)
+        """
+        year_beginning = self.beginning_of_month(1, year) + dateutil.relativedelta.relativedelta(years=offset)
+        return year_beginning
 
 
-    def today(self):
+    def today(self, offset=0):
         """
         Return today's date
+
+        :param offset: negative number for previous days, positive for future ones
+        :type offset: int
 
         :return: date of today
         :rtype: datetime.date
         """
-        return datetime.datetime.now().date()
+        return (datetime.datetime.now() + datetime.timedelta(days=offset)).date()
 
 
     def tomorrow(self):
@@ -588,57 +602,74 @@ class Shtime:
         return self.today() + datetime.timedelta(days=-1)
 
 
-    def current_year(self):
+    def current_year(self, offset=0):
         """
         Return the current year
+
+        :param offset: negative number for previous years, positive for future ones
+        :type offset: int
 
         :return: year
         :rtype: int
         """
-        return self.today().year
+        return (self.today() + dateutil.relativedelta.relativedelta(years=offset)).year
 
 
-    def current_month(self):
+    def current_month(self, offset=0):
         """
         Return the current month
+
+        :param offset: negative number for previous months, positive for future ones
+        :type offset: int
 
         :return: month
         :rtype: int
         """
-        return self.today().month
+        return (self.today() + dateutil.relativedelta.relativedelta(months=offset)).month
 
 
-    def current_day(self):
+    def current_day(self, offset=0):
         """
         Return the current day
+
+        :param offset: negative number for previous days, positive for future ones
+        :type offset: int
 
         :return: day
         :rtype: int
         """
-        return self.today().day
+        return (self.today() + datetime.timedelta(days=offset)).day
 
 
-    def length_of_year(self, year=None):
+    def length_of_year(self, year=None, offset=0):
         """
         Returns the length of a given year
 
         :param year: year to use for calculation
+        :param offset: negative number for previous months, positive for future ones
         :type year: int
+        :type offset: int
 
         :return: Length of year in days
         :rtype: int
         """
-        return self.length_of_month(1, year)
+        if year is None:
+            year = self.current_year()
+        year += offset
+        leap_year = True if year % 4 == 0 and (year % 100 != 0 or year % 400 == 0) else False
+        return 365 if leap_year is False else 366
 
 
-    def length_of_month(self, month=None, year=None):
+    def length_of_month(self, month=None, year=None, offset=0):
         """
         Returns the length of a given month for a given year
 
         :param month: month to use for calculation
         :param year: year to use for calculation
+        :param offset: negative number for previous months, positive for future ones
         :type month: int
         :type year: int
+        :type offset: int
 
         :return: Length of month in days
         :rtype: int
@@ -647,21 +678,28 @@ class Shtime:
             month = self.current_month()
         if year is None:
             year = self.current_year()
+        offset_dt = datetime.datetime(year, month, 1) + dateutil.relativedelta.relativedelta(months=offset)
+        month = offset_dt.month
+        year = offset_dt.year
 
         next_month = month
         next_year = year
         if next_month == 12:
             next_year += 1
             next_month = 0
+        debug_month = "" if offset == 0 else " (offset {offset})".format(offset=offset)
+        self.logger.debug(self.translate("Calculating length of month based on year {year}, month {month}{debug_month}").format(year=year, month=month, debug_month=debug_month))
         return (datetime.datetime(next_year, next_month+1, 1) - datetime.datetime(year, month, 1)).days
 
 
-    def day_of_year(self, date=None):
+    def day_of_year(self, date=None, offset=0):
         """
         Calculate which day of the year the given date is
 
         :param date: date
+        :param offset: negative number for previous days, positive for future ones
         :type date: str|datetime.datetime|datetime.date|int|float
+        :type offset: int
 
         :return: day of year
         :rtype: int
@@ -670,52 +708,60 @@ class Shtime:
             date = self.date_transform(date)
         else:
             date = self.today()
+        date = date + datetime.timedelta(days=offset)
         return (date - datetime.date(date.year, 1, 1)).days + 1
 
 
-    def weekday(self, date=None):
+    def weekday(self, date=None, offset=0):
         """
         Returns the ISO weekday of a given date (or of today, if date is None)
 
         Return the day of the week as an integer, where Monday is 1 and Sunday is 7. (ISO weekday)
 
         :param date: date
+        :param offset: negative number for previous days, positive for future ones
         :type date: str|datetime.datetime|datetime.date|int|float
+        :type offset: int
 
         :return: weekday (1=Monday .... 7=Sunday)
         :rtype: int
         """
 
         if date:
-            dt = self.date_transform(date)
-            return dt.isoweekday()
+            weekday = self.date_transform(date)
+            weekday = weekday + datetime.timedelta(days=offset)
         else:
-            return datetime.datetime.now().isoweekday()
+            weekday = self.today() + datetime.timedelta(days=offset)
+        return weekday.isoweekday()
 
 
-    def calendar_week(self, date=None):
+    def calendar_week(self, date=None, offset=0):
         """
         Returns the calendar week (according to ISO)
 
         :param date: date
+        :param offset: negative number for previous weeks, positive for future ones
         :type date: str|datetime.datetime|datetime.date|int|float
+        :type offset: int
 
         :return: week (ISO)
         :rtype: int
         """
         if date:
-            dt = self.date_transform(date)
-            return dt.isocalendar()[1]
+            cal_week = self.date_transform(date) + dateutil.relativedelta.relativedelta(weeks=offset)
         else:
-            return datetime.datetime.now().isocalendar()[1]
+            cal_week = self.today() + dateutil.relativedelta.relativedelta(weeks=offset)
+        return cal_week.isocalendar()[1]
 
 
-    def weekday_name(self, date=None):
+    def weekday_name(self, date=None, offset=0):
         """
         Returns the name of the weekday for a given date
 
         :param date: date
+        :param offset: negative number for previous days, positive for future ones
         :type date: str|datetime.datetime|datetime.date|int|float
+        :type offset: int
 
         :return: weekday name
         :rtype: str
@@ -724,6 +770,7 @@ class Shtime:
             dt = self.date_transform(date)
         else:
             dt = self.today()
+        dt = dt + datetime.timedelta(days=offset)
 
         wday = self.weekday(dt)
         if wday == 1:
@@ -731,7 +778,7 @@ class Shtime:
         elif wday == 2:
             day = "Dienstag"
         elif wday == 3:
-            day = "Mittowch"
+            day = "Mittwoch"
         elif wday == 4:
             day = "Donnerstag"
         elif wday == 5:
@@ -743,7 +790,7 @@ class Shtime:
         else:
             day = "?"
 
-        return translate(day)
+        return self.translate(day)
 
 
     def _get_nth_dow_in_month(self, dow, dow_week, year, month):
@@ -873,6 +920,8 @@ class Shtime:
             return 0
 
         custom = self.config.get('custom', [])
+        if custom is None:
+            custom = []
         count = 0
         if len(custom) > 0:
             for entry in custom:
@@ -956,6 +1005,7 @@ class Shtime:
         self.holidays.append(cust_dict)
         return
 
+# {"dow": 5, "dow_week": "last", "month": 7, "name": "Sysadmin day"}
 
     def _initialize_holidays(self):
         """

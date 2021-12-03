@@ -46,7 +46,7 @@ from lib.utils import Utils
 
 
 class Websocket(Module):
-    version = '1.0.1'
+    version = '1.0.1a'
     longname = 'Websocket module for SmartHomeNG'
     port = 0
 
@@ -605,7 +605,7 @@ class Websocket(Module):
                         if self.update_visuitem not in item.get_method_triggers():
                             item.add_method_trigger(self.update_visuitem)
                     else:
-                        self.logger.error("prepare_monitor: No item '{}' found".format(path))
+                        self.logger.error("prepare_monitor: No item '{}' found (requested by client {} - {} {})".format(path, client_addr, self.sv_clients[client_addr]['browser'], self.sv_clients[client_addr]['bver'] ))
                 except KeyError as e:
                     self.logger.warning(
                         "KeyError: Client {0} requested to monitor item {1} which can not be found".format(

@@ -61,7 +61,7 @@ class Tools():
                 if ping_response.returncode == 0:
                     # need to inspect the returned output since it could be that
                     # **destination is unreachable** anyway which does not generate an error code
-                    # as the result is a bytearray which codepage might vary between cp850, cp1252 and utf8, 
+                    # as the result is a bytearray which codepage might vary between cp850, cp1252 and utf8,
                     # it is a quick hack to just look if ms is inside this string.
                     # if not, it is sure that destination could not be reached
                     if b'ms' in ping_response.stdout:
@@ -77,10 +77,12 @@ class Tools():
         return round((241.2 * log + 4222.03716 * t / (241.2 + t)) / (17.5043 - log - 17.5043 * t / (241.2 + t)), 2)
 
     def dt2js(self, dt):
-        return time.mktime(dt.timetuple()) * 1000 + int(dt.microsecond / 1000)
+        #return time.mktime(dt.timetuple()) * 1000 + int(dt.microsecond / 1000)
+        return dt.timestamp() * 1000 + int(dt.microsecond / 1000)
 
     def dt2ts(self, dt):
-        return time.mktime(dt.timetuple())
+        #return time.mktime(dt.timetuple())
+        return dt.timestamp()
 
     def fetch_url(self, url, username=None, password=None, timeout=2, warn_no_connect=1, method = 'GET', body=None, errorItem = None):
         connErrors = ['Host is down', 'timed out', '[Errno 113] No route to host']
@@ -125,16 +127,16 @@ class Tools():
         mix = 18.0160 / 28.9660 * rf * sat / (100000 - rf * sat)
         rhov = 100000 / (287.0 * (1 - mix) + 462.0 * mix) / t
         return mix * rhov * 1000
-    
+
     def abs2rel(self,t,ah):
         """
         Return the relative humidity from the absolute humidity (g/cm3) and temperature (Celsius)
-        
+
         :param t: temperature in celsius
         :type t: float
         :param ah: absolute humidity (g/cm3)
         :type t: float
-        
+
         :return: val = relative humidity (in percent)
         :rtype: dict
         """

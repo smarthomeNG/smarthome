@@ -130,6 +130,13 @@ class ConfigController(RESTResource):
         except Exception as e:
             self.logger.critical("update_holidays: Exception {}".format(e))
 
+        if self.holidays_confdata['custom'] == []:
+            #self.holidays_confdata['custom'] = None
+            del self.holidays_confdata['custom']
+
+        if self.holidays_confdata['location']['state'] is None:
+            del self.holidays_confdata['location']['state']
+
         self.logger.info("update_holidays: self.holidays_confdata = '{}'".format(self.holidays_confdata))
         shyaml.yaml_save_roundtrip(filename, self.holidays_confdata, create_backup=True)
         return
