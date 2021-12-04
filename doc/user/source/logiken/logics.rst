@@ -23,13 +23,25 @@ Grundlegende Struktur
 
 Das wichtigste Objekt, dass in Logiken verwendet wird, ist **sh**. Dies ist das Smarthome-Objekt.
 Es enthält jedes Detail über die laufende SmartHomeNG Instanz. Mit diesem Objekt ist es möglich auf
-alle Items, Plugins und Grundfunktionen von SmartHomeNG zuzugreifen. Um den Wert eines Items zu
-erhalten, rufen Sie zum Beispiel den Namen auf: sh.path.item(). Um einen neuen Wert zu setzen,
-geben Sie ihn einfach als Argument an: sh.path.item(neuer_wert).
+alle Items, Plugins und Grundfunktionen von SmartHomeNG zuzugreifen. 
 
-Es ist sehr wichtig, immer mit Klammern **()** auf die Items zuzugreifen! Andernfalls würde ein
-Fehler auftreten.
+Zugriff auf Items und Werte
+===========================
 
+Um den Wert eines Items zu erhalten, rufen Sie zum Beispiel den Namen auf: sh.path.item(). 
+Um einen neuen Wert zu setzen, geben Sie ihn einfach als Argument an: sh.path.item(neuer_wert).
+
+.. attention::
+
+   Zuweisung von Item-Werten:
+
+   Es ist sehr wichtig, immer mit Klammern **()** auf die Items zuzugreifen! Wenn das Item direkt
+   zugewiesen wird, z.B. mit sh.path.item = Wert, dann wird das item-Objekt in SmartHomeNG überschrieben
+   und kann nur durch einen Neustart von SmartHomeNG wieder hergestellt werden.
+
+
+Beispiel
+========
 
 Eine Logik sieht prinzipiell folgendermaßen aus:
 
