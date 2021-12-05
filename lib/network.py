@@ -625,19 +625,19 @@ class Tcp_client(object):
                     self.logger.warning(f'Error sending message {message} to host {self._host}: message truncated, sent {bytes_sent} of {len(message)} bytes')
             else:
                 return False
-        except Exception as e:
-            if isinstance(e.args, tuple) and e[0] == errno.EPIPE:
-                self.logger.warning(f'Detected disconnect from {self._host}, send failed.')
-                self._is_connected = False
-                if self._disconnected_callback:
-                    self._disconnected_callback(self)
-                if self._autoreconnect:
-                    self.logger.debug(f'Autoreconnect enabled for {self._host}')
-                    self.connect()
-            else:  # log errors we are not prepared to handle and raise exception for further debugging
-                self.logger.warning(f'Unhandleded error on sending to {self._host}, cannot send data {message}. Error: {e}')
-                raise
+        except BrokenPipeError:
+            self.logger.warning(f'Detected disconnect from {self._host}, send failed.')
+            self._is_connected = False
+            if self._disconnected_callback:
+                self._disconnected_callback(self)
+            if self._autoreconnect:
+                self.logger.debug(f'Autoreconnect enabled for {self._host}')
+                self.connect()
             return False
+
+        except Exception as e:  # log errors we are not prepared to handle and raise exception for further debugging
+            self.logger.warning(f'Unhandleded error on sending to {self._host}, cannot send data {message}. Error: {e}')
+            raise
 
         return True
 
