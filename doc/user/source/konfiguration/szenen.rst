@@ -14,8 +14,8 @@ Seit SmartHomeNG v1.4 werden folgende Features für Szenen unterstützt:
 - Für Szenen Stati können Namen vergeben werden.
 - Der Ziel Item-Pfad einer Szenenaktion kann als relative Referenz angegeben werden.
 - Wenn dem Zielitem Stringwerte zugewiesen werden sollen, müssen diese zweifach in Anführungszeichen angegeben werden,
-  z.B. `"'Wert'"`, Zahlen können direkt angegeben werden, und andere Werte wie z.B. Listen oder dicts müssen einfach
-  in Anführungszeichen stehen, z.B. `"{'key': 'value'}"` oder `'["listitem1", "listitem2"]'`.
+  z.B. ``"'Wert'"``, Zahlen können direkt angegeben werden, und andere Werte wie z.B. Listen oder dicts müssen einfach
+  in Anführungszeichen stehen, z.B. ``"{'key': 'value'}"`` oder ``'["listitem1", "listitem2"]'``.
 - Anstelle eines Wertes kann auch ein **eval** Ausdruck angegeben werden. In diesem Ausdruck sind auch relative
   Item Referenzen möglich. eval-Ausdrücke werde wie andere Werte einfach in Anführungszeichen gesetzt.
 - Für Szenen Aktionen in denen ein absoluter Wert angegeben wird, wird bei Verwendung des neuen Dateiformats das
@@ -25,8 +25,8 @@ Das alte Dateiformat (.conf)  von smarthome.py wird weiterhin unterstützt. Alle
 keine Unterstützung für die neueren Features.
 
 Die Nutzung der neuen Features ist unter :doc:`Konfiguation/Konfigurationsdateien/scenes/\*.yaml <./konfigurationsdateien/scenes>`
-beschrieben. Zu beachten ist, dass die Konfigurationsdateien für Szenen nur eingelesen werden, wenn ein Item
-gleichen Namens definiert ist und der Type dieses Items **scene** ist.
+beschrieben. Zu beachten ist, dass die Konfigurationsdateien für Szenen nur eingelesen werden, wenn ein Item **pfad.item**
+des Typs **scene** definiert ist und die Szenen-Datei **pfad.item.yaml** bzw. **pfad.item.conf** benannt ist.
 
 
 Funktionsweise von Szenen
