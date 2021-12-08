@@ -13,8 +13,11 @@ Seit SmartHomeNG v1.4 werden folgende Features für Szenen unterstützt:
 
 - Für Szenen Stati können Namen vergeben werden.
 - Der Ziel Item-Pfad einer Szenenaktion kann als relative Referenz angegeben werden.
+- Wenn dem Zielitem Stringwerte zugewiesen werden sollen, müssen diese zweifach in Anführungszeichen angegeben werden,
+  z.B. `"'Wert'"`, Zahlen können direkt angegeben werden, und andere Werte wie z.B. Listen oder dicts müssen einfach
+  in Anführungszeichen stehen, z.B. `"{'key': 'value'}"` oder `'["listitem1", "listitem2"]'`.
 - Anstelle eines Wertes kann auch ein **eval** Ausdruck angegeben werden. In diesem Ausdruck sind auch relative
-  Item Referenzen möglich.
+  Item Referenzen möglich. eval-Ausdrücke werde wie andere Werte einfach in Anführungszeichen gesetzt.
 - Für Szenen Aktionen in denen ein absoluter Wert angegeben wird, wird bei Verwendung des neuen Dateiformats das
   Lernen (analog zu KNX Szenen) unterstützt
 
