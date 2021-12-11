@@ -36,8 +36,11 @@ Um einen neuen Wert zu setzen, geben Sie ihn einfach als Argument an: sh.path.it
    Zuweisung von Item-Werten:
 
    Es ist sehr wichtig, immer mit Klammern **()** auf die Items zuzugreifen! Wenn das Item direkt
-   zugewiesen wird, z.B. mit sh.path.item = Wert, dann wird das item-Objekt in SmartHomeNG überschrieben
-   und kann nur durch einen Neustart von SmartHomeNG wieder hergestellt werden.
+   zugewiesen wird, z.B. mit sh.path.item = Wert, dann wird das item-Objekt in SmartHomeNG überschrieben.
+
+   In diesem Fall kann die mitgelieferte Logik **check_items.py** verwendet werden, um auf Vorhandensein
+   entsprechend beschädigter Items zu prüfen und diese wiederherzustellen. Alternativ werden die Items nach
+   einem Neustart von SmartHomeNG neu erstellt.
 
 
 Alternativ kann auch über die Item-Properties auf den Wert zugegriffen werden: sh.path.item.propery.value
