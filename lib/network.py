@@ -747,7 +747,7 @@ class Tcp_client(object):
                                 line = __buffer[:i]
                                 __buffer = __buffer[i:]
                                 if self._data_received_callback is not None:
-                                    self._data_received_callback(self, line)
+                                    self._data_received_callback(self, line if self._binary else str(line, 'utf-8').strip())
                         # If not in terminator mode just forward what we received
                         else:
                             if self._data_received_callback is not None:
