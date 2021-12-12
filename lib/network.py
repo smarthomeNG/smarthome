@@ -720,9 +720,15 @@ class Tcp_client(object):
                     msg = self._socket.recv(4096)
                     # Check if incoming message is not empty
                     if msg:
-                        # If we transfer in text mode decode message to string
-                        if not self._binary:
-                            msg = str.rstrip(str(msg, 'utf-8'))
+                        # TODO: doing this breaks line separation if multiple lines 
+                        #       are read at a time, the next loop can't split it
+                        #       because line endings are missing
+                        #       find out reason for this operation...
+
+                        # # If we transfer in text mode decode message to string
+                        # # if not self._binary:
+                        # #     msg = str.rstrip(str(msg, 'utf-8')).encode('utf-8')
+
                         # If we work in line mode (with a terminator) slice buffer into single chunks based on terminator
                         if self.terminator:
                             __buffer += msg
