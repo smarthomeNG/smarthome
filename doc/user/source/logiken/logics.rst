@@ -21,15 +21,34 @@ Die Logik-Skripte müssen im Verzeichnis **../logics** der SmartHomeNG Installat
 Grundlegende Struktur
 =====================
 
-Das wichtigste Objekt, dass in Logiken verwendet wird, ist **sh**. Dies ist das Smarthome-Objekt.
+Das wichtigste Objekt, das in Logiken verwendet wird, ist **sh**. Dies ist das Smarthome-Objekt.
 Es enthält jedes Detail über die laufende SmartHomeNG Instanz. Mit diesem Objekt ist es möglich auf
-alle Items, Plugins und Grundfunktionen von SmartHomeNG zuzugreifen. Um den Wert eines Items zu
-erhalten, rufen Sie zum Beispiel den Namen auf: sh.path.item(). Um einen neuen Wert zu setzen,
-geben Sie ihn einfach als Argument an: sh.path.item(neuer_wert).
+alle Items, Plugins und Grundfunktionen von SmartHomeNG zuzugreifen. 
 
-Es ist sehr wichtig, immer mit Klammern **()** auf die Items zuzugreifen! Andernfalls würde ein
-Fehler auftreten.
+Zugriff auf Items und Werte
+===========================
 
+Um den Wert eines Items zu erhalten, rufen Sie zum Beispiel den Namen auf: sh.path.item(). 
+Um einen neuen Wert zu setzen, geben Sie ihn einfach als Argument an: sh.path.item(neuer_wert).
+
+.. attention::
+
+   Zuweisung von Item-Werten:
+
+   Es ist sehr wichtig, immer mit Klammern **()** auf die Items zuzugreifen! Wenn das Item direkt
+   zugewiesen wird, z.B. mit sh.path.item = Wert, dann wird das item-Objekt in SmartHomeNG überschrieben.
+
+   In diesem Fall kann die mitgelieferte Logik **check_items.py** verwendet werden, um auf Vorhandensein
+   entsprechend beschädigter Items zu prüfen und diese wiederherzustellen. Alternativ werden die Items nach
+   einem Neustart von SmartHomeNG neu erstellt.
+
+
+Alternativ kann auch über die Item-Properties auf den Wert zugegriffen werden: sh.path.item.propery.value
+gibt den Wert zurück, mit sh.path.item.property.value = Wert kann der Wert zugewiesen werden. Diese Variante
+lässt sich wie eine normale Variablenzuweisung nutzen.
+
+Beispiel
+========
 
 Eine Logik sieht prinzipiell folgendermaßen aus:
 

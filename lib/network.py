@@ -619,12 +619,25 @@ class Tcp_client(object):
                 return False
         try:
             if self._is_connected:
-                self._socket.send(message)
+                bytes_sent = self._socket.send(message)
+                if bytes_sent != len(message):
+                    self.logger.warning(f'Error sending message {message} to host {self._host}: message truncated, sent {bytes_sent} of {len(message)} bytes')
             else:
                 return False
-        except Exception as e:
-            self.logger.warning(f'No connection to {self._host}, cannot send data {message}. Error: {e}')
+        except BrokenPipeError:
+            self.logger.warning(f'Detected disconnect from {self._host}, send failed.')
+            self._is_connected = False
+            if self._disconnected_callback:
+                self._disconnected_callback(self)
+            if self._autoreconnect:
+                self.logger.debug(f'Autoreconnect enabled for {self._host}')
+                self.connect()
             return False
+
+        except Exception as e:  # log errors we are not prepared to handle and raise exception for further debugging
+            self.logger.warning(f'Unhandleded error on sending to {self._host}, cannot send data {message}. Error: {e}')
+            raise
+
         return True
 
     def _connect_thread_worker(self):
@@ -707,9 +720,15 @@ class Tcp_client(object):
                     msg = self._socket.recv(4096)
                     # Check if incoming message is not empty
                     if msg:
-                        # If we transfer in text mode decode message to string
-                        if not self._binary:
-                            msg = str.rstrip(str(msg, 'utf-8'))
+                        # TODO: doing this breaks line separation if multiple lines 
+                        #       are read at a time, the next loop can't split it
+                        #       because line endings are missing
+                        #       find out reason for this operation...
+
+                        # # If we transfer in text mode decode message to string
+                        # # if not self._binary:
+                        # #     msg = str.rstrip(str(msg, 'utf-8')).encode('utf-8')
+
                         # If we work in line mode (with a terminator) slice buffer into single chunks based on terminator
                         if self.terminator:
                             __buffer += msg
@@ -728,7 +747,7 @@ class Tcp_client(object):
                                 line = __buffer[:i]
                                 __buffer = __buffer[i:]
                                 if self._data_received_callback is not None:
-                                    self._data_received_callback(self, line)
+                                    self._data_received_callback(self, line if self._binary else str(line, 'utf-8').strip())
                         # If not in terminator mode just forward what we received
                         else:
                             if self._data_received_callback is not None:
