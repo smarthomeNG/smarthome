@@ -712,56 +712,61 @@ class Tcp_client(object):
         __buffer = b''
 
         self._is_receiving = True
-        self._receiving_callback and self._receiving_callback(self)
-        while self._is_connected and self.__running:
-            events = waitobj.wait(1000)     # BMX
-            for fileno, read, write in events:  # BMX
-                if read:
-                    msg = self._socket.recv(4096)
-                    # Check if incoming message is not empty
-                    if msg:
-                        # TODO: doing this breaks line separation if multiple lines 
-                        #       are read at a time, the next loop can't split it
-                        #       because line endings are missing
-                        #       find out reason for this operation...
+        if self._receiving_callback:
+            self._receiving_callback(self)
+        # try to find possible "hidden" errors
+        try:
+            while self._is_connected and self.__running:
+                events = waitobj.wait(1000)     # BMX
+                for fileno, read, write in events:  # BMX
+                    if read:
+                        msg = self._socket.recv(4096)
+                        # Check if incoming message is not empty
+                        if msg:
+                            # TODO: doing this breaks line separation if multiple lines 
+                            #       are read at a time, the next loop can't split it
+                            #       because line endings are missing
+                            #       find out reason for this operation...
+     
+                            # # If we transfer in text mode decode message to string
+                            # # if not self._binary:
+                            # #     msg = str.rstrip(str(msg, 'utf-8')).encode('utf-8')
 
-                        # # If we transfer in text mode decode message to string
-                        # # if not self._binary:
-                        # #     msg = str.rstrip(str(msg, 'utf-8')).encode('utf-8')
-
-                        # If we work in line mode (with a terminator) slice buffer into single chunks based on terminator
-                        if self.terminator:
-                            __buffer += msg
-                            while True:
-                                # terminator = int means fixed size chunks
-                                if isinstance(self.terminator, int):
-                                    i = self.terminator
-                                    if i > len(__buffer):
-                                        break
-                                # terminator is str or bytes means search for it
-                                else:
-                                    i = __buffer.find(self.terminator)
-                                    if i == -1:
-                                        break
-                                    i += len(self.terminator)
-                                line = __buffer[:i]
-                                __buffer = __buffer[i:]
+                            # If we work in line mode (with a terminator) slice buffer into single chunks based on terminator
+                            if self.terminator:
+                                __buffer += msg
+                                while True:
+                                    # terminator = int means fixed size chunks
+                                    if isinstance(self.terminator, int):
+                                        i = self.terminator
+                                        if i > len(__buffer):
+                                            break
+                                    # terminator is str or bytes means search for it
+                                    else:
+                                        i = __buffer.find(self.terminator)
+                                        if i == -1:
+                                            break
+                                        i += len(self.terminator)
+                                    line = __buffer[:i]
+                                    __buffer = __buffer[i:]
+                                    if self._data_received_callback is not None:
+                                        self._data_received_callback(self, line if self._binary else str(line, 'utf-8').strip())
+                            # If not in terminator mode just forward what we received
+                            else:
                                 if self._data_received_callback is not None:
-                                    self._data_received_callback(self, line if self._binary else str(line, 'utf-8').strip())
-                        # If not in terminator mode just forward what we received
+                                    self._data_received_callback(self, msg)
+                        # If empty peer has closed the connection
                         else:
-                            if self._data_received_callback is not None:
-                                self._data_received_callback(self, msg)
-                    # If empty peer has closed the connection
-                    else:
-                        # Peer connection closed
-                        self.logger.warning(f'Connection closed by peer {self._host}')
-                        self._is_connected = False
-                        waitobj.unwatch(self._socket)
-                        self._disconnected_callback and self._disconnected_callback(self)
-                        if self._autoreconnect:
-                            self.logger.debug(f'Autoreconnect enabled for {self._host}')
-                            self.connect()
+                            # Peer connection closed
+                            self.logger.warning(f'Connection closed by peer {self._host}')
+                            self._is_connected = False
+                            waitobj.unwatch(self._socket)
+                            self._disconnected_callback and self._disconnected_callback(self)
+                            if self._autoreconnect:
+                                self.logger.debug(f'Autoreconnect enabled for {self._host}')
+                                self.connect()
+        except Exception as e:
+            self.logger.warning(f'lib.network receive thread died with error: {e}. Go tell...')
         self._is_receiving = False
 
     def _sleep(self, time_lapse):
