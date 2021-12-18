@@ -757,16 +757,30 @@ class Tcp_client(object):
                                     self._data_received_callback(self, msg)
                         # If empty peer has closed the connection
                         else:
-                            # Peer connection closed
-                            self.logger.warning(f'Connection closed by peer {self._host}')
-                            self._is_connected = False
-                            waitobj.unwatch(self._socket)
-                            self._disconnected_callback and self._disconnected_callback(self)
-                            if self._autoreconnect:
-                                self.logger.debug(f'Autoreconnect enabled for {self._host}')
-                                self.connect()
+                            if self.__running:
+
+                                # default state, peer closed connection
+                                self.logger.warning(f'Connection closed by peer {self._host}')
+                                self._is_connected = False
+                                waitobj.unwatch(self._socket)
+                                if self._disconnected_callback is not None:
+                                    self._disconnected_callback()
+                                if self._autoreconnect:
+                                    self.logger.debug(f'Autoreconnect enabled for {self._host}')
+                                    self.connect()
+                            else:
+
+                                # socket shut down by self.close, no error
+                                self.logger.debug('Connection shut down by call to close method')
+                                self._is_receiving = False
+                                return
         except Exception as e:
-            self.logger.warning(f'lib.network receive thread died with error: {e}. Go tell...')
+            if not self.__running:
+                self.logger.debug('lib.network receive thread shutting down')
+                self._is_receiving = False
+                return
+            else:
+                self.logger.warning(f'lib.network receive thread died with error: {e}. Go tell...')
         self._is_receiving = False
 
     def _sleep(self, time_lapse):
@@ -789,6 +803,7 @@ class Tcp_client(object):
         """
         self.logger.info(f'Closing connection to {self._host} on TCP port {self._port}')
         self.__running = False
+        self._socket.shutdown(socket.SHUT_RD)
         if self.__connect_thread is not None and self.__connect_thread.is_alive():
             self.__connect_thread.join()
         if self.__receive_thread is not None and self.__receive_thread.is_alive():
