@@ -491,6 +491,16 @@ class Tcp_client(object):
     """
     Structured class to handle locally initiated TCP connections with two-way communication.
 
+    The callbacks need to be defined as follows:
+
+    def connected_callback(Tcp_client_instance)
+    def receiving_callback(Tcp_client_instance)
+    def disconnected_callback(Tcp_client_instance)
+    def data_received_callback(Tcp_client_instance, message)
+
+    (Class members need the additional first `self` parameter)
+
+
     :param host: Remote host name or ip address (v4 or v6)
     :param port: Remote host port to connect to
     :param name: Name of this connection (mainly for logging purposes). Try to keep the name short.
@@ -764,7 +774,7 @@ class Tcp_client(object):
                                 self._is_connected = False
                                 waitobj.unwatch(self._socket)
                                 if self._disconnected_callback is not None:
-                                    self._disconnected_callback()
+                                    self._disconnected_callback(self)
                                 if self._autoreconnect:
                                     self.logger.debug(f'Autoreconnect enabled for {self._host}')
                                     self.connect()
