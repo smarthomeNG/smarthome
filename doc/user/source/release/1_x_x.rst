@@ -8,9 +8,9 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 8. Oktober 2021
-       (...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 6. Oktober 2021
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 23. Dezember 2021
+       (Bugfix for autotimer method of an item)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 21. Dezember 2021
        (...)
 
 
@@ -90,6 +90,7 @@ Updates in the CORE
 
   * Added new struct files of ../etc directory to configuration backup
   * Added \*.pem to backup of certificate files
+  * Certificate backup now backs up *.pem files for certificates that are not named *.cer
 
 lib.env.location:
 
@@ -99,19 +100,45 @@ lib.env.location:
 
   * Added loading of structs from multiple files (etc/struct_xyz.yaml) in addition to loading from etc/struct.yaml
   * Extended functionallity for item logging (incl. shngadmin and documentation)
+  * Added attribute source to timer function
+  * Improved logging for items with cache attribute
+  * items: optionally return items sorted
+  * Bugfix for autotimer method of an item
+
+* lib.log:
+
+  * Improved handling of loglevel NOTICE
 
 * lib.network:
 
   * first udp server implementation
   * Removed setting of loglevel for logger lib.network (should be defined in etc/logging.yaml)
+  * Handle 'broken pipe' error on remote disconnect
+  * added log entry for truncated send
+  * Fix received data processing
+  * Fix missing bytes/str conversion
+  * Better and faster shutdown handling
+  * Fix callback syntax
+
+* lib.scene:
+
+  * Extended eval to use shtime, userfunctions and math (analog to eval attribute of items)
+  * Implemented reload of all scenes
+  * implemented multi language support for log entries
 
 * lib.smarthome:
 
   * Added loglevel NOTICE
+  * Improved handling of memory logs
+
+* lib.tools:
+
+  * Fix for daylight saving time in tools.dt2ts() and tools.dt2js()
 
 * lib.userfunctions
 
-  * New library, that implements userfuncations for eval-statements and logics
+  * New library, that implements userfunctions for eval-statements and logics
+  * Implemented userfunctions for evalchecker in admin gui
 
 * Modules:
 
@@ -119,6 +146,13 @@ lib.env.location:
 
     * Display of structs in shngadmin is now sorted and grouped by plugin
     * Randomized calls to find blog articles on smarthomeng.de
+    * Added level NOTICE to api
+    * GUI: Added loglevel NOTICE
+    * GUI Added reload button for scenes
+    * Implemented html escape for dicts and lists in item detail view
+    * Bugfix for list loggers (Issue #411) "dictionary changed size during iteration"
+    * GUI: Fix for handling/editing custom holidays
+    * Fix for compatibility to newer PyJWT versions
 
   * http:
 
@@ -133,6 +167,8 @@ lib.env.location:
   * websocket:
 
     * Changes to memory logging in core
+    * Added missing requirements.txt
+    * Exitcode 1001 is now logged as info, not as exception
 
 * Plugins:
 
@@ -156,7 +192,9 @@ For details of the changes of the individual plugins, please refer to the docume
   smarthome sensors based on HTTP GET Request
 * homeconnect: usage of the BSH/Siemens HomeConnect interface with oauth2
 * husky: plugin to control Husqvarna automower
+* philips_tv: Added initial support for Philips TV with OAuth2 authentication
 * sma_mb: this plug-in reads the current values of an SMA inverter via SMA Speedwire fieldbus/Modbus
+* text_display: New text display Plugin
 
 
 
@@ -174,6 +212,10 @@ Plugin Updates
   * moved webif to seperate file
   * fixed rare error in function _update_home_automation
   * catching exceptions when Ethernet is temporary unavailable
+
+* bose_soundtouch:
+
+  * Improved error handling
 
 * bsblan:
 
@@ -197,6 +239,8 @@ Plugin Updates
   * fixed status decode error
   * added backend online status parsing to item
   * fixed unknown variable error in debug message
+  * Trigger socket reinitialization after pipe error
+  * Switched logger outputs to f-strings
 
 * cli:
 
@@ -220,6 +264,8 @@ Plugin Updates
 * database:
 
   * updated to use newest version of datepicker
+  * Improved robustness, limit reconnects improved plugin robustness, if db is not available (e.g. temporarily missing ethernet)
+  * Limit number of reconnects
 
 * dlms:
 
@@ -240,10 +286,13 @@ Plugin Updates
   * changed to new is_alive() syntax for python 3.9
   * updated to use newest version of datepicker
   * removed datepicker includes, which are no longer necessary for this plugin
+  * Added debug info to BaseID error message
+  * Adapted logging to fstrings
+  * Added optional item attribute "enocean_device" to select appropriate learn message
 
 * garminconnect:
 
-  * updated to use newest version of datepicker
+  * Updated to use newest version of datepicker
 
 * gpio:
 
@@ -255,6 +304,15 @@ Plugin Updates
 * hue:
 
   * Small BugFix in UpdateGoupItems
+
+* hue2:
+
+  * Changed create_new_username() to support qhue v2.0.0 and up
+  * Implemented bridge discovery via mdns (for bridges v2)
+  * Reimplemented bridge discovery via upnp (for bridges v1)
+  * Removed bridge discovery through hue portal (old Philips site)
+  * Implemented new Signify broker discovery methods
+  * automatic discovery at startup takes place only if stored ip address does not point to a hue bridge
 
 * husky:
 
@@ -310,6 +368,9 @@ Plugin Updates
   * added return values for plugin commands
   * added function list available rooms to plugin webif
   * improved map cleaning control
+  * Added return values for plugin commands; added function list available rooms to plugin webif. Improved map cleaning control
+  * Added 'robot not online' warning
+  * Added command to dismiss backend alerts (dustbin full etc.) via item
 
 * network:
 
@@ -327,6 +388,16 @@ Plugin Updates
   * catching exception if network is not available
   * added UPS via Synology disk station example to readme
   * fixed error occurring after exception of type "network not available"
+
+* odlinfo:
+
+  * Updated to new data interface https://odlinfo.bfs.de/ODL/DE/service/datenschnittstelle/datenschnittstelle_node.html
+  * No more use and password needed
+  * Added web interface
+  * Added cycle and cached json data
+  * Added manual update option, reduced default cycle to 1800 sec
+  * Bumped version to 1.5.1
+  * Added auto update for items
 
 * onewire:
 
@@ -349,8 +420,10 @@ Plugin Updates
 * resol:
 
   * Catch wrong message sizes
-  * fixed scheduler stop on plugin exit
-  * robustness measures when Ethernet is temporary not available
+  * Fixed scheduler stop on plugin exit
+  * Robustness measures when Ethernet is temporary not available
+  * Added socket shutdown on plugin stop
+  * Plugin performance: Do not register receive only attributes for update_item function
 
 * robonect:
 
@@ -364,6 +437,10 @@ Plugin Updates
   * caching full error list
   * added mode to webservices set for automower (helps only, if webservices plugin is used)
   * added check for mqtt mode
+
+* rpi1wire:
+
+  * Updated user docu, webif and Code cleanup
 
 * russound:
 
@@ -404,6 +481,7 @@ Plugin Updates
   * adapted behavior of play_snippet if stop() functionality is currently not supported by the respective speaker
   * upgrade to SoCo 0.22 framework
   * display number of online speakers on Webinterface
+  * pgrade SoCo base framework to Version 0.24.0; additional robustness improvements
 
 * speech:
 
@@ -432,9 +510,16 @@ Plugin Updates
   * better sun_tracking offset handling
   * correct webif colors and conditionlist if no conditionsets given
 
+* tasmota:
+
+  * Functional Update of Tasmota Plugin incl WebIF Rework
+
 * telegram:
 
   * add new attribut telegram_condition to suppress multiple messages upon update
+  * Add possibility to send telegram message zu just 1 chat-id
+  * Add chat-if to "telegram-info" to allow response depending on chat-id
+  * Updated user docu, webif and code cleanup
 
 * unifi:
 
@@ -444,6 +529,13 @@ Plugin Updates
 
   * outsource webif and fix webinterface problem with showing the whole dictionary when a rule contains a "<"
   * update webif to use datatables JS
+  * Update req. for python 3.7 and 3.9
+  * Minimize dict item renewal: lastvalue not written to dict anymore, fix bug in sun calculated values
+  * Remove lastvalue from dict on start as it is not used anymore
+  * Fix webIF overlay when clicking on entry
+  * Improve last value struct and handling
+  * xtensions for series - second try
+  * Sun calculation cron is now adjustable in plugin settings
 
 * viessmann:
 
@@ -468,12 +560,15 @@ Plugin Updates
 * wol:
 
   * now has a web interface with items and interactive wol
+  * Corrected metadata - changed type of wol_ip from ip4 to ipv4
 
 * xiaomi_vac:
 
   * use datatables js in webif
   * fix problem with newer miio module (>=0.5.8) that doesn't accept return_list argument for clean_details method
   * Bump version to 1.1.2
+  * ompatibility with newer python-miio modules (0.5.9+)
+  * Bump version to 1.2.0
 
 * xmpp:
 
