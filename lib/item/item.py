@@ -1578,6 +1578,7 @@ class Item():
 
     def autotimer(self, time=None, value=None, compat=ATTRIB_COMPAT_V12):
         if time is not None and value is not None:
+            time = self._cast_duration(time)
             self._autotimer = [(time, value), compat, None, None]
         else:
             self._autotimer = False
