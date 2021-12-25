@@ -344,6 +344,29 @@ class FilesController(RESTResource):
                                  'attachment', fn + '.py')
 
 
+    def save_functions_config(self, filename):
+        """
+        Save function library
+
+        :return: status dict
+        """
+        params = None
+        params = self.get_body(text=True)
+        if params is None:
+            self.logger.warning("FilesController.save_functions_config(): Bad, request")
+            raise cherrypy.HTTPError(status=411)
+        self.logger.debug("FilesController.save_functions_config(): '{}'".format(params))
+
+
+        filename = os.path.join(self.functions_dir, filename + '.py')
+        read_data = None
+        with open(filename, 'w', encoding='UTF-8') as f:
+            f.write(params)
+
+        result = {"result": "ok"}
+        return json.dumps(result)
+
+
     # ======================================================================
     #  /api/files/logics
     #
@@ -581,6 +604,8 @@ class FilesController(RESTResource):
             return self.save_items_config(filename)
         elif (id == 'scenes' and filename != ''):
             return self.save_scenes_config(filename)
+        elif (id == 'functions' and filename != ''):
+            return self.save_functions_config(filename)
         elif (id == 'logics' and filename != ''):
             return self.save_logics_config(filename)
         elif (id == 'restore' and filename != ''):

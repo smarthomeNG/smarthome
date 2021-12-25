@@ -396,7 +396,10 @@ class PluginsInfoController(RESTResource):
 
             plugin['stopped'] = False
             # Update(s) triggered by < strong > {{p.instance._itemlist | length}} < / strong > items
-            plugin['triggers'] = str(x._itemlist)
+            plugin['triggers'] = []
+            for it in x._itemlist:
+                plugin['triggers'].append(it._path)
+            #self.logger.warning("{} items={}, itemlist={}".format(x.get_shortname(), len(plugin['triggers']), plugin['triggers']))
 
             if isinstance(x, SmartPlugin):
                 plugin['pluginname'] = x.get_shortname()
