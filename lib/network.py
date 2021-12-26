@@ -646,6 +646,16 @@ class Tcp_client(object):
                 self.connect()
             return False
 
+        except TimeoutError:
+            self.logger.warning(f'Detected timeout on {self._host}, disconnecting, send failed.')
+            self._is_connected = False
+            if self._disconnected_callback:
+                self._disconnected_callback(self)
+            if self._autoreconnect:
+                self.logger.debug(f'Autoreconnect enabled for {self._host}')
+                self.connect()
+            return False
+
         except Exception as e:  # log errors we are not prepared to handle and raise exception for further debugging
             self.logger.warning(f'Unhandleded error on sending to {self._host}, cannot send data {message}. Error: {e}')
             raise
@@ -732,7 +742,12 @@ class Tcp_client(object):
                 events = waitobj.wait(1000)     # BMX
                 for fileno, read, write in events:  # BMX
                     if read:
-                        msg = self._socket.recv(4096)
+                        timeout = False
+                        try:
+                            msg = self._socket.recv(4096)
+                        except TimeoutError:
+                            msg = None
+                            timeout = True
                         # Check if incoming message is not empty
                         if msg:
                             # TODO: doing this breaks line separation if multiple lines 
@@ -777,8 +792,12 @@ class Tcp_client(object):
                         else:
                             if self.__running:
 
-                                # default state, peer closed connection
-                                self.logger.warning(f'Connection closed by peer {self._host}')
+                                if timeout:
+                                    # TimeoutError exception caught
+                                    self.logger.warning(f'Connection timed out on peer {self._host}, disconnecting.')
+                                else:
+                                    # default state, peer closed connection
+                                    self.logger.warning(f'Connection closed by peer {self._host}')
                                 self._is_connected = False
                                 waitobj.unwatch(self._socket)
                                 if self._disconnected_callback is not None:
@@ -803,10 +822,10 @@ class Tcp_client(object):
                 self._is_receiving = False
                 return
             else:
-                self._log_exception(ex, f'lib.network receive thread died with error: {ex}. Go tell...')
+                self._log_exception(ex, f'lib.network receive thread died with unexpected error: {ex}. Go tell...')
         self._is_receiving = False
         
-    def _log_exception( self, ex, msg):
+    def _log_exception(self, ex, msg):
         self.logger.error(msg + ' If stack trace is necessary, enable debug log')
 
         if self.logger.isEnabledFor(logging.DEBUG):
