@@ -12,6 +12,7 @@ Eine vollständige Übersicht der Änderungen ist den den :doc:`Release Notes </
   - **Logging**: Es gibt einen Handler, der beim Logging den Zugriff auf die memory Logs von SmartHomeNG erlaubt
   - **Userfunctions**: Es können Python Funktionen definiert werden, die in eval Statements und Logiken verwendet
     werden können
+  - **Szenen**: Die Szenen Definitionsdateien können neu geladen werden, ohne SmartHomeNG neu starten zu müssen
 
 Details zu den genannten Punkten sind in den Abschnitten :doc:`Konfiguration </konfiguration/konfiguration>`
 bzw. :doc:`Referenz </referenz/referenz>` zu finden.

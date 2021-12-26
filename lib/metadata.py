@@ -414,7 +414,6 @@ class Metadata():
         shng_version = l[0]+'.'+l[1]
         if len(l) > 2:
             shng_version += '.'+l[2]
-
         l = str(self.get_string('sh_minversion')).split('.')
         min_shngversion = l[0]
         if len(l) > 1:
@@ -432,10 +431,12 @@ class Metadata():
         mod_version = self.get_string('version')
 
         if min_shngversion != '':
+            r = self._compare_versions(min_shngversion, shng_version, '>', (min_shngversion > shng_version))
             if min_shngversion > shng_version:
                 logger.error("{0} '{1}': The version {3} of SmartHomeNG is too old for this {0}. It requires at least version v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, min_shngversion, shng_version))
                 return False
         if max_shngversion != '':
+            self._compare_versions(max_shngversion, shng_version, '<', (max_shngversion < shng_version))
             if max_shngversion < shng_version:
                 logger.error("{0} '{1}': The version {3} of SmartHomeNG is too new for this {0}. It requires a version up to v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, max_shngversion, shng_version))
                 return False
@@ -463,10 +464,12 @@ class Metadata():
         mod_version = self.get_string('version')
 
         if min_pyversion != '':
+            self._compare_versions(min_pyversion, py_version, '>', (min_pyversion > py_version))
             if min_pyversion > py_version:
                 logger.error("{0} '{1}': The Python version {3} is too old for this {0}. It requires at least version v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, min_pyversion, py_version))
                 return False
         if max_pyversion != '':
+            self._compare_versions(max_pyversion, py_version, '<', (max_pyversion < py_version))
             if max_pyversion < py_version:
                 logger.error("{0} '{1}': The Python version {3} is too new for this {0}. It requires a version up to v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, max_pyversion, py_version))
                 return False
@@ -1164,3 +1167,62 @@ class Metadata():
 
         return value
 
+
+    def _compare_versions(self, vers1, vers2, operator, res_old=None):
+        """
+        Compare two version numbers and return if the condition is met
+
+        :param vers1:
+        :param vers2:
+        :param operator:
+        :type vers1: str
+        :type vers2: str
+        :type operator: str
+
+        :return: true if condition is met
+        :rtype: bool
+        """
+        v1 = self._version_to_list(vers1)
+        v2 = self._version_to_list(vers2)
+
+        result = False
+        if v1 == v2 and operator in ['>=', '==', '<=']:
+            result = True
+        if v1 < v2 and operator in ['<', '<=']:
+            result = True
+        if v1 > v2 and operator in ['>', '>=']:
+            result = True
+        #logger.warning(f"_compare_versions: {self._addon_name:12} v1={v1}, v2={v2}, operator='{operator}', result={result}, res_old={res_old}")
+
+        logger.debug("_compare_versions: - - - vers1 = {}, vers2 = {}, v1 = {}, v2 = {}, operator = '{}', result = {}".format(vers1, vers2, v1, v2, operator, result))
+        return result
+
+
+    def _version_to_list(self, vers):
+        """
+        Split version number to list and get rid of non-numeric parts
+
+        :param vers:
+
+        :return: version as list
+        :rtype: list
+        """
+        # create list with [major,minor,revision,build]
+        vsplit = vers.split('.')
+        while len(vsplit) < 4:
+            vsplit.append('0')
+
+        import re
+
+        # get rid of non numeric parts
+        vlist = []
+        for v in vsplit:
+            v = re.findall('\d+', v )[0]
+            vi = 0
+            try:
+                vi = int(v)
+            except:
+                pass
+            vlist.append(vi)
+
+        return vlist

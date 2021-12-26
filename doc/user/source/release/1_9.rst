@@ -1,6 +1,6 @@
-==========================
-Release 1.x - tt. mmm 2021
-==========================
+===============================
+Release 1.9 - tt. Dezember 2021
+===============================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
@@ -78,13 +78,15 @@ Updates in the CORE
 * etc.logging.yaml.default: Changes to new logging handlers
 * move crontab in lib.triggertimes, extend syntax for crontabs
 
-* Items:
-
-  * ...
-
 * Logics:
 
-  * ...
+  * Logic **check_items.py**: Check items for damaged items (created in logics)
+    It is not possible with Python to intercept an assignment to a variable or an objects' attribute. The only
+    thing one can do is search all items for a mismatching item type.
+
+It is not possible with Python to intercept an assignment to a variable or an
+objects' attribute. The only thing one can do is search all items for a
+mismatching item type.
 
 * lib.backup:
 
@@ -108,6 +110,10 @@ Updates in the CORE
 * lib.log:
 
   * Improved handling of loglevel NOTICE
+
+* lib.metadata
+
+  * bugfix in version checking
 
 * lib.network:
 
