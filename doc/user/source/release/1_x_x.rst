@@ -90,9 +90,9 @@ Updates in the CORE
 
   * Added new struct files of ../etc directory to configuration backup
   * Added \*.pem to backup of certificate files
-  * Certificate backup now backs up *.pem files for certificates that are not named *.cer
+  * Certificate backup now backs up \*.pem files for certificates that are not named \*.cer
 
-lib.env.location:
+* lib.env.location:
 
   * Added lat, lon and elev settings from smarthome.yaml to items
 
