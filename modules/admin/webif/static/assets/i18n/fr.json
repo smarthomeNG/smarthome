@@ -502,6 +502,7 @@
 
   "CONFIGURATION": "Configuration",
   "RESTART FOR CHANGES": "Les changements deviennent seulement actifs après un redémarrage de SmartHomeNG",
+  "RELOAD FOR CHANGES": "Les modifications ne prennent effet qu'après rechargement du fichier ou redémarrage de SmartHomeNG",
   "RESTART LOGIC FOR CHANGES": "Les changements deviennent seulement actifs après un redémarrage de la logique",
 
   "LINEBREAK": "Saut de ligne"

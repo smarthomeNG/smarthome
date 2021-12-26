@@ -183,7 +183,7 @@ class FunctionsReloadController(RESTResource):
             return json.dumps(result)
         else:
             result = reload(id)
-            return json.dumps(False)
+            return json.dumps(result)
 
     update.expose_resource = True
     update.authentication_needed = True

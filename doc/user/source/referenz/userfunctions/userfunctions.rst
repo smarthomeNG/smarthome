@@ -38,6 +38,17 @@ Die Python Datei sieht folgendermaßen aus:
        return 'Die Antwort auf die Frage aller Fragen'
 
 
+Verwendung der Admin GUI
+------------------------
+
+In der Admin GUI steht ein Editor zum erstellen und bearbeiten von Userfunctions zur Verfügung. Dieser findet sich
+unter **Dienste/User-Funktionen**.
+
+.. image:: /referenz/assets/uf_editor1.jpg
+   :class: screenshot
+
+
+
 Initialisierung der Userfunctions
 =================================
 
@@ -229,11 +240,12 @@ Die Userfunction dazu kann z.B. folgendermaßen aussehen:
 Reload von Userfunctions
 ========================
 
-Benutzerdefinierte Funktionen können während der Laufzeit von SmartHomeNG verändert und neu geladen werden.
-Bis die Admin GUI dafür eine dedizierte Funktionalität zur Verfügung stellt, kann man über den **eval Syntax Checker**
-die Funktionen neu laden. Um die Datei des obigen Beispiels neu zu laden, muss man **uf.reload('anhalter')** eingeben
-und **Prüfen** klicken.
+Benutzerdefinierte Funktionen können während der Laufzeit von SmartHomeNG verändert und neu geladen werden. Dabei
+können einzelne Module mit Userfunctions neu geladen werden oder alle Module mit Usewrfunctions auf einmal.
+
+In der Admin GUI erfolgt das auf der Seite mit dem Editor für Userfunctions. Alternativ können die Module über
+den **eval Syntax Checker** neu geladen werden. Um die Datei des obigen Beispiels neu zu laden, muss
+man **uf.reload('anhalter')** eingeben und **Prüfen** klicken.
 
 Man kann auch alle benutzerdefinierte Dateien neu laden, indem man **uf.reload_all()** eingibt und **Prüfen** klickt.
-
 

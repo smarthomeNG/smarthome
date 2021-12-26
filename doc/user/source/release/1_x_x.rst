@@ -8,10 +8,10 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 23. Dezember 2021
-       (Bugfix for autotimer method of an item)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 21. Dezember 2021
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 25. Dezember 2021
        (...)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 26. Dezember 2021
+       (onewire plugin: enhanced tree function in owbase)
 
 
 Überblick
@@ -90,9 +90,9 @@ Updates in the CORE
 
   * Added new struct files of ../etc directory to configuration backup
   * Added \*.pem to backup of certificate files
-  * Certificate backup now backs up *.pem files for certificates that are not named *.cer
+  * Certificate backup now backs up \*.pem files for certificates that are not named \*.cer
 
-lib.env.location:
+* lib.env.location:
 
   * Added lat, lon and elev settings from smarthome.yaml to items
 
@@ -119,6 +119,7 @@ lib.env.location:
   * Fix missing bytes/str conversion
   * Better and faster shutdown handling
   * Fix callback syntax
+  * Exception handling for callbacks
 
 * lib.scene:
 
@@ -153,6 +154,9 @@ lib.env.location:
     * Bugfix for list loggers (Issue #411) "dictionary changed size during iteration"
     * GUI: Fix for handling/editing custom holidays
     * Fix for compatibility to newer PyJWT versions
+    * Added support for user functions
+    * Added button to reload scenes
+    * Added shngadmin version to system property page
 
   * http:
 
@@ -192,10 +196,11 @@ For details of the changes of the individual plugins, please refer to the docume
   smarthome sensors based on HTTP GET Request
 * homeconnect: usage of the BSH/Siemens HomeConnect interface with oauth2
 * husky: plugin to control Husqvarna automower
+* modbus_tcp: New plugin to read registers from modbusTcp-device
 * philips_tv: Added initial support for Philips TV with OAuth2 authentication
 * sma_mb: this plug-in reads the current values of an SMA inverter via SMA Speedwire fieldbus/Modbus
 * text_display: New text display Plugin
-
+* timmy: Plugin für Ein-/Ausschaltverzögerung und Blinken
 
 
 Plugin Updates
@@ -371,6 +376,7 @@ Plugin Updates
   * Added return values for plugin commands; added function list available rooms to plugin webif. Improved map cleaning control
   * Added 'robot not online' warning
   * Added command to dismiss backend alerts (dustbin full etc.) via item
+  * Modifications by ivan73 (without desciption)
 
 * network:
 
@@ -398,10 +404,13 @@ Plugin Updates
   * Added manual update option, reduced default cycle to 1800 sec
   * Bumped version to 1.5.1
   * Added auto update for items
+  * Modifications by ivan73 (without desciption) -> 1.5.2
+
 
 * onewire:
 
   * improve error handling
+  * enhanced tree function in owbase
 
 * openweathermap:
 
@@ -424,6 +433,7 @@ Plugin Updates
   * Robustness measures when Ethernet is temporary not available
   * Added socket shutdown on plugin stop
   * Plugin performance: Do not register receive only attributes for update_item function
+  * Modifications by ivan73 (without desciption)
 
 * robonect:
 
@@ -449,6 +459,8 @@ Plugin Updates
 * shelly:
 
   * add support for Shelly H&T
+  * Some updates
+  * bumped version to 1.2.0
 
 * simulation:
 
@@ -536,6 +548,7 @@ Plugin Updates
   * Improve last value struct and handling
   * xtensions for series - second try
   * Sun calculation cron is now adjustable in plugin settings
+  * Modifications by ivan73 (without desciption)
 
 * viessmann:
 
