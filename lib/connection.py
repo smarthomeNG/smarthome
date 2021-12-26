@@ -21,13 +21,14 @@
 
 """
 
-This library is softly on it's way out. In the future network classes for SmartHomeNG
-will be implemented trough the network library lib.network, which is still in development.
+This library is on its way out. Network classes for SmartHomeNG are provided by
+lib.network. Creating lib.connection Server and Client class object will
+create an appropriate WARNING log entry.
 
-The following modules use an import lib.connection as of April 2018:
+The following modules use an import lib.connection as of December 2021:
 smarthome.py for an object of Connections()
 Plugins:
-russound, network, visu_websocket, asterisk, knx, squeezebox, nuki, mpd, raumfeld, cli, speech, xbmc, lirc
+visu_websocket
 
 """
 import logging
