@@ -47,6 +47,7 @@ import struct
 import subprocess
 import threading
 import time
+from contextlib import suppress
 from . import aioudp
 
 
@@ -629,6 +630,11 @@ class Tcp_client(object):
             except Exception:
                 self.logger.warning(f'Error encoding message for client {self.name}')
                 return False
+
+        # automatically (re)connect on send attempt
+        if not self._is_connected:
+            self.connect()
+
         try:
             if self._is_connected:
                 bytes_sent = self._socket.send(message)
@@ -636,18 +642,13 @@ class Tcp_client(object):
                     self.logger.warning(f'Error sending message {message} to host {self._host}: message truncated, sent {bytes_sent} of {len(message)} bytes')
             else:
                 return False
-        except BrokenPipeError:
-            self.logger.warning(f'Detected disconnect from {self._host}, send failed.')
-            self._is_connected = False
-            if self._disconnected_callback:
-                self._disconnected_callback(self)
-            if self._autoreconnect:
-                self.logger.debug(f'Autoreconnect enabled for {self._host}')
-                self.connect()
-            return False
 
-        except TimeoutError:
-            self.logger.warning(f'Detected timeout on {self._host}, disconnecting, send failed.')
+        except (BrokenPipeError, TimeoutError) as e:
+            if e.errno == 60:
+                # timeout
+                self.logger.warning(f'Detected timeout on {self._host}, disconnecting, send failed.')
+            else:
+                self.logger.warning(f'Detected disconnect from {self._host}, send failed.')
             self._is_connected = False
             if self._disconnected_callback:
                 self._disconnected_callback(self)
@@ -826,7 +827,7 @@ class Tcp_client(object):
         self._is_receiving = False
         
     def _log_exception(self, ex, msg):
-        self.logger.error(msg + ' If stack trace is necessary, enable debug log')
+        self.logger.error(msg + ' -- If stack trace is necessary, enable/check debug log')
 
         if self.logger.isEnabledFor(logging.DEBUG):
 
@@ -923,10 +924,8 @@ class ConnectionClient(object):
         """
         Ensure drain() is called.
         """
-        try:
+        with suppress(ConnectionResetError):
             await self.writer.drain()
-        except ConnectionResetError:
-            pass
 
     def send(self, message):
         """
@@ -1241,11 +1240,9 @@ class Tcp_server(object):
         self.__loop.call_soon_threadsafe(self.__loop.stop)
         while self.__loop.is_running():
             pass
-        try:
+        with suppress(AttributeError):  # thread can disappear between first and second condition test
             if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
-        except AttributeError:  # thread can disappear between first and second condition test
-            pass
         self.__loop.close()
 
 
@@ -1377,11 +1374,9 @@ class Udp_server(object):
             self.__loop.stop()
         time.sleep(0.5)
 
-        try:
+        with suppress(AttributeError):  # thread can disappear between first and second condition test
             if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
-        except AttributeError:  # thread can disappear between first and second condition test
-            pass
         self.__loop.close()
 
     async def __start_server(self):
