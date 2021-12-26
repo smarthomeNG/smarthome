@@ -119,7 +119,7 @@ def reload(userlib):
             exec( f"importlib.reload({userlib})")
         except Exception as e:
             if str(e) == f"name '{userlib}' is not defined":
-                _logger.warning(translate("Error reloading userfunctions '{module}': Module is not loaded, trying to newly import userfunctions '{module}' instead", {'module': userlib}))
+                _logger.warning(translate("Error reloading userfunctions Modul '{module}': Module is not loaded, trying to newly import userfunctions '{module}' instead", {'module': userlib}))
                 if import_user_module(userlib):
                     return True
                 else:
