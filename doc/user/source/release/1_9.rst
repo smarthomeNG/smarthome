@@ -8,7 +8,7 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 25. Dezember 2021
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 26. Dezember 2021
        (...)
      - Berücksichtigt sind Commits im plugins Repository bis incl. 26. Dezember 2021
        (...)
@@ -33,7 +33,7 @@ Python Versionen nicht mehr zu Buxfixen führen.
 
 
 Minimum Python Version
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 Die absolute Minimum Python Version in der SmartHomeNG startet wurde auf v3.6 angehoben, da Python 3.5 im
 September 2020 End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen
