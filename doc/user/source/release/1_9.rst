@@ -592,6 +592,7 @@ in the next release. User of these plugins should switch to corresponding succee
 
 * System Plugins
 
+  * backend - use the administration interface instead
   * sqlite_visu2_8 - switch to the **database** plugin
 
 * Web Plugins
