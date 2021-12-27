@@ -132,8 +132,12 @@ def reload(userlib):
             _logger.notice(translate("Reloaded userfunctions '{module}'", {'module': userlib}))
             return True
     else:
-        _logger.error(translate("Reload: Userfunctions '{module}' do not exist", {'module': userlib}))
-        return False
+        if import_user_module(userlib):
+            #_logger.notice(translate("Reload: Loaded new userfunctions '{module}'", {'module': userlib}))
+            return True
+        else:
+            _logger.error(translate("Reload: Userfunctions '{module}' do not exist", {'module': userlib}))
+            return False
 
 
 def reload_all():
