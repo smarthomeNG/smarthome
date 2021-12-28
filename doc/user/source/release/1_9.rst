@@ -1,17 +1,17 @@
 ===============================
-Release 1.9 - tt. Dezember 2021
+Release 1.9 - 28. Dezember 2021
 ===============================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
-.. note::
+.. comment note::
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 26. Dezember 2021
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 27. Dezember 2021
        (...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 26. Dezember 2021
-       (...)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 28. Dezember 2021
+       (openweathermap: Added name of location to locals-struct)
 
 
 Überblick
@@ -263,6 +263,7 @@ Plugin Updates
   * Improved robustness, limit reconnects improved plugin robustness, if db is not available (e.g. temporarily missing ethernet)
   * Limit number of reconnects
   * Fixed bug in item_detail page
+  * added Datatable to overview and details
 
 * dlms:
 
@@ -336,6 +337,7 @@ Plugin Updates
   * added DPT 251.600 RGBW
   * fix webinterface fix mixup
   * add password for knxproj to webif, introduce knxd namespace for constants, update doku
+  * removed local redundant datatables
 
 * kodi:
 
@@ -409,6 +411,11 @@ Plugin Updates
 * openweathermap:
 
   * corrected user_doc (replaced all references to darksky plugin)
+  * multiple changes, bumped version to 1.8.2
+  * Fixed bug in metadaa (plugin.yaml)
+  * Removed extra line with API-key which displayed only asterixes from web interface
+  * Added name of location to locals-struct
+  * Bumped version to 1.8.3
 
 * raumfeld
 
