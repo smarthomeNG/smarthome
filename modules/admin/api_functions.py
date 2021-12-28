@@ -148,9 +148,10 @@ class FunctionsController(RESTResource):
     read.authentication_needed = True
 
 
-class ScenesReloadController(RESTResource):
+class FunctionsReloadController(RESTResource):
 
     def __init__(self, module):
+
         self._sh = module._sh
         self.module = module
         self.base_dir = self._sh.get_basedir()
@@ -173,11 +174,16 @@ class ScenesReloadController(RESTResource):
         from lib.scene import Scenes
         self.scenes = Scenes.get_instance()
 
+        from lib.userfunctions import reload
+        from lib.userfunctions import reload_all
+
         if id == 'all':
-            result = self.scenes.reload_scenes()
+            #result = self.scenes.reload_scenes()
+            result = reload_all()
             return json.dumps(result)
         else:
-            return json.dumps(False)
+            result = reload(id)
+            return json.dumps(result)
 
     update.expose_resource = True
     update.authentication_needed = True

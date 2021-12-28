@@ -1,0 +1,96 @@
+{
+  "logs": {
+    "knx_busmonitor": [
+      "knx_busmonitor.log",
+      "knx_busmonitor.log.2018-09-01",
+      "knx_busmonitor.log.2018-09-02",
+      "knx_busmonitor.log.2018-09-03",
+      "knx_busmonitor.log.2018-09-04",
+      "knx_busmonitor.log.2018-09-05",
+      "knx_busmonitor.log.2018-09-06",
+      "knx_busmonitor.log.2018-09-07"
+    ],
+    "q21-items": [
+      "q21-items.log",
+      "q21-items.log.2018-11-17",
+      "q21-items.log.2018-11-18",
+      "q21-items.log.2018-11-19",
+      "q21-items.log.2018-11-20",
+      "q21-items.log.2018-11-21",
+      "q21-items.log.2018-11-22",
+      "q21-items.log.2018-11-23"
+    ],
+    "q21-phones": [
+      "q21-phones.log",
+      "q21-phones.log.2018-11-17",
+      "q21-phones.log.2018-11-18",
+      "q21-phones.log.2018-11-19",
+      "q21-phones.log.2018-11-20",
+      "q21-phones.log.2018-11-21",
+      "q21-phones.log.2018-11-22",
+      "q21-phones.log.2018-11-23"
+    ],
+    "q21-wetter": [
+      "q21-wetter.log",
+      "q21-wetter.log.2018-11-17",
+      "q21-wetter.log.2018-11-18",
+      "q21-wetter.log.2018-11-19",
+      "q21-wetter.log.2018-11-20",
+      "q21-wetter.log.2018-11-21",
+      "q21-wetter.log.2018-11-22",
+      "q21-wetter.log.2018-11-23"
+    ],
+    "q21": [
+      "q21.log",
+      "q21.log.2018-11-17",
+      "q21.log.2018-11-18",
+      "q21.log.2018-11-19",
+      "q21.log.2018-11-20",
+      "q21.log.2018-11-21",
+      "q21.log.2018-11-22",
+      "q21.log.2018-11-23"
+    ],
+    "smarthome-additional": [
+      "smarthome-additional.log"
+    ],
+    "smarthome-details-1": [
+      "smarthome-details-1.log"
+    ],
+    "smarthome-details": [
+      "smarthome-details.log",
+      "smarthome-details.log.2018-11-17",
+      "smarthome-details.log.2018-11-18",
+      "smarthome-details.log.2018-11-19",
+      "smarthome-details.log.2018-11-20",
+      "smarthome-details.log.2018-11-21",
+      "smarthome-details.log.2018-11-22",
+      "smarthome-details.log.2018-11-23"
+    ],
+    "smarthome-dev": [
+      "smarthome-dev.log"
+    ],
+    "smarthome-develop": [
+      "smarthome-develop.log",
+      "smarthome-develop.log.2018-11-17",
+      "smarthome-develop.log.2018-11-18",
+      "smarthome-develop.log.2018-11-19",
+      "smarthome-develop.log.2018-11-20",
+      "smarthome-develop.log.2018-11-21",
+      "smarthome-develop.log.2018-11-22",
+      "smarthome-develop.log.2018-11-23"
+    ],
+    "smarthome-warnings": [
+      "smarthome-warnings.log",
+      "smarthome-warnings.log.2018-11-17",
+      "smarthome-warnings.log.2018-11-18",
+      "smarthome-warnings.log.2018-11-19",
+      "smarthome-warnings.log.2018-11-20",
+      "smarthome-warnings.log.2018-11-21",
+      "smarthome-warnings.log.2018-11-22",
+      "smarthome-warnings.log.2018-11-23"
+    ]
+  },
+  "default": "smarthome-warnings"
+}
+
+

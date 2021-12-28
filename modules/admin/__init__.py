@@ -373,6 +373,7 @@ class WebApi(RESTResource):
         self.items = ItemsController(self.module)
         self.items.list = ItemsListController(self.module)
         self.functions = FunctionsController(self.module)
+        self.functions.reload = FunctionsReloadController(self.module)
         self.logics = LogicsController(self.module)
         self.loggers = LoggersController(self.module)
         self.logs = LogsController(self.module)

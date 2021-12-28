@@ -35,6 +35,8 @@ These classes, functions and methods are mainly meant to be used by plugin devel
 """
 
 from lib.utils import Utils
+import sys
+import traceback
 import re
 import asyncio
 import logging
@@ -491,6 +493,16 @@ class Tcp_client(object):
     """
     Structured class to handle locally initiated TCP connections with two-way communication.
 
+    The callbacks need to be defined as follows:
+
+    def connected_callback(Tcp_client_instance)
+    def receiving_callback(Tcp_client_instance)
+    def disconnected_callback(Tcp_client_instance)
+    def data_received_callback(Tcp_client_instance, message)
+
+    (Class members need the additional first `self` parameter)
+
+
     :param host: Remote host name or ip address (v4 or v6)
     :param port: Remote host port to connect to
     :param name: Name of this connection (mainly for logging purposes). Try to keep the name short.
@@ -712,57 +724,108 @@ class Tcp_client(object):
         __buffer = b''
 
         self._is_receiving = True
-        self._receiving_callback and self._receiving_callback(self)
-        while self._is_connected and self.__running:
-            events = waitobj.wait(1000)     # BMX
-            for fileno, read, write in events:  # BMX
-                if read:
-                    msg = self._socket.recv(4096)
-                    # Check if incoming message is not empty
-                    if msg:
-                        # TODO: doing this breaks line separation if multiple lines 
-                        #       are read at a time, the next loop can't split it
-                        #       because line endings are missing
-                        #       find out reason for this operation...
+        if self._receiving_callback:
+            self._receiving_callback(self)
+        # try to find possible "hidden" errors
+        try:
+            while self._is_connected and self.__running:
+                events = waitobj.wait(1000)     # BMX
+                for fileno, read, write in events:  # BMX
+                    if read:
+                        msg = self._socket.recv(4096)
+                        # Check if incoming message is not empty
+                        if msg:
+                            # TODO: doing this breaks line separation if multiple lines 
+                            #       are read at a time, the next loop can't split it
+                            #       because line endings are missing
+                            #       find out reason for this operation...
 
-                        # # If we transfer in text mode decode message to string
-                        # # if not self._binary:
-                        # #     msg = str.rstrip(str(msg, 'utf-8')).encode('utf-8')
+                            # # If we transfer in text mode decode message to string
+                            # # if not self._binary:
+                            # #     msg = str.rstrip(str(msg, 'utf-8')).encode('utf-8')
 
-                        # If we work in line mode (with a terminator) slice buffer into single chunks based on terminator
-                        if self.terminator:
-                            __buffer += msg
-                            while True:
-                                # terminator = int means fixed size chunks
-                                if isinstance(self.terminator, int):
-                                    i = self.terminator
-                                    if i > len(__buffer):
-                                        break
-                                # terminator is str or bytes means search for it
-                                else:
-                                    i = __buffer.find(self.terminator)
-                                    if i == -1:
-                                        break
-                                    i += len(self.terminator)
-                                line = __buffer[:i]
-                                __buffer = __buffer[i:]
+                            # If we work in line mode (with a terminator) slice buffer into single chunks based on terminator
+                            if self.terminator:
+                                __buffer += msg
+                                while True:
+                                    # terminator = int means fixed size chunks
+                                    if isinstance(self.terminator, int):
+                                        i = self.terminator
+                                        if i > len(__buffer):
+                                            break
+                                    # terminator is str or bytes means search for it
+                                    else:
+                                        i = __buffer.find(self.terminator)
+                                        if i == -1:
+                                            break
+                                        i += len(self.terminator)
+                                    line = __buffer[:i]
+                                    __buffer = __buffer[i:]
+                                    if self._data_received_callback is not None:
+                                        try:
+                                            self._data_received_callback(self, line if self._binary else str(line, 'utf-8').strip())
+                                        except Exception as iex:
+                                            self._log_exception(iex, f'lib.network receive in terminator mode calling data_received_callback {self._data_received_callback} failed: {iex}')
+                            # If not in terminator mode just forward what we received
+                            else:
                                 if self._data_received_callback is not None:
-                                    self._data_received_callback(self, line if self._binary else str(line, 'utf-8').strip())
-                        # If not in terminator mode just forward what we received
+                                    try:
+                                        self._data_received_callback(self, msg)
+                                    except Exception as iex:
+                                        self._log_exception(iex, f'lib.network calling data_received_callback {self._data_received_callback} failed: {iex}')
+                        # If empty peer has closed the connection
                         else:
-                            if self._data_received_callback is not None:
-                                self._data_received_callback(self, msg)
-                    # If empty peer has closed the connection
-                    else:
-                        # Peer connection closed
-                        self.logger.warning(f'Connection closed by peer {self._host}')
-                        self._is_connected = False
-                        waitobj.unwatch(self._socket)
-                        self._disconnected_callback and self._disconnected_callback(self)
-                        if self._autoreconnect:
-                            self.logger.debug(f'Autoreconnect enabled for {self._host}')
-                            self.connect()
+                            if self.__running:
+
+                                # default state, peer closed connection
+                                self.logger.warning(f'Connection closed by peer {self._host}')
+                                self._is_connected = False
+                                waitobj.unwatch(self._socket)
+                                if self._disconnected_callback is not None:
+                                    try:
+                                        self._disconnected_callback(self)
+                                    except Exception as iex:
+                                        self._log_exception(iex, f'lib.network calling disconnected_callback {self._disconnected_callback} failed: {iex}')
+                                if self._autoreconnect:
+                                    self.logger.debug(f'Autoreconnect enabled for {self._host}')
+                                    self.connect()
+                                if self._is_connected:
+                                    self.logger.debug('set a read watch on socket again')
+                                    waitobj.watch(self._socket, read=True)
+                            else:
+                                # socket shut down by self.close, no error
+                                self.logger.debug('Connection shut down by call to close method')
+                                self._is_receiving = False
+                                return
+        except Exception as ex:
+            if not self.__running:
+                self.logger.debug('lib.network receive thread shutting down')
+                self._is_receiving = False
+                return
+            else:
+                self._log_exception(ex, f'lib.network receive thread died with error: {ex}. Go tell...')
         self._is_receiving = False
+        
+    def _log_exception( self, ex, msg):
+        self.logger.error(msg + ' If stack trace is necessary, enable debug log')
+
+        if self.logger.isEnabledFor(logging.DEBUG):
+
+            # Get current system exception
+            ex_type, ex_value, ex_traceback = sys.exc_info()
+
+            # Extract unformatter stack traces as tuples
+            trace_back = traceback.extract_tb(ex_traceback)
+
+            # Format stacktrace
+            stack_trace = list()
+
+            for trace in trace_back:
+                stack_trace.append("File : %s , Line : %d, Func.Name : %s, Message : %s" % (trace[0], trace[1], trace[2], trace[3]))
+
+            self.logger.debug("Exception type : %s " % ex_type.__name__)
+            self.logger.debug("Exception message : %s" % ex_value)
+            self.logger.debug("Stack trace : %s" % stack_trace)
 
     def _sleep(self, time_lapse):
         """
@@ -784,6 +847,7 @@ class Tcp_client(object):
         """
         self.logger.info(f'Closing connection to {self._host} on TCP port {self._port}')
         self.__running = False
+        self._socket.shutdown(socket.SHUT_RD)
         if self.__connect_thread is not None and self.__connect_thread.is_alive():
             self.__connect_thread.join()
         if self.__receive_thread is not None and self.__receive_thread.is_alive():

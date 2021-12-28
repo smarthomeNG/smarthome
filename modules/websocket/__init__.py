@@ -46,7 +46,7 @@ from lib.utils import Utils
 
 
 class Websocket(Module):
-    version = '1.0.1a'
+    version = '1.0.3'
     longname = 'Websocket module for SmartHomeNG'
     port = 0
 
@@ -919,7 +919,7 @@ class Websocket(Module):
                     self.logger.info("visu >MONIT: '{}'   -   to {}".format(msg, self.client_address(websocket)))
                     await websocket.send(msg)
                 except Exception as e:
-                    if not str(e).startswith(('code = 1005', 'code = 1006')):
+                    if not str(e).startswith(('code = 1001', 'code = 1005', 'code = 1006')):
                         self.logger.exception("update_item - Error in 'await websocket.send(data)': {}".format(e))
                     else:
                         self.logger.info("update_item - Error in 'await websocket.send(data)': {}".format(e))

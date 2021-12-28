@@ -72,9 +72,12 @@ import plugins.__init__ as plugin_vers
 # Update auf 1.8.2a wg. Kennzeichnung des Stands als "nach dem v1.8.2 Release"
 # Update auf 1.8.2b wg. Erweiterung des Item Loggings"
 # Update auf 1.8.2c wg. Wegen Anpassungen an mem-logging / lib.log
-# Update auf 1.8.2d Unterstützung für User-Functions
+# Update auf 1.8.2d wg. Unterstützung für User-Functions
 
-shNG_version = '1.8.2d'
+# Update auf 1.9.0  wg. Release
+# Update auf 1.9a   wg. Kennzeichnung des Stands als "nach dem v1.9.0 Release"
+
+shNG_version = '1.9a'
 shNG_branch = 'develop'
 
 # ---------------------------------------------------------------------------------

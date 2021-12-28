@@ -1,4 +1,5 @@
 # ignore everything
 *
-# except .gitignore
+# except .gitignore and template file
 !.gitignore
+!uf.tpl
