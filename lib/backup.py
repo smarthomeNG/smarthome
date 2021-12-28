@@ -24,6 +24,7 @@ This library creates a zip file with the configuration of SmartHomeNG.
 """
 
 import copy
+import glob
 import logging
 import zipfile
 import shutil
@@ -106,6 +107,7 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     items_dir = os.path.join(conf_base_dir, 'items')
     logic_dir = os.path.join(conf_base_dir, 'logics')
     scenes_dir = os.path.join(conf_base_dir, 'scenes')
+    uf_dir = os.path.join(conf_base_dir, 'functions')
 
 
     # create new zip file
@@ -123,10 +125,17 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
     backup_file(backupzip, source_dir, arc_dir, 'module.yaml')
     backup_file(backupzip, source_dir, arc_dir, 'plugin.yaml')
     backup_file(backupzip, source_dir, arc_dir, 'smarthome.yaml')
+
     backup_file(backupzip, source_dir, arc_dir, 'struct.yaml')
+    struct_files = glob.glob(os.path.join( etc_dir, 'struct_*.yaml'))
+    for pn in struct_files:
+        fn = os.path.split(pn)[1]
+        backup_file(backupzip, source_dir, arc_dir, fn)
 
     # backup certificate files from /etc
     backup_directory(backupzip, etc_dir, '.cer')
+    backup_directory(backupzip, etc_dir, '.pem')
+
     backup_directory(backupzip, etc_dir, '.key')
 
     # backup files from /items
@@ -139,12 +148,16 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
 
     # backup files from /scenes
     #logger.warning("- scenes_dir = {}".format(scenes_dir))
-    backup_directory(backupzip, scenes_dir)
+    backup_directory(backupzip, scenes_dir, '.yaml')
+    backup_directory(backupzip, scenes_dir, '.conf')
+
+    # backup files from /functions
+    #logger.warning("- uf_dir = {}".format(uf_dir))
+    backup_directory(backupzip, uf_dir, '.*')
 
     zipped_files = backupzip.namelist()
     logger.info("Zipped files: {}".format(zipped_files))
     backupzip.close()
-
 
     #logger.warning("- backup_dir = {}".format(backup_dir))
 
@@ -211,7 +224,7 @@ def backup_directory(backupzip, source_dir, extenstion='.yaml'):
     arc_dir = dir + os.path.sep
     files = []
     for filename in os.listdir(source_dir):
-        if filename.endswith(extenstion):
+        if filename.endswith(extenstion) or extenstion == '.*':
             backup_file(backupzip, source_dir, arc_dir, filename)
 
     return
@@ -240,6 +253,7 @@ def restore_backup(conf_base_dir, base_dir):
     items_dir = os.path.join(conf_base_dir, 'items')
     logic_dir = os.path.join(conf_base_dir, 'logics')
     scenes_dir = os.path.join(conf_base_dir, 'scenes')
+    uf_dir = os.path.join(conf_base_dir, 'functions')
 
     archive_file = ''
     for filename in os.listdir(restore_dir):
@@ -277,6 +291,9 @@ def restore_backup(conf_base_dir, base_dir):
 
     # backup files from /scenes
     restore_directory(restorezip, 'scenes', scenes_dir, overwrite)
+
+    # backup files from /scenes
+    restore_directory(restorezip, 'functions', uf_dir, overwrite)
 
     # mark zip-file as restored
     os.rename(restorezip_filename, restorezip_filename + '.done')

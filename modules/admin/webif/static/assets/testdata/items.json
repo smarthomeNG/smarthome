@@ -1,7 +1,33 @@
 [
   179,
   [
-     {
+    {
+      "label": "test",
+      "nodename": "test",
+      "name": "test",
+      "tags": [
+        2
+      ],
+      "children": [
+        {
+          "label": "test.string",
+          "nodename": "string",
+          "name": "beschattung.config",
+          "tags": [
+            3
+          ]
+        },
+        {
+          "label": "test.number",
+          "nodename": "number",
+          "name": "Test-Nummer",
+          "tags": [
+            2
+          ]
+        }
+      ]
+    },
+    {
       "label": "beoremote",
       "nodename": "beoremote",
       "name": "beoremote",

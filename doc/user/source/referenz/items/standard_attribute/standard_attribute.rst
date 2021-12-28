@@ -10,6 +10,10 @@
 .. index:: value
 .. index:: Standard-Attribute; log_change
 .. index:: log_change
+.. index:: Standard-Attribute; log_level
+.. index:: log_level
+.. index:: Standard-Attribute; log_text
+.. index:: log_text
 .. index:: Standard-Attribute; name
 .. index:: name
 .. index:: Standard-Attribute; remark
@@ -20,8 +24,8 @@
 
 .. role:: bluesup
 
-Standard Attribute
-==================
+Standard Attribute :bluesup:`Update`
+====================================
 
 
 In SmartHomeNG werden eine Reihe von Standard Attributen unterstützt. Diese sind in der folgenden
@@ -34,19 +38,19 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 | **Attribut**    | **Beschreibung**                                                                       |
 +=================+========================================================================================+
 | autotimer       | setzt den Wert des Items nach einer Zeitspanne auf einen bestimmten Wert.              |
-|                 | **Ab SmartHomeNG v1.3** werden die Konfigurationsmöglichkeiten erweitert               |
+|                 | Ab SmartHomeNG v1.3 wurden die Konfigurationsmöglichkeiten erweitert                   |
 |                 | (siehe :doc:`autotimer <./autotimer>`).                                                |
 +-----------------+----------------------------------------------------------------------------------------+
-| cache           | Wenn 'Yes', dann wird der Wert des Items zwischengespeichert und beim                  |
-|                 | erneuten Start von SmartHomeNG wird der alte Wert aus dem Zwischenspeicher             |
-|                 | geladen (vergleichbar mit dem Permanentspeicher vom HS)                                |
+| cache           | Wenn das Attribut auf **True** (oder 'Yes') gesetzt wird, dann wird der Wert des Items |
+|                 | zwischengespeichert und beim erneuten Start von SmartHomeNG wird der alte Wert aus dem |
+|                 | Zwischenspeicher geladen (vergleichbar mit dem Permanentspeicher vom HS)               |
 +-----------------+----------------------------------------------------------------------------------------+
 | crontab         | Die Evaluierung des Items findet zu angegebenen Zeitpunkten statt (siehe               |
 |                 | Beschreibung unten)                                                                    |
 +-----------------+----------------------------------------------------------------------------------------+
 | cycle           | Definiert ein regelmäßiges Aufrufen des Items (und damit der verknüpften               |
-|                 | Logik oder Eval-Funktion). **Ab SmartHomeNG v1.3** werden die                          |
-|                 | Konfigurationsmöglichkeiten erweitert (siehe Beschreibung unten).                      |
+|                 | Logik oder Eval-Funktion). Ab SmartHomeNG v1.3 wurden die                              |
+|                 | Konfigurationsmöglichkeiten erweitert  (siehe :doc:`cycle <./cycle>`).                 |
 +-----------------+----------------------------------------------------------------------------------------+
 | enforce_updates | Wenn das Attribut auf **True** gesetzt wird, führt jede Wertzuweisung ans Item         |
 |                 | dazu, das abhängige Logiken und item Evaluationen getriggert werden, auch              |
@@ -70,21 +74,41 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
 |                 | vom Typ **dict** erfolgen soll, muss unbedingt darauf geachtet werden, dass            |
 |                 | der angegebene Wert in Anführungszeichen gesetzt wird, damit yaml nicht den            |
 |                 | Wert nicht als Datenstruktur interpretiert.                                            |
-|                 | (Also folgendermaßen: **initial_value**: "{'k1': 'v1', 'k2': 'v2'}" )                  |
+|                 | (Also folgendermaßen: ``initial_value: "{'k1': 'v1', 'k2': 'v2'}"`` )                  |
 +-----------------+----------------------------------------------------------------------------------------+
-| log_change      | Ermöglicht das Loggen jeder Veränderung des Item-Wertes. **log_change** muss           |
-|                 | dazu den Namen des zu verwendeten Loggers enthalten. In **logging.yaml**               |
-|                 | muss der Logger als **items.<Name>** konfiguriert sein. Wertänderungen des             |
-|                 | Items werden dann mit dem Level INFO geloggt. **Ab SmartHomeNG v1.5**                  |
+| log_change      | Ermöglicht das Loggen jeder Veränderung des Item-Wertes. **log_change** muss dazu den  |
+|                 | Namen des zu verwendeten Loggers enthalten. In **logging.yaml** muss der Logger als    |
+|                 | **items.<Name>** konfiguriert sein. Wertänderungen des Items werden dann mit dem Level |
+|                 | **INFO** geloggt. (siehe :doc:`log_change <./log_change>`) **Ab SmartHomeNG v1.5**     |
++-----------------+----------------------------------------------------------------------------------------+
+| log_level       | Ermöglicht es einen anderen Loglevel für log_change festzulegen. Der angegebene        |
+|                 | Log_level kann jeder in SmartHomeNG unterstützte Python Loglevel sein. Die Angabe kann |
+|                 | durch den Namen oder den Integer Wert des Loglevels erfolgen. **Ab SmartHomeNG v1.9**  |
++-----------------+----------------------------------------------------------------------------------------+
+| log_text        | Ermöglicht es einen eigenen Text für den Logeintrag festzulegen. **log_text** kann     |
+|                 | dabei eine Reihe von Variablen und eval-Ausdrücken enthalten. **Ab SmartHomeNG v1.9**  |
+|                 | Unterstützt werden folgende Variablen: value, caller, source, dest, id, name, age,     |
+|                 | mvalue, lvalue, mlvalue, pid, pname, lowlimit, highlimit                               |
+|                 |                                                                                        |
+|                 | **Achtung:** log_text darf keine Single-Quotes (``'``) enthalten!                      |
+|                 | Falls es aufgrund des YAML Syntaxes notwendig kann der gesamte String für log_text     |
+|                 | in Single-Quotes (``'``) eingeschlossen werden. **Beispiel:**                          |
+|                 | ``log_text: 'Alter={age}'``                                                            |
++-----------------+----------------------------------------------------------------------------------------+
+| log_mapping     | Ermöglicht es im Text ein Mapping von **value** auf einen anderen Wert auszugeben      |
+|                 | (siehe :doc:`log_change <./log_change>`). **Ab SmartHomeNG v1.9**                      |
++-----------------+----------------------------------------------------------------------------------------+
+| log_rules       | Ermöglicht es Regeln zum log_change zu definieren                                      |
+|                 | (siehe :doc:`log_change <./log_change>`).  **Ab SmartHomeNG v1.9**                     |
 +-----------------+----------------------------------------------------------------------------------------+
 | name            | ein optionaler Name für das Item                                                       |
 +-----------------+----------------------------------------------------------------------------------------+
 | on_update       | Ermöglicht das setzen des Wertes anderer Items, wenn das aktuelle Item ein             |
 |                 | Update erhält (auch wenn sich der Wert des aktuellen Items dabei nicht                 |
-|                 | ändert). **Ab SmartHomeNG v1.4**                                                       |
+|                 | ändert).                                                                               |
 +-----------------+----------------------------------------------------------------------------------------+
 | on_change       | Ermöglicht das Setzen des Wertes anderer Items, wenn der Wert des aktuellen            |
-|                 | Items verändert wird. **Ab SmartHomeNG v1.4**                                          |
+|                 | Items verändert wird.                                                                  |
 +-----------------+----------------------------------------------------------------------------------------+
 | remark          | ein optionaler Kommentar für das Item. Es ist sinnvoll Kommentare zu einem             |
 |                 | Item als **remark** Attribut zu erfassen und nicht als Kommentar ( **#** )             |
@@ -121,6 +145,7 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
    enforce_updates
    enforce_change
    eval
+   log_change
    on_update
    struct
    type

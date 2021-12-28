@@ -54,6 +54,7 @@ import locale
 # https://stackoverflow.com/questions/31469707/changing-the-locale-preferred-encoding-in-python-3-in-windows
 
 
+
 #####################################################################
 # Read command line arguments
 #####################################################################
@@ -137,12 +138,12 @@ elif core_reqs == -1:
 # Import SmartHomeNG Modules
 #####################################################################
 #import lib.config
-#import lib.connection
 import lib.daemon
 #import lib.item
 #import lib.log
 #import lib.logic
 #import lib.module
+#import lib.network
 #import lib.plugin
 #import lib.scene
 #import lib.scheduler

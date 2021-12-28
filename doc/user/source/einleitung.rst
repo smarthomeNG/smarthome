@@ -8,7 +8,7 @@ Einleitung
 ==========
 
 Übersicht über SmartHomeNG
---------------------------
+----------------------------
 
 SmartHomeNG ist ein System das als Metagateway zwischen verschiedenen
 "Dingen" fungiert und dient der Verbindung unterschiedlicher
@@ -18,17 +18,18 @@ So ist es möglich dass die Klingel mit der Musikanlage und TV spricht,
 und dessen Wiedergabe unterbricht oder bei Abwesenheit eine Nachricht
 per Email verschickt.
 
-Eine umfassende Entwickler-Dokumentation in englischer Sprache gibt es
-unter
-`www.SmartHomeNG.de/developer <https://www.smarthomeng.de/developer>`__.
+Eine umfassende (veraltete) Entwickler-Dokumentation in englischer Sprache gibt es
+unter `www.SmartHomeNG.de/developer <https://www.smarthomeng.de/developer>`__.
+Nach und nach werden diese Informationen übersetztz und in die User Dokumentation
+integriert.
 
-Natürlich lebt dieses Projekt wie alles an Open Source vom mitmachen und
-alle sind eingeladen, das im Rahmen ihrer Möglichkeiten zu tun. Das z.B.
-kann gerne die Erweiterung eines How-To, die Kommentierung bestehenden
+Natürlich lebt dieses Projekt wie alles bei Open Source vom mitmachen. 
+Jeder ist eingeladen im Rahmen seiner Möglichkeiten beizutragen.
+Das kann gerne die Erweiterung eines How-To, die Kommentierung bestehenden
 Codes oder auch Beispiele sein.
 
 Wie alles zusammenhängt
------------------------
+-------------------------
 
-.. figure:: /_static/img/SmarthomeNG_V1.7.0.svg
+.. figure:: /_static/img/SmarthomeNG_V1.8.0.svg
    :alt: Image

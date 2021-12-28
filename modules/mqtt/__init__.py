@@ -28,7 +28,7 @@
 import threading
 import logging
 import json
-#import os
+# import os
 import platform
 import socket    # for gethostbyname
 import inspect
@@ -37,7 +37,6 @@ import datetime
 import paho.mqtt.client as mqtt
 
 from lib.model.module import Module
-from lib.module import Modules
 from lib.shtime import Shtime
 from lib.utils import Utils
 from lib.scheduler import Scheduler
@@ -67,7 +66,6 @@ class Mqtt(Module):
         self._sh = sh
         self.shtime = Shtime.get_instance()
         self.logger.debug("Module '{}': Initializing".format(self._shortname))
-
 
         # get the parameters for the plugin (as defined in metadata plugin.yaml):
         self.logger.debug("Module '{}': Parameters = '{}'".format(self._shortname, dict(self._parameters)))
@@ -106,17 +104,16 @@ class Mqtt(Module):
             self.broker_hostname = ''
 
         # handle last_will and birth topic configuration
-        if (self.last_will_topic != '') and (self.last_will_topic [-1] == '/'):
+        if (self.last_will_topic != '') and (self.last_will_topic[-1] == '/'):
             self.last_will_topic = self.last_will_topic[:-1]
         if self.birth_topic == '':
             self.birth_topic = self.last_will_topic
         else:
-            if self.birth_topic [-1] == '/':
+            if self.birth_topic[-1] == '/':
                 self.birth_topic = self.birth_topic[:-1]
 
         # if self.items_topic_prefix [-1] != '/':
         #     self.items_topic_prefix = self.items_topic_prefix + '/'
-
 
         if self.password == '':
             self.password = None
@@ -152,7 +149,6 @@ class Mqtt(Module):
 
         self.logicpayloadtypes = {}  # payload types for subscribed topics for triggering logics
 
-
         # ONLY used for multiinstance handling of plugins?
         # # needed because self.set_attr_value() can only set but not add attributes
         # self.at_instance_name = self.get_instance_name()
@@ -173,10 +169,7 @@ class Mqtt(Module):
             # return
             pass
 
-
-        ip = _get_local_ipv4_address()
-
-
+ 
     def start(self):
         """
         This method starts the mqtt module
@@ -220,14 +213,13 @@ class Mqtt(Module):
         self.logger.info("Connecting to broker '{}:{}'. Starting mqtt client '{}'".format(self.broker_ip, self.broker_port, clientname))
         self._client = mqtt.Client(client_id=clientname)
 
-
         # set testament, if configured
         if (self.last_will_topic != '') and (self.last_will_payload != ''):
             retain = False
             if (self.birth_topic != '') and (self.birth_payload != ''):
                 retain = True
             self._client.will_set(self.last_will_topic, self.last_will_payload, self.qos, retain=retain)
-            self.logger.debug("- Last will set to topic '{}' and payload '{}' with retain set to '{}'".format(self.last_will_topic,self.last_will_payload, retain))
+            self.logger.debug("- Last will set to topic '{}' and payload '{}' with retain set to '{}'".format(self.last_will_topic, self.last_will_payload, retain))
 
         if self.username != '':
             self._client.username_pw_set(self.username, self.password)
@@ -394,14 +386,14 @@ class Mqtt(Module):
 
         source_type = self._get_caller_type()
         self.logger.debug("'{}()' - called from {} by '{}()'".format(inspect.stack()[0][3], source_type, inspect.stack()[1][3]))
-        #self.logger.debug("subscribe_topic: inspect.stack()[2][3] = '{}', inspect.stack()[3][3] = '{}'".format(inspect.stack()[2][3], inspect.stack()[3][3]))
+        # self.logger.debug("subscribe_topic: inspect.stack()[2][3] = '{}', inspect.stack()[3][3] = '{}'".format(inspect.stack()[2][3], inspect.stack()[3][3]))
 
-        if qos == None:
+        if qos is None:
             qos = self.qos
 
         if bool_values:
-            if not (isinstance(bool_values, list) and len(bool_values)==2):
-                self.logger.warning("subscribe_topic: topic '{}', source '{}': Invalid bool_values specified ('{}') - Ignoring bool_values".format( topic, source, bool_values))
+            if not (isinstance(bool_values, list) and len(bool_values) == 2):
+                self.logger.warning("subscribe_topic: topic '{}', source '{}': Invalid bool_values specified ('{}') - Ignoring bool_values".format(topic, source, bool_values))
 
         if not payload_type.lower() in ['str', 'num', 'bool', 'list', 'dict', 'scene', 'bytes']:
             self.logger.warning("Invalid payload-datatype '{}' specified for {} '{}', ignored".format(payload_type, source_type, callback))
@@ -410,16 +402,11 @@ class Mqtt(Module):
         if not self._subscribed_topics.get(topic, None):
             # self.logger.info("subscribe_topic: No MQTT Subscription to topic '{}' exists yet, adding topic".format(topic))
             self.logger.info("subscribe_topic: Adding topic '{}'".format(topic))
-            # lock
-            self._subscribed_topics_lock.acquire()
-            try:
+            with self._subscribed_topics_lock:
                 # add topic
                 self._subscribed_topics[topic] = {}
                 # add subscription definition
                 self._add_subscription_definition(topic, source, source_type, callback, payload_type, bool_values)
-            finally:
-                # unlock
-                self._subscribed_topics_lock.release()
 
             # subscribe to topic
             try:
@@ -429,14 +416,9 @@ class Mqtt(Module):
                 self.logger.critical("subscribe_topic: mqtt module tried to subscribe to topic '{}' for callback {}, exception: {}".format(topic, callback, e))
         else:
             self.logger.info("subscribe_topic: A MQTT Subscription to topic '{}' already exists".format(topic))
-            # lock
-            self._subscribed_topics_lock.acquire()
-            try:
+            with self._subscribed_topics_lock:
                 # add subscription definition
                 self._add_subscription_definition(topic, source, source_type, callback, payload_type, bool_values)
-            finally:
-                # unlock
-                self._subscribed_topics_lock.release()
         return
 
 
@@ -463,18 +445,17 @@ class Mqtt(Module):
             return
 
         self.logger.info("unsubscribe_topic: Subscription to topic '{}' for '{}' is removed".format(topic, source))
-        # lock
-        self._subscribed_topics_lock.acquire()
-        try:
+        needUnsubscribe = False
+        with self._subscribed_topics_lock:
             # delete subscription-source for this topic
             del self._subscribed_topics[topic][source]
             if self._subscribed_topics[topic] == {}:
-                # unsubscribe on broker, if no source is subscribing the topic any more
+                # unsubscribe on broker needed, if no source is subscribing the topic any more
                 del self._subscribed_topics[topic]
-                self._client.unsubscribe(topic)
-        finally:
-            # unlock
-            self._subscribed_topics_lock.release()
+                needUnsubscribe = True
+        if needUnsubscribe:
+            # Unsubscribe without lock (to avoid deadlock)
+            self._client.unsubscribe(topic)
 
         return
 
@@ -527,7 +508,7 @@ class Mqtt(Module):
         if plugin:
             self.logger.info("_callback_to_plugin: Using topic '{}', payload '{}' (type {}) for callback to plugin '{}' {}".format(topic, payload, datatype, plugin_name, plugin))
 
-            #self._sh.logics.trigger_logic(logic, source='mqtt', by=topic, value=payload)
+            #s elf._sh.logics.trigger_logic(logic, source='mqtt', by=topic, value=payload)
             plugin(topic, payload, qos, retain)
             subscription_found = True
         else:
@@ -545,57 +526,49 @@ class Mqtt(Module):
         :param message:   an instance of MQTTMessage.
                           This is a class with members topic, payload, qos, retain.
         """
-        self.logger.debug( "_on_mqtt_message: RECEIVED topic '{}', payload '{}, QoS '{}', retain '{}'".format(message.topic, message.payload, message.qos, message.retain))
+        self.logger.debug("_on_mqtt_message: RECEIVED topic '{}', payload '{}, QoS '{}', retain '{}'".format(message.topic, message.payload, message.qos, message.retain))
 
-        # lock
-        self._subscribed_topics_lock.acquire()
-        subscibed_topics = list(self._subscribed_topics.keys())
-        # unlock
-        self._subscribed_topics_lock.release()
-
-        try:
-            # look for subscriptions to the received topic
-            subscription_found = False
-            for topic in subscibed_topics:
+        with self._subscribed_topics_lock:
+            subscibed_topics = list(self._subscribed_topics.keys())
+    
+        # look for subscriptions to the received topic
+        subscription_found = False
+        for topic in subscibed_topics:
+            topics_equal = False
+            if (topic.find('+') != -1) or (topic.find('#') != -1):
                 topics_equal = False
-                if (topic.find('+') != -1) or (topic.find('#') != -1):
-                    topics_equal = False
-                    wc_topic = topic.split('/')
-                    msg_topic = message.topic.split('/')
+                wc_topic = topic.split('/')
+                msg_topic = message.topic.split('/')
 
-                    equal = False
-                    if (len(wc_topic) == len(msg_topic)) or (wc_topic[len(wc_topic)-1] == '#' and (len(wc_topic) <= len(msg_topic))):
-                        equal = True
-                        for i in range(len(wc_topic)):
-                            if not (wc_topic[i] == msg_topic[i] or wc_topic[i] == '+' or wc_topic[i] == '#'):
-                                equal = False
-                        if equal:
-                            topics_equal = True
+                equal = False
+                if (len(wc_topic) == len(msg_topic)) or (wc_topic[len(wc_topic)-1] == '#' and (len(wc_topic) <= len(msg_topic))):
+                    equal = True
+                    for i in range(len(wc_topic)):
+                        if not (wc_topic[i] == msg_topic[i] or wc_topic[i] == '+' or wc_topic[i] == '#'):
+                            equal = False
+                    if equal:
+                        topics_equal = True
 
-                if (topic == message.topic) or topics_equal:
-                    topic_dict = self._subscribed_topics[topic]
+            if (topic == message.topic) or topics_equal:
+                topic_dict = self._subscribed_topics[topic]
 
-                    for subscription in topic_dict:
-                        self.logger.debug("_on_mqtt_message: subscription '{}': {}".format(subscription, topic_dict[subscription]))
-                        subscriber_type = topic_dict[subscription].get('subscriber_type', None)
-                        if subscriber_type == 'plugin':
-                            subscription_found = self._callback_to_plugin(subscription, topic_dict[subscription], message.topic, message.payload, message.qos, message.retain)
-                        elif subscriber_type == 'logic':
-                            subscription_found = self._trigger_logic(topic_dict[subscription], message.topic, message.payload)
-                        else:
-                            self.logger.error("_on_mqtt_message: received topic for unknown subscriber_type '{}'".format(subscriber_type))
+                for subscription in topic_dict:
+                    self.logger.debug("_on_mqtt_message: subscription '{}': {}".format(subscription, topic_dict[subscription]))
+                    subscriber_type = topic_dict[subscription].get('subscriber_type', None)
+                    if subscriber_type == 'plugin':
+                        subscription_found = self._callback_to_plugin(subscription, topic_dict[subscription], message.topic, message.payload, message.qos, message.retain)
+                    elif subscriber_type == 'logic':
+                        subscription_found = self._trigger_logic(topic_dict[subscription], message.topic, message.payload)
+                    else:
+                        self.logger.error("_on_mqtt_message: received topic for unknown subscriber_type '{}'".format(subscriber_type))
 
-        finally:
-            # unlock
-            #self._subscribed_topics_lock.release()
-            pass
 
         if not subscription_found:
             if not self._handle_broker_infos(message):
                 self.logger.error("_on_mqtt_message: Received topic '{}', payload '{}', QoS '{}', retain '{}' WITHOUT matching item/logic".format( message.topic, message.payload, message.qos, message.retain))
 
-
     # ----------------------------------------------------------------------------------------
+
 
     def _get_qos_forTopic(self, item):
         """
@@ -672,6 +645,7 @@ class Mqtt(Module):
         self.logger.debug("_handle_broker_infos: $SYS/broker info = '{}'".format(self._broker))
         return True
 
+
     def _unsubscribe_broker_infos(self):
         """
         Unsubscribe from broker's infos
@@ -710,19 +684,20 @@ class Mqtt(Module):
             # subscribe to topics to listen for items
             for topic in self._subscribed_topics:
                 item = self._subscribed_topics[topic]
-                self._client.subscribe(topic, qos=self._get_qos_forTopic(item) )
-                self.logger.info("Listening on topic '{}' for item '{}'".format( topic, item.id() ))
+                self._client.subscribe(topic, qos=self._get_qos_forTopic(item))
+                self.logger.info("Listening on topic '{}' for item '{}'".format(topic, item.id()))
 
             self.logger.info("self._subscribed_topics = {}".format(self._subscribed_topics))
 
             return
 
-        msg = "Connection returned result '{}': {} (client={}, userdata={}, self._client={})".format( str(rc), mqtt.connack_string(rc), client, userdata, self._client )
+        msg = "Connection returned result '{}': {} (client={}, userdata={}, self._client={})".format(str(rc), mqtt.connack_string(rc), client, userdata, self._client)
         if rc == 5:
             self.logger.error(msg)
             self._disconnect_from_broker()
         else:
             self.logger.warning(msg)
+
 
     def _on_disconnect(self, client, userdata, rc):
         """
@@ -730,7 +705,6 @@ class Mqtt(Module):
         """
         self.logger.info("Disconnection returned result '{}' ".format(rc))
         return
-
 
 
     # ---------------------------------------------------------------------------------
@@ -777,14 +751,14 @@ class Mqtt(Module):
 
         source_type = self._get_caller_type()
         self.logger.info("'{}()' - called from {} by '{}()'".format(inspect.stack()[0][3], source_type, inspect.stack()[1][3]))
-        #self.logger.info("inspect.stack()[1][1] = '{}', split = {}".format(inspect.stack()[1][1], inspect.stack()[1][1].split('/')))
+        # self.logger.info("inspect.stack()[1][1] = '{}', split = {}".format(inspect.stack()[1][1], inspect.stack()[1][1].split('/')))
 
         if not self._connected:
             return False
 
-        if qos == None:
+        if qos is None:
             qos = self.qos
-        self.logger.info("{} '{}' is publishing topic '{}' with payload '{}' (qos={}, retain={})".format(source_type, source, topic, payload, qos, retain ))
+        self.logger.info("{} '{}' is publishing topic '{}' with payload '{}' (qos={}, retain={})".format(source_type, source, topic, payload, qos, retain))
         payload = self.cast_to_mqtt(payload, bool_values)
         try:
             self._client.publish(topic=topic, payload=payload, qos=qos, retain=retain)
@@ -899,25 +873,3 @@ class Mqtt(Module):
         except Exception as e:
             self.logger.error("cast_to_mqtt: Cast exception'{}'".format(e))
         return payload_data
-
-
-
-# ----------------------------------------------------------------------------------------
-
-def _get_local_ipv4_address():
-    """
-    Get's local ipv4 address of the interface with the default gateway.
-    Return '127.0.0.1' if no suitable interface is found
-
-    :return: IPv4 address as a string
-    :rtype: string
-    """
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.connect(('8.8.8.8', 1))
-        IP = s.getsockname()[0]
-    except:
-        IP = '127.0.0.1'
-    finally:
-        s.close()
-    return IP

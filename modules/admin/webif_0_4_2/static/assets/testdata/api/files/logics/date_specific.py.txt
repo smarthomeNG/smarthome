@@ -1,0 +1,31 @@
+from lib.shtime import Shtime
+import datetime
+
+now = Shtime.get_instance().now()
+
+_logicname_prefix = 'logics.'     # prefix for scheduler names
+
+sh.holidays.calculate(datetime.date.today().year, "BY")
+if sh.holidays.is_holiday(datetime.date.today()):
+    sh.date.is_holiday(1)
+else:
+    sh.date.is_holiday(0)
+
+sh.date.holiday_name(sh.holidays.get_holiday_name(datetime.date.today()))
+sh.date.day_name(sh.holidays.get_day_name(datetime.date.today()))
+
+if now.weekday() in [0,1,2,3,4] and not sh.date.is_holiday():
+    logger.info("Wochenende-/Feiertags-Steuerung: Setze den SunriseLogic Sheduler auf Wochentag")
+    sh.scheduler.change(_logicname_prefix+'SunriseLogic', cron='06:00<sunrise-15m')
+else:
+    logger.info("Wochenende-/Feiertags-Steuerung: Setze den SunriseLogic Sheduler auf Wochenenden / Feiertage")
+    sh.scheduler.change(_logicname_prefix+'SunriseLogic', cron='06:30<sunrise-15m')
+
+if sh.date.is_holiday():
+    logger.info("Feiertags-Steuerung: Setzte den AutomaticGateControlLogicDay Scheduler auf Feiertage")
+    sh.scheduler.change(_logicname_prefix+'AutomaticGateControlLogicDay', active=False)
+else:
+    logger.info("Feiertags-Steuerung: Setzte den AutomaticGateControlLogicDay Scheduler auf Arbeitstage")
+    sh.scheduler.change(_logicname_prefix+'AutomaticGateControlLogicDay', cron='0 5 * 0,1,2,3,4', active=True)
+
+sh.knx.cellar.utility_room.water_meter.consumption_since_midnight(0)

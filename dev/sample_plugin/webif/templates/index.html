@@ -15,13 +15,36 @@
 			var objResponse = JSON.parse(response);
 			myProto = document.getElementById(dataSet);
 			for (var device in objResponse) {
-				<!--
+				/*
 				shngInsertText (device+'_source', objResponse[device]['source']);
 				shngInsertText (device+'_powerState', objResponse[device]['powerState']);
-				-->
+				*/
 			}
 		}
 	}
+</script>
+<!--
+	This part is used to implement datatable JS for the tables. It allows resorting tables by column, etc.
+	For each table you have to implement the code part $('#<table_id>').DataTable(..); where the <table_id> matches the id of a table tag
+-->
+<script>
+    $(document).ready( function () {
+		try 
+			{	
+			$('#<table_id>').DataTable( {
+				"paging": false,
+				fixedHeader: true
+				} );
+			$('#maintable').DataTable( {
+				"paging": false,
+				fixedHeader: true
+				} );				
+			}
+		catch (e) 
+			{
+			console.log("Datatable JS not loaded, showing standard table without reorder option")
+			}					
+        });
 </script>
 {% endblock pluginscripts %}
 
@@ -70,7 +93,7 @@
 {% endblock %}
 
 <!--
-	Define the number of tabs for the body of the web interface (1 - 3)
+	Define the number of tabs for the body of the web interface (1 - 6)
 -->
 {% set tabcount = 4 %}
 
@@ -90,6 +113,36 @@
 {% block bodytab1 %}
 <div class="container-fluid m-2">
 	{{ _('Hier kommt der Inhalt des Webinterfaces hin.') }}
+	<!--
+	Example table using datatables JS. Always use well-formed table formatting like
+	<table>
+		<thead>
+			<tr> <th></th><th></th>...</tr>
+		</thead>
+		<tbody>
+		  <tr> <td></td><td></td>...</tr>
+		</tbody>
+	</table>
+	-->
+	<table id="maintable" class="table table-striped table-hover pluginList">
+		<thead>
+			<tr>
+			  <th>{{ _('Item') }}</th>
+			  <th>{{ _('Wert') }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in p.get_items() %}
+			  {% if p.has_iattr(item.conf, '<plugin_attribute>') %}
+				<tr>
+				  <td class="py-1">{{ item._path }}</td>
+				  <td class="py-1">{{ item() }}</td>
+				</tr>
+			  {% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+
 </div>
 {% endblock bodytab1 %}
 

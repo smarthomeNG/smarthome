@@ -145,3 +145,37 @@ class ScenesController(RESTResource):
     read.expose_resource = True
     read.authentication_needed = True
 
+
+class ScenesReloadController(RESTResource):
+
+    def __init__(self, module):
+        self._sh = module._sh
+        self.module = module
+        self.base_dir = self._sh.get_basedir()
+        self.logger = logging.getLogger(__name__)
+
+        self.items = Items.get_instance()
+
+        return
+
+
+    # ======================================================================
+    #  /api/scenes/reload
+    #
+
+    @cherrypy.expose
+    def update(self, id=None):
+        """
+        Handle PUT requests for scenes/reload API
+        """
+        from lib.scene import Scenes
+        self.scenes = Scenes.get_instance()
+
+        if id == 'all':
+            result = self.scenes.reload_scenes()
+            return json.dumps(result)
+        else:
+            return json.dumps(False)
+
+    update.expose_resource = True
+    update.authentication_needed = True

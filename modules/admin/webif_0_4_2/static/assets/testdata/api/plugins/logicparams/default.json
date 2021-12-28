@@ -1,0 +1,95 @@
+{
+  "knx_listen": {
+    "type": "list",
+    "description": {
+      "de": "Gruppenadresse (oder Liste von Gruppenadressen), auf die gehört werden soll. KNX-Nachrichten an diese Gruppenadresse(n) werden an die Logik weitergegeben",
+      "en": "Group address (or list of group addresses) to listen for. KNX messages to this group address(es) will be directed to th logic"
+    },
+    "listtype": [
+      "knx_ga"
+    ],
+    "listlen": 0,
+    "plugin": "knx"
+  },
+  "knx_reply": {
+    "type": "list",
+    "description": {
+      "de": "Eine oder mehrere Gruppenadressen angeben, um den Objektwert vom KNX-Bus aus lesen zu können.",
+      "en": "Specify one or more group addresses to allow reading the item value from the KNX bus."
+    },
+    "listtype": [
+      "knx_ga"
+    ],
+    "listlen": 0,
+    "plugin": "knx"
+  },
+  "olog": {
+    "type": "str",
+    "description": {
+      "de": "Wenn gesetzt, werden Item-Änderungen in das angegebene Log geloggt",
+      "en": "When set, item changes will be logged to the given log"
+    },
+    "listtype": [
+      "foo"
+    ],
+    "listlen": 0,
+    "plugin": "operationlog"
+  },
+  "olog_level": {
+    "type": "str",
+    "valid_list": [
+      "DEBUG",
+      "INFO",
+      "WARNING",
+      "ERROR"
+    ],
+    "description": {
+      "de": "Gibt den Log-Level an (DEBUG, INFO, WARNING, ERROR)",
+      "en": "Specifies the log level (DEBUG, INFO, WARNING, ERROR)"
+    },
+    "listtype": [
+      "foo"
+    ],
+    "listlen": 0,
+    "plugin": "operationlog"
+  },
+  "olog_txt": {
+    "type": "str",
+    "description": {
+      "de": "Gibt den Text an, der bei Änderungen geloggt werden soll",
+      "en": "Specifies the text to log on changes"
+    },
+    "listtype": [
+      "foo"
+    ],
+    "listlen": 0,
+    "plugin": "operationlog"
+  },
+  "visu_acl": {
+    "type": "bool",
+    "default": false,
+    "valid_list": [
+      true,
+      false
+    ],
+    "valid_list_description": {
+      "de": [
+        "Logik kann durch smartVISU getriggert werden",
+        "Logik kann durch smartVISU getriggert werden"
+      ],
+      "en": [
+        "Logic can be triggered by smartVISU",
+        "Logic cannot be triggered by smartVISU"
+      ]
+    },
+    "description": {
+      "de": "Dieses Attribut kann für jede Logik in ../etc/logic.yaml angegeben werden.",
+      "en": "This attribute can be added to every logic in ../etc/logic.yaml."
+    },
+    "listtype": [
+      "foo"
+    ],
+    "listlen": 0,
+    "plugin": "visu_websocket"
+  }
+}

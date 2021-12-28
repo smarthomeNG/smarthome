@@ -59,7 +59,6 @@ class ItemsController(RESTResource):
             # /api/items/structs
             self.logger.info("ItemsController.root(): item_name = {}".format(id))
             result = self.items.return_struct_definitions(all=False)
-
             return json.dumps(result)
 
             #raise cherrypy.NotFound

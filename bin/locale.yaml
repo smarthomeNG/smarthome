@@ -75,6 +75,67 @@ global_translations:
     'Letztes Update':        {'de': '=', 'en': 'Last Update', 'fr': ''}
     'Letzter Change':        {'de': '=', 'en': 'Last Change', 'fr': ''}
 
+    #Translations for lib.scene:
+    "A second 'scenes' object has been created. There should only be ONE instance of class 'Scenes'!!! Called from: {frame1} ({frame2})":
+        'de': "Ein zweites Szenenobjekt wurde erzeugt. Es darf jedoch nur EINE Instanz der Klasse 'Szenes' geben!!! Aufgerufen durch: {frame1} ({frame2})"
+        'en': '='
+    "Directory '{scenes_dir}' not found. Ignoring scenes.":
+        'de': "Directory '{scenes_dir}' nicht gefunden. Szenen werden ignoriert."
+        'en': '='
+    "Scene {scene}, state {state}: action '{action}' is not a dict":
+        'de': "Szene {scene}, Status {state}: Action '{action}' ist kein Dictionary"
+        'en': '='
+    "Scene {scene}, state {state}: actions are not a list":
+        'de': "Szene {scene}, Status {state}: Actionen sind keine Liste"
+        'en': '='
+    "Reloaded all scenes":
+        'de': "Alle Szenen neu geladen"
+        'en': '='
+    "Problem reading scene file {file}: No .yaml or .conf file found with this name":
+        'de': "Problem beim lesen der Szenen Datei {file}: Keine .yaml oder .conf Datei mit diesem Namen gefunden"
+        'en': '='
+    "Problem evaluating: {value} - {exception}":
+        'de': "Problem beim berechnen: {value} - {exception}"
+        'en': '='
+    "Invalid state '{state}' for scene {scene}":
+        'de': "Ungültiger Status '{state}' für Szene {scene}"
+        'en': '='
+    "Learn set to 'False', because '{rvalue}' != '{value}'":
+        'de': "Learn auf False gesetzt, weil '{rvalue}' != '{value}'"
+        'en': '='
+    "Could not find item or logic '{ditemname}' specified in {file}":
+        'de': "Item oder Logik '{ditemname}' nicht gefunden. Wurde in {file} spezifiziert"
+        'en': '='
+    "unable to get self._scenes['{scenename}']['{action}'][0][2] <- {res}":
+        'de': "self._scenes['{scenename}']['{action}'][0][2] kann nicht gelesen werden <- {res}"
+        'en': '='
+
+    #Translations for lib.userfunctions:
+    "Imported userfunctions from '{mmodule}' v{version} - {description}":
+        'de': "Userfunctions importiert aus '{module}' v{version} - {description}"
+        'en': '='
+    "Error importing userfunctions from '{module}': {error}":
+        'de': "Fehler beim importieren von Userfunctions aus '{module}': {error}"
+        'en': '='
+    "Error reloading userfunctions '{module}': Module is not loaded, trying to newly import userfunctions '{module}' instead":
+        'de': "Fehler beim Reload von Userfunctions '{module}': Modul ist nicht geladen, versuche stattdessen Userfunctions '{module}' neu zu importieren"
+        'en': '='
+    "Error reloading userfunctions '{module}': {error} - old version of '{module}' is still active":
+        'de': "Fehler beim Reload von userfunctions '{module}': {error} - alte Version von '{module}' ist noch aktiv"
+        'en': '='
+    "Reloaded userfunctions '{module}'":
+        'de': "Reload: Userfunctions '{module}' neu geladen"
+        'en': '='
+    "Reload: Userfunctions '{module}' do not exist":
+        'de': "Reload: Userfunctions '{module}' existieren nicht"
+        'en': '='
+    "Reload: Loaded new userfunctions '{module}'":
+        'de': "Reload: Neue Userfunctions '{module}' geladen"
+        'en': '='
+    "No userfunctions are loaded, nothing to reload":
+        'de': "Es existieren keine Userfunctions, es gibt nichts für einen Reload"
+        'en': '='
+
 
 lib.shtime_translations:
     'defined':               {'de': 'definiert', 'en': '='}
@@ -114,5 +175,12 @@ lib.shtime_translations:
         'de': "Aufgerufen mit einem Parameter der nicht vom Typ 'datetime' ist: {dt1}, {dt2}"
         'en': '='
     "Called with point in time that is earlier than now: {dt}":
-        'de': 'Aufgerufen mit Zeitpunkt in der Vergangenheit'
+        'de': 'Aufgerufen mit Zeitpunkt in der Vergangenheit: {dt}'
         'en': '='
+    "Calculating beginning of week based on year {year}, week {week} and offset {offset}":
+        'de': 'Berechne Wochenstart basierend auf Jahr {year}, Woche {week} und Offset {offset}'
+        'en': '='
+    "Calculating length of month based on year {year}, month {month}{debug_month}":
+        'de': 'Berechne Länge des Monats basierend auf Jahr {year}, Monat {month}{debug_month}'
+        'en': '='
+

@@ -34,7 +34,8 @@ Szenen
 Für die Verwendung von Szenen ist eine Konfigurationsdatei für jedes 'Szenenobjekt' im Szenenverzeichnis
 erforderlich. Diese Dateien können im alten Szenen-Conf Format (Endung '.conf') oder im
 yaml Format (Endung '.yaml') erstellt werden und müssen als Dateinamen den Item-Path des Items
-tragen in dem die Szene definiert ist und über das der Status der Szene gesteuert wird.
+(mit der entsprechenden Dateiendung) tragen, in dem die Szene definiert ist und über das der Status der
+Szene gesteuert wird.
 
 
 altes Konfigurationsformat
@@ -108,8 +109,11 @@ Jede einzelne Aktion ist durch die Keys ``item:`` , ``value:`` und ``learn:`` de
 Die Verwendung von Wildcards (*) in den ``item:`` Definitionen ist nicht möglich.
 
 Der Key **item** enthält den Pfad des Items, das verändert werden soll. Der Key **value** enthält
-den Wert auf den das Item gesetzt werden soll. Anstelle eines festen Wertes, kann hier auch ein
-**eval** Ausdruck angegeben werden. Der Key **learn** ist optional. Wird er nicht angegeben,
+den Wert auf den das Item gesetzt werden soll. Wenn dem Item Stringwerte zugewiesen werden sollen, 
+müssen diese zweifach in Anführungszeichen angegeben werden, z.B. ``"'Wert'"``, Zahlen können direkt
+angegeben werden, und andere Werte wie z.B. Listen oder dicts müssen einfach in Anführungszeichen
+stehen, z.B. ``"{'key': 'value'}"`` oder ``'["listitem1", "listitem2"]'``. Anstelle eines festen Wertes
+kann hier auch ein **eval** Ausdruck angegeben werden. Der Key **learn** ist optional. Wird er nicht angegeben,
 wird der Wert False für **learn** angenommen. Außerdem wird der Wert für **learn** immer auf False
 gesetzt, wenn **value** einen Ausdruck und keinen absoluten  Wert enthält.
 

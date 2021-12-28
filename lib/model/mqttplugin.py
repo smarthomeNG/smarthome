@@ -22,7 +22,7 @@
 import threading
 
 from lib.module import Modules
-from lib.model.smartplugin import *
+from lib.model.smartplugin import SmartPlugin
 from lib.shtime import Shtime
 
 
@@ -67,14 +67,11 @@ class MqttPlugin(SmartPlugin):
         Should be called from the run method of a plugin
         """
         if self.mod_mqtt:
-            # lock
-            self._subscribed_topics_lock.acquire()
-            for topic in self._subscribed_topics:
-                # start subscription to all items for this topic
-                for item_path in self._subscribed_topics[topic]:
-                    self._start_subscription(topic, item_path)
-            # unlock
-            self._subscribed_topics_lock.release()
+            with self._subscribed_topics_lock:
+                for topic in self._subscribed_topics:
+                    # start subscription to all items for this topic
+                    for item_path in self._subscribed_topics[topic]:
+                        self._start_subscription(topic, item_path)
 
             self._subscriptions_started = True
         return
@@ -86,16 +83,13 @@ class MqttPlugin(SmartPlugin):
         Should be called from the stop method of a plugin
         """
         if self.mod_mqtt:
-            # lock
-            self._subscribed_topics_lock.acquire()
-            for topic in self._subscribed_topics:
-                # stop subscription to all items for this topic
-                for item_path in self._subscribed_topics[topic]:
-                    current = str(self._subscribed_topics[topic][item_path]['current'])
-                    self.logger.info("stop(): Unsubscribing from topic {} for item {}".format(topic, item_path))
-                    self.mod_mqtt.unsubscribe_topic(self.get_shortname() + '-' + current, topic)
-            # unlock
-            self._subscribed_topics_lock.release()
+            with self._subscribed_topics_lock:
+                for topic in self._subscribed_topics:
+                    # stop subscription to all items for this topic
+                    for item_path in self._subscribed_topics[topic]:
+                        current = str(self._subscribed_topics[topic][item_path]['current'])
+                        self.logger.info("stop(): Unsubscribing from topic {} for item {}".format(topic, item_path))
+                        self.mod_mqtt.unsubscribe_topic(self.get_shortname() + '-' + current, topic)
             self._subscriptions_started = False
         return
 
@@ -125,31 +119,27 @@ class MqttPlugin(SmartPlugin):
         :return:
         """
 
-        # lock
-        self._subscribed_topics_lock.acquire()
+        with self._subscribed_topics_lock:
 
-        # test if topic is new
-        if not self._subscribed_topics.get(topic, None):
-            self._subscribed_topics[topic] = {}
-        # add this item to topic
-        if item is None:
-            item_path = '*no_item*'
-        else:
-            item_path = item.path()
-        self._subscribed_topics[topic][item_path] = {}
-        self._subscribe_current_number += 1
-        self._subscribed_topics[topic][item_path]['current'] = self._subscribe_current_number
-        self._subscribed_topics[topic][item_path]['item'] = item
-        self._subscribed_topics[topic][item_path]['qos'] = None
-        self._subscribed_topics[topic][item_path]['payload_type'] = payload_type
-        if callback:
-            self._subscribed_topics[topic][item_path]['callback'] = callback
-        else:
-            self._subscribed_topics[topic][item_path]['callback'] = self._on_mqtt_message
-        self._subscribed_topics[topic][item_path]['bool_values'] = bool_values
-
-        # unlock
-        self._subscribed_topics_lock.release()
+            # test if topic is new
+            if not self._subscribed_topics.get(topic, None):
+                self._subscribed_topics[topic] = {}
+            # add this item to topic
+            if item is None:
+                item_path = '*no_item*'
+            else:
+                item_path = item.path()
+            self._subscribed_topics[topic][item_path] = {}
+            self._subscribe_current_number += 1
+            self._subscribed_topics[topic][item_path]['current'] = self._subscribe_current_number
+            self._subscribed_topics[topic][item_path]['item'] = item
+            self._subscribed_topics[topic][item_path]['qos'] = None
+            self._subscribed_topics[topic][item_path]['payload_type'] = payload_type
+            if callback:
+                self._subscribed_topics[topic][item_path]['callback'] = callback
+            else:
+                self._subscribed_topics[topic][item_path]['callback'] = self._on_mqtt_message
+            self._subscribed_topics[topic][item_path]['bool_values'] = bool_values
 
         if self._subscriptions_started:
             # directly subscribe to added subscription, if subscribtions are started

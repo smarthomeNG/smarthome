@@ -25,7 +25,7 @@
 #
 #########################################################################
 
-from lib.model.mqttplugin import *
+from lib.model.mqttplugin import MqttPlugin
 from lib.item import Items
 
 from .webif import WebInterface
@@ -41,7 +41,7 @@ class SampleMqttPlugin(MqttPlugin):
     the update functions for the items
     """
 
-    PLUGIN_VERSION = '1.7.0'    # (must match the version specified in plugin.yaml), use '1.0.0' for your initial plugin Release
+    PLUGIN_VERSION = '1.0.0'    # (must match the version specified in plugin.yaml), use '1.0.0' for your initial plugin Release
 
     def __init__(self, sh):
         """
@@ -69,7 +69,7 @@ class SampleMqttPlugin(MqttPlugin):
         #   return
 
         # if plugin should start even without web interface
-        self.init_webinterface()
+        self.init_webinterface(WebInterface)
 
         return
 
@@ -108,7 +108,7 @@ class SampleMqttPlugin(MqttPlugin):
                         can be sent to the knx with a knx write function within the knx plugin.
         """
         if self.has_iattr(item.conf, 'foo_itemid'):
-            self.logger.debug("parse item: {}".format(item))
+            self.logger.debug(f"parse item: {item.property.path}")
 
             # subscribe to topic for relay state
             # mqtt_id = self.get_iattr_value(item.conf, 'foo_itemid').upper()
@@ -154,13 +154,10 @@ class SampleMqttPlugin(MqttPlugin):
         if self.alive and caller != self.get_shortname():
             # code to execute if the plugin is not stopped
             # and only, if the item has not been changed by this this plugin:
-            self.logger.info("Update item: {}, item has been changed outside this plugin".format(item.id()))
+            self.logger.info(f"Update item: {item.property.path}, item has been changed outside this plugin")
 
             if self.has_iattr(item.conf, 'foo_itemtag'):
                 self.logger.debug(
-                    "update_item was called with item '{}' from caller '{}', source '{}' and dest '{}'".format(item,
-                                                                                                               caller,
-                                                                                                               source,
-                                                                                                               dest))
+                    f"update_item was called with item {item.property.path} from caller {caller}, source {source} and dest {dest}")
             pass
 

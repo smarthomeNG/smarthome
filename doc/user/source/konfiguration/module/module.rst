@@ -35,4 +35,5 @@ möglich.
    module_websocket
    module_admin
    module_mqtt
+   /referenz/module/module_metadata
 

@@ -44,13 +44,16 @@ das für den **Apache2** Webserver zugänglich ist:
     chmod g+rws smartvisu/
     cd smartvisu
     git clone git://github.com/Martin-Gleiss/smartvisu.git .
+    # Schreibrechte für Cache und Konfigurationsdateien setzen
     bash setpermissions
 
 Bitte auf den **Punkt** am Ende des **git clone** Kommandos achten!
 
-Für den ordnungsgemäßen Betrieb braucht die SmartVISU noch das SmartHomeNG Plugin
-**visu_websocket**. Dieses ist in der **plugin.yaml.default** bereits vorkonfiguriert
-und wird beim ersten Start nach einer frischen Installation in die **plugin.yaml**
+Eine Besonderheit des Apache Webservers ist sein spezieller Umgang mit einem Ordner namens "icons" im Root-Verzeichnis. Da smartVISU einen solchen Ordner verwendet, sollte sie immer wie oben angegeben in einem Unterverzeichnis angelegt werden, damit keine Konflikte entstehen. Dies gilt auch für Docker-Umgebungen. 
+
+Für den ordnungsgemäßen Betrieb braucht die SmartVISU noch das SmartHomeNG Plugin **smartvisu** und das **Websocket-Modul** (oder 
+"visu_websocket", das aber seit v1.8 deprecated ist). Beide sind in der **plugin.yaml.default** und **module.yaml.default** bereits vorkonfiguriert
+und werden beim ersten Start nach einer frischen Installation in die Einstellungen
 übernommen.
 
 
@@ -84,17 +87,17 @@ Eigene Visu Seiten anlegen
 ==========================
 
 Um mit der SmartVISU eine eigene Visu anzulegen, muss innerhalb des Ordners ``pages`` der SmartVISU ein neues
-Verzeichnis angelegt werden, in dem dann die eigenen Seiten z.B. für Räume oder Funktionsbereich abgelegt werden.
+Verzeichnis angelegt werden, in dem dann die eigenen Seiten z.B. für Räume oder Funktionsbereiche abgelegt werden.
 Es existiert im Ordner ``pages`` bereits ein Unterordner ``_template``. Dieser wird als Basis der neuen Visu einfach
 kopiert ``cp _template <meineneuevisu>``. Für ``<meineneuevisu>`` sollte **nicht smarthome** gewählt werden
-wenn später die Visu vom SmartHomeNG Plugin **visu\_smartvisu** erstellt werden soll. Die manuell erstellten Seiten
+wenn später die Visu vom SmartHomeNG Plugin **smartvisu** erstellt werden soll. Die manuell erstellten Seiten
 könnten sonst einfach von SmartHomeNG überschrieben werden.
 
 Die Dateien für die SmartVISU sind einfache HTML Dateien. Die einzelnen Bedienelemente wie Buttons, Flips,
 Werteanzeigen (sogenannte Widgets) sind Makros die mit der Makrosprache **TWIG** definiert sind.
 Die HTML können auf eigene Bedürfnisse beliebig angepasst werden.
-Im einzelnen ist das zwar auf der veralteten `Projektseite smartVISU <http://www.smartvisu.de/>`__ nachzulesen,
-es wird aber empfohlen die entsprechende Dokumentation nachzuinstallieren (siehe unten).
+Im einzelnen ist das zwar auf der  `Projektseite smartVISU <http://www.smartvisu.de/>`__ nachzulesen,
+es wird aber empfohlen die entsprechende Dokumentation aus GitGub nachzuinstallieren, wo immer die aktuellste Version gepflegt ist (siehe unten).
 Die durch die SmartVISU generierten HTML Seiten sind zwar responsiv aber durchweg statisch.
 Die Kommunikation zwischen SmartHomeNG und der SmartVISU erfolgt über ein Websocket Plugin
 für SmartHomeNG und JavaScript Code der in der HTML Seite eingebunden wird. Der Javascript Code manipuliert dann
@@ -129,7 +132,10 @@ SmartHomeNG Plugin **visu\_smartvisu**
     sollte man sich zuerst mit der Dokumentation der smartVISU vertraut machen. Wenn man mit einem Browser
     die Seite einer noch nicht konfigurierten smartVISU aufruft, kommt man zu einer Inline Dokumentation der
     smartVISU. Eine umfassende aktuelle Kurzanleitung kann nachinstalliert werden. Wie das geht, ist weiter
-    unten beschrieben.
+    oben beschrieben.
+    Zudem gibt es seit smartVISU v3.0 den Widget Assistenten, mit dem die benötigten Widgets parametriert,
+    getestet und in die Zwischenablage kopiert werden können. Der Widget Assistent ist über das 
+    Systemmenü zu erreichen.
 
 Mit dem Plugin **smartvisu** können aus der Definition der Items in SmartHomeNG automatisch Visuseiten
 erstellt werden. Diese Visu Seiten werden im Verzeichnis ``smarthome`` des ``pages`` Verzeichnisses der
@@ -142,5 +148,4 @@ Mischung von generierten und manuell erstellten Seiten
 Es ist möglich automatisch generierte und manuell erstellte Seiten zu mischen. Das Vorgehen hierzu ist
 in unter :doc:`Visualisierung </visualisierung/visualisierung>` und in der
 :doc:`Dokumentation des Plugins </plugins/visu_smartvisu/user_doc>` beschrieben.
-
 

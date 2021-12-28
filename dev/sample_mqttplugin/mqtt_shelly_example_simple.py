@@ -29,8 +29,9 @@ import logging
 import json
 
 from lib.module import Modules
-from lib.model.mqttplugin import *
+from lib.model.mqttplugin import MqttPlugin
 from lib.item import Items
+from .webif import WebInterface
 
 
 class Shelly(MqttPlugin):
@@ -66,8 +67,8 @@ class Shelly(MqttPlugin):
         # Initialization code goes here
         self.shelly_items = []              # to hold item information for web interface
 
-         # if plugin should start even without web interface
-        self.init_webinterface()
+        # if plugin should start even without web interface
+        self.init_webinterface(WebInterface)
 
         return
 
@@ -112,7 +113,7 @@ class Shelly(MqttPlugin):
                         can be sent to the knx with a knx write function within the knx plugin.
         """
         if self.has_iattr(item.conf, 'shelly_id'):
-            self.logger.debug("parsing item: {0}".format(item.id()))
+            self.logger.debug(f"parsing item: {item}")
 
             shelly_id = self.get_iattr_value(item.conf, 'shelly_id').upper()
             shelly_type = self.get_iattr_value(item.conf, 'shelly_type').lower()
@@ -125,7 +126,7 @@ class Shelly(MqttPlugin):
             # subscribe to topic for relay state
             topic = 'shellies/' + shelly_type + '-' + shelly_id + '/relay/' + shelly_relay
             payload_type = item.property.type
-            bool_values = ['off','on']
+            bool_values = ['off', 'on']
             self.add_subscription(topic, payload_type, bool_values, item=item)
 
             return self.update_item
@@ -153,12 +154,12 @@ class Shelly(MqttPlugin):
         :param source: if given it represents the source
         :param dest: if given it represents the dest
         """
-        self.logger.info("update_item: {}".format(item.id()))
+        self.logger.info(f"update_item: {item}")
 
         if self.alive and caller != self.get_shortname():
             # code to execute if the plugin is not stopped
             # and only, if the item has not been changed by this this plugin:
-            self.logger.info("update_item: {}, item has been changed outside this plugin".format(item.id()))
+            self.logger.info(f"update_item: {item}, item has been changed outside this plugin")
 
             # publish topic with new relay state
             shelly_id = self.get_iattr_value(item.conf, 'shelly_id').upper()
@@ -167,118 +168,4 @@ class Shelly(MqttPlugin):
             if not shelly_relay:
                 shelly_relay = '0'
             topic = 'shellies/' + shelly_type + '-' + shelly_id + '/relay/' + shelly_relay + '/command'
-            self.publish_topic(topic, item(), item, bool_values=['off','on'])
-
-    # -----------------------------------------------------------------------
-
-    def init_webinterface(self):
-        """"
-        Initialize the web interface for this plugin
-
-        This method is only needed if the plugin is implementing a web interface
-        """
-        try:
-            self.mod_http = Modules.get_instance().get_module('http')  # try/except to handle running in a core version that does not support modules
-        except:
-            self.mod_http = None
-        if self.mod_http == None:
-            self.logger.error("Not initializing the web interface")
-            return False
-
-        import sys
-        if not "SmartPluginWebIf" in list(sys.modules['lib.model.smartplugin'].__dict__):
-            self.logger.warning("Web interface needs SmartHomeNG v1.5 and up. Not initializing the web interface")
-            return False
-
-        # set application configuration for cherrypy
-        webif_dir = self.path_join(self.get_plugin_dir(), 'webif')
-        config = {
-            '/': {
-                'tools.staticdir.root': webif_dir,
-            },
-            '/static': {
-                'tools.staticdir.on': True,
-                'tools.staticdir.dir': 'static'
-            }
-        }
-
-        # Register the web interface as a cherrypy app
-        self.mod_http.register_webif(WebInterface(webif_dir, self),
-                                     self.get_shortname(),
-                                     config,
-                                     self.get_classname(), self.get_instance_name(),
-                                     description='')
-
-        return True
-
-
-
-# -----------------------------------------------------------------------
-#    Webinterface of the plugin
-# -----------------------------------------------------------------------
-
-import cherrypy
-from jinja2 import Environment, FileSystemLoader
-
-
-class WebInterface(SmartPluginWebIf):
-
-    def __init__(self, webif_dir, plugin):
-        """
-        Initialization of instance of class WebInterface
-
-        :param webif_dir: directory where the webinterface of the plugin resides
-        :param plugin: instance of the plugin
-        :type webif_dir: str
-        :type plugin: object
-        """
-        self.logger = logging.getLogger(__name__)
-        self.webif_dir = webif_dir
-        self.plugin = plugin
-        self.tplenv = self.init_template_environment()
-
-        self.items = Items.get_instance()
-
-    @cherrypy.expose
-    def index(self, reload=None):
-        """
-        Build index.html for cherrypy
-
-        Render the template and return the html file to be delivered to the browser
-
-        :return: contents of the template after beeing rendered
-        """
-        self.plugin.get_broker_info()
-
-        tmpl = self.tplenv.get_template('index.html')
-        # add values to be passed to the Jinja2 template eg: tmpl.render(p=self.plugin, interface=interface, ...)
-        return tmpl.render(p=self.plugin, items=sorted(self.items.return_items(), key=lambda k: str.lower(k['_path'])))
-
-
-    @cherrypy.expose
-    def get_data_html(self, dataSet=None):
-        """
-        Return data to update the webpage
-
-        For the standard update mechanism of the web interface, the dataSet to return the data for is None
-
-        :param dataSet: Dataset for which the data should be returned (standard: None)
-        :return: dict with the data needed to update the web page.
-        """
-        if dataSet is None:
-            # get the new data
-            self.plugin.get_broker_info()
-            data = {}
-            data['broker_info'] = self.plugin._broker
-            data['broker_uptime'] = self.plugin.broker_uptime()
-            data['item_values'] = self.plugin._item_values
-
-            # return it as json the the web page
-            try:
-                return json.dumps(data)
-            except Exception as e:
-                self.logger.error("get_data_html exception: {}".format(e))
-                return {}
-
-        return
-
+            self.publish_topic(topic, item(), item, bool_values=['off', 'on'])

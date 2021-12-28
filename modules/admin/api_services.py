@@ -102,6 +102,8 @@ class ServicesController(RESTResource):
         shtime = Shtime.get_instance()
         items = Items.get_instance()
         import math
+        import lib.userfunctions as uf
+
 
         eval_code = eval_code.replace('\r', '').replace('\n', ' ').replace('  ', ' ').strip()
         if relative_to == '':

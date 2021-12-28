@@ -26,7 +26,6 @@
 #########################################################################
 #
 # TO DO:
-# - Isolate Logging (MemLog, etc.) to lib module
 # - remove all remarks with old code (that has been moved to lib modules)
 #
 #########################################################################
@@ -96,8 +95,9 @@ import lib.translation
 from lib.shtime import Shtime
 import lib.shyaml
 from lib.shpypi import Shpypi
-
+from lib.triggertimes import TriggerTimes
 from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE)
+import lib.userfunctions as uf
 
 #import bin.shngversion
 #MODE = 'default'
@@ -107,23 +107,6 @@ from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE)
 #####################################################################
 # Classes
 #####################################################################
-
-class _LogHandler(logging.StreamHandler):
-    """
-    LogHandler used by MemLog
-    """
-    def __init__(self, log, shtime):
-        logging.StreamHandler.__init__(self)
-        self._log = log
-        self._shtime = shtime
-
-    def emit(self, record):
-        try:
-            self.format(record)
-            timestamp = datetime.datetime.fromtimestamp(record.created, self._shtime.tzinfo())
-            self._log.add([timestamp, record.threadName, record.levelname, record.message])
-        except Exception:
-            self.handleError(record)
 
 class SmartHome():
     """
@@ -159,8 +142,6 @@ class SmartHome():
         self.plugin_start_complete = False
 
         self._smarthome_conf_basename = None
-        self._log_buffer = 50
-        self.__logs = {}
         self.__event_listeners = {}
         self.__all_listeners = []
         self.modules = []
@@ -212,7 +193,8 @@ class SmartHome():
         """
         self.shng_status = {'code': 0, 'text': 'Initalizing'}
         self._logger = logging.getLogger(__name__)
-        self._logger_main = logging.getLogger(__name__ + '.main')
+        self._logger_main = logging.getLogger(__name__)
+        self.logs = lib.log.Logs(self)   # initialize object for memory logs
 
         self.initialize_vars()
         self.initialize_dir_vars()
@@ -243,6 +225,7 @@ class SmartHome():
 
         self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
         self._items_dir = os.path.join(self._extern_conf_dir, 'items'+os.path.sep)
+        self._functions_dir = os.path.join(self._extern_conf_dir, 'functions'+os.path.sep)
         self._logic_dir = os.path.join(self._extern_conf_dir, 'logics'+os.path.sep)
         self._scenes_dir = os.path.join(self._extern_conf_dir, 'scenes'+os.path.sep)
         self._smarthome_conf_basename = os.path.join(self._etc_dir,'smarthome')
@@ -316,9 +299,11 @@ class SmartHome():
         virtual_text = ''
         if lib.utils.running_virtual():
             virtual_text = ' in virtual environment'
-        self._logger_main.warning("--------------------   Init SmartHomeNG {}   --------------------".format(self.version))
-        self._logger_main.warning(f"Running in Python interpreter 'v{self.PYTHON_VERSION}'{virtual_text}, from directory {self._base_dir}")
-        self._logger_main.warning(f" - on {platform.platform()} (pid={pid})")
+        self._logger_main.notice("--------------------   Init SmartHomeNG {}   --------------------".format(self.version))
+        self._logger_main.notice(f"Running in Python interpreter 'v{self.PYTHON_VERSION}'{virtual_text}, from directory {self._base_dir}")
+        self._logger_main.notice(f" - on {platform.platform()} (pid={pid})")
+        if logging.getLevelName('NOTICE') == 31:
+            self._logger_main.notice(f" - Loglevel NOTICE is set to value {logging.getLevelName('NOTICE')} because handler of root logger is set to level WARNING or higher  -  Set level of handler '{self.logs.root_handler_name}' to 'NOTICE'!")
 
         default_encoding = locale.getpreferredencoding() # returns cp1252 on windows
         if not (default_encoding in  ['UTF8','UTF-8']):
@@ -355,7 +340,7 @@ class SmartHome():
         base_reqs = self.shpypi.test_base_requirements(self)
         if base_reqs == 0:
             self.restart('SmartHomeNG (Python package installation)')
-            exit(5)    # exit code 5 -> for systemctl to restart ShamrtHomeNG
+            exit(5)    # exit code 5 -> for systemctl to restart SmartHomeNG
         elif base_reqs == -1:
             self._logger.critical("Python package requirements for modules are not met and unable to install base requirements")
             self._logger.critical("Do you have multiple Python3 Versions installed? Maybe PIP3 looks into a wrong Python environment. Try to configure pip_command in etc/smarthome.yaml")
@@ -365,7 +350,7 @@ class SmartHome():
         plugin_reqs = self.shpypi.test_conf_plugins_requirements(self._plugin_conf_basename, self._plugins_dir)
         if plugin_reqs == 0:
             self.restart('SmartHomeNG (Python package installation)')
-            exit(5)    # exit code 5 -> for systemctl to restart ShamrtHomeNG
+            exit(5)    # exit code 5 -> for systemctl to restart SmartHomeNG
         elif plugin_reqs == -1:
             self._logger.critical("Python package requirements for configured plugins are not met and unable to install those requirements")
             self._logger.critical("Do you have multiple Python3 Versions installed? Maybe PIP3 looks into a wrong Python environment. Try to configure pip_command in etc/smarthome.yaml")
@@ -377,7 +362,7 @@ class SmartHome():
 
 
         self.shtime._initialize_holidays()
-        self._logger_main.warning(" - " + self.shtime.log_msg)
+        self._logger_main.notice(" - " + self.shtime.log_msg)
 
         # Add Signal Handling
 #        signal.signal(signal.SIGHUP, self.reload_logics)
@@ -394,20 +379,15 @@ class SmartHome():
         # Catching Exceptions
         sys.excepthook = self._excepthook
 
-        #############################################################
-        # Setting debug level and adding memory handler
-        self.initMemLog()
-
         # test if a valid locale is set in the operating system
         if os.name != 'nt':
-            pass
-        try:
-            if not any(utf in os.environ['LANG'].lower() for utf in ['utf-8', 'utf8']):
-                self._logger.error("Locale for the enviroment is not set to a valid value. Set the LANG environment variable to a value supporting UTF-8")
-        except:
-            self._logger.error("Locale for the enviroment is not set. Defaulting to en_US.UTF-8")
-            os.environ["LANG"] = 'en_US.UTF-8'
-            os.environ["LC_ALL"] = 'en_US.UTF-8'
+            try:
+                if not any(utf in os.environ['LANG'].lower() for utf in ['utf-8', 'utf8']):
+                    self._logger.error("Locale for the enviroment is not set to a valid value. Set the LANG environment variable to a value supporting UTF-8")
+            except:
+                self._logger.error("Locale for the enviroment is not set. Defaulting to en_US.UTF-8")
+                os.environ["LANG"] = 'en_US.UTF-8'
+                os.environ["LC_ALL"] = 'en_US.UTF-8'
 
         #############################################################
         # Link Tools
@@ -528,15 +508,10 @@ class SmartHome():
         """
         if conf_basename == '':
             conf_basename = self._log_conf_basename
-        #fo = open(conf_basename + YAML_FILE, 'r')
-        doc = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
-        if doc == None:
-            print()
-            print("ERROR: Invalid logging configuration in file 'logging.yaml'")
-            exit(1)
-        self.logging_config = doc
-        logging.config.dictConfig(doc)
-        #fo.close()
+        conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
+
+        self.logs.configure_logging(conf_dict)
+
         if MODE == 'interactive':  # remove default stream handler
             logging.getLogger().disabled = True
         elif MODE == 'verbose':
@@ -545,22 +520,7 @@ class SmartHome():
             logging.getLogger().setLevel(logging.DEBUG)
         elif MODE == 'quiet':
             logging.getLogger().setLevel(logging.WARNING)
-#       log_file.doRollover()
-
-
-    def initMemLog(self):
-        """
-        This function initializes all needed datastructures to use the (old) memlog plugin
-        """
-
-        self.log = lib.log.Log(self, 'env.core.log', ['time', 'thread', 'level', 'message'], maxlen=self._log_buffer)
-        _logdate = "%Y-%m-%d %H:%M:%S"
-        _logformat = "%(asctime)s %(levelname)-8s %(threadName)-12s %(message)s"
-        formatter = logging.Formatter(_logformat, _logdate)
-        log_mem = _LogHandler(self.log, self.shtime)
-        log_mem.setLevel(logging.WARNING)
-        log_mem.setFormatter(formatter)
-        logging.getLogger('').addHandler(log_mem)
+        return
 
 
     #################################################################
@@ -577,6 +537,11 @@ class SmartHome():
         self.shng_status = {'code': 10, 'text': 'Starting'}
 
         threading.currentThread().name = 'Main'
+
+        #############################################################
+        # Prepare TriggerTimes for Scheduler
+        #############################################################
+        self.triggertimes = TriggerTimes(self)
 
         #############################################################
         # Start Scheduler
@@ -600,6 +565,11 @@ class SmartHome():
         self._logger.info("Init loadable Modules")
         self.modules = lib.module.Modules(self, configfile=self._module_conf_basename)
         self.modules.start()
+
+        #############################################################
+        # Init and import user-functions
+        #############################################################
+        uf.init_lib(self.getBaseDir())
 
         #############################################################
         # Init Item-Wrapper
@@ -638,7 +608,7 @@ class SmartHome():
         #############################################################
         # Init Scenes
         #############################################################
-        lib.scene.Scenes(self)
+        self.scenes = lib.scene.Scenes(self)
 
         #############################################################
         # Start Connections
@@ -665,7 +635,7 @@ class SmartHome():
         # Main Loop
         #############################################################
         self.shng_status = {'code': 20, 'text': 'Running'}
-        self._logger_main.warning("--------------------   SmartHomeNG initialization finished   --------------------")
+        self._logger_main.notice("--------------------   SmartHomeNG initialization finished   --------------------")
 
         while self.alive:
             try:
@@ -714,14 +684,14 @@ class SmartHome():
 #            if header_logged:
 #                self._logger.warning("SmartHomeNG stopped")
 #        else:
-        self._logger_main.warning("--------------------   SmartHomeNG stopped   --------------------")
+        self._logger_main.notice("--------------------   SmartHomeNG stopped   --------------------")
 
         self.shng_status = {'code': 33, 'text': 'Stopped'}
 
         lib.daemon.remove_pidfile(PIDFILE)
 
         logging.shutdown()
-        exit(5)  # exit code 5 -> for systemctl to restart ShamrtHomeNG
+        exit(5)  # exit code 5 -> for systemctl to restart SmartHomeNG
 
 
     def restart(self, source=''):
@@ -734,7 +704,7 @@ class SmartHome():
             self.shng_status = {'code': 30, 'text': 'Restarting'}
             if source != '':
                 source = ', initiated by ' + source
-            self._logger_main.warning("--------------------   SmartHomeNG restarting" + source + "   --------------------")
+            self._logger_main.notice("--------------------   SmartHomeNG restarting" + source + "   --------------------")
             # python_bin could contain spaces (at least on windows)
             python_bin = sys.executable
             if ' ' in python_bin:
@@ -743,7 +713,7 @@ class SmartHome():
             self._logger.info("Restart command = '{}'".format(command))
             try:
                 p = subprocess.Popen(command, shell=True)
-                exit(5)  # exit code 5 -> for systemctl to restart ShamrtHomeNG
+                exit(5)  # exit code 5 -> for systemctl to restart SmartHomeNG
             except subprocess.SubprocessError as e:
                 self._logger.error("Restart command '{}' failed with error {}".format(command,e))
 
@@ -772,33 +742,6 @@ class SmartHome():
 #        for child in self.__children:
 #            yield child
         return self.items.get_toplevel_items()
-
-
-    #################################################################
-    # Log Methods
-    #################################################################
-    """
-    SmartHomeNG internally keeps a list of logs which can be extended
-    Currently these logs are created by several plugins
-    (plugins memlog, operationlog and visu_websocket) and initMemLog function of SmartHomeNG
-    """
-    def add_log(self, name, log):
-        """
-        Adds a log to the list of logs
-
-        :param name: Name of log
-        :param log: Log object, essentially an object based of a double ended queue
-        """
-        self.__logs[name] = log
-
-    def return_logs(self):
-        """
-        Function to the list of logs
-
-        :return: List of logs
-        :rtype: list
-        """
-        return self.__logs
 
 
     #################################################################
