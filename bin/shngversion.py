@@ -74,8 +74,10 @@ import plugins.__init__ as plugin_vers
 # Update auf 1.8.2c wg. Wegen Anpassungen an mem-logging / lib.log
 # Update auf 1.8.2d Unterstützung für User-Functions
 
-shNG_version = '1.8.2d'
-shNG_branch = 'develop'
+# Update auf 1.9.0  wg. Release
+
+shNG_version = '1.9.0'
+shNG_branch = 'master'
 
 # ---------------------------------------------------------------------------------
 FileBASE = None
