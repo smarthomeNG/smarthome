@@ -51,10 +51,10 @@ filters:
 handlers:
 
     shng_warnings_file:
-        # This handler writes only entries with level WARNING and above
+        # This handler writes only entries with level NOTICE/WARNING and above
         # to the file. This allows for a quick check if all is running smooth.
         #
-        # To keep the warnings file easy readable, the level should always be WARNING!
+        # To keep the warnings file easy readable, the level should always be NOTICE!
         #
         # The TimedRotatingFileHandler seperates the logentries by day and
         # keeps the entries of the last seven days in seperate files.
