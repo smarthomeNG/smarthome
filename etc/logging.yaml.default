@@ -62,7 +62,7 @@ handlers:
         #class: logging.handlers.TimedRotatingFileHandler
         (): lib.log.ShngTimedRotatingFileHandler
         formatter: shng_simple
-        level: WARNING
+        level: NOTICE
         utc: false
         when: midnight
         backupCount: 7
@@ -141,24 +141,24 @@ loggers:
     lib:
         # Default logger for SmartHomeNG libraries
         handlers: [shng_details_file]
-        level: WARNING
+        level: NOTICE
 
     lib.smarthome:
         # Add all logging handlers that should receive the initial log lines after a startup
         # (example below) but leave out the logging handlers that are defined in the root-logger
         # (otherwise log entries will be doubled).
         #
-        # 2020-12-29  11:35:34 WARNING  lib.smarthome   --------------------   Init SmartHomeNG 1.8.0   --------------------
-        # 2020-12-29  11:35:34 WARNING  lib.smarthome   Running in Python interpreter 'v3.8.3 final' in virtual environment
-        # 2020-12-29  11:35:34 WARNING  lib.smarthome    - on Linux-4.9.0-6-amd64-x86_64-with-glibc2.17 (pid=24407)
-        # 2020-12-29  11:35:35 WARNING  lib.smarthome    - Nutze Feiertage für Land 'DE', Provinz 'HH', 1 benutzerdefinierte(r) Feiertag(e) definiert
-        # 2020-12-29  11:36:54 WARNING  lib.smarthome   --------------------   SmartHomeNG initialization finished   --------------------
+        # 2020-12-29  11:35:34 NOTICE  lib.smarthome   --------------------   Init SmartHomeNG 1.8.0   --------------------
+        # 2020-12-29  11:35:34 NOTICE  lib.smarthome   Running in Python interpreter 'v3.8.3 final' in virtual environment
+        # 2020-12-29  11:35:34 NOTICE  lib.smarthome    - on Linux-4.9.0-6-amd64-x86_64-with-glibc2.17 (pid=24407)
+        # 2020-12-29  11:35:35 NOTICE  lib.smarthome    - Nutze Feiertage für Land 'DE', Provinz 'HH', 1 benutzerdefinierte(r) Feiertag(e) definiert
+        # 2020-12-29  11:36:54 NOTICE  lib.smarthome   --------------------   SmartHomeNG initialization finished   --------------------
         #
         # logging to shng_details_file is already enabled in logger lib:
         #handlers: [shng_develop_file]
 
         # set to WARNING LEVEL to prevent unwanted log entries and add ONLY start and stop log-messages to further logfiles
-        level: WARNING
+        level: NOTICE
 
     modules:
         # Default logger for SmartHomeNG modules
