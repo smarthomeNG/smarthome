@@ -148,11 +148,12 @@ def create_backup(conf_base_dir, base_dir, filename_with_timestamp=False, before
 
     # backup files from /scenes
     #logger.warning("- scenes_dir = {}".format(scenes_dir))
-    backup_directory(backupzip, scenes_dir)
+    backup_directory(backupzip, scenes_dir, '.yaml')
+    backup_directory(backupzip, scenes_dir, '.conf')
 
     # backup files from /functions
     #logger.warning("- uf_dir = {}".format(uf_dir))
-    backup_directory(backupzip, uf_dir)
+    backup_directory(backupzip, uf_dir, '.*')
 
     zipped_files = backupzip.namelist()
     logger.info("Zipped files: {}".format(zipped_files))
@@ -223,7 +224,7 @@ def backup_directory(backupzip, source_dir, extenstion='.yaml'):
     arc_dir = dir + os.path.sep
     files = []
     for filename in os.listdir(source_dir):
-        if filename.endswith(extenstion):
+        if filename.endswith(extenstion) or extenstion == '.*':
             backup_file(backupzip, source_dir, arc_dir, filename)
 
     return

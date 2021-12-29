@@ -1,17 +1,17 @@
-==========================
-Release 1.x - tt. mmm 2021
-==========================
+===============================
+Release 1.9 - 28. Dezember 2021
+===============================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
-.. note::
+.. comment note::
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 25. Dezember 2021
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 27. Dezember 2021
        (...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 26. Dezember 2021
-       (onewire plugin: enhanced tree function in owbase)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 28. Dezember 2021
+       (openweathermap: Added name of location to locals-struct)
 
 
 Überblick
@@ -24,35 +24,20 @@ folgenden in diesen Release Notes beschrieben.
 Unterstützte Python Versionen
 -----------------------------
 
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.8 ist Python 3.6.
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.9 ist Python 3.7.
 (Siehe auch *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
 
-..
-    Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.8 nicht mehr unter älteren Python Versionen läuft,
-    sondern das SmartHomeNG nicht mehr mit älteren Python Versionen getestet wird und das gemeldete Fehler mit älteren
-    Python Versionen nicht mehr zu Buxfixen führen.
-
-    Es werden jedoch zunehmend Features eingesetzt, die erst ab Python 3.6 zur Verfügung stehen.
-    So ist Python 3.6 die minimale Vorraussetzung zur Nutzung des neuen Websocket Moduls.
+Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.9 nicht mehr unter älteren Python Versionen läuft,
+sondern das SmartHomeNG nicht mehr mit älteren Python Versionen getestet wird und das gemeldete Fehler mit älteren
+Python Versionen nicht mehr zu Buxfixen führen.
 
 
 Minimum Python Version
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 Die absolute Minimum Python Version in der SmartHomeNG startet wurde auf v3.6 angehoben, da Python 3.5 im
 September 2020 End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen
 auf einer der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
-
-.. important::
-
-   Mit dem kommenden Release 1.9 werden die unterstützten Python Versionen
-   :doc:`(wie hier beschrieben) </installation/anforderungen>` auf **Python 3.7, 3.8, 3.9** angehoben. Python 3.6
-   hatte bereits eine Reihe sehr interessanter Features und Verbesserungen gebracht, die dann in SmartHomeNG genutzt
-   werden können.
-
-   Sollten solche neuen Features in den Core Einzug halten, wird die **Absolute Minimum Python Version** auf 3.6
-   angehoben werden. Sollten die Features nur in Plugins genutzt werden, so können nur solche Plugins nicht genutzt
-   werden, wenn eine ältere Python Version als 3.6 eingesetzt wird.
 
 
 Änderungen am Core
@@ -78,13 +63,15 @@ Updates in the CORE
 * etc.logging.yaml.default: Changes to new logging handlers
 * move crontab in lib.triggertimes, extend syntax for crontabs
 
-* Items:
-
-  * ...
-
 * Logics:
 
-  * ...
+  * Logic **check_items.py**: Check items for damaged items (created in logics)
+    It is not possible with Python to intercept an assignment to a variable or an objects' attribute. The only
+    thing one can do is search all items for a mismatching item type.
+
+It is not possible with Python to intercept an assignment to a variable or an
+objects' attribute. The only thing one can do is search all items for a
+mismatching item type.
 
 * lib.backup:
 
@@ -108,6 +95,10 @@ Updates in the CORE
 * lib.log:
 
   * Improved handling of loglevel NOTICE
+
+* lib.metadata
+
+  * bugfix in version checking
 
 * lib.network:
 
@@ -271,11 +262,14 @@ Plugin Updates
   * updated to use newest version of datepicker
   * Improved robustness, limit reconnects improved plugin robustness, if db is not available (e.g. temporarily missing ethernet)
   * Limit number of reconnects
+  * Fixed bug in item_detail page
+  * added Datatable to overview and details
 
 * dlms:
 
   * added parameter to allow listen only mode
   * extend webinterface with list of common obis codes
+  * allow crontab timings, enhance listen only smartmeter handling, improve getting manufacturer list
 
 * ebus:
 
@@ -342,6 +336,8 @@ Plugin Updates
   * adjusted plugin to lib.network
   * added DPT 251.600 RGBW
   * fix webinterface fix mixup
+  * add password for knxproj to webif, introduce knxd namespace for constants, update doku
+  * removed local redundant datatables
 
 * kodi:
 
@@ -415,6 +411,11 @@ Plugin Updates
 * openweathermap:
 
   * corrected user_doc (replaced all references to darksky plugin)
+  * multiple changes, bumped version to 1.8.2
+  * Fixed bug in metadaa (plugin.yaml)
+  * Removed extra line with API-key which displayed only asterixes from web interface
+  * Added name of location to locals-struct
+  * Bumped version to 1.8.3
 
 * raumfeld
 
@@ -451,6 +452,7 @@ Plugin Updates
 * rpi1wire:
 
   * Updated user docu, webif and Code cleanup
+  * Corrected errors in structure of user documentation
 
 * russound:
 
@@ -597,24 +599,11 @@ in the next release. User of these plugins should switch to corresponding succee
 
 * System Plugins
 
-  * sqlite - switch to the **database** plugin
+  * backend - use the administration interface instead
   * sqlite_visu2_8 - switch to the **database** plugin
-
-* Gateway Plugins
-
-  * tellstick - classic Plugin, not used according to survey in knx-user-forum
-
-* Interface Plugins
-
-  * netio230b - classic plugin, not used according to survey in knx-user-forum
-  * smawb - classic plugin, not used according to survey in knx-user-forum
 
 * Web Plugins
 
-  * alexa - switch to the **alexa4p3** plugin
-  * boxcar - classic Plugin, not used according to survey in knx-user-forum
-  * mail - switch to the **mailsend** and **mailrcv** plugin
-  * openenergymonitor - classic plugin, not used according to survey in knx-user-forum
   * wunderground - the free API is not provided anymore by Wunderground
 
 
@@ -631,13 +620,11 @@ The following plugins are marked as *deprecated* with SmartHomeNG v1.7, because 
 * Interface Plugins
 
   * easymeter
-  * netio230b
   * smawb
   * vr100
 
 * Web Plugins
 
-  * boxcar
   * nma
 
 Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecated*, because the new mqtt
@@ -649,18 +636,20 @@ Retired Plugins
 
 The following plugins have been retired. They had been deprecated in one of the preceding releases of SmartHomeNG.
 They have been removed from the plugins repository, but they can still be found on github. Now they reside in
-the plugin_archive repository from where they can be downloaded if they are still needed.
+the **plugin_archive** repository from where they can be downloaded if they are still needed.
 
-* ...
+* alexa - switch to the **alexa4p3** plugin
+* boxcar - classic Plugin, not used according to survey in knx-user-forum
+* mail - switch to the **mailsend** and **mailrcv** plugin
+* netio230b - classic plugin, not used according to survey in knx-user-forum
+* openenergymonitor - classic plugin, not used according to survey in knx-user-forum
+* smawb - classic plugin, not used according to survey in knx-user-forum
+* sqlite - switch to the **database** plugin
+* tellstick - classic Plugin, not used according to survey in knx-user-forum
 
 
 Weitere Änderungen
 ==================
-
-Tools
------
-
-* ...
 
 
 Documentation

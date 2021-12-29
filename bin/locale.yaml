@@ -124,10 +124,13 @@ global_translations:
         'de': "Fehler beim Reload von userfunctions '{module}': {error} - alte Version von '{module}' ist noch aktiv"
         'en': '='
     "Reloaded userfunctions '{module}'":
-        'de': "Userfunctions '{module}' neu geladen"
+        'de': "Reload: Userfunctions '{module}' neu geladen"
         'en': '='
     "Reload: Userfunctions '{module}' do not exist":
-        'de': "Userfunctions '{module}' existieren nicht"
+        'de': "Reload: Userfunctions '{module}' existieren nicht"
+        'en': '='
+    "Reload: Loaded new userfunctions '{module}'":
+        'de': "Reload: Neue Userfunctions '{module}' geladen"
         'en': '='
     "No userfunctions are loaded, nothing to reload":
         'de': "Es existieren keine Userfunctions, es gibt nichts für einen Reload"

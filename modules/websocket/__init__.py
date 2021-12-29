@@ -480,7 +480,6 @@ class Websocket(Module):
                     elif command == 'logic':
                         answer = {}
                         await self.request_logic(data, client_addr)
-                        self.logger.warning("{} <CMD  not yet tested: '{}'   -   from {}".format(protocol, data, client_addr))
 
                     elif command == 'series':
                         path = data['item']
