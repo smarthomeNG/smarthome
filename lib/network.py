@@ -47,6 +47,7 @@ import struct
 import subprocess
 import threading
 import time
+from contextlib import suppress
 from . import aioudp
 
 
@@ -629,6 +630,11 @@ class Tcp_client(object):
             except Exception:
                 self.logger.warning(f'Error encoding message for client {self.name}')
                 return False
+
+        # automatically (re)connect on send attempt
+        if not self._is_connected:
+            self.connect()
+
         try:
             if self._is_connected:
                 bytes_sent = self._socket.send(message)
@@ -636,8 +642,13 @@ class Tcp_client(object):
                     self.logger.warning(f'Error sending message {message} to host {self._host}: message truncated, sent {bytes_sent} of {len(message)} bytes')
             else:
                 return False
-        except BrokenPipeError:
-            self.logger.warning(f'Detected disconnect from {self._host}, send failed.')
+
+        except (BrokenPipeError, TimeoutError) as e:
+            if e.errno == 60:
+                # timeout
+                self.logger.warning(f'Detected timeout on {self._host}, disconnecting, send failed.')
+            else:
+                self.logger.warning(f'Detected disconnect from {self._host}, send failed.')
             self._is_connected = False
             if self._disconnected_callback:
                 self._disconnected_callback(self)
@@ -732,7 +743,12 @@ class Tcp_client(object):
                 events = waitobj.wait(1000)     # BMX
                 for fileno, read, write in events:  # BMX
                     if read:
-                        msg = self._socket.recv(4096)
+                        timeout = False
+                        try:
+                            msg = self._socket.recv(4096)
+                        except TimeoutError:
+                            msg = None
+                            timeout = True
                         # Check if incoming message is not empty
                         if msg:
                             # TODO: doing this breaks line separation if multiple lines 
@@ -777,8 +793,12 @@ class Tcp_client(object):
                         else:
                             if self.__running:
 
-                                # default state, peer closed connection
-                                self.logger.warning(f'Connection closed by peer {self._host}')
+                                if timeout:
+                                    # TimeoutError exception caught
+                                    self.logger.warning(f'Connection timed out on peer {self._host}, disconnecting.')
+                                else:
+                                    # default state, peer closed connection
+                                    self.logger.warning(f'Connection closed by peer {self._host}')
                                 self._is_connected = False
                                 waitobj.unwatch(self._socket)
                                 if self._disconnected_callback is not None:
@@ -803,11 +823,11 @@ class Tcp_client(object):
                 self._is_receiving = False
                 return
             else:
-                self._log_exception(ex, f'lib.network receive thread died with error: {ex}. Go tell...')
+                self._log_exception(ex, f'lib.network receive thread died with unexpected error: {ex}. Go tell...')
         self._is_receiving = False
         
-    def _log_exception( self, ex, msg):
-        self.logger.error(msg + ' If stack trace is necessary, enable debug log')
+    def _log_exception(self, ex, msg):
+        self.logger.error(msg + ' -- If stack trace is necessary, enable/check debug log')
 
         if self.logger.isEnabledFor(logging.DEBUG):
 
@@ -904,10 +924,8 @@ class ConnectionClient(object):
         """
         Ensure drain() is called.
         """
-        try:
+        with suppress(ConnectionResetError):
             await self.writer.drain()
-        except ConnectionResetError:
-            pass
 
     def send(self, message):
         """
@@ -1222,11 +1240,9 @@ class Tcp_server(object):
         self.__loop.call_soon_threadsafe(self.__loop.stop)
         while self.__loop.is_running():
             pass
-        try:
+        with suppress(AttributeError):  # thread can disappear between first and second condition test
             if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
-        except AttributeError:  # thread can disappear between first and second condition test
-            pass
         self.__loop.close()
 
 
@@ -1268,8 +1284,10 @@ class Udp_server(object):
         self._close_timeout = 2
 
         # private properties
-        self.__loop = None
         self.__coroutine = None
+        self.__loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.__loop)
+
         self.__server = aioudp.aioUDPServer()
         self.__listening_thread = None
         self.__running = True
@@ -1299,8 +1317,6 @@ class Udp_server(object):
             return False
         try:
             self.logger.info(f'Starting up UDP server socket {self.__our_socket}')
-            self.__loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(self.__loop)
             self.__coroutine = self.__start_server()
             self.__loop.run_until_complete(self.__coroutine)
 
@@ -1358,11 +1374,9 @@ class Udp_server(object):
             self.__loop.stop()
         time.sleep(0.5)
 
-        try:
+        with suppress(AttributeError):  # thread can disappear between first and second condition test
             if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
-        except AttributeError:  # thread can disappear between first and second condition test
-            pass
         self.__loop.close()
 
     async def __start_server(self):
