@@ -223,7 +223,6 @@ class Network(object):
         """
         # find login data
         pattern = re.compile('http([s]?)://([^:]+:[^@]+@)')
-
         # possible replacement modes
         replacement = {
             'strip': 'http\\g<1>://',
@@ -525,7 +524,7 @@ class Tcp_client(object):
     :type terminator: int | bytes | str
     """
 
-    def __init__(self, host, port, name=None, autoreconnect=True, connect_retries=5, connect_cycle=5, retry_cycle=30, binary=False, terminator=False):
+    def __init__(self, host, port, name=None, autoreconnect=True, connect_retries=5, connect_cycle=5, retry_cycle=30, binary=False, terminator=False, timeout=1):
         self.logger = logging.getLogger(__name__)
 
         # public properties
@@ -541,7 +540,7 @@ class Tcp_client(object):
         self._connect_retries = connect_retries
         self._connect_cycle = connect_cycle
         self._retry_cycle = retry_cycle
-        self._timeout = 1
+        self._timeout = timeout
 
         self._hostip = None
         self._family = socket.AF_INET
@@ -561,7 +560,7 @@ class Tcp_client(object):
         self.__receive_threadlock = threading.Lock()
         self.__running = True
 
-        #self.logger.setLevel(logging.DEBUG)   # Das sollte hier NICHT gesetzt werden, sondern in etc/logging.yaml im Logger lib.network konfiguriert werden!
+        # self.logger.setLevel(logging.DEBUG)   # Das sollte hier NICHT gesetzt werden, sondern in etc/logging.yaml im Logger lib.network konfiguriert werden!
 
         self._host = host
         self._port = port
