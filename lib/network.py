@@ -1284,8 +1284,10 @@ class Udp_server(object):
         self._close_timeout = 2
 
         # private properties
-        self.__loop = None
         self.__coroutine = None
+        self.__loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.__loop)
+
         self.__server = aioudp.aioUDPServer()
         self.__listening_thread = None
         self.__running = True
@@ -1315,8 +1317,6 @@ class Udp_server(object):
             return False
         try:
             self.logger.info(f'Starting up UDP server socket {self.__our_socket}')
-            self.__loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(self.__loop)
             self.__coroutine = self.__start_server()
             self.__loop.run_until_complete(self.__coroutine)
 
