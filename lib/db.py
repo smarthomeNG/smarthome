@@ -49,6 +49,8 @@ class Database():
     'lock()' - acquire the database lock (prevent simultaneous reads/writes)
     'release()' - release the database lock
     'verify()' - check database connection and reconnect if required
+    'connected()' - check if database is connected
+
 
     The SQL statements executed may have placeholders and parameters which
     are passed to the execution methods listed above. The following DB-API
