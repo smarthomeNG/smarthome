@@ -122,7 +122,7 @@ if core_reqs == 0:
         python_bin = '"'+python_bin+'"'
     command = python_bin + ' ' + os.path.join(BASE, 'bin', 'smarthome.py')
     try:
-        p = subprocess.Popen(command, shell=True)
+        p = subprocess.Popen(command + ' -r', shell=True)
     except subprocess.SubprocessError as e:
         print("Restart command '{}' failed with error {}".format(command,e))
     time.sleep(10)

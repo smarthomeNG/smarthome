@@ -510,7 +510,17 @@ class SmartHome():
             conf_basename = self._log_conf_basename
         conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
 
-        self.logs.configure_logging(conf_dict)
+        if not self.logs.configure_logging(conf_dict):
+            conf_basename = self._log_conf_basename + '_min'
+            print(f"       Trying minimal logging configuration from:")
+            print(f"       {conf_basename + YAML_FILE}")
+            print()
+            conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
+            if not self.logs.configure_logging(conf_dict, 'logging_min.yaml'):
+                print("ABORTING")
+                print()
+                exit(1)
+            print("Starting with minimal logging configuration")
 
         if MODE == 'interactive':  # remove default stream handler
             logging.getLogger().disabled = True

@@ -53,7 +53,7 @@ class Logs():
         return
 
 
-    def configure_logging(self, config_dict):
+    def configure_logging(self, config_dict, config_filename='logging.yaml'):
 
         if config_dict == None:
             print()
@@ -87,17 +87,17 @@ class Logs():
         except Exception as e:
             #self._logger_main.error(f"Invalid logging configuration in file 'logging.yaml' - Exception: {e}")
             print()
-            print("ERROR: Invalid logging configuration in file 'logging.yaml'")
+            print(f"ERROR: Invalid logging configuration in file '{config_filename}'")
             print(f"       Exception: {e}")
             print()
-            exit(1)
+            return False
 
         #self.logger.notice(f"Logs.configure_logging: Level NOTICE = {notice_level} / root_handler_level={root_handler_level}")
 
         # Initialize MemLog Handler to output root log entries to smartVISU
         self.initMemLog()
 
-        return
+        return True
 
 
     def add_logging_level(self, description, value):

@@ -1,0 +1,139 @@
+%YAML 1.1
+---
+version: 1
+disable_existing_loggers: false
+
+formatters:
+
+    # The following sections define the output formats to be used in the different logs
+    #
+    shng_simple:
+        format: '%(asctime)s %(levelname)-8s %(name)-19s %(message)s'
+        datefmt: '%Y-%m-%d  %H:%M:%S'
+
+    shng_detail1:
+        format: '%(asctime)s %(levelname)-8s %(module)-17s %(threadName)-12s %(message)s  --  (%(filename)s:%(funcName)s:%(lineno)d)'
+        datefmt: '%Y-%m-%d %H:%M:%S %Z'
+
+    shng_detail2:
+        format: '%(asctime)s %(levelname)-8s %(name)-19s %(module)-19s %(funcName)-12s ln:%(lineno)-3d %(message)s  ----  %(threadName)-12s '
+        datefmt: '%Y-%m-%d %H:%M:%S %Z'
+
+    shng_items:
+        format: '%(asctime)s %(levelname)-8s %(module)-12s %(message)s'
+        datefmt: '%Y-%m-%d %H:%M:%S'
+
+    shng_busmonitor:
+        # This formatter must be enabled when busmonitor logging from the knx plugin should be used.
+        format: '%(asctime)s;%(message)s;'
+        datefmt: '%Y-%m-%d;%H:%M:%S'
+
+
+handlers:
+
+    shng_warnings_file:
+        # This handler writes only entries with level NOTICE/WARNING and above
+        # to the file. This allows for a quick check if all is running smooth.
+        #
+        # To keep the warnings file easy readable, the level should always be NOTICE!
+        #
+        # The TimedRotatingFileHandler seperates the logentries by day and
+        # keeps the entries of the last seven days in seperate files.
+        #
+        #class: logging.handlers.TimedRotatingFileHandler
+        (): lib.log.ShngTimedRotatingFileHandler
+        formatter: shng_simple
+        level: NOTICE
+        utc: false
+        when: midnight
+        backupCount: 7
+        filename: ./var/log/smarthome-warnings.log
+        encoding: utf8
+
+    shng_details_file:
+        # This handler writes all entries to the details-file. Log entries with level WARNING
+        # and above are additionally written to the warnings-file (through the root logger).
+        #
+        # The TimedRotatingFileHandler seperates the logentries by day and
+        # keeps the entries of the last seven days in seperate files.
+        #
+        (): lib.log.ShngTimedRotatingFileHandler
+        formatter: shng_simple
+        level: DEBUG
+        utc: false
+        when: midnight
+        backupCount: 7
+        filename: ./var/log/smarthome-details.log
+        encoding: utf8
+
+    console:
+        class: logging.StreamHandler
+        formatter: shng_simple
+        stream: ext://sys.stdout
+
+loggers:
+    # The following default loggers should not be changed. If additional logging
+    # is required, a logger for the specific lib, module or plugin shoud be added.
+    #
+    functions:
+        handlers: [shng_details_file]
+        level: INFO
+
+    lib:
+        # Default logger for SmartHomeNG libraries
+        handlers: [shng_details_file]
+        level: NOTICE
+
+    lib.smarthome:
+        # Add all logging handlers that should receive the initial log lines after a startup
+        # (example below) but leave out the logging handlers that are defined in the root-logger
+        # (otherwise log entries will be doubled).
+        #
+        # 2020-12-29  11:35:34 NOTICE  lib.smarthome   --------------------   Init SmartHomeNG 1.8.0   --------------------
+        # 2020-12-29  11:35:34 NOTICE  lib.smarthome   Running in Python interpreter 'v3.8.3 final' in virtual environment
+        # 2020-12-29  11:35:34 NOTICE  lib.smarthome    - on Linux-4.9.0-6-amd64-x86_64-with-glibc2.17 (pid=24407)
+        # 2020-12-29  11:35:35 NOTICE  lib.smarthome    - Nutze Feiertage für Land 'DE', Provinz 'HH', 1 benutzerdefinierte(r) Feiertag(e) definiert
+        # 2020-12-29  11:36:54 NOTICE  lib.smarthome   --------------------   SmartHomeNG initialization finished   --------------------
+        #
+        # logging to shng_details_file is already enabled in logger lib:
+        #handlers: [shng_develop_file]
+
+        # set to WARNING LEVEL to prevent unwanted log entries and add ONLY start and stop log-messages to further logfiles
+        level: NOTICE
+
+    modules:
+        # Default logger for SmartHomeNG modules
+        handlers: [shng_details_file]
+        level: WARNING
+
+    plugins:
+        # Default logger for SmartHomeNG plugins
+        handlers: [shng_details_file]
+        level: WARNING
+
+    logics:
+        # Default logger for SmartHomeNG logics
+        # to change the loglevel for all logics, the level can be changed.
+        # Alternatively individual loggers for certain logics can be added.
+        handlers: [shng_details_file]
+        level: WARNING
+
+    # ================
+    # special loggers
+    # ----------------
+
+    __main__:
+        handlers: [shng_details_file]
+        level: WARNING
+
+
+root:
+    # This is the configuration of the root logger. Additionally to be written to other logs,
+    # ALL entries are handed to this logger. To keep the warnings file easy readable,
+    # the level should always be WARNING!
+    #
+    # Logging of details (level INFO and DEBUG) should be handled by other loggers and written
+    # to other log files than the warnings file.
+    #
+    level: WARNING
+    handlers: [shng_warnings_file]
