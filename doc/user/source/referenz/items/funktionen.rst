@@ -71,6 +71,9 @@ Bitte stattdessen die entsprechenden in SmartHomeNG v1.6 eingeführten Propertie
 | changed_by()           | Liefert einen String zurück, der auf das Objekt hinweist, welches das Item   |
 |                        | zuletzt geändert hat.                                                        |
 +------------------------+------------------------------------------------------------------------------+
+| updated_by()           | Liefert einen String zurück, der auf das Objekt hinweist, durch welches      |
+|                        | das Item zuletzt ein Update erfahren hat.                                    |
++------------------------+------------------------------------------------------------------------------+
 | prev_value()           | Liefert den Wert des Items zurück, den es vor der letzten Änderung hatte.    |
 +------------------------+------------------------------------------------------------------------------+
 | prev_update()          | Liefert ein *datetime* Objekt mit dem Zeitpunkt des vorletzten Updates des   |
@@ -112,5 +115,3 @@ Die folgende Beispiel Logik nutzt einige der oben beschriebenen Funktionen:
 
    # will in- or decrement the living room light to 100 by a stepping of ``1`` and a timedelta of ``2.5`` seconds.
    sh.living.light.fade(100, 1, 2.5)
-
-
