@@ -595,11 +595,11 @@ class Tcp_client(object):
         :rtype: bool
         """
         if self._hostip is None:  # return False if no valid ip to connect to
-            self.logger.error(f'No valid IP address to connect to {self._host}')
+            self.logger.error(f'No valid IP address to connect to {self._host}:{self._port}')
             self._is_connected = False
             return False
         if self._is_connected:  # return false if already connected
-            self.logger.error(f'Already connected to {self._host}, ignoring new request')
+            self.logger.error(f'Already connected to {self._host}:{self._port}, ignoring new request')
             return False
 
         self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name='TCP_Connect')
