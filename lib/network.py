@@ -667,12 +667,12 @@ class Tcp_client(object):
         Thread worker to handle connection.
         """
         if not self.__connect_threadlock.acquire(blocking=False):
-            self.logger.warning(f'Connection attempt already in progress for {self._host}, ignoring new request')
+            self.logger.warning(f'Connection attempt already in progress for {self._host}:{self._port}, ignoring new request')
             return
         if self._is_connected:
-            self.logger.error(f'Already connected to {self._host}, ignoring new request')
+            self.logger.error(f'Already connected to {self._host}:{self._port}, ignoring new request')
             return
-        self.logger.debug(f'Starting connection cycle for {self._host}')
+        self.logger.debug(f'Starting connection cycle for {self._host}:{self._port}')
         self._connect_counter = 0
         while self.__running and not self._is_connected:
             # Try a full connect cycle
