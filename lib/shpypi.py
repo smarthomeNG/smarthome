@@ -1181,7 +1181,8 @@ class Requirements_files():
             sh_minversion = Version.format(meta['plugin'].get('sh_minversion', ''))
             sh_maxversion = Version.format(meta['plugin'].get('sh_maxversion', ''))
             py_minversion = Version.format(meta['plugin'].get('py_minversion', ''))
-            py_maxversion = Version.format(meta['plugin'].get('py_maxversion', ''))
+            #py_maxversion = Version.format(meta['plugin'].get('py_maxversion', ''))
+            py_maxversion = meta['plugin'].get('py_maxversion', '') #w/o format to enable max 3.8 -> 3.8.999
             if sh_minversion != '':
                 self.logger.debug(f"sh_minversion={sh_minversion}, self.shng_version={self.shng_version}")
                 if Version.compare(sh_minversion, self.shng_version, '>'):
@@ -1199,6 +1200,12 @@ class Requirements_files():
                     self.logger.debug(f"meta data: {metaname} - meta: py_minversion={py_minversion}, py_maxversion={py_maxversion}")
                     return False, 'Python min version'
             if py_maxversion != '':
+                max = str(py_maxversion)
+                if len(max.split('.')) == 2:
+                    # if given max version has only two parts, make it the max for that version: 3.8 -> 3.8.999
+                    max += '.999'
+                py_maxversion = Version.format(str(max))
+
                 self.logger.debug(f"py_maxversion={py_maxversion}, self.py_version={self.py_version}")
                 if Version.compare(py_maxversion, self.py_version, '<'):
                     self.logger.debug(f"meta data: {metaname} - meta: py_minversion={py_minversion}, py_maxversion={py_maxversion}")
