@@ -57,7 +57,7 @@ _shpypi_instance = None    # Pointer to the initialized instance of the Shpypi c
 
 class Shpypi:
 
-    def __init__(self, sh=None, base=None, version=None):
+    def __init__(self, sh=None, base=None, version=None, for_tests=False):
         """
 
         :param smarthome:
@@ -65,6 +65,7 @@ class Shpypi:
         NOTE: During initialization (and initial calls to some methods, the logging interface is not yet initialized!!!
         """
         self.logger = logging.getLogger(__name__)
+        self.for_tests = for_tests
 
         global _shpypi_instance
         if _shpypi_instance is not None:
@@ -74,7 +75,7 @@ class Shpypi:
             self.logger.critical("A second 'shpypi' object has been created. There should only be ONE instance of class 'Shpypi'!!! Called from: {} {} ({})".format(calframe[1][1], calframe[1][2], calframe[1][3]))
 
         _shpypi_instance = self
-        self.req_files = Requirements_files(version)
+        self.req_files = Requirements_files(version, self.for_tests)
 
         self.scheduler_crontab = ['init', '7 3 * *']
 
@@ -1067,10 +1068,11 @@ class Requirements_files():
     _plugin_files = []
     _core_files = []  # to be a list in the future
 
-    def __init__(self, version='0.0.0'):
+    def __init__(self, version='0.0.0', for_tests=False):
 
         self.logger = logging.getLogger(__name__)
 
+        self.for_tests = for_tests
         self._conf_plugin_files = []
 
         self.shng_version = Version.format(version.split('-')[0])
@@ -1235,8 +1237,10 @@ class Requirements_files():
             if (selection == "plugins" and "_pv" not in root) or (level < basedir_level + 3):
                 for filename in fnmatch.filter(filenames, 'requirements.txt'):
                     use_it = True
+                    msg = ''
                     if (selection == "plugins"):
-                        use_it, msg = self._test_plugin_versions(os.path.join(root, filename))
+                        if self.for_tests:
+                            use_it, msg = self._test_plugin_versions(os.path.join(root, filename))
                     if use_it:
                         # print("level = {}: root = {}".format(level, root))
                         file_list.append(os.path.join(root, filename))
