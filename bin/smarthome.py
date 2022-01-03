@@ -112,7 +112,7 @@ VERSION = bin.shngversion.get_shng_version()
 from lib.shpypi import Shpypi
 shpypi = Shpypi.get_instance()
 if shpypi is None:
-    shpypi = Shpypi(base=BASE)
+    shpypi = Shpypi(base=BASE, version=VERSION)
 
 core_reqs = shpypi.test_core_requirements(logging=False, pip3_command=args.pip3_command)
 if core_reqs == 0:

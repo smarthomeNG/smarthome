@@ -46,7 +46,9 @@ try:
 except:
     pass
 
+import lib.shyaml as shyaml
 from lib.utils import Utils
+from lib.utils import Version
 from lib.constants import (YAML_FILE)
 
 
@@ -55,7 +57,7 @@ _shpypi_instance = None    # Pointer to the initialized instance of the Shpypi c
 
 class Shpypi:
 
-    def __init__(self, sh=None, base=None):
+    def __init__(self, sh=None, base=None, version=None):
         """
 
         :param smarthome:
@@ -72,7 +74,7 @@ class Shpypi:
             self.logger.critical("A second 'shpypi' object has been created. There should only be ONE instance of class 'Shpypi'!!! Called from: {} {} ({})".format(calframe[1][1], calframe[1][2], calframe[1][3]))
 
         _shpypi_instance = self
-        self.req_files = Requirements_files()
+        self.req_files = Requirements_files(version)
 
         self.scheduler_crontab = ['init', '7 3 * *']
 
@@ -229,7 +231,7 @@ class Shpypi:
     def test_core_requirements(self, logging=True, pip3_command=None):
 
         # build an actual requirements file for core+modules
-        # req_files = Requirements_files()
+        # req_files = Requirements_files(self.sh)
         self.req_files.create_requirementsfile('base')
         self.req_files.create_requirementsfile('all')
         self.req_files.create_requirementsfile('core')
@@ -263,7 +265,7 @@ class Shpypi:
         if sh is not None:
             self.sh = sh
         # build an actual requirements file for core+modules
-        # req_files = Requirements_files()
+        # req_files = Requirements_files(self.sh)
         self.req_files.create_requirementsfile('base')
 
         # test if the requirements of the base.txt file are met
@@ -281,7 +283,7 @@ class Shpypi:
 
     def test_conf_plugins_requirements(self, plugin_conf_basename, plugins_dir):
         # import lib.shyaml here, so test_base_requirements() can be run even if ruamel.yaml package is not installed
-        import lib.shyaml as shyaml
+#        import lib.shyaml as shyaml
 
         if not os.path.isfile(plugin_conf_basename+ YAML_FILE):
             self.logger.warning("Requirments for configured plugins were not checked because the plugin configuration is not in YAML format")
@@ -312,9 +314,13 @@ class Shpypi:
 
         self._conf_plugin_filelist = []
         for plugin in req_dict:
-            self._conf_plugin_filelist.append(req_dict[plugin])
+            use_it, msg = self.req_files._test_plugin_versions(req_dict[plugin])
+            if use_it:
+                self._conf_plugin_filelist.append(req_dict[plugin])
+            else:
+                self.logger.info(f"Not appended: ({msg}) conf_all: {req_dict[plugin]}")
 
-        #req_files = Requirements_files()
+        #req_files = Requirements_files(self.sh)
         self.req_files.set_conf_plugin_files(self._conf_plugin_filelist)
         self.req_files.create_requirementsfile('conf_all')
 
@@ -402,6 +408,7 @@ class Shpypi:
                 if logging:
                     self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
                 else:
+                    print()
                     print("Running in a virtualenv environment,")
                     print("installing "+req_type_display+" requirements only to actual virtualenv, please wait...")
                 stdout, stderr = Utils.execute_subprocess('pip3 install -r requirements/'+req_type+'.txt')
@@ -1060,11 +1067,16 @@ class Requirements_files():
     _plugin_files = []
     _core_files = []  # to be a list in the future
 
-    def __init__(self):
+    def __init__(self, version=None):
 
         self.logger = logging.getLogger(__name__)
 
         self._conf_plugin_files = []
+
+        self.shng_version = Version.format(version.split('-')[0])
+        l = sys.version_info
+        self.py_version = Version.format(str(l[0])+'.'+str(l[1])+'.'+str(l[2]))
+
         self.sh_basedir = os.sep.join(os.path.realpath(__file__).split(os.sep)[:-2])
         self.logger.debug("Requirements_files is using '{}' as base directory".format(self.sh_basedir))
         return
@@ -1107,7 +1119,7 @@ class Requirements_files():
 
         # build list of package requirement dicts
         packagelist = []
-        self.logger.debug("Req_files: _build_packagelist: requirements = '{}'".format(requirements))
+        self.logger.debug("_build_packagelist: Req_files: requirements = '{}'".format(requirements))
         for key in requirements:
             packaged = {}
             wrk = re.split('<|>|=', key)
@@ -1158,11 +1170,50 @@ class Requirements_files():
         return packagelist
 
 
+    def _test_plugin_versions(self, filename):
+
+        metaname = filename[:-16] + 'plugin.yaml'
+        meta = shyaml.yaml_load(metaname, ignore_notfound=True)
+        if meta is None:
+            #self.logger.warning(f"{metaname} not found")
+            return False, ''
+        else:
+            sh_minversion = Version.format(meta['plugin'].get('sh_minversion', ''))
+            sh_maxversion = Version.format(meta['plugin'].get('sh_maxversion', ''))
+            py_minversion = Version.format(meta['plugin'].get('py_minversion', ''))
+            py_maxversion = Version.format(meta['plugin'].get('py_maxversion', ''))
+            if sh_minversion != '':
+                self.logger.debug(f"sh_minversion={sh_minversion}, self.shng_version={self.shng_version}")
+                if Version.compare(sh_minversion, self.shng_version, '>'):
+                    self.logger.debug(f"meta data: {metaname} - meta: sh_minversion={sh_minversion}, sh_maxversion={sh_maxversion}")
+                    return False, 'SmartHomeNG min version'
+            if sh_maxversion != '':
+                self.logger.debug(f"sh_maxversion={sh_maxversion}, self.shng_version={self.shng_version}")
+                if Version.compare(sh_maxversion, self.shng_version, '<'):
+                    self.logger.debug(f"meta data: {metaname} - meta: sh_minversion={sh_minversion}, sh_maxversion={sh_maxversion}")
+                    return False, 'SmartHomeNG max version'
+
+            if py_minversion != '':
+                self.logger.debug(f"py_minversion={py_minversion}, self.py_version={self.py_version}")
+                if Version.compare(py_minversion, self.py_version, '>'):
+                    self.logger.debug(f"meta data: {metaname} - meta: py_minversion={py_minversion}, py_maxversion={py_maxversion}")
+                    return False, 'Python min version'
+            if py_maxversion != '':
+                self.logger.debug(f"py_maxversion={py_maxversion}, self.py_version={self.py_version}")
+                if Version.compare(py_maxversion, self.py_version, '<'):
+                    self.logger.debug(f"meta data: {metaname} - meta: py_minversion={py_minversion}, py_maxversion={py_maxversion}")
+                    return False, 'Python max version'
+            #if sh_minversion != '' or sh_maxversion != '' or py_minversion != '' or py_maxversion != '':
+            #    self.logger.warning(f"meta data: {metaname} - meta: sh_minversion={sh_minversion}, sh_maxversion={sh_maxversion}, py_minversion={py_minversion}, py_maxversion={py_maxversion}")
+        return True, ''
+
+
     def _get_filelist(self, selection):
         """
         returns a list of files with all paths for a requirements.txt within a
         certain selection subpath.
         Currently selection is one of 'modules', 'lib', 'plugins'
+
         When testing with travis the self.sh_basedir will be something like "/home/travis/build/<repo owner>/smarthome"
         On a native Linux without specialities this is normally "/usr/local/smarthome"
         When inspecting the plugins then all requirements.txt for previous plugin versions should be omitted from the list.
@@ -1176,15 +1227,22 @@ class Requirements_files():
             #self.logger.debug("level = {}: root = {}".format(level, root))
             if (selection == "plugins" and "_pv" not in root) or (level < basedir_level + 3):
                 for filename in fnmatch.filter(filenames, 'requirements.txt'):
-                    # print("level = {}: root = {}".format(level, root))
-                    file_list.append(os.path.join(root, filename))
-                    self.logger.debug("found '{}'".format(os.path.join(root, filename)))
+                    use_it = True
+                    if (selection == "plugins"):
+                        use_it, msg = self._test_plugin_versions(os.path.join(root, filename))
+                    if use_it:
+                        # print("level = {}: root = {}".format(level, root))
+                        file_list.append(os.path.join(root, filename))
+                        self.logger.debug("found '{}'".format(os.path.join(root, filename)))
+                    else:
+                        self.logger.info(f"Not appended: ({msg}) all: {root}")
         self.logger.debug("_get_filelist found '{}'".format(file_list))
         return file_list
 
 
     def _build_filelists(self, selection):
 
+        self.logger.debug(f"_build_filelists: selection={selection}")
         # global _module_files, _plugin_files, _core_files
         self._module_files = []
         self._plugin_files = []
@@ -1194,7 +1252,7 @@ class Requirements_files():
             # build list of all modules with requirements
             self._module_files = self._get_filelist('modules')
 
-        if selection in ['plugins','all']:
+        if selection in ['plugins', 'all']:
             # build list of all plugins with requirements
             self._plugin_files = self._get_filelist('plugins')
 
@@ -1230,18 +1288,22 @@ class Requirements_files():
         requirements = {}
 
         # Read requirements for core
+        #self.logger.warning(f"__read_requirementfiles: self._core_files={self._core_files}")
         for fname in self._core_files:
             self._read_requirementfile(fname, requirements, 'SmartHomeNG-')
 
         # Read requirements for modules
+        #self.logger.warning(f"__read_requirementfiles: self._module_files={self._module_files}")
         for fname in self._module_files:
             self._read_requirementfile(fname, requirements, 'SmartHomeNG-module ')
 
         # Read requirements for plugins
+        #self.logger.warning(f"__read_requirementfiles: self._plugin_files={self._plugin_files}")
         for fname in self._plugin_files:
             self._read_requirementfile(fname, requirements, 'plugin ')
 
         # Read requirements for configured plugins
+        #self.logger.warning(f"__read_requirementfiles: self._conf_plugin_files={self._conf_plugin_files}")
         for fname in self._conf_plugin_files:
             self._read_requirementfile(fname, requirements, 'configured plugin ')
 
@@ -1365,6 +1427,7 @@ class Requirements_files():
 
     def set_conf_plugin_files(self, conf_plugin_filelist):
         self._conf_plugin_files = conf_plugin_filelist
+
 
     def create_requirementsfile(self, selection):
         """
