@@ -163,7 +163,7 @@ loggers:
     modules:
         # Default logger for SmartHomeNG modules
         handlers: [shng_details_file]
-        level: WARNING
+        level: NOTICE
 
     plugins:
         # Default logger for SmartHomeNG plugins

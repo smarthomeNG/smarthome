@@ -6,7 +6,6 @@
 # except yaml default-files
 !holidays.yaml.default
 !logging.yaml.default
-!logging_min.yaml
 !logic.yaml.default
 !module.yaml.default
 !plugin.yaml.default
