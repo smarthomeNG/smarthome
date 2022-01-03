@@ -1067,7 +1067,7 @@ class Requirements_files():
     _plugin_files = []
     _core_files = []  # to be a list in the future
 
-    def __init__(self, version=None):
+    def __init__(self, version='0.0.0'):
 
         self.logger = logging.getLogger(__name__)
 
