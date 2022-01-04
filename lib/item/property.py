@@ -312,6 +312,57 @@ class Property:
         return
 
     @property
+    def last_trigger(self):
+        """
+        Read-Only Property: last_trigger
+
+        Available in SmartHomeNG v1.9.1 and above
+
+        :return: path of the item
+        :rtype: str
+        """
+        return self._item._get_last_trigger()
+
+    @last_trigger.setter
+    def last_trigger(self, value):
+        self._ro_error()
+        return
+
+    @property
+    def last_trigger_age(self):
+        """
+        Read-Only Property: last_trigger_age
+
+        Available in SmartHomeNG v1.9.1 and above
+
+        :return: path of the item
+        :rtype: str
+        """
+        return self._item._get_last_trigger_age()
+
+    @last_trigger_age.setter
+    def last_trigger_age(self, value):
+        self._ro_error()
+        return
+
+    @property
+    def last_trigger_by(self):
+        """
+        Read-Only Property: last_trigger_by
+
+        Available in SmartHomeNG v1.9.1 and above
+
+        :return: path of the item
+        :rtype: str
+        """
+        return self._item._get_last_trigger_by()
+
+    @last_trigger_by.setter
+    def last_trigger_by(self, value):
+        self._ro_error()
+        return
+
+    @property
     def last_value(self):
         """
         Read-Only Property: last_value
@@ -563,6 +614,57 @@ class Property:
 
     @prev_update_by.setter
     def prev_update_by(self, value):
+        self._ro_error()
+        return
+
+    @property
+    def prev_trigger(self):
+        """
+        Read-Only Property: prev_trigger
+
+        Available in SmartHomeNG v1.9.1 and above
+
+        :return: path of the item
+        :rtype: str
+        """
+        return self._item._get_prev_trigger()
+
+    @prev_trigger.setter
+    def prev_trigger(self, value):
+        self._ro_error()
+        return
+
+    @property
+    def prev_trigger_age(self):
+        """
+        Read-Only Property: prev_trigger_age
+
+        Available in SmartHomeNG v1.9.1 and above
+
+        :return: path of the item
+        :rtype: str
+        """
+        return self._item._get_prev_trigger_age()
+
+    @prev_trigger_age.setter
+    def prev_trigger_age(self, value):
+        self._ro_error()
+        return
+
+    @property
+    def prev_trigger_by(self):
+        """
+        Read-Only Property: prev_trigger_by
+
+        Available in SmartHomeNG v1.9.1 and above
+
+        :return: path of the item
+        :rtype: str
+        """
+        return self._item._get_prev_trigger_by()
+
+    @prev_trigger_by.setter
+    def prev_trigger_by(self, value):
         self._ro_error()
         return
 

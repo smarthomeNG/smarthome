@@ -47,26 +47,55 @@ genutzt werden können.
 
 
 Weiterhin werden die folgenden Funktionen unterstützt, die jedoch **ab SmartHomeNG v1.6** nicht mehr genutzt werden sollen.
-Bitte stattdessen die entsprechenden in SmartHomeNG v1.6 eingeführten Properties benutzen.
+Bitte stattdessen die entsprechenden in SmartHomeNG v1.6 eingeführten :doc:`Properties </referenz/items/properties>` benutzen.
 
 +------------------------+------------------------------------------------------------------------------+
 | **Funktion**           | **Beschreibung**                                                             |
 +========================+==============================================================================+
 | id()                   | Liefert den item-Pfad des Items zurück. Aufruf: sh.item.id()                 |
 +------------------------+------------------------------------------------------------------------------+
+| ()                     | Liefert den aktuellen Wert des Items zurück. Aufruf: sh.item()               |
++------------------------+------------------------------------------------------------------------------+
+| prev_value()           | Liefert den Wert des Items zurück, den es vor der letzten Änderung hatte.    |
++------------------------+------------------------------------------------------------------------------+
 | last_update()          | Liefert ein *datetime* Objekt mit dem Zeitpunkt des letzten Updates des      |
 |                        | Items zurück. Im Gegensatz zu **last_change()** wird dieser Zeitstempel auch |
+|                        | verändert, wenn sich bei einem Update der Wert des Items nicht ändert.       |
++------------------------+------------------------------------------------------------------------------+
+| prev_update()          | Liefert ein *datetime* Objekt mit dem Zeitpunkt des vorletzten Updates des   |
+|                        | Items zurück. Im Gegensatz zu **prev_change()** wird dieser Zeitstempel auch |
 |                        | verändert, wenn sich bei einem Update der Wert des Items nicht ändert.       |
 +------------------------+------------------------------------------------------------------------------+
 | last_change()          | Liefert ein *datetime* Objekt mit dem Zeitpunkt der letzten Änderung des     |
 |                        | Items zurück.                                                                |
 +------------------------+------------------------------------------------------------------------------+
-| age()                  | Liefert das Alter des Items seit der letzten Änderung des Wertes in Sekunden |
-|                        | zurück.                                                                      |
+| prev_change()          | Liefert ein *datetime* Objekt mit dem Zeitpunkt der vorletzten Änderung des  |
+|                        | Items zurück.                                                                |
++------------------------+------------------------------------------------------------------------------+
+| last_trigger()         | Liefert ein *datetime* Objekt mit dem Zeitpunkt der letzten eval Triggerung  |
+|                        | des Items zurück. Hat das Item kein eval Attribut oder wurde es nicht        |
+|                        | getriggert, wird der Zeitpunkt des letzten Updates übermittelt.              |
+|                        | (Neu **ab SmartHomeNG v1.9.1**)                                              |
++------------------------+------------------------------------------------------------------------------+
+| prev_trigger()         | Liefert ein *datetime* Objekt mit dem Zeitpunkt der vorletzten eval          |
+|                        | Triggerung des Items zurück. (Neu **ab SmartHomeNG v1.9.1**)                 |
 +------------------------+------------------------------------------------------------------------------+
 | update_age()           | Liefert das Alter des Items seit dem letzten Update in Sekunden zurück. Das  |
 |                        | Update Age wird auch gesetzt, wenn sich bei einem Update der Wert des Items  |
 |                        | nicht ändert. (Neu **ab SmartHomeNG v1.4**)                                  |
++------------------------+------------------------------------------------------------------------------+
+| prev_update_age()      | Liefert das Alter des vorangegangenen Updates in Sekunden zurück.            |
++------------------------+------------------------------------------------------------------------------+
+| age()                  | Liefert das Alter des Items seit der letzten Änderung des Wertes in Sekunden |
+|                        | zurück.                                                                      |
++------------------------+------------------------------------------------------------------------------+
+| prev_age()             | Liefert das Alter des vorangegangenen geänderten Wertes in Sekunden zurück.  |
++------------------------+------------------------------------------------------------------------------+
+| trigger_age()          | Liefert das Alter der letzten Eval Triggerung in Sekunden zurück.            |
+|                        | (Neu **ab SmartHomeNG v1.9.1**)                                              |
++------------------------+------------------------------------------------------------------------------+
+| prev_trigger_age()     | Liefert das Alter der vorletzten Eval Triggerung in Sekunden zurück.         |
+|                        | (Neu **ab SmartHomeNG v1.9.1**)                                              |
 +------------------------+------------------------------------------------------------------------------+
 | changed_by()           | Liefert einen String zurück, der auf das Objekt hinweist, welches das Item   |
 |                        | zuletzt geändert hat.                                                        |
@@ -74,19 +103,11 @@ Bitte stattdessen die entsprechenden in SmartHomeNG v1.6 eingeführten Propertie
 | updated_by()           | Liefert einen String zurück, der auf das Objekt hinweist, durch welches      |
 |                        | das Item zuletzt ein Update erfahren hat.                                    |
 +------------------------+------------------------------------------------------------------------------+
-| prev_value()           | Liefert den Wert des Items zurück, den es vor der letzten Änderung hatte.    |
+| triggered_by()         | Liefert einen String zurück, der auf das Objekt hinweist, durch welches      |
+|                        | eine eventuell vorhandene eval Expression getriggert wurde.                  |
+|                        | (Neu **ab SmartHomeNG v1.9.1**)                                              |
 +------------------------+------------------------------------------------------------------------------+
-| prev_update()          | Liefert ein *datetime* Objekt mit dem Zeitpunkt des vorletzten Updates des   |
-|                        | Items zurück. Im Gegensatz zu **prev_change()** wird dieser Zeitstempel auch |
-|                        | verändert, wenn sich bei einem Update der Wert des Items nicht ändert.       |
-+------------------------+------------------------------------------------------------------------------+
-| prev_change()          | Liefert ein *datetime* Objekt mit dem Zeitpunkt der vorletzten Änderung des  |
-|                        | Items zurück.                                                                |
-+------------------------+------------------------------------------------------------------------------+
-| prev_update_age()      | Liefert das Alter des vor-vorangegangenen Wertes in Sekunden zurück.         |
-+------------------------+------------------------------------------------------------------------------+
-| prev_age()             | Liefert das Alter des vorangegangenen Wertes in Sekunden zurück.             |
-+------------------------+------------------------------------------------------------------------------+
+
 
 
 Beispiele für die Nutzung von Funktionen
@@ -115,3 +136,11 @@ Die folgende Beispiel Logik nutzt einige der oben beschriebenen Funktionen:
 
    # will in- or decrement the living room light to 100 by a stepping of ``1`` and a timedelta of ``2.5`` seconds.
    sh.living.light.fade(100, 1, 2.5)
+
+Der folgende Beispiel eval Ausdruck sorgt dafür, dass ein Item den zugewiesenen Wert nur dann übernimmt,
+wenn die Wertänderung bzw. das Anstoßen der eval Funktion über das Admin Interface erfolgt ist und das
+letzte Update vor der aktuellen Triggerung über 10 Sekunden zurück liegt.
+
+.. code-block:: python
+
+  eval: value if sh..self.triggered_by().startswith('admin') and sh..self.update_age() > 10 else None

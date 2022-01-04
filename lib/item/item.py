@@ -111,6 +111,7 @@ class Item():
         self.cast = cast_bool
         self.__changed_by = 'Init:None'
         self.__updated_by = self.__changed_by
+        self.__triggered_by = 'N/A'
         self.__children = []
         self.conf = {}
         self._crontab = None
@@ -143,10 +144,13 @@ class Item():
         self._items_to_trigger = []
         self.__last_change = self.shtime.now()
         self.__last_update = self.__last_change
+        self.__last_trigger = self.__last_change
         self.__prev_change = self.__last_change
         self.__prev_update = self.__prev_change
+        self.__prev_trigger = self.__prev_change
         self.__prev_change_by = 'N/A'
         self.__prev_update_by = self.__prev_change_by
+        self.__prev_trigger_by = self.__prev_change_by
         self._lock = threading.Condition()
         self.__logics_to_trigger = []
         self._name = path
@@ -400,6 +404,7 @@ class Item():
                 self.__last_change, self._value = cache_read(self._cache, self.shtime.tzinfo())
                 self.__prev_change = self.__last_change
                 self.__updated_by = self.__changed_by
+                self.__triggered_by = 'N/A'
                 self.__last_update = self.__last_change
                 self.__prev_update = self.__prev_change
 
@@ -648,6 +653,16 @@ class Item():
         delta = self.shtime.now() - self.__last_update
         return delta.total_seconds()
 
+    def _get_last_trigger(self):
+        return self.__last_trigger
+
+    def _get_last_trigger_age(self):
+        delta = self.shtime.now() - self.__last_trigger
+        return delta.total_seconds()
+
+    def _get_last_trigger_by(self):
+        return self.__triggered_by
+
     def _get_last_value(self):
         return self.__last_value
 
@@ -679,6 +694,18 @@ class Item():
     def _get_prev_value(self):
         return self.__prev_value
 
+    def _get_prev_trigger(self):
+        return self.__prev_trigger
+
+    def _get_prev_trigger_age(self):
+
+        delta = self.__last_trigger - self.__prev_trigger
+        if delta.total_seconds() < 0.0001:
+            return 0.0
+        return delta.total_seconds()
+
+    def _get_prev_trigger_by(self):
+        return self. __prev_trigger_by
 
 
     """
@@ -748,6 +775,23 @@ class Item():
         """
         return self.property.last_update_age
 
+    def last_trigger(self):
+        """
+        Timestamp of last trigger of item's eval expression (if available)
+
+        :return: Timestamp of last update
+        """
+        return self.property.last_trigger
+
+    def trigger_age(self):
+        """
+        Trigger-age of the item's last eval trigger. Returns the time in seconds since the eval has been triggered
+
+        :return: Update-age of the value
+        :rtype: int
+        """
+        return self.property.last_trigger_age
+
     def prev_change(self):
         """
         Timestamp of the previous (next-to-last) change of item's value
@@ -783,6 +827,23 @@ class Item():
         """
         return self.property.prev_update_age
 
+    def prev_trigger(self):
+        """
+        Timestamp of previous (next-to-last) trigger of item's eval
+
+        :return: Timestamp of previous update
+        """
+        return self.property.prev_trigger
+
+    def prev_trigger_age(self):
+        """
+        Trigger-age of the item's previous eval trigger. Returns the time in seconds of the previous eval trigger
+
+        :return: Update-age of the previous value
+        :rtype: int
+        """
+        return self.property.prev_trigger_age
+
     def prev_value(self):
         """
         Next-to-last value of the item
@@ -809,6 +870,14 @@ class Item():
         """
         return self.property.last_update_by
 
+    def triggered_by(self):
+        """
+        Returns an indication, which plugin, logic or event triggered the item's eval
+
+        :return: Updater of item's value
+        :rtype: str
+        """
+        return self.property.last_trigger_by
 
     """
     Following are methods to handle relative item paths
@@ -1188,7 +1257,7 @@ class Item():
                     cond = eval(self._trigger_condition)
                     logger.warning("Item {}: Condition result '{}' evaluating trigger condition {}".format(self._path, cond, self._trigger_condition))
                 except Exception as e:
-                    log_msg = "Item {}: Xroblem evaluating trigger condition '{}': {}".format(self._path, self._trigger_condition, e)
+                    log_msg = "Item {}: Problem evaluating trigger condition '{}': {}".format(self._path, self._trigger_condition, e)
                     if (self._sh.shng_status['code'] != 20) and (caller != 'Init'):
                         logger.debug(log_msg)
                     else:
@@ -1209,9 +1278,17 @@ class Item():
                 # uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
 
                 try:
-                    #logger.warning("Item {}: Evaluating item value {}".format(self._path, self._eval))
+                    self.__prev_trigger_by = self.__triggered_by
+                    self.__triggered_by = "{0}:{1}".format(caller, source)
+                    self.__prev_trigger = self.__last_trigger
+                    self.__last_trigger = self.shtime.now()
+
+                    logger.debug("Item {}: Eval triggered by: {}. Evaluating item with value {}. Eval expression: {}".format(self._path, self.__triggered_by, value, self._eval))
                     value = eval(self._eval)
                 except Exception as e:
+                    # adding "None" as the "destination" information at end of triggered_by
+                    # This helps figuring out whether an eval expression was successfully evaluated or not.
+                    self.__triggered_by = "{0}:{1}:None".format(caller, source)
                     log_msg = "Item {}: problem evaluating '{}': {}".format(self._path, self._eval, e)
                     if (self._sh.shng_status['code'] != 20) and (caller != 'Init'):
                         logger.debug(log_msg + " (status_code={}/caller={})".format(self._sh.shng_status['code'], caller))
@@ -1429,6 +1506,7 @@ class Item():
         self.__prev_update_by = self.__updated_by
         self.__changed_by = "{0}:{1}".format(caller, source)
         self.__updated_by = "{0}:{1}".format(caller, source)
+        self.__triggered_by = "{0}:{1}".format(caller, source)
 
         if caller != "fader":
             # log every item change to standard logger, if level is DEBUG
@@ -1557,7 +1635,7 @@ class Item():
         return self.__methods_to_trigger
 
 
-    def timer(self, time, value, auto=False, compat=ATTRIB_COMPAT_DEFAULT, source=None):
+    def timer(self, time, value, auto=False, compat=ATTRIB_COMPAT_DEFAULT, caller=None, source=None):
         time = self._cast_duration(time)
         value = self._castvalue_to_itemtype(value, compat)
         if auto:
