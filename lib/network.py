@@ -866,9 +866,10 @@ class Tcp_client(object):
         """
         Close the current client socket.
         """
-        self.logger.info(f'Closing connection to {self._host} on TCP port {self._port}')
         self.__running = False
-        self._socket.shutdown(socket.SHUT_RD)
+        self.logger.info(f'Closing connection to {self._host} on TCP port {self._port}')
+        if self._is_connected:
+            self._socket.shutdown(socket.SHUT_RD)
         if self.__connect_thread is not None and self.__connect_thread.is_alive():
             self.__connect_thread.join()
         if self.__receive_thread is not None and self.__receive_thread.is_alive():
