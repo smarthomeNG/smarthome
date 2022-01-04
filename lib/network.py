@@ -172,7 +172,7 @@ class Network(object):
         :type addr: str
         :param port: port number under test
         :type port: num
-        :return: (ip_address, port, family) or (None, undef, undef) if error occurs
+        :return: (ip_address, port, family) or (None, 0, None) if error occurs
         :rtype: tuple
         """
         logger = logging.getLogger(__name__)
@@ -199,6 +199,8 @@ class Network(object):
                 # Unable to resolve hostname
                 logger.error(f'Cannot resolve {addr} to a valid ip address (v4 or v6): {e}')
                 ip = None
+                port = 0
+                family = None
 
         return (ip, port, family)
 
