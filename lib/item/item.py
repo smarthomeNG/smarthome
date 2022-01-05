@@ -926,7 +926,7 @@ class Item():
             while (rest.find(begintag+'.') != -1):
                 pref += rest[:rest.find(begintag+'.')+len(begintag)]
                 rest = rest[rest.find(begintag+'.')+len(begintag):]
-                if endtag == '':
+                if endtag == '' or rest.find(endtag) == -1:
                     rel = rest
                     rest = ''
                 else:
