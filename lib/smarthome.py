@@ -374,7 +374,6 @@ class SmartHome():
 
         #############################################################
         # Check Time
-# TODO Morg: why hardcoded check? any added value by this? -> remove?
         while datetime.date.today().isoformat() < '2016-03-16':  # XXX update date
             time.sleep(5)
             self._logger.info("Waiting for updated time.")
@@ -713,8 +712,11 @@ class SmartHome():
         This method is used to restart the python interpreter and SmartHomeNG
 
         If SmartHomeNG was started in one of the foreground modes (-f, -i, -d),
-        this will break the behaviour and daemonize.
+        just quit and let the user restart manually.
         """
+        if self._mode in ['foreground', 'debug', 'interactive']:
+            self.stop()
+
         if self.shng_status['code'] == 30:
             self._logger.warning("Another RESTART is issued, while SmartHomeNG is restarting. Reason: "+source)
         else:
@@ -726,8 +728,7 @@ class SmartHome():
             python_bin = sys.executable
             if ' ' in python_bin:
                 python_bin = '"'+python_bin+'"'
-# TODO Morg: add inofficial parameter to transport original MODE setting
-            command = python_bin + ' ' + os.path.join(self._base_dir, 'bin', 'smarthome.py') + ' -r'
+            command = python_bin + ' ' + os.path.join(self._base_dir, 'bin', 'smarthome.py')
             self._logger.info("Restart command = '{}'".format(command))
             try:
                 p = subprocess.Popen(command, shell=True)

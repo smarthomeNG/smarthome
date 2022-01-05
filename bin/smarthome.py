@@ -120,7 +120,6 @@ if core_reqs == 0:
     python_bin = sys.executable
     if ' ' in python_bin:
         python_bin = '"'+python_bin+'"'
-# TODO Morg: keep original command line arguments?
     # if we didn't change the working dir (yet), for example...
     # command = [python_bin] + sys.argv
     command = [python_bin, os.path.join(BASE, 'bin', 'smarthome.py')]
