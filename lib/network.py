@@ -875,6 +875,12 @@ class Tcp_client(object):
         if self.__receive_thread is not None and self.__receive_thread.is_alive():
             self.__receive_thread.join()
 
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return super().__str__()
+
 
 class ConnectionClient(object):
     """
@@ -1003,6 +1009,12 @@ class ConnectionClient(object):
             else:
                 string += chr(char)
         return string.rstrip()
+
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return super().__str__()
 
 
 class Tcp_server(object):
@@ -1247,6 +1259,12 @@ class Tcp_server(object):
                 self.__listening_thread.join()
         self.__loop.close()
 
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return super().__str__()
+
 
 class Udp_server(object):
     """
@@ -1435,3 +1453,9 @@ class Udp_server(object):
                 self.logger.debug(f'Received undecodable bytes from {host}:{port}')
         else:
             self.logger.debug(f'Received empty datagram from {host}:{port}')
+
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return super().__str__()
