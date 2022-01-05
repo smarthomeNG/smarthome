@@ -34,6 +34,7 @@ import re
 import hashlib
 import ipaddress
 import socket
+import subprocess
 
 logger = logging.getLogger(__name__)
 
@@ -55,23 +56,28 @@ class Utils(object):
         """
 
         mac = str(mac)
+        # notation without separators
         if len(mac) == 12:
             for c in mac:
-                try:
-                    if int(c, 16) > 15:
-                        return False
-                except:
+                # each digit is hex
+                if c not in '0123456789abcdefABCDEF':
                     return False
             return True
 
-        octets = re.split('[\:\-\ ]', mac)
+        # notation with separators -> 12 digits + 5 separators
+        if len(mac) != 17:
+            return False
+        octets = re.split('[: -]', mac)
+        # 6 groups...
         if len(octets) != 6:
             return False
-        for i in octets:
-            try:
-                if int(i, 16) > 255:
-                    return False
-            except:
+        for o in octets:
+            # ... of 2 digits each
+            if len(o) != 2:
+                return False
+        # and each digit is hex
+        for c in ''.join(octets):
+            if c not in '0123456789abcdefABCDEF':
                 return False
         return True
 
@@ -89,6 +95,7 @@ class Utils(object):
         """
 
         return Utils.is_ipv4(string)
+        # later: return (Utils.is_ipv4(string) or Utils.is_ipv6(string))
 
     @staticmethod
     def is_ipv4(string):
@@ -141,15 +148,18 @@ class Utils(object):
         """
 
         try:
-            return bool(re.match("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$", string))
+            return bool(re.match("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9])\\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$", string))
         except TypeError:
             return False
 
     @staticmethod
     def get_local_ipv4_address():
         """
-        Get's local ipv4 address
-        TODO: What if more than one interface present ?
+        Get local ipv4 address of the interface with the default gateway.
+        Return '127.0.0.1' if no suitable interface is found
+        NOTE: if more than one IP addresses are available and no external
+        gateway is configured, thie method returns one of the configured
+        addresses, but not deterministically.
 
         :return: IPv4 address as a string
         :rtype: string
@@ -168,15 +178,15 @@ class Utils(object):
     @staticmethod
     def get_local_ipv6_address():
         """
-        Get's local ipv6 address
-        TODO: What if more than one interface present ?
+        Get local ipv6 address of the interface with the default gateway.
+        Return '::1' if no suitable interface is found
 
         :return: IPv6 address as a string
         :rtype: string
         """
         try:
             s = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
-            s.connect(('2001:4860:4860::8888', 1))
+            s.connect(('fda2:ffff:ffff:ffff:ffff:ffff:ffff:ffff', 1))
             IP = s.getsockname()[0]
         except:
             IP = '::1'
@@ -536,10 +546,7 @@ class Utils(object):
         """
         Executes a subprocess via a shell and returns the output written to stdout by this process as a string
         """
-        ## get subprocess module
-        import subprocess
-
-        ## call date command ##
+        # call date command
         p = subprocess.Popen(commandline, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 
         # Talk with date command i.e. read data from stdout and stderr. Store this info in tuple ##
@@ -551,17 +558,120 @@ class Utils(object):
     #    print("result="+str(result))
     #    print("err="+str(err))
         if wait:
-            ## Wait for date to terminate. Get return returncode ##
-            p_status = p.wait()
+            # Wait for date to terminate. Get return returncode
+            p.wait()
         return (str(result, encoding='utf-8', errors='strict'), str(err, encoding='utf-8', errors='strict'))
 
+#--------------------------------------------------------------------------------------------
 
+class Version():
 
+    @staticmethod
+    def check_list(versl):
 
+        while len(versl) < 4:
+            if isinstance(versl[0], str):
+                versl.append('0')
+            else:
+                versl.append(0)
+        while len(versl) > 4:
+            del versl[-1]
+        return versl
+
+    @classmethod
+    def to_list(cls, vers):
+        """
+        Split version number to list and get rid of non-numeric parts
+
+        :param vers:
+
+        :return: version as list
+        :rtype: list
+        """
+        if len(vers) == 0:
+            vers = '0'
+        if vers[0].lower() == 'v':
+            vers = vers[1:]
+
+        # create list with [major,minor,revision,build]
+        vsplit = vers.split('.')
+        vsplit = cls.check_list(vsplit)
+
+        # get rid of non numeric parts
+        vlist = []
+        build = 0
+        if vsplit == '':
+            return ''
+        for v in vsplit:
+            if v[-1].isalpha():
+                build += ord(v[-1].lower()) - 96
+                v = v[:-1]
+            vi = 0
+            try:
+                vi = int(v)
+            except:
+                pass
+            vlist.append(vi)
+        vlist[3] += build
+        return vlist
+
+    @classmethod
+    def to_string(cls, versl):
+
+        if versl == [0, 0, 0, 0]:
+            return ''
+        import copy
+        versl2 = copy.deepcopy(versl)
+        cls.check_list(versl2)
+        if versl2 == '':
+            return ''
+
+        if versl2[3] == 0:
+            del versl2[3]
+        versls = [str(int) for int in versl2]
+        vers = ".".join(versls)
+
+        return 'v' + vers
+
+    @classmethod
+    def format(cls, vers):
+
+        return cls.to_string(cls.to_list(str(vers)))
+
+    @classmethod
+    def compare(cls, v1, v2, operator):
+        """
+        Compare two version numbers and return if the condition is met
+
+        :param v1:
+        :param v2:
+        :param operator:
+        :type v1: str or list of int
+        :type v2: str or list of int
+        :type operator: str
+
+        :return: true if condition is met
+        :rtype: bool
+        """
+        if isinstance(v1, str):
+            v1 = cls.to_list(v1)
+        if isinstance(v2, str):
+            v2 = cls.to_list(v2)
+
+        result = False
+        if v1 == v2 and operator in ['>=', '==', '<=']:
+            result = True
+        if v1 < v2 and operator in ['<', '<=']:
+            result = True
+        if v1 > v2 and operator in ['>', '>=']:
+            result = True
+        # logger.warning(f"_compare_versions: v1={v1}, v2={v2}, operator='{operator}', result={result}")
+        return result
+
+#--------------------------------------------------------------------------------------------
 
 def get_python_version():
-
-    PYTHON_VERSION = str(sys.version_info[0])+'.'+str(sys.version_info[1])+'.'+str(sys.version_info[2])+' '+str(sys.version_info[3])
+    PYTHON_VERSION = str(sys.version_info[0]) + '.' + str(sys.version_info[1]) + '.' + str(sys.version_info[2]) + ' ' + str(sys.version_info[3])
     if sys.version_info[3] != 'final':
         PYTHON_VERSION += ' '+str(sys.version_info[4])
     return PYTHON_VERSION
@@ -571,15 +681,11 @@ def execute_subprocess(commandline, wait=True):
     """
     Executes a subprocess via a shell and returns the output written to stdout by this process as a string
     """
-    ## get subprocess module
-    import subprocess
-    ## call date command ##
     p = subprocess.Popen(commandline, stdout=subprocess.PIPE, shell=True)
-    # Talk with date command i.e. read data from stdout and stderr. Store this info in tuple ##
     # Interact with process: Send data to stdin. Read data from stdout and stderr, until end-of-file is reached.
     # Wait for process to terminate. The optional input argument should be a string to be sent to the child process, or None, if no data should be sent to the child.
     (result, err) = p.communicate()
-#    logger.warning("execute_subprocess: commandline='{}', result='{}', err='{}'".format(command, result, err))
+    # logger.warning("execute_subprocess: commandline='{}', result='{}', err='{}'".format(command, result, err))
     print("err='{}'".format(err))
     if wait:
         ## Wait for date to terminate. Get return returncode ##
@@ -592,4 +698,3 @@ def running_virtual():
     # Check supports venv && virtualenv
     return (getattr(sys, 'base_prefix', sys.prefix) != sys.prefix or
             hasattr(sys, 'real_prefix'))
-

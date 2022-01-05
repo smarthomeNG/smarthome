@@ -21,13 +21,14 @@
 
 """
 
-This library is softly on it's way out. In the future network classes for SmartHomeNG
-will be implemented trough the network library lib.network, which is still in development.
+This library is on its way out. Network classes for SmartHomeNG are provided by
+lib.network. Creating lib.connection Server and Client class object will
+create an appropriate WARNING log entry.
 
-The following modules use an import lib.connection as of April 2018:
+The following modules use an import lib.connection as of December 2021:
 smarthome.py for an object of Connections()
 Plugins:
-russound, network, visu_websocket, asterisk, knx, squeezebox, nuki, mpd, raumfeld, cli, speech, xbmc, lirc
+visu_websocket
 
 """
 import logging
@@ -54,6 +55,7 @@ class Base():
     _family = {'UDP': socket.AF_INET, 'UDP6': socket.AF_INET6, 'TCP': socket.AF_INET, 'TCP6': socket.AF_INET6}
     _type = {'UDP': socket.SOCK_DGRAM, 'UDP6': socket.SOCK_DGRAM, 'TCP': socket.SOCK_STREAM, 'TCP6': socket.SOCK_STREAM}
     _monitor = []
+    _deprecated_wanings = True
 
     def __init__(self, monitor=False):
         self._name = self.__class__.__name__
@@ -64,6 +66,53 @@ class Base():
         family, type, proto, canonname, sockaddr = socket.getaddrinfo(self._host, self._port, family=self._family[self._proto], type=self._type[self._proto])[0]
         self.socket = socket.socket(family, type, proto)
         return sockaddr
+
+    def _deprecated_warning(self, n_func=''):
+        """
+        Display function deprecated warning
+        """
+        if hasattr(self, '_deprecated_warnings'):
+            if lib.utils.Utils.to_bool(self._deprecated_warnings) == False:
+                return
+        else:
+            return # if parameter is not defined
+
+        d_func = 'sh.'+str(sys._getframe(1).f_code.co_name)+'()'
+        if n_func != '':
+            n_func = '- use the '+n_func+' instead'
+        try:
+            d_test = ' (' + str(sys._getframe(2).f_locals['self'].__module__) + ')'
+        except:
+            d_test = ''
+
+        called_by = str(sys._getframe(2).f_code.co_name)
+        in_class = ''
+        try:
+            in_class = 'class ' + str(sys._getframe(2).f_locals['self'].__class__.__name__) + d_test
+        except:
+            in_class = 'a logic?' + d_test
+        if called_by == '<module>':
+            called_by = str(sys._getframe(3).f_code.co_name)
+            level = 3
+            while True:
+                level += 1
+                try:
+                    c_b = str(sys._getframe(level).f_code.co_name)
+                except ValueError:
+                    c_b = ''
+                if c_b == '':
+                    break
+                called_by += ' -> ' + c_b
+
+#            called_by = str(sys._getframe(3).f_code.co_name)
+
+        if not hasattr(self, 'dep_id_list'):
+            self.dep_id_list = []
+        id_str = d_func + '|' + in_class + '|' + called_by
+        if not id_str in self.dep_id_list:
+            self.logger.warning("DEPRECATED: Used function '{}', called in '{}' by '{}' {}".format(d_func, in_class, called_by, n_func))
+            self.dep_id_list.append(id_str)
+        return
 
 
 class Connections(Base):
@@ -354,6 +403,7 @@ class Server(Base):
         self._proto = proto
         self.address = "{}:{}".format(host, port)
         self.connected = False
+        self._deprecated_warning('lib.network.Tcp_server() class')
 
     def connect(self):
         try:
@@ -581,6 +631,7 @@ class Client(Stream):
         self._connection_attempts = 0
         self._connection_errorlog = 60
         self._connection_lock = threading.Lock()
+        self._deprecated_warning('lib.network.Tcp_client() class')
 
     def connect(self):
         self._connection_lock.acquire()

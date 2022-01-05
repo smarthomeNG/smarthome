@@ -1,0 +1,660 @@
+===============================
+Release 1.9 - 28. Dezember 2021
+===============================
+
+Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+
+.. comment note::
+
+    Diese Release Notes sind ein Arbeitsstand.
+
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 27. Dezember 2021
+       (...)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 28. Dezember 2021
+       (openweathermap: Added name of location to locals-struct)
+
+
+Überblick
+=========
+
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.8.x sind im
+folgenden in diesen Release Notes beschrieben.
+
+
+Unterstützte Python Versionen
+-----------------------------
+
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.9 ist Python 3.7.
+(Siehe auch *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
+
+Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.9 nicht mehr unter älteren Python Versionen läuft,
+sondern das SmartHomeNG nicht mehr mit älteren Python Versionen getestet wird und das gemeldete Fehler mit älteren
+Python Versionen nicht mehr zu Buxfixen führen.
+
+
+Minimum Python Version
+^^^^^^^^^^^^^^^^^^^^^^
+
+Die absolute Minimum Python Version in der SmartHomeNG startet wurde auf v3.6 angehoben, da Python 3.5 im
+September 2020 End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen
+auf einer der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
+
+
+Änderungen am Core
+==================
+
+Bugfixes in the CORE
+--------------------
+
+* Fixes in lib.network
+* Fixes in lib.utils
+
+* Fixes in modules.mqtt
+* Fixes in modules.websocket
+
+* modules.websocket: Bugfix for smartVISU payload protocol (command 'log')
+* create var/log directory prior recording output from pip
+
+
+Updates in the CORE
+-------------------
+
+* Removed references to lib.connection
+* etc.logging.yaml.default: Changes to new logging handlers
+* move crontab in lib.triggertimes, extend syntax for crontabs
+
+* Logics:
+
+  * Logic **check_items.py**: Check items for damaged items (created in logics)
+    It is not possible with Python to intercept an assignment to a variable or an objects' attribute. The only
+    thing one can do is search all items for a mismatching item type.
+
+It is not possible with Python to intercept an assignment to a variable or an
+objects' attribute. The only thing one can do is search all items for a
+mismatching item type.
+
+* lib.backup:
+
+  * Added new struct files of ../etc directory to configuration backup
+  * Added \*.pem to backup of certificate files
+  * Certificate backup now backs up \*.pem files for certificates that are not named \*.cer
+
+* lib.env.location:
+
+  * Added lat, lon and elev settings from smarthome.yaml to items
+
+* lib.item:
+
+  * Added loading of structs from multiple files (etc/struct_xyz.yaml) in addition to loading from etc/struct.yaml
+  * Extended functionallity for item logging (incl. shngadmin and documentation)
+  * Added attribute source to timer function
+  * Improved logging for items with cache attribute
+  * items: optionally return items sorted
+  * Bugfix for autotimer method of an item
+
+* lib.log:
+
+  * Improved handling of loglevel NOTICE
+
+* lib.metadata
+
+  * bugfix in version checking
+
+* lib.network:
+
+  * first udp server implementation
+  * Removed setting of loglevel for logger lib.network (should be defined in etc/logging.yaml)
+  * Handle 'broken pipe' error on remote disconnect
+  * added log entry for truncated send
+  * Fix received data processing
+  * Fix missing bytes/str conversion
+  * Better and faster shutdown handling
+  * Fix callback syntax
+  * Exception handling for callbacks
+
+* lib.scene:
+
+  * Extended eval to use shtime, userfunctions and math (analog to eval attribute of items)
+  * Implemented reload of all scenes
+  * implemented multi language support for log entries
+
+* lib.smarthome:
+
+  * Added loglevel NOTICE
+  * Improved handling of memory logs
+
+* lib.tools:
+
+  * Fix for daylight saving time in tools.dt2ts() and tools.dt2js()
+
+* lib.userfunctions
+
+  * New library, that implements userfunctions for eval-statements and logics
+  * Implemented userfunctions for evalchecker in admin gui
+
+* Modules:
+
+  * admin:
+
+    * Display of structs in shngadmin is now sorted and grouped by plugin
+    * Randomized calls to find blog articles on smarthomeng.de
+    * Added level NOTICE to api
+    * GUI: Added loglevel NOTICE
+    * GUI Added reload button for scenes
+    * Implemented html escape for dicts and lists in item detail view
+    * Bugfix for list loggers (Issue #411) "dictionary changed size during iteration"
+    * GUI: Fix for handling/editing custom holidays
+    * Fix for compatibility to newer PyJWT versions
+    * Added support for user functions
+    * Added button to reload scenes
+    * Added shngadmin version to system property page
+
+  * http:
+
+    * update chartjs to 2.9.4
+    * added Datatables Javascript v1.11.0 to allow table sorting in WebIFs, updated documentation
+    * updated bootstrap to 4.6.0
+    * updated bootstrap datepicker to 1.9.0
+    * updated Font Awesome to 5.15.4
+    * updated jquery to 3.6.0
+    * updated popper.js to 2.10.1
+
+  * websocket:
+
+    * Changes to memory logging in core
+    * Added missing requirements.txt
+    * Exitcode 1001 is now logged as info, not as exception
+
+* Plugins:
+
+  * ...
+
+* tests:
+
+  * mock.core: Read core version from bin.shngversion.py
+  * migrated tests to Travis-CI.com, updated Readme
+
+
+Änderungen bei Plugins
+======================
+
+New Plugins
+-----------
+
+For details of the changes of the individual plugins, please refer to the documentation of the respective plugin.
+
+* avm_smarthome: AVM smarthome plugin for DECT sockes, smart radiator control DECT301 and Comet DECT and DECT
+  smarthome sensors based on HTTP GET Request
+* homeconnect: usage of the BSH/Siemens HomeConnect interface with oauth2
+* husky: plugin to control Husqvarna automower
+* modbus_tcp: New plugin to read registers from modbusTcp-device
+* philips_tv: Added initial support for Philips TV with OAuth2 authentication
+* sma_mb: this plug-in reads the current values of an SMA inverter via SMA Speedwire fieldbus/Modbus
+* text_display: New text display Plugin
+* timmy: Plugin für Ein-/Ausschaltverzögerung und Blinken
+
+
+Plugin Updates
+--------------
+
+* asterix:
+
+  * adjusted plugin to lib.network
+
+* avm:
+
+  * handle callmonitor reconnect
+  * avoid error message on requested shutdown
+  * moved webif to seperate file
+  * fixed rare error in function _update_home_automation
+  * catching exceptions when Ethernet is temporary unavailable
+
+* bose_soundtouch:
+
+  * Improved error handling
+
+* bsblan:
+
+  * revised README
+  * compatibility check for BSB-LAN Version 2.x
+  * adjusted link to icon in readme.md
+
+* casambi:
+
+  * Catch socket errors leading to unintentional termination of EventHandlerThread
+  * deleted readme and improved user_doc
+  * added automatic sessionID request, e.g. after Casambi API key validity has been extended
+  * improved webinterface
+  * added english translation for webinterface
+  * added python websocket to plugin requirements
+  * fixed requirement websocket-client
+  * added tunable white (CCT) support
+  * added extended debugging for CCT commands
+  * debugging setups with more than one Casambi network
+  * removed unjustified error/warning messages
+  * fixed status decode error
+  * added backend online status parsing to item
+  * fixed unknown variable error in debug message
+  * Trigger socket reinitialization after pipe error
+  * Switched logger outputs to f-strings
+
+* cli:
+
+  * adjustments to new network classes
+  * fixed error - self.alive
+  * added 'logl' (log-list) command
+  * updated output of command 'logd'
+  * updated to conform with changes to memory logging in core
+
+* comfoair:
+
+  * removed lib.connection references for cleanup
+
+* darksky:
+
+  * added URL for data retrieval to webif
+  * switched default to "ca" to have wind in kmh
+  * added some more attributes to webif
+  * set to deprecated for next plugin release, API ends 2021
+
+* database:
+
+  * updated to use newest version of datepicker
+  * Improved robustness, limit reconnects improved plugin robustness, if db is not available (e.g. temporarily missing ethernet)
+  * Limit number of reconnects
+  * Fixed bug in item_detail page
+  * added Datatable to overview and details
+
+* dlms:
+
+  * added parameter to allow listen only mode
+  * extend webinterface with list of common obis codes
+  * allow crontab timings, enhance listen only smartmeter handling, improve getting manufacturer list
+
+* ebus:
+
+  * removed lib.connection references for cleanup
+
+* ecmd:
+
+  * removed lib.connection references for cleanup
+
+* enocean:
+
+  * added debug infos for powermeter devices
+  * changed to new is_alive() syntax for python 3.9
+  * updated to use newest version of datepicker
+  * removed datepicker includes, which are no longer necessary for this plugin
+  * Added debug info to BaseID error message
+  * Adapted logging to fstrings
+  * Added optional item attribute "enocean_device" to select appropriate learn message
+
+* garminconnect:
+
+  * Updated to use newest version of datepicker
+
+* gpio:
+
+  * fix local variable 'err' referenced before assignment in line 126
+  * implement datatables JS in webif
+  * rename webif tables correctly
+  * improve error handling on startup and bump version to 1.5.1
+
+* hue:
+
+  * Small BugFix in UpdateGoupItems
+
+* hue2:
+
+  * Changed create_new_username() to support qhue v2.0.0 and up
+  * Implemented bridge discovery via mdns (for bridges v2)
+  * Reimplemented bridge discovery via upnp (for bridges v1)
+  * Removed bridge discovery through hue portal (old Philips site)
+  * Implemented new Signify broker discovery methods
+  * automatic discovery at startup takes place only if stored ip address does not point to a hue bridge
+
+* husky:
+
+  * added error/debug message if model, id or name cannot be extracted from json response
+  * added logger to Mower class
+  * degraded error message on missing model type to debug level
+
+* ical:
+
+  * adapted to new lib.network
+  * made cycle to a class attribute (self._cycle)
+
+* jsonread:
+
+  * now has a webinterface
+  * some minor text changes to metadata (plugin.yaml)
+  * remove old readme.md
+  * corrected plugin.yaml (it was not a valid yaml file any more)
+
+* knx:
+
+  * adjusted plugin to lib.network
+  * added DPT 251.600 RGBW
+  * fix webinterface fix mixup
+  * add password for knxproj to webif, introduce knxd namespace for constants, update doku
+  * removed local redundant datatables
+
+* kodi:
+
+  * make favourites type dict instead of str
+
+* mailrcv: catch exception when trying to close imap even if it's not possible
+
+* memlog:
+
+  * updated to conform with changes to memory logging in core
+
+* mpd:
+
+  * adjusted plugin to lib.network
+
+* mqtt:
+
+  * updated to use newest version of datepicker
+
+* neato:
+
+  * added new function start_robot to enable single room cleaning; added new function get_map_boundaries to request
+    available map boundaries (rooms) for a given map; added new function dismiss_current_alert to reset current alerts
+  * fix for clean_room command
+  * bugfix in metadata (plugin-function definition hat indentation error)
+  * added option to clear errors/alarms in neato/vorwerk backend via plugin's webif
+  * added english translation for webinterface
+  * deactivate SSL verify
+  * added return values for plugin commands
+  * added function list available rooms to plugin webif
+  * improved map cleaning control
+  * Added return values for plugin commands; added function list available rooms to plugin webif. Improved map cleaning control
+  * Added 'robot not online' warning
+  * Added command to dismiss backend alerts (dustbin full etc.) via item
+  * Modifications by ivan73 (without desciption)
+
+* network:
+
+  * adapted plugin to lib.network
+  * improved plugin parameter handling
+  * fixed starting server only on run()
+  * adjusted logging
+
+* nuki:
+
+  * fixed get_local_ipv4_address handling
+
+* nut:
+
+  * catching exception if network is not available
+  * added UPS via Synology disk station example to readme
+  * fixed error occurring after exception of type "network not available"
+
+* odlinfo:
+
+  * Updated to new data interface https://odlinfo.bfs.de/ODL/DE/service/datenschnittstelle/datenschnittstelle_node.html
+  * No more use and password needed
+  * Added web interface
+  * Added cycle and cached json data
+  * Added manual update option, reduced default cycle to 1800 sec
+  * Bumped version to 1.5.1
+  * Added auto update for items
+  * Modifications by ivan73 (without desciption) -> 1.5.2
+
+
+* onewire:
+
+  * improve error handling
+  * enhanced tree function in owbase
+
+* openweathermap:
+
+  * corrected user_doc (replaced all references to darksky plugin)
+  * multiple changes, bumped version to 1.8.2
+  * Fixed bug in metadaa (plugin.yaml)
+  * Removed extra line with API-key which displayed only asterixes from web interface
+  * Added name of location to locals-struct
+  * Bumped version to 1.8.3
+
+* raumfeld
+
+  * removed lib.connection references for cleanup
+  * some cleanup
+
+* raumfeld_ng:
+
+  * Bugfix in poll_device (get_sh())
+  * Added get_mediainfo to valid_list of rf_attr item attribute
+
+* resol:
+
+  * Catch wrong message sizes
+  * Fixed scheduler stop on plugin exit
+  * Robustness measures when Ethernet is temporary not available
+  * Added socket shutdown on plugin stop
+  * Plugin performance: Do not register receive only attributes for update_item function
+  * Modifications by ivan73 (without desciption)
+
+* robonect:
+
+  * corrected datatype for unix timestamp error_unix
+  * extended by some MQTT commands
+  * changed indent of mode item
+  * changed "and not" to "or"
+  * added keychecks to avoid exceptions
+  * added buttons in webif to switch modes
+  * don't try to iterate error list in case robonect has no wifi connection (error list is None then)
+  * caching full error list
+  * added mode to webservices set for automower (helps only, if webservices plugin is used)
+  * added check for mqtt mode
+
+* rpi1wire:
+
+  * Updated user docu, webif and Code cleanup
+  * Corrected errors in structure of user documentation
+
+* russound:
+
+  * adjusted plugin to lib.network
+
+* shelly:
+
+  * add support for Shelly H&T
+  * Some updates
+  * bumped version to 1.2.0
+
+* simulation:
+
+  * fix parameters
+
+* smartvisu:
+
+  * added parameter create_masteritem_file
+  * adjusted web interface
+  * improve descriptions for widget names and blocks
+
+* sml:
+
+  * removed lib.connection references for cleanup
+
+* smlx:
+
+  * changed from readme to user_doc docu, provide a requirements.txt
+  * removed lib.connection references for cleanup
+
+* snmp:
+
+  * functional update of plugin incl enhancement of WebIF
+
+* sonos:
+
+  * added plugin webinterface
+  * added name for SoCo EventServerThread
+  * catching rare exception that could occur during automatic IP detection and invalid network connectivity
+  * adapted behavior of play_snippet if stop() functionality is currently not supported by the respective speaker
+  * upgrade to SoCo 0.22 framework
+  * display number of online speakers on Webinterface
+  * pgrade SoCo base framework to Version 0.24.0; additional robustness improvements
+
+* speech:
+
+  * adjusted plugin to lib.network
+
+* squeezebox:
+
+  * change struct wipecache to str as the value might also be a string like "queue"
+
+* stateengine:
+
+  * moved web interface to a separate file
+  * change logging: general log is plugins.stateengine and se_item logs are logged to "stateengine" (without plugins. prefix)
+  * improve log handling
+  * handle problem when SE item has name, bump version to 1.9.2
+  * improve logging and source for item update
+  * fix docu example for south and se_use
+  * lower case log directory
+  * optional offset for sun_tracking function
+  * moved webif to external file
+  * new logger names, fix items having a name
+  * corrected intentation in user_doc/13_sonstiges.rst
+  * add offset and value for open lamella value parameters to improve sun_tracking function
+  * replace sh.tools.dt2ts() by timestamp() for evaluating the start_time of the suspend state
+  * change web visu - condition rectangle now has dynamic width
+  * better sun_tracking offset handling
+  * correct webif colors and conditionlist if no conditionsets given
+
+* tasmota:
+
+  * Functional Update of Tasmota Plugin incl WebIF Rework
+
+* telegram:
+
+  * add new attribut telegram_condition to suppress multiple messages upon update
+  * Add possibility to send telegram message zu just 1 chat-id
+  * Add chat-if to "telegram-info" to allow response depending on chat-id
+  * Updated user docu, webif and code cleanup
+
+* unifi:
+
+  * moved dependency from lib.network to lib.utils
+
+* uzsu:
+
+  * outsource webif and fix webinterface problem with showing the whole dictionary when a rule contains a "<"
+  * update webif to use datatables JS
+  * Update req. for python 3.7 and 3.9
+  * Minimize dict item renewal: lastvalue not written to dict anymore, fix bug in sun calculated values
+  * Remove lastvalue from dict on start as it is not used anymore
+  * Fix webIF overlay when clicking on entry
+  * Improve last value struct and handling
+  * xtensions for series - second try
+  * Sun calculation cron is now adjustable in plugin settings
+  * Modifications by ivan73 (without desciption)
+
+* viessmann:
+
+  * fixes webif includes
+  * fix cyclic due calculation
+
+* visu_websocket:
+
+  * updated to conform with changes to memory logging in core
+  * fix parameters in widget call
+
+* webservices:
+
+  * moveed and translated readme.md documentation to user_doc.rst
+  * remove readme.md, create user_doc.rst, use sphinx-tabs
+
+* withings_health:
+
+  * updated to newest version of withings-api
+  * moved webif to seperate file
+
+* wol:
+
+  * now has a web interface with items and interactive wol
+  * Corrected metadata - changed type of wol_ip from ip4 to ipv4
+
+* xiaomi_vac:
+
+  * use datatables js in webif
+  * fix problem with newer miio module (>=0.5.8) that doesn't accept return_list argument for clean_details method
+  * Bump version to 1.1.2
+  * ompatibility with newer python-miio modules (0.5.9+)
+  * Bump version to 1.2.0
+
+* xmpp:
+
+  * Try to reconnect when loosing connection
+
+
+Outdated Plugins
+----------------
+
+The following plugins were already marked in version v1.6 as *deprecated*. This means that the plugins
+are still working, but are not developed further anymore and are removed from the release of SmartHomeNG
+in the next release. User of these plugins should switch to corresponding succeeding plugins.
+
+* System Plugins
+
+  * backend - use the administration interface instead
+  * sqlite_visu2_8 - switch to the **database** plugin
+
+* Web Plugins
+
+  * wunderground - the free API is not provided anymore by Wunderground
+
+
+The following plugins are marked as *deprecated* with SmartHomeNG v1.7, because neither user nor tester have been found:
+
+* Gateway Plugins
+
+  * ecmd
+  * elro
+  * iaqstick
+  * snom
+  * tellstick
+
+* Interface Plugins
+
+  * easymeter
+  * smawb
+  * vr100
+
+* Web Plugins
+
+  * nma
+
+Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecated*, because the new mqtt
+plugin takes over the functionality. This plugin is based on the mqtt module and the recent core.
+
+
+Retired Plugins
+---------------
+
+The following plugins have been retired. They had been deprecated in one of the preceding releases of SmartHomeNG.
+They have been removed from the plugins repository, but they can still be found on github. Now they reside in
+the **plugin_archive** repository from where they can be downloaded if they are still needed.
+
+* alexa - switch to the **alexa4p3** plugin
+* boxcar - classic Plugin, not used according to survey in knx-user-forum
+* mail - switch to the **mailsend** and **mailrcv** plugin
+* netio230b - classic plugin, not used according to survey in knx-user-forum
+* openenergymonitor - classic plugin, not used according to survey in knx-user-forum
+* smawb - classic plugin, not used according to survey in knx-user-forum
+* sqlite - switch to the **database** plugin
+* tellstick - classic Plugin, not used according to survey in knx-user-forum
+
+
+Weitere Änderungen
+==================
+
+
+Documentation
+-------------
+
+* Changed Requirements for documentation build, added tab extension to sphinx, introduced MyST
+* Documentation build should now run under Windows
+

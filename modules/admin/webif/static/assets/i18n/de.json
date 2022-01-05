@@ -15,6 +15,7 @@
     "SCENES": "Szenen",
     "SCENE_LIST": "Szenen Liste",
     "SCENE_CONFIGURATION": "Szenen Konfiguration",
+    "FUNCTION_CONFIGURATION": "User-Funktionen",
     "THREADS": "Threads",
     "LOGS": "Logs",
     "LOGS_DISPLAY": "Logs Anzeigen",
@@ -30,6 +31,7 @@
     "SHNG_VERSION": "SmartHomeNG Version",
     "IN": "in",
     "SHNG_PLG_VERSION": "SmartHomeNG Plugins Version",
+    "SHNG_ADMIN_GUI": "Administrations-Oberfläche",
     "HOST": "Host",
     "OS": "Betriebssystem",
     "PID": "Prozess ID",
@@ -384,6 +386,18 @@
     "DELETE_CONFIG": "Löschen der Szene bestätigen",
     "DELETE_CONFIG_FILE": "Soll die Szenen-Konfigurationsdatei '{{config}}' wirklich gelöscht werden?"
   },
+  "FUNCTION_CONFIG": {
+    "DEFINITION_FILES": "Funktions-Bibliotheken",
+    "CONFIG_FILE": "Funktion Bibliotheksdatei",
+    "FILE_NOT_FOUND": "Datei nicht gefunden!",
+    "FILETYPE_UNSUPPORTED": "Dateityp nicht unterstützt!",
+    "CONFIG_ERROR": "Konfigurations-Fehler - Konfiguration nicht gespeichert!",
+    "CONFIG_ERROR_TEXT": "Fehler in der Funktionsbibliothek gefunden.\nUngültiges Format der Datei.\n",
+    "NAME_CONFIGURATION": "Dateinamen für die neue Funktionsbibliothek wählen",
+    "UNIQUE_NAME": "Eindeutiger Dateiname (ohne Erweiterung)",
+    "DELETE_CONFIG": "Löschen der Funktions-Bibliothek bestätigen",
+    "DELETE_CONFIG_FILE": "Soll die Funktions-Bibliothek '{{config}}' wirklich gelöscht werden?"
+  },
   "THREADS": {
     "THREAD": "Thread",
     "TOTAL": "gesamt",
@@ -448,6 +462,11 @@
     "NEW_DEFINITION_FILE": "Neue Datei",
     "NEW_LOGIC": "Neue Logik",
     "NEW_SCENE": "Neue Szene",
+    "RELOAD_SCENES": "Szenen neu laden",
+    "RELOAD_SCENE": "Laden",
+    "NEW_FUNCTION": "Neue Bibliothek",
+    "RELOAD_FUNCTIONS": "Alle neu laden",
+    "RELOAD_FUNCTION": "Laden",
     "LINE_WRAPPING": "Zeilenumbruch",
     "TRIGGER": "Auslösen"
   },
@@ -502,6 +521,7 @@
 
   "CONFIGURATION": "Konfiguration",
   "RESTART FOR CHANGES": "Änderungen werden erst nach einem Neustart von SmartHomeNG wirksam - Nach dem Neustart ein Reload der Admin GUI durchführen",
+  "RELOAD FOR CHANGES": "Änderungen werden erst nach dem erneuten Laden der Datei(en) oder einem Neustart von SmartHomeNG wirksam",
   "RESTART LOGIC FOR CHANGES": "Änderungen werden erst nach einem Neustart der Logik wirksam",
 
   "LINEBREAK": "Umbruch"

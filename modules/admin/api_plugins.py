@@ -28,6 +28,7 @@ import collections
 import requests
 import time
 import threading
+from random import randrange
 
 import lib.shyaml as shyaml
 import lib.config
@@ -324,7 +325,7 @@ class PluginsInfoController(RESTResource):
         if self.plugins == None:
             self.plugins = Plugins.get_instance()
         if self.plugins != None and self._sh.shng_status.get('code', 0) == 20:   # Running
-            self._sh.scheduler._scheduler[self._blog_task_name]['cycle'] = {120 * 60 : None}  # set scheduler cycle to test every 2 hours
+            self._sh.scheduler._scheduler[self._blog_task_name]['cycle'] = {120 * 60 + randrange(60) : None}  # set scheduler cycle to test every 2 hours
             start = time.time()
             temp_blog_urls = {}
 
@@ -345,10 +346,14 @@ class PluginsInfoController(RESTResource):
                             if r.status_code == 404:
                                 temp_blog_urls[plugin_name] = ''
                             elif r.status_code != 200:
-                                self.logger.error("Received status_code {} for get-request to {}".format(r.status_code, temp_blog_urls[plugin_name]))
+                                if r.status_code in [500, 503]:
+                                    self.logger.info("www.smarthomeng.de sent status_code {} for get-request to {}".format(r.status_code, temp_blog_urls[plugin_name]))
+                                else:
+                                    self.logger.notice("www.smarthomeng.de sent status_code {} for get-request to {}".format(r.status_code, temp_blog_urls[plugin_name]))
                                 temp_blog_urls[plugin_name] = ''
                         else:
                             pass
+                        time.sleep(1)
             except OSError as e:
                 if str(e).find('[Errno 101]') > -1:     # [Errno 101] Das Netzwerk ist nicht erreichbar
                     pass
@@ -391,7 +396,10 @@ class PluginsInfoController(RESTResource):
 
             plugin['stopped'] = False
             # Update(s) triggered by < strong > {{p.instance._itemlist | length}} < / strong > items
-            plugin['triggers'] = str(x._itemlist)
+            plugin['triggers'] = []
+            for it in x._itemlist:
+                plugin['triggers'].append(it._path)
+            #self.logger.warning("{} items={}, itemlist={}".format(x.get_shortname(), len(plugin['triggers']), plugin['triggers']))
 
             if isinstance(x, SmartPlugin):
                 plugin['pluginname'] = x.get_shortname()

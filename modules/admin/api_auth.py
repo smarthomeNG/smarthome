@@ -129,7 +129,13 @@ class AuthController(RESTResource):
                     payload['ttl'] = self.module.login_expiration
                     payload['name'] = user.get('name', '?')
                     payload['admin'] = ('admin' in user.get('groups', []))
-                    response['token'] = jwt.encode(payload, self.jwt_secret, algorithm='HS256').decode('utf-8')
+                    # try/except to support PyJWT 1.7.x and 2.x
+                    try:
+                        # For PyJWT <= 1.7.1 (and maybe higher?)
+                        response['token'] = jwt.encode(payload, self.jwt_secret, algorithm='HS256').decode('utf-8')
+                    except:
+                        # For PyJWT >= 2.3.0 (and maybe lower?)
+                        response['token'] = jwt.encode(payload, self.jwt_secret, algorithm='HS256')
                     self.logger.info("AuthController.authenticate(): payload = {}".format(payload))
                     self.logger.info("AuthController.authenticate(): response = {}".format(response))
                     self.logger.info("AuthController.authenticate(): cherrypy.url = {}".format(cherrypy.url()))

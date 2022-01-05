@@ -70,6 +70,8 @@ class WebInterface(SmartPluginWebIf):
 
         :return: contents of the template after beeing rendered
         """
+        self.plugin.get_broker_info()
+
         tmpl = self.tplenv.get_template('index.html')
         # add values to be passed to the Jinja2 template eg: tmpl.render(p=self.plugin, interface=interface, ...)
         return tmpl.render(p=self.plugin,
@@ -89,16 +91,18 @@ class WebInterface(SmartPluginWebIf):
         """
         if dataSet is None:
             # get the new data
+            self.plugin.get_broker_info()
             data = {}
+            data['broker_info'] = self.plugin._broker
+            data['broker_uptime'] = self.plugin.broker_uptime()
+            data['item_values'] = self.plugin._item_values
 
-            # data['item'] = {}
-            # for i in self.plugin.items:
-            #     data['item'][i]['value'] = self.plugin.getitemvalue(i)
-            #
             # return it as json the the web page
-            # try:
-            #     return json.dumps(data)
-            # except Exception as e:
-            #     self.logger.error("get_data_html exception: {}".format(e))
-        return {}
+            try:
+                return json.dumps(data)
+            except Exception as e:
+                self.logger.error("get_data_html exception: {}".format(e))
+                return {}
+
+        return
 

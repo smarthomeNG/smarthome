@@ -1,0 +1,8 @@
+{
+  "cycle": 200,
+  "last_run": "2019-05-04 16:33:48+0200",
+  "filename": "wind.py",
+  "name": "WindLogic",
+  "watch_item": ["knx.weather.wind"],
+  "next_exec": "2019-05-04 16:37:01+0200"
+}

@@ -7,8 +7,8 @@
 .. role:: redsup
 .. role:: bluesup
 
-enforce_change :redsup:`Neu`
-============================
+enforce_change
+==============
 
 Das Attribut *enforce_change* ist die verschärfte Form des *enforce_updates* Attributes.
 

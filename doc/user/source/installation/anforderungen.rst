@@ -1,5 +1,7 @@
 :tocdepth: 2
 
+.. index:: Linux, MacOS, Unix, Windows
+
 Hard- u. Software Anforderungen
 ===============================
 
@@ -24,6 +26,9 @@ Häufig verwendete Hardware ist:
    besonders wenn die Webinterfaces der Plugins genutzt werden und falls die Visualisierung (smartVISU) auf dem
    selben System betrieben werden sollen. Der Großteil der Nutzer verwendet diese Hardware, siehe
    `Umfrage <https://knx-user-forum.de/forum/supportforen/smarthome-py/1112952-welche-hardware-nutzt-ihr-f%C3%BCr-euer-smarthomeng>`__
+   Die verschiedenen Raspberry Pi Varianten wurden in diesem
+   `Geschwindigkeitstest <https://magpi.raspberrypi.org/articles/raspberry-pi-4-specs-benchmarks>`_
+   miteinander verglichen.
 -  Intel NUC (Empfohlen für Stabilität und Geschwindigkeit, auch wenn
    diese Rechner mehr Leistung haben, als benötigt wird. Unterstützt
    normale SATA Festplatten/SSD, was ein Vorteil gegenüber den Raspberry Pi
@@ -42,11 +47,11 @@ virtuelle Maschine mit 512MB RAM und zwischen 40GB und 80GB
 Plattenplatz.
 
 
-Raspberry Pi 2, 3 oder 4
-~~~~~~~~~~~~~~~~~~~~~~~~
+Raspberry Pi 3 oder 4
+~~~~~~~~~~~~~~~~~~~~~
 
-SmartHomeNG ist auf einem Raspberry Pi 1 zwar lauffähig, sollte dann aber nur in einer Minimalkonfiguration eingesetzt
-werden.
+SmartHomeNG ist auf einem Raspberry Pi 1 oder Pi 2 zwar lauffähig, sollte dann aber nur in einer Minimalkonfiguration
+eingesetzt werden.
 
 Vorteile:
 ^^^^^^^^^
@@ -126,11 +131,11 @@ Nachteile:
 -  es hängt sehr von der Plattform ab ob sich Nachteile ergeben
 
 
-Betriebssystem
---------------
+Betriebssysteme
+---------------
 
-Ein beliebiges Linux oder Unix System (mit Shell Zugang um die Requirements und SmartHomeNG zu installieren) sollte
-funktionieren.
+Ein beliebiges **Linux** oder **Unix System** (mit Shell Zugang um die Requirements und SmartHomeNG zu installieren)
+sollte funktionieren.
 
 SmartHomeNG ist mindestens getestet auf Raspbian und Debian Buster (amd64)
 
@@ -139,13 +144,15 @@ Einsatz eines NTP Daemons notwendig, um die Zeit über das Internet zu
 beziehen. Sonst wird SmartHomeNG aufgrund der fehlenden Zeitinformation
 nicht starten.
 
-Einige Libraries in SmartHomeNG benutzen noch Bibliotheken, die ein Unix-artiges Betriebssystem voraussetzen.
-Daher läuft SmartHomeNG nicht auf Windows.
+Einige Libraries in SmartHomeNG benutzen Bibliotheken, die ein Unix-artiges Betriebssystem voraussetzen
+oder spezielle Hardware erwarten.
 
-Ab SmartHomeNG v1.6 sollte eine Installation unter MacOS möglich sein.
+Ab SmartHomeNG v1.6 sollte eine Installation unter **MacOS** (BSD Unix) möglich sein.
+
+Ab SmartHomeNG v1.8.2 sollte eine Installation unter **Windows** möglich sein.
 
 
-weitere Software
+Python Versionen
 ----------------
 
 Die aktuelle Version von SmartHomeNG setzt Python der Version 3.6 oder neuer voraus.
@@ -167,15 +174,27 @@ Version aktuelle Python Version und die zwei Vorgängerversionen.**
   "v1.7",            "Python 3.7",  "Python 3.5, 3.6, 3.7"
   "v1.8",            "Python 3.8",  "Python 3.6, 3.7, 3.8"
   "v1.9",            "Python 3.9",  "Python 3.7, 3.8, 3.9"
+  "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10"
 
 Das bedeutet nicht automatisch, dass SmartHomeNG mit älteren Python Versionen nicht mehr funktioniert,
-die Entwicklung wird nur nicht mehr mit älteren Versionen getestet.
+die Entwicklung wird nur nicht mehr mit älteren Versionen getestet. Zudem bekommen ältere Python Versionen keine
+Bugfixes mehr sondern nur noch Sicherheits-Updates.
 
 Python 3.6 jedoch hat eine Reihe sehr interessanter Features und Verbesserungen gebracht, die nur dann in SmartHomeNG
 genutzt werden können, wenn sichergestellt ist dass SmartHomeNG mindestens unter Python 3.6 gestartet wurde. Daher
 wurde für SmartHomeNG v1.8 die **Absolute Minimum Python Version** auf 3.6 angehoben.
 
-Debian Buster bringt aktuell Python 3.7.x und PHP 7.3 mit und Ubuntu 20.04 LTS Python 3.8.x sowie PHP 7.4 und PHP 7.3
+Beispiele für Linux-System und mitgeliefere Software Versionen:
 
-PHP wird für SmartHomeNG selbst nicht benötigt, ist jedoch eine Voraussetzung für den Einsatz von smartVISU.
+   * Debian 9 (Stretch) beinhaltet Python 3.5 und PHP 7.0
+   * Debian 10 (Buster) beinhaltet Python 3.7 und PHP 7.3
+   * Debian 11 (Bullseye) beinhaltet Python 3.9 und PHP 7.4
+   * Ubuntu 18.04 LTS (Bionic Beaver) beinhaltet Python 3.6 und PHP 7.2
+   * Ubuntu 20.04 LTS (Focal Fossa) beinhaltet Python 3.8 und PHP 7.4
+
+Aus den Beispielen ist ersichtlich, das Debian Stretch nicht mehr für Neuinstallationen verwendet werden sollte.
+Bei Ubuntu sollte man die LTS (Long Term Support) Varianten bevorzugen um nicht andauern mit Systemänderungen konfrontiert zu werden
+
+PHP wird für SmartHomeNG selbst nicht benötigt, ist jedoch eine Voraussetzung für den Einsatz der
+`SmartVISU <https://www.smartvisu.de>`_.
 

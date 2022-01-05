@@ -54,6 +54,7 @@ import locale
 # https://stackoverflow.com/questions/31469707/changing-the-locale-preferred-encoding-in-python-3-in-windows
 
 
+
 #####################################################################
 # Read command line arguments
 #####################################################################
@@ -111,7 +112,7 @@ VERSION = bin.shngversion.get_shng_version()
 from lib.shpypi import Shpypi
 shpypi = Shpypi.get_instance()
 if shpypi is None:
-    shpypi = Shpypi(base=BASE)
+    shpypi = Shpypi(base=BASE, version=VERSION)
 
 core_reqs = shpypi.test_core_requirements(logging=False, pip3_command=args.pip3_command)
 if core_reqs == 0:
@@ -134,7 +135,7 @@ if core_reqs == 0:
             exit(0)
 
     try:
-        p = subprocess.Popen(command, shell=True)
+        p = subprocess.Popen(command + ' -r', shell=True)
     except subprocess.SubprocessError as e:
         print("Restart command '{}' failed with error {}".format(command,e))
     time.sleep(10)
@@ -150,12 +151,12 @@ elif core_reqs == -1:
 # Import SmartHomeNG Modules
 #####################################################################
 #import lib.config
-#import lib.connection
 import lib.daemon
 #import lib.item
 #import lib.log
 #import lib.logic
 #import lib.module
+#import lib.network
 #import lib.plugin
 #import lib.scene
 #import lib.scheduler

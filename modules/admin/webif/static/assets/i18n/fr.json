@@ -15,6 +15,7 @@
     "SCENES": "Scènes",
     "SCENE_LIST": "Liste des scènes",
     "SCENE_CONFIGURATION": "Configuration des scènes",
+    "FUNCTION_CONFIGURATION": "Configuration des fonctions utilisateur",
     "THREADS": "Tâches",
     "LOGS": "Journaux",
     "LOGS_DISPLAY": "Afficher les journaux",
@@ -30,6 +31,7 @@
     "SHNG_VERSION": "Version de SmartHomeNG",
     "IN": "dans",
     "SHNG_PLG_VERSION": "Version des extensions",
+    "SHNG_ADMIN_GUI": "Interface d'administration",
     "HOST": "Hôte",
     "OS": "Système d'exploitation",
     "ARCHITECTURE": "architecture",
@@ -500,6 +502,7 @@
 
   "CONFIGURATION": "Configuration",
   "RESTART FOR CHANGES": "Les changements deviennent seulement actifs après un redémarrage de SmartHomeNG",
+  "RELOAD FOR CHANGES": "Les modifications ne prennent effet qu'après rechargement du fichier ou redémarrage de SmartHomeNG",
   "RESTART LOGIC FOR CHANGES": "Les changements deviennent seulement actifs après un redémarrage de la logique",
 
   "LINEBREAK": "Saut de ligne"

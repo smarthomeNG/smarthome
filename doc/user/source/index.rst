@@ -7,7 +7,7 @@ SmartHomeNG
 Anwenderdokumentation
 =====================
 
-SmartHomeNG [#f1]_ ist ein System das als Metagateway zwischen verschiedenen "Dingen" fungiert und
+SmartHomeNG ist ein System das als Metagateway zwischen verschiedenen "Dingen" fungiert und
 dient der Verbindung unterschiedlicher Geräte-Schnittstellen. Die Standard-Schnittstelle eines
 Gerätes wird durch das Metagateway so um viele zusätzliche Schnittstellen erweitert. So ist es
 möglich dass die Klingel mit der Musikanlage und TV spricht, und dessen Wiedergabe unterbricht
@@ -35,8 +35,6 @@ oder im `Chat auf gitter.im <https://gitter.im/smarthomeNG/smarthome>`_ .
    **Anmerkungen** und **Änderungswünsche** zu dieser Anwenderdokumentation bitte auf
    `dieser Feedback Seite <https://www.smarthomeng.de/feedback-zur-dokumentation>`_ hinterlassen.
 
-.. [#f1] SmartHomeNG © Copyright 2016-2020 SmartHomeNG Team, basiert auf smarthome.py © 2011-2014 Marcus Popp.
-
 ..    :titlesonly:
 
 .. toctree::
@@ -44,6 +42,7 @@ oder im `Chat auf gitter.im <https://gitter.im/smarthomeNG/smarthome>`_ .
    :hidden:
 
    einleitung.md
+   was_ist_neu.rst
    installation/installation.rst
    konfiguration/konfiguration.rst
    plugins_all.rst

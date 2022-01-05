@@ -22,6 +22,21 @@ Möglichkeiten des Nesting von structs erweitern.
 
 |
 
+lib.network
+-----------
+
+|
+
+daemonzize überarbeiten
+-----------------------
+
+die Systemlogik für "daemonize" bzw. "im Vordergrund bleiben" ist kaputt.
+Spätestens die Methoden stop und restart können damit so nicht umgehen.
+Dazu hatte ich (Morg) schon ein issue aufgemacht.
+(Besonders "spaßig": smarthome mit -f oder -i starten und im AdminUI auf Restart Core klicken... hrhr)
+
+|
+
 Logiken: Zusätzlichen Trigger „shutdown“
 ----------------------------------------
 
@@ -33,6 +48,18 @@ Items: User Attribute implementieren
 ------------------------------------
 
 Attribute, die User nutzen wollen, die aber in keinem Plugin definiert sind.
+
+|
+
+Items: Hinzufügen von Items während der Laufzeit
+------------------------------------------------
+
+|
+
+Items: Einzelne Attribute während der Laufzeit ändern
+-----------------------------------------------------
+
+* eval Ausdruck während der Laufzeit änderbar machen
 
 |
 

@@ -5,8 +5,9 @@ import datetime
 import dateutil.tz
 import logging
 
+import bin.shngversion
+
 import lib.config
-import lib.connection
 
 import lib.item
 import lib.plugin
@@ -84,9 +85,12 @@ class MockSmartHome():
 
 
     def __init__(self):
-        VERSION = '1.7a.'
-        VERSION += '0.man'
-        self.version = VERSION
+        #VERSION = '1.8.'
+        #VERSION += '2c.man'
+        #self.version = VERSION
+
+        self.version = bin.shngversion.shNG_version
+
         self.python_bin = os.environ.get('_','')
         self.__logs = {}
 #        self.__item_dict = {}
@@ -98,7 +102,6 @@ class MockSmartHome():
             self.shtime = Shtime.get_instance()
 
         self.scheduler = MockScheduler()
-        self.connections = lib.connection.Connections()
 
         if self.shtime is None:
             lib.shtime._shtime_instance = self.shtime = Shtime(self)

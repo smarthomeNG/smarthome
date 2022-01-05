@@ -39,14 +39,20 @@ extensions = [
   'sphinx.ext.ifconfig',
   'sphinx.ext.viewcode',
   'sphinx.ext.githubpages',
-  'recommonmark']
-#  'recommonmark',
+  'sphinx_tabs.tabs',
+  'myst_parser']
 #  'rst2pdf.pdfbuilder']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
-from recommonmark.parser import CommonMarkParser
+# Markdown Support via MyST
+# without the following, we will get warnings from Parsing old Readme.md as described in
+# https://myst-parser.readthedocs.io/en/latest/using/howto.html#suppress-warnings
+suppress_warnings = ["myst.header"]
+
+# Not used any more
+#from recommonmark.parser import CommonMarkParser
 
 # for autostructify
 #import recommonmark
@@ -77,7 +83,7 @@ shversion = shngversion.get_shng_main_version()
 # General information about the project.
 #project = u'SmartHomeNG'
 project = u'Anwenderdokumentation v'
-copyright = u'2016-2021 SmartHomeNG Team, SmartHomeNG is based on smarthome.py © Marcus Popp'
+copyright = u'2016-2021 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp'
 
 # The full version, including alpha/beta/rc tags.
 #release = '1.3a dev (as of 13. October 2017)'  13. October 2017 is replaced by makefile with a date in the form of '2. September 2017'

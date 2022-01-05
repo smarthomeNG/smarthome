@@ -40,7 +40,16 @@ Der globale Metadaten Abschnitt ``plugin:`` kennt die folgenden Schlüsselbegrif
 
 Beschreibung der Schlüsselbegriffe im Abschnitt ``plugin:``
 
-    - ``type:`` Beschreibt den Typ des Plugins (gültige Werte: ``gateway``, ``interface``, ``protocol``, ``system``, ``cloud`` oder *leer* für ein nicht klassifiziertes Plugin
+    - ``type:`` Beschreibt den Typ des Plugins (gültige Werte: ``gateway``, ``interface``, ``protocol``, ``system``, ``web`` oder *leer* für ein nicht klassifiziertes Plugin.
+
+      Die Typen sind wie folgt definiert:
+
+        - keine Anbindung von Geräten/Diensten: **System-Plugin**
+        - Ansteuerung eines Gerätes je Plugin-Instanz: **Interface-Plugin**
+        - Ansteuerung mehrerer Geräte je Plugin-Instanz: **Gateway-Plugin**
+        - reine Unterstützung von Übertragungsprotokollen: **Protokoll-Plugin**
+        - Anbindung von Internet-Diensten: **Web-Plugin**
+
     - ``description:`` Mehrsprachiger Text, der die Funktion das Plugins beschreibt. Die Beschreibung wird bei der
       Generierung des Dokumentations-Seiten des Plugins verwendet - Die Texte in den verschiedenen Sprachen werden
       als Unter-Einträge in der Form <Sprache>: <Text> erfasst. Zur Identifikation der Sprache werden die 2-stelligen

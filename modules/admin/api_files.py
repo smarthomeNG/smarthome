@@ -53,6 +53,7 @@ class FilesController(RESTResource):
 
         self.etc_dir = self._sh._etc_dir
         self.items_dir = self._sh._items_dir
+        self.functions_dir = self._sh._functions_dir
         self.scenes_dir = self._sh._scenes_dir
         self.logics_dir = self._sh._logic_dir
         self.extern_conf_dir = self._sh._extern_conf_dir
@@ -318,6 +319,72 @@ class FilesController(RESTResource):
 
 
     # ======================================================================
+    #  /api/files/functions
+    #
+    def get_functions_filelist(self):
+
+        list = os.listdir( self.functions_dir )
+        filelist = []
+        for filename in list:
+            if filename.endswith('.py'):
+                filelist.append(filename)
+
+        self.logger.info("filelist = {}".format(filelist))
+        self.logger.info("filelist.sort() = {}".format(filelist.sort()))
+        return json.dumps(sorted(filelist))
+
+    def get_functions_config(self, fn):
+
+        self.logger.info("FilesController.get_functions_config({})".format(fn))
+        if fn.endswith('.tpl'):
+            filename = os.path.join(self.functions_dir, fn)
+        else:
+            filename = os.path.join(self.functions_dir, fn + '.py')
+        read_data = None
+        with open(filename, encoding='UTF-8') as f:
+            read_data = f.read()
+        return cherrypy.lib.static.serve_file(filename, 'application/x-download',
+                                 'attachment', fn + '.py')
+
+
+    def save_functions_config(self, filename):
+        """
+        Save function library
+
+        :return: status dict
+        """
+        params = None
+        params = self.get_body(text=True)
+        if params is None:
+            self.logger.warning("FilesController.save_functions_config(): Bad, request")
+            raise cherrypy.HTTPError(status=411)
+        self.logger.debug("FilesController.save_functions_config(): '{}'".format(params))
+
+
+        filename = os.path.join(self.functions_dir, filename + '.py')
+        read_data = None
+        with open(filename, 'w', encoding='UTF-8') as f:
+            f.write(params)
+
+        result = {"result": "ok"}
+        return json.dumps(result)
+
+
+    def delete_functions_config(self, filename):
+        """
+        Delete a scene configuration file
+
+        :return: status dict
+        """
+        self.logger.debug("FilesController.delete_functions_config(): '{}'".format(filename))
+
+        filename = os.path.join(self.functions_dir, filename + '.py')
+        os.remove(filename)
+
+        result = {"result": "ok"}
+        return json.dumps(result)
+
+    # ======================================================================
     #  /api/files/logics
     #
     def get_logics_filelist(self):
@@ -520,6 +587,12 @@ class FilesController(RESTResource):
             cherrypy.response.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate, no-store'
             return self.get_scenes_config(filename)
 
+        elif (id == 'functions' and filename == ''):
+            return self.get_functions_filelist()
+        elif id == 'functions':
+            cherrypy.response.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate, no-store'
+            return self.get_functions_config(filename)
+
         elif (id == 'logics' and filename == ''):
             return self.get_logics_filelist()
         elif id == 'logics':
@@ -548,6 +621,8 @@ class FilesController(RESTResource):
             return self.save_items_config(filename)
         elif (id == 'scenes' and filename != ''):
             return self.save_scenes_config(filename)
+        elif (id == 'functions' and filename != ''):
+            return self.save_functions_config(filename)
         elif (id == 'logics' and filename != ''):
             return self.save_logics_config(filename)
         elif (id == 'restore' and filename != ''):
@@ -584,6 +659,8 @@ class FilesController(RESTResource):
             return self.delete_items_config(filename)
         if (id == 'scenes' and filename != ''):
             return self.delete_scenes_config(filename)
+        if (id == 'functions' and filename != ''):
+            return self.delete_functions_config(filename)
 
         return None
 

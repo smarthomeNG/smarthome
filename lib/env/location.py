@@ -1,6 +1,13 @@
 
 # lib/env/location.py
 
+if sh.env.location.lon() == 0 and sh.env.location.lat() == 0:
+    try:
+        sh.env.location.lon(sh._lon, logic.lname)
+        sh.env.location.lat(sh._lat, logic.lname)
+        sh.env.location.elev(sh._elev, logic.lname)
+    except: pass
+
 if sh.sun:
     try:
 #        sunrise = sh.sun.rise().astimezone(sh.tzinfo())

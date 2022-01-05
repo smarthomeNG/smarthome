@@ -292,16 +292,23 @@ class Items():
             return self.__item_dict[string]
 
 
-    def return_items(self):
+    def return_items(self, sorted=False):
         """
         Function to return a list with all defined items
+
+        :param sorted: return list sorted alphabetically, defaults to False
+        :type sorted: bool
 
         :return: List of all items
         :rtype: list
         """
 
-        for item in self.__items:
-            yield self.__item_dict[item]
+        if sorted:
+            for item in sorted(self.__items):
+                yield self.__item_dict[item]
+        else:
+            for item in self.__items:
+                yield self.__item_dict[item]
 
 
     def match_items(self, regex):

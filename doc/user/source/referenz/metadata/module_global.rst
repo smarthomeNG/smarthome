@@ -7,8 +7,8 @@
 .. index:: Modul Metadaten; Globale Metadaten
 
 
-``module``
-----------
+module
+------
 
 Der globale Metadaten Abschnitt ``module:`` kennt die folgenden Schlüsselbegriffe:
 
