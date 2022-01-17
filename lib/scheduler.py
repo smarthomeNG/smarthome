@@ -582,14 +582,15 @@ class Scheduler(threading.Thread):
                 if next_time is not None:
                     if ct < next_time:
                         next_time = ct
-                        value = job['cron'][entry]
                         #job['source'] = 'cron'    # ms
-                        job['source'] = {'source': 'cron1', 'details': str(entry)+' -> '+str(next_time)}
+                        job['source'] = {'source': 'cron', 'details': str(entry)}
+                        value = job['cron'][entry]
                 else:
                     next_time = ct
+                    job['source'] = {'source': 'cron', 'details': str(entry)}
                     value = job['cron'][entry]
-                    job['source'] = {'source': 'cron2', 'details': str(entry)+' -> '+str(next_time)}
         self._scheduler[name]['next'] = next_time
+        self._scheduler[name]['value'] = value
         if name not in ['Connections', 'series', 'SQLite dump']:
             logger.debug("{0} next time: {1}".format(name, next_time))
 
