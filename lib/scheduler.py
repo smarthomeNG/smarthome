@@ -285,7 +285,8 @@ class Scheduler(threading.Thread):
                     if task['next'] is not None:
                         if task['next'] < now:
                             self._runc.acquire()
-                            self._runq.insert(task['prio'], (name, task['obj'], 'Scheduler', None, None, task['value']))
+                            # insert priority and a tuple of (name, obj, by, source, dest, value) # ms
+                            self._runq.insert(task['prio'], (name, task['obj'], 'Scheduler', task.get('source', None), None, task['value']))
                             self._runc.notify()
                             self._runc.release()
                             task['next'] = None
@@ -415,9 +416,11 @@ class Scheduler(threading.Thread):
             self.items = Items.get_instance()
         self._lock.acquire()
         try:
+            source = '??'
             if isinstance(cron, str):
                 cron = [cron, ]
             if isinstance(cron, list):
+                details = None
                 _cron = {}
                 for entry in cron:
                     desc, __, _value = entry.partition('=')
@@ -427,6 +430,7 @@ class Scheduler(threading.Thread):
                     else:
                         _value = _value.strip()
                     if desc.lower().startswith('init'):
+                        details = desc
                         offset = 5  # default init offset
                         desc, op, seconds = desc.partition('+')
                         if op:
@@ -439,12 +443,14 @@ class Scheduler(threading.Thread):
                         next = self.shtime.now() + datetime.timedelta(seconds=offset)
                     else:
                         _cron[desc] = _value
+                    source = {'source': 'cron', 'details': details}
                 if _cron == {}:
                     cron = None
                 else:
                     cron = _cron
             if isinstance(cycle, int):
-                cycle = {cycle: None}
+                source = {'source': 'cycle1', 'details': cycle}
+                cycle = {cycle: cycle}
             elif isinstance(cycle, str):
                 cycle, __, _value = cycle.partition('=')
                 try:
@@ -455,10 +461,11 @@ class Scheduler(threading.Thread):
                 if _value != '':
                     _value = _value.strip()
                 else:
-                    _value = None
+                    _value = cycle
                 cycle = {cycle: _value}
+                source = {'source': 'cycle', 'details': _value}
             if cycle is not None and offset is None:  # spread cycle jobs
-                    offset = random.randint(10, 15)
+                offset = random.randint(10, 15)
             # change name for multi instance plugins
             if obj.__class__.__name__ == 'method':
                 if isinstance(obj.__self__, SmartPlugin):
@@ -467,7 +474,7 @@ class Scheduler(threading.Thread):
                         if not from_smartplugin:
                             name = name +'_'+ obj.__self__.get_instance_name()
                         logger.debug("Scheduler: Name changed by adding plugin instance name to: " + name)
-            self._scheduler[name] = {'prio': prio, 'obj': obj, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
+            self._scheduler[name] = {'prio': prio, 'obj': obj, 'source': source, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
             if next is None:
                 self._next_time(name, offset)
         finally:
@@ -561,10 +568,12 @@ class Scheduler(threading.Thread):
         now = now.replace(microsecond=0)
         if job['cycle'] is not None:
             cycle = list(job['cycle'].keys())[0]
-            value = job['cycle'][cycle]
+            #value = job['cycle'][cycle]
             if offset is None:
                 offset = cycle
             next_time = now + datetime.timedelta(seconds=offset)
+            #job['source'] = 'cycle'
+            job['source'] = {'source': 'cycle', 'details': str(cycle)}
         if job['cron'] is not None:
             for entry in job['cron']:
                 if entry == 'None':
@@ -574,11 +583,13 @@ class Scheduler(threading.Thread):
                     if ct < next_time:
                         next_time = ct
                         value = job['cron'][entry]
+                        #job['source'] = 'cron'    # ms
+                        job['source'] = {'source': 'cron1', 'details': str(entry)+' -> '+str(next_time)}
                 else:
                     next_time = ct
                     value = job['cron'][entry]
+                    job['source'] = {'source': 'cron2', 'details': str(entry)+' -> '+str(next_time)}
         self._scheduler[name]['next'] = next_time
-        self._scheduler[name]['value'] = value
         if name not in ['Connections', 'series', 'SQLite dump']:
             logger.debug("{0} next time: {1}".format(name, next_time))
 
@@ -617,7 +628,11 @@ class Scheduler(threading.Thread):
             source_details = None
             if isinstance(source, dict):
                 source_details = source.get('details', '')
-                source = source.get('item', '')
+                src = source.get('item', '')
+                if src == '':
+                    # get source ('cron' or 'cycle')
+                    src = source.get('source', '')
+                source = src
             trigger = {'by': by, 'source': source, 'source_details': source_details, 'dest': dest, 'value': value}  # noqa
 
             #following variables are assigned to be available during logic execution
