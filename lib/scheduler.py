@@ -62,6 +62,7 @@ _scheduler_instance = None    # Pointer to the initialized instance of the sched
 
 from lib.triggertimes import TriggerTimes
 
+class LeaveLogic(Exception): pass  # declare a label for 'raise LeaveLogic'
 
 class _PriorityQueue:
     """
@@ -376,7 +377,11 @@ class Scheduler(threading.Thread):
         :param from_smartplugin:
         :return: returns either the name or name combined with instance name
         """
-        stack = inspect.stack()
+        try:
+            stack = inspect.stack()
+        except Exception as e:
+            logger.exception(f"check_caller('{name}'): Exception in inspect.stack(): {e}")
+
         try:
             obj = stack[2][0].f_locals["self"]
             if isinstance(obj, SmartPlugin):
@@ -665,14 +670,22 @@ class Scheduler(threading.Thread):
 
         try:
             if logic.enabled:
-                exec(logic.bytecode)
-                # store timestamp of last run
-                logic.set_last_run()
-                for method in logic.get_method_triggers():
-                    try:
-                        method(logic, by, source, dest)
-                    except Exception as e:
-                        logger.exception("Logic: Trigger {} for {} failed: {}".format(method, logic.name, e))
+                if sh.shng_status['code'] < 20:
+                    logger.warning('Logik ignoriert, SmartHomeNG ist noch nicht vollständig initialisiert')
+                else:
+                    logger.debug(f"Getriggert durch: {trigger}")
+                    exec(logic.bytecode)
+                    # store timestamp of last run
+                    logic.set_last_run()
+                    for method in logic.get_method_triggers():
+                        try:
+                            method(logic, by, source, dest)
+                        except Exception as e:
+                            logger.exception("Logic: Trigger {} for {} failed: {}".format(method, logic.name, e))
+        except LeaveLogic as e:
+            # 'LeaveLogic' is no error
+            if str(e) != '':
+                logger.warning(f"Die Logik '{logic.name}' wurde verlassen. Grund: {e}")
         except SystemExit:
             # ignore exit() call from logic.
             pass
