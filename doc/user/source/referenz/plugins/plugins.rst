@@ -2,8 +2,10 @@
 .. index:: Referenz; Plugins
 .. Index:: Plugins; Referenz
 
-.. role:: bluesup
 .. role:: redsup
+.. role:: bluesup
+.. role:: greensup
+.. role:: blacksup
 
 
 =======

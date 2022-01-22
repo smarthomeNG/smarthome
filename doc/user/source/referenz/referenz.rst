@@ -1,3 +1,4 @@
+:tocdepth: 5
 
 .. index:: Referenz
 
@@ -14,12 +15,13 @@ können.
 
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
    :hidden:
    :titlesonly:
 
    smarthomeng/smarthomeng
    items/items
+   logiken/logiken
    module/module
    plugins/plugins
    metadata/metadata

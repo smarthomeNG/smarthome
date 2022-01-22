@@ -3,6 +3,11 @@
 .. role:: greensup
 .. role:: redsup
 
+.. index:: Konfiguration; Userfunctions
+.. index:: Konfiguration; uf
+.. index:: Konfiguration; Functions
+.. index:: Userfunctions; Konfiguration
+
 ===========================
 Userfunctions :redsup:`Neu`
 ===========================

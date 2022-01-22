@@ -212,7 +212,7 @@ loggers:
     #     # Logging items with configuration: log_change: new_device
     #     # to a different file
     #     #
-    #     handlers: [items_file]
+    #     handlers: [shng_items_file]
     #     level: DEBUG
 
     # ------------------------------------------

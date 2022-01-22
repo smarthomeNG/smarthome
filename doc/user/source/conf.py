@@ -82,8 +82,8 @@ shversion = shngversion.get_shng_main_version()
 
 # General information about the project.
 #project = u'SmartHomeNG'
-project = u'Anwenderdokumentation v'
-copyright = u'2016-2021 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp'
+project = u'Anwenderdokumentation '
+copyright = u'2016-2022 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp'
 
 # The full version, including alpha/beta/rc tags.
 #release = '1.3a dev (as of 13. October 2017)'  13. October 2017 is replaced by makefile with a date in the form of '2. September 2017'
@@ -107,7 +107,7 @@ if branch != 'master':
 release += ')'
 #release = sphinx_bootstrap_theme.__version__
 
-plgrelease = pluginsversion.plugin_release()
+plgrelease = shngversion.get_shng_plugins_version()
 plgbranch = pluginsversion.plugin_branch()
 if plgbranch != 'master':
     plgrelease += ' ' + plgbranch
@@ -175,7 +175,7 @@ html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
     'collapse_navigation': False,
     'display_version': False,
-    'navigation_depth': 4,
+    'navigation_depth': 5,
 }
 
 

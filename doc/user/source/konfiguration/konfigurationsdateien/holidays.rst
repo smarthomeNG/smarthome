@@ -94,6 +94,6 @@ etwa so aussehen:
    :language: yaml
 
 
-Im Abschnitt **Logiken** ist auf der Seite :doc:`Feiertage, Daten und Zeiten </logiken/objekteundmethoden_feiertage_datum_zeit>`
+Im Abschnitt **Logiken** ist auf der Seite :doc:`Feiertage, Daten und Zeiten </referenz/logiken/objekteundmethoden_feiertage_datum_zeit>`
 beschrieben, wie die hier konfigurierten Feiertage in Logiken und **eval** Attributen genutzt werden können.
 

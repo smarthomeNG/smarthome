@@ -102,8 +102,8 @@ if [ "${KEEP_REPO,,}" != "true" ]; then
 fi
 echo
 echo Sollten die build Verzeichnisse bereits existieren, werden die alten
-echo gebauten Versionen während des Skriptes gelöscht. Der Account unter dem s
-echo diese Skript ausgeführt wird, muss Rechte zum anlegen von Verzeichnissen
+echo gebauten Versionen während des Skriptes gelöscht. Der Account unter dem
+echo dieses Skript ausgeführt wird, muss Rechte zum anlegen von Verzeichnissen
 echo in \'$DIR\' haben.
 echo
 if [ "${GIT_CHECKOUT,,}" == "true" ]; then
@@ -171,6 +171,8 @@ if [ "${DOC,,}" == "developer" ] || [ "${DOC,,}" == "all" ]; then
   make html || exit
   echo
   echo Bau der Entwickler-Dokumentation ist abgeschlossen!
+  echo
+  echo Die Startseite ist: \'${DIR}/user/build/html/index.html\'
 fi
 
 if [ "${DOC,,}" == "user" ] || [ "${DOC,,}" == "all" ]; then
@@ -185,6 +187,8 @@ if [ "${DOC,,}" == "user" ] || [ "${DOC,,}" == "all" ]; then
   make html || exit
   echo
   echo Bau der Anwender-Dokumentation ist abgeschlossen!
+  echo
+  echo Die Startseite ist: \'${DIR}/user/build/html/index.html\'
 fi
 
 

@@ -1,6 +1,6 @@
 :tocdepth: 2
 
-..index:: Logging
+.. index:: Logging
 
 #######
 Logging
@@ -10,22 +10,22 @@ Ein `Log <https://de.wikipedia.org/wiki/Log>`_ zeichnet Ergebnisse von Vorgänge
 und dient der Dokumentation. Anhand eines Logs kann man Programmfehlern auf die Spur kommen oder bestimmte
 Situationen können im Nachhinein untersucht werden. Je detaillierter ein Log geführt wird, desto einfacher
 ist die Untersuchung bestimmter Sachverhalte.
-Je nachdem, was man untersuchen möchte, kann man mit einem **Logging Level** im Programm vorgeben wie ernst 
+Je nachdem, was man untersuchen möchte, kann man mit einem **Logging Level** im Programm vorgeben wie ernst
 oder wie wichtig ein bestimmter Logeintrag ist.
-Innerhalb des Kerns von SmartHomeNG finden sich zum Beispiel Einträge im Programm mit dem Log Level **NOTICE** 
+Innerhalb des Kerns von SmartHomeNG finden sich zum Beispiel Einträge im Programm mit dem Log Level **NOTICE**
 die in einer Logdatei dann im Ergebnis so aufgezeichnet werden:
 
 ``2021-04-16  21:56:31 NOTICE   lib.smarthome     --------------------   Init SmartHomeNG 1.8.2c.4e0938c2.develop   --------------------``
 
-Das ist als Information zu sehen um bei Problemen Hilfe zu erhalten. Es deutet hier nichts auf Fehler oder Probleme hin. 
+Das ist als Information zu sehen um bei Problemen Hilfe zu erhalten. Es deutet hier nichts auf Fehler oder Probleme hin.
 Ein anderer Logging Befehl im Core mit dem Log Level **WARNING** erzeugt hingehen folgendes:
 
 ``2021-04-16  21:56:32 WARNING  lib.module        Not loading module Mqtt from section 'mqtt': Module is disabled``
 
 Das ist als Warnung gedacht um darauf hinzuweisen, das ein Module nicht geladen wird und in dieser Folge eventuell
 weitere Fehler oder Probleme auftauchen könnten. Steigerungen von Warnungen sind Log Level **ERROR** oder **CRITICAL**.
-Während ein **ERROR** also ein Fehler durchaus bedeuten kann das SmartHomeNG weiterarbeiten kann, bedeutet ein **CRITICAL** 
-also ein kritischer Fehler das das Programm beendet werden muss. 
+Während ein **ERROR** also ein Fehler durchaus bedeuten kann das SmartHomeNG weiterarbeiten kann, bedeutet ein **CRITICAL**
+also ein kritischer Fehler das das Programm beendet werden muss.
 Fehlt ein für den Kern von SmartHomeNG benötigtes Modul, so stell das einen kritischen Fehler dar.
 
 Die Log Level in der Übersicht, absteigend in der Bedeutung für den Programmablauf:
@@ -51,7 +51,7 @@ Die Log Level in der Übersicht, absteigend in der Bedeutung für den Programmab
      - Warnung das etwas unerwartetes passiert ist aber trotzdem weitergearbeitet werden kann
    * - 20
      - INFO
-     - Eine Ablaufinformation die nicht unbedingt wichtig ist 
+     - Eine Ablaufinformation die nicht unbedingt wichtig ist
    * - DEBUG
      - 10
      - Informationen für die Fehlersuche die normalerweise nicht benötigt werden
@@ -68,14 +68,14 @@ verstanden werden sollen.
 Konfiguration des Loggings
 ==========================
 
-Auf der Seite `Python Logging <https://docs.python.org/3.6/library/logging.html#module-logging>`_ 
+Auf der Seite `Python Logging <https://docs.python.org/3.6/library/logging.html#module-logging>`_
 sind die Konfigurationsmöglichkeiten detailliert beschrieben.
 
 SmartHomeNG lädt beim Start die Konfiguration des Logging aus der Datei **etc/logging.yaml**. Ist diese Datei nicht vorhanden,
-so versucht SmartHomeNG die Datei **etc/logging.yaml.default** zu kopieren nach **etc/logging.yaml** und dann daraus 
+so versucht SmartHomeNG die Datei **etc/logging.yaml.default** zu kopieren nach **etc/logging.yaml** und dann daraus
 die Konfiguration des Loggings zu laden.
 
-Wenn bei der Konfiguration des Loggings etwas schief geht, kann also jederzeit die Datei **etc/logging.yaml** gelöscht oder 
+Wenn bei der Konfiguration des Loggings etwas schief geht, kann also jederzeit die Datei **etc/logging.yaml** gelöscht oder
 besser umbenannt werden und wird dann beim nächsten Neustart durch den Inhalt der **etc/logging.yaml.default** frisch bereitgestellt.
 
 Ein Beispiel für **etc/logging.yaml.default** im Folgenden:
