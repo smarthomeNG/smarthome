@@ -1,13 +1,13 @@
 :tocdepth: 5
 
-.. index:: Referenz; Logiken
-.. Index:: Logiken; Referenz
-
 .. role:: redsup
 .. role:: bluesup
 .. role:: greensup
 .. role:: blacksup
 
+
+.. index:: Referenz; Logiken
+.. Index:: Logiken; Referenz
 
 #####################
 Logiken :redsup:`Neu`
@@ -33,10 +33,12 @@ definiert hat).
    logiken_grundstruktur
    logiken_konfiguration
    logiken_logic_objekt
-   objekteundmethoden
    logiken_logging
+
    logiken_python_module
    logiken_smarthomeng_methoden
+   logiken_plugin_funktionen
+
    logiken_persistente_vars
    logiken_items
    logiken_funktionen

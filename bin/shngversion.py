@@ -118,6 +118,10 @@ def _get_git_data(sub='', printout=False):
 def get_shng_main_version():
     return Version.format( shNG_version )
 
+def get_shng_plugins_version():
+    plgversion = get_plugins_version().split('-')[0]
+    return Version.format( plgversion )
+
 def get_shng_version():
     commit, commit_short, branch, describe = _get_git_data()
     VERSION = get_shng_main_version()

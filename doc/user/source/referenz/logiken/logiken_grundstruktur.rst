@@ -1,12 +1,15 @@
 
-:tocdepth: 5
+.. role:: redsup
+.. role:: bluesup
+.. role:: greensup
+.. role:: blacksup
 
 .. index:: Struktur; Logiken
 .. index:: Logiken; Struktur
 
-=========================
-Grundstruktur einer Logik
-=========================
+=======================================================
+Grundstruktur einer Logik :bluesup:`under construction`
+=======================================================
 
 Das eigentliche Python Skript einer Logik muss im Verzeichnis ``../logics`` der SmartHomeNG Installation abgelegt
 werden. Damit die Logiken getriggert und ausgeführt werden, müssen sie zusätzlich in der Konfigurationsdatei

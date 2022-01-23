@@ -29,7 +29,7 @@ Die folgenden Parameter können für eine Logik in der Konfigurationsdatei im Ve
 +------------------+-----------------------------------------------------------------------------------------------+
 | prio             | **Optional**: Angabe einer Priorität für die Logik. Die Priorität kommt nur bei Logiken zum   |
 |                  | Einsatz, die ein Schedule haben, bei denen also der Paramter **crontab** oder **cycle**       |
-|                  | angegeben wurde. Die Priorität sollte zwischen **2** und **6** liegen. Falls der Parameter    |
+|                  | angegeben wurde. Die Priorität sollte zwischen **1** und **5** liegen. Falls der Parameter    |
 |                  | nicht angegeben wird, wird die Standardpriorität **3** verwendet.                             |
 +------------------+-----------------------------------------------------------------------------------------------+
 | visu_acl         | **Optional**: Dieser Parameter wird durch das Plugin **visu_websocket**                       |

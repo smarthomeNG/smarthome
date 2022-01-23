@@ -2,8 +2,10 @@
 .. index:: Referenz; Items
 .. Index:: Items; Referenz
 
-.. role:: bluesup
 .. role:: redsup
+.. role:: bluesup
+.. role:: greensup
+.. role:: blacksup
 
 
 =====
@@ -22,3 +24,4 @@ In den folgenden Abschnitten sind Informationen zu den Items in SmartHomeNG zu f
    properties
    funktionen
    systemitems
+   methoden

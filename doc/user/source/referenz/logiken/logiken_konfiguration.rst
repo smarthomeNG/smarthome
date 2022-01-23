@@ -210,9 +210,9 @@ prio
 ~~~~
 
 Setzt die Priorität der Logik im Kontext des Schedulers.
-Jeder Wert zwischen ``1`` und ``10`` ist erlaubt mit ``1`` für die höchste Priorität und ``10`` die niedrigste.
+Jeder Wert zwischen ``1`` und ``5`` ist erlaubt mit ``1`` für die höchste Priorität und ``5`` die niedrigste.
 Im Normalfall ist eine Angabe der Priorität nicht notwendig, die Vorgabe für alle Logiken ohne
-Prioritätsangabe ist ``5``.
+Prioritätsangabe ist ``3``.
 
 
 .. _logik_parameter_user_parameter:
@@ -227,5 +227,5 @@ Im ersten Beispiel ist für die vierte definierte Logik ein Parameter ``usage_wa
 
 
 
-Details zur Erstellung von Logiken finden sich unter  :doc:`Logiken </logiken/logics>`
+Details zur Erstellung von Logiken finden sich unter :doc:`Logiken </logiken/logics>`
 und :doc:`Entwicklung/Logiken </entwicklung/logiken/logiken>`.

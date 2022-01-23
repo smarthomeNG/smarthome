@@ -101,8 +101,8 @@ zusätzliche Funktionen in eval Ausdrücken
 
 Bereits SmartHomeNG v1.3 wird das Python Modul `math <https://docs.python.org/3.4/library/math.html>`__
 bereitgestellt und es können entsprechende Funktionen genutzt werden. Außerdem sind seit SmarthomeNG v1.7 die
-:doc:`Items-API </referenz/logiken/objekteundmethoden_item_methoden>` als **items** (z.B. items.return_item('bla')) und das
-:doc:`shtime Modul </referenz/logiken/objekteundmethoden_feiertage_datum_zeit>` mittels **shtime** (z.B. shtime.now()) verfügbar.
+:doc:`Items-API </referenz/logiken/logiken_items>` als **items** (z.B. items.return_item('bla')) und das
+:doc:`shtime Modul </referenz/smarthomeng/feiertage_datum_zeit>` mittels **shtime** (z.B. shtime.now()) verfügbar.
 
 Beispiel:
 
@@ -127,7 +127,7 @@ auf andere Items beziehen.
 
 .. tip::
 
-   Im Abschnitt **Logiken** ist auf der Seite :doc:`Feiertage, Daten und Zeiten </referenz/logiken/objekteundmethoden_feiertage_datum_zeit>`
+   Im Abschnitt **Logiken** ist auf der Seite :doc:`Feiertage, Daten und Zeiten </referenz/smarthomeng/feiertage_datum_zeit>`
    beschrieben, welche Feiertags- und Datums-Funktionen in Logiken benutzt werden können. Diese Funktionen können auch
    in eval Attributen genutzt werden können.
 

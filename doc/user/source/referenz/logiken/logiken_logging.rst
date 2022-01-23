@@ -1,12 +1,17 @@
-:tocdepth: 5
 
 .. index:: Logging; Logging in Logiken
 .. index:: Logiken; Logging in Logiken
+
+.. role:: bluesup
+.. role:: redsup
 
 
 ==================
 Logging in Logiken
 ==================
+
+Logger Konfiguration
+====================
 
 Damit aus Logiken heraus geloggt werden kann, muss dafür in der Logging-Konfigurationsdatei ``etc/logging.yaml``
 ein entsprechender Logger konfiguriert sein.
@@ -54,3 +59,27 @@ Für eine Logik mit dem Namen ``example``, sieht das beispielsweise folgenderma�
 Als Handler wird dabei der bereits im Logger ``logics`` definierte Handler verwendet. Es können bei Bedarf im
 Logger der einzelnen Logik zusätzliche handler angegeben werden. Dabei muss darauf geachtet werden, dass der im
 Logger ``logics`` definierte Handler nicht erneut angegeben wird, sa sonst die Logausgaben doppelt erfolgen.
+
+
+
+Logging im Code
+===============
+
+Nachdem das Logging für die Logik/Logiken wie oben beschrieben konfiguriert wurde, können aus dem Code der Logik
+heraus folgendermaßen Logeinträge erstellt werden:
+
+.. code-block:: python
+
+    logger.error("Logtext der mit dem Level ERROR geloggt wird")
+
+    logger.warning("Logtext der mit dem Level WARNING geloggt wird")
+
+    logger.info("Logtext der mit dem Level INFO geloggt wird")
+
+    logger.debug("Logtext der mit dem Level DEBUG geloggt wird")
+
+
+Zusätzlich zu den Logeinträgen die in der Logik explizit erzeugt werden, wird vor Aufruf der Logik ein Logeintrag
+erzeugt, der anzeigt, was die Ausführung der Logik getriggert hat. Dieser Logeintrag wird im Level DEBUG geschrieben.
+Er erscheint in den Logdateien also nur, wenn der Loglevel für die entsprechende Logik auf DEBUG gesetzt ist.
+

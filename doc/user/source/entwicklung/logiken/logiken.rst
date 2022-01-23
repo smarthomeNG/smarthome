@@ -1,12 +1,14 @@
 
 .. index:: Entwicklung; Logiken
 
-.. role:: bluesup
 .. role:: redsup
+.. role:: bluesup
+.. role:: greensup
+.. role:: blacksup
 
 
-Logiken
-=======
+Logiken :bluesup:`under construction`
+=====================================
 
 
 Einführung
