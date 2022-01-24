@@ -7,27 +7,144 @@
 .. role:: blacksup
 
 
+=====================================
 Logiken :bluesup:`under construction`
 =====================================
 
+Eine Logik besteht aus einem Python Skript sowie einer Reihe von Parametern die den Aufruf (das Triggern) der Logik
+steuern. Eine Logik kan während der Laufzeit von SmartHomeNG geladen und entladen werden. Dadurch sind Veränderungen
+ein einer Logik möglich, ohne SmartHomeNG neu starten zu müssen.
+
 
 Einführung
-----------
+==========
 
-Logiken in SmartHomeNG sind in Python geschriebene Skript. Sie werden im Unterordner ``logics/`` abgelegt
-und definiert in ``etc/logic.yaml``.
-Die Konfigurationsdatei ``etc/logic.yaml`` beschreibt für SmartHomeNG unter welchen Bedingungen eine bestimmte Logik auszuführen ist.
+Das eigentliche Python Skript einer Logik muss im Verzeichnis ``../logics`` der SmartHomeNG Installation abgelegt
+werden. Damit die Logik getriggert und ausgeführt wird, muss sie zusätzlich in der Konfigurationsdatei
+``../etc/logic.yaml`` konfiguriert werden. Hier wird festgelegt, unter welchen Bedingungen eine bestimmte Logik
+auszuführen ist.
 
-Die Vorlage für das Skript einer Logik kann folgendermaßen aussehen:
+Wenn eine Logik mit der Admin GUI erstellt wurde, ist sie nach dem ersten erfolgreichen Laden pausiert (disabled).
+Damit die Logik ausgeführt werden kann, muss sie zuerst mit dem "Play"-Button enabeld werden. (Der "Play"-Button
+wechselt dabei zum "Pause"-Button.)
 
+
+Behandlung von Fehlern in der Logik
+-----------------------------------
+
+Syntaktische Fehler
+~~~~~~~~~~~~~~~~~~~
+
+Wenn eine Logik geladen wird, entweder beim Start von SmartHomeNG oder durch die Admin GUI, wird das Python Skript,
+wie ein normales Python Programm, in einen Bytecode übersetzt. Falls hierbei ein grober syntaktischer Fehler auftritt,
+wird die Logik nicht geladen und es wird ein entsprechender Fehler geloggt.
+
+Beispiel: Folgende Test Logik
+
+.. code-block:: python
+
+    #!/usr/bin/env python3
+    # test_logic.py
+
+    logger.warning("Start der Logik")
+
+    Hier steht Müll
+
+    logger.warning("Ende der Logik")
+
+
+erzeugt beim laden/übersetzen folgenden Logeintrag:
+
+.. code-block:: text
+
+    2022-01-24  12:51:26 ERROR    lib.logic            Exception: invalid syntax (test_logic.py, line 6)
+    Traceback (most recent call last):
+      File "/usr/local/shng_dev/lib/logic.py", line 1034, in _generate_bytecode
+        self.bytecode = compile(code, self.pathname, 'exec')
+      File "/usr/local/shng_dev/logics/test_logic.py", line 6
+        Hier steht Müll
+             ^
+    SyntaxError: invalid syntax
+
+
+Laufzeit Fehler
+~~~~~~~~~~~~~~~
+
+Nachdem eine Logik erfolgreich geladen wurde, können bei der Ausführung der Logik Laufzeit Fehler auftreten.
+Falls ein Laufzeitfehler nicht innerhalb der Logik abgefangen wird, führt er zur Beendigung des aktuellen
+Laufes der Logik und es wird ein entsprechender Fehler geloggt. Die Logik bleibt jedoch geladen und wird, wenn sie
+getriggert wird, erneut ausgeführt.
+
+Beispiel: Folgende Test Logik
+
+.. code-block:: python
+
+    #!/usr/bin/env python3
+    # test_logic.py
+
+    logger.warning("Start der Logik")
+
+    var = int('abc')
+
+    logger.warning("Ende der Logik")
+
+
+erzeugt zur Laufzeit folgenden Logeintrag:
+
+.. code-block:: text
+
+   2022-01-24  13:55:14 ERROR    logics.test_logic    In der Logik ist ein Fehler aufgetreten:
+      Logik 'test_logic', Datei '/usr/local/shng_dev/logics/test_logic.py', Zeile 6
+      Hauptroutine der Logik, Exception: invalid literal for int() with base 10: 'abc'
+
+
+Template für eine neue Logik
+----------------------------
+
+Eine neue Logik sollte möglichst auf der folgenden Vorlage ``logic.tpl`` aufbauen.
+Die Template Datei ist im Verzeichnis ``logics/`` abgelegt:
 
 .. literalinclude:: /logics/logic.tpl
-   :caption: /logics/example_logic.py
+   :caption: /logics/logic.tpl
    :language: python
 
+Um zum Beispiel eine Logik ``example`` zu erzeugen, muss zuerst die Datei ``logics/logic.tpl`` auf die
+Datei ``logics/example.py`` kopiert werden und in der erstellten Datei der eigentliche Code der Logik erfasst werden.
 
-> - - - - - - - - - - - - - - - - - - - -
+Anschließend muss noch in der Konfigurationsdatei ``etc/logic.yaml`` die Konfiguration für die Logik festgelegt
+werden.
 
+Die Minimalkonfiguration sieht für das Beispiel folgendermaßen aus:
+
+.. code-block:: yaml
+
+    example:
+        filename: example.py
+
+Der Name der Logik wird durch den Namen des Abschnitts ``example`` in der Konfigurationsdatei festgelegt. Unter diesem
+Namen wird die Logik innerhalb von SmartHomeNG angesprochen. Der Parameter ``filename`` legt fest, in welcher
+Datei der Code für die Logik ``example`` gespeichert ist. Dafür kann im Prinzip ein beliebiger Dateiname gewählt
+werden, solange die Extension ``.py`` ist. Um mögliche Verwirrungen zu vermeiden, wird jedoch empfohlen den
+Namen der Logik und den Namen der Datei gleich zu wählen. Generell sollten Dateinamen nur aus Kleinbuchstaben
+bestehen, da je nach verwendetem Betriebssystem das Dateisystem evtl. Case sensitiv ist und ``Example.py`` eine
+andere Datei sein kann als ``example.py``.
+
+Erst mit der Existenz dieser Konfiguration kann die Logik gestartet werden. Die Logik würde zwar noch nicht durch
+ein normaler Ereignis innerhalb von SmartHomeNG getriggert, da keine Trigger definiert sind, die Logik kann jedoch
+aus der Admin GUI getriggert werden.
+
+Wenn die Logik zum Beispiel beim Start von SmartHomeNG getriggert werden soll, so muss noch der folgende ``crontab``
+Parameter angebeben werden:
+
+.. code-block:: yaml
+
+    example:
+        filename: example.py
+        crontab: init
+
+
+Beispiele
+=========
 
 Die folgende Beispielkonfiguration definiert 4 Logiken:
 
