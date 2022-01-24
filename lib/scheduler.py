@@ -628,9 +628,34 @@ class Scheduler(threading.Thread):
             self._task(name, obj, by, source, dest, value)
 
 
-    def _start_logic_task(self, logic, by, source, dest, value):
+    def _task(self, name, obj, by, source, dest, value):
+        threading.current_thread().name = name
+        logger = logging.getLogger(name)
+        if obj.__class__.__name__ == 'Logic':
+            self._execute_logic_task(obj, by, source, dest, value)
+
+        elif obj.__class__.__name__ == 'Item':
+            try:
+                if value is not None:
+                    obj(value, caller="Scheduler")
+            except Exception as e:
+                logger.exception(f"Item {name} exception: {e}")
+
+        else:  # method
+            try:
+                if value is None:
+                    obj()
+                else:
+                    obj(**value)
+            except Exception as e:
+                logger.exception(f"Method {name} exception: {e}")
+
+        threading.current_thread().name = 'idle'
+
+
+    def _execute_logic_task(self, logic, by, source, dest, value):
         """
-        Start a logic from _task method
+        Execute a logic from _task method
 
         :param logic:
         :return:
@@ -671,7 +696,7 @@ class Scheduler(threading.Thread):
         try:
             if logic.enabled:
                 if sh.shng_status['code'] < 20:
-                    logger.warning('Logik ignoriert, SmartHomeNG ist noch nicht vollständig initialisiert')
+                    logger.warning(f"Logik ignoriert, SmartHomeNG ist noch nicht vollständig initialisiert - Logik wurde getriggert durch {trigger}")
                 else:
                     logger.debug(f"Getriggert durch: {trigger}")
                     exec(logic.bytecode)
@@ -695,83 +720,10 @@ class Scheduler(threading.Thread):
             if tb[2] == '<module>':
                 logic_method = 'Hauptroutine der Logik'
             else:
-                logic_method = tb[2] + '()'
-            logger.error(f"In der Logik ist ein Fehler aufgetreten:\n   Logik '{logic.name}', Datei '{tb[0]}', Zeile {tb[1]}\n   Methode '{logic_method}', Exception: '{e}'")
-            #logger.exception(f"In der Logik ist ein Fehler aufgetreten:\n   Logik '{logic.name}', Datei '{tb[0]}', Zeile {tb[1]}\n   Methode '{logic_method}', Exception: '{e}'\n ")
+                logic_method = 'function ' + tb[2] + '()'
+            logger.error(f"In der Logik ist ein Fehler aufgetreten:\n   Logik '{logic.name}', Datei '{tb[0]}', Zeile {tb[1]}\n   {logic_method}, Exception: {e}")
+            #logger.exception(f"In der Logik ist ein Fehler aufgetreten:\n   Logik '{logic.name}', Datei '{tb[0]}', Zeile {tb[1]}\n   {logic_method}, Exception: '{e}'\n ")
 
         return
 
 
-    def _task(self, name, obj, by, source, dest, value):
-        threading.current_thread().name = name
-        logger = logging.getLogger(name)
-        if obj.__class__.__name__ == 'Logic':
-            self._start_logic_task(obj, by, source, dest, value)
-
-            # source_details = None
-            # if isinstance(source, dict):
-            #     source_details = source.get('details', '')
-            #     src = source.get('item', '')
-            #     if src == '':
-            #         # get source ('cron' or 'cycle')
-            #         src = source.get('source', '')
-            #     source = src
-            # trigger = {'by': by, 'source': source, 'source_details': source_details, 'dest': dest, 'value': value}  # noqa
-            #
-            # #following variables are assigned to be available during logic execution
-            # sh = self._sh  # noqa
-            # shtime = self.shtime
-            # items = self.items
-            #
-            # # set the logic environment here (for use within functions in logics):
-            # logic = obj  # noqa
-            # logic.sh = sh
-            # logic.logger = logger
-            # logic.shtime = shtime
-            # logic.items = items
-            # logic.trigger_dict = trigger    # logic.trigger has naming conflict with method logic.trigger of lib.item
-            #
-            # #logics = obj._logics
-            # logics = logic._logics
-            #
-            # if not self.mqtt:
-            #     if _lib_modules_found:
-            #         self.mqtt = Modules.get_instance().get_module('mqtt')
-            # mqtt = self.mqtt
-            # logic.mqtt = mqtt
-            #
-            # try:
-            #     if logic.enabled:
-            #         #exec(obj.bytecode)
-            #         exec(logic.bytecode)
-            #         # store timestamp of last run
-            #         #obj.set_last_run()
-            #         logic.set_last_run()
-            #         for method in logic.get_method_triggers():
-            #             try:
-            #                 method(logic, by, source, dest)
-            #             except Exception as e:
-            #                 logger.exception("Logic: Trigger {} for {} failed: {}".format(method, logic.name, e))
-            # except SystemExit:
-            #     # ignore exit() call from logic.
-            #     pass
-            # except Exception as e:
-            #     tb = sys.exc_info()[2]
-            #     tb = traceback.extract_tb(tb)[-1]
-            #     logger.exception("Logic: {0}, File: {1}, Line: {2}, Method: {3}, Exception: {4}".format(name, tb[0], tb[1], tb[2], e))
-
-        elif obj.__class__.__name__ == 'Item':
-            try:
-                if value is not None:
-                    obj(value, caller="Scheduler")
-            except Exception as e:
-                logger.exception("Item {0} exception: {1}".format(name, e))
-        else:  # method
-            try:
-                if value is None:
-                    obj()
-                else:
-                    obj(**value)
-            except Exception as e:
-                logger.exception("Method {0} exception: {1}".format(name, e))
-        threading.current_thread().name = 'idle'
