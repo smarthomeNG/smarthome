@@ -7,7 +7,7 @@
 .. role:: blacksup
 
 
-.. index:: Logiken; Plgin Funktionen
+.. index:: Logiken; Plugin Funktionen
 
 =============================
 Nutzung von Plugin Funktionen

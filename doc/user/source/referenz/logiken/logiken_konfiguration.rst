@@ -10,9 +10,6 @@
 Logik Konfiguration
 ===================
 
-Details zur Konfiguration von Logiken finden sich :doc:`hier <../../konfiguration/logiken>` .
-
-
 Zur Konfiguration einer Logik wird in der Datei **../etc/logic.yaml** ein Abschnitt für die
 Logik angelegt. Unter dem Namen dieses Abschnitts wird die Logik an anderen Stellen referenziert.
 

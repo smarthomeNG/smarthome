@@ -43,4 +43,6 @@ definiert hat).
    logiken_items
    logiken_funktionen
    logiken_mqtt
+   logiken_exceptions
+
 

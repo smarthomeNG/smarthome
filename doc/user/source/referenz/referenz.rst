@@ -27,3 +27,5 @@ können.
    metadata/metadata
    logging/logging
    userfunctions/userfunctions
+   libraries_plugins_logics
+   APIs

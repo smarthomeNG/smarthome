@@ -143,6 +143,17 @@ Parameter angebeben werden:
         crontab: init
 
 
+Verlassen einer Logik
+---------------------
+
+Normalerweise wird der aktuelle Lauf einer Logik dadurch beendet, dass das Ende des Codes der Hauptroutine
+erreicht wird. In einigen Fällen kann es jedoch sinnvoll sein, die Logik mitten aus dem Code heraus oder as einer
+Funktion heraus zu beenden/zu verlassen.
+
+Dafür kann eine spezielle Exception ausgelöst werden. Das geschieht mit dem Befehl ``raise LeaveLogic()``.
+Details hierzu sind in der :ref:`Referenz <logik_exceptions_leavelogic>` zu finden.
+
+
 Beispiele
 =========
 
