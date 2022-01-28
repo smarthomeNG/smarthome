@@ -25,16 +25,7 @@ Zunächst müssen einige zusätzlichen Pakete installiert werden:
 
 .. code-block:: bash
 
-   sudo apt-get -y install dialog python3 python3-dev python3-setuptools unzip git-core build-essential
-   sudo apt-get install python3-pip
-
-
-    Dann sollte evtl. noch Pythons Paketmanager PIP auf den neuesten Stand gebracht werden. Die installierte
-    Version von PIP sollte jedoch bereits ausreichend sein:
-
-    .. code-block:: bash
-
-       python3 -m pip install --upgrade pip
+   sudo apt-get -y install dialog python3 python3-dev python3-setuptools unzip git-core build-essential python3-pip
 
 
 SmartHomeNG Quellcode laden
@@ -103,7 +94,7 @@ Weitere Python Bibliotheken installieren
          Dieser Mechanismus sorgt auch dafür, dass Pakete die von später konfigurierten Plugins benötigt werden, automatisch
          nachinstalliert werden.
 
-   .. tab:: SmartHomeNG vor v1.7 
+   .. tab:: SmartHomeNG vor v1.7
 
       Für den ersten Start müssen noch einige Python Packages nachgeladen werden.
       Im Unterordner ``requirements`` befindet sich dafür eine Datei ``base.txt``.
