@@ -728,7 +728,7 @@ class SmartHome():
             python_bin = sys.executable
             if ' ' in python_bin:
                 python_bin = '"'+python_bin+'"'
-            command = python_bin + ' ' + os.path.join(self._base_dir, 'bin', 'smarthome.py')
+            command = python_bin + ' ' + os.path.join(self._base_dir, 'bin', 'smarthome.py') + ' -r'
             self._logger.info("Restart command = '{}'".format(command))
             try:
                 p = subprocess.Popen(command, shell=True)

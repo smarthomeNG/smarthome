@@ -211,12 +211,9 @@ if __name__ == '__main__':
 
     lib.backup.make_backup_directories(BASE)
 
-# TODO Morg: need to do this first, so interactive console can resume - hopefully?
     if args.restart:
         time.sleep(5)
         lib.daemon.kill(PIDFILE, 30)
-# TODO Morg: add code to adjust MODE setting based on inofficial parameters
-        pass
     elif args.interactive:
         MODE = 'interactive'
         import code
