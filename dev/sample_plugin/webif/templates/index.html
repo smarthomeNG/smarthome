@@ -29,22 +29,22 @@
 -->
 <script>
     $(document).ready( function () {
-		try 
-			{	
-			$('#<table_id>').DataTable( {
-				"paging": false,
-				fixedHeader: true
-				} );
-			$('#maintable').DataTable( {
-				"paging": false,
-				fixedHeader: true
-				} );				
-			}
-		catch (e) 
-			{
-			console.log("Datatable JS not loaded, showing standard table without reorder option")
-			}					
-        });
+			/*
+			loading defaults from /modules/http/webif/gstatic/datatables/datatables.defaults.js
+			You can copy that file, put it in your plugin directory, rename the "bind" function and
+			trigger that function here instead of datatables_defaults if you want to change the behaviour.
+			*/
+			$(window).trigger('datatables_defaults');
+			try
+				{
+					$('#maintable').DataTable( {} ); // put options into {} if needed
+					$('#<table_id>').DataTable( {} ); // delete or change name
+				}
+			catch (e)
+				{
+					console.log("Datatable JS not loaded, showing standard table without reorder option " + e)
+				}
+    });
 </script>
 {% endblock pluginscripts %}
 
@@ -124,7 +124,7 @@
 		</tbody>
 	</table>
 	-->
-	<table id="maintable" class="table table-striped table-hover pluginList">
+	<table id="maintable" class="table table-striped table-hover pluginList display">
 		<thead>
 			<tr>
 			  <th>{{ _('Item') }}</th>
