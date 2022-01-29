@@ -13,6 +13,7 @@ genutzt werden können. Alle Properties sind zumindest lesend (r/o) zugreifbar. 
 auch beschrieben (r/w) werden.
 
 Properties sind **ab SmartHomeNG v1.6** verfügbar.
+Die Properties ``last/prev_trigger(_by/_age)`` sind **ab SmartHomeNG v1.9.1** verfügbar.
 
 
 Properties werden in Logiken und eval-Ausdrücken folgendermaßen abgerufen:
@@ -61,6 +62,15 @@ Werte für Properties, die auch geschrieben werden können (z.B. in Logiken), we
 | last_change_by       | r/o        | str      | Liefert einen String zurück, der auf das Objekt hinweist, welches das Item   |
 |                      |            |          | zuletzt geändert hat.                                                        |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
+| last_trigger         | r/o        | datetime | Liefert ein *datetime* Objekt mit dem Zeitpunkt der letzten eval Triggerung  |
+|                      |            |          | des Items zurück. Hat das Item kein eval Attribut oder wurde es nicht        |
+|                      |            |          | getriggert, wird der Zeitpunkt des letzten Updates übermittelt.              |
++----------------------+------------+----------+------------------------------------------------------------------------------+
+| last_trigger_age     | r/o        | float    | Liefert das Alter der letzten Eval Triggerung in Sekunden zurück.            |
++----------------------+------------+----------+------------------------------------------------------------------------------+
+| last_trigger_by      | r/o        | str      | Liefert einen String zurück, der auf das Objekt hinweist, durch welches      |
+|                      |            |          | eine eventuell vorhandene eval Expression getriggert wurde.                  |
++----------------------+------------+----------+------------------------------------------------------------------------------+
 | last_update          | r/o        | datetime | Liefert ein *datetime* Objekt mit dem Zeitpunkt des letzten Updates des      |
 |                      |            |          | Items zurück. Im Gegensatz zu **last_change()** wird dieser Zeitstempel auch |
 |                      |            |          | verändert, wenn sich bei einem Update der Wert des Items nicht ändert.       |
@@ -95,19 +105,27 @@ Werte für Properties, die auch geschrieben werden können (z.B. in Logiken), we
 | prev_change          | r/o        | datetime | Liefert ein *datetime* Objekt mit dem Zeitpunkt der vorletzten Änderung des  |
 |                      |            |          | Items zurück.                                                                |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
-| prev_change_age      | r/o        | float    | Liefert das Alter des vorangegangenen Wertes in Sekunden zurück.             |
+| prev_change_age      | r/o        | float    | Liefert das Alter des vorangegangenen (geänderten) Wertes in Sekunden zurück.|
 +----------------------+------------+----------+------------------------------------------------------------------------------+
 | prev_change_by       | r/o        | str      | Liefert einen String zurück, der auf das Objekt hinweist, welches das Item   |
-|                      |            |          | das vorletzte mal geändert hat.                                              |
+|                      |            |          | das vorletzte Mal geändert hat.                                              |
++----------------------+------------+----------+------------------------------------------------------------------------------+
+| prev_trigger         | r/o        | datetime | Liefert ein *datetime* Objekt mit dem Zeitpunkt der vorletzten eval          |
+|                      |            |          | Triggerung des Items zurück.                                                 |
++----------------------+------------+----------+------------------------------------------------------------------------------+
+| prev_trigger_age     | r/o        | float    | Liefert das Alter der vorletzten Eval Triggerung in Sekunden zurück.         |
++----------------------+------------+----------+------------------------------------------------------------------------------+
+| prev_trigger_by      | r/o        | str      | Liefert einen String zurück, der auf das Objekt hinweist, durch welches      |
+|                      |            |          | eine eventuell vorhandene eval Expression das vorletzte Mal ausgelöst wurde. |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
 | prev_update          | r/o        | datetime | Liefert ein *datetime* Objekt mit dem Zeitpunkt des vorletzten Updates des   |
 |                      |            |          | Items zurück. Im Gegensatz zu **prev_change()** wird dieser Zeitstempel auch |
 |                      |            |          | verändert, wenn sich bei einem Update der Wert des Items nicht ändert.       |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
-| prev_update_age      | r/o        | float    | Liefert das Alter des vor-vorangegangenen Wertes in Sekunden zurück.         |
+| prev_update_age      | r/o        | float    | Liefert das Alter des vorangegangenen Updates in Sekunden zurück.            |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
 | prev_update_by       | r/o        | str      | Liefert einen String zurück, der auf das Objekt hinweist, durch welches das  |
-|                      |            |          | Item das vorletzte mal ein Update erfahren hat.                              |
+|                      |            |          | Item das vorletzte Mal ein Update erfahren hat.                              |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
 | prev_value           | r/o        | str      | Liefert den Wert des Items zurück, den es vor der vorletzten Änderung hatte. |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
@@ -129,3 +147,11 @@ Werte für Properties, die auch geschrieben werden können (z.B. in Logiken), we
 |                      |            |          | **schaltaktor** zugegriffen werden: **schaltaktor.property.knx_send**        |
 |                      |            |          | Dyn. Properties sind erst in SmartHomeNG Releases nach v1.6.1 implementiert. |
 +----------------------+------------+----------+------------------------------------------------------------------------------+
+
+Der folgende Beispiel eval Ausdruck sorgt dafür, dass ein Item den zugewiesenen Wert nur dann übernimmt,
+wenn die Wertänderung bzw. das Anstoßen der eval Funktion über das Admin Interface erfolgt ist und das
+letzte Update vor der aktuellen Triggerung über 10 Sekunden zurück liegt.
+
+.. code-block:: python
+
+  eval: value if sh..self.property.last_trigger_by == 'admin' and sh..self.property.last_update_age > 10 else None
