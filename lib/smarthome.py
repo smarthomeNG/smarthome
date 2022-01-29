@@ -579,7 +579,7 @@ class SmartHome():
         #############################################################
         # Init and import user-functions
         #############################################################
-        uf.init_lib(self.getBaseDir())
+        uf.init_lib(self.get_basedir())
 
         #############################################################
         # Init Item-Wrapper
@@ -1210,4 +1210,3 @@ class SmartHome():
 
         self._deprecated_warning('Shtime-API')
         return self.shtime.runtime()
-
