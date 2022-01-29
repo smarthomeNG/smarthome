@@ -710,7 +710,7 @@ class Scheduler(threading.Thread):
         except LeaveLogic as e:
             # 'LeaveLogic' is no error
             if str(e) != '':
-                logger.warning(f"Die Logik '{logic.name}' wurde verlassen. Grund: {e}")
+                logger.info(f"Die Logik '{logic.name}' wurde verlassen. Grund: {e}")
         except SystemExit:
             # ignore exit() call from logic.
             pass
