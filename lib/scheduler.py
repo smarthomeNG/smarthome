@@ -645,10 +645,10 @@ class Scheduler(threading.Thread):
         elif obj.__class__.__name__ == 'Item':
             try:
                 scheduler_source = source.get('source', '')
-                #if name.startswith('items.test.test_trigger.'):
-                #    logger.warning(f"ms: _task: name={name}, obj={str(obj)}, by={by}, source={source}, dest={dest}, value={value}")
+                if name.startswith('items.test.test_trigger.') or name.startswith('items.test.cron_tab.'):
+                    logger.warning(f"ms: _task: name={name}, obj={str(obj)}, by={by}, source={source}, dest={dest}, value={value}")
                 if scheduler_source != '':
-                    scheduler_source = ' ('+scheduler_source+')'
+                    scheduler_source = ':'+scheduler_source+':'+source.get('details','')
                 if value is not None:
                     obj(value, caller=("Scheduler"+scheduler_source))
             except Exception as e:
