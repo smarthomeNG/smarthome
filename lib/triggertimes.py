@@ -922,7 +922,7 @@ class Skytime(TriggerTime):
                                 if eventtime.tzinfo == tzutc():
                                     eventtime = eventtime.astimezone(Skytime.sh.shtime.tzinfo())
                                     if starttime > eventtime:
-                                        logger.error(f"eventtime {eventtime} is earlier than starttime {starttime} maybe ephem>4.1 with errors")
+                                        logger.error(f"eventtime {eventtime} is earlier than starttime {starttime} for {self.event}(doff={self.doff},moff={self.moff}, searchtime={searchtime}); maybe ephem>4.1 with errors")
                                         #starttime = starttime.replace(hour=0,minute=0,second=0,microsecond=0)+datetime.timedelta(days=1)
                                         continue
                                     else:
