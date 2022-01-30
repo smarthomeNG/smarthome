@@ -480,8 +480,6 @@ class Scheduler(threading.Thread):
                         if not from_smartplugin:
                             name = name +'_'+ obj.__self__.get_instance_name()
                         logger.debug("Scheduler: Name changed by adding plugin instance name to: " + name)
-            #if name.startswith('items.test.test_trigger.'):
-            #    logger.warning(f"ms: add: name={name}, cycle={cycle}, value={value}")
             self._scheduler[name] = {'prio': prio, 'obj': obj, 'source': source, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
             if next is None:
                 self._next_time(name, offset)
@@ -580,8 +578,6 @@ class Scheduler(threading.Thread):
             # set value only, if it is an item scheduler
             if job['obj'].__class__.__name__ == 'Item':
                 value = job['cycle'][cycle]
-            #if name.startswith('items.test.test_trigger'):
-            #    logger.warning(f"_next_time ms: (cycle) value={value}, job['cycle']={job['cycle']}, job={job}")
             if offset is None:
                 offset = cycle
             next_time = now + datetime.timedelta(seconds=offset)
@@ -645,8 +641,6 @@ class Scheduler(threading.Thread):
         elif obj.__class__.__name__ == 'Item':
             try:
                 scheduler_source = source.get('source', '')
-                if name.startswith('items.test.test_trigger.') or name.startswith('items.test.cron_tab.'):
-                    logger.warning(f"ms: _task: name={name}, obj={str(obj)}, by={by}, source={source}, dest={dest}, value={value}")
                 if scheduler_source != '':
                     scheduler_source = ':'+scheduler_source+':'+source.get('details','')
                 if value is not None:
