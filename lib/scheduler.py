@@ -453,6 +453,7 @@ class Scheduler(threading.Thread):
                     cron = None
                 else:
                     cron = _cron
+
             if isinstance(cycle, int):
                 source = {'source': 'cycle1', 'details': cycle}
                 cycle = {cycle: cycle}
@@ -479,6 +480,8 @@ class Scheduler(threading.Thread):
                         if not from_smartplugin:
                             name = name +'_'+ obj.__self__.get_instance_name()
                         logger.debug("Scheduler: Name changed by adding plugin instance name to: " + name)
+            #if name.startswith('items.test.test_trigger.'):
+            #    logger.warning(f"ms: add: name={name}, cycle={cycle}, value={value}")
             self._scheduler[name] = {'prio': prio, 'obj': obj, 'source': source, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
             if next is None:
                 self._next_time(name, offset)
@@ -574,6 +577,11 @@ class Scheduler(threading.Thread):
         if job['cycle'] is not None:
             cycle = list(job['cycle'].keys())[0]
             #value = job['cycle'][cycle]
+            # set value only, if it is an item scheduler
+            if job['obj'].__class__.__name__ == 'Item':
+                value = job['cycle'][cycle]
+            #if name.startswith('items.test.test_trigger'):
+            #    logger.warning(f"_next_time ms: (cycle) value={value}, job['cycle']={job['cycle']}, job={job}")
             if offset is None:
                 offset = cycle
             next_time = now + datetime.timedelta(seconds=offset)
@@ -636,8 +644,13 @@ class Scheduler(threading.Thread):
 
         elif obj.__class__.__name__ == 'Item':
             try:
+                scheduler_source = source.get('source', '')
+                #if name.startswith('items.test.test_trigger.'):
+                #    logger.warning(f"ms: _task: name={name}, obj={str(obj)}, by={by}, source={source}, dest={dest}, value={value}")
+                if scheduler_source != '':
+                    scheduler_source = ' ('+scheduler_source+')'
                 if value is not None:
-                    obj(value, caller="Scheduler")
+                    obj(value, caller=("Scheduler"+scheduler_source))
             except Exception as e:
                 logger.exception(f"Item {name} exception: {e}")
 
