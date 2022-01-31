@@ -560,7 +560,7 @@ class Tcp_client(object):
         self.__connect_threadlock = threading.Lock()
         self.__receive_thread = None
         self.__receive_threadlock = threading.Lock()
-        self.__running = True
+        self.__running = False
 
         # self.logger.setLevel(logging.DEBUG)   # Das sollte hier NICHT gesetzt werden, sondern in etc/logging.yaml im Logger lib.network konfiguriert werden!
 
@@ -596,17 +596,21 @@ class Tcp_client(object):
         :return: False if an error prevented us from launching a connection thread. True if a connection thread has been started.
         :rtype: bool
         """
+        if self._is_connected:  # return false if already connected
+            self.logger.debug(f'Already connected to {self._host}:{self._port}, ignoring new request')
+            return False
+
         if self._hostip is None:  # return False if no valid ip to connect to
             self.logger.error(f'No valid IP address to connect to {self._host}:{self._port}')
             self._is_connected = False
             return False
-        if self._is_connected:  # return false if already connected
-            self.logger.error(f'Already connected to {self._host}:{self._port}, ignoring new request')
-            return False
 
-        self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name='TCP_Connect')
-        self.__connect_thread.daemon = True
-        self.__connect_thread.start()
+        self.logger.debug(f'Starting connect to {self._host}:{self._port}')
+        if not self.__connect_thread:
+            self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name='TCP_Connect')
+            self.__connect_thread.daemon = True
+        if not self.__running:
+            self.__connect_thread.start()
         return True
 
     def connected(self):
@@ -634,7 +638,12 @@ class Tcp_client(object):
 
         # automatically (re)connect on send attempt
         if not self._is_connected:
-            self.connect()
+            if self._autoreconnect:
+                self.logger.debug(f'auto(re)connecting to host {self._host} on send attempt, message is {message}')
+                self.connect()
+            else:
+                self.logger.warning(f'trying to send {message}, but not connected to host {self._host} and autoreconnect not set. Aborting.')
+                return False
 
         try:
             if self._is_connected:
@@ -669,19 +678,20 @@ class Tcp_client(object):
         Thread worker to handle connection.
         """
         if not self.__connect_threadlock.acquire(blocking=False):
-            self.logger.warning(f'Connection attempt already in progress for {self._host}:{self._port}, ignoring new request')
+            self.logger.info(f'Connection attempt already in progress for {self._host}:{self._port}, ignoring new request')
             return
         if self._is_connected:
-            self.logger.error(f'Already connected to {self._host}:{self._port}, ignoring new request')
+            self.logger.info(f'Already connected to {self._host}:{self._port}, ignoring new request')
             return
         self.logger.debug(f'Starting connection cycle for {self._host}:{self._port}')
         self._connect_counter = 0
+        self.__running = True
         while self.__running and not self._is_connected:
             # Try a full connect cycle
             while not self._is_connected and self._connect_counter < self._connect_retries and self.__running:
                 self._connect()
                 if self._is_connected:
-                    try:
+                    try:                        
                         self.__connect_threadlock.release()
                         if self._connected_callback:
                             self._connected_callback(self)
@@ -731,6 +741,7 @@ class Tcp_client(object):
         """
         Thread worker to handle receiving.
         """
+        self.logger.debug(f'started receive thread for host {self._host}')
         waitobj = IOWait()
         waitobj.watch(self._socket, read=True)
         __buffer = b''
