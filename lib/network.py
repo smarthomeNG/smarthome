@@ -560,7 +560,7 @@ class Tcp_client(object):
         self.__connect_threadlock = threading.Lock()
         self.__receive_thread = None
         self.__receive_threadlock = threading.Lock()
-        self.__running = True
+        self.__running = False
 
         # self.logger.setLevel(logging.DEBUG)   # Das sollte hier NICHT gesetzt werden, sondern in etc/logging.yaml im Logger lib.network konfiguriert werden!
 
@@ -679,6 +679,7 @@ class Tcp_client(object):
             return
         self.logger.debug(f'Starting connection cycle for {self._host}:{self._port}')
         self._connect_counter = 0
+        self.__running = True
         while self.__running and not self._is_connected:
             # Try a full connect cycle
             while not self._is_connected and self._connect_counter < self._connect_retries and self.__running:
