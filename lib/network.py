@@ -605,6 +605,7 @@ class Tcp_client(object):
             self._is_connected = False
             return False
 
+        self.logger.debug(f'Starting connect to {self._host}:{self._port}')
         if not self.__connect_thread:
             self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name='TCP_Connect')
             self.__connect_thread.daemon = True
@@ -637,7 +638,12 @@ class Tcp_client(object):
 
         # automatically (re)connect on send attempt
         if not self._is_connected:
-            self.connect()
+            if self._autoreconnect:
+                self.logger.debug(f'auto(re)connecting to host {self._host} on send attempt, message is {message}')
+                self.connect()
+            else:
+                self.logger.warning(f'trying to send {message}, but not connected to host {self._host} and autoreconnect not set. Aborting.')
+                return False
 
         try:
             if self._is_connected:
@@ -685,7 +691,7 @@ class Tcp_client(object):
             while not self._is_connected and self._connect_counter < self._connect_retries and self.__running:
                 self._connect()
                 if self._is_connected:
-                    try:
+                    try:                        
                         self.__connect_threadlock.release()
                         if self._connected_callback:
                             self._connected_callback(self)
@@ -735,6 +741,7 @@ class Tcp_client(object):
         """
         Thread worker to handle receiving.
         """
+        self.logger.debug(f'started receive thread for host {self._host}')
         waitobj = IOWait()
         waitobj.watch(self._socket, read=True)
         __buffer = b''
