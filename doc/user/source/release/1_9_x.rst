@@ -73,7 +73,8 @@ Updates to the CORE
 
 * Logics:
 
-  * ...
+  * Logics are now prevented from beeing executed before SmartHomeNG is in Run-Mode (the initialization has finished)
+    even if triggerd (by e.g. item initialization) during initialization phase
 
 * Libs:
 

@@ -26,5 +26,7 @@ Die vollständige zum Python Logging Modul ist unter
    logging_handler
    logging_formatter
    logging_filter
+   logging_textformatierung
+
 
 

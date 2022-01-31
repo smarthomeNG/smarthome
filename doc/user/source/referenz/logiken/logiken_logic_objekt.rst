@@ -118,6 +118,6 @@ Zugriff auf das Logics-API über das logics Objekt:
 | logics.set_config_section_key() | Setzt den Wert eines Schlüssels für eine angegebene Logik (Abschnitt) permanent in ../etc/logic.yaml    |
 +---------------------------------+---------------------------------------------------------------------------------------------------------+
 
-Der vollständige Syntax der Methoden kann im Abschnitt :doc:`Entwicklung/APIs von SmartHomeNG </entwicklung/APIs>`
+Der vollständige Syntax der Methoden kann im Abschnitt :doc:`Entwicklung/APIs von SmartHomeNG </referenz/APIs>`
 dem **Logics-API** entnommen werden.
 
