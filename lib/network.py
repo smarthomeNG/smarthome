@@ -647,7 +647,7 @@ class Tcp_client(object):
                 self.logger.debug(f'autoconnecting to host {self._host} on send attempt, message is {message}')
                 self.connect()
             else:
-+                self.logger.warning(f'trying to send {message}, but not connected to host {self._host} and autoconnect not active. Aborting.')
+                self.logger.warning(f'trying to send {message}, but not connected to host {self._host} and autoconnect not active. Aborting.')
                 return False
 
         try:
