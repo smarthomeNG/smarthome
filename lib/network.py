@@ -514,6 +514,7 @@ class Tcp_client(object):
     :param retry_cycle: Time between cycles if :param:autoreconnect is True
     :param binary: Switch between binary and text mode. Text will be encoded / decoded using encoding parameter.
     :param terminator: Terminator to use to split received data into chunks (split lines <cr> for example). If integer then split into n bytes. Default is None means process chunks as received.
+    :param autoconnect: automatically connect on send. Copies autoreconnect if None
 
     :type host: str
     :type port: int
@@ -524,9 +525,10 @@ class Tcp_client(object):
     :type retry_cycle: int
     :type binary: bool
     :type terminator: int | bytes | str
+    :type autoconnect: bool
     """
 
-    def __init__(self, host, port, name=None, autoreconnect=True, connect_retries=5, connect_cycle=5, retry_cycle=30, binary=False, terminator=False, timeout=1):
+    def __init__(self, host, port, name=None, autoreconnect=True, connect_retries=5, connect_cycle=5, retry_cycle=30, binary=False, terminator=False, timeout=1, autoconnect=None):
         self.logger = logging.getLogger(__name__)
 
         # public properties
@@ -537,6 +539,9 @@ class Tcp_client(object):
         self._host = host
         self._port = port
         self._autoreconnect = autoreconnect
+        self._autoconnect = autoconnect
+        if self._autoconnect is None:
+            self._autoconnect = self._autoreconnect
         self._is_connected = False
         self._is_receiving = False
         self._connect_retries = connect_retries
@@ -638,11 +643,11 @@ class Tcp_client(object):
 
         # automatically (re)connect on send attempt
         if not self._is_connected:
-            if self._autoreconnect:
-                self.logger.debug(f'auto(re)connecting to host {self._host} on send attempt, message is {message}')
+            if self._autoconnect:
+                self.logger.debug(f'autoconnecting to host {self._host} on send attempt, message is {message}')
                 self.connect()
             else:
-                self.logger.warning(f'trying to send {message}, but not connected to host {self._host} and autoreconnect not set. Aborting.')
++                self.logger.warning(f'trying to send {message}, but not connected to host {self._host} and autoconnect not active. Aborting.')
                 return False
 
         try:
