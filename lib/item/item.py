@@ -1284,7 +1284,14 @@ class Item():
                     self.__last_trigger = self.shtime.now()
 
                     logger.debug("Item {}: Eval triggered by: {}. Evaluating item with value {}. Eval expression: {}".format(self._path, self.__triggered_by, value, self._eval))
-                    value = eval(self._eval)
+                    #value = eval(self._eval)
+                    # if contab: init = x is set, x is transfered as a string, for that case re-try eval with x converted to float
+                    try:
+                        value = eval(self._eval)
+                    except:
+                        value = float(value)
+                        value = eval(self._eval)
+                    # ms end
                 except Exception as e:
                     # adding "None" as the "destination" information at end of triggered_by
                     # This helps figuring out whether an eval expression was successfully evaluated or not.
