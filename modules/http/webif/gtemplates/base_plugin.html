@@ -19,7 +19,7 @@
 <div id="webif-navbar" style="position: fixed; top: 0; width: 100%; height: 180px; background: RGB(255, 255, 255); z-index: 10;">
 {% endif %}
 
-<div class="container-fluid m-3">
+<div class="container-fluid m-3" id="webif-top">
 	<div style="margin-right: 2px;" class="row">
 
 		<div class="{% if logo_frame %}card {% endif %} col-sm-2" style="height:150px;">
@@ -57,7 +57,7 @@
 			{% block headtable %}
 			{% endblock %}
 
-			<table width="100%">
+			<table style="width:100%" id="webif-buttons">
 				<tr>
 					<td colspan="3">
 						{% block buttons %}
