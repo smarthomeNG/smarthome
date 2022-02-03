@@ -696,7 +696,7 @@ class Tcp_client(object):
             while not self._is_connected and self._connect_counter < self._connect_retries and self.__running:
                 self._connect()
                 if self._is_connected:
-                    try:                        
+                    try:
                         self.__connect_threadlock.release()
                         if self._connected_callback:
                             self._connected_callback(self)
@@ -768,7 +768,7 @@ class Tcp_client(object):
                             timeout = True
                         # Check if incoming message is not empty
                         if msg:
-                            # TODO: doing this breaks line separation if multiple lines 
+                            # TODO: doing this breaks line separation if multiple lines
                             #       are read at a time, the next loop can't split it
                             #       because line endings are missing
                             #       find out reason for this operation...
@@ -842,7 +842,7 @@ class Tcp_client(object):
             else:
                 self._log_exception(ex, f'lib.network receive thread died with unexpected error: {ex}. Go tell...')
         self._is_receiving = False
-        
+
     def _log_exception(self, ex, msg):
         self.logger.error(msg + ' -- If stack trace is necessary, enable/check debug log')
 
