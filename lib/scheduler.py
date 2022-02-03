@@ -640,9 +640,12 @@ class Scheduler(threading.Thread):
 
         elif obj.__class__.__name__ == 'Item':
             try:
-                scheduler_source = source.get('source', '')
-                if scheduler_source != '':
-                    scheduler_source = ':'+scheduler_source+':'+source.get('details','')
+                if isinstance(source, str):
+                    scheduler_source = source
+                else:
+                    scheduler_source = source.get('source', '')
+                    if scheduler_source != '':
+                        scheduler_source = ':'+scheduler_source+':'+source.get('details','')
                 if value is not None:
                     obj(value, caller=("Scheduler"+scheduler_source))
             except Exception as e:
