@@ -196,6 +196,9 @@ class SmartHome():
         self._logger_main = logging.getLogger(__name__)
         self.logs = lib.log.Logs(self)   # initialize object for memory logs
 
+        # keep for checking on restart command
+        self._mode = MODE
+
         self.initialize_vars()
         self.initialize_dir_vars()
         self.create_directories()
@@ -707,7 +710,13 @@ class SmartHome():
     def restart(self, source=''):
         """
         This method is used to restart the python interpreter and SmartHomeNG
+
+        If SmartHomeNG was started in one of the foreground modes (-f, -i, -d),
+        just quit and let the user restart manually.
         """
+        if self._mode in ['foreground', 'debug', 'interactive']:
+            self.stop()
+
         if self.shng_status['code'] == 30:
             self._logger.warning("Another RESTART is issued, while SmartHomeNG is restarting. Reason: "+source)
         else:
