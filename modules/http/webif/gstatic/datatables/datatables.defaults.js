@@ -24,8 +24,8 @@ $(window).bind('datatables_defaults', function() {
 		{
 			// Set datatable useful defaults
 			$.extend( $.fn.dataTable.defaults, {
-				lengthMenu: [ [10, 25, 50, -1], [10, 25, 50, "All"] ], // pagination menu
-				pageLength: -1, // default to "all"
+				lengthMenu: [ [25, 50, 100, -1], [25, 50, 100, "All"] ], // pagination menu
+				pageLength: 100, // default to "all"
 				pagingType: "full_numbers", // include first and last in pagination menu
 				colReorder: true, // enable colomn reorder by drag and drop
 				fixedHeader: {header: true, // header will always be visible on top of page when scrolling
@@ -38,12 +38,14 @@ $(window).bind('datatables_defaults', function() {
 					} else {
 							$(oSettings.nTableWrapper).find('.dataTables_paginate').show();
 					}
+					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
 				}
 			});
 			// Set date format for correct sorting of columns containing date strings
 			$.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss');
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
-				$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().draw();
+				$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+				$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
 				$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
 			});
 		}
