@@ -8,10 +8,10 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 30. Januar 2022
-       (lib.scheduler: Removed some development logging)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 30. Januar 2022
-       (uzsu plugin: use sun and moon objects of sh and new orb.py)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 4. Februar 2022
+       (Merge pull request #467 from onkelandy/datatables Datatables update and fixes)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 10. Februar 2022
+       (Sonos: Update SoCo base framework to version 0.26.1)
 
 
 Überblick
@@ -87,6 +87,9 @@ Updates to the CORE
       value has not changed)
     * Get relative item path: Fix issue where last character of expression part got truncated and therefore
       eval expression might get invalid
+    * Fix for eval expressions, if crontab attribute is given with an init value, which is to be used in a
+      numerical calculation
+    * Fix for non numeric values on attribute crontab: init = xyz
 
   * lib.network:
 
@@ -96,6 +99,10 @@ Updates to the CORE
     * Fix validate_inet_addr return for invalid ip
     * Fix for clean shutdown if not connected
     * Added __str__ methods to simplyfy logging
+    * Modified startup/connect logging
+    * Modified __running initialization
+    * Added more debug logging, modified connect_on_send behaviour to respect autoreconnect setting
+    * Added autoconnect parameter
 
   * lib.orb:
 
@@ -110,6 +117,7 @@ Updates to the CORE
     * Implemented 'raise LeaveLogic()' for logics
     * Small modification for executing logics
     * Added more details to 'update_by' and 'change_by' on items
+    * Bugfix for 'str' object has no attribute 'get' (line 643)
 
   * lib.shpypi:
 
@@ -123,13 +131,21 @@ Updates to the CORE
 
     * Fix a triggertimes with empty params or wrong parameter set size
     * Enhance debug message 'eventtime is earlier than starttime'
+    * Fix a bug in relation to sunset with offset
 
 
 * Modules:
 
+  * admin:
+
+    * eval syntax checker sets 'value' to the 'path relative to' item, if it is specified
+
   * http:
 
     * Added datatables for use in webinterfaces of plugins
+    * datatables: Fix table width in tabs
+    * datatables: Improve defaults and fix some issues
+    * datatables: update to 1.11.4
 
   * websocket:
 
@@ -159,6 +175,12 @@ For details of the changes of the individual plugins, please refer to the docume
 
 Plugin Updates
 --------------
+
+* avdevice:
+
+  * Fix web interface logging (introduces with last commit), remove very old versions
+
+* casambi: Resend commands on transmission error (e.g. due to sigpipe error) once
 
 * database:
 
@@ -190,14 +212,21 @@ Plugin Updates
 
   * Fix error handling and log on startup
   * Slight improvements in webif concerning datatables
+  * Update web interface (datatables, realtime values), convert debug messages to f-strings
+
+* knx:
+
+  * Only execute update_item if plugin is running
+  * Bumped version to 1.8.0
 
 * modbus_tcp:
 
   * slaveUnit zu Items hinzugefügt
   * slaveUnit-Bug _regToRead-key (adress.unit)
-  * bumped version to 1.0.3
+  * Bumped version to 1.0.3
   * Bugfix in web interface
   * Fixes in example.yaml
+  * Bumped version to 1.0.5
 
 * openweathermap:
 
@@ -220,15 +249,21 @@ Plugin Updates
 
   * Copy info block.html from _templates dir (for sv 3.2 and up)
 
+* snap7_logo:
+
+  * Unspecified updates
+  * Update to 1.6.0
+
 * sonos:
 
   * Fix for use with python 3.9 upwards (Thread::isAlive deprecated)
-  * Update underlying SoCo library to V_0.25.3
+  * Update SoCo base framework to version 0.26.1
 
 * stateengine:
 
   * Add gitignore to webif/visualizations folder to make sure folder is created and files in folder are ignored
   * Minor webif update
+  * Update web interface in real-time and include datatables
 
 * telegram:
 
@@ -239,10 +274,18 @@ Plugin Updates
 * uzsu:
 
   * Use sun and moon objects of sh and new orb.py
+  * Remove uzsu\_ from scheduler name
+  * Simplify requirements file: scipy 1.1.0 if python >= 3.7
+  * Major web interface update. Clean code, use automatic update of values, implement datatables, etc.
+  * Removed old uzsu_sun residuum
 
 * viessmann:
 
   * Fixed log call
+
+* withings_health:
+
+  * Updated requirements so that with 2.4.0 of pypi package auth is working again (hopefully)
 
 
 Outdated Plugins
