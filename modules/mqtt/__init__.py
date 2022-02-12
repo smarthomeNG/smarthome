@@ -169,7 +169,7 @@ class Mqtt(Module):
             # return
             pass
 
- 
+
     def start(self):
         """
         This method starts the mqtt module
@@ -530,7 +530,7 @@ class Mqtt(Module):
 
         with self._subscribed_topics_lock:
             subscibed_topics = list(self._subscribed_topics.keys())
-    
+
         # look for subscriptions to the received topic
         subscription_found = False
         for topic in subscibed_topics:
@@ -720,12 +720,12 @@ class Mqtt(Module):
         """
         caller = inspect.stack()[2][1]
         split = caller.split('/')
-        self.logger.debug("_get_caller_type: inspect.stack()[2][1] = '{}', split = {}".format(caller, split))
+        self.logger.warning("_get_caller_type: inspect.stack()[2][1] = '{}', split = {}".format(caller, split))
         if split[-3] == 'lib' and split[-2] == 'model':
             source_type = 'Plugin'
         elif split[-3] == 'plugins':
             source_type = 'Plugin'
-        elif split[-3] == 'logics':
+        elif split[-2] == 'logics':
             source_type = 'Logic'
         else:
             source_type = 'Unknown'
