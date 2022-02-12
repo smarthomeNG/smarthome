@@ -720,7 +720,7 @@ class Mqtt(Module):
         """
         caller = inspect.stack()[2][1]
         split = caller.split('/')
-        self.logger.warning("_get_caller_type: inspect.stack()[2][1] = '{}', split = {}".format(caller, split))
+        self.logger.debug("_get_caller_type: inspect.stack()[2][1] = '{}', split = {}".format(caller, split))
         if split[-3] == 'lib' and split[-2] == 'model':
             source_type = 'Plugin'
         elif split[-3] == 'plugins':
