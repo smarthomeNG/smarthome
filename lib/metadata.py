@@ -170,6 +170,15 @@ class Metadata():
 
             # build dict for checking of item attributes and their values
             if self.itemprefixdefinitions is not None:
+                # dummy 'my_' prefix for user's attributes for logics, etc. (add only, if list is still empty)
+                if  all_itemprefixdefinitions == {}:
+                    prefix_name = 'my_'
+                    all_itemprefixdefinitions[prefix_name] = {'type': 'foo', 'description': {'de': 'Attribute für verschiedene Tests', 'en': 'Attributes for various tests'}, 'listtype': ['foo'], 'listlen': 0, '_addon_name': 'priv_develop', '_addon_type': 'plugin', '_name': 'my_', '_type': 'prefix'}
+                    all_itemprefixdefinitions[prefix_name]['_addon_name'] = 'lib_metadata'
+                    all_itemprefixdefinitions[prefix_name]['_addon_type'] = 'plugin'
+                    all_itemprefixdefinitions[prefix_name]['_name'] = prefix_name
+                    all_itemprefixdefinitions[prefix_name]['_type'] = 'prefix'
+                # add all prefixes loaded from metadate of the plugin
                 for prefix_name in self.itemprefixdefinitions:
                     all_itemprefixdefinitions[prefix_name] = self.itemprefixdefinitions[prefix_name]
                     all_itemprefixdefinitions[prefix_name]['_addon_name'] = self._addon_name
