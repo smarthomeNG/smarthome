@@ -134,7 +134,7 @@ if core_reqs == 0:
             exit(0)
 
     try:
-        command[1] += ' -r'
+        command.append('-r')
         p = subprocess.Popen(command, shell=True)
     except subprocess.SubprocessError as e:
         print("Restart command '{}' failed with error {}".format(command,e))
