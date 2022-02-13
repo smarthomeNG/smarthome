@@ -75,8 +75,9 @@ plugin_sections = [ ['gateway', 'Gateway', 'Gateway'],
                     ['interface', 'Interface', 'Interface'],
                     ['protocol', 'Protocol', 'Protokoll'],
                     ['system', 'System', 'System'],
+                    ['web', 'Web/Cloud', 'Web/Cloud'],
                     [type_unclassified, 'Non classified', 'nicht klassifizierte'],
-                    ['web', 'Web/Cloud', 'Web/Cloud']
+                    ['all', 'All plugins', 'Alle Plugins']
                   ]
 
 def bold(s):
@@ -152,6 +153,16 @@ def get_version(section_dict, maxlen=8):
         lines.append('')
     return lines
 
+
+def get_state(section_dict, maxlen=20):
+    state = section_dict.get('state', '')
+
+    #import textwrap
+    #lines = textwrap.wrap(state, maxlen, break_long_words=False)
+    #if lines == []:
+    #    lines.append('')
+    #return lines
+    return state
 
 def get_maintainer(section_dict, maxlen=20):
     maint = section_dict.get('maintainer', '')
@@ -230,6 +241,7 @@ def build_pluginlist( plugin_type='all' ):
                             plg_dict['name'] = metaplugin.lower()
                             plg_dict['version'] = get_version(section_dict)
                             plg_dict['type'] = plgtype
+                            plg_dict['state'] = get_state(section_dict)
                             plg_dict['desc'] = get_description(section_dict, 85, language)
                             plg_dict['maint'] = get_maintainer(section_dict, 15)
                             plg_dict['test'] = get_tester(section_dict, 15)
@@ -237,6 +249,7 @@ def build_pluginlist( plugin_type='all' ):
                             plg_dict['sup'] = html_escape(section_dict.get('support', ''))
                         else:
                             plgtype = type_unclassified
+                        plg_dict['type'] = plgtype
                     else:
                         plgtype = type_unclassified
                         if plugin_type == type_unclassified:
@@ -285,7 +298,7 @@ def build_pluginlist( plugin_type='all' ):
     return result
 
 
-def write_rstfile(plgtype='All', plgtype_print='', heading=''):
+def write_rstfile(plgtype='all', plgtype_print='', heading=''):
     """
     Create a .rst file for each plugin category
     """
@@ -314,7 +327,10 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
     fh.write('\n')
 
     if (len(plglist) == 0):
-        fh.write('At the moments there are no plugins that have not been classified.\n')
+        if language == 'de':
+            fh.write('Zurzeit gibt es keine noch nicht klassifizierten Plugins.\n')
+        else:
+            fh.write('At the moments there are no plugins that have not been classified.\n')
     else:
         if not fh_dummy_used:
             fh_dummy = open(plugin_rst_dir + '/' + rst_dummyname, "w")
@@ -372,9 +388,10 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
         fh.write('\n')
         fh.write('   +-'+ '-'*65 +'-+-' + '-'*8 +'-+-' +  '-'*165 +'-+-----------------+-----------------+\n')
         if language == 'de':
-            fh.write('   | {p:<65.65} | Version  | {b:<165.165} | Maintainer      | Tester          |\n'.format(p='Plugin', b='Beschreibung'))
+            fh.write(f"   | {'Plugin (Konfiguration)':<65.65} | Version  | {'Beschreibung':<165.165} | Maintainer      | Tester          |\n")
         else:
-            fh.write('   | {p:<65.65} | Version  | {b:<165.165} | Maintainer      | Tester          |\n'.format(p='Plugin', b='Description'))
+            fh.write(f"   | {'Plugin (Configuration)':<65.65} | Version  | {'Description':<165.165} | Maintainer      | Tester          |\n")
+            #fh.write('   | {p:<65.65} | Version  | {b:<165.165} | Maintainer      | Tester          |\n'.format(p='Plugin', b='Description'))
         fh.write('   +='+ '='*65 +'=+=' + '='*8 +'=+=' + '='*165 + '=+=================+=================+\n')
         for plg in plglist:
             plg_readme_link = ':doc:`'+plg['name']+' </plugins/'+plg['name']+'/README.md>`'
@@ -406,7 +423,31 @@ def write_rstfile(plgtype='All', plgtype_print='', heading=''):
                 else:
                     plg['sup'] = "`"+plg['name']+" support <"+plg['sup']+">`_"
                 fh.write('   | {plg:<65.65} | {vers:<8.8} | - {desc:<163.163} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=plg['sup'], maint='', test=''))
+            else:
+                fh.write(f"   | {'':<65.65} | {'':<8.8} | {'-':<165.165} | {'':<15.15} | {'':<15.15} |\n")
+
+            leerzeileausgegeben = False
+            if plgtype == 'all':
+                if language == 'de':
+                    desc = 'Plugin Typ: **' + plg['type'] + '**'
+                else:
+                    desc = 'Plugin type: **' + plg['type'] + '**'
+                leerzeileausgegeben = True
+                fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
+                fh.write('   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=desc, maint='', test=''))
+
+            if plg['state'] in ['deprecated', 'develop']:
+                if language == 'de':
+                    desc = 'Plugin Status: **' + plg['state'] + '**'
+                else:
+                    desc = 'Plugin Status: **' + plg['state'] + '**'
+                if not leerzeileausgegeben:
+                    fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
+                fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
+                fh.write('   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=desc, maint='', test=''))
+
             fh.write('   +-'+ '-'*65 +'-+-' + '-'*8 + '-+-' + '-'*165 +'-+-----------------+-----------------+\n')
+
         fh.write('\n')
         fh.write('\n')
 

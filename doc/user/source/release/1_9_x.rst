@@ -1,10 +1,10 @@
 ============================
-Release 1.9.x - tt. Feb 2022
+Release 1.9.1 - 13. Feb 2022
 ============================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
-.. note::
+.. note ::
 
     Diese Release Notes sind ein Arbeitsstand.
 
@@ -189,7 +189,7 @@ Plugin Updates
   * Improved error handling
   * Updated WebIF
   * Updated documentation
-  * Bumped version to 1.6.0
+  * Bumped version to 1.6.1
 
 * casambi: Resend commands on transmission error (e.g. due to sigpipe error) once
 
@@ -380,5 +380,7 @@ Documentation
 
 * Added "updated_by()" function to reference page
 * Consolidated logic documentation to reference section
+* Added Plugins/All plugins page to navigation
+
 
 

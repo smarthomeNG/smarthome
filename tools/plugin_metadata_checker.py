@@ -603,7 +603,7 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
     # Checking plugin name
     maxlen = 12
     if len(plg) > maxlen:
-        disp_warning(f"A plugin name should not be longer than {maxlen} characters. {plg[0:12]}", f"The plugin name '{plg}' is {len(plg)} characters long")
+        disp_warning(f"A plugin name should not be longer than {maxlen} characters.", f"The plugin name '{plg}' is {len(plg)} characters long")
     if plg != plg.lower():
         disp_error(f"Invalid plugin name '{plg}'.", f"Plugin names have to be lower case. Use '{plg.lower()}' instead")
 

@@ -21,8 +21,6 @@ die zentralen Funktionen von SmartHomeNG. Diese Plugins sind zum Teil auch enger
 von SmartHomeNG gekoppelt und müssen daher in der Version genauer zum Core passen als andere
 Plugins.
 
-Besonders das **backend** Plugin, das **cli** Plugin und das **visu_websocket** Plugin müssen 
-genau zur Core Version von SmartHomeNG passen.
 
 |br|
 |br|

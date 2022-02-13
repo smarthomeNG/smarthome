@@ -15,11 +15,11 @@ in der Navigationsleiste.
 
    Diese Seiten werden vollständig automatisch aus den Plugins des Repositories generiert.
    Deshalb:
-   
+
    - kann nur der Autor des jeweiligen Plugins sicherstellen, dass keine ungewünschten Mischungen der Sprache (Deutsch/Englisch) vorkommen.
    - kann keine Dokumentation für Plugins außerhalb des SmartHomeNG Plugin-Repositories in die Dokumentation aufgenommen werden.
-   
-   Hinweise auf weitere Plugins, die sich nicht im SmartHomeNG Repository befinden, sind auf der 
+
+   Hinweise auf weitere Plugins, die sich nicht im SmartHomeNG Repository befinden, sind auf der
    entsprechenden `Wiki Seite <https://github.com/smarthomeNG/smarthome/wiki/Plugins-außerhalb-des-SmartHomeNG-Repository>`_ zu finden.
 
 Die Plugins sind Kategorien unterteilt, die von der Interaktion mit bzw. Ansteuerung von externen Geräten oder Diensten ableiten.
@@ -44,6 +44,7 @@ Die Plugins und die jeweiligen Beschreibungen sind auf den folgenden Seiten aufg
    /plugins_doc/plugins_protocol
    /plugins_doc/plugins_web
    /plugins_doc/plugins_unclassified
+   /plugins_doc/plugins_all
 
 
 Wenn ein Plugin Autor die Informationen auf diesen Seiten aktualisieren möchte, muss er nur

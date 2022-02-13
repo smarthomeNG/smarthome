@@ -736,6 +736,7 @@ if __name__ == '__main__':
     global docu_type
     docu_type = start_dir.split('/')[-1:][0]     # developer / user
 
+    print('Creating the configuration documentation pages for the plugins')
     print('Start directory        = '+start_dir)
     print('Documentation type     = '+docu_type)
     print('Documentation language = '+language)
