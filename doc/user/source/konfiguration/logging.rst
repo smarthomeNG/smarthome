@@ -203,31 +203,9 @@ muss in der config auch dieser Name verwendet werden. Ohne `plugin.` oder `logic
 Logging der Veränderung von Items
 ---------------------------------
 
-Die Veränderung von Item Werten kann am einfachsten geloggt werden, indem bei dem Item das Attribut **log_change** gesetzt
-wird und auf einen entsprechenden Item Logger verweist. Der Item Logger muss in der etc/logging.yaml mit Level INFO oder
-DEBUG definiert sein.
-
-.. code-block:: yaml
-   :caption: items/items.yaml
-
-    test:
-        item:
-            log_change: <Logger-Name>
-
-
-und
-
-.. code-block:: yaml
-   :caption: etc/logging.yaml
-
-    ...-
-
-    logger:
-        items_<Logger-Name>:
-            level: INFO
-            handlers: [shng_details_file]
-
-    ...
+Ab Version 1.5 von SmartHomeNG erfolgt die Konfiguration des Loggings der Veränderung von Item Werten über
+Standard Item Attribute, wie es :doc:`bei den Standardattributen </referenz/items/standard_attribute/log_change>`
+beschrieben ist.
 
 
 Best Practices
