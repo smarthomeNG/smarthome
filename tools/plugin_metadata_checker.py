@@ -32,7 +32,7 @@ The result is printed to stdout
 import os
 import argparse
 
-VERSION = '1.7.7'
+VERSION = '1.7.8'
 
 print('')
 print(os.path.basename(__file__) + ' v' + VERSION + ' - Checks the care status of plugin metadata')
@@ -680,7 +680,7 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
                     if not is_dict(par_dict):
                         disp_error("Definition of parameter '{}' is not a dict".format(par), '')
                     else:
-                        if par_dict.get('mandatory', None) != None and par_dict.get('default', None) != None:
+                        if par_dict.get('mandatory', False) != False and par_dict.get('default', None) != None:
                             disp_error("parameter '{}': mandatory and default cannot be used together".format(par), "If mandatory and a default value are specified togeather, mandatory has no effect, since a value for the parameter is already specified (the default value).")
                         test_description('parameter', par, par_dict.get('description', None))
 
@@ -691,7 +691,7 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
                     if not is_dict(par_dict):
                         disp_error("Definition of item_attribute '{}' is not a dict".format(par), '')
                     else:
-                        if par_dict.get('mandatory', None) != None and par_dict.get('default', None) != None:
+                        if par_dict.get('mandatory', False) != False and par_dict.get('default', None) != None:
                             disp_error("item '{}': mandatory and default cannot be used together".format(par), "If mandatory and a default value are specified togeather, mandatory has no effect, since a value for the parameter is already specified (the default value).")
                         test_description('item attribute', par, par_dict.get('description', None))
 
