@@ -369,7 +369,10 @@ Weitere Änderungen
 Tools
 -----
 
-* ...
+* plugin_metadata_checker.py:
+
+  * Added two checks for plugin name (length and lowercase)
+  * Fixed check for mandatory value given and default value given
 
 
 Documentation

@@ -180,6 +180,9 @@ in der `__init__` Methode instanziert werden. Das ist inzwischen nicht mehr notw
 Klasse erzeugt den Logger inzwischen selbst. Ein **import logging** ist nicht mehr notwendig und die
 Initialisierung des Loggers in der `__init__` Methode sollte auch weggelassen werden.
 
+Der Logger konn/muss in der ``etc/logging,yaml`` konfiguriert werden. Der Name des Loggers ist ``plugins.<Name des Plugins>``.
+
+
 Für die Entwickler von Logiken:
 Verwendet man zur Instanziierung einen eigenen Namen (nicht empfohlen), wie z.B.
 
@@ -198,6 +201,9 @@ muss in der config auch dieser Name verwendet werden. Ohne `plugin.` oder `logic
        DWD:
            level: DEBUG
 
+Standardmäßig haben Logiken bereits einen Logger, der in der ``etc/logging,yaml`` konfiguriert werden kann/muss.
+Der Name des Loggers ist ``logics.<Name der Logik>``, wobei der Name der Logik, der in der Konfiguration festgelegte
+Name ist und nicht der Name des Python Skriptes.
 
 
 Logging der Veränderung von Items
