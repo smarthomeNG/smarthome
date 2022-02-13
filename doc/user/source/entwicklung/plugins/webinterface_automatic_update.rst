@@ -67,7 +67,7 @@ Die Klasse ``WebInterface`` im Plugin Code muss so erweitert werden, dass sie di
 
 
 Die optionale Möglichkeit einen ``dataSet`` anzugeben, ist für zukünftige Erweiterungen vorgesehen.
-Darüber soll es möglich werden, Daten in unterschiedlichen Zyklen zu aktualisieren 
+Darüber soll es möglich werden, Daten in unterschiedlichen Zyklen zu aktualisieren
 (z.B. für Daten, deren Ermittlung eine längere Zeit in Anspruch nimmt).
 
 
@@ -100,7 +100,7 @@ Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleif
     {% block **bodytab1** %}
         <div class="table-responsive" style="margin-left: 3px; margin-right: 3px;" class="row">
             <div class="col-sm-12">
-                <table class="table table-striped table-hover pluginList">
+                <table id="#maintable" class="table table-striped table-hover pluginList display">
                     <thead>
                         <tr>
                             <th>{{ _('Item') }}</th>
@@ -149,13 +149,13 @@ dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hie
     {% block **bodytab1** %}
         <div class="table-responsive" style="margin-left: 3px; margin-right: 3px;" class="row">
             <div class="col-sm-12">
-                <table class="table table-striped table-hover pluginList">
+                <table id="#maintable" class="table table-striped table-hover pluginList display">
                     <thead>
                         <tr>
-                            <th>{{ _('Item') }}</th>
-                            <th>{{ _('Typ') }}</th>
-                            <th>{{ _('knx_dpt') }}</th>
-                            <th>{{ _('Wert') }}</th>
+                            <th class="item">{{ _('Item') }}</th>
+                            <th class="typ">{{ _('Typ') }}</th>
+                            <th class="dpt">{{ _('knx_dpt') }}</th>
+                            <th class="value">{{ _('Wert') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -183,7 +183,7 @@ Das Webinterface ruft regelmäßig eine Methode des Plugins auf, um aktualisiert
 Wenn die Daten empfangen wurden, werden sie an die JavaScript-Funktion ``handleUpdatedData()``
 der Webseite übergeben. Diese Funktion weist dann die neuen Daten den jeweiligen DOM-Elementen zu.
 
-Die Funktion ``handleUpdatedData()`` ist im Block ``pluginscripts`` des HTML-Templates definiert. 
+Die Funktion ``handleUpdatedData()`` ist im Block ``pluginscripts`` des HTML-Templates definiert.
 Das folgende Beispiel weist die neuen Daten dem oben vorgestellten <td>-Element des ``headtable`` zu:
 
 .. code-block:: html+jinja
@@ -194,7 +194,7 @@ Das folgende Beispiel weist die neuen Daten dem oben vorgestellten <td>-Element 
             if (dataSet === 'devices_info' || dataSet === null) {
                 var objResponse = JSON.parse(response);
 
-                shngInsertText('fromip', objResponse['fromip'])
+                shngInsertText('fromip', objResponse['fromip']);
             }
         }
     </script>
@@ -212,12 +212,64 @@ Das nächste Beispiel befüllt dazu analog die <td>-Elemente der Zeilen in der T
                 var objResponse = JSON.parse(response);
 
                 for (var item in objResponse) {
-                    shngInsertText(item+'_value', objResponse['item'][item]['value'])
+                    shngInsertText(item+'_value', objResponse['item'][item]['value']);
+                    // bei Tabellen mit datatables Funktion sollte die Zeile lauten:
+                    // shngInsertText(item+'_value', objResponse['item'][item]['value'], 'maintable');
                 }
             }
         }
     </script>
     {% endblock pluginscripts %}
+
+
+Sortierbare Tabellen
+--------------------
+
+Wie erwähnt muss für das Aktivieren von sortier- und durchsuchbaren Tabellen der entsprechende Script-Block
+wie in :doc:`Das Webinterface mit Inhalt füllen </entwicklung/plugins/webinterface_filling_webinterface>`
+unter Punkt 3 beschrieben eingefügt werden. Dabei ist auch zu beachten, dass der zu sortierenden
+Tabelle eine entsprechende ID gegeben wird (im Beispiel oben ``#maintable``) und die Klasse ``display``
+ergänzt wird.
+
+Damit die neuen Daten auch von datatables.js erkannt und korrekt sortiert werden, ist es wichtig,
+dem Aufruf ``shngInsertText`` die Tabellen-ID als dritten Parameter mitzugeben (im Beispiel 'maintable').
+
+Standardmäßig werden die Spalten automatisch so skaliert, dass sich den Inhalten anpassen. Möchte man
+bestimmten Spalten eine konkrete Breite vorgeben, sollte im Block ``pluginstyles`` entsprechender
+Code eingefügt werden. Außerdem sind die ``<th>`` Tags natürlich mit den entsprechenden Klassen zu bestücken.
+Zusätzlich/alternativ kann die Tabelle auch mit dem css Style ``table-layout: fixed;`` versehen werden,
+um die dynamische Anpassung der Spaltenbreite gänzlich zu unterbinden.
+
+.. code-block:: css+jinja
+
+    {% block pluginstyles %}
+    <style>
+      table th.dpt {
+        width: 40px;
+      }
+      table th.value {
+        width: 100px;
+      }
+      #maintable {
+         display: none;
+      }
+    </style>
+    {% endblock pluginstyles %}
+
+
+Sollte der Inhalt einer Spalte erwartungsgemäß sehr breit sein, kann die Spalte stattdessen auch
+als ausklappbare Informationszeile konfiguriert werden. Dann empfiehlt es sich auf jeden Fall,
+wie oben angegeben, die Tabelle per CSS unsichtbar zu machen. Die datatables.js defaults sorgen dafür,
+dass die Tabelle nach der kompletten Inititalisierung angezeigt wird. Dadurch wird ein
+mögliches Flackern der Seite beim Aufbau verhindert. Die Deklaration der Tabelle im pluginscripts
+Block hat dabei wie folgt auszusehen, wobei bei ``targets`` die interne Nummerierung der Spalten
+anzugeben ist (0 wäre die erste Tabellenspalte, 2 die zweite, etc.).
+
+.. code-block:: html+jinja
+
+    table = $('#maintable').DataTable( {
+      "columnDefs": [{ "targets": 0, "className": "none"}].concat($.fn.dataTable.defaults.columnDefs)
+    } );
 
 
 Festlegen des Aktualisierungsintervalls
@@ -234,4 +286,3 @@ Diese wird auf den gewünschten Wert in Millisekunden gesetzt. Dabei muss sicher
 .. warning::
 
     Das Intervall darf nicht zu klein sein. Die Dauer **MUSS** länger sein als die notwendige Zeit zur Ausführung der Python-Methode ``get_data_html()``.
-

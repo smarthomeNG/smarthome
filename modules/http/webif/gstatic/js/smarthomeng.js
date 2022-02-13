@@ -50,8 +50,21 @@ function shngPost(path, params, method='post') {
  * @param {string} text to insert
  */
 
-function shngInsertText (id, text) {
-    document.getElementById(id).innerHTML = text;
+function shngInsertText (id, text, table_id=null) {
+    if (table_id == null) {
+      document.getElementById(id).innerHTML = text;
+    }
+    else {
+      try {
+        if ( $.fn.dataTable.isDataTable(table_id) ) {
+          table = $('#' + table_id).DataTable();
+        }
+        table.cell( $('#' + $.escapeSelector(id)) ).data(text) ;
+      }
+      catch (e) {
+        console.log("Problem setting cell with id " + id + " of table " + table_id + ". Error: " + e);
+      }
+    }
 }
 
 
