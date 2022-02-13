@@ -89,7 +89,7 @@ Updates to the CORE
 
   * lib.metadata:
 
-    * Added attribute prefix 'my_' for user defined attributes (for logics, etc.)
+    * Added attribute prefix 'my\_' for user defined attributes (for logics, etc.)
 
   * lib.network:
 
@@ -177,6 +177,19 @@ Plugin Updates
 * asterisk:
 
   * Check connected before calling close in stop
+
+* avm:
+
+  * Created _pv_1_5_12 before merging PR
+  * Connect to Smarthome Devices via AHA-Interface (tested with Fritz 440, Comet Dect)
+    (therefore Plugin AVM smarthome can be depreciated)
+  * Implemented call deflections (tested with Fritzbox 7530)
+  * Renamed parameter "index" to "avm_tam_index"
+  * Code cleanup (add new functions to minimize code repetitions)
+  * Improved error handling
+  * Updated WebIF
+  * Updated documentation
+  * Bumped version to 1.6.0
 
 * casambi: Resend commands on transmission error (e.g. due to sigpipe error) once
 
