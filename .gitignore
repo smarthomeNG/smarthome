@@ -29,6 +29,14 @@ Thumbs.db
 # Don't check in built documentation
 /doc/user/build
 /doc/user/source/plugins_doc
+!/doc/user/source/plugins_doc/plugins_footer.rst
+!/doc/user/source/plugins_doc/plugins_gateway_header.rst
+!/doc/user/source/plugins_doc/plugins_interface_header.rst
+!/doc/user/source/plugins_doc/plugins_protocol_header.rst
+!/doc/user/source/plugins_doc/plugins_system_header.rst
+!/doc/user/source/plugins_doc/plugins_unclassified_header.rst
+!/doc/user/source/plugins_doc/plugins_all_header.rst
+
 /doc/developer/build
 /doc/developer/source/plugins_doc
 
