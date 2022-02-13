@@ -264,9 +264,11 @@ class SmartHome():
 
         #############################################################
         # Setting (local) tz if set in smarthome.yaml
+        # (to ensure propper logging)
         if hasattr(self, '_tz'):
             self.shtime.set_tz(self._tz)
-            del(self._tz)
+            # self._tz is deleted later (work in progress)
+            #del(self._tz)
 
         #############################################################
         # test if needed Python packages are installed
@@ -287,6 +289,12 @@ class SmartHome():
         self.init_logging(self._log_conf_basename, MODE)
 
         self.shng_status = {'code': 1, 'text': 'Initalizing: Logging initalized'}
+
+        if hasattr(self, '_tz'):
+            # set _tz again (now with logging enabled),
+            # so that shtime.set_tz can produce log output
+            self.shtime.set_tz(self._tz)
+            del(self._tz)
 
         #############################################################
         # Fork process and write pidfile
