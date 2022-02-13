@@ -1,5 +1,5 @@
 ============================
-Release 1.9.x - tt. mmm 2022
+Release 1.9.x - tt. Feb 2022
 ============================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
@@ -8,10 +8,10 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 4. Februar 2022
-       (Merge pull request #467 from onkelandy/datatables Datatables update and fixes)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 10. Februar 2022
-       (Sonos: Update SoCo base framework to version 0.26.1)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 12. Februar 2022
+       (. . .)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 12. Februar 2022
+       (. . .)
 
 
 Überblick
@@ -64,12 +64,8 @@ Updates to the CORE
 * Fixed initialization for cases where logging.yaml contains instructions that thow an exception
   when SmartHomeNG is not fully configured (requirements installed)
 * If logging.yaml gives an exception, logging.yaml.default is used
+* Changed restart handling, when in debug- or foreground-mode
 
-* ...
-
-* Items:
-
-  * ...
 
 * Logics:
 
@@ -90,6 +86,10 @@ Updates to the CORE
     * Fix for eval expressions, if crontab attribute is given with an init value, which is to be used in a
       numerical calculation
     * Fix for non numeric values on attribute crontab: init = xyz
+
+  * lib.metadata:
+
+    * Added attribute prefix 'my_' for user defined attributes (for logics, etc.)
 
   * lib.network:
 
@@ -147,18 +147,12 @@ Updates to the CORE
     * datatables: Improve defaults and fix some issues
     * datatables: update to 1.11.4
 
+  * mqtt: Fixed _get_caller_type for logics (see issue #450)
+
   * websocket:
 
     * Removed "untested" warning from trigger-logic command
     * Loglevel for 'no close frame received or sent' reduced to INFO
-
-* Plugins:
-
-  * ...
-
-* tests:
-
-  * ...
 
 
 Änderungen bei Plugins
@@ -179,6 +173,10 @@ Plugin Updates
 * avdevice:
 
   * Fix web interface logging (introduces with last commit), remove very old versions
+
+* asterisk:
+
+  * Check connected before calling close in stop
 
 * casambi: Resend commands on transmission error (e.g. due to sigpipe error) once
 
@@ -218,15 +216,20 @@ Plugin Updates
 
   * Only execute update_item if plugin is running
   * Bumped version to 1.8.0
+  * Fix connected bug for init ga
 
 * modbus_tcp:
 
   * slaveUnit zu Items hinzugefügt
   * slaveUnit-Bug _regToRead-key (adress.unit)
-  * Bumped version to 1.0.3
   * Bugfix in web interface
   * Fixes in example.yaml
-  * Bumped version to 1.0.5
+  * Feature to write to registers
+  * Bumped version to 1.0.6
+
+* mpd:
+
+  * Fix connection related bug, remove scheduler at stop
 
 * openweathermap:
 
@@ -264,6 +267,14 @@ Plugin Updates
   * Add gitignore to webif/visualizations folder to make sure folder is created and files in folder are ignored
   * Minor webif update
   * Update web interface in real-time and include datatables
+
+* tasmota:
+
+  * Implemented support if TW light sources
+  * Implemented ZIGBEE support;
+  * Updated Docu
+  * Updated WebIF
+  * Bumped version to 1.2.0
 
 * telegram:
 
