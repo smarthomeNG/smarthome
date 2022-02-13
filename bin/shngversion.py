@@ -77,8 +77,10 @@ from lib.utils import Version
 # Update auf 1.9.0  wg. Release
 # Update auf 1.9a   wg. Kennzeichnung des Stands als "nach dem v1.9.0 Release"
 
-shNG_version = '1.9a'
-shNG_branch = 'develop'
+# Update auf 1.9.1  wg. Release
+
+shNG_version = '1.9.1'
+shNG_branch = 'master'
 
 # ---------------------------------------------------------------------------------
 FileBASE = None
