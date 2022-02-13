@@ -27,7 +27,7 @@ import subprocess
 sys.path.append('..')
 
 import plugins.__init__ as plugin_vers
-
+from lib.utils import Version
 
 # Update auf 1.3d   wg. neuer item features on_update, on_change
 # Update auf 1.3e   wg. neuer logic features for visu_websocket
@@ -72,11 +72,14 @@ import plugins.__init__ as plugin_vers
 # Update auf 1.8.2a wg. Kennzeichnung des Stands als "nach dem v1.8.2 Release"
 # Update auf 1.8.2b wg. Erweiterung des Item Loggings"
 # Update auf 1.8.2c wg. Wegen Anpassungen an mem-logging / lib.log
-# Update auf 1.8.2d Unterstützung für User-Functions
+# Update auf 1.8.2d wg. Unterstützung für User-Functions
 
 # Update auf 1.9.0  wg. Release
+# Update auf 1.9a   wg. Kennzeichnung des Stands als "nach dem v1.9.0 Release"
 
-shNG_version = '1.9.0'
+# Update auf 1.9.1  wg. Release
+
+shNG_version = '1.9.1'
 shNG_branch = 'master'
 
 # ---------------------------------------------------------------------------------
@@ -115,17 +118,21 @@ def _get_git_data(sub='', printout=False):
 # ---------------------------------------------------------------------------------
 
 def get_shng_main_version():
-    return shNG_version
+    return Version.format( shNG_version )
+
+def get_shng_plugins_version():
+    plgversion = get_plugins_version().split('-')[0]
+    return Version.format( plgversion )
 
 def get_shng_version():
     commit, commit_short, branch, describe = _get_git_data()
     VERSION = get_shng_main_version()
     if branch == 'master':
-        VERSION += '.'+branch+' ('+commit_short+')'
+        VERSION += '-'+branch+' ('+commit_short+')'
     elif branch == 'manual':
-        VERSION += '.'+shNG_branch+' ('+branch+')'
+        VERSION += '-'+shNG_branch+' ('+branch+')'
     else:
-        VERSION += '.'+commit_short+'.'+branch
+        VERSION += '-'+commit_short+'.'+branch
     return VERSION
 
 def get_shng_branch():
@@ -139,7 +146,7 @@ def get_shng_description():
 
 def get_plugins_version():
     commit, commit_short, branch, describe = _get_git_data('plugins')
-    VERSION = get_shng_main_version()
+    VERSION = Version.format( get_shng_main_version() )
     try:
         PLUGINS_VERSION = plugin_vers.plugin_release()
     except:
@@ -150,16 +157,16 @@ def get_plugins_version():
         PLUGINS_SOURCE_BRANCH = ''
 
     if branch == 'master':
-        VERSION = PLUGINS_VERSION
-        VERSION += '.'+branch+' ('+commit_short+')'
+        VERSION = Version.format( PLUGINS_VERSION )
+        VERSION += '-'+branch+' ('+commit_short+')'
     elif branch == 'manual':
-        VERSION = PLUGINS_VERSION
+        VERSION = Version.format( PLUGINS_VERSION )
         if PLUGINS_SOURCE_BRANCH != '':
-            VERSION += '.'+PLUGINS_SOURCE_BRANCH
+            VERSION += '-'+PLUGINS_SOURCE_BRANCH
         VERSION += ' ('+branch+')'
     else:
-        VERSION = PLUGINS_VERSION
-        VERSION += '.'+commit_short+'.'+branch
+        VERSION = Version.format( PLUGINS_VERSION )
+        VERSION += '-'+commit_short+'.'+branch
     return VERSION
 
 

@@ -1,5 +1,5 @@
 # lib.orb:
-ephem>=3.7
+ephem>=3.7,<=4.1.0
 
 # lib.shtime:
 python-dateutil>=2.5.3

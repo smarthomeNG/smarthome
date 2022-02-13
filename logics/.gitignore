@@ -3,3 +3,4 @@
 # except .gitignore
 !.gitignore
 !example_*.*
+!logic.tpl

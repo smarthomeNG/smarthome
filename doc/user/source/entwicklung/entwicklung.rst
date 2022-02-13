@@ -18,8 +18,6 @@ Hier entsteht nach und nach der Teil der Dokumentation, welcher sich mit der Ent
 
    logiken/logiken
    plugins/plugins
-   APIs
-   libraries_plugins_logics
    module/module
    core/core
    build_doc

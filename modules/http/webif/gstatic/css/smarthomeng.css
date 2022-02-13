@@ -31,6 +31,15 @@ plusIconlist-group-item.py-2.node-tree.node-selected {
   background-color: #ecf3f8;
 }
 
+table .truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+table .notruncate {
+  overflow: visible;
+}
+
 .minusIcon {
   position: relative;
   display: inline-block;
@@ -247,4 +256,3 @@ a.text-shng:focus, a.text-shng:hover {
   color: #4d4d4d;
   font-weight: bold;
 }
-

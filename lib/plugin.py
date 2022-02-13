@@ -132,6 +132,7 @@ class Plugins():
             if item_attribute_prefixes is not None:
                 attribute_prefixes_keys = list(item_attribute_prefixes.keys())
                 for attribute_prefix in attribute_prefixes_keys:
+                    #logger.warning(f"plugin_name={plugin_name}, attribute_prefix={attribute_prefix}, item_attribute_prefixes[attribute_prefix]={item_attribute_prefixes[attribute_prefix]}")
                     self._sh.items.add_plugin_attribute_prefix(plugin_name, attribute_prefix, item_attribute_prefixes[attribute_prefix])
 
             # Test if plugin defines item structs

@@ -1,6 +1,6 @@
 :tocdepth: 2
 
-..index:: Logging
+.. index:: Logging
 
 #######
 Logging
@@ -10,22 +10,22 @@ Ein `Log <https://de.wikipedia.org/wiki/Log>`_ zeichnet Ergebnisse von Vorgänge
 und dient der Dokumentation. Anhand eines Logs kann man Programmfehlern auf die Spur kommen oder bestimmte
 Situationen können im Nachhinein untersucht werden. Je detaillierter ein Log geführt wird, desto einfacher
 ist die Untersuchung bestimmter Sachverhalte.
-Je nachdem, was man untersuchen möchte, kann man mit einem **Logging Level** im Programm vorgeben wie ernst 
+Je nachdem, was man untersuchen möchte, kann man mit einem **Logging Level** im Programm vorgeben wie ernst
 oder wie wichtig ein bestimmter Logeintrag ist.
-Innerhalb des Kerns von SmartHomeNG finden sich zum Beispiel Einträge im Programm mit dem Log Level **NOTICE** 
+Innerhalb des Kerns von SmartHomeNG finden sich zum Beispiel Einträge im Programm mit dem Log Level **NOTICE**
 die in einer Logdatei dann im Ergebnis so aufgezeichnet werden:
 
 ``2021-04-16  21:56:31 NOTICE   lib.smarthome     --------------------   Init SmartHomeNG 1.8.2c.4e0938c2.develop   --------------------``
 
-Das ist als Information zu sehen um bei Problemen Hilfe zu erhalten. Es deutet hier nichts auf Fehler oder Probleme hin. 
+Das ist als Information zu sehen um bei Problemen Hilfe zu erhalten. Es deutet hier nichts auf Fehler oder Probleme hin.
 Ein anderer Logging Befehl im Core mit dem Log Level **WARNING** erzeugt hingehen folgendes:
 
 ``2021-04-16  21:56:32 WARNING  lib.module        Not loading module Mqtt from section 'mqtt': Module is disabled``
 
 Das ist als Warnung gedacht um darauf hinzuweisen, das ein Module nicht geladen wird und in dieser Folge eventuell
 weitere Fehler oder Probleme auftauchen könnten. Steigerungen von Warnungen sind Log Level **ERROR** oder **CRITICAL**.
-Während ein **ERROR** also ein Fehler durchaus bedeuten kann das SmartHomeNG weiterarbeiten kann, bedeutet ein **CRITICAL** 
-also ein kritischer Fehler das das Programm beendet werden muss. 
+Während ein **ERROR** also ein Fehler durchaus bedeuten kann das SmartHomeNG weiterarbeiten kann, bedeutet ein **CRITICAL**
+also ein kritischer Fehler das das Programm beendet werden muss.
 Fehlt ein für den Kern von SmartHomeNG benötigtes Modul, so stell das einen kritischen Fehler dar.
 
 Die Log Level in der Übersicht, absteigend in der Bedeutung für den Programmablauf:
@@ -51,7 +51,7 @@ Die Log Level in der Übersicht, absteigend in der Bedeutung für den Programmab
      - Warnung das etwas unerwartetes passiert ist aber trotzdem weitergearbeitet werden kann
    * - 20
      - INFO
-     - Eine Ablaufinformation die nicht unbedingt wichtig ist 
+     - Eine Ablaufinformation die nicht unbedingt wichtig ist
    * - DEBUG
      - 10
      - Informationen für die Fehlersuche die normalerweise nicht benötigt werden
@@ -68,14 +68,14 @@ verstanden werden sollen.
 Konfiguration des Loggings
 ==========================
 
-Auf der Seite `Python Logging <https://docs.python.org/3.6/library/logging.html#module-logging>`_ 
+Auf der Seite `Python Logging <https://docs.python.org/3.6/library/logging.html#module-logging>`_
 sind die Konfigurationsmöglichkeiten detailliert beschrieben.
 
 SmartHomeNG lädt beim Start die Konfiguration des Logging aus der Datei **etc/logging.yaml**. Ist diese Datei nicht vorhanden,
-so versucht SmartHomeNG die Datei **etc/logging.yaml.default** zu kopieren nach **etc/logging.yaml** und dann daraus 
+so versucht SmartHomeNG die Datei **etc/logging.yaml.default** zu kopieren nach **etc/logging.yaml** und dann daraus
 die Konfiguration des Loggings zu laden.
 
-Wenn bei der Konfiguration des Loggings etwas schief geht, kann also jederzeit die Datei **etc/logging.yaml** gelöscht oder 
+Wenn bei der Konfiguration des Loggings etwas schief geht, kann also jederzeit die Datei **etc/logging.yaml** gelöscht oder
 besser umbenannt werden und wird dann beim nächsten Neustart durch den Inhalt der **etc/logging.yaml.default** frisch bereitgestellt.
 
 Ein Beispiel für **etc/logging.yaml.default** im Folgenden:
@@ -180,6 +180,9 @@ in der `__init__` Methode instanziert werden. Das ist inzwischen nicht mehr notw
 Klasse erzeugt den Logger inzwischen selbst. Ein **import logging** ist nicht mehr notwendig und die
 Initialisierung des Loggers in der `__init__` Methode sollte auch weggelassen werden.
 
+Der Logger konn/muss in der ``etc/logging,yaml`` konfiguriert werden. Der Name des Loggers ist ``plugins.<Name des Plugins>``.
+
+
 Für die Entwickler von Logiken:
 Verwendet man zur Instanziierung einen eigenen Namen (nicht empfohlen), wie z.B.
 
@@ -198,36 +201,17 @@ muss in der config auch dieser Name verwendet werden. Ohne `plugin.` oder `logic
        DWD:
            level: DEBUG
 
+Standardmäßig haben Logiken bereits einen Logger, der in der ``etc/logging,yaml`` konfiguriert werden kann/muss.
+Der Name des Loggers ist ``logics.<Name der Logik>``, wobei der Name der Logik, der in der Konfiguration festgelegte
+Name ist und nicht der Name des Python Skriptes.
 
 
 Logging der Veränderung von Items
 ---------------------------------
 
-Die Veränderung von Item Werten kann am einfachsten geloggt werden, indem bei dem Item das Attribut **log_change** gesetzt
-wird und auf einen entsprechenden Item Logger verweist. Der Item Logger muss in der etc/logging.yaml mit Level INFO oder
-DEBUG definiert sein.
-
-.. code-block:: yaml
-   :caption: items/items.yaml
-
-    test:
-        item:
-            log_change: <Logger-Name>
-
-
-und
-
-.. code-block:: yaml
-   :caption: etc/logging.yaml
-
-    ...-
-
-    logger:
-        items_<Logger-Name>:
-            level: INFO
-            handlers: [shng_details_file]
-
-    ...
+Ab Version 1.5 von SmartHomeNG erfolgt die Konfiguration des Loggings der Veränderung von Item Werten über
+Standard Item Attribute, wie es :doc:`bei den Standardattributen </referenz/items/standard_attribute/log_change>`
+beschrieben ist.
 
 
 Best Practices

@@ -4,7 +4,7 @@
 # Copyright 2016-2020   Martin Sinn                         m.sinn@gmx.de
 # Copyright 2016        Christian Straßburg           c.strassburg@gmx.de
 # Copyright 2012-2013   Marcus Popp                        marcus@popp.mx
-# Copyright 2019-2021   Bernd Meiners               Bernd.Meiners@mail.de
+# Copyright 2019-2022   Bernd Meiners               Bernd.Meiners@mail.de
 #########################################################################
 #  This file is part of SmartHomeNG.
 #
@@ -33,9 +33,8 @@ import dateutil.relativedelta
 from dateutil.relativedelta import MO, TU, WE, TH, FR, SA, SU
 from dateutil.tz import tzutc
 
-#print("lib.triggertimes is being imported")
 from lib.shtime import Shtime
-shtime = None
+shtime = Shtime.get_instance()
 
 logger = logging.getLogger(__name__)
 
@@ -341,13 +340,28 @@ class Crontab(TriggerTime):
 
         self.next_event = None  # store last result
         self.max_calc_time = 0  # keep track of maximum calculation time
+        # prevent
+        self.hour = None
+        self.hour_range = None
+        self.minute = None
+        self.minute_range = None
+        self.second = None
+        self.second_range = None
+        self.day = None
+        self.day_range = None
+        self.wday = None
+        self.weekday_range = None
+        self.month = None
+        self.month_range = None
+        self.parameter_count = 0
+        self._is_valid = False
 
         self.parse_triggertime()
 
     def parse_triggertime(self):
         """parse the crontab string for details and store them to the class variables for later use"""
         logger.debug(f'Enter Crontab.parse_triggertime({self._triggertime})')
-        self._is_valid = False
+
         with self._lock:
             triggertime = self._triggertime
             # replace @yearly etc. with correct preset
@@ -358,11 +372,14 @@ class Crontab(TriggerTime):
             try:
                 parameter_set = triggertime.strip().split()
             except:
-                logger.error(f"crontab entry '{triggertime}' can not be split up into 4 parts for minute, hour, day and weekday")
+                logger.error(f"crontab entry '{triggertime}' can not be split up into parts")
                 return False
             
             self.parameter_count = len(parameter_set)
-            if self.parameter_count == 4:
+            if self.parameter_count < 4:
+                logger.error(f"crontab entry '{triggertime}' has fewer than 4 parts and is invalid")
+                return False
+            elif self.parameter_count == 4:
                 logger.debug(f'old smarthome.py style parameter set {triggertime} given')
                 self.minute, self.hour, self.day, self.wday = parameter_set[0],parameter_set[1],parameter_set[2],parameter_set[3]
                 self.month='*'
@@ -374,6 +391,9 @@ class Crontab(TriggerTime):
             elif self.parameter_count == 6:
                 logger.debug(f'new SmartHomeNG style parameter set {triggertime} given')
                 self.second, self.minute, self.hour, self.day, self.month, self.wday = parameter_set[0],parameter_set[1],parameter_set[2],parameter_set[3], parameter_set[4], parameter_set[5]
+            else:
+                logger.error(f"crontab entry '{triggertime}' has more than 6 parts and is invalid")
+                return False
 
             if self.parameter_count > 4:
                 # replace abbreviated months like 'jan' with their number like '1'
@@ -418,6 +438,9 @@ class Crontab(TriggerTime):
         :return: found date and time of next occurence or a time way up in the future
         :rtype: datetime
         """
+        if not self._is_valid:
+            return get_invalid_time()
+
         with self._lock:
             tik = time.perf_counter()
             if self.next_event is None:
@@ -749,7 +772,8 @@ class Skytime(TriggerTime):
 
     @staticmethod
     def keep_in_range(value, minvalue, maxvalue):
-        assert minvalue <= maxvalue
+        if minvalue > maxvalue:
+            logger.error(f"minvalue={minvalue} is greater than maxvalue={maxvalue}")
         if value < minvalue:
             value = minvalue
             logger.warning(f"{value}<{minvalue} --> {value}={minvalue}")
@@ -869,10 +893,11 @@ class Skytime(TriggerTime):
             days = 0
             searchtime = starttime
             #logger.debug(f'looking for the next event after {starttime}')
-            searchtime = searchtime.replace(microsecond=0) + datetime.timedelta(seconds=1)   # smallest amount higher than given time
+            searchtime = searchtime + datetime.timedelta(microseconds=1)   # smallest amount higher than given time
             while True:
-                #logger.warning(f"{searchtime}")
-                days = abs((starttime-searchtime).days)
+                #logger.warning(f"searchtime: {searchtime}")
+                #logger.warning(f"difference {searchtime-starttime}")
+                days = abs((searchtime-starttime).days)
                 if days > days_max_count:
                     logger.error(f'No matches after {days} examined days, giving up')
                     return get_invalid_time()
@@ -896,9 +921,8 @@ class Skytime(TriggerTime):
                                 # time in next_time will be in utctime. So we need to adjust it
                                 if eventtime.tzinfo == tzutc():
                                     eventtime = eventtime.astimezone(Skytime.sh.shtime.tzinfo())
-                                    logger.debug(f"starting with {starttime} the next {self.event}({self.doff},{self.moff}) is {eventtime}")
                                 else:
-                                    logger.warning("searchtime.tzinfo was not given as utc!")
+                                    logger.error("searchtime.tzinfo was not given as utc!")
                             else:
                                 logger.error(f'No function found to get next skyevent time for {self._triggertime}')
                                 return get_invalid_time()
@@ -908,18 +932,25 @@ class Skytime(TriggerTime):
                             #  - searchtime must be smaller than eventtime and 
                             #  - eventtime might be one or more day(s) later
 
+                            logger.debug(f"starting with {starttime} the next {self.event}({self.doff},{self.moff}) is {eventtime}")
+
                             # if the dates differ then it must be certain that the new date adheres to the
                             # constraints of the day range.
                             if eventtime.date() > searchtime.date():
                                 logger.debug(f"eventtime ({eventtime.date()}) is at least a day later than current searchtime ({searchtime}), skip to eventtime's early morning")
-                                searchtime = eventtime.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=Skytime.sh.shtime.tzinfo())
+                                searchtime = eventtime.replace(hour=0, minute=0, second=0, microsecond=0)
                                 continue # need to start over for a matching date
 
-                            # eventtime and searchtime have the same date
+                            if eventtime.date() < searchtime.date():
+                                logger.debug(f"eventtime ({eventtime.date()}) is at least a day earlier than current searchtime ({searchtime}), skip to searchtime's early morning")
+                                searchtime = searchtime.replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)
+                                continue
+
+                            # eventtime and searchtime have the same day
                             # now check time limits if given
                             if self.h_min is not None and self.m_min is not None:
                                 try:
-                                    dmin = eventtime.replace(hour=self.h_min, minute=self.m_min, second=0, microsecond=0,  tzinfo=Skytime.sh.shtime.tzinfo())
+                                    dmin = eventtime.replace(hour=self.h_min, minute=self.m_min, second=0, microsecond=0)
                                 except Exception:
                                     logger.error('Wrong syntax: {self._triggertime}. Should be [H:M<](skyevent)[+|-][offset][<H:M]')
                                     return get_invalid_time()
@@ -928,7 +959,7 @@ class Skytime(TriggerTime):
 
                             if self.h_max is not None and self.m_max is not None:
                                 try:
-                                    dmax = eventtime.replace(hour=self.h_max, minute=self.m_max, second=0, microsecond=0, tzinfo=Skytime.sh.shtime.tzinfo())
+                                    dmax = eventtime.replace(hour=self.h_max, minute=self.m_max, second=0, microsecond=0)
                                     logger.debug(f"searchtime={searchtime}, eventtime={eventtime}, dmax={dmax}")
                                 except Exception:
                                     logger.error('Wrong syntax: {self._triggertime}. Should be [H:M<](skyevent)[+|-][offset][<H:M]')
@@ -943,7 +974,12 @@ class Skytime(TriggerTime):
 
                                 if dmax < eventtime:
                                     eventtime = dmax
-                            # next trigger time found!
+                            if eventtime < searchtime:
+                                logger.debug(f"eventtime ({eventtime}) is still earlier than current searchtime ({searchtime}), skip to searchtime's early morning")
+                                searchtime = searchtime.replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)
+                                continue
+
+                            #logger.debug(f"next trigger time found: {eventtime}")
                             searchtime = eventtime
                             break
                             #------------------------------

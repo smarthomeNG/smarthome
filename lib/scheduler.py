@@ -62,6 +62,7 @@ _scheduler_instance = None    # Pointer to the initialized instance of the sched
 
 from lib.triggertimes import TriggerTimes
 
+class LeaveLogic(Exception): pass  # declare a label for 'raise LeaveLogic'
 
 class _PriorityQueue:
     """
@@ -285,7 +286,8 @@ class Scheduler(threading.Thread):
                     if task['next'] is not None:
                         if task['next'] < now:
                             self._runc.acquire()
-                            self._runq.insert(task['prio'], (name, task['obj'], 'Scheduler', None, None, task['value']))
+                            # insert priority and a tuple of (name, obj, by, source, dest, value) # ms
+                            self._runq.insert(task['prio'], (name, task['obj'], 'Scheduler', task.get('source', None), None, task['value']))
                             self._runc.notify()
                             self._runc.release()
                             task['next'] = None
@@ -375,7 +377,11 @@ class Scheduler(threading.Thread):
         :param from_smartplugin:
         :return: returns either the name or name combined with instance name
         """
-        stack = inspect.stack()
+        try:
+            stack = inspect.stack()
+        except Exception as e:
+            logger.exception(f"check_caller('{name}'): Exception in inspect.stack(): {e}")
+
         try:
             obj = stack[2][0].f_locals["self"]
             if isinstance(obj, SmartPlugin):
@@ -415,9 +421,11 @@ class Scheduler(threading.Thread):
             self.items = Items.get_instance()
         self._lock.acquire()
         try:
+            source = '??'
             if isinstance(cron, str):
                 cron = [cron, ]
             if isinstance(cron, list):
+                details = None
                 _cron = {}
                 for entry in cron:
                     desc, __, _value = entry.partition('=')
@@ -427,6 +435,7 @@ class Scheduler(threading.Thread):
                     else:
                         _value = _value.strip()
                     if desc.lower().startswith('init'):
+                        details = desc
                         offset = 5  # default init offset
                         desc, op, seconds = desc.partition('+')
                         if op:
@@ -439,12 +448,15 @@ class Scheduler(threading.Thread):
                         next = self.shtime.now() + datetime.timedelta(seconds=offset)
                     else:
                         _cron[desc] = _value
+                    source = {'source': 'cron', 'details': details}
                 if _cron == {}:
                     cron = None
                 else:
                     cron = _cron
+
             if isinstance(cycle, int):
-                cycle = {cycle: None}
+                source = {'source': 'cycle1', 'details': cycle}
+                cycle = {cycle: cycle}
             elif isinstance(cycle, str):
                 cycle, __, _value = cycle.partition('=')
                 try:
@@ -455,10 +467,11 @@ class Scheduler(threading.Thread):
                 if _value != '':
                     _value = _value.strip()
                 else:
-                    _value = None
+                    _value = cycle
                 cycle = {cycle: _value}
+                source = {'source': 'cycle', 'details': _value}
             if cycle is not None and offset is None:  # spread cycle jobs
-                    offset = random.randint(10, 15)
+                offset = random.randint(10, 15)
             # change name for multi instance plugins
             if obj.__class__.__name__ == 'method':
                 if isinstance(obj.__self__, SmartPlugin):
@@ -467,7 +480,7 @@ class Scheduler(threading.Thread):
                         if not from_smartplugin:
                             name = name +'_'+ obj.__self__.get_instance_name()
                         logger.debug("Scheduler: Name changed by adding plugin instance name to: " + name)
-            self._scheduler[name] = {'prio': prio, 'obj': obj, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
+            self._scheduler[name] = {'prio': prio, 'obj': obj, 'source': source, 'cron': cron, 'cycle': cycle, 'value': value, 'next': next, 'active': True}
             if next is None:
                 self._next_time(name, offset)
         finally:
@@ -561,10 +574,15 @@ class Scheduler(threading.Thread):
         now = now.replace(microsecond=0)
         if job['cycle'] is not None:
             cycle = list(job['cycle'].keys())[0]
-            value = job['cycle'][cycle]
+            #value = job['cycle'][cycle]
+            # set value only, if it is an item scheduler
+            if job['obj'].__class__.__name__ == 'Item':
+                value = job['cycle'][cycle]
             if offset is None:
                 offset = cycle
             next_time = now + datetime.timedelta(seconds=offset)
+            #job['source'] = 'cycle'
+            job['source'] = {'source': 'cycle', 'details': str(cycle)}
         if job['cron'] is not None:
             for entry in job['cron']:
                 if entry == 'None':
@@ -573,9 +591,12 @@ class Scheduler(threading.Thread):
                 if next_time is not None:
                     if ct < next_time:
                         next_time = ct
+                        #job['source'] = 'cron'    # ms
+                        job['source'] = {'source': 'cron', 'details': str(entry)}
                         value = job['cron'][entry]
                 else:
                     next_time = ct
+                    job['source'] = {'source': 'cron', 'details': str(entry)}
                     value = job['cron'][entry]
         self._scheduler[name]['next'] = next_time
         self._scheduler[name]['value'] = value
@@ -610,60 +631,26 @@ class Scheduler(threading.Thread):
                 self._runc.release()
             self._task(name, obj, by, source, dest, value)
 
+
     def _task(self, name, obj, by, source, dest, value):
         threading.current_thread().name = name
         logger = logging.getLogger(name)
         if obj.__class__.__name__ == 'Logic':
-            source_details = None
-            if isinstance(source, dict):
-                source_details = source.get('details', '')
-                source = source.get('item', '')
-            trigger = {'by': by, 'source': source, 'source_details': source_details, 'dest': dest, 'value': value}  # noqa
+            self._execute_logic_task(obj, by, source, dest, value)
 
-            #following variables are assigned to be available during logic execution
-            sh = self._sh  # noqa
-            shtime = self.shtime
-            items = self.items
-
-            # set the logic environment here (for use within functions in logics):
-            logic = obj  # noqa
-            logic.sh = sh
-            logic.logger = logger
-            logic.shtime = shtime
-            logic.items = items
-            logic.trigger_dict = trigger    # logic.trigger has naming conflict with method logic.trigger of lib.item
-
-            logics = obj._logics
-
-            if not self.mqtt:
-                if _lib_modules_found:
-                    self.mqtt = Modules.get_instance().get_module('mqtt')
-            mqtt = self.mqtt
-            logic.mqtt = mqtt
-
-            try:
-                if logic.enabled:
-                    exec(obj.bytecode)
-                    # store timestamp of last run
-                    obj.set_last_run()
-                    for method in logic.get_method_triggers():
-                        try:
-                            method(logic, by, source, dest)
-                        except Exception as e:
-                            logger.exception("Logic: Trigger {} for {} failed: {}".format(method, logic.name, e))
-            except SystemExit:
-                # ignore exit() call from logic.
-                pass
-            except Exception as e:
-                tb = sys.exc_info()[2]
-                tb = traceback.extract_tb(tb)[-1]
-                logger.exception("Logic: {0}, File: {1}, Line: {2}, Method: {3}, Exception: {4}".format(name, tb[0], tb[1], tb[2], e))
         elif obj.__class__.__name__ == 'Item':
             try:
+                if isinstance(source, str):
+                    scheduler_source = source
+                else:
+                    scheduler_source = source.get('source', '')
+                    if scheduler_source != '':
+                        scheduler_source = ':'+scheduler_source+':'+source.get('details','')
                 if value is not None:
-                    obj(value, caller="Scheduler")
+                    obj(value, caller=("Scheduler"+scheduler_source))
             except Exception as e:
-                logger.exception("Item {0} exception: {1}".format(name, e))
+                logger.exception(f"Item {name} exception: {e}")
+
         else:  # method
             try:
                 if value is None:
@@ -671,5 +658,82 @@ class Scheduler(threading.Thread):
                 else:
                     obj(**value)
             except Exception as e:
-                logger.exception("Method {0} exception: {1}".format(name, e))
+                logger.exception(f"Method {name} exception: {e}")
+
         threading.current_thread().name = 'idle'
+
+
+    def _execute_logic_task(self, logic, by, source, dest, value):
+        """
+        Execute a logic from _task method
+
+        :param logic:
+        :return:
+        """
+        name = 'logics.' + logic.name
+        logger = logging.getLogger(name)
+        source_details = None
+        if isinstance(source, dict):
+            source_details = source.get('details', '')
+            src = source.get('item', '')
+            if src == '':
+                # get source ('cron' or 'cycle')
+                src = source.get('source', '')
+            source = src
+        trigger = {'by': by, 'source': source, 'source_details': source_details, 'dest': dest, 'value': value}  # noqa
+
+        # following variables are assigned to be available during logic execution
+        sh = self._sh  # noqa
+        shtime = self.shtime
+        items = self.items
+
+        # set the logic environment here (for use within functions in logics):
+        #logic = obj  # noqa
+        logic.sh = sh
+        logic.logger = logger
+        logic.shtime = shtime
+        logic.items = items
+        logic.trigger_dict = trigger  # logic.trigger has naming conflict with method logic.trigger of lib.item
+
+        logics = logic._logics
+
+        if not self.mqtt:
+            if _lib_modules_found:
+                self.mqtt = Modules.get_instance().get_module('mqtt')
+        mqtt = self.mqtt
+        logic.mqtt = mqtt
+
+        try:
+            if logic.enabled:
+                if sh.shng_status['code'] < 20:
+                    logger.warning(f"Logik ignoriert, SmartHomeNG ist noch nicht vollständig initialisiert - Logik wurde getriggert durch {trigger}")
+                else:
+                    logger.debug(f"Getriggert durch: {trigger}")
+                    exec(logic.bytecode)
+                    # store timestamp of last run
+                    logic.set_last_run()
+                    for method in logic.get_method_triggers():
+                        try:
+                            method(logic, by, source, dest)
+                        except Exception as e:
+                            logger.exception("Logic: Trigger {} for {} failed: {}".format(method, logic.name, e))
+        except LeaveLogic as e:
+            # 'LeaveLogic' is no error
+            if str(e) != '':
+                logger.info(f"Die Logik '{logic.name}' wurde verlassen. Grund: {e}")
+        except SystemExit:
+            # ignore exit() call from logic.
+            pass
+        except Exception as e:
+            tb = sys.exc_info()[2]
+            tb = traceback.extract_tb(tb)[-1]
+            if tb[2] == '<module>':
+                logic_method = 'Hauptroutine der Logik'
+            else:
+                logic_method = 'function ' + tb[2] + '()'
+            logger.error(f"In der Logik ist ein Fehler aufgetreten:\n   Logik '{logic.name}', Datei '{tb[0]}', Zeile {tb[1]}\n   {logic_method}, Exception: {e}")
+            #logger.exception(f"In der Logik ist ein Fehler aufgetreten:\n   Logik '{logic.name}', Datei '{tb[0]}', Zeile {tb[1]}\n   {logic_method}, Exception: '{e}'\n ")
+
+        return
+
+

@@ -47,6 +47,7 @@ import struct
 import subprocess
 import threading
 import time
+from contextlib import suppress
 from . import aioudp
 
 
@@ -171,7 +172,7 @@ class Network(object):
         :type addr: str
         :param port: port number under test
         :type port: num
-        :return: (ip_address, port, family) or (None, undef, undef) if error occurs
+        :return: (ip_address, port, family) or (None, 0, None) if error occurs
         :rtype: tuple
         """
         logger = logging.getLogger(__name__)
@@ -198,6 +199,8 @@ class Network(object):
                 # Unable to resolve hostname
                 logger.error(f'Cannot resolve {addr} to a valid ip address (v4 or v6): {e}')
                 ip = None
+                port = 0
+                family = None
 
         return (ip, port, family)
 
@@ -222,7 +225,6 @@ class Network(object):
         """
         # find login data
         pattern = re.compile('http([s]?)://([^:]+:[^@]+@)')
-
         # possible replacement modes
         replacement = {
             'strip': 'http\\g<1>://',
@@ -512,6 +514,7 @@ class Tcp_client(object):
     :param retry_cycle: Time between cycles if :param:autoreconnect is True
     :param binary: Switch between binary and text mode. Text will be encoded / decoded using encoding parameter.
     :param terminator: Terminator to use to split received data into chunks (split lines <cr> for example). If integer then split into n bytes. Default is None means process chunks as received.
+    :param autoconnect: automatically connect on send. Copies autoreconnect if None
 
     :type host: str
     :type port: int
@@ -522,9 +525,10 @@ class Tcp_client(object):
     :type retry_cycle: int
     :type binary: bool
     :type terminator: int | bytes | str
+    :type autoconnect: bool
     """
 
-    def __init__(self, host, port, name=None, autoreconnect=True, connect_retries=5, connect_cycle=5, retry_cycle=30, binary=False, terminator=False):
+    def __init__(self, host, port, name=None, autoreconnect=True, connect_retries=5, connect_cycle=5, retry_cycle=30, binary=False, terminator=False, timeout=1, autoconnect=None):
         self.logger = logging.getLogger(__name__)
 
         # public properties
@@ -535,12 +539,15 @@ class Tcp_client(object):
         self._host = host
         self._port = port
         self._autoreconnect = autoreconnect
+        self._autoconnect = autoconnect
+        if self._autoconnect is None:
+            self._autoconnect = self._autoreconnect
         self._is_connected = False
         self._is_receiving = False
         self._connect_retries = connect_retries
         self._connect_cycle = connect_cycle
         self._retry_cycle = retry_cycle
-        self._timeout = 1
+        self._timeout = timeout
 
         self._hostip = None
         self._family = socket.AF_INET
@@ -558,9 +565,9 @@ class Tcp_client(object):
         self.__connect_threadlock = threading.Lock()
         self.__receive_thread = None
         self.__receive_threadlock = threading.Lock()
-        self.__running = True
+        self.__running = False
 
-        #self.logger.setLevel(logging.DEBUG)   # Das sollte hier NICHT gesetzt werden, sondern in etc/logging.yaml im Logger lib.network konfiguriert werden!
+        # self.logger.setLevel(logging.DEBUG)   # Das sollte hier NICHT gesetzt werden, sondern in etc/logging.yaml im Logger lib.network konfiguriert werden!
 
         self._host = host
         self._port = port
@@ -594,17 +601,21 @@ class Tcp_client(object):
         :return: False if an error prevented us from launching a connection thread. True if a connection thread has been started.
         :rtype: bool
         """
-        if self._hostip is None:  # return False if no valid ip to connect to
-            self.logger.error(f'No valid IP address to connect to {self._host}')
-            self._is_connected = False
-            return False
         if self._is_connected:  # return false if already connected
-            self.logger.error(f'Already connected to {self._host}, ignoring new request')
+            self.logger.debug(f'Already connected to {self._host}:{self._port}, ignoring new request')
             return False
 
-        self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name='TCP_Connect')
-        self.__connect_thread.daemon = True
-        self.__connect_thread.start()
+        if self._hostip is None:  # return False if no valid ip to connect to
+            self.logger.error(f'No valid IP address to connect to {self._host}:{self._port}')
+            self._is_connected = False
+            return False
+
+        self.logger.debug(f'Starting connect to {self._host}:{self._port}')
+        if not self.__connect_thread:
+            self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name='TCP_Connect')
+            self.__connect_thread.daemon = True
+        if not self.__running:
+            self.__connect_thread.start()
         return True
 
     def connected(self):
@@ -629,6 +640,16 @@ class Tcp_client(object):
             except Exception:
                 self.logger.warning(f'Error encoding message for client {self.name}')
                 return False
+
+        # automatically (re)connect on send attempt
+        if not self._is_connected:
+            if self._autoconnect:
+                self.logger.debug(f'autoconnecting to host {self._host} on send attempt, message is {message}')
+                self.connect()
+            else:
+                self.logger.warning(f'trying to send {message}, but not connected to host {self._host} and autoconnect not active. Aborting.')
+                return False
+
         try:
             if self._is_connected:
                 bytes_sent = self._socket.send(message)
@@ -636,8 +657,13 @@ class Tcp_client(object):
                     self.logger.warning(f'Error sending message {message} to host {self._host}: message truncated, sent {bytes_sent} of {len(message)} bytes')
             else:
                 return False
-        except BrokenPipeError:
-            self.logger.warning(f'Detected disconnect from {self._host}, send failed.')
+
+        except (BrokenPipeError, TimeoutError) as e:
+            if e.errno == 60:
+                # timeout
+                self.logger.warning(f'Detected timeout on {self._host}, disconnecting, send failed.')
+            else:
+                self.logger.warning(f'Detected disconnect from {self._host}, send failed.')
             self._is_connected = False
             if self._disconnected_callback:
                 self._disconnected_callback(self)
@@ -657,13 +683,14 @@ class Tcp_client(object):
         Thread worker to handle connection.
         """
         if not self.__connect_threadlock.acquire(blocking=False):
-            self.logger.warning(f'Connection attempt already in progress for {self._host}, ignoring new request')
+            self.logger.info(f'Connection attempt already in progress for {self._host}:{self._port}, ignoring new request')
             return
         if self._is_connected:
-            self.logger.error(f'Already connected to {self._host}, ignoring new request')
+            self.logger.info(f'Already connected to {self._host}:{self._port}, ignoring new request')
             return
-        self.logger.debug(f'Starting connection cycle for {self._host}')
+        self.logger.debug(f'Starting connection cycle for {self._host}:{self._port}')
         self._connect_counter = 0
+        self.__running = True
         while self.__running and not self._is_connected:
             # Try a full connect cycle
             while not self._is_connected and self._connect_counter < self._connect_retries and self.__running:
@@ -719,6 +746,7 @@ class Tcp_client(object):
         """
         Thread worker to handle receiving.
         """
+        self.logger.debug(f'started receive thread for host {self._host}')
         waitobj = IOWait()
         waitobj.watch(self._socket, read=True)
         __buffer = b''
@@ -732,10 +760,15 @@ class Tcp_client(object):
                 events = waitobj.wait(1000)     # BMX
                 for fileno, read, write in events:  # BMX
                     if read:
-                        msg = self._socket.recv(4096)
+                        timeout = False
+                        try:
+                            msg = self._socket.recv(4096)
+                        except TimeoutError:
+                            msg = None
+                            timeout = True
                         # Check if incoming message is not empty
                         if msg:
-                            # TODO: doing this breaks line separation if multiple lines 
+                            # TODO: doing this breaks line separation if multiple lines
                             #       are read at a time, the next loop can't split it
                             #       because line endings are missing
                             #       find out reason for this operation...
@@ -777,8 +810,12 @@ class Tcp_client(object):
                         else:
                             if self.__running:
 
-                                # default state, peer closed connection
-                                self.logger.warning(f'Connection closed by peer {self._host}')
+                                if timeout:
+                                    # TimeoutError exception caught
+                                    self.logger.warning(f'Connection timed out on peer {self._host}, disconnecting.')
+                                else:
+                                    # default state, peer closed connection
+                                    self.logger.warning(f'Connection closed by peer {self._host}')
                                 self._is_connected = False
                                 waitobj.unwatch(self._socket)
                                 if self._disconnected_callback is not None:
@@ -803,11 +840,11 @@ class Tcp_client(object):
                 self._is_receiving = False
                 return
             else:
-                self._log_exception(ex, f'lib.network receive thread died with error: {ex}. Go tell...')
+                self._log_exception(ex, f'lib.network receive thread died with unexpected error: {ex}. Go tell...')
         self._is_receiving = False
-        
-    def _log_exception( self, ex, msg):
-        self.logger.error(msg + ' If stack trace is necessary, enable debug log')
+
+    def _log_exception(self, ex, msg):
+        self.logger.error(msg + ' -- If stack trace is necessary, enable/check debug log')
 
         if self.logger.isEnabledFor(logging.DEBUG):
 
@@ -845,13 +882,20 @@ class Tcp_client(object):
         """
         Close the current client socket.
         """
-        self.logger.info(f'Closing connection to {self._host} on TCP port {self._port}')
         self.__running = False
-        self._socket.shutdown(socket.SHUT_RD)
+        self.logger.info(f'Closing connection to {self._host} on TCP port {self._port}')
+        if self._is_connected:
+            self._socket.shutdown(socket.SHUT_RD)
         if self.__connect_thread is not None and self.__connect_thread.is_alive():
             self.__connect_thread.join()
         if self.__receive_thread is not None and self.__receive_thread.is_alive():
             self.__receive_thread.join()
+
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return super().__str__()
 
 
 class ConnectionClient(object):
@@ -904,10 +948,8 @@ class ConnectionClient(object):
         """
         Ensure drain() is called.
         """
-        try:
+        with suppress(ConnectionResetError):
             await self.writer.drain()
-        except ConnectionResetError:
-            pass
 
     def send(self, message):
         """
@@ -983,6 +1025,12 @@ class ConnectionClient(object):
             else:
                 string += chr(char)
         return string.rstrip()
+
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return super().__str__()
 
 
 class Tcp_server(object):
@@ -1222,12 +1270,16 @@ class Tcp_server(object):
         self.__loop.call_soon_threadsafe(self.__loop.stop)
         while self.__loop.is_running():
             pass
-        try:
+        with suppress(AttributeError):  # thread can disappear between first and second condition test
             if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
-        except AttributeError:  # thread can disappear between first and second condition test
-            pass
         self.__loop.close()
+
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return super().__str__()
 
 
 class Udp_server(object):
@@ -1268,8 +1320,10 @@ class Udp_server(object):
         self._close_timeout = 2
 
         # private properties
-        self.__loop = None
         self.__coroutine = None
+        self.__loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.__loop)
+
         self.__server = aioudp.aioUDPServer()
         self.__listening_thread = None
         self.__running = True
@@ -1299,8 +1353,6 @@ class Udp_server(object):
             return False
         try:
             self.logger.info(f'Starting up UDP server socket {self.__our_socket}')
-            self.__loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(self.__loop)
             self.__coroutine = self.__start_server()
             self.__loop.run_until_complete(self.__coroutine)
 
@@ -1358,11 +1410,9 @@ class Udp_server(object):
             self.__loop.stop()
         time.sleep(0.5)
 
-        try:
+        with suppress(AttributeError):  # thread can disappear between first and second condition test
             if self.__listening_thread and self.__listening_thread.is_alive():
                 self.__listening_thread.join()
-        except AttributeError:  # thread can disappear between first and second condition test
-            pass
         self.__loop.close()
 
     async def __start_server(self):
@@ -1419,3 +1469,9 @@ class Udp_server(object):
                 self.logger.debug(f'Received undecodable bytes from {host}:{port}')
         else:
             self.logger.debug(f'Received empty datagram from {host}:{port}')
+
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return super().__str__()

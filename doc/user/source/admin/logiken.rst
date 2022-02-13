@@ -10,12 +10,20 @@ Liste der Logiken
 =================
 
 Unter **Logiken** wird eine Liste der konfigurierten Logiken mit einer Reihe von Informationen angezeigt.
-Rechts in der jeweiligen Zeile sind Icons über die
+Rechts in der jeweiligen Zeile sind Buttons, über die
 
 - eine Logik ausgelöst (getriggert) werden kann,
 - eine Logik neu geladen werden kann,
 - eine Logik deaktiviert bzw. aktiviert werden kann,
 - eine Logik entladen werden kann,
+- eine Logik inclusive Code und Parametern gelöscht werden kann
+
+Die Liste der geladenen Logiken ist nach dem Namen der Logik alphabetisch sortiert.
+
+Nicht geladene Logiken werden am unteren Ende der Liste angezeigt. Für nicht geladene Logiken stehen
+nur zwei Buttons zum Auslösen von Aktionen zur Verfügung, über die
+
+- eine Logik geladen werden kann,
 - eine Logik inclusive Code und Parametern gelöscht werden kann
 
 Oberhalb der Liste findet sich ein Button, der die Erstellung einer neuen Logik ermöglicht.

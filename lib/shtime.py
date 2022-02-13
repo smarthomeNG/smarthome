@@ -124,8 +124,12 @@ class Shtime:
     def set_tz(self, tz):
         """
         set timezone info from name of timezone
+
+        :param tz: Name of the timezone (like 'Europe/Berlin')
+        :type: tz: str
         """
         tzinfo = dateutil.tz.gettz(tz)
+        self.logger.info(f"set_tz: tz={tz} -> tzinfo={tzinfo}")
         if tzinfo is not None:
 #            TZ = tzinfo
             self._tz = tz
@@ -136,12 +140,16 @@ class Shtime:
         else:
             self.logger.warning(self.translate("Problem parsing timezone '{tz}' - Using UTC").format(tz=tz))
             self._timezone = pytz.timezone("UTC")
+        self.logger.info(f"self.set_tz: -> self._timezone={self._timezone}")
+        self.logger.info(f"self.set_tz: -> self._tzinfo={self._tzinfo}")
         return
 
 
     def set_tzinfo(self, tzinfo):
         """
         Set the timezone info
+
+        :param tzinfo:
         """
         self._tzinfo = tzinfo
         return
@@ -168,7 +176,7 @@ class Shtime:
         """
         Returns the the actual local timezone
 
-        :return: Timezone
+        :return: Name of the timezone (like 'Europe/Berlin', or 'UTC' if not set)
         :rtype: str
         """
 
@@ -190,7 +198,7 @@ class Shtime:
         """
         Returns the name about the actual local timezone (e.g. CET)
 
-        :return: Timezone info
+        :return: timezone string (like: 'CET')
         :rtype: str
         """
 
@@ -201,7 +209,7 @@ class Shtime:
         """
         Returns the name for Standard Time in the local timezone (e.g. CET)
 
-        :return: Timezone info
+        :return: Timezone info (like: 'CET')
         :rtype: str
         """
 
@@ -213,7 +221,7 @@ class Shtime:
         """
         Returns the name for Daylight Saving Time (DST) in the local timezone (e.g. CEST)
 
-        :return: Timezone info
+        :return: Timezone info (like: 'CEST')
         :rtype: str
         """
 

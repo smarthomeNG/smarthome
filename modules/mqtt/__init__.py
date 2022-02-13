@@ -169,7 +169,7 @@ class Mqtt(Module):
             # return
             pass
 
- 
+
     def start(self):
         """
         This method starts the mqtt module
@@ -530,7 +530,7 @@ class Mqtt(Module):
 
         with self._subscribed_topics_lock:
             subscibed_topics = list(self._subscribed_topics.keys())
-    
+
         # look for subscriptions to the received topic
         subscription_found = False
         for topic in subscibed_topics:
@@ -725,7 +725,7 @@ class Mqtt(Module):
             source_type = 'Plugin'
         elif split[-3] == 'plugins':
             source_type = 'Plugin'
-        elif split[-3] == 'logics':
+        elif split[-2] == 'logics':
             source_type = 'Logic'
         else:
             source_type = 'Unknown'

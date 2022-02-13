@@ -6,6 +6,17 @@
 {% set update_interval = 0 %}
 
 <!--
+	Additional styles go into this block
+-->
+{% block pluginstyles %}
+<style>
+  table th.value {
+    width: 100px;
+  }
+</style>
+{% endblock pluginstyles %}
+
+<!--
 	Additional script tag for plugin specific javascript code go into this block
 -->
 {% block pluginscripts %}
@@ -14,10 +25,9 @@
 		if (dataSet === 'devices_info' || dataSet === null) {
 			var objResponse = JSON.parse(response);
 			myProto = document.getElementById(dataSet);
-			for (var device in objResponse) {
+			for (item in objResponse) {
 				/*
-				shngInsertText (device+'_source', objResponse[device]['source']);
-				shngInsertText (device+'_powerState', objResponse[device]['powerState']);
+				shngInsertText (item+'_value', objResponse[item]['value'], 'maintable');
 				*/
 			}
 		}
@@ -29,22 +39,23 @@
 -->
 <script>
     $(document).ready( function () {
-		try 
-			{	
-			$('#<table_id>').DataTable( {
-				"paging": false,
-				fixedHeader: true
-				} );
-			$('#maintable').DataTable( {
-				"paging": false,
-				fixedHeader: true
-				} );				
-			}
-		catch (e) 
-			{
-			console.log("Datatable JS not loaded, showing standard table without reorder option")
-			}					
-        });
+			/*
+			loading defaults from /modules/http/webif/gstatic/datatables/datatables.defaults.js
+			You can copy that file, put it in your plugin directory, rename the "bind" function and
+			trigger that function here instead of datatables_defaults if you want to change the behaviour.
+			Of course you can also overwrite defaults by putting the option declarations in {} below.
+			*/
+			$(window).trigger('datatables_defaults');
+			try
+				{
+					$('#maintable').DataTable( {} ); // put options into {} if needed
+					$('#<table_id>').DataTable( {} ); // delete or change name
+				}
+			catch (e)
+				{
+					console.log("Datatable JS not loaded, showing standard table without reorder option " + e)
+				}
+    });
 </script>
 {% endblock pluginscripts %}
 
@@ -113,30 +124,21 @@
 {% block bodytab1 %}
 <div class="container-fluid m-2">
 	{{ _('Hier kommt der Inhalt des Webinterfaces hin.') }}
-	<!--
-	Example table using datatables JS. Always use well-formed table formatting like
-	<table>
-		<thead>
-			<tr> <th></th><th></th>...</tr>
-		</thead>
-		<tbody>
-		  <tr> <td></td><td></td>...</tr>
-		</tbody>
-	</table>
-	-->
-	<table id="maintable" class="table table-striped table-hover pluginList">
+
+	<!-- set id accordingly -->
+	<table id="maintable" class="table table-striped table-hover pluginList display">
 		<thead>
 			<tr>
 			  <th>{{ _('Item') }}</th>
-			  <th>{{ _('Wert') }}</th>
+			  <th class="value">{{ _('Wert') }}</th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for item in p.get_items() %}
 			  {% if p.has_iattr(item.conf, '<plugin_attribute>') %}
 				<tr>
-				  <td class="py-1">{{ item._path }}</td>
-				  <td class="py-1">{{ item() }}</td>
+				  <td class="py-1" id="{{ item._path }}">{{ item._path }}</td>
+				  <td class="py-1" id="{{ item._path }}_value">{{ item() }}</td>
 				</tr>
 			  {% endif %}
 			{% endfor %}

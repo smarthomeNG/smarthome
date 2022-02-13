@@ -101,8 +101,8 @@ zusätzliche Funktionen in eval Ausdrücken
 
 Bereits SmartHomeNG v1.3 wird das Python Modul `math <https://docs.python.org/3.4/library/math.html>`__
 bereitgestellt und es können entsprechende Funktionen genutzt werden. Außerdem sind seit SmarthomeNG v1.7 die
-:doc:`Items-API </logiken/objekteundmethoden_item_methoden>` als **items** (z.B. items.return_item('bla')) und das
-:doc:`shtime Modul </logiken/objekteundmethoden_feiertage_datum_zeit>` mittels **shtime** (z.B. shtime.now()) verfügbar.
+:doc:`Items-API </referenz/logiken/logiken_items>` als **items** (z.B. items.return_item('bla')) und das
+:doc:`shtime Modul </referenz/smarthomeng/feiertage_datum_zeit>` mittels **shtime** (z.B. shtime.now()) verfügbar.
 
 Beispiel:
 
@@ -127,7 +127,7 @@ auf andere Items beziehen.
 
 .. tip::
 
-   Im Abschnitt **Logiken** ist auf der Seite :doc:`Feiertage, Daten und Zeiten </logiken/objekteundmethoden_feiertage_datum_zeit>`
+   Im Abschnitt **Logiken** ist auf der Seite :doc:`Feiertage, Daten und Zeiten </referenz/smarthomeng/feiertage_datum_zeit>`
    beschrieben, welche Feiertags- und Datums-Funktionen in Logiken benutzt werden können. Diese Funktionen können auch
    in eval Attributen genutzt werden können.
 
@@ -255,3 +255,35 @@ den Ausdruck **sh..self.prev_value()** zugegriffen werden.
    **None** bewirkt, dass das Item unverändert bleibt, und somit auch keine Trigger ausgelöst werden.
 
    Diese Art, per ``None`` Werte nicht zuzuweisen, funktioniert **nur** bei ``eval``; bei anderen Attributen wie z.B. ``cycle`` kann dies nicht genutzt werden.
+
+
+Abfrage des Auslösers eines **eval** Ausdrucks
+----------------------------------------------
+
+Zu dem Zeitpunkt, wo ein **eval** Ausdruck ausgeführt wird, bezieht sich das Property ``last_update_by`` **nicht** auf
+die aktuellste Auslösung des Items, sondern auf das letzte Update davor. Möchte man nun aber abfragen, durch welches
+Item, Plugin oder durch welche Logik die Ausführung des eval Ausdrucks angestoßen wurde,
+muss das seit SmartHomeNG 1.9.1 implementierte Property ``last_trigger_by`` genutzt werden.
+
+Dabei findet folgender zeitlicher Ablauf statt:
+
+    - Aktualisieren des Itemwerts oder Veränderung eines Triggeritems (eval_trigger)
+    - Setzen und Aktualisieren der ``last_trigger_by`` und dazu passenden Properties
+    - Ausführen des eval Ausdrucks
+    - Ist das Ergebnis des eval Ausdrucks **None**, passiert nichts weiter. Das Item wird nicht aktualisiert,
+      ``last_update_by`` ändert sich ebenfalls nicht.
+    - Ist das Ergebnis des eval Ausdrucks ein erlaubter Wert, wird dieser ins Item geschrieben.
+      ``last_update_by`` und/oder ``last_change_by`` werden entsprechend aktualisiert.
+
+Details zu den verschiedenen Abfragemöglichkeiten sind unter :doc:`Properties </referenz/items/properties>` zu finden.
+
+.. attention::
+
+   Möchte man in einem **eval** Ausdruck abfragen, wodurch der Ausdruck ausgelöst wurde, muss **property.last_trigger_by**
+   genutzt werden. Das **property.last_update_by** wird erst danach (oder bei None gar nicht) aktualisiert.
+
+.. tip::
+
+  War die Auflösung eines **eval** Ausdrucks nicht erfolgreich (weil z.B. die Syntax falsch ist oder ein Item nicht
+  gefunden werden konnte), wird beim ``last_trigger_by`` den Caller- und Source-Angaben noch ein None (als "dest") hinten
+  angehängt. Der Wert beinhaltet somit ``<caller>:<source>:None``.

@@ -22,12 +22,12 @@
 """
 This script assembles a complete list of requirements for the SmartHomeNG core and all plugins.
 
-The list is not tested for correctness nor checked for contrary 
-requirements. 
+The list is not tested for correctness nor checked for contrary
+requirements.
 
 The procedure is as following:
 1) walks the plugins subdirectory and collect all files with requirements
-2) read the requirements for the core 
+2) read the requirements for the core
 3) read all files with requirements and add them with source of requirement to a dict
 4) write it all to a file all.txt in requirements directory
 
@@ -50,6 +50,13 @@ if "-debug_tox" in arguments:
 
 import lib.shpypi as shpypi
 
+import bin.shngversion
+VERSION = bin.shngversion.get_shng_version()
+
+from lib.shpypi import Shpypi
+shpypi = Shpypi.get_instance()
+if shpypi is None:
+    shpypi = Shpypi(base=sh_basedir, version=VERSION, for_tests=True)
 
 # ==========================================================================
 
@@ -67,16 +74,16 @@ if not os.path.exists(os.path.join(sh_basedir, 'requirements')):
     print ("Directory <shng-root>/requirements not found!")
     exit(1)
 
-req_files = shpypi.Requirements_files()
+#req_files = shpypi.req_files('1.9.0.1', for_tests=True)
 
 # req_files.create_requirementsfile('core')
 # print("File 'requirements" + os.sep + "core.txt' created.")
 # req_files.create_requirementsfile('modules')
 # print("File 'requirements" + os.sep + "modules.txt' created.")
-fn = req_files.create_requirementsfile('base')
+fn = shpypi.req_files.create_requirementsfile('base')
 print("File {} created.".format(fn))
 
 # req_files.create_requirementsfile('plugins')
 # print("File 'requirements" + os.sep + "plugins.txt' created.")
-fn = req_files.create_requirementsfile('all')
+fn = shpypi.req_files.create_requirementsfile('all')
 print("File {} created.".format(fn))

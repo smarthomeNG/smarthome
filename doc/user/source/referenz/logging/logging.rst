@@ -6,9 +6,9 @@
 .. role:: redsup
 
 
-=====================
-Logging :redsup:`Neu`
-=====================
+=======
+Logging
+=======
 
 SmartHomeNG nutzt das Logging-Modul von Python. In den folgenden Abschnitten sind Informationen zum Logging
 in SmartHomeNG zu finden.
@@ -26,5 +26,7 @@ Die vollständige zum Python Logging Modul ist unter
    logging_handler
    logging_formatter
    logging_filter
+   logging_textformatierung
+
 
 

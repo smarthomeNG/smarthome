@@ -196,6 +196,9 @@ class SmartHome():
         self._logger_main = logging.getLogger(__name__)
         self.logs = lib.log.Logs(self)   # initialize object for memory logs
 
+        # keep for checking on restart command
+        self._mode = MODE
+
         self.initialize_vars()
         self.initialize_dir_vars()
         self.create_directories()
@@ -261,9 +264,11 @@ class SmartHome():
 
         #############################################################
         # Setting (local) tz if set in smarthome.yaml
+        # (to ensure propper logging)
         if hasattr(self, '_tz'):
             self.shtime.set_tz(self._tz)
-            del(self._tz)
+            # self._tz is deleted later (work in progress)
+            #del(self._tz)
 
         #############################################################
         # test if needed Python packages are installed
@@ -284,6 +289,12 @@ class SmartHome():
         self.init_logging(self._log_conf_basename, MODE)
 
         self.shng_status = {'code': 1, 'text': 'Initalizing: Logging initalized'}
+
+        if hasattr(self, '_tz'):
+            # set _tz again (now with logging enabled),
+            # so that shtime.set_tz can produce log output
+            self.shtime.set_tz(self._tz)
+            del(self._tz)
 
         #############################################################
         # Fork process and write pidfile
@@ -510,7 +521,17 @@ class SmartHome():
             conf_basename = self._log_conf_basename
         conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
 
-        self.logs.configure_logging(conf_dict)
+        if not self.logs.configure_logging(conf_dict):
+            #conf_basename = self._log_conf_basename + YAML_FILE + '.default'
+            print(f"       Trying default logging configuration from:")
+            print(f"       {conf_basename + YAML_FILE + '.default'}")
+            print()
+            conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE + '.default', True)
+            if not self.logs.configure_logging(conf_dict, 'logging.yaml.default'):
+                print("ABORTING")
+                print()
+                exit(1)
+            print("Starting with default logging configuration")
 
         if MODE == 'interactive':  # remove default stream handler
             logging.getLogger().disabled = True
@@ -569,7 +590,7 @@ class SmartHome():
         #############################################################
         # Init and import user-functions
         #############################################################
-        uf.init_lib(self.getBaseDir())
+        uf.init_lib(self.get_basedir())
 
         #############################################################
         # Init Item-Wrapper
@@ -697,7 +718,13 @@ class SmartHome():
     def restart(self, source=''):
         """
         This method is used to restart the python interpreter and SmartHomeNG
+
+        If SmartHomeNG was started in one of the foreground modes (-f, -i, -d),
+        just quit and let the user restart manually.
         """
+        if self._mode in ['foreground', 'debug', 'interactive']:
+            self.stop()
+
         if self.shng_status['code'] == 30:
             self._logger.warning("Another RESTART is issued, while SmartHomeNG is restarting. Reason: "+source)
         else:
@@ -1200,4 +1227,3 @@ class SmartHome():
 
         self._deprecated_warning('Shtime-API')
         return self.shtime.runtime()
-

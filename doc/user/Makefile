@@ -50,6 +50,7 @@ html:
 	@test ! -L "source/plugins" && echo "creating a link to the plugin directory" && ln -s ../../../plugins source/plugins || echo "link to plugins directory already exists"
 	@test ! -L "source/modules" && echo "creating a link to the module directory" && ln -s ../../../modules source/modules || echo "link to modules directory already exists"
 	@test ! -L "source/dev" && echo "creating a link to the dev directory" && ln -s ../../../dev source/dev || echo "link to dev directory already exists"
+	@test ! -L "source/logics" && echo "creating a link to the logics directory" && ln -s ../../../logics source/logics || echo "link to logics directory already exists"
 	@echo
 	@python3 -V
 	@python3 ../build_plugin_config_files.py de
@@ -60,6 +61,7 @@ html:
 	@test -L "source/dev" && echo "removing link to the dev directory" && unlink source/dev
 	@test -L "source/modules" && echo "removing link to the modules directory" && unlink source/modules
 	@test -L "source/plugins" && echo "removing link to the plugin directory" && unlink source/plugins
+	@test -L "source/logics" && echo "removing link to the logics directory" && unlink source/logics
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
@@ -71,6 +73,7 @@ pdf:
 	@test ! -L "source/plugins" && echo "creating a link to the plugin directory" && ln -s ../../../plugins source/plugins || echo "link to plugins directory already exists"
 	@test ! -L "source/modules" && echo "creating a link to the module directory" && ln -s ../../../modules source/modules || echo "link to modules directory already exists"
 	@test ! -L "source/dev" && echo "creating a link to the dev directory" && ln -s ../../../dev source/dev || echo "link to dev directory already exists"
+	@test ! -L "source/logics" && echo "creating a link to the logics directory" && ln -s ../../../logics source/logics || echo "link to logics directory already exists"
 	@echo
 	@python3 -V
 	@python3 ../build_plugin_config_files.py de
@@ -81,6 +84,7 @@ pdf:
 	@test -L "source/dev" && echo "removing link to the dev directory" && unlink source/dev
 	@test -L "source/modules" && echo "removing link to the modules directory" && unlink source/modules
 	@test -L "source/plugins" && echo "removing link to the plugin directory" && unlink source/plugins
+	@test -L "source/logics" && echo "removing link to the logics directory" && unlink source/logics
 	@echo
 	@echo "Build finished. The PDF files are in build/pdf."
 

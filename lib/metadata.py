@@ -25,6 +25,7 @@ import sys
 import collections
 
 from lib.utils import Utils
+from lib.utils import Version
 import lib.shyaml as shyaml
 from lib.constants import (YAML_FILE, FOO, META_DATA_TYPES, META_DATA_DEFAULTS)
 
@@ -169,6 +170,15 @@ class Metadata():
 
             # build dict for checking of item attributes and their values
             if self.itemprefixdefinitions is not None:
+                # dummy 'my_' prefix for user's attributes for logics, etc. (add only, if list is still empty)
+                if  all_itemprefixdefinitions == {}:
+                    prefix_name = 'my_'
+                    all_itemprefixdefinitions[prefix_name] = {'type': 'foo', 'description': {'de': 'Attribute für verschiedene Tests', 'en': 'Attributes for various tests'}, 'listtype': ['foo'], 'listlen': 0, '_addon_name': 'priv_develop', '_addon_type': 'plugin', '_name': 'my_', '_type': 'prefix'}
+                    all_itemprefixdefinitions[prefix_name]['_addon_name'] = 'lib_metadata'
+                    all_itemprefixdefinitions[prefix_name]['_addon_type'] = 'plugin'
+                    all_itemprefixdefinitions[prefix_name]['_name'] = prefix_name
+                    all_itemprefixdefinitions[prefix_name]['_type'] = 'prefix'
+                # add all prefixes loaded from metadate of the plugin
                 for prefix_name in self.itemprefixdefinitions:
                     all_itemprefixdefinitions[prefix_name] = self.itemprefixdefinitions[prefix_name]
                     all_itemprefixdefinitions[prefix_name]['_addon_name'] = self._addon_name
@@ -410,37 +420,20 @@ class Metadata():
         :return: True if the SmartHomeNG version is in the supported range
         :rtype: bool
         """
-        l = str(self._sh.version).split('.')
-        shng_version = l[0]+'.'+l[1]
-        if len(l) > 2:
-            shng_version += '.'+l[2]
-        l = str(self.get_string('sh_minversion')).split('.')
-        min_shngversion = l[0]
-        if len(l) > 1:
-            min_shngversion += '.'+l[1]
-        if len(l) > 2:
-            min_shngversion += '.'+l[2]
-
-        l = str(self.get_string('sh_maxversion')).split('.')
-        max_shngversion = l[0]
-        if len(l) > 1:
-            max_shngversion += '.'+l[1]
-        if len(l) > 2:
-            max_shngversion += '.'+l[2]
-
-        mod_version = self.get_string('version')
+        shng_version = Version.format(self._sh.version.split('-')[0])
+        min_shngversion = Version.format(str(self.get_string('sh_minversion')))
+        max_shngversion = Version.format(str(self.get_string('sh_maxversion')))
+        mod_version = Version.format(self.get_string('version'))
 
         if min_shngversion != '':
-            #r = self._compare_versions(min_shngversion, shng_version, '>', (min_shngversion > shng_version))
             # if min_shngversion > shng_version:
-            if self._compare_versions(min_shngversion, shng_version, '>', (min_shngversion > shng_version)):
-                logger.error("{0} '{1}': The version {3} of SmartHomeNG is too old for this {0}. It requires at least version v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, min_shngversion, shng_version))
+            if Version.compare(min_shngversion, shng_version, '>'):
+                logger.error(f"{self._addon_type} '{self._addon_name}' {mod_version}: SmartHomeNG {shng_version} is too old for this {self._addon_type}. It requires at least version {Version.format(min_shngversion)}. The {self._addon_type} was not loaded.")
                 return False
         if max_shngversion != '':
-            #self._compare_versions(max_shngversion, shng_version, '<', (max_shngversion < shng_version))
             # if max_shngversion < shng_version:
-            if self._compare_versions(max_shngversion, shng_version, '<', (max_shngversion < shng_version)):
-                logger.error("{0} '{1}': The version {3} of SmartHomeNG is too new for this {0}. It requires a version up to v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, max_shngversion, shng_version))
+            if Version.compare(max_shngversion, shng_version, '<'):
+                logger.error(f"{self._addon_type} '{self._addon_name}' {mod_version}: SmartHomeNG {shng_version} is too new for this {self._addon_type}. It requires a version up to {Version.format(max_shngversion)}. The {self._addon_type} was not loaded.")
                 return False
         return True
 
@@ -453,29 +446,31 @@ class Metadata():
         :rtype: bool
         """
         l = sys.version_info
-        py_version = str(l[0])+'.'+str(l[1])
+        py_version = Version.format(str(l[0])+'.'+str(l[1])+'.'+str(l[2]))
+        min_pyversion = Version.format(str(self.get_string('py_minversion')))
+        max = str(self.get_string('py_maxversion'))
+        if len(max.split('.')) == 2:
+            # if given max version has only two parts, make it the max for that version: 3.8 -> 3.8.999
+            max += '.999'
+        max_pyversion = Version.format(str(max))
+        mod_version = Version.format(self.get_string('version'))
 
-        l = str(self.get_string('py_minversion')).split('.')
-        min_pyversion = l[0]
-        if len(l) > 1:
-            min_pyversion += '.'+l[1]
-        l = str(self.get_string('py_maxversion')).split('.')
-        max_pyversion = l[0]
-        if len(l) > 1:
-            max_pyversion += '.'+l[1]
-        mod_version = self.get_string('version')
+        #if min_pyversion != '' or max_pyversion != '':
+        #    logger.notice(f"{self._addon_type} '{self._addon_name}' {mod_version}: Python Version: {py_version}, min: {min_pyversion}, max: {max_pyversion}")
 
         if min_pyversion != '':
             #self._compare_versions(min_pyversion, py_version, '>', (min_pyversion > py_version))
             # if min_pyversion > py_version:
-            if self._compare_versions(min_pyversion, py_version, '>', (min_pyversion > py_version)):
-                logger.error("{0} '{1}': The Python version {3} is too old for this {0}. It requires at least version v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, min_pyversion, py_version))
+            #if self._compare_versions(min_pyversion, py_version, '>', (min_pyversion > py_version)):
+            if Version.compare(min_pyversion, py_version, '>'):
+                logger.error(f"{self._addon_type} '{self._addon_name}' {mod_version}: The Python version {py_version} is too old for this {self._addon_type}. It requires at least version {min_pyversion}. The {self._addon_type} was not loaded.")
                 return False
         if max_pyversion != '':
             #self._compare_versions(max_pyversion, py_version, '<', (max_pyversion < py_version))
             # if max_pyversion < py_version:
-            if self._compare_versions(max_pyversion, py_version, '<', (max_pyversion < py_version)):
-                logger.error("{0} '{1}': The Python version {3} is too new for this {0}. It requires a version up to v{2}. The {0} was not loaded.".format(self._addon_type, self._addon_name, max_pyversion, py_version))
+            #if self._compare_versions(max_pyversion, py_version, '<', (max_pyversion < py_version)):
+            if Version.compare(max_pyversion, py_version, '<'):
+                logger.error(f"{self._addon_type} '{self._addon_name}' {mod_version}: The Python version {py_version} is too new for this {self._addon_type}. It requires a version up to {max_pyversion}. The {self._addon_type} was not loaded.")
                 return False
         return True
 

@@ -562,6 +562,113 @@ class Utils(object):
             p.wait()
         return (str(result, encoding='utf-8', errors='strict'), str(err, encoding='utf-8', errors='strict'))
 
+#--------------------------------------------------------------------------------------------
+
+class Version():
+
+    @staticmethod
+    def check_list(versl):
+
+        while len(versl) < 4:
+            if isinstance(versl[0], str):
+                versl.append('0')
+            else:
+                versl.append(0)
+        while len(versl) > 4:
+            del versl[-1]
+        return versl
+
+    @classmethod
+    def to_list(cls, vers):
+        """
+        Split version number to list and get rid of non-numeric parts
+
+        :param vers:
+
+        :return: version as list
+        :rtype: list
+        """
+        if len(vers) == 0:
+            vers = '0'
+        if vers[0].lower() == 'v':
+            vers = vers[1:]
+
+        # create list with [major,minor,revision,build]
+        vsplit = vers.split('.')
+        vsplit = cls.check_list(vsplit)
+
+        # get rid of non numeric parts
+        vlist = []
+        build = 0
+        if vsplit == '':
+            return ''
+        for v in vsplit:
+            if v[-1].isalpha():
+                build += ord(v[-1].lower()) - 96
+                v = v[:-1]
+            vi = 0
+            try:
+                vi = int(v)
+            except:
+                pass
+            vlist.append(vi)
+        vlist[3] += build
+        return vlist
+
+    @classmethod
+    def to_string(cls, versl):
+
+        if versl == [0, 0, 0, 0]:
+            return ''
+        import copy
+        versl2 = copy.deepcopy(versl)
+        cls.check_list(versl2)
+        if versl2 == '':
+            return ''
+
+        if versl2[3] == 0:
+            del versl2[3]
+        versls = [str(int) for int in versl2]
+        vers = ".".join(versls)
+
+        return 'v' + vers
+
+    @classmethod
+    def format(cls, vers):
+
+        return cls.to_string(cls.to_list(str(vers)))
+
+    @classmethod
+    def compare(cls, v1, v2, operator):
+        """
+        Compare two version numbers and return if the condition is met
+
+        :param v1:
+        :param v2:
+        :param operator:
+        :type v1: str or list of int
+        :type v2: str or list of int
+        :type operator: str
+
+        :return: true if condition is met
+        :rtype: bool
+        """
+        if isinstance(v1, str):
+            v1 = cls.to_list(v1)
+        if isinstance(v2, str):
+            v2 = cls.to_list(v2)
+
+        result = False
+        if v1 == v2 and operator in ['>=', '==', '<=']:
+            result = True
+        if v1 < v2 and operator in ['<', '<=']:
+            result = True
+        if v1 > v2 and operator in ['>', '>=']:
+            result = True
+        # logger.warning(f"_compare_versions: v1={v1}, v2={v2}, operator='{operator}', result={result}")
+        return result
+
+#--------------------------------------------------------------------------------------------
 
 def get_python_version():
     PYTHON_VERSION = str(sys.version_info[0]) + '.' + str(sys.version_info[1]) + '.' + str(sys.version_info[2]) + ' ' + str(sys.version_info[3])

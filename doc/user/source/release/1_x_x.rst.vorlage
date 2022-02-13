@@ -1,5 +1,5 @@
 ==========================
-Release 1.x - tt. mmm 2021
+Release 1.x - tt. mmm 2022
 ==========================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
@@ -17,7 +17,7 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 Überblick
 =========
 
-Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.8.x sind im
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.9.x sind im
 folgenden in diesen Release Notes beschrieben.
 
 
@@ -77,7 +77,10 @@ Updates in the CORE
 
   * ...
 
-* lib....:
+* Libs:
+
+  * lib. ...:
+
 * Modules:
 
   * ...:
@@ -85,6 +88,10 @@ Updates in the CORE
     * ...
 
 * Plugins:
+
+  * ...
+
+* tests:
 
   * ...
 
@@ -118,24 +125,11 @@ in the next release. User of these plugins should switch to corresponding succee
 
 * System Plugins
 
-  * sqlite - switch to the **database** plugin
+  * backend - use the administration interface instead
   * sqlite_visu2_8 - switch to the **database** plugin
-
-* Gateway Plugins
-
-  * tellstick - classic Plugin, not used according to survey in knx-user-forum
-
-* Interface Plugins
-
-  * netio230b - classic plugin, not used according to survey in knx-user-forum
-  * smawb - classic plugin, not used according to survey in knx-user-forum
 
 * Web Plugins
 
-  * alexa - switch to the **alexa4p3** plugin
-  * boxcar - classic Plugin, not used according to survey in knx-user-forum
-  * mail - switch to the **mailsend** and **mailrcv** plugin
-  * openenergymonitor - classic plugin, not used according to survey in knx-user-forum
   * wunderground - the free API is not provided anymore by Wunderground
 
 
@@ -152,13 +146,11 @@ The following plugins are marked as *deprecated* with SmartHomeNG v1.7, because 
 * Interface Plugins
 
   * easymeter
-  * netio230b
   * smawb
   * vr100
 
 * Web Plugins
 
-  * boxcar
   * nma
 
 Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecated*, because the new mqtt
@@ -170,7 +162,7 @@ Retired Plugins
 
 The following plugins have been retired. They had been deprecated in one of the preceding releases of SmartHomeNG.
 They have been removed from the plugins repository, but they can still be found on github. Now they reside in
-the plugin_archive repository from where they can be downloaded if they are still needed.
+the **plugin_archive** repository from where they can be downloaded if they are still needed.
 
 * ...
 

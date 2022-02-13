@@ -4,8 +4,8 @@
 .. role:: redsup
 .. role:: bluesup
 
-Module websocket :redsup:`new`
-==============================
+Module websocket
+================
 
 Dieses Modul implementiert die Möglichkeit mit SmartHomeNG über das Websocket Protokoll zu kommunizieren.
 

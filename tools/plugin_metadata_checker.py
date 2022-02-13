@@ -32,7 +32,7 @@ The result is printed to stdout
 import os
 import argparse
 
-VERSION = '1.7.6'
+VERSION = '1.7.8'
 
 print('')
 print(os.path.basename(__file__) + ' v' + VERSION + ' - Checks the care status of plugin metadata')
@@ -600,6 +600,13 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
         print("Check metadata of {} plugin '{}'".format(plg_type, plg))
         print()
 
+    # Checking plugin name
+    maxlen = 12
+    if len(plg) > maxlen:
+        disp_warning(f"A plugin name should not be longer than {maxlen} characters.", f"The plugin name '{plg}' is {len(plg)} characters long")
+    if plg != plg.lower():
+        disp_error(f"Invalid plugin name '{plg}'.", f"Plugin names have to be lower case. Use '{plg.lower()}' instead")
+
     # Checking global metadata
     if metadata.get('plugin', None) == None:
         disp_error("No global metadata defined", "Make sure to create a section 'plugin' and fill it with the necessary entries", "Take a look at https://www.smarthomeng.de/developer/development_plugin/plugin_metadata.html")
@@ -621,8 +628,8 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
         else:
             if metadata['plugin'].get('state', None) == None:
                 disp_error('No development state given for the plugin', "Add 'state:' to the plugin section and set it to one of the following values ['develop', 'ready', 'qa-passed']", "The state'qa-passed' should only be set by the shNG core team")
-            elif not metadata['plugin'].get('state', None) in ['qa-passed', 'ready', 'develop', '-']:
-                disp_error('An invalid development state is given for the plugin', "Set'state:' to one of the followind valid values ['develop', 'ready', 'qa-passed']", "The state'qa-passed' should only be set by the shNG core team")
+            elif not metadata['plugin'].get('state', None) in ['qa-passed', 'ready', 'develop', 'deprecated', '-']:
+                disp_error('An invalid development state is given for the plugin', "Set'state:' to one of the followind valid values ['develop', 'ready', 'qa-passed', 'deprecated']", "The state'qa-passed' should only be set by the shNG core team")
 
             if metadata['plugin'].get('multi_instance', None) == None:
                 disp_warning('It is not documented if wether the plugin is multi-instance capable or not', "Add 'multi_instance:' to the plugin section")
@@ -673,7 +680,7 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
                     if not is_dict(par_dict):
                         disp_error("Definition of parameter '{}' is not a dict".format(par), '')
                     else:
-                        if par_dict.get('mandatory', None) != None and par_dict.get('default', None) != None:
+                        if par_dict.get('mandatory', False) != False and par_dict.get('default', None) != None:
                             disp_error("parameter '{}': mandatory and default cannot be used together".format(par), "If mandatory and a default value are specified togeather, mandatory has no effect, since a value for the parameter is already specified (the default value).")
                         test_description('parameter', par, par_dict.get('description', None))
 
@@ -684,7 +691,7 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
                     if not is_dict(par_dict):
                         disp_error("Definition of item_attribute '{}' is not a dict".format(par), '')
                     else:
-                        if par_dict.get('mandatory', None) != None and par_dict.get('default', None) != None:
+                        if par_dict.get('mandatory', False) != False and par_dict.get('default', None) != None:
                             disp_error("item '{}': mandatory and default cannot be used together".format(par), "If mandatory and a default value are specified togeather, mandatory has no effect, since a value for the parameter is already specified (the default value).")
                         test_description('item attribute', par, par_dict.get('description', None))
 

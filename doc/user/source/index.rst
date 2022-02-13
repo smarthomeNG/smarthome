@@ -52,9 +52,9 @@ oder im `Chat auf gitter.im <https://gitter.im/smarthomeNG/smarthome>`_ .
    beispiele/beispiele.rst
    tools/tools.rst
    fehlersuche
-   faq
-   referenz/referenz
    entwicklung/entwicklung
+   referenz/referenz
+   faq
    release/release
    genindex
    impressum

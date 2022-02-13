@@ -15,7 +15,7 @@ Hier finden sich einige Beispiele für die Anwendung von **eval** und **eval_tri
 Bearbeiten von Werten
 ---------------------
 
-Wird einem Item ein neuer Wert zugewiesen, wird dieser erst einmal als **value** zwischengespeichert. 
+Wird einem Item ein neuer Wert zugewiesen, wird dieser erst einmal als **value** zwischengespeichert.
 Ist ein **eval** vorhanden, wird dies erst ausgeführt, bevor dem Item der Wert final zugewiesen wird.
 Das kann man sich für Nachbearbeitungen zu nutze machen, bspw. wenn der zugewiesene Wert zu viele
 Nachkommastellen hat. In folgenden Beispiel wird auf eine Nachkommastelle gerundet.
@@ -30,7 +30,7 @@ Nachkommastellen hat. In folgenden Beispiel wird auf eine Nachkommastelle gerund
 Wertermittung durch Datenbankabfrage
 ------------------------------------
 
-Mit Hilfe eines **eval** kann auch eine Datenbankabfrage (Plugin **database**) realisiert werden. 
+Mit Hilfe eines **eval** kann auch eine Datenbankabfrage (Plugin **database**) realisiert werden.
 Im folgenden Beispiel wird täglich um 0:01 Uhr das **eval** ausgeführt und der Wert ermittelt.
 
 .. code-block:: yaml
@@ -213,13 +213,13 @@ Das bool Item ist True, wenn der Wert des passenden num-Items > 0 ansonsten Fals
 Basierend auf dem Wert eines numerischen andere Items setzen
 ------------------------------------------------------------
 
-Bei dem folgenden Beispiel werden basierend auf dem Wert des Items "Sollzustand" die 
+Bei dem folgenden Beispiel werden basierend auf dem Wert des Items "Sollzustand" die
 Items "FolgeA", "FolgeB", "FolgeC" und "FolgeD" gesetzt.
-Änderungen des Items "Sollzustand" löst für die Folgeitems den **eval_trigger** aus 
-und übergibt seinen Wert als "value" and diese. Im **eval** wird nun die Bedingung 
+Änderungen des Items "Sollzustand" löst für die Folgeitems den **eval_trigger** aus
+und übergibt seinen Wert als "value" and diese. Im **eval** wird nun die Bedingung
 basierend auf "value" geprüft, und das Item entsprechend gesetzt.
-Für das Item "FolgeA" bedeutet es konkret: Ändert sich das Wert von "Sollzustand", 
-wird die Neuberechnung des Items "FolgeA" angestoßen und der Wert von "Sollzustand" 
+Für das Item "FolgeA" bedeutet es konkret: Ändert sich das Wert von "Sollzustand",
+wird die Neuberechnung des Items "FolgeA" angestoßen und der Wert von "Sollzustand"
 wird als "value" mit übergeben. Das eval ergibt True, wenn "value" einer 2 entspricht, ansonsten False.
 
 .. code-block:: yaml
@@ -254,7 +254,7 @@ Berechnung einer Zeitdauer in Sekunden von beliebigen datetime bis jetzt
 In diesem Beispiel wird die Dauer eines **autotimer** mit einem **eval** aus
 einem **datetime** Wertes eines Hilfsitem berechnet.
 Die Berechnung des Item "laufzeit_autotimer" wird durch Änderungen im Item "enddatetime_autotimer"
-getriggert und berechnet die Zeitdauer in Sekunden zwischen dem Wert (datetime im ISO-format) 
+getriggert und berechnet die Zeitdauer in Sekunden zwischen dem Wert (datetime im ISO-format)
 des Items "enddatetime_autotimer" und jetzt.
 Dieser errechnete Wert wird dann als Dauer für den **autotimer** verwendet.
 
@@ -280,7 +280,7 @@ Dieser errechnete Wert wird dann als Dauer für den **autotimer** verwendet.
    Ab SmartHomeNG v1.7 gibt es hierfür eine Funktion, die in eval Attributen und Logiken verwendet werden kann:
    **shtime.time_since()** ermöglicht auch die Rückgabe in anderen Einheiten/Formaten als Sekunden.
 
-   Zur Verwendung der Funktionen bitte im Abschnitt Logiken unter :doc:`Feiertage, Daten und Zeiten </logiken/objekteundmethoden_feiertage_datum_zeit>`
+   Zur Verwendung der Funktionen bitte im Abschnitt Referenz/Logiken unter :doc:`Feiertage, Daten und Zeiten </referenz/smarthomeng/feiertage_datum_zeit>`
    nachschauen. Dort sind auch eine Reihe weiterer hilfreicher Funktionen beschrieben.
 
 
@@ -321,7 +321,7 @@ siehe auch `Thread im knx-user-forum <https://knx-user-forum.de/forum/supportfor
 
 - Item das den Bewässerungskreis (Lampe, ...) schaltet. In meinem Fall ist das das Item "Rundbeet"
 - Item über das ich in der Visu die Dauer setze
-- Item das zyklisch die Restdauer berechnet in dem es das Alter des Items zwei Ebenen 
+- Item das zyklisch die Restdauer berechnet in dem es das Alter des Items zwei Ebenen
   höher von dem Wert des Items eine Ebene höher abzieht. Da dies ständig geschieht,
   wird die Häufigkeit der Berechnung über **cycle** (hier alle 10s) gesteuert.
 
@@ -379,7 +379,7 @@ siehe auch `Thread im knx-user-forum <https://knx-user-forum.de/forum/supportfor
 Das folgende Beispiel zeigt, wie aus Rückmeldungen von 5 Präsenzmeldern der Anwesenheitsstatus ermittelt werden.
 Die Präsenzmelder senden immer True, wenn Präsenz da ist (es wird kein False gesendet).
 
-Konkret wird das Item "anwesend" 10 min nachdem der letzte Präsenzmelder ein TRUE gesendet hat. 
+Konkret wird das Item "anwesend" 10 min nachdem der letzte Präsenzmelder ein TRUE gesendet hat.
 Bei jedem **eval_trigger** wird der **autotimer** neu gestartet.
 
 .. code-block:: yaml

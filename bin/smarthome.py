@@ -112,7 +112,7 @@ VERSION = bin.shngversion.get_shng_version()
 from lib.shpypi import Shpypi
 shpypi = Shpypi.get_instance()
 if shpypi is None:
-    shpypi = Shpypi(base=BASE)
+    shpypi = Shpypi(base=BASE, version=VERSION)
 
 core_reqs = shpypi.test_core_requirements(logging=False, pip3_command=args.pip3_command)
 if core_reqs == 0:
@@ -120,8 +120,21 @@ if core_reqs == 0:
     python_bin = sys.executable
     if ' ' in python_bin:
         python_bin = '"'+python_bin+'"'
-    command = python_bin + ' ' + os.path.join(BASE, 'bin', 'smarthome.py')
+    # if we didn't change the working dir (yet), for example...
+    # command = [python_bin] + sys.argv
+    command = [python_bin, os.path.join(BASE, 'bin', 'smarthome.py')]
+
+    # if started with parameter to stay in foreground, don't fork
+    if args.foreground or args.interactive or args.debug:
+        try:
+            # function call doesn't return; this process is replaced by the new one
+            os.execv(python_bin, [python_bin] + sys.argv)
+        except OSError as e:
+            print(f'Restart command {command} failed with error {e}')
+            exit(0)
+
     try:
+        command.append('-r')
         p = subprocess.Popen(command, shell=True)
     except subprocess.SubprocessError as e:
         print("Restart command '{}' failed with error {}".format(command,e))
@@ -199,7 +212,10 @@ if __name__ == '__main__':
 
     lib.backup.make_backup_directories(BASE)
 
-    if args.interactive:
+    if args.restart:
+        time.sleep(5)
+        lib.daemon.kill(PIDFILE, 30)
+    elif args.interactive:
         MODE = 'interactive'
         import code
         import rlcompleter  # noqa
@@ -234,10 +250,6 @@ if __name__ == '__main__':
     elif args.stop:
         lib.daemon.kill(PIDFILE, 30)
         exit(0)
-    elif args.restart:
-        time.sleep(5)
-        lib.daemon.kill(PIDFILE, 30)
-        pass
     elif args.debug:
         MODE = 'debug'
     elif args.quiet:
