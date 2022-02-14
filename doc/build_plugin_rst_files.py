@@ -424,6 +424,7 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
                     plg['sup'] = "`"+plg['name']+" support <"+plg['sup']+">`_"
                 fh.write('   | {plg:<65.65} | {vers:<8.8} | - {desc:<163.163} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=plg['sup'], maint='', test=''))
             else:
+                fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
                 fh.write(f"   | {'':<65.65} | {'':<8.8} | {'.':<165.165} | {'':<15.15} | {'':<15.15} |\n")
 
             leerzeileausgegeben = False

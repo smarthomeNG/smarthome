@@ -89,7 +89,8 @@ New Plugins
 
 For details of the changes of the individual plugins, please refer to the documentation of the respective plugin.
 
-* <Name>: ...
+* zigbee2mqtt: Plugin to control devices which are linked to Zigbee Gateway equipped with Zigbee2MQTT firmware.
+  Communication is handled through the MQTT module of SmartHomeNG.
 
 
 
