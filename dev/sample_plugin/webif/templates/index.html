@@ -134,7 +134,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for item in p.get_items() %}
+			{% for item in items %}
 			  {% if p.has_iattr(item.conf, '<plugin_attribute>') %}
 				<tr>
 				  <td class="py-1" id="{{ item._path }}">{{ item._path }}</td>
