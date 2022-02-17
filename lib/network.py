@@ -611,10 +611,10 @@ class Tcp_client(object):
             return False
 
         self.logger.debug(f'Starting connect to {self._host}:{self._port}')
-        if not self.__connect_thread:
+        if not self.__connect_thread or not self.__connect_thread.is_alive():
             self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name='TCP_Connect')
             self.__connect_thread.daemon = True
-        if not self.__running:
+        if not self.__running or not self.__connect_thread.is_alive():
             self.__connect_thread.start()
         return True
 
@@ -665,6 +665,10 @@ class Tcp_client(object):
             else:
                 self.logger.warning(f'Detected disconnect from {self._host}, send failed.')
             self._is_connected = False
+            try:
+                self._socket.shutdown()
+            except Exception:
+                pass
             if self._disconnected_callback:
                 self._disconnected_callback(self)
             if self._autoreconnect:
@@ -809,14 +813,18 @@ class Tcp_client(object):
                         # If empty peer has closed the connection
                         else:
                             if self.__running:
-
+                                self._is_receiving = False
+                                self._is_connected = False
+                                try:
+                                    self._socket.shutdown()
+                                except Exception:
+                                    pass
                                 if timeout:
                                     # TimeoutError exception caught
                                     self.logger.warning(f'Connection timed out on peer {self._host}, disconnecting.')
                                 else:
                                     # default state, peer closed connection
                                     self.logger.warning(f'Connection closed by peer {self._host}')
-                                self._is_connected = False
                                 waitobj.unwatch(self._socket)
                                 if self._disconnected_callback is not None:
                                     try:
@@ -832,7 +840,6 @@ class Tcp_client(object):
                             else:
                                 # socket shut down by self.close, no error
                                 self.logger.debug('Connection shut down by call to close method')
-                                self._is_receiving = False
                                 return
         except Exception as ex:
             if not self.__running:
