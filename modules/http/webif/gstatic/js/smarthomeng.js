@@ -56,10 +56,7 @@ function shngInsertText (id, text, table_id=null) {
     }
     else {
       try {
-        if ( $.fn.dataTable.isDataTable(table_id) ) {
-          table = $('#' + table_id).DataTable();
-        }
-        table.cell( $('#' + $.escapeSelector(id)) ).data(text) ;
+        $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data(text);
       }
       catch (e) {
         console.log("Problem setting cell with id " + id + " of table " + table_id + ". Error: " + e);
