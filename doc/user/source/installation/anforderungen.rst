@@ -95,11 +95,13 @@ Nachteile:
 ~~~~~~~~~~
 
 -  teurer
+
    z.B.:
+
    - DN2820FYKH0 (Atom CPU)  bei 4GB RAM und 60GB SSD um 250 EUR)
-   - NUC 7, Celeron CPU **ohne** RAM SSD um 150 EUR)
-   - NUC 7, Pentium CPU **ohne** RAM SSD um 200 EUR)
-   - NUC 11, Core i3 CPU **ohne** RAM SSD um 350 EUR)
+   - NUC 7, Celeron CPU **ohne** RAM und SSD um 150 EUR)
+   - NUC 7, Pentium CPU **ohne** RAM und SSD um 200 EUR)
+   - NUC 11, Core i3 CPU **ohne** RAM und SSD um 350 EUR)
 
 
 

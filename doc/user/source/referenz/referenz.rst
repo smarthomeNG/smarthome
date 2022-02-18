@@ -21,11 +21,12 @@ können.
 
    smarthomeng/smarthomeng
    items/items
+   logging/logging
    logiken/logiken
    module/module
-   plugins/plugins
    metadata/metadata
-   logging/logging
+   netzwerk
+   plugins/plugins
    userfunctions/userfunctions
    libraries_plugins_logics
    APIs

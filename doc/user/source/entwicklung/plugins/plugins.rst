@@ -1,21 +1,24 @@
 
 .. index:: Entwicklung; Plugins
 
-.. role:: bluesup
 .. role:: redsup
+.. role:: bluesup
+.. role:: greensup
+.. role:: blacksup
 
 
-=======
-Plugins
-=======
+=====================================
+Plugins :bluesup:`under construction`
+=====================================
 
-Informationen über das Schreiben von Plugins und wie sie in SmartHomeNG eingebunden werden, kann hier
-gefunden werden:
+Informationen über das Schreiben von Plugins und wie sie in SmartHomeNG eingebunden werden, können in diesem
+Abschnitt und den links in der Navigation verlinkten Seiten gefunden werden.
 
 .. toctree::
    :maxdepth: 1
-   :titlesonly:
+   :hidden:
 
+   vorueberlegungen.rst
    /dev/README.md
 
 
@@ -72,7 +75,7 @@ Je nach Umfang und Erfordernissen sind folgende optionale Dateien hinzuzufügen:
 |                          | Soweit möglich, sollten bestehende ``README`` im Rahmen von Aktualisierungen    |
 |                          | in entsprechende ``user_doc`` überführt werden.                                 |
 +--------------------------+---------------------------------------------------------------------------------+
-                              
+
 
 .. important::
 
