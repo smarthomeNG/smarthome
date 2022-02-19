@@ -24,7 +24,7 @@ können frei konfiguriert werden.
 
 .. csv-table:: Port Nutzung durch SmartHomeNG
   :header: "Port", "Prozess", "Modul/Plugin", "Config Parameter", "Verwendung"
-  :widths: 10, 20, 30, 20, 60
+  :widths: 13, 22, 31, 25, 60
 
   "2424",  "SmartHomeNG",     "websocket Modul",     "port",         "ws:// für die smartVISU"
   "2425",  "SmartHomeNG",     "websocket Modul",     "tls_port",     "wss:// für die smartVISU (falls aktiviert)"
@@ -39,12 +39,12 @@ Falls diese Dienste auch auf dem SmartHomeNG System installiert/gestartet sind, 
 geöffenet:
 
 .. csv-table:: Port Nutzung durch weitere Dienste
-  :header: "Port", "Prozess", "Modul/Plugin", "...", "Verwendung"
-  :widths: 15, 20, 35, 20, 60
+  :header: "Port", "Prozess", "Modul/Plugin", "Verwendung"
+  :widths: 13, 22, 32, 85
 
-  "1883",  "Mosquitto",  "MQTT Broker",                "",                    "MQTT über TCP"
-  "4304",  "owserver",   "Daemon for 1-wire control",  "",                    "..."
-  "6600",  "mpd",        "Music Player Daemon",        "",                    "..."
-  "6720",  "knxd",       "KNX Daemon",                 "",                    "Kommunikation zu KNX Interface oder KNX Router"
-  "8883",  "Mosquitto",  "MQTT Broker",                "",                    "Secure MQTT über TCP (falls konfiguriert)"
+  "1883",  "Mosquitto",  "MQTT Broker",                "Broker zur Nutzung des MQTT Protokolls über TCP"
+  "4304",  "owserver",   "1-wire control Daemon",      "Ansteuerung des 1-Wire Bus Systems"
+  "6600",  "mpd",        "Music Player Daemon",        "Wiedergabe von Musik über Audio Peripherie eines Linux Systems"
+  "6720",  "knxd",       "KNX Daemon",                 "Kommunikation zu KNX Interface oder KNX Router"
+  "8883",  "Mosquitto",  "MQTT Broker",                "Secure MQTT über TCP (falls konfiguriert)"
 

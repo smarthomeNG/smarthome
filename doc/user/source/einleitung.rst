@@ -20,13 +20,14 @@ per Email verschickt.
 
 Eine umfassende (veraltete) Entwickler-Dokumentation in englischer Sprache gibt es
 unter `www.SmartHomeNG.de/developer <https://www.smarthomeng.de/developer>`__.
-Nach und nach werden diese Informationen übersetztz und in die User Dokumentation
-integriert.
+Nach und nach werden diese Informationen übersetzt und in die User Dokumentation
+integriert. Dort ist diese Dokumentation in den Abschnitten
+`Entwicklung <https://www.smarthomeng.de/user/entwicklung/entwicklung.html>`__ und
+`Referenz <https://www.smarthomeng.de/user/referenz/referenz.html>`__ zu finden.
 
-Natürlich lebt dieses Projekt wie alles bei Open Source vom mitmachen. 
-Jeder ist eingeladen im Rahmen seiner Möglichkeiten beizutragen.
-Das kann gerne die Erweiterung eines How-To, die Kommentierung bestehenden
-Codes oder auch Beispiele sein.
+Natürlich lebt dieses Projekt wie alles bei Open Source vom mitmachen. Jeder ist eingeladen im Rahmen
+seiner Möglichkeiten beizutragen. Das kann gerne die Erweiterung eines How-To, die Kommentierung
+bestehenden Codes oder auch Beispiele sein.
 
 Wie alles zusammenhängt
 -------------------------

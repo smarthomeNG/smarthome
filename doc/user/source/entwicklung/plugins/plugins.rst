@@ -21,8 +21,11 @@ Abschnitt und den links in der Navigation verlinkten Seiten gefunden werden.
    vorueberlegungen.rst
    /dev/README.md
 
+Kurzanleitung
+=============
 
-Weitere Informationen über die zu erstellenden Methoden und ihre Parameter können in der folgenden Kurzanleitung gefunden werden. Die Libraries im Verzeichnis ``/lib`` stellen den Kern der Funktionalitäten von smarthomeng bereit.
+Weitere Informationen über die zu erstellenden Methoden und ihre Parameter können in der folgenden Kurzanleitung
+gefunden werden. Die Libraries im Verzeichnis ``/lib`` stellen den Kern der Funktionalitäten von smarthomeng bereit.
 
 .. toctree::
    :maxdepth: 1
