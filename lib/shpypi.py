@@ -395,7 +395,7 @@ class Shpypi:
         # ToDo
         # create_directories is available in lib.smarthome.py but shpypi.py might be started prior to SH object creation
         # thus it is needed to create the var/log directory here
-        os.makedirs(os.path.join(self._sh_dir, 'log'), exist_ok=True)
+        os.makedirs(os.path.join(self._sh_dir, 'var'), exist_ok=True)
         os.makedirs(os.path.join(self._sh_dir, 'var', 'log'), exist_ok=True)
 
         pip_log_name = os.path.join(self._sh_dir, 'var', 'log', 'pip3_outout.log')
