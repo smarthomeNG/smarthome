@@ -39,7 +39,7 @@ Falls diese Dienste auch auf dem SmartHomeNG System installiert/gestartet sind, 
 geöffenet:
 
 .. csv-table:: Port Nutzung durch weitere Dienste
-  :header: "Port", "Prozess", "Modul/Plugin", "Verwendung"
+  :header: "Port", "Prozess", "Software", "Verwendung"
   :widths: 13, 22, 32, 85
 
   "1883",  "Mosquitto",  "MQTT Broker",                "Broker zur Nutzung des MQTT Protokolls über TCP"
