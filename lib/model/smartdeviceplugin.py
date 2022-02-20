@@ -7,6 +7,8 @@
 #########################################################################
 #  This file is part of SmartHomeNG
 #
+#  SmartDevicePlugin class and standalone routines
+#
 #  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
@@ -38,7 +40,7 @@ import lib.shyaml as shyaml
 from lib.module import Modules
 from lib.plugin import Plugins
 
-from lib.model.sdp.globals import (update, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS, CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS, CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES, CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_READ_GROUPS, CMD_IATTR_RG_LEVELS, CMD_IATTR_TEMPLATE, COMMAND_READ, COMMAND_SEP, COMMAND_WRITE, CONN_NET_TCP_REQ, CONN_NULL, CONN_SER_DIR, CONNECTION_TYPES, CUSTOM_SEP, INDEX_GENERIC, INDEX_MODEL, ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM_PREFIX, ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ, ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CLEAN_STRUCTS, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_ATTR_SERIAL_PORT, PLUGIN_PATH, PROTO_NULL, PROTOCOL_TYPES)
+from lib.model.sdp.globals import (update, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS, CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS, CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES, CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_READ_GROUPS, CMD_IATTR_RG_LEVELS, CMD_IATTR_TEMPLATE, COMMAND_READ, COMMAND_SEP, COMMAND_WRITE, CONN_NET_TCP_REQ, CONN_NULL, CONN_SER_DIR, CONNECTION_TYPES, CUSTOM_SEP, INDEX_GENERIC, INDEX_MODEL, ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM_PREFIX, ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ, ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_ATTR_SERIAL_PORT, PLUGIN_PATH, PROTO_NULL, PROTOCOL_TYPES)
 from lib.model.sdp.commands import SDPCommands
 from lib.model.sdp.command import SDPCommand
 from lib.model.sdp.connection import SDPConnection
@@ -49,6 +51,14 @@ class SmartDevicePlugin(SmartPlugin):
     """
     The class SmartDevicePlugin implements the base class of smart-plugins
     designed especially for device connectivity.
+
+    It implements a fully functional plugin with all necessary methods to
+    set up network or serial connections, handle item parsing and updating
+    and converting data from shng to the device and vice versa.
+
+    In the easiest cases, only the command specifications in ``commands.py``
+    and possibly DT-* datatype classes are needed; additional command classes
+    or plugin code can be added if necessary or desired.
 
     The implemented methods are described below, inherited methods are only
     described if changed/overwritten.
@@ -66,17 +76,17 @@ class SmartDevicePlugin(SmartPlugin):
         self._set_item_attributes()
 
         # set item properties
-        self._items_write = {}          # contains all items with write command - <item_id>: {'device_id': <device_id>, 'command': <command>}
-        self._items_read_all = {}       # contains items which trigger 'read all' - <item_id>: <device_id>
-        self._items_read_grp = {}       # contains items which trigger 'read group foo' - <item_id>: [<device_id>, <foo>]
-        self._commands_read = {}        # contains all commands per device with read command - <device_id>: {<command>: [<item_object>, <item_object>...]}
-        self._commands_pseudo = {}      # contains all pseudo commands per device (without command sequence) - <device_id>: {<command>: [<item_object>, <item_object>...]}
-        self._commands_read_grp = {}    # contains all commands per device with read group command - <device_id>: {<group>: [<command>, <command>...]}
-        self._commands_initial = []     # contains all commands per device to be read after run() is called - <device_id>: ['command', 'command', ...]
-        self._commands_cyclic = {}      # contains all commands per device to be read cyclically - device_id: {<command>: {'cycle': <cycle>, 'next': <next>}}
-        self._triggers_initial = []     # contains all read groups per device to be triggered after run() is called - <device_id>: ['grp', 'grp', ...]
-        self._triggers_cyclic = {}      # contains all read groups per device to be triggered cyclically - device_id: {<grp>: {'cycle': <cycle>, 'next': <next>}}
-        self._items_custom = {}         # contains item md_custom<x> attributes - <item_id>: {1: custom1, 2: custom2, 3:custom3}
+        self._items_write = {}          # contains all items with write command - <item_id>: <command>
+        self._items_read_all = []       # contains items which trigger 'read all' - <item_id>
+        self._items_read_grp = {}       # contains items which trigger 'read group foo' - <item_id>: <foo>
+        self._commands_read = {}        # contains all commands with read command - <command>: [<item_object>, <item_object>...]
+        self._commands_pseudo = {}      # contains all pseudo commands (without command sequence) - <command>: [<item_object>, <item_object>...]
+        self._commands_read_grp = {}    # contains all commands with read group command - <group>: [<command>, <command>...]
+        self._commands_initial = []     # contains all commands to be read after run() is called - 'command'
+        self._commands_cyclic = {}      # contains all commands to be read cyclically - <command>: {'cycle': <cycle>, 'next': <next>}
+        self._triggers_initial = []     # contains all read groups per device to be triggered after run() is called - 'grp'
+        self._triggers_cyclic = {}      # contains all read groups per device to be triggered cyclically - <grp>: {'cycle': <cycle>, 'next': <next>}
+        self._items_custom = {}         # contains item xx_custom<x> attributes - <item_id>: {1: custom1, 2: custom2, 3:custom3}
 
         # None for normal operations, 1..3 for combined custom commands (<command>#<customx>)
         self.custom_commands = None
@@ -167,8 +177,8 @@ class SmartDevicePlugin(SmartPlugin):
 
         self._parameters.update(kwargs)
 
-        # this is only viable for the base class. All derived classes from
-        # MD_Device will probably be created towards a specific command class
+        # this is only viable for the base class. All derived plugin classes
+        # will probably be created towards a specific command class
         # but, just in case, be well-behaved...
         self._command_class = self._parameters.get(PLUGIN_ATTR_CMD_CLASS, SDPCommand)
 
@@ -226,7 +236,7 @@ class SmartDevicePlugin(SmartPlugin):
     #     """
     #     If you want to provide a standalone function, you'll have to implement
     #     this function with the appropriate code. You can use all functions from
-    #     the MultiDevice class (plugin), the devices, connections and commands.
+    #     the SmartDevicePlugin class (plugin), the connections and commands.
     #     You do not have an sh object, items or web interfaces.
     #
     #     As the base class should not have this method, it is commented out.
@@ -397,7 +407,7 @@ class SmartDevicePlugin(SmartPlugin):
                 return
 
             # if "custom commands" are active for this device, modify command to be
-            # <command>#<customx>, where x is the index of the md_custom<x> item attribute
+            # <command>#<customx>, where x is the index of the xx_custom<x> item attribute
             # and <customx> is the value of the attribute.
             # By this modification, multiple items with the same command but different customx-Values
             # can "coexist" and be differentiated by the plugin and the device.
@@ -561,16 +571,16 @@ class SmartDevicePlugin(SmartPlugin):
         Value is already in item-compatible format, so find appropriate item
         and update value
 
-        :param device_id: name of the originating device
         :param command: command for or in reply to which data was received
         :param value: data
+        :param by: str
         :type command: str
         """
         if self.alive:
 
             item = None
 
-            # check if combination of device_id and command is configured for reading
+            # check if command is configured for reading
             items = self._commands_read.get(command, [])
             items += self._commands_pseudo.get(command, [])
 
@@ -655,7 +665,7 @@ class SmartDevicePlugin(SmartPlugin):
             return rec == index
 
     def set_custom_item(self, item, command, index, value):
-        """ this is called by parse_items if md_custom[123] is found. """
+        """ this is called by parse_items if xx_custom[123] is found. """
         self._custom_values[index].append(value)
         self._custom_values[index] = list(set(self._custom_values[index]))
 
@@ -700,8 +710,7 @@ class SmartDevicePlugin(SmartPlugin):
         This method acts as a overwritable intermediate between the handling
         logic of send_command() and the connection layer.
         If you need any special arrangements for or reaction to events on sending,
-        you can implement this method in your derived MD_Device-class in the
-        dev_foo/device.py device file.
+        you can implement this method in your plugin class.
 
         By default, this just forwards the data_dict to the connection instance
         and return the result.
@@ -810,7 +819,7 @@ class SmartDevicePlugin(SmartPlugin):
                 conn_classname = 'SDPConnection'
 
         if not conn_classname:
-            conn_classname = 'MD_Connection_' + '_'.join([tok.capitalize() for tok in conn_type.split('_')])
+            conn_classname = 'SDPConnection' + ''.join([tok.capitalize() for tok in conn_type.split('_')])
         self.logger.debug(f'wanting connection class named {conn_classname}')
 
         if not conn_cls:
@@ -840,7 +849,7 @@ class SmartDevicePlugin(SmartPlugin):
             if proto_type == PROTO_NULL:
                 proto_cls = SDPProtocol
             elif proto_type:
-                proto_classname = 'MD_Protocol_' + '_'.join([tok.capitalize() for tok in proto_type.split('_')])
+                proto_classname = 'SDPProtocol' + ''.join([tok.capitalize() for tok in proto_type.split('_')])
 
             if not proto_cls:
                 proto_cls = getattr(proto_module, proto_classname, None)
@@ -1069,7 +1078,7 @@ class SmartDevicePlugin(SmartPlugin):
         try:
             # try/except to handle running in a core version that does not support modules
             self.mod_http = Modules.get_instance().get_module('http')
-        except:
+        except Exception:
             self.mod_http = None
         if self.mod_http is None:
             self.logger.warning("Module 'http' not loaded. Not initializing the web interface for the plugin")
@@ -1402,7 +1411,7 @@ class Standalone():
                             if tmpl in self.item_templates:
                                 update(item, self.item_templates[tmpl])
 
-                    # if item has 'md_lookup' and item_attrs['lookup_item'] is set,
+                    # if item has 'xx_lookup' and item_attrs['lookup_item'] is set,
                     # create additional item with lookup values
                     lu_item = inode.get(CMD_IATTR_LOOKUP_ITEM)
                     if lu_item and node.get(CMD_ATTR_LOOKUP):
@@ -1546,7 +1555,7 @@ class Standalone():
                     # as we modify obj, we need to copy this
                     obj = {model: deepcopy(commands)}
 
-                    # remove all items with model-invalid 'md_command' attribute obj
+                    # remove all items with model-invalid 'xx_command' attribute obj
                     self.walk(obj[model], model, obj, self.removeItemsUndefCmd, '', 0, model, [model], True, False)
 
                     # remove all empty items from obj

@@ -7,7 +7,7 @@
 #  https://www.smarthomeNG.de
 #  https://knx-user-forum.de/forum/supportforen/smarthome-py
 #
-#  SDPProtocol and derived classes for MultiDevice plugin
+#  SDPProtocol and derived classes for SmartDevicePlugin class
 #
 #  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -43,10 +43,10 @@ import json
 #############################################################################################################################################################################################################################################
 
 class SDPProtocol(SDPConnection):
-    """ SDPProtocol class to provide protocol support for MD_Device
+    """ SDPProtocol class to provide protocol support for SmartDevicePlugin
 
     This class implements a basic protocol layer to act as a standin between
-    the MD_Device-class and the SDPConnection-class. Its purpose is to enable
+    the plugin class and the SDPConnection-class. Its purpose is to enable
     establishing a control layer, so the connection only has to care for the
     'physical' connection and the device only needs to operate on commmand basis.
 
@@ -59,7 +59,6 @@ class SDPProtocol(SDPConnection):
 
     def __init__(self, data_received_callback, **kwargs):
 
-        # get MultiDevice.device logger
         self.logger = logging.getLogger(__name__)
 
         if SDP_standalone:
@@ -108,7 +107,7 @@ class SDPProtocol(SDPConnection):
         return self._connection.send(data_dict)
 
 
-class MD_Protocol_Jsonrpc(SDPProtocol):
+class SDPProtocolJsonrpc(SDPProtocol):
     """ Protocol support for JSON-RPC 2.0
 
     This class implements a protocol to send JSONRPC 2.0  compatible messages
@@ -124,14 +123,9 @@ class MD_Protocol_Jsonrpc(SDPProtocol):
         def data_received_callback(by, message, command=None)
     If callbacks are class members, they need the additional first parameter 'self'
 
-    :param device_type: device type as used in commands.py name
-    :param device_id: device id for use in item configuration and logs
-    :type device_type: str
-    :type device_id: str
     """
     def __init__(self, data_received_callback, **kwargs):
 
-        # get MultiDevice.device logger
         self.logger = logging.getLogger(__name__)
 
         if SDP_standalone:
@@ -393,7 +387,7 @@ class MD_Protocol_Jsonrpc(SDPProtocol):
                 self.on_data_received('request', response)
 
 
-class MD_Protocol_Viessmann(SDPProtocol):
+class SDPProtocolViessmann(SDPProtocol):
     """ Protocol support for Viessmann heating systems
 
     This class implements a Viessmann protocol layer. By default, this uses
@@ -408,7 +402,6 @@ class MD_Protocol_Viessmann(SDPProtocol):
 
     def __init__(self, data_received_callback, **kwargs):
 
-        # get MultiDevice.device logger
         self.logger = logging.getLogger(__name__)
 
         if SDP_standalone:

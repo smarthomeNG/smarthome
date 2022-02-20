@@ -7,7 +7,7 @@
 #  https://www.smarthomeNG.de
 #  https://knx-user-forum.de/forum/supportforen/smarthome-py
 #
-#  SDPCommands for MultiDevice plugin
+#  SDPCommands for SmartDevicePlugin class
 #
 #  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -51,7 +51,6 @@ class SDPCommands(object):
     """
     def __init__(self, command_obj_class=SDPCommand, **kwargs):
 
-        # get MultiDevice.device logger
         self.logger = logging.getLogger(__name__)
 
         self.logger.debug(f'commands initializing from {command_obj_class.__name__}')
@@ -207,9 +206,6 @@ class SDPCommands(object):
 
         # try to load datatypes.py from device directory
         mod_str = self._params[PLUGIN_PATH] + '.datatypes'
-        #if not SDP_standalone:
-        #    mod_str = '.'.join(self.__module__.split('.')[:-1]) + '.' + mod_str
-
         cust_mod = locate(mod_str)
         if cust_mod:
             _enum_dt_cls(cust_mod)
