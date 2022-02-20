@@ -7,7 +7,7 @@
 #  https://www.smarthomeNG.de
 #  https://knx-user-forum.de/forum/supportforen/smarthome-py
 #
-#  SDPCommand and derived classes for MultiDevice plugin
+#  SDPCommand and derived classes for SmartDevicePlugin class
 #
 #  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -51,7 +51,6 @@ class SDPCommand(object):
 
     This class serves as a base class for further format-specific command types.
     """
-    device_id = ''
     name = ''
     opcode = ''
     read = False
@@ -67,7 +66,6 @@ class SDPCommand(object):
 
     def __init__(self, command, dt_class, **kwargs):
 
-        # get MultiDevice.device logger (if not already defined by derived class calling us via super().__init__())
         if not hasattr(self, 'logger'):
             self.logger = logging.getLogger(__name__)
 
@@ -189,7 +187,7 @@ class SDPCommand(object):
         return data
 
 
-class MD_Command_Str(SDPCommand):
+class SDPCommandStr(SDPCommand):
     """ Command for string-based communication
 
     This class represents a command which uses a string with arguments as payload,
@@ -315,13 +313,13 @@ class MD_Command_Str(SDPCommand):
             return node
 
 
-class MD_Command_ParseStr(MD_Command_Str):
+class SDPCommandParseStr(SDPCommandStr):
     """ Command for string-based communication with parsed arguments
 
     With this class, you can simplify the creation of read and write commands
     containing data values.
 
-    Default behaviour is identical to MD_Command_Str.
+    Default behaviour is identical to SDPCommandStr.
 
     opcode, write_cmd and read_cmd will be parsed to substitute values.
     write_cmd will be formatted, replacing ``{RAW_VALUE}`` with the value by
@@ -426,7 +424,7 @@ class MD_Command_ParseStr(MD_Command_Str):
         return value
 
 
-class MD_Command_JSON(SDPCommand):
+class SDPCommandJSON(SDPCommand):
     """ Command for JSON-RPC communication
 
     With this class, you can send JSON-RPC commands to the device and read
@@ -522,7 +520,7 @@ class MD_Command_JSON(SDPCommand):
         return params
 
 
-class MD_Command_Viessmann(SDPCommand):
+class SDPCommandViessmann(SDPCommand):
     """ Command for Viessmann binary command format
 
     With this class, you can send commands to Viessmann heating systems

@@ -7,10 +7,10 @@ plugin:
     # Global plugin attributes
     type: interface
     description:
-        de: '-Plugin'               # !! fill
-        en: '-Plugin'               # !! fill
-    maintainer:                     # !! fill
-    tester:                         # !! fill
+        de: 'Example-Plugin'        # !! fill
+        en: 'Example-Plugin'        # !! fill
+    maintainer: Morg                # !! fill
+    # tester:                       # !! fill
     state: develop
     keywords: iot device
     # documentation: https://github.com/smarthomeNG/smarthome/wiki/
@@ -20,9 +20,10 @@ plugin:
     py_minversion: 3.6
     multi_instance: false
     restartable: true
-    classname:                      # !! fill
+    classname: example              # !! fill
 
 parameters:
+    # !! parameters left in place for demonstation purposes
 
     # model selection
     # set only if necessary, no empty default!
@@ -36,8 +37,8 @@ parameters:
             de: 'Modellauswahl'
             en: 'model selection'
 
-    # select if xx_custom1/2/3 item attributes should be inherited by sub-items
-    # !! irrelevant if xx_custom1/2/3 not implemented
+    # select if ex_custom1/2/3 item attributes should be inherited by sub-items
+    # !! irrelevant if ex_custom1/2/3 not implemented
     recursive_custom:
         type: bool
         default: true
@@ -159,12 +160,11 @@ parameters:
             en: 'number of stop bits'
 
     # more fundamental connection settings
-    # !! plugin defaults can be set here (add default:) or in code
     # adjust/set only if necessary for plugin
     # not meant for user configuration
     conn_type:
         type: str
-        mandatory: false
+        default: ''
         valid_list:
             - ''
             - net_tcp_request
@@ -188,7 +188,7 @@ parameters:
             en: 'protocol type for connection'
     command_class:
         type: str
-        mandatory: false
+        default: SDPCommandStr
         valid_list:
             - SDPCommand
             - SDPCommandStr
@@ -199,47 +199,46 @@ parameters:
             de: 'Klasse für Verarbeitung von Kommandos'
             en: 'class for command processing'
 
-
 item_attributes:
     # Definition of item attributes defined by this plugin
     # !! change all 'xx' prefixes to appropriate prefix, eg plugin (short) name
     # !! don't change attribute names behind the (first) underscore!
-    xx_command:
+    ex_command:
         type: str
         description:
             de: 'Legt das angegebene Kommando für das Item fest'
             en: 'Assigns the given command to the item'
-    xx_read:
+    ex_read:
         type: bool
         description:
             de: 'Item liest/erhält Werte vom Gerät'
             en: 'Item reads/receives data from the device'
-    xx_read_group:
+    ex_read_group:
         type: list(str)
         description:
             de: 'Weist das Item der angegebenen Gruppe zum gesammelten Lesen zu. Mehrere Gruppen können als Liste angegeben werden.'
             en: 'Assigns the item to the given group for collective reading. Multiple groups can be provided as a list.'
-    xx_read_cycle:
+    ex_read_cycle:
         type: num
         description:
             de: 'Konfiguriert ein Intervall in Sekunden für regelmäßiges Lesen'
             en: 'Configures a interval in seconds for cyclic read actions'
-    xx_read_initial:
+    ex_read_initial:
         type: bool
         description:
             de: 'Legt fest, dass der Wert beim Start vom Gerät gelesen wird'
             en: 'Sets item value to be read from the device on startup'
-    xx_write:
+    ex_write:
         type: bool
         description:
             de: 'Änderung des Items werden an das Gerät gesendet'
             en: 'Changes to this item will be sent to the device'
-    xx_read_group_trigger:
+    ex_read_group_trigger:
         type: str
         description:
-            de: 'Wenn diesem Item ein beliebiger Wert zugewiesen wird, werden alle zum Lesen konfigurierten Items der angegebenen Gruppe neu vom Gerät gelesen, bei Gruppe 0 werden alle zum Lesen konfigurierten Items neu gelesen. Das Item kann nicht gleichzeitig mit xx_command belegt werden.'
-            en: 'When set to any value, all items configured for reading for the given group will update their value from the device, if group is 0, all items configured for reading will update. The item cannot be used with xx_command in parallel.'
-    xx_lookup:
+            de: 'Wenn diesem Item ein beliebiger Wert zugewiesen wird, werden alle zum Lesen konfigurierten Items der angegebenen Gruppe neu vom Gerät gelesen, bei Gruppe 0 werden alle zum Lesen konfigurierten Items neu gelesen. Das Item kann nicht gleichzeitig mit ex_command belegt werden.'
+            en: 'When set to any value, all items configured for reading for the given group will update their value from the device, if group is 0, all items configured for reading will update. The item cannot be used with ex_command in parallel.'
+    ex_lookup:
         type: str
         description:
             de: 'Der Inhalt der Lookup-Tabelle mit dem angegebenen Namen wird beim Start einmalig als dict oder list in das Item geschrieben.'
@@ -265,7 +264,13 @@ item_attributes:
                  - list return the list of names for SmartHomeNG (e.g. for selection dropdowns in visu applications)'
     # !! if these attributes are supported by (implemented in) the plugin, adjust the
     # !! description(s) to match the intended use
-    xx_custom1:
+    ex_custom1:
+        type: str
+        description:
+            de: 'Item ist für Beispielzwecke vorgesehen.'
+            en: 'Item is meant for example purposes.'
+
+    ex_custom2:
         type: str
         description:
             de: 'Der Inhalt dieses Items kann vom Plugin für spezielle Zwecke genutzt werden.'
@@ -273,15 +278,7 @@ item_attributes:
         description_long:
             de: 'Der Inhalt dieses Items kann vom Plugin für spezielle Zwecke genutzt werden. Durch den Parameter "recursive_custom: 1" in der Plugin-Konfiguration wird der Wert rekursiv für alle Unteritems gesetzt.'
             en: 'For custom use of the plugin. By setting "recursive_custom: 1" in the plugin configuration, the value of this attribute will be set for all sub-items.'
-    xx_custom2:
-        type: str
-        description:
-            de: 'Der Inhalt dieses Items kann vom Plugin für spezielle Zwecke genutzt werden.'
-            en: 'For custom use of the plugin.'
-        description_long:
-            de: 'Der Inhalt dieses Items kann vom Plugin für spezielle Zwecke genutzt werden. Durch den Parameter "recursive_custom: 1" in der Plugin-Konfiguration wird der Wert rekursiv für alle Unteritems gesetzt.'
-            en: 'For custom use of the plugin. By setting "recursive_custom: 1" in the plugin configuration, the value of this attribute will be set for all sub-items.'
-    xx_custom3:
+    ex_custom3:
         type: str
         description:
             de: 'Der Inhalt dieses Items kann vom Plugin für spezielle Zwecke genutzt werden.'

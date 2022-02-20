@@ -7,7 +7,7 @@
 #  https://www.smarthomeNG.de
 #  https://knx-user-forum.de/forum/supportforen/smarthome-py
 #
-#  SDPConnection and derived classes for MultiDevice plugin
+#  SDPConnection and derived classes for SmartDevicePlugin class
 #
 #  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ import json
 
 from lib.network import Tcp_client
 
-from lib.model.sdp.globals import (sanitize_param, PLUGIN_ATTRS, PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_BINARY, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE, PLUGIN_ATTR_SERIAL_PARITY, PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_STOP, REQUEST_DICT_ARGS)
+from lib.model.sdp.globals import (sanitize_param, PLUGIN_ATTRS, PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_BINARY, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE, PLUGIN_ATTR_SERIAL_PARITY, PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_STOP, REQUEST_DICT_ARGS)
 
 
 #############################################################################################################################################################################################################################################
@@ -50,15 +50,9 @@ class SDPConnection(object):
     This class is the base class for further connection classes. It can - well,
     not much. Opening and closing of connections and writing and receiving data
     is something to implement in the interface-specific derived classes.
-
-    :param device_type: device type as used in commands.py name
-    :param device_id: device id for use in item configuration and logs
-    :type device_type: str
-    :type device_id: str
     """
     def __init__(self, data_received_callback, **kwargs):
 
-        # get MultiDevice.device logger (if not already defined by derived class calling us via super().__init__())
         if not hasattr(self, 'logger'):
             self.logger = logging.getLogger(__name__)
 
@@ -74,6 +68,7 @@ class SDPConnection(object):
 
         # we set defaults for all possible connection parameters, so we don't
         # need to care later if a parameter is set or not
+        # these will be overwritten by all parameters set in plugin.yaml
         self._params = {PLUGIN_ATTR_SERIAL_PORT: '',
                         PLUGIN_ATTR_SERIAL_BAUD: 9600,
                         PLUGIN_ATTR_SERIAL_BSIZE: 8,
@@ -84,6 +79,7 @@ class SDPConnection(object):
                         PLUGIN_ATTR_NET_PORT: 0,
                         PLUGIN_ATTR_CONN_BINARY: False,
                         PLUGIN_ATTR_CONN_TIMEOUT: 1.0,
+                        PLUGIN_ATTR_CONN_AUTO_RECONN: True,
                         PLUGIN_ATTR_CONN_AUTO_CONN: True,
                         PLUGIN_ATTR_CONN_RETRIES: 1,
                         PLUGIN_ATTR_CONN_CYCLE: 3,
@@ -235,7 +231,7 @@ class SDPConnection(object):
         return self.__class__.__name__
 
 
-class MD_Connection_Net_Tcp_Request(SDPConnection):
+class SDPConnectionNetTcpRequest(SDPConnection):
     """ Connection via TCP / HTTP requests
 
     This class implements TCP connections in the query-reply matter using
@@ -299,7 +295,7 @@ class MD_Connection_Net_Tcp_Request(SDPConnection):
         return None
 
 
-class MD_Connection_Net_Tcp_Client(SDPConnection):
+class SDPConnectionNetTcpClient(SDPConnection):
     """ Connection via direct TCP connection with listener
 
     This class implements a TCP connection using a single persistent connection
@@ -368,7 +364,7 @@ class UDPServer(socket.socket):
         self.bind(('0.0.0.0', local_port))
 
 
-class MD_Connection_Net_Udp_Request(MD_Connection_Net_Tcp_Request):
+class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
     """ Connection via TCP / HTTP requests and listens for UDP messages
 
     This class implements TCP connections in the query-reply matter using
@@ -430,7 +426,7 @@ class MD_Connection_Net_Udp_Request(MD_Connection_Net_Tcp_Request):
             self._params[PLUGIN_ATTR_CB_ON_DISCONNECT](self.__str__() + ' UDP_listener')
 
 
-class MD_Connection_Serial(SDPConnection):
+class SDPConnectionSerial(SDPConnection):
     """ Connection for serial connectivity
 
     This class implements a serial connection using a single persistent connection
@@ -472,7 +468,7 @@ class MD_Connection_Serial(SDPConnection):
 
         # set class properties
         self._lock = TimeoutLock()
-        self.__lock_timeout = 2         # TODO: validate this is a sensible value
+        self.__lock_timeout = 2
         self._timeout_mult = 3
         self._lastbyte = b''
         self._lastbytetime = 0
@@ -692,13 +688,13 @@ class MD_Connection_Serial(SDPConnection):
         pass
 
 
-class MD_Connection_Serial_Async(MD_Connection_Serial):
+class SDPConnectionSerialAsync(SDPConnectionSerial):
     """ Connection for serial connectivity with async listener
 
     This class implements a serial connection for call-based sending and a
     threaded listener for async reading with callbacks.
 
-    As this is derived from ``MD_Connection_Serial``, most of the documentation
+    As this is derived from ``SDPConnectionSerial``, most of the documentation
     is identical.
 
     The timeout needs to be set small enough not to block reading for too long.
@@ -723,7 +719,7 @@ class MD_Connection_Serial_Async(MD_Connection_Serial):
             return
 
         self._listener_active = True
-        self.__receive_thread = Thread(target=self.__receive_thread_worker, name=f'{self.device_id}_Serial')
+        self.__receive_thread = Thread(target=self.__receive_thread_worker, name='Serial')
         self.__receive_thread.daemon = True
         self.__receive_thread.start()
 

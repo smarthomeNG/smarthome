@@ -7,7 +7,7 @@
 #  https://www.smarthomeNG.de
 #  https://knx-user-forum.de/forum/supportforen/smarthome-py
 #
-#  Globals for MultiDevice plugin
+#  Globals for SmartDevicePlugin class
 #
 #  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 #
 #########################################################################
 
-""" Global definitions of constants and functions for MultiDevice """
+""" Global definitions of constants and functions for SmartDevicePlugin """
 
 from lib.utils import Utils
 from ast import literal_eval
@@ -43,7 +43,6 @@ import types
 
 # general attributes
 PLUGIN_ATTR_MODEL            = 'model'                   # select model if applicable. Don't set if not necessary!
-PLUGIN_ATTR_CLEAN_STRUCTS    = 'clean_structs'           # remove items from stucts not supported by chosen model (not necessary if using generated structs)
 PLUGIN_ATTR_CMD_CLASS        = 'command_class'           # name of class to use for commands
 PLUGIN_ATTR_RECURSIVE        = 'recursive_custom'        # indices of custom item attributes for which to enable recursive lookup (number or list of numbers)
 
@@ -77,7 +76,7 @@ PLUGIN_ATTR_MSG_REPEAT       = 'message_repeat'          # how often to repeat c
 PLUGIN_ATTR_CB_ON_CONNECT    = 'connected_callback'      # callback function, called if connection is established
 PLUGIN_ATTR_CB_ON_DISCONNECT = 'disconnected_callback'   # callback function, called if connection is lost
 
-PLUGIN_ATTRS = (PLUGIN_ATTR_MODEL, PLUGIN_ATTR_CLEAN_STRUCTS, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_RECURSIVE,
+PLUGIN_ATTRS = (PLUGIN_ATTR_MODEL, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_RECURSIVE,
                 PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONN_TIMEOUT,
                 PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_CYCLE,
                 PLUGIN_ATTR_CONN_BINARY, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
