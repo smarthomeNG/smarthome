@@ -1,0 +1,248 @@
+{% extends "base_plugin.html" %}
+
+{% set logo_frame = false %}
+
+<!-- set update_interval to a value > 0 (in milliseconds) to enable periodic data updates -->
+{% set update_interval = 0 %}
+
+<!--
+	Additional script tag for plugin specific javascript code go into this block
+-->
+{% block pluginscripts %}
+
+<script>
+    $(document).ready( function () {
+		$(window).trigger('datatables_defaults');
+		try
+			{
+				$('#maintable').DataTable( {} ); // put options into {} if needed
+				$('#itemtable').DataTable( {} );
+
+			}
+		catch (e)
+			{
+				console.log("Datatable JS not loaded, showing standard table without reorder option " + e)
+			}
+
+	    $("#button_pressed").submit(function(e) {
+
+			e.preventDefault();
+
+			// just do it
+	        $.post('submit', {button: $("#button").val(), param: $("#param").val()}, function(data) {
+
+	            // and set the title with the result
+ 				update_buttons(data);
+		    });
+    	    return false ;
+	    });
+
+	});
+
+    function show_hide(elem, hide) {
+    		if (hide) {
+    			elem.fadeTo(400, 0, function() { elem.css("visibility", "hidden") });
+    		} else {
+	    		elem.css("visibility", "visible");
+	    		elem.fadeTo(400, 1);
+    		}
+    }
+
+    function update_buttons(data) {
+    	for (var dev in data.running) {
+    		if (data.running[dev]) {
+    			$("#" + dev + "-run").hide()
+    			$("#" + dev + "-stop").show()
+				document.querySelectorAll('button.' + dev + '-set').forEach(elem => { elem.disabled = true; });
+				document.querySelectorAll('input.' + dev + '-set').forEach(elem => { elem.disabled = true; });
+
+    		} else {
+    			$("#" + dev + "-run").show()
+    			$("#" + dev + "-stop").hide()
+				document.querySelectorAll('button.' + dev + '-set').forEach(elem => { elem.disabled = false; });
+				document.querySelectorAll('input.' + dev + '-set').forEach(elem => { elem.disabled = false; });
+    		}
+    	}
+    	if (data.notify) {
+    		var elem = $("#" + data.notify);
+    		show_hide(elem, false);
+    		setTimeout(function() { show_hide(elem, true) }, 1500);
+    	}
+    }
+
+</script>
+{% endblock pluginscripts %}
+
+
+{% block headtable %}
+<table class="table table-striped table-hover">
+	<tbody>
+		<tr>
+			<td class="py-1"><strong>{{ _('Aktiv') }}</strong></td>
+			<td class="py-1">{{ p.alive }}</td>
+			<td class="py-1" width="50px"></td>
+			<td class="py-1"><strong>{{ _('Anzahl Geräte') }}</strong></td>
+			<td class="py-1">{{ p._devices|length }}</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td class="py-1"><strong>{{ _('') }}</strong></td>
+			<td class="py-1"></td>
+			<td></td>
+			<td class="py-1"><strong>{{ _('Anzahl Items') }}</strong></td>
+			<td class="py-1">{{ plgitems|length }}</td>
+			<td class="py-1" width="50px"></td>
+		</tr>
+	</tbody>
+</table>
+{% endblock headtable %}
+
+
+<!--
+	Additional buttons for the web interface (if any are needed) - displayed below the headtable-section
+-->
+{% block buttons %}
+{% if 1==2 %}
+	<div>
+		<button id="btn1" class="btn btn-shng btn-sm" name="scan" onclick="shngPost('', {learn: 'on'})"><i class="fas fa-question"></i>&nbsp;&nbsp;&nbsp;{{ _('nach Devices suchen') }}&nbsp;</button>
+	</div>
+{% endif %}
+{% endblock %}
+
+<!--
+	Define the number of tabs for the body of the web interface (1 - 3)
+-->
+{% set tabcount = 2 %}
+
+{% set tab1title = "<strong>" ~ _('Geräte') ~ "</strong>" %}
+{% block bodytab1 %}
+<div class="table-responsive" style="margin-left: 2px; margin-right: 2px;" class="row">
+	<div class="col-sm-12">
+	<form id="button_pressed" action="" method="post">
+		<input type="hidden" id="button" name="button" value="" />
+		<input type="hidden" id="param" name="param" value="" />
+		{% if devices|length %}
+		    <table class="table table-hover">
+			{% for dev in devices %}
+		    	<tr>
+		    		<td><strong>{{ _('Geräte-ID') }}:</strong></td>
+		    		<td colspan="3"><strong>{{ dev }}</strong></td>
+		    		<td>
+						<button id="{{dev}}-run" {% if running[dev] %}style="display: none" {% else %}style="display: block"{% endif %} class="btn btn-shng btn-sm" type="button" onclick="$('#button').val('run#{{ dev }}');$('#button_pressed').submit();">{{ _('Start') }}</button>
+						<button id="{{dev}}-stop" class="btn btn-shng btn-sm" {% if not running[dev] %}style="display: none" {% else %}style="display: block"{% endif %}type="button" onclick="$('#button').val('stop#{{ dev }}');$('#button_pressed').submit();">{{ _('Stop') }}</button>
+		    		</td>
+		    	</tr>
+		    	<tr>
+		    		<td>&nbsp;</td>
+		    		<td>{{ _('Geräte-Typ') }}:</td>
+		    		<td colspan="2">{{ devices[dev]['device_type'] }}</td>
+		    		<td>&nbsp;</td>
+		    	</tr>
+		    	<tr>
+		    		<td>&nbsp;</td>
+		    		<td>{{ _('Parameter') }}:</td>
+		    		{% if devices[dev]['params']|length %}
+		    			{% for arg in devices[dev]['params'] %}
+		    				{% if not loop.first -%}
+		    	<tr>
+		    		<td>&nbsp;</td>
+		    		<td>&nbsp;</td>
+		    				{%- endif %}
+    				<td>{{ arg }}</td>
+    				<td>
+    					<input class="{{dev}}-set" type="{% if devices[dev]['params'][arg] is sameas true or devices[dev]['params'][arg] is sameas false %}checkbox{% elif devices[dev]['params'][arg] is number %}number{% else %}text{% endif %}" id="{{ dev }}-{{ arg }}" name="{{ dev }}-{{ arg }}" title="{{ arg }}" value="{{ devices[dev]['params'][arg] }}" /> ({{ _('Typ') }}: {% if devices[dev]['params'][arg] is sameas true or devices[dev]['params'][arg] is sameas false %}{{ _('Bool') }}{% elif devices[dev]['params'][arg] is number %}{{ _('Zahl') }}{% else %}{{ _('String') }}{% endif %}) <span id="{{ dev }}-{{ arg }}-notify" style="visibility: hidden; opacity: 0; background-color: green;">{{ _('übernommen') }}</span>
+    				</td>
+    				<td><button class="btn btn-shng btn-sm {{dev}}-set" type="button" onclick="var fval=$('#{{ dev }}-{{ arg }}').val();$('#param').val(fval);$('#button').val('{{ dev }}.{{ arg }}');$('#button_pressed').submit();" {% if running[dev] %} disabled{% endif %}>{{ _('Setzen') }}</button></td>
+    			</tr>
+		    			{% endfor %}
+		    		{% else %}
+		    		<td colspan="2">{{ _('keine') }}</td>
+		    		<td>&nbsp;</td>
+		    	</tr>
+		    		{% endif %}
+		    	<tr><td colspan="5">&nbsp;</td></tr>
+		    {% endfor %}
+		    </table>
+		{% endif %}
+	</form>
+	</div>
+</div>
+{% endblock bodytab1 %}
+
+
+
+<!--
+	Content block for the second tab of the Webinterface
+-->
+{% set tab2title = "<strong> Items </strong> (" ~ plgitems|length ~ ")" %}
+{% block bodytab2 %}
+<div class="table-responsive" style="margin-left: 2px; margin-right: 2px;" class="row">
+	<div class="col-sm-12">
+		{% if plgitems|length %}
+		    <table id="itemtable" class="table table-striped table-hover">
+		    	<thead>
+				    <tr>
+				    	<th>{{ _('Item') }}</th>
+				    	<th>{{ _('Gerät') }}</th>
+				    	<th>{{ _('Befehlsname') }}</th>
+				    	<th>{{ _('Lesen') }}</th>
+				    	<th>{{ _('Schreiben') }}</th>
+				    	<th>{{ _('Init') }}</th>
+				    	<th>{{ _('Cycle') }}</th>
+				    	<th>{{ _('Typ') }}</th>
+				    	<th>{{ _('Wert') }}</th>
+				    	<th>{{ _('Letzte Aktualisierung') }}</th>
+				    </tr>
+				</thead>
+				<tbody>
+				    {% for item in plgitems %}
+				        <tr>
+				            <td>{{ item }}</td>
+				            <td>{% if 'md_device' in item.conf %}{{ item.conf['md_device'] }}{% endif %}</td>
+				            <td>{% if 'md_command' in item.conf %}
+				            		{{ item.conf['md_command'] }}
+				            	{% elif 'md_read_all' in item.conf %}
+				            		{{ _('update_all') }}
+				            	{% endif %}</td>
+				            <td>{% if 'md_read' in item.conf %}{{ item.conf['md_read'] }}{% endif %}</td>
+				            <td>{% if 'md_write' in item.conf %}{{ item.conf['md_write'] }}{% endif %}</td>
+				            <td>{% if 'md_read_initial' in item.conf %}{{ item.conf['md_read_initial'] }}{% endif %}</td>
+				            <td>{% if 'md_cycle' in item.conf %}{{ item.conf['md_cycle'] }}{% endif %}</td>
+				            <td>{{ item.type() }}</td>
+				            <td>{{ item() }}</td>
+				            <td>{{ item.last_update().strftime('%Y-%m-%d %H:%M:%S') }}</td>
+				        </tr>
+				    {% endfor %}
+				</tbody>
+		    </table>
+		{% endif %}
+	</div>
+</div>
+{% endblock bodytab2 %}
+
+
+<!--
+	Content block for the third tab of the Webinterface
+	If wanted, a title for the tab can be defined as:
+		{% set tab3title = "<strong>" ~ p.get_shortname() ~ " Geräte</strong>" %}
+
+	It has to be defined before (and outside) the block bodytab3
+-->
+{% set tab3title = "<strong> Items (Baum) </strong> (" ~ plgitems|length ~ ")" %}
+{% block bodytab3 %}
+<div class="table-responsive" style="margin-left: 2px; margin-right: 2px;" class="row">
+	<div id="tree" class="col-sm-12">
+	</div>
+</div>
+{% endblock bodytab3 %}
+
+
+<!--
+	Content block for the fourth tab of the Webinterface
+	If wanted, a title for the tab can be defined as:
+		{% set tab4title = "<strong>" ~ p.get_shortname() ~ " Geräte</strong>" %}
+
+	It has to be defined before (and outside) the block bodytab4
+-->
+{% block bodytab4 %}
+{% endblock bodytab4 %}
