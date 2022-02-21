@@ -1054,10 +1054,23 @@ class Shtime:
                     c_logcount = ' ' + str(count)
                     c_logtext = self.translate('defined')
                 defined_state = ''
-                if self.holidays.state is not None:
-                    defined_state = ", state'" + self.holidays.state + "'"
+                # Test if class of self.holiday has an attribute 'state'
+                try:
+                    state = self.holidays.state
+                except Exception as e:
+                    state = self.holidays.subdiv
+
+                # Test if class of self.holiday has an attribute 'prov'
+                try:
+                    prov = self.holidays.prov
+                except Exception as e:
+                    prov = self.holidays.subdiv
+                    state = None
+
+                if state is not None:
+                    defined_state = ", state'" + state + "'"
                 self.log_msg = self.translate("Using holidays for country '{country}', province '{province}'{state},{count} custom holiday(s) {defined}")
-                self.log_msg = self.log_msg.format(country=self.holidays.country, province=self.holidays.prov, state=defined_state, count=c_logcount, defined=c_logtext)
+                self.log_msg = self.log_msg.format(country=self.holidays.country, province=prov, state=defined_state, count=c_logcount, defined=c_logtext)
                 self.logger.info(self.log_msg)
 
                 self.logger.info(self.translate('Defined holidays') + ':')
