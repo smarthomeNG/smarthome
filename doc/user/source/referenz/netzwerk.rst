@@ -32,6 +32,7 @@ können frei konfiguriert werden.
   "8383",  "SmartHomeNG",     "http Modul",          "port",         "http:// für die Admin GUI und Webinterfaces"
   "8384",  "SmartHomeNG",     "http Modul",          "servicesport", "Webservices"
   "8385",  "SmartHomeNG",     "http Modul",          "tls_port",     "https:// für die Admin GUI und Webinterfaces (falls aktiviert)"
+  "9000",  "SmartHomeNG",     "alexa4p3 Plugin",     "service_port", "Port auf dem das Plugin die Anfragen von Amazon-Alexa erwartet"
 
 
 Die folgenden Dienste können auf dem System auf dem SmartHomeNG läuft installiert sein oder auf anderen Rechnern.
