@@ -164,6 +164,7 @@ class SmartDevicePlugin(SmartPlugin):
                 for item in items:
                     if item in self._itemlist:
                         self._sh.items.return_item(item).remove_trigger_method(self.update_item)
+                        self._remove_from_itemlist(item)
             except Exception:
                 pass
 
@@ -242,115 +243,6 @@ class SmartDevicePlugin(SmartPlugin):
     #     As the base class should not have this method, it is commented out.
     #     """
     #     pass
-
-    def send_command(self, command, value=None, **kwargs):
-        """
-        Sends the specified command to the device providing <value> as data
-        Not providing data will issue a read command, trying to read the value
-        from the device and writing it to the associated item.
-
-        :param command: the command to send
-        :param value: the data to send, if applicable
-        :type command: str
-        :return: True if send was successful, False otherwise
-        :rtype: bool
-        """
-        if not self.alive:
-            self.logger.warning(f'trying to send command {command} with value {value}, but device is not active.')
-            return False
-
-        if not self._connection:
-            self.logger.warning(f'trying to send command {command} with value {value}, but connection is None. This shouldn\'t happen...')
-            return False
-
-        kwargs.update(self._parameters)
-        if self.custom_commands:
-            try:
-                command, custom_value = command.split(CUSTOM_SEP)
-                if 'custom' not in kwargs:
-                    kwargs['custom'] = {1: None, 2: None, 3: None}
-                kwargs['custom'][self.custom_commands] = custom_value
-            except ValueError:
-                self.logger.debug(f'extracting custom token failed, maybe not present in command {command}')
-
-        if not self._connection.connected():
-            if self._parameters.get(PLUGIN_ATTR_CONN_AUTO_CONN):
-                self._connection.open()
-
-            if not self._connection.connected():
-                self.logger.warning(f'trying to send command {command} with value {value}, but connection could not be established.')
-                return False
-
-        try:
-            data_dict = self._commands.get_send_data(command, value, **kwargs)
-        except Exception as e:
-            self.logger.warning(f'command {command} with value {value} produced error on converting value, aborting. Error was: {e}')
-            return False
-
-        if data_dict['payload'] is None or data_dict['payload'] == '':
-            self.logger.warning(f'command {command} with value {value} yielded empty command payload, aborting')
-            return False
-
-        data_dict = self._transform_send_data(data_dict, **kwargs)
-        self.logger.debug(f'command {command} with value {value} yielded send data_dict {data_dict}')
-
-        # if an error occurs on sending, an exception is thrown "below"
-        result = None
-        try:
-            result = self._send(data_dict)
-        except OSError as e:  # Exception as e:
-            self.logger.debug(f'error on sending command {command}, error was {e}')
-            return False
-
-        if result:
-            self.logger.debug(f'command {command} received result {result}')
-            self.on_data_received(None, value, command)
-
-        return True
-
-    def on_data_received(self, by, data, command=None):
-        """
-        Callback function for received data e.g. from an event loop
-        Processes data and dispatches value to plugin class
-
-        :param command: the command in reply to which data was received
-        :param data: received data in 'raw' connection format
-        :param by: client object / name / identifier
-        :type command: str
-        """
-        data = self._transform_received_data(data)
-        if command is not None:
-            self.logger.debug(f'received data "{data}" from {by} for command {command}')
-        else:
-            # command == None means that we got raw data from a callback and don't know yet to
-            # which command this belongs to. So find out...
-            self.logger.debug(f'received data "{data}" from {by} without command specification')
-            command = self._commands.get_command_from_reply(data)
-            if not command:
-                if self._discard_unknown_command:
-                    self.logger.debug(f'data "{data}" did not identify a known command, ignoring it')
-                    return
-                else:
-                    self.logger.debug(f'data "{data}" did not identify a known command, forwarding it anyway for {self._unknown_command}')
-                    self._dispatch_callback(self._unknown_command, data, by)
-
-        custom = None
-        if self.custom_commands:
-            custom = self._get_custom_value(command, data)
-
-        base_command = command
-        value = None
-        try:
-            value = self._commands.get_shng_data(command, data)
-            if custom:
-                command = command + CUSTOM_SEP + custom
-        except OSError as e:  # Exception as e:
-            self.logger.info(f'received data "{data}" for command {command}, error {e} occurred while converting. Discarding data.')
-        else:
-            self.logger.debug(f'received data "{data}" for command {command} converted to value {value}')
-            self._dispatch_callback(command, value, by)
-
-        self._process_additional_data(base_command, data, value, custom, by)
 
     def parse_item(self, item):
         """
@@ -505,6 +397,7 @@ class SmartDevicePlugin(SmartPlugin):
         # is lookup table item?
         table = self.get_iattr_value(item.conf, ITEM_ATTR_LOOKUP)
         if table:
+
             mode = 'fwd'
             if '#' in table:
                 (table, mode) = table.split('#')
@@ -564,6 +457,115 @@ class SmartDevicePlugin(SmartPlugin):
                     group = self._items_read_grp[item.id()]
                     self.logger.debug(f'Triggering read_group {group}')
                     self.read_all_commands(group)
+
+    def send_command(self, command, value=None, **kwargs):
+        """
+        Sends the specified command to the device providing <value> as data
+        Not providing data will issue a read command, trying to read the value
+        from the device and writing it to the associated item.
+
+        :param command: the command to send
+        :param value: the data to send, if applicable
+        :type command: str
+        :return: True if send was successful, False otherwise
+        :rtype: bool
+        """
+        if not self.alive:
+            self.logger.warning(f'trying to send command {command} with value {value}, but device is not active.')
+            return False
+
+        if not self._connection:
+            self.logger.warning(f'trying to send command {command} with value {value}, but connection is None. This shouldn\'t happen...')
+            return False
+
+        kwargs.update(self._parameters)
+        if self.custom_commands:
+            try:
+                command, custom_value = command.split(CUSTOM_SEP)
+                if 'custom' not in kwargs:
+                    kwargs['custom'] = {1: None, 2: None, 3: None}
+                kwargs['custom'][self.custom_commands] = custom_value
+            except ValueError:
+                self.logger.debug(f'extracting custom token failed, maybe not present in command {command}')
+
+        if not self._connection.connected():
+            if self._parameters.get(PLUGIN_ATTR_CONN_AUTO_CONN):
+                self._connection.open()
+
+            if not self._connection.connected():
+                self.logger.warning(f'trying to send command {command} with value {value}, but connection could not be established.')
+                return False
+
+        try:
+            data_dict = self._commands.get_send_data(command, value, **kwargs)
+        except Exception as e:
+            self.logger.warning(f'command {command} with value {value} produced error on converting value, aborting. Error was: {e}')
+            return False
+
+        if data_dict['payload'] is None or data_dict['payload'] == '':
+            self.logger.warning(f'command {command} with value {value} yielded empty command payload, aborting')
+            return False
+
+        data_dict = self._transform_send_data(data_dict, **kwargs)
+        self.logger.debug(f'command {command} with value {value} yielded send data_dict {data_dict}')
+
+        # if an error occurs on sending, an exception is thrown "below"
+        result = None
+        try:
+            result = self._send(data_dict)
+        except OSError as e:  # Exception as e:
+            self.logger.debug(f'error on sending command {command}, error was {e}')
+            return False
+
+        if result:
+            self.logger.debug(f'command {command} received result {result}')
+            self.on_data_received(None, value, command)
+
+        return True
+
+    def on_data_received(self, by, data, command=None):
+        """
+        Callback function for received data e.g. from an event loop
+        Processes data and dispatches value to plugin class
+
+        :param command: the command in reply to which data was received
+        :param data: received data in 'raw' connection format
+        :param by: client object / name / identifier
+        :type command: str
+        """
+        data = self._transform_received_data(data)
+        if command is not None:
+            self.logger.debug(f'received data "{data}" from {by} for command {command}')
+        else:
+            # command == None means that we got raw data from a callback and don't know yet to
+            # which command this belongs to. So find out...
+            self.logger.debug(f'received data "{data}" from {by} without command specification')
+            command = self._commands.get_command_from_reply(data)
+            if not command:
+                if self._discard_unknown_command:
+                    self.logger.debug(f'data "{data}" did not identify a known command, ignoring it')
+                    return
+                else:
+                    self.logger.debug(f'data "{data}" did not identify a known command, forwarding it anyway for {self._unknown_command}')
+                    self._dispatch_callback(self._unknown_command, data, by)
+
+        custom = None
+        if self.custom_commands:
+            custom = self._get_custom_value(command, data)
+
+        base_command = command
+        value = None
+        try:
+            value = self._commands.get_shng_data(command, data)
+            if custom:
+                command = command + CUSTOM_SEP + custom
+        except OSError as e:  # Exception as e:
+            self.logger.info(f'received data "{data}" for command {command}, error {e} occurred while converting. Discarding data.')
+        else:
+            self.logger.debug(f'received data "{data}" for command {command} converted to value {value}')
+            self._dispatch_callback(command, value, by)
+
+        self._process_additional_data(base_command, data, value, custom, by)
 
     def dispatch_data(self, command, value, by=None):
         """
@@ -629,26 +631,6 @@ class SmartDevicePlugin(SmartPlugin):
             return self._commands.is_valid_command(command, read)
         else:
             return False
-
-    def update_device_config(self, **kwargs):
-        """
-        Updates / changes configuration parametes for device. Needs device to not be running
-
-        overwrite as needed.
-        """
-        if self.alive:
-            self.logger.warning(f'tried to update configuration with {kwargs}, but plugin is still running. Ignoring request')
-            return
-
-        if not kwargs:
-            self.logger.warning('update_device_config called without new parameters. Don\'t know what to update.')
-            return
-
-        # merge new params with self._parameters, overwrite old values if necessary
-        self._parameters.update(kwargs)
-
-        # update = recreate the connection with new parameters
-        self._connection = self._get_connection()
 
     def get_lookup(self, lookup, mode='fwd'):
         """ returns the lookup table for name <lookup>, None on error """
@@ -739,6 +721,16 @@ class SmartDevicePlugin(SmartPlugin):
     # utility methods
     #
     #
+
+    def _append_to_itemlist(self, item):
+        if item not in self._itemlist:
+            self._itemlist.append(item)
+
+    def _remove_from_itemlist(self, item):
+        try:
+            self._itemlist.remove(item)
+        except Exception:
+            pass
 
     def _get_custom_value(self, command, data):
         """ extract custom value from data. At least PATTERN Needs to be overwritten """

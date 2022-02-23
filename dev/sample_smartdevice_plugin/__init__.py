@@ -45,7 +45,7 @@ else:
 # <--
 
 from lib.model.sdp.globals import PLUGIN_ATTR_CONNECTION, CONN_NULL         # import all "constants" you need in your own code
-from lib.model.smartdeviceplugin import SmartDevicePlugin                   # needed, obviously
+from lib.model.smartdeviceplugin import SmartDevicePlugin, Standalone       # needed, obviously
 
 if not SDP_standalone:
     from .webif import WebInterface                                         # can be removed if no webif is provided
@@ -86,3 +86,9 @@ class example(SmartDevicePlugin):
     def on_disconnect(self, by=None):
         """ callback if connection is broken. """
         self.logger.info('example plugin disconnected')
+
+
+# needed to start operation in standalone mode
+# as we don't have a run_standalone() method, only struct generation can be used
+if __name__ == '__main__':
+    s = Standalone(example, sys.argv[0])
