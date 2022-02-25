@@ -61,6 +61,7 @@ In die Datei folgendes einfügen:
    printing = bsd
    printcap name = /dev/null
    disable spoolss = yes
+   security = user
    # do not use old protocol versions due to security reasons
    server min protocol = SMB2_10
    #   client max protocol = SMB3
@@ -87,7 +88,7 @@ In die Datei folgendes einfügen:
    available = yes
    browseable = yes
    writable = yes
-   force user = www-data
+   force user = smarthome
    force group = www-data
    create mask = 0775
    directory mask = 0775
