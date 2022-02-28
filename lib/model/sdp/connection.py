@@ -25,6 +25,7 @@
 #########################################################################
 
 import logging
+import sys
 from time import sleep, time
 import requests
 import serial
@@ -35,7 +36,7 @@ import json
 
 from lib.network import Tcp_client
 
-from lib.model.sdp.globals import (sanitize_param, PLUGIN_ATTRS, PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_BINARY, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE, PLUGIN_ATTR_SERIAL_PARITY, PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_STOP, REQUEST_DICT_ARGS)
+from lib.model.sdp.globals import (sanitize_param, CONN_NET_TCP_REQ, CONN_NULL, CONN_SER_DIR, CONNECTION_TYPES, PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_BINARY, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE, PLUGIN_ATTR_SERIAL_PARITY, PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_STOP, PLUGIN_ATTRS, PROTO_NULL, PROTOCOL_TYPES, REQUEST_DICT_ARGS)
 
 
 #############################################################################################################################################################################################################################################
@@ -229,6 +230,109 @@ class SDPConnection(object):
 
     def __str__(self):
         return self.__class__.__name__
+
+    def _get_connection_class(self, conn_type=None, conn_classname=None, conn_cls=None, **params):
+
+        if not params:
+            params = self._params
+
+        conn_module = sys.modules.get('lib.model.sdp.connection', '')
+        if not conn_module:
+            self.logger.error('unable to get object handle of SDPConnection module')
+            return None
+
+        try:
+
+            # class not set
+            if not conn_cls:
+
+                if PLUGIN_ATTR_CONNECTION in params and isinstance(params[PLUGIN_ATTR_CONNECTION], SDPConnection):
+                    conn_cls = params[PLUGIN_ATTR_CONNECTION]
+                    conn_classname = conn_cls.__name__
+
+                # classname not known
+                if not conn_classname:
+
+                    if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] not in CONNECTION_TYPES:
+                        conn_classname = params[PLUGIN_ATTR_CONNECTION]
+                        conn_type = 'manual'
+
+                    # wanted connection type not known
+                    if not conn_type:
+
+                        if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] in CONNECTION_TYPES:
+                            conn_type = params[PLUGIN_ATTR_CONNECTION]
+
+                        elif PLUGIN_ATTR_NET_HOST in params and params[PLUGIN_ATTR_NET_HOST]:
+
+                            # no further information on network specifics, use basic HTTP TCP client
+                            conn_type = CONN_NET_TCP_REQ
+
+                        elif PLUGIN_ATTR_SERIAL_PORT in params and params[PLUGIN_ATTR_SERIAL_PORT]:
+
+                            # this seems to be a serial killer application
+                            conn_type = CONN_SER_DIR
+
+                        if not conn_type:
+                            # if not preset and not identified, use "empty" connection, e.g. for testing
+                            # when physical device is not present
+                            conn_type = CONN_NULL
+
+                    conn_classname = 'SDPConnection' + ''.join([tok.capitalize() for tok in conn_type.split('_')])
+
+                conn_cls = getattr(conn_module, conn_classname, getattr(conn_module, 'SDPConnection'))
+
+        except (TypeError, AttributeError):
+            self.logger.warning(f'could not identify wanted connection class from {conn_cls}, {conn_classname}, {conn_type}. Using default connection.')
+            conn_cls = SDPConnection
+
+        return conn_cls
+
+    def _get_protocol_class(self, proto_cls=None, proto_classname=None, proto_type=None, **params):
+
+        if not params:
+            params = self._params
+
+        proto_module = sys.modules.get('lib.model.sdp.protocol', '')
+        if not proto_module:
+            self.logger.error('unable to get object handle of SDPProtocol module')
+            return None
+
+        # class not set
+        if not proto_cls:
+
+            if PLUGIN_ATTR_PROTOCOL in params and isinstance(params[PLUGIN_ATTR_PROTOCOL], SDPConnection):
+                proto_cls = params[PLUGIN_ATTR_CONNECTION]
+                proto_classname = proto_cls.__name__
+
+            # classname not known
+            if not proto_classname:
+
+                if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] not in PROTOCOL_TYPES:
+                    proto_classname = params[PLUGIN_ATTR_CONNECTION]
+                    proto_type = ''
+
+                # wanted connection type not known
+                if not proto_type:
+
+                    if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] in PROTOCOL_TYPES:
+                        proto_type = params[PLUGIN_ATTR_CONNECTION]
+                    else:
+                        proto_type = PROTO_NULL
+
+                if proto_type not in PROTOCOL_TYPES:
+                    self.logger.error(f'protocol "{proto_type}" specified, but unknown and not class type or class name. Using default protocol')
+                    proto_type = PROTO_NULL
+
+                proto_classname = 'SDPProtocol' + ''.join([tok.capitalize() for tok in proto_type.split('_')])
+
+            proto_cls = getattr(proto_module, proto_classname, None)
+
+        if not proto_cls:
+            self.logger.error(f'protocol {self._parameters[PLUGIN_ATTR_PROTOCOL]} specified, but not loadable.')
+            return None
+
+        return proto_cls
 
 
 class SDPConnectionNetTcpRequest(SDPConnection):
