@@ -106,6 +106,16 @@ class SDPProtocol(SDPConnection):
         self.logger.debug(f'{self.__class__.__name__} _send called with {data_dict}')
         return self._connection.send(data_dict)
 
+    def _get_connection(self, use_callbacks=False):
+        conn_params = self._params.copy()
+
+        cb_connect = self.on_connect if use_callbacks else None
+        cb_disconnect = self.on_disconnect if use_callbacks else None
+        conn_params.update({PLUGIN_ATTR_CB_ON_CONNECT: cb_connect, PLUGIN_ATTR_CB_ON_DISCONNECT: cb_disconnect})
+
+        conn_cls = self._get_connection_class(**conn_params)
+        self._connection = conn_cls(None, **conn_params)
+
 
 class SDPProtocolJsonrpc(SDPProtocol):
     """ Protocol support for JSON-RPC 2.0
@@ -170,9 +180,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
         self._data_received_callback = data_received_callback
 
         # initialize connection
-        conn_params = self._params.copy()
-        conn_params.update({PLUGIN_ATTR_CB_ON_CONNECT: self.on_connect, PLUGIN_ATTR_CB_ON_DISCONNECT: self.on_disconnect})
-        self._connection = self._params[PLUGIN_ATTR_CONNECTION](self.on_data_received, **conn_params)
+        self._get_connection(True)
 
         # tell someone about our actual class
         self.logger.debug(f'protocol initialized from {self.__class__.__name__}')
@@ -486,10 +494,7 @@ class SDPProtocolViessmann(SDPProtocol):
         self._set_connection_params()
 
         # initialize connection
-        conn_params = self._params.copy()
-        # don't supply callback, we do only reply-based work
-        conn_params.update({PLUGIN_ATTR_CB_ON_CONNECT: None, PLUGIN_ATTR_CB_ON_DISCONNECT: None})
-        self._connection = self._params[PLUGIN_ATTR_CONNECTION](None, **conn_params)
+        self._get_connection()
 
         # set "method pointers"
         self._send_bytes = self._connection._send_bytes

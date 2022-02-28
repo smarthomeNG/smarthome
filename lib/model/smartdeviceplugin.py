@@ -40,11 +40,11 @@ import lib.shyaml as shyaml
 from lib.module import Modules
 from lib.plugin import Plugins
 
-from lib.model.sdp.globals import (update, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS, CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS, CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES, CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_READ_GROUPS, CMD_IATTR_RG_LEVELS, CMD_IATTR_TEMPLATE, COMMAND_READ, COMMAND_SEP, COMMAND_WRITE, CONN_NET_TCP_REQ, CONN_NULL, CONN_SER_DIR, CONNECTION_TYPES, CUSTOM_SEP, INDEX_GENERIC, INDEX_MODEL, ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM_PREFIX, ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ, ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_ATTR_SERIAL_PORT, PLUGIN_PATH, PROTO_NULL, PROTOCOL_TYPES)
+from lib.model.sdp.globals import (update, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS, CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS, CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES, CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_READ_GROUPS, CMD_IATTR_RG_LEVELS, CMD_IATTR_TEMPLATE, COMMAND_READ, COMMAND_SEP, COMMAND_WRITE, CUSTOM_SEP, INDEX_GENERIC, INDEX_MODEL, ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM_PREFIX, ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ, ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH)
 from lib.model.sdp.commands import SDPCommands
 from lib.model.sdp.command import SDPCommand
 from lib.model.sdp.connection import SDPConnection
-from lib.model.sdp.protocol import SDPProtocol
+from lib.model.sdp.protocol import SDPProtocol  # noqa
 
 
 class SmartDevicePlugin(SmartPlugin):
@@ -199,7 +199,8 @@ class SmartDevicePlugin(SmartPlugin):
             return False
 
         # try to import struct(s)
-        self._import_structs()
+        if self._sh:
+            self._import_structs()
 
         return True
 
@@ -748,7 +749,7 @@ class SmartDevicePlugin(SmartPlugin):
             self.logger.debug(f'received custom token {res[0]}, not in list of known tokens {self._custom_values[self.custom_commands]}')
             return None
 
-    def _get_connection(self):
+    def _get_connection(self, conn_type=None, conn_classname=None, conn_cls=None, proto_type=None, proto_classname=None, proto_cls=None, **params):
         """
         return connection object. Try to identify the wanted connection  and return
         the proper subclass instead. If no decision is possible, just return an
@@ -769,94 +770,27 @@ class SmartDevicePlugin(SmartPlugin):
             self._parameters[PLUGIN_ATTR_CB_ON_CONNECT] = self.on_connect
             self._parameters[PLUGIN_ATTR_CB_ON_DISCONNECT] = self.on_disconnect
 
-        conn_type = None
-        conn_classname = None
-        conn_cls = None
-        proto_type = None
-        proto_classname = None
-        proto_cls = None
+        self._params = self._parameters
 
-        conn_module = sys.modules.get('lib.model.sdp.connection', '')
-        if not conn_module:
-            self.logger.error('unable to get object handle of SDPConnection module')
-            return None
-
-        # try to find out what kind of connection is wanted
-        if PLUGIN_ATTR_CONNECTION in self._parameters:
-            if isinstance(self._parameters[PLUGIN_ATTR_CONNECTION], type) and issubclass(self._parameters[PLUGIN_ATTR_CONNECTION], SDPConnection):
-                conn_cls = self._parameters[PLUGIN_ATTR_CONNECTION]
-                conn_classname = conn_cls.__name__
-            elif self._parameters[PLUGIN_ATTR_CONNECTION] in CONNECTION_TYPES:
-                conn_type = self._parameters[PLUGIN_ATTR_CONNECTION]
-                if conn_type == CONN_NULL:
-                    conn_classname = 'SDPConnection'
-                    conn_cls = SDPConnection
-            else:
-                conn_classname = self._parameters[PLUGIN_ATTR_CONNECTION]
-
-        if not conn_type and not conn_cls and not conn_classname:
-            if PLUGIN_ATTR_NET_HOST in self._parameters and self._parameters[PLUGIN_ATTR_NET_HOST]:
-
-                # no further information on network specifics, use basic HTTP TCP client
-                conn_type = CONN_NET_TCP_REQ
-
-            elif PLUGIN_ATTR_SERIAL_PORT in self._parameters and self._parameters[PLUGIN_ATTR_SERIAL_PORT]:
-
-                # this seems to be a serial killer application
-                conn_type = CONN_SER_DIR
-
-            if not conn_type:
-                # if not preset and not identified, use "empty" connection, e.g. for testing
-                # when physical device is not present
-                conn_classname = 'SDPConnection'
-
-        if not conn_classname:
-            conn_classname = 'SDPConnection' + ''.join([tok.capitalize() for tok in conn_type.split('_')])
-        self.logger.debug(f'wanting connection class named {conn_classname}')
-
+        conn_cls = SDPConnection._get_connection_class(self)
         if not conn_cls:
-            conn_cls = getattr(conn_module, conn_classname, getattr(conn_module, 'SDPConnection'))
-
-        self.logger.debug(f'using connection class {conn_cls}')
+            return None
 
         # if protocol is specified, find second class
         if PLUGIN_ATTR_PROTOCOL in self._parameters:
-            proto_module = sys.modules.get('lib.model.sdp.protocol', '')
-            if not proto_module:
-                self.logger.error('unable to get object handle of SDPProtocol module')
-                return None
 
-            if isinstance(self._parameters[PLUGIN_ATTR_PROTOCOL], type) and issubclass(self._parameters[PLUGIN_ATTR_PROTOCOL], SDPConnection):
-                proto_cls = self._parameters[PLUGIN_ATTR_PROTOCOL]
-            elif self._parameters[PLUGIN_ATTR_PROTOCOL] in PROTOCOL_TYPES:
-                proto_type = self._parameters[PLUGIN_ATTR_PROTOCOL]
-            else:
-                proto_classname = self._parameters[PLUGIN_ATTR_PROTOCOL]
-
-            if proto_type is None and not proto_cls and not proto_classname:
-                # class not known and not provided
-                self.logger.error(f'protocol {self._parameters[PLUGIN_ATTR_PROTOCOL]} specified, but unknown and not class type or class name')
-                return None
-
-            if proto_type == PROTO_NULL:
-                proto_cls = SDPProtocol
-            elif proto_type:
-                proto_classname = 'SDPProtocol' + ''.join([tok.capitalize() for tok in proto_type.split('_')])
-
+            proto_cls = SDPConnection._get_protocol_class(self)
             if not proto_cls:
-                proto_cls = getattr(proto_module, proto_classname, None)
-                if not proto_cls:
-                    self.logger.error(f'protocol {self._parameters[PLUGIN_ATTR_PROTOCOL]} specified, but not loadable')
-                    return None
-
-            self.logger.debug(f'using protocol class {proto_cls}')
+                return None
 
             # set connection class in _params dict for protocol class to use
             self._parameters[PLUGIN_ATTR_CONNECTION] = conn_cls
 
             # return protocol instance as connection instance
+            self.logger.debug(f'using protocol class {proto_cls}')
             return proto_cls(self.on_data_received, **self._parameters)
 
+        self.logger.debug(f'using connection class {conn_cls}')
         return conn_cls(self.on_data_received, **self._parameters)
 
     def _create_cyclic_scheduler(self):
@@ -1115,7 +1049,7 @@ class Standalone():
         pfitems = plugin_file.split('/')
 
         self.plugin_mod_path = '.'.join(pfitems[:-1])
-        self.plugin_path = '/'.join(pfitems[:-1])
+        self.plugin_path = os.path.join(*pfitems[:-1])
         self.plugin_name = pfitems[-2]
 
         usage = """
