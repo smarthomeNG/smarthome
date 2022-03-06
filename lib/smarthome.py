@@ -157,7 +157,7 @@ class SmartHome():
         self._etc_dir = os.path.join(self._base_dir, 'etc')
         self._var_dir = os.path.join(self._base_dir, 'var')
         self._lib_dir = os.path.join(self._base_dir,'lib')
-        self._plugins_dir = os.path.join(self.base_dir, 'plugins')
+        self._plugins_dir = os.path.join(self._base_dir, 'plugins')
         self._env_dir = os.path.join(self._lib_dir, 'env' + os.path.sep)
 
         self._env_logic_conf_basename = os.path.join(self._env_dir ,'logic')
