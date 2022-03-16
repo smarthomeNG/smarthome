@@ -40,7 +40,20 @@ import lib.shyaml as shyaml
 from lib.module import Modules
 from lib.plugin import Plugins
 
-from lib.model.sdp.globals import (update, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS, CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS, CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES, CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_READ_GROUPS, CMD_IATTR_RG_LEVELS, CMD_IATTR_TEMPLATE, COMMAND_READ, COMMAND_SEP, COMMAND_WRITE, CUSTOM_SEP, INDEX_GENERIC, INDEX_MODEL, ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM_PREFIX, ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ, ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH)
+from lib.model.sdp.globals import (
+    update, ATTR_NAMES, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_ITEM_ATTRS,
+    CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_PARAMS,
+    CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES,
+    CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL,
+    CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_READ_GROUPS, CMD_IATTR_RG_LEVELS,
+    CMD_IATTR_TEMPLATE, COMMAND_READ, COMMAND_SEP, COMMAND_WRITE, CUSTOM_SEP,
+    INDEX_GENERIC, INDEX_MODEL, ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM_PREFIX,
+    ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ,
+    ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE,
+    PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT,
+    PLUGIN_ATTR_CMD_CLASS, PLUGIN_ATTR_CONNECTION,
+    PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_AUTO_CONN,
+    PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_RECURSIVE, PLUGIN_PATH)
 from lib.model.sdp.commands import SDPCommands
 from lib.model.sdp.command import SDPCommand
 from lib.model.sdp.connection import SDPConnection
@@ -76,19 +89,42 @@ class SmartDevicePlugin(SmartPlugin):
         self._set_item_attributes()
 
         # set item properties
-        self._items_write = {}          # contains all items with write command - <item_id>: <command>
-        self._items_read_all = []       # contains items which trigger 'read all' - <item_id>
-        self._items_read_grp = {}       # contains items which trigger 'read group foo' - <item_id>: <foo>
-        self._commands_read = {}        # contains all commands with read command - <command>: [<item_object>, <item_object>...]
-        self._commands_pseudo = {}      # contains all pseudo commands (without command sequence) - <command>: [<item_object>, <item_object>...]
-        self._commands_read_grp = {}    # contains all commands with read group command - <group>: [<command>, <command>...]
-        self._commands_initial = []     # contains all commands to be read after run() is called - 'command'
-        self._commands_cyclic = {}      # contains all commands to be read cyclically - <command>: {'cycle': <cycle>, 'next': <next>}
-        self._triggers_initial = []     # contains all read groups per device to be triggered after run() is called - 'grp'
-        self._triggers_cyclic = {}      # contains all read groups per device to be triggered cyclically - <grp>: {'cycle': <cycle>, 'next': <next>}
-        self._items_custom = {}         # contains item xx_custom<x> attributes - <item_id>: {1: custom1, 2: custom2, 3:custom3}
 
-        # None for normal operations, 1..3 for combined custom commands (<command>#<customx>)
+        # contains all items with write command
+        # <item_id>: <command>
+        self._items_write = {}
+        # contains items which trigger 'read all'
+        # <item_id>
+        self._items_read_all = []
+        # contains items which trigger 'read group foo'
+        # <item_id>: <foo>
+        self._items_read_grp = {}
+        # contains all commands with read command
+        # <command>: [<item_object>, <item_object>...]
+        self._commands_read = {}
+        # contains all pseudo commands (without command sequence)
+        # <command>: [<item_object>, <item_object>...]
+        self._commands_pseudo = {}
+        # contains all commands with read group command
+        # <group>: [<command>, <command>...]
+        self._commands_read_grp = {}
+        # contains all commands to be read after run() is called
+        # 'command'
+        self._commands_initial = []
+        # contains all commands to be read cyclically
+        # <command>: {'cycle': <cycle>, 'next': <next>}
+        self._commands_cyclic = {}
+        # contains all read groups to be triggered after run() is called
+        # 'grp'
+        self._triggers_initial = []
+        # contains all read groups per device to be triggered cyclically
+        # <grp>: {'cycle': <cycle>, 'next': <next>}
+        self._triggers_cyclic = {}
+        # contains item xx_custom<x> attributes
+        # <item_id>: {1: custom1, 2: custom2, 3:custom3}
+        self._items_custom = {}
+
+        # None for normal operations, 1..3 for combined custom commands
         self.custom_commands = None
 
         # for extraction of custom token from reply
@@ -101,12 +137,18 @@ class SmartDevicePlugin(SmartPlugin):
         self._use_callbacks = False
 
         # set class properties
-        self._connection = None                             # connection instance
-        self._commands = None                               # commands instance
-        self._custom_values = {1: [], 2: [], 3: []}         # keep custom123 values
 
-        self._discard_unknown_command = True                # by default, discard data not assignable to known command
-        self._unknown_command = '.notify.'                  # if not discarding data, set this command instead
+        # connection instance
+        self._connection = None
+        # commands instance
+        self._commands = None
+        # keep custom123 values
+        self._custom_values = {1: [], 2: [], 3: []}
+
+        # by default, discard data not assignable to known command
+        self._discard_unknown_command = True
+        # if not discarding data, set this command instead
+        self._unknown_command = '.notify.'
         self._initial_values_read = False
         self._cyclic_update_active = False
 
@@ -151,8 +193,8 @@ class SmartDevicePlugin(SmartPlugin):
 
     def deinit(self, items=[]):
         """
-        If the Plugin needs special code to be executed before it is unloaded, this method
-        has to be overwritten with the code needed for de-initialization
+        If the plugin needs special code to be executed before it is unloaded,
+        this method has to be overwritten for de-initialization
         """
         if self.alive:
             self.stop()
@@ -237,8 +279,9 @@ class SmartDevicePlugin(SmartPlugin):
     # def run_standalone(self):
     #     """
     #     If you want to provide a standalone function, you'll have to implement
-    #     this function with the appropriate code. You can use all functions from
-    #     the SmartDevicePlugin class (plugin), the connections and commands.
+    #     this function with the appropriate code. You can use all functions
+    #     from the SmartDevicePlugin class (plugin), the connections and
+    #     commands.
     #     You do not have an sh object, items or web interfaces.
     #
     #     As the base class should not have this method, it is commented out.
@@ -256,8 +299,9 @@ class SmartDevicePlugin(SmartPlugin):
         """
 
         def find_custom_attr(item, index=1):
-            """ find custom item attribute recursively. Returns attribute or None """
-            # self.logger.debug(f'looking recursively for {ITEM_ATTR_CUSTOM_PREFIX + str(index)} in {item} with {item.conf}...')
+            """ find custom item attribute recursively.
+            Returns attribute or None
+            """
             parent = item.return_parent()
 
             # parent(top_item) is sh.items
@@ -299,14 +343,16 @@ class SmartDevicePlugin(SmartPlugin):
                 self.logger.warning(f'Item {item} requests undefined command {command}, ignoring item')
                 return
 
-            # if "custom commands" are active for this device, modify command to be
-            # <command>#<customx>, where x is the index of the xx_custom<x> item attribute
-            # and <customx> is the value of the attribute.
-            # By this modification, multiple items with the same command but different customx-Values
-            # can "coexist" and be differentiated by the plugin and the device.
+            # if "custom commands" are active for this device, modify command to
+            # be <command>#<customx>, where x is the index of the xx_custom<x>
+            # item attribute and <customx> is the value of the attribute.
+            # By this modification, multiple items with the same command but
+            # different customx-values can "coexist" and be differentiated by
+            # the plugin and the device.
             command += custom_token
 
-            # from here on command is combined if device.custom_commands is set and a valid custom token is found
+            # from here on command is combined if device.custom_commands is set
+            # and a valid custom token is found
 
             # command marked for reading
             if self.get_iattr_value(item.conf, ITEM_ATTR_READ):
@@ -538,8 +584,8 @@ class SmartDevicePlugin(SmartPlugin):
         if command is not None:
             self.logger.debug(f'received data "{data}" from {by} for command {command}')
         else:
-            # command == None means that we got raw data from a callback and don't know yet to
-            # which command this belongs to. So find out...
+            # command == None means that we got raw data from a callback and
+            # don't know yet to which command this belongs to. So find out...
             self.logger.debug(f'received data "{data}" from {by} without command specification')
             command = self._commands.get_command_from_reply(data)
             if not command:
@@ -666,7 +712,7 @@ class SmartDevicePlugin(SmartPlugin):
         pass
 
     def _post_init(self):
-        """ do something after default initializing is done. Overwrite if needed. """
+        """ do something after default initializing is done. Overwrite it """
         pass
 
     def _transform_send_data(self, data_dict, **kwargs):
@@ -734,7 +780,10 @@ class SmartDevicePlugin(SmartPlugin):
             pass
 
     def _get_custom_value(self, command, data):
-        """ extract custom value from data. At least PATTERN Needs to be overwritten """
+        """
+        extract custom value from data
+        At least PATTERN needs to be overwritten
+        """
         if not self.custom_commands:
             return None
         if not isinstance(data, str):
@@ -751,15 +800,18 @@ class SmartDevicePlugin(SmartPlugin):
 
     def _get_connection(self, conn_type=None, conn_classname=None, conn_cls=None, proto_type=None, proto_classname=None, proto_cls=None, **params):
         """
-        return connection object. Try to identify the wanted connection  and return
-        the proper subclass instead. If no decision is possible, just return an
-        instance of SDPConnection.
+        return connection object.
 
-        If the PLUGIN_ATTR_PROTOCOL parameter is set, we need to change something.
-        In this case, the protocol instance takes the place of the connection
-        object and instantiates the connection object itself. Instead of the name
-        of the connection class, we pass the class itself, so instantiating it
-        poses no further challenge.
+        Try to identify the wanted connection and return the proper subclass
+        instead. If no decision is possible, just return an instance of the
+        base class SDPConnection, which is - externally - nonfunctional, but
+        can stand as a debugging and diagnosis tool.
+
+        If the PLUGIN_ATTR_PROTOCOL parameter is set, we need to change
+        something. In this case, the protocol instance takes the place of the
+        connection object and instantiates the connection object itself. Instead
+        of the name of the connection class, we pass the class itself, so
+        instantiating it poses no further challenge.
 
         If you need to use other connection types for your device, implement it
         and preselect with PLUGIN_ATTR_CONNECTION in /etc/plugin.yaml, so this
@@ -795,7 +847,8 @@ class SmartDevicePlugin(SmartPlugin):
 
     def _create_cyclic_scheduler(self):
         """
-        Setup the scheduler to handle cyclic read commands and find the proper time for the cycle.
+        Setup the scheduler to handle cyclic read commands and find the proper
+        time for the cycle.
         """
         if not self.alive:
             return
@@ -829,19 +882,19 @@ class SmartDevicePlugin(SmartPlugin):
 
     def _read_initial_values(self):
         """
-        Read all values configured to be read/triggered at startup / after reconnect
+        Read all values configured to be read/triggered at startup
         """
         if self._initial_values_read:
             self.logger.debug('_read_initial_values() called, but inital values were already read. Ignoring')
         else:
-            if self._commands_initial:  # also read after reconnect and not self._initial_values_read:
+            if self._commands_initial:
                 self.logger.info('Starting initial read commands')
                 for cmd in self._commands_initial:
                     self.logger.debug(f'Sending initial command {cmd}')
                     self.send_command(cmd)
                 self._initial_values_read = True
                 self.logger.info('Initial read commands sent')
-            if self._triggers_initial:  # also read after reconnect and not self._initial_values_read:
+            if self._triggers_initial:
                 self.logger.info('Starting initial read group triggers')
                 for grp in self._triggers_initial:
                     self.logger.debug(f'Triggering initial read group {grp}')
@@ -850,7 +903,8 @@ class SmartDevicePlugin(SmartPlugin):
 
     def _read_cyclic_values(self):
         """
-        Recall function for cyclic scheduler. Reads all values configured to be read cyclically.
+        Recall function for cyclic scheduler.
+        Reads all values configured to be read cyclically.
         """
         # check if another cyclic cmd run is still active
         if self._cyclic_update_active:
@@ -871,7 +925,7 @@ class SmartDevicePlugin(SmartPlugin):
                 todo.append(cmd)
 
         for cmd in todo:
-            # as this loop can take considerable time, repeatedly check if shng wants to stop
+            # repeatedly check if shng wants to stop to prevent stalling shng
             if not self.alive:
                 self.logger.info('Stop command issued, cancelling cyclic read')
                 return
@@ -899,7 +953,7 @@ class SmartDevicePlugin(SmartPlugin):
                 todo.append(grp)
 
         for grp in todo:
-            # as this loop can take considerable time, repeatedly check if shng wants to stop
+            # repeatedly check if shng wants to stop to prevent stalling shng
             if not self.alive:
                 self.logger.info('Stop command issued, cancelling cyclic trigger')
                 return
@@ -922,8 +976,8 @@ class SmartDevicePlugin(SmartPlugin):
     def _read_configuration(self):
         """
         This initiates reading of configuration.
-        Basically, this calls the SDPCommands object to fill itselt; but if needed,
-        this can be overwritten to do something else.
+        Basically, this calls the SDPCommands object to fill itselt
+        if needed, this can be overwritten to do something else.
         """
         cls = None
         if isinstance(self._command_class, type):
@@ -943,7 +997,7 @@ class SmartDevicePlugin(SmartPlugin):
         return True
 
     def _import_structs(self):
-        """ import and clean structs before adding - remove unsupported commands """
+        """ check if additional MODEL struct is needed and insert it """
 
         # check for and load struct definitions
         if not SDP_standalone:
@@ -1002,7 +1056,7 @@ class SmartDevicePlugin(SmartPlugin):
             return False
 
         try:
-            # try/except to handle running in a core version that does not support modules
+            # handle running in a core version that does not support modules
             self.mod_http = Modules.get_instance().get_module('http')
         except Exception:
             self.mod_http = None
@@ -1032,13 +1086,13 @@ class SmartDevicePlugin(SmartPlugin):
         return True
 
 
-#############################################################################################################################################################################################################################################
+################################################################################
 #
 #
 # Standalone functions
 #
 #
-#############################################################################################################################################################################################################################################
+################################################################################
 
 class Standalone():
 
@@ -1054,20 +1108,20 @@ class Standalone():
 
         usage = """
         Usage:
-        ----------------------------------------------------------------------------------
+        ------------------------------------------------------------------------
 
         This plugin is meant to be used inside SmartHomeNG.
 
-        Is is generally possible to run this plugin in standalone mode, usually for
-        diagnostic purposes - IF the plugin supports this mode. 
+        Is is generally possible to run this plugin in standalone mode, usually
+        for diagnostic purposes - IF the plugin supports this mode.
 
         ===============
 
-        If you call this plugin, any necessary configuration options can be specified
-        either as arg=value pairs or as a python dict(this needs to be enclosed in
-        quotes).
-        Be aware that later parameters, be they dict or pair type, overwrite earlier
-        parameters of the same name.
+        If you call this plugin, any necessary configuration options can be
+        specified either as arg=value pairs or as a python dict(this needs to be
+        enclosed in quotes).
+        Be aware that later parameters, be they dict or pair type, overwrite
+        earlier parameters of the same name.
 
         ``__init__.py host=www.smarthomeng.de port=80``
 
@@ -1075,7 +1129,7 @@ class Standalone():
 
         ``__init__.py '{'host': 'www.smarthomeng.de', 'port': 80}'``
 
-        If you call it with -v as a parameter, you get additional debug information:
+        If you set -v as a parameter, you get additional debug information:
 
         ``__init__.py -v``
 
@@ -1187,8 +1241,9 @@ class Standalone():
         :param indent: indent level (indent is INDENT ** indent)
         :param gpath: path of 'current' (next above) read group
         :param gpathlist: list of all current (above) read groups
-        :param has_models: True is command dict has models ('ALL') -> then include top level = model name in read groups and in command paths
-        :param func_first: True if 'first work, then walk', False if 'first walk, then work'
+        :param has_models: True is command dict has models ('ALL')
+        -> include top level = model name in read groups and in command paths
+        :param func_first: order of work (func) and walk, True is work first
         :param cut_levels: cut <n> levels from front of path
         :type node: dict
         :type node_name: str
@@ -1209,7 +1264,6 @@ class Standalone():
         # iterate over all children who are dicts
         for child in list(k for k in node.keys() if isinstance(node[k], dict)):
 
-            # (path if path else ('' if has_models else node_name)) + ('.' if path or not has_models else '') + child
             if path:
                 new_path = path + COMMAND_SEP
             elif not has_models:
@@ -1299,7 +1353,8 @@ class Standalone():
 
                 # rg_level = None: print all read groups (default)
                 # rg_level = 0: don't print read groups
-                # rg_level > 0: print last <x> levels of read groups plus custom read groups
+                # rg_level > 0: print last <x> levels of read groups
+                #               (plus custom read groups)
 
                 # only set read_groups if item 'can' trigger read.
                 # no logging because standalone mode and syntax output active
@@ -1337,8 +1392,8 @@ class Standalone():
                             if tmpl in self.item_templates:
                                 update(item, self.item_templates[tmpl])
 
-                    # if item has 'xx_lookup' and item_attrs['lookup_item'] is set,
-                    # create additional item with lookup values
+                    # if item has 'xx_lookup' and item_attrs['lookup_item'] is
+                    # set, create additional item with lookup values
                     lu_item = inode.get(CMD_IATTR_LOOKUP_ITEM)
                     if lu_item and node.get(CMD_ATTR_LOOKUP):
                         ltyp = inode.get(CMD_IATTR_LOOKUP_ITEM)
@@ -1419,8 +1474,8 @@ class Standalone():
             self.yaml = shyaml.yaml_load(file, ordered=True)
             self.yaml['item_structs'] = OrderedDict()
 
-            # this means the commands dict has 'ALL' and model names at the top level
-            # otherwise, these be commands or sections
+            # this means the commands dict has 'ALL' and model names at the top
+            # level otherwise, these be commands or sections
             cmds_has_models = INDEX_GENERIC in top_level_entries
 
             if cmds_has_models:
@@ -1444,7 +1499,7 @@ class Standalone():
 
             else:
 
-                # create flat commands, 'valid command' comparison needs full cmd path
+                # create flat commands, 'valid command' needs full cmd path
                 flat_commands = deepcopy(commands)
                 SDPCommands._flatten_cmds(None, flat_commands)
 
@@ -1481,7 +1536,7 @@ class Standalone():
                     # as we modify obj, we need to copy this
                     obj = {model: deepcopy(commands)}
 
-                    # remove all items with model-invalid 'xx_command' attribute obj
+                    # remove all items with model-invalid 'xx_command'
                     self.walk(obj[model], model, obj, self.removeItemsUndefCmd, '', 0, model, [model], True, False)
 
                     # remove all empty items from obj
