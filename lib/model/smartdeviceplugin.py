@@ -235,7 +235,7 @@ class SmartDevicePlugin(SmartPlugin):
             return False
 
         # instantiate connection object
-        self._connection = self._get_connection()
+        self._connection = self._get_connection(name=self.get_fullname())
         if not self._connection:
             self.logger.error(f'could not setup connection with {self._parameters}, plugin disabled')
             return False
@@ -798,7 +798,7 @@ class SmartDevicePlugin(SmartPlugin):
             self.logger.debug(f'received custom token {res[0]}, not in list of known tokens {self._custom_values[self.custom_commands]}')
             return None
 
-    def _get_connection(self, conn_type=None, conn_classname=None, conn_cls=None, proto_type=None, proto_classname=None, proto_cls=None, **params):
+    def _get_connection(self, conn_type=None, conn_classname=None, conn_cls=None, proto_type=None, proto_classname=None, proto_cls=None, name=None, **params):
         """
         return connection object.
 
@@ -840,10 +840,10 @@ class SmartDevicePlugin(SmartPlugin):
 
             # return protocol instance as connection instance
             self.logger.debug(f'using protocol class {proto_cls}')
-            return proto_cls(self.on_data_received, **self._parameters)
+            return proto_cls(self.on_data_received, name=name, **self._parameters)
 
         self.logger.debug(f'using connection class {conn_cls}')
-        return conn_cls(self.on_data_received, **self._parameters)
+        return conn_cls(self.on_data_received, name=name, **self._parameters)
 
     def _create_cyclic_scheduler(self):
         """
@@ -851,10 +851,6 @@ class SmartDevicePlugin(SmartPlugin):
         time for the cycle.
         """
         if not self.alive:
-            return
-
-        # did we get the plugin instance?
-        if not self._plugin:
             return
 
         # find shortest cycle
@@ -1003,7 +999,7 @@ class SmartDevicePlugin(SmartPlugin):
         if not SDP_standalone:
 
             shstructs = self._sh.items.return_struct_definitions(False)
-            model = self._parameters.get('model')
+            model = self._parameters.get('model', '')
             m_name = self.get_shortname() + '.' + model
             a_name = self.get_shortname() + '.' + INDEX_GENERIC
             m_struct = None
@@ -1115,7 +1111,7 @@ class Standalone():
         Is is generally possible to run this plugin in standalone mode, usually
         for diagnostic purposes - IF the plugin supports this mode.
 
-        ===============
+        ========================================================================
 
         If you call this plugin, any necessary configuration options can be
         specified either as arg=value pairs or as a python dict(this needs to be
@@ -1138,7 +1134,7 @@ class Standalone():
         ``visu_acl: <ro>/<rw>``
 
         attribute depending on the read/write configuration.
-        ===============
+        ========================================================================
 
         If you call it with -s as a parameter, the plugin will insert the struct
         into the plugins' `plugins/<plugin_name>/plugin.yaml` file. Old struct
@@ -1164,7 +1160,7 @@ class Standalone():
 
         self.indentwidth = 4
 
-        if len(sys.argv) >= 1 or (len(sys.argv) > 1 and sys.argv[1] not in ['-h', '--help', '-?', '/?', '/h', '/help']):
+        if len(sys.argv) == 1 or (len(sys.argv) > 1 and sys.argv[1] not in ['-h', '--help', '-?', '/?', '/h', '/help']):
 
             # check for further command line arguments
             self.params = {}

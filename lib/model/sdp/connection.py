@@ -52,7 +52,7 @@ class SDPConnection(object):
     not much. Opening and closing of connections and writing and receiving data
     is something to implement in the interface-specific derived classes.
     """
-    def __init__(self, data_received_callback, **kwargs):
+    def __init__(self, data_received_callback, name=None, **kwargs):
 
         if not hasattr(self, 'logger'):
             self.logger = logging.getLogger(__name__)
@@ -413,7 +413,7 @@ class SDPConnectionNetTcpClient(SDPConnection):
         def data_received_callback(command, message)
     If callbacks are class members, they need the additional first parameter 'self'
     """
-    def __init__(self, data_received_callback, **kwargs):
+    def __init__(self, data_received_callback, name=None, **kwargs):
 
         super().__init__(data_received_callback, done=False, **kwargs)
 
@@ -423,7 +423,7 @@ class SDPConnectionNetTcpClient(SDPConnection):
         # initialize connection
         self._tcp = Tcp_client(host=self._params[PLUGIN_ATTR_NET_HOST],
                                port=self._params[PLUGIN_ATTR_NET_PORT],
-                               name='TcpConnection',
+                               name=name,
                                autoreconnect=self._params[PLUGIN_ATTR_CONN_AUTO_CONN],
                                connect_retries=self._params[PLUGIN_ATTR_CONN_RETRIES],
                                connect_cycle=self._params[PLUGIN_ATTR_CONN_CYCLE],
@@ -481,9 +481,9 @@ class SDPConnectionNetUdpRequest(SDPConnectionNetTcpRequest):
 
     Response data is returned as text. Errors raise HTTPException
     """
-    def __init__(self, data_received_callback, **kwargs):
+    def __init__(self, data_received_callback, name=None, **kwargs):
 
-        super().__init__(data_received_callback, **kwargs)
+        super().__init__(data_received_callback, name, **kwargs)
 
         self.alive = False
         self._sock = None
@@ -549,7 +549,7 @@ class SDPConnectionSerial(SDPConnection):
         def data_received_callback(by, message)
     If callbacks are class members, they need the additional first parameter 'self'
     """
-    def __init__(self, data_received_callback, **kwargs):
+    def __init__(self, data_received_callback, name=None, **kwargs):
 
         class TimeoutLock(object):
             def __init__(self):
@@ -568,7 +568,7 @@ class SDPConnectionSerial(SDPConnection):
             def release(self):
                 self._lock.release()
 
-        super().__init__(data_received_callback, done=False, **kwargs)
+        super().__init__(data_received_callback, done=False, name=name, **kwargs)
 
         # set class properties
         self._lock = TimeoutLock()
@@ -812,18 +812,19 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
         def data_received_callback(by, message)
     If callbacks are class members, they need the additional first parameter 'self'
     """
-    def __init__(self, data_received_callback, **kwargs):
+    def __init__(self, data_received_callback, name=None, **kwargs):
         # set additional class members
         self.__receive_thread = None
+        self._name = name if name else ''
 
-        super().__init__(data_received_callback, **kwargs)
+        super().__init__(data_received_callback, name=name, **kwargs)
 
     def _setup_listener(self):
         if not self._is_connected:
             return
 
         self._listener_active = True
-        self.__receive_thread = Thread(target=self.__receive_thread_worker, name='Serial')
+        self.__receive_thread = Thread(target=self.__receive_thread_worker, name=self._name + '.Serial')
         self.__receive_thread.daemon = True
         self.__receive_thread.start()
 
