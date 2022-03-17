@@ -57,7 +57,7 @@ class SDPProtocol(SDPConnection):
     of the device and the connection classes.
     """
 
-    def __init__(self, data_received_callback, **kwargs):
+    def __init__(self, data_received_callback, name=None, **kwargs):
 
         self.logger = logging.getLogger(__name__)
 
@@ -84,7 +84,7 @@ class SDPProtocol(SDPConnection):
         # initialize connection
         conn_params = self._params.copy()
         conn_params.update({PLUGIN_ATTR_CB_ON_CONNECT: self.on_connect, PLUGIN_ATTR_CB_ON_DISCONNECT: self.on_disconnect})
-        self._connection = self._params[PLUGIN_ATTR_CONNECTION](self.on_data_received, **conn_params)
+        self._connection = self._params[PLUGIN_ATTR_CONNECTION](self.on_data_received, name=name, **conn_params)
 
         # tell someone about our actual class
         self.logger.debug(f'protocol initialized from {self.__class__.__name__}')
@@ -106,7 +106,7 @@ class SDPProtocol(SDPConnection):
         self.logger.debug(f'{self.__class__.__name__} _send called with {data_dict}')
         return self._connection.send(data_dict)
 
-    def _get_connection(self, use_callbacks=False):
+    def _get_connection(self, use_callbacks=False, name=None):
         conn_params = self._params.copy()
 
         cb_connect = self.on_connect if use_callbacks else None
@@ -114,7 +114,7 @@ class SDPProtocol(SDPConnection):
         conn_params.update({PLUGIN_ATTR_CB_ON_CONNECT: cb_connect, PLUGIN_ATTR_CB_ON_DISCONNECT: cb_disconnect})
 
         conn_cls = self._get_connection_class(**conn_params)
-        self._connection = conn_cls(None, **conn_params)
+        self._connection = conn_cls(None, name=name, **conn_params)
 
 
 class SDPProtocolJsonrpc(SDPProtocol):
@@ -134,7 +134,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
     If callbacks are class members, they need the additional first parameter 'self'
 
     """
-    def __init__(self, data_received_callback, **kwargs):
+    def __init__(self, data_received_callback, name=None, **kwargs):
 
         self.logger = logging.getLogger(__name__)
 
@@ -180,7 +180,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
         self._data_received_callback = data_received_callback
 
         # initialize connection
-        self._get_connection(True)
+        self._get_connection(True, name=name)
 
         # tell someone about our actual class
         self.logger.debug(f'protocol initialized from {self.__class__.__name__}')
@@ -408,7 +408,7 @@ class SDPProtocolViessmann(SDPProtocol):
     implemented for network access as of this time...
     """
 
-    def __init__(self, data_received_callback, **kwargs):
+    def __init__(self, data_received_callback, name=None, **kwargs):
 
         self.logger = logging.getLogger(__name__)
 
@@ -494,7 +494,7 @@ class SDPProtocolViessmann(SDPProtocol):
         self._set_connection_params()
 
         # initialize connection
-        self._get_connection()
+        self._get_connection(name=name)
 
         # set "method pointers"
         self._send_bytes = self._connection._send_bytes
