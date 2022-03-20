@@ -158,8 +158,6 @@ class SmartPlugin(SmartObject, Utils):
             # if a device_command was given for the item, the item is being removed from the list of the device_command
             self._item_lookup_dict[command].remove(item_path)
 
-        return True
-
 # NOTE: as we delete information about registered items, we need to un-register the trigger methods
         self.unparse_item(self._item_dict[item_path]['item'])
 
