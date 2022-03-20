@@ -46,3 +46,15 @@ weitere Packages von pypi.org:
 +-----------------+------------------------------------------------+
 
 
+Import weiterer Python Module
+=============================
+
+Weitere Module können normal mit dem import Statement importiert werden.
+
+Beim import von Modulen in Logiken ist eine Besonderheit zu beachten, falls in der Logik Funktionen definiert
+werden: Eine Logik verhält sich nicht wie ein Python Modul!
+
+.. important::
+
+    Sollen in der Logik weitere Python Module genutzt werden, so muss der import der Moduls innerhalb der Funktion
+    erfolgen, die eine Funktion aus dem zu importierenden Python Modul nutzt.
