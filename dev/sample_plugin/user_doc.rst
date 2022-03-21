@@ -1,17 +1,5 @@
-.. index:: Plugins; sample
-.. index:: sample
-
-======
-sample
-======
-
-.. image:: webif/static/img/plugin_logo.png
-   :alt: plugin logo
-   :width: 300px
-   :height: 300px
-   :scale: 50 %
-   :align: left
-
+Sample Plugin <- hier den Namen des Plugins einsetzen
+=====================================================
 
 Anforderungen
 -------------
