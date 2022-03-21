@@ -22,38 +22,53 @@ $(window).bind('datatables_defaults', function() {
 	};
 	try
 		{
-
+			top_offset = $('#webif-navbar').outerHeight() + $('#webif-tabs').outerHeight();
 			// Set datatable useful defaults
 			$.extend( $.fn.dataTable.defaults, {
 				lengthMenu: [ [25, 50, 100, -1], [25, 50, 100, "All"] ], // pagination menu
-				pageLength: 100, // default to "all"
+				pageResize: false,
+				lengthChange: true,
+				paging: true,
+				pageLength: 100, // default to "100"
 				pagingType: "full_numbers", // include first and last in pagination menu
 				colReorder: true, // enable colomn reorder by drag and drop
 				columnDefs: [{ targets: '_all', className: 'truncate' }],
 				fixedHeader: {header: true, // header will always be visible on top of page when scrolling
-				 						 headerOffset: $('#webif-navbar').outerHeight() + $('#webif-tabs').outerHeight()},
+				 						 headerOffset: top_offset},
 				autoWidth: false,
-				initComplete: function () {$(this).show();}, // show table (only) after init
+				initComplete: function () {$(this).show();$('#resize_wrapper').css('height', $(window).height() - top_offset - $('.dataTables_paginate').outerHeight() - 10);}, // show table (only) after init, adjust height of wrapper
         responsive: {details: {renderer: $.fn.dataTable.Responsive.renderer.listHiddenNodes()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
 				fnDrawCallback: function(oSettings) { // hide pagination if not needed
 					if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay() || oSettings._iDisplayLength == -1) {
 						 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
 					} else {
 							$(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+							$(oSettings.nTableWrapper).find('.paginate_button').on('click', function(){
+								// scroll to top on page change
+								  $('html, body').animate({
+									  scrollTop: $('#'+oSettings.sTableId).offset().top - top_offset
+								  }, 'slow');
+							});
 					}
+
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( false );
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( true );
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
+
 				}
 			});
 			// Set date format for correct sorting of columns containing date strings
 			$.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss');
 			$.fn.dataTable.moment('YYYY-MM-DD HH:mm:ss');
+			$.fn.dataTable.moment('DD.MM.');
+			$.fn.dataTable.moment('HH:mm');
+
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
 				$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 				$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
 				$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
 			});
+
 		}
 	catch (e)
 		{
