@@ -31,9 +31,16 @@ plusIconlist-group-item.py-2.node-tree.node-selected {
   background-color: #ecf3f8;
 }
 
-table .truncate {
+table td.truncate {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+table td.truncate:active {
+  text-overflow: clip;
+  white-space: normal;
+  word-break: break-all;
 }
 
 table .notruncate {
@@ -255,4 +262,13 @@ a.text-shng:focus, a.text-shng:hover {
 .shng_heading {
   color: #4d4d4d;
   font-weight: bold;
+}
+/*
+These are necessary for highligt effect in web interface when a value changes. Can be overwritten in own index.html
+*/
+.shng_effect_highlight {
+  background-color: #FFFFE0;
+}
+.shng_effect_standard {
+  background-color: none;
 }
