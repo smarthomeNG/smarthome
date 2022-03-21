@@ -46,6 +46,11 @@ table td.truncate:active {
 table .notruncate {
   overflow: visible;
 }
+/* this is necessary for correct auto pageResize of datatables */
+.table-resize {
+  height: 100%;
+  box-sizing: border-box;
+}
 
 .minusIcon {
   position: relative;

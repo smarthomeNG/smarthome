@@ -98,29 +98,27 @@ Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleif
 .. code-block:: html+jinja
 
     {% block **bodytab1** %}
-        <div class="table-responsive" style="margin-left: 3px; margin-right: 3px;" class="row">
-            <div class="col-sm-12">
-                <table id="#maintable" class="table table-striped table-hover pluginList display">
-                    <thead>
+        <div class="container-fluid m-2 table-resize">
+            <table id="#maintable" class="table table-striped table-hover pluginList display">
+                <thead>
+                    <tr>
+                        <th>{{ _('Item') }}</th>
+                        <th>{{ _('Typ') }}</th>
+                        <th>{{ _('knx_dpt') }}</th>
+                        <th>{{ _('Wert') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
                         <tr>
-                            <th>{{ _('Item') }}</th>
-                            <th>{{ _('Typ') }}</th>
-                            <th>{{ _('knx_dpt') }}</th>
-                            <th>{{ _('Wert') }}</th>
+                            <td class="py-1">{{ item._path }}</td>
+                            <td class="py-1">{{ item._type }}</td>
+                            <td class="py-1">{{ item.conf['knx_dpt'] }}</td>
+                            <td class="py-1">{{ item._value }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in items %}
-                            <tr>
-                                <td class="py-1">{{ item._path }}</td>
-                                <td class="py-1">{{ item._type }}</td>
-                                <td class="py-1">{{ item.conf['knx_dpt'] }}</td>
-                                <td class="py-1">{{ item._value }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     {% endblock **bodytab1** %}
 
@@ -147,29 +145,23 @@ dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hie
     ...
 
     {% block **bodytab1** %}
-        <div class="table-responsive" style="margin-left: 3px; margin-right: 3px;" class="row">
-            <div class="col-sm-12">
-                <table id="#maintable" class="table table-striped table-hover pluginList display">
-                    <thead>
+        <div class="container-fluid m-2 table-resize">
+            <table id="#maintable" class="table table-striped table-hover pluginList display">
+                <thead>
+                    <tr>
+                        ...
+                        <th class="value">{{ _('Wert') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
                         <tr>
-                            <th class="item">{{ _('Item') }}</th>
-                            <th class="typ">{{ _('Typ') }}</th>
-                            <th class="dpt">{{ _('knx_dpt') }}</th>
-                            <th class="value">{{ _('Wert') }}</th>
+                            ...
+                            <td id="{{ item }}_value" class="py-1">{{ item._value }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in items %}
-                            <tr>
-                                <td class="py-1">{{ item._path }}</td>
-                                <td class="py-1">{{ item._type }}</td>
-                                <td class="py-1">{{ item.conf['knx_dpt'] }}</td>
-                                <td id="{{ item }}_value" class="py-1">{{ item._value }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     {% endblock **bodytab1** %}
 
@@ -201,7 +193,17 @@ Das folgende Beispiel weist die neuen Daten dem oben vorgestellten <td>-Element 
     {% endblock pluginscripts %}
 
 
-Das nächste Beispiel befüllt dazu analog die <td>-Elemente der Zeilen in der Tabelle im ``bodytab?``:
+Das nächste Beispiel befüllt dazu analog die <td>-Elemente der Zeilen in der Tabelle im ``bodytab?``.
+Die Parameter der shngInsertText-Funktion sind dabei wie folgt:
+
+#. (obligatorisch) ID des HTML Elements, z.B. der Tabellenzelle
+
+#. (obligatorisch) zu schreibender Wert, wird aus dem objResponse dict gelesen
+
+#. (optional) Wenn das Element aus Parameter 0 in einer dataTable ist, muss die ID der Tabelle mitgegeben werden
+
+#. (optional) Möchte man beim Ändern eines Werts einen Highlight-Effekt, kann die Dauer in Sekunden angegeben werden
+
 
 .. code-block:: html+jinja
 
@@ -212,9 +214,9 @@ Das nächste Beispiel befüllt dazu analog die <td>-Elemente der Zeilen in der T
                 var objResponse = JSON.parse(response);
 
                 for (var item in objResponse) {
-                    shngInsertText(item+'_value', objResponse['item'][item]['value']);
+                    shngInsertText(item+'_value', objResponse['item'][item]['value'], null, 2);
                     // bei Tabellen mit datatables Funktion sollte die Zeile lauten:
-                    // shngInsertText(item+'_value', objResponse['item'][item]['value'], 'maintable');
+                    // shngInsertText(item+'_value', objResponse['item'][item]['value'], 'maintable', 2);
                 }
             }
         }
@@ -270,6 +272,32 @@ anzugeben ist (0 wäre die erste Tabellenspalte, 2 die zweite, etc.).
     table = $('#maintable').DataTable( {
       "columnDefs": [{ "targets": 0, "className": "none"}].concat($.fn.dataTable.defaults.columnDefs)
     } );
+
+
+Hervorheben von Änderungen
+--------------------------
+
+Wird über ``shngInsertText`` der Inhalt eines HTML Elements aktualisiert, kann dies optional durch einen
+farbigen Hintergrund hervorgehoben werden. Der jquery UI Effekt ``switchClass`` wechselt dabei sanft
+von einer CSS Klasse zur anderen. Die Dauer des Effekts kann im letzten Parameter des Aufrufs von
+``shngInsertText`` in Sekunden angegeben werden. Eine Dauer von 0 oder keine Angabe sorgen dafür,
+dass kein Highlight Effekt ausgeführt wird. Außerdem wird der Effekt auch nicht aktiviert, wenn der vorige
+Wert ``...`` war (z.B. beim Initialisieren der Tabelle, bevor aktualisierte Werte vom Plugin kommen).
+Die beiden Klassen sind bereits hinterlegt, können aber in der index.html im Block ``pluginStyles``
+bei Bedarf überschrieben werden.
+
+.. code-block:: css+jinja
+
+    {% block pluginstyles %}
+    <style>
+        .shng_effect_highlight {
+          background-color: #FFFFE0;
+        }
+        .shng_effect_standard {
+          background-color: none;
+        }
+    </style>
+    {% endblock pluginstyles %}
 
 
 Festlegen des Aktualisierungsintervalls
