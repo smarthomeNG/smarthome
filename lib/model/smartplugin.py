@@ -121,7 +121,7 @@ class SmartPlugin(SmartObject, Utils):
         :rtype: bool
         """
         if item_path in self._item_dict:
-            self.logging.error("Trying to add an existing item")
+            self.logging.warning("Trying to add an existing item")
             return False
 
         self._item_dict[item_path] = {
@@ -156,7 +156,8 @@ class SmartPlugin(SmartObject, Utils):
         command = self._item_dict[item_path].get('device_command')
         if command:
             # if a device_command was given for the item, the item is being removed from the list of the device_command
-            self._item_lookup_dict[command].remove(item_path)
+            if item_path in self._item_lookup_dict[command]:
+                self._item_lookup_dict[command].remove(item_path)
 
 # NOTE: as we delete information about registered items, we need to un-register the trigger methods
         self.unparse_item(self._item_dict[item_path]['item'])
@@ -164,6 +165,7 @@ class SmartPlugin(SmartObject, Utils):
         del self._item_dict[item_path]
         return True
 
+# TODO: harmonize name with key name self._item_dict['has_trigger_method']
     def register_updating(self, item):
         """
         Mark item in self._item_dict as registered in shng for updating
