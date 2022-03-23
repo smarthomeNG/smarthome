@@ -39,10 +39,10 @@ shitems = Items.get_instance()
 
 class SmartPlugin(SmartObject, Utils):
     """
-    The class SmartPlugin implements the base class of call smart-plugins.
+    The class SmartPlugin implements the base class of all smart-plugins.
     The implemented methods are described below.
 
-    In adition the methods implemented in lib.utils.Utils are inhereted.
+    In addition the methods implemented in lib.utils.Utils are inherited.
     """
 
     ALLOW_MULTIINSTANCE = None
@@ -58,7 +58,7 @@ class SmartPlugin(SmartObject, Utils):
     _pluginname_prefix = 'plugins.'
 
     _item_dict = {}         # dict to hold the items assigned to the plugin and their plugin specific information
-    _item_lookup_dict = {}  # dict for the reverse lookup from a device_command to an item, contains a list of item_paths for each device_command
+    _item_lookup_dict = {}  # dict for the reverse lookup from a device_command to an item, contains a list of items for each device_command
     _add_translation = None
 
     _parameters = {}    # Dict for storing the configuration parameters read from /etc/plugin.yaml
@@ -77,27 +77,21 @@ class SmartPlugin(SmartObject, Utils):
         has to be overwritten with the code needed for de-initialization
 
         If called without parameters, all registered items are unregistered.
-        items can be a list of items or item paths.
+        items is a list of items.
         """
         if self.alive:
             self.stop()
 
         if not items:
-            items = self.get_item_list()
-# TODO: im Folgenden sind einige "Fehlerfänger", fail safe, not sorry.
-#       Wenn die Schnittstelle ausreichend definiert und dokumentiert ist,
-#       könnte man ggf. darauf verzichten... 
+            items = self.get_items()
         elif not isinstance(items, list):
             items = [items]
 
-        for item_spec in items:
-            item = self.ensure_item(item_spec)
-# NOTE: gem. Angaben in lib.item.item soll statt item.id() item.path() verwendet werden...
+        for item in items:
             if item.path() in self._item_dict:
-                self.remove_item(item.path())
+                self.remove_item(item)
 
-# TODO: prüfen, ob statt item_path item übergeben werden soll
-    def add_item(self, item_path, config_data_dict={}, device_command=None):
+    def add_item(self, item, config_data_dict={}, device_command=None):
         """
         For items that are used/handled by a plugin, this method stores the configuration information
         that is individual for the plugin. The configuration information is/has to be stored in a dictionary
@@ -105,27 +99,27 @@ class SmartPlugin(SmartObject, Utils):
         The configuration information can be retrieved later by a call to the method get_item_configdata(<item_path>)
 
         If data is beeing received by the plugin, a 'device_command' has to be specified as an optional 3rd parameter.
-        This allows a reverse lookup. The method get_itemlist_for_devcie_command(<device_command>) returns a list
-        of item-pathes for the items that have defined the <device_command>. In most cases, the list will have only one
+        This allows a reverse lookup. The method get_itemlist_for_device_command(<device_command>) returns a list
+        of items for the items that have defined the <device_command>. In most cases, the list will have only one
         entry, but if multiple items should receive data from the same device (or command), the list can have more than
         one entry.
 
-        :param item_path: Path of the item (item.property.path / item.id())
+        :param item: item
         :param config_data_dict: Dictionary with the plugin-specific configuration information for the item
         :param device_command: String identifing the origin (source/kind) of received data
-        :type item_path: str
+        :type item: Item
         :type config_data_dict: dict
         :type device_command: str
 
         :return: True, if the information has been added
         :rtype: bool
         """
-        if item_path in self._item_dict:
+        if item.path() in self._item_dict:
             self.logging.warning("Trying to add an existing item")
             return False
 
-        self._item_dict[item_path] = {
-            'item': shitems.return_item(item_path),
+        self._item_dict[item.path()] = {
+            'item': item,
 # TODO: besseren Namen für 'has_trigger_method'? zB 'is_updating' oder so...
             'has_trigger_method': False,
             'device_command': device_command,
@@ -135,11 +129,11 @@ class SmartPlugin(SmartObject, Utils):
         if device_command:
             if device_command not in self._item_lookup_dict:
                 self._item_lookup_dict[device_command] = []
-            self._item_lookup_dict[device_command].append(item_path)
+            self._item_lookup_dict[device_command].append(item)
 
         return True
 
-    def remove_item(self, item_path):
+    def remove_item(self, item):
         """
         Remove configuration data for an item (and remove the item from the device_command's list
 
@@ -149,20 +143,21 @@ class SmartPlugin(SmartObject, Utils):
         :return: True, if the information has been removed
         :rtype: bool
         """
-        if item_path not in self._item_dict:
+        if item.path() not in self._item_dict:
             # There is no information stored for that item
             return False
 
-        command = self._item_dict[item_path].get('device_command')
+        # remove item from self._item_lookup_dict if present
+        command = self._item_dict[item.path()].get('device_command')
         if command:
             # if a device_command was given for the item, the item is being removed from the list of the device_command
-            if item_path in self._item_lookup_dict[command]:
-                self._item_lookup_dict[command].remove(item_path)
+            if item in self._item_lookup_dict[command]:
+                self._item_lookup_dict[command].remove(item)
 
-# NOTE: as we delete information about registered items, we need to un-register the trigger methods
-        self.unparse_item(self._item_dict[item_path]['item'])
+        # unregister item update method
+        self.unparse_item(item)
 
-        del self._item_dict[item_path]
+        del self._item_dict[item.path()]
         return True
 
 # TODO: harmonize name with key name self._item_dict['has_trigger_method']
@@ -174,22 +169,24 @@ class SmartPlugin(SmartObject, Utils):
         This method is called by the item object itself
         """
         if item.path() not in self._item_dict:
-            self.add_item(item.path())
+            self.add_item(item)
         self._item_dict[item.path()]['has_trigger_method'] = True
 
-    def get_item_config(self, item_path):
+    def get_item_config(self, item):
         """
-        Returns the plugin-specific configuration information for the given item_path
+        Returns the plugin-specific configuration information for the given item
 
-        :param item_path: Path of the item (item.property.path / item.id()) to get config info for
-        :type item_path: str
+        :param item: item to get config info for
+        :type item: class Item
 
-        :return: dict with the configuration information for the given item_path
+        :return: dict with the configuration information for the given item
         :rtype: dict
         """
-        return self._item_dict[item_path].get('config_data')
+        return self._item_dict[item.path()].get('config_data')
 
-    def get_item_list(self):
+# TODO: maybe call this get_item_names to be more intuitive?
+#       get_item_paths would be syntactically correct, but weird
+    def get_item_path_list(self):
         """
         Return list of stored item paths
         """
@@ -207,14 +204,14 @@ class SmartPlugin(SmartObject, Utils):
         """
         return [self._item_dict[item]['item'] for item in self._item_dict if self._item_dict[item]['has_trigger_method']]
 
-    def get_itemlist_for_command(self, device_command):
+    def get_items_for_command(self, device_command):
         """
-        Returns a list with item paths that should receive data for the given device_command
+        Returns a list of items that should receive data for the given device_command
 
         :param device_command: device_command, for which the receiving items should be returned
         :type device_command: str
 
-        :return: List of item_pathes
+        :return: List of items
         :rtype: list
         """
         return self._item_lookup_dict.get(device_command, [])
@@ -228,31 +225,6 @@ class SmartPlugin(SmartObject, Utils):
             return True
         except Exception:
             return False
-
-# NOTE: benötigt als Hilfsmethode, um insb. deinit() lesbarer zu halten.
-#       Wenn die Fehlerabfragen in deinit() gelöscht werden, kann die Methode entfallen
-    @staticmethod
-    def _ensure_item(item_spec):
-        """
-        make sure we have an item object. If necessary, try to retrieve the
-        item object by requesting it from the Items instance
-        If item_path does not specify a valid item, the method returns None.
-
-        :param item_spec: item or item_path
-
-        :return: item
-        :rtype: obj
-        """
-        if isinstance(item_spec, Item):
-            return item_spec
-        elif isinstance(item_spec, str):
-            return shitems.return_item(item_spec)
-        else:
-            return None
-
-
-
-
 
     def get_configname(self):
         """
@@ -948,12 +920,12 @@ class SmartPlugin(SmartObject, Utils):
 #
 
     def _get_itemlist(self):
-        self._sh._deprecated_warning('SmartPlugin.get_item_list()')
-        return self.get_item_list()
+        self._sh._deprecated_warning('SmartPlugin.get_items()')
+        return self.get_items()
 
     def _append_to_itemlist(self, item):
-        self._sh._deprecated_warning('SmartPlugin.register_updating()')
-        self.append_to_itemdict(item)
+        self._sh._deprecated_warning('SmartPlugin.add_item()')
+        self.add_item(item)
 
 
 
