@@ -51,6 +51,10 @@ table .notruncate {
   height: 100%;
   box-sizing: border-box;
 }
+.tab-content {
+  position:absolute;
+  top:230px;
+}
 
 .minusIcon {
   position: relative;
