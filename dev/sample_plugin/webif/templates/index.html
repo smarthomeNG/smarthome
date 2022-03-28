@@ -13,12 +13,6 @@
   table th.value {
     width: 100px;
   }
-  /* hides the maintable datatable by default until it is initialized. */
-  #maintable {
-     display: none;
-     table-layout: fixed;
-  }
-  /*
   These are used for highligt effect in web interface when a value changes. If you don't want to overwrite the
   default color, you can remove the entries here as the classes are already defined in smarthomeng.css
   */
@@ -173,7 +167,7 @@
 	{{ _('Hier kommt der Inhalt des Webinterfaces hin.') }}
 
 	<!-- set id accordingly -->
-	<table id="maintable" class="table table-striped table-hover pluginList display">
+	<table id="maintable" class="table table-striped table-hover pluginList">
 		<thead>
 			<tr>
 			  <th>{{ _('Item') }}</th>

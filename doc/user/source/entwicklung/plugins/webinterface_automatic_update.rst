@@ -99,7 +99,7 @@ Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleif
 
     {% block **bodytab1** %}
         <div class="container-fluid m-2 table-resize">
-            <table id="#maintable" class="table table-striped table-hover pluginList display">
+            <table id="#maintable" class="table table-striped table-hover pluginList">
                 <thead>
                     <tr>
                         <th>{{ _('Item') }}</th>
@@ -146,7 +146,7 @@ dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hie
 
     {% block **bodytab1** %}
         <div class="container-fluid m-2 table-resize">
-            <table id="#maintable" class="table table-striped table-hover pluginList display">
+            <table id="#maintable" class="table table-striped table-hover pluginList">
                 <thead>
                     <tr>
                         ...
@@ -230,8 +230,7 @@ Sortierbare Tabellen
 Wie erwähnt muss für das Aktivieren von sortier- und durchsuchbaren Tabellen der entsprechende Script-Block
 wie in :doc:`Das Webinterface mit Inhalt füllen </entwicklung/plugins/webinterface_filling_webinterface>`
 unter Punkt 3 beschrieben eingefügt werden. Dabei ist auch zu beachten, dass der zu sortierenden
-Tabelle eine entsprechende ID gegeben wird (im Beispiel oben ``#maintable``) und die Klasse ``display``
-ergänzt wird.
+Tabelle eine entsprechende ID gegeben wird (im Beispiel oben ``#maintable``).
 
 Damit die neuen Daten auch von datatables.js erkannt und korrekt sortiert werden, ist es wichtig,
 dem Aufruf ``shngInsertText`` die Tabellen-ID als dritten Parameter mitzugeben (im Beispiel 'maintable').
@@ -239,8 +238,7 @@ dem Aufruf ``shngInsertText`` die Tabellen-ID als dritten Parameter mitzugeben (
 Standardmäßig werden die Spalten automatisch so skaliert, dass sich den Inhalten anpassen. Möchte man
 bestimmten Spalten eine konkrete Breite vorgeben, sollte im Block ``pluginstyles`` entsprechender
 Code eingefügt werden. Außerdem sind die ``<th>`` Tags natürlich mit den entsprechenden Klassen zu bestücken.
-Zusätzlich/alternativ kann die Tabelle auch mit dem css Style ``table-layout: fixed;`` versehen werden,
-um die dynamische Anpassung der Spaltenbreite gänzlich zu unterbinden.
+
 
 .. code-block:: css+jinja
 
@@ -251,9 +249,6 @@ um die dynamische Anpassung der Spaltenbreite gänzlich zu unterbinden.
       }
       table th.value {
         width: 100px;
-      }
-      #maintable {
-         display: none;
       }
     </style>
     {% endblock pluginstyles %}

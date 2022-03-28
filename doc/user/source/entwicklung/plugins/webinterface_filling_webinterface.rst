@@ -94,10 +94,7 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
       muss für jede Tabelle, für die Filtern/Sortieren ermöglicht werden soll, kopiert werden.
       Dabei ist sicher zu stellen, dass die ID (#maintable) jeweils richtig angepasst wird.
       Die aktuellste Variante des nötigen Codeteils ist dem Sample-Plugin zu entnehmen, dort sind noch
-      weitere relevante Anpassungen zu finden.
-      Den entsprechenden ``<table>`` Tags sind die entsprechenden ids zu vergeben, außerdem sollte die
-      CSS Klasse ``display`` hinzugefügt werden.
-      Beispiel: ``<table id="maintable" class="table table-striped table-hover pluginList display">``.
+      weitere relevante Anpassungen zu finden..
 
       .. code-block:: HTML
 

@@ -54,6 +54,8 @@ $(window).bind('datatables_defaults', function() {
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( false );
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( true );
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
+					$(this).addClass( "dataTableAdditional" );
+					$(this).addClass( "display" );
 
 				}
 			});
