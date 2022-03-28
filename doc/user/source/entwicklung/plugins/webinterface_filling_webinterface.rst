@@ -69,9 +69,9 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
                  <table id="maintable" class="table table-striped table-hover pluginList">
                      <thead>
                          <tr>
-                             <th>{{ _('Item') }}</th>
-                             <th>{{ _('Typ') }}</th>
-                             <th>{{ _('knx_dpt') }}</th>
+                             <th class="item">{{ _('Item') }}</th>
+                             <th class="typ">{{ _('Typ') }}</th>
+                             <th class="knx_dpt">{{ _('knx_dpt') }}</th>
                          </tr>
                      </thead>
                      <tbody>
@@ -94,7 +94,7 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
       muss für jede Tabelle, für die Filtern/Sortieren ermöglicht werden soll, kopiert werden.
       Dabei ist sicher zu stellen, dass die ID (#maintable) jeweils richtig angepasst wird.
       Die aktuellste Variante des nötigen Codeteils ist dem Sample-Plugin zu entnehmen, dort sind noch
-      weitere relevante Anpassungen zu finden..
+      weitere relevante Anpassungen zu finden.
 
       .. code-block:: HTML
 

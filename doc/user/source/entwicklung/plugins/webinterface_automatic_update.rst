@@ -235,8 +235,10 @@ Tabelle eine entsprechende ID gegeben wird (im Beispiel oben ``#maintable``).
 Damit die neuen Daten auch von datatables.js erkannt und korrekt sortiert werden, ist es wichtig,
 dem Aufruf ``shngInsertText`` die Tabellen-ID als dritten Parameter mitzugeben (im Beispiel 'maintable').
 
-Standardmäßig werden die Spalten automatisch so skaliert, dass sich den Inhalten anpassen. Möchte man
-bestimmten Spalten eine konkrete Breite vorgeben, sollte im Block ``pluginstyles`` entsprechender
+Standardmäßig werden die Spalten automatisch so skaliert, dass sie sich den Inhalten anpassen. Dies kann
+va. in Kombination mit dem standardmäßig aktivierten ``responsive`` Modul der Datatables zu
+unerwünschten Ergebnissen führen. Insofern ist es empfehlenswert,
+bestimmten Spalten eine konkrete Breite vorzugeben. Dazu sollte im Block ``pluginstyles`` entsprechender
 Code eingefügt werden. Außerdem sind die ``<th>`` Tags natürlich mit den entsprechenden Klassen zu bestücken.
 
 
@@ -255,9 +257,8 @@ Code eingefügt werden. Außerdem sind die ``<th>`` Tags natürlich mit den ents
 
 
 Sollte der Inhalt einer Spalte erwartungsgemäß sehr breit sein, kann die Spalte stattdessen auch
-als ausklappbare Informationszeile konfiguriert werden. Dann empfiehlt es sich auf jeden Fall,
-wie oben angegeben, die Tabelle per CSS unsichtbar zu machen. Die datatables.js defaults sorgen dafür,
-dass die Tabelle nach der kompletten Inititalisierung angezeigt wird. Dadurch wird ein
+als ausklappbare Informationszeile konfiguriert werden. Die datatables.js defaults sorgen dafür,
+dass die Tabelle erst nach der kompletten Inititalisierung angezeigt wird. Dadurch wird ein
 mögliches Flackern der Seite beim Aufbau verhindert. Die Deklaration der Tabelle im pluginscripts
 Block hat dabei wie folgt auszusehen, wobei bei ``targets`` die interne Nummerierung der Spalten
 anzugeben ist (0 wäre die erste Tabellenspalte, 2 die zweite, etc.).
