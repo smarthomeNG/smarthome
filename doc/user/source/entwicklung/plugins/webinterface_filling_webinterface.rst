@@ -67,7 +67,7 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
 
       .. code-block:: HTML
 
-        <div class="col-sm-12 table-resize">
+        <div class="container-fluid m-2 table-resize">
            <table id="maintable" class="table table-striped table-hover pluginList">
                <thead>
                    <tr>
