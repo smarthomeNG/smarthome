@@ -289,7 +289,7 @@ class Http(object):
         self._session = requests.Session()
         self._hide_login = hide_login
 
-        self._id = f'({self.name if self.name else "HTTP"}_{self.baseurl})'
+        self._id = f'({name if name else "HTTP"}_{self.baseurl})'
 
     def HTTPDigestAuth(self, user=None, password=None):
         """
