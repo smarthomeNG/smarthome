@@ -43,7 +43,7 @@ das für den **Apache2** Webserver zugänglich ist:
     # guid setzen
     chmod g+rws smartvisu/
     cd smartvisu
-    git clone git://github.com/Martin-Gleiss/smartvisu.git .
+    git clone https://github.com/Martin-Gleiss/smartvisu.git .
     # Schreibrechte für Cache und Konfigurationsdateien setzen
     bash setpermissions
 
@@ -114,7 +114,7 @@ Um die aktuelle Version 2.0 der Kurzanleitung nachzuinstallieren, sind folgende 
     cd /var/www/html/smartvisu/pages
     mkdir kurzanleitung
     cd kurzanleitung
-    git clone git://github.com/smartVISU-newstuff/kurzanleitung .
+    git clone https://github.com/smartVISU-newstuff/kurzanleitung .
 
 (Bitte wie immer auf den Punkt am Ende des letzten Befehls achten)
 

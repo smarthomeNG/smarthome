@@ -43,8 +43,8 @@ unter dem später SmartHomeNG laufen soll, **nicht als root**.
    sudo chown -R smarthome:smarthome /usr/local/smarthome
 
    cd smarthome
-   git clone git://github.com/smarthomeNG/smarthome.git .
-   git clone git://github.com/smarthomeNG/plugins.git plugins
+   git clone https://github.com/smarthomeNG/smarthome.git .
+   git clone https://github.com/smarthomeNG/plugins.git plugins
 
 Bitte auf den **Punkt** am Ende des ersten **git clone** Kommandos achten!
 
