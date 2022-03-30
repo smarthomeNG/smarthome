@@ -1542,7 +1542,7 @@ class Standalone():
                     self.walk(obj[model], model, obj, self.create_item, model, 0, '', [], False, cut_levels=1)
 
                     jdata = json.dumps(self.item_tree)
-                    self.yaml['item_structs'][model] = json.loads(jdata, object_pairs_hook=OrderedDict)
+                    self.yaml['item_structs'][model] = json.loads(jdata, object_pairs_hook=OrderedDict)[model]
 
         except OSError as e:
             err = f'Error: file {file} could not be opened. Original error: {e}'
