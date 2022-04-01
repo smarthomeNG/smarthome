@@ -400,6 +400,8 @@ class SDPCommandParseStr(SDPCommandStr):
         self.logger.debug(f'parse_str command got data {data} of type {type(data)}')
 
         if self.reply_pattern and isinstance(data, str):
+            if not isinstance(self.reply_pattern, list):
+                self.reply_pattern = [self.reply_pattern]
             for pattern in self.reply_pattern:
                 regex = re.compile(pattern)
                 match = regex.search(data)
@@ -412,13 +414,13 @@ class SDPCommandParseStr(SDPCommandStr):
                     elif len(match.groups()) > 1:
 
                         # more than one captured group - error
-                        raise ValueError(f'reply_pattern {self.reply_pattern} has more than one pair of capturing parentheses')
+                        raise ValueError(f'reply_pattern {pattern} has more than one pair of capturing parentheses')
                     else:
 
                         # no captured groups = no parentheses = no extraction of value, just do the "normal" thing
                         value = self._DT.get_shng_data(data, **kwargs)
                 else:
-                    raise ValueError(f'reply_pattern {self.reply_pattern} could not get a match on {data}')
+                    raise ValueError(f'reply_pattern {pattern} could not get a match on {data}')
         else:
             value = self._DT.get_shng_data(data, **kwargs)
         return value
