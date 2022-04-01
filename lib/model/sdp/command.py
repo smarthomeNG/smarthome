@@ -402,6 +402,7 @@ class SDPCommandParseStr(SDPCommandStr):
         if self.reply_pattern and isinstance(data, str):
             if not isinstance(self.reply_pattern, list):
                 self.reply_pattern = [self.reply_pattern]
+            found = False
             for pattern in self.reply_pattern:
                 regex = re.compile(pattern)
                 match = regex.search(data)
@@ -410,6 +411,7 @@ class SDPCommandParseStr(SDPCommandStr):
 
                         # one captured group - ok
                         value = self._DT.get_shng_data(match.group(1), **kwargs)
+                        found = True
                         break
                     elif len(match.groups()) > 1:
 
@@ -419,8 +421,10 @@ class SDPCommandParseStr(SDPCommandStr):
 
                         # no captured groups = no parentheses = no extraction of value, just do the "normal" thing
                         value = self._DT.get_shng_data(data, **kwargs)
-                else:
-                    raise ValueError(f'reply_pattern {pattern} could not get a match on {data}')
+                        found = True
+                        break
+            if not found:
+                raise ValueError(f'reply_pattern {pattern} could not get a match on {data}')
         else:
             value = self._DT.get_shng_data(data, **kwargs)
         return value
