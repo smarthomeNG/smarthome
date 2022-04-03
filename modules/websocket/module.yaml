@@ -2,8 +2,8 @@
 module:
     # Global plugin attributes
     classname: Websocket
-    version: 1.0.3
-    sh_minversion: 1.8.2c
+    version: 1.0.4
+    sh_minversion: 1.9.0
 #   sh_maxversion:                  # maximum shNG version to use this module (leave empty if latest)
 #    py_minversion: 3.6             # minimum Python version to use for this module
 #    py_maxversion:                 # maximum Python version to use for this module (leave empty if latest)

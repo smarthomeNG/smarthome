@@ -31,6 +31,7 @@ import time
 
 import os
 import sys
+import socket
 import logging
 import json
 import collections
@@ -46,7 +47,7 @@ from lib.utils import Utils
 
 
 class Websocket(Module):
-    version = '1.0.3'
+    version = '1.0.4'
     longname = 'Websocket module for SmartHomeNG'
     port = 0
 
@@ -103,12 +104,13 @@ class Websocket(Module):
             self.ssl_context = None
             self.use_tls = False
 
-        self.logger.info("ip         : {}".format(self.ip))
-        self.logger.info("port       : {}".format(self.port))
-        self.logger.info("tls_port   : {}".format(self.tls_port))
-        self.logger.info("use_tls    : {}".format(self.use_tls))
-        self.logger.info("tls_cert   : {}".format(self.tls_cert))
-        self.logger.info("tls_key    : {}".format(self.tls_key))
+        if self.ip == '0.0.0.0':
+            self.logger.info(f"Listening on IP .: all local IPs")
+        else:
+            self.logger.info(f"Listening on IP .: {self.ip}")
+        self.logger.info(f"port / tls_port .: {self.port} / {self.tls_port}")
+        self.logger.info(f"use_tls .........: {self.use_tls}")
+        self.logger.info(f"certificate / key: {self.tls_cert} / {self.tls_key}")
 
         # try to get API handles
         self.items = Items.get_instance()
@@ -434,8 +436,12 @@ class Websocket(Module):
         client_ip = websocket.remote_address[0]
         self.sv_clients[client_addr] = {}
         self.sv_clients[client_addr]['websocket'] = websocket
-        self.sv_clients[client_addr]['sw'] = 'Visu'
-        self.logger.info("smartVISU_protocol_v4: Client {} started".format(client_addr))
+        try:
+            self.sv_clients[client_addr]['hostname'] = socket.gethostbyaddr(client_ip)[0]
+        except:
+            pass
+        self.sv_clients[client_addr]['sw'] = "'some_visu'"
+        self.logger.info(f"smartVISU_protocol_v4: Client {self.build_log_info(client_addr)} started")
         # client_addr = websocket.remote_address[0] + ':' + str(websocket.remote_address[1])
         await self.get_shng_class_instances()
 
@@ -448,7 +454,7 @@ class Websocket(Module):
                 command = data.get("cmd", '')
                 protocol = 'wss' if websocket.secure else 'ws '
                 # self.logger.warning("{} <CMD  : '{}'   -   from {}".format(protocol, data, client_addr))
-                self.logger.info(f"{client_addr} sent '{data}'")
+                self.logger.info(f"{self.build_log_info(client_addr)} sent '{data}'")
                 answer = {"error": "unhandled command"}
 
                 try:
@@ -523,13 +529,14 @@ class Websocket(Module):
                         answer = {'cmd': 'proto', 'ver': self.proto, 'server': 'module.websocket', 'time': self.shtime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")}
 
                     elif command == 'identity':  # identify client
-                        client = data.get('sw', 'Visu')
+                        client = data.get('sw', "'some_visu'")
                         self.sv_clients[client_addr]['sw'] = data.get('sw', '')
                         self.sv_clients[client_addr]['ver'] = data.get('ver', '')
-                        self.sv_clients[client_addr]['hostname'] = data.get('hostname', '')
+                        if data.get('hostname', '') != '':
+                            self.sv_clients[client_addr]['hostname'] = data.get('hostname', '')
                         self.sv_clients[client_addr]['browser'] = data.get('browser', '')
                         self.sv_clients[client_addr]['bver'] = data.get('bver', '')
-                        self.logger.info("smartVISU_protocol_v4: Client {} identified as '{} {}' in Browser '{} {}'".format(client_addr, self.sv_clients[client_addr]['sw'], self.sv_clients[client_addr]['ver'], self.sv_clients[client_addr]['browser'], self.sv_clients[client_addr]['bver']))
+                        self.logger.info(f"smartVISU_protocol_v4: Client {self.build_client_info(client_addr)} identified as {self.build_sw_info(client_addr)}")
                         answer = {}
 
                     elif command == 'list_items':
@@ -537,14 +544,14 @@ class Websocket(Module):
                         if self.sv_querydef:
                             path = data.get('path', '')
                             answer = await self.request_list_items(path, client_addr)
-                        self.logger.warning("{} <CMD  not yet tested: '{}'   -   from {}".format(protocol, data, client_addr))
+                        self.logger.warning(f"{protocol} <CMD  not yet tested: '{data}'   -   from {self.build_log_info(client_addr)}")
 
                     elif command == 'list_logics':
                         answer = {}
                         if self.sv_querydef:
                             enabled = data.get('enabled', 0)
                             answer = await self.request_list_logics((enabled == 1), client_addr)
-                        self.logger.warning("{} <CMD  not yet tested: '{}'   -   from {}".format(protocol, data, client_addr))
+                        self.logger.warning(f"{protocol} <CMD  not yet tested: '{data}'   -   from {self.build_log_info(client_addr)}")
 
                     else:
                         self.logger.error("unsupported event: '{}'", data)
@@ -556,26 +563,75 @@ class Websocket(Module):
                     # if an answer should be send, it is done here
                     try:
                         await websocket.send(reply)
-                        self.logger.info("visu >REPLY: '{}'   -   to {}".format(answer, websocket.remote_address))
+                        self.logger.info(f"visu >REPLY: '{answer}'   -   to {self.build_log_info(websocket.remote_address)}")
                     #except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                     except Exception as e:
-                        self.logger.warning("smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {} - reply = {}".format(e, reply))
+                        self.logger.warning(f"smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {e} - reply = {reply} to {self.build_log_info(websocket.remote_address)}")
 
         except Exception as e:
+            ex = str(e)
             if str(e).startswith(('code = 1005', 'code = 1006', 'no close frame received or sent')) or str(e).endswith('keepalive ping timeout; no close frame received'):
-                self.logger.info(f"smartVISU_protocol_v4 error: Client {client_addr} - {e}")
+                self.logger.info(f"smartVISU_protocol_v4 error: Client {self.build_log_info(client_addr)} - {e}")
             else:
-                self.logger.error(f"smartVISU_protocol_v4 exception: Client {client_addr} - {e}")
+                self.logger.error(f"smartVISU_protocol_v4 exception: Client {self.build_log_info(client_addr)} - {ex}")
 
         # Remove client from monitoring dict and from dict of active clients
         del(self.sv_monitor_items[client_addr])
         try:
             del(self.sv_clients[client_addr])
         except Exception as e:
-            self.logger.error("smartVISU_protocol_v4 error deleting client session data: {}".format(e))
+            self.logger.error(f"smartVISU_protocol_v4 error deleting client session data: {e}")
 
-        self.logger.info("smartVISU_protocol_v4: Client {} stopped".format(client_addr))
+        self.logger.info(f"smartVISU_protocol_v4: Client {self.build_log_info(client_addr)} stopped")
         return
+
+
+    def build_client_info(self, client_addr):
+        """
+        Build string with client host info for info/error logging
+        :param client_addr:
+        :return: info string
+        """
+        if self.sv_clients.get(client_addr):
+            if self.sv_clients[client_addr].get('hostname', '') == '':
+                return f"{client_addr}"
+            else:
+                return f"{self.sv_clients[client_addr].get('hostname', '')} ({client_addr})"
+        else:
+            return f"{client_addr}"
+
+    def build_sw_info(self, client_addr):
+        """
+        Build string with client host info for info/error logging
+        :param client_addr:
+        :return: info string
+        """
+        if self.sv_clients.get(client_addr):
+            sw = f"{self.sv_clients[client_addr].get('sw', '')} {self.sv_clients[client_addr].get('ver', '')}".strip()
+            browser = f"{self.sv_clients[client_addr].get('browser', '')} {self.sv_clients[client_addr].get('bver', '')}".strip()
+
+            if browser == '':
+                return sw
+            else:
+                return f"{sw}, {browser}"
+        else:
+            return ""
+
+    def build_log_info(self, client_addr):
+        """
+        Build string with client info (name and software) for info/error logging
+        :param client_addr:
+        :return: info string
+        """
+        if isinstance(client_addr, tuple):
+            client_addr = client_addr[0] + ':' + str(client_addr[1])
+
+        sw = self.build_sw_info(client_addr)
+        if sw != '':
+            sw = ', ' + sw
+
+        return f"{self.build_client_info(client_addr)}{sw}"
+
 
     async def prepare_monitor(self, data, client_addr):
         """
@@ -635,7 +691,7 @@ class Websocket(Module):
             "json_parse: send to {0}: {1}".format(client_addr, ({'cmd': 'item', 'items': items})))  # MSinn
         answer = {'cmd': 'item', 'items': items}
         self.sv_monitor_items[client_addr] = newmonitor_items
-        self.logger.info("Client {0} new monitored items are {1}".format(client_addr, newmonitor_items))
+        self.logger.info(f"Client {self.build_client_info(client_addr)} new monitored items are {newmonitor_items}")
         return answer
 
     async def prepare_series(self, data, client_addr):
@@ -915,13 +971,13 @@ class Websocket(Module):
                 data = {'cmd': 'item', 'items': items}
                 msg = json.dumps(data, default=self.json_serial)
                 try:
-                    self.logger.info("visu >MONIT: '{}'   -   to {}".format(msg, self.client_address(websocket)))
+                    self.logger.info(f"visu >MONIT: '{msg}'   -   to {self.build_log_info(self.client_address(websocket))}")
                     await websocket.send(msg)
                 except Exception as e:
-                    if not str(e).startswith(('code = 1001', 'code = 1005', 'code = 1006')):
-                        self.logger.exception("update_item - Error in 'await websocket.send(data)': {}".format(e))
+                    if str(e).startswith(('code = 1001', 'code = 1005', 'code = 1006')):
+                        self.logger.info("update_item - Error in 'await websocket.send(data)': {} - {}".format(e, data))
                     else:
-                        self.logger.info("update_item - Error in 'await websocket.send(data)': {}".format(e))
+                        self.logger.notice("update_item - Error in 'await websocket.send(data)': {} - {}".format(e, data))
 
         return
 
@@ -969,7 +1025,7 @@ class Websocket(Module):
                 if 'val' in data:
                     value = data['val']
                     self.logger.info("Client {0} triggerd logic {1} with '{2}'".format(client_addr, name, value))
-                    mylogic.trigger(by='Visu', value=value, source=client_addr)
+                    mylogic.trigger(by="'some_visu'", value=value, source=client_addr)
                 if 'enabled' in data:
                     if data['enabled']:
                         self.logger.info("Client {0} enabled logic {1}".format(client_addr, name))
