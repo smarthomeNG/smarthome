@@ -169,7 +169,7 @@ class Websocket(Module):
         self.sv_enabled = protocol_enabled
         self.sv_acl = default_acl
         self.sv_querydef = query_definitions
-        self.sv_ser_upd_cycle = series_updatecycle
+        self.sv_ser_upd_cycle = int(series_updatecycle)
         self.logger.info(f"set_smartvisu_support: Set to protocol_enabled={protocol_enabled}, default_acl={default_acl}, query_definitions={query_definitions}, series_updatecycle={series_updatecycle}")
         # self.sv_config = {'enabled': self.sv_enabled, 'acl': self.sv_acl, 'query_def': self.sv_querydef, 'upd_cycle': self.sv_ser_upd_cycle}
         # self.logger.warning(f"sv_config {self.sv_config}")
@@ -756,11 +756,13 @@ class Websocket(Module):
         """
         Async task to periodically update the series data for the visu(s)
         """
+        # wait until SmartHomeNG is completly initialized
         while self._sh.shng_status['code'] != 20:
             await asyncio.sleep(1)
 
         self.logger.info("update_all_series: Started")
-        while True:
+        keep_running = True
+        while keep_running:
             remove = []
             series_list = list(self.sv_update_series.keys())
             if series_list != []:
@@ -794,13 +796,31 @@ class Websocket(Module):
             for client_addr in remove:
                 del (self.sv_update_series[client_addr])
 
-            await asyncio.sleep(10)
+            await self.sleep(10)
+
             if self.sv_ser_upd_cycle > 0:
                 # wait for sv_ser_upd_cycle seconds before running update loop and update all series
-                await asyncio.sleep(self.sv_ser_upd_cycle)
+                #await asyncio.sleep(self.sv_ser_upd_cycle)
+                await self.sleep(self.sv_ser_upd_cycle)
             else:
                 # wait for 10 seconds before running update loop again (loop gets update cycle from database plugin)
-                await asyncio.sleep(10)
+                await self.sleep(10)
+
+            if self._sh.shng_status['code'] != 20:
+                # if SmartHomeNG leaves running mode
+                keep_running = False
+                self.logger.info("update_all_series: Terminating loop, because SmartHomeNG left running mode")
+
+
+    async def sleep(self, seconds):
+        """
+        sleep method with abort, if smarthomeNG leaves running mode
+        :param seconds:
+        """
+        for i in range(seconds):
+            if self._sh.shng_status['code'] == 20:
+                await asyncio.sleep(1)
+
 
     def update_series(self, client_addr):
         """
