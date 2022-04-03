@@ -58,6 +58,7 @@ table .dataTableAdditional {
 .tab-content {
   position:absolute;
   top:230px;
+  width: 98%;
 }
 
 .minusIcon {
