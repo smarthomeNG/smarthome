@@ -66,9 +66,9 @@ function shngPost(path, params, method='post') {
   */
 function shngInsertText (id, text, table_id=null, highlight=0) {
     if (table_id == null) {
+      element = $("#" + $.escapeSelector(id));
       if (highlight > 0) {
         old_text = $('#' + $.escapeSelector(id)).text();
-        element = $("#" + $.escapeSelector(id));
         // compare old value of cell with new one and highlight
         if (old_text != "..." && old_text != text) {
           startAnimation(element, highlight);
