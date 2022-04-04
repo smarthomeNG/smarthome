@@ -36,7 +36,7 @@ $(window).bind('datatables_defaults', function() {
 				fixedHeader: {header: true, // header will always be visible on top of page when scrolling
 				 						 headerOffset: top_offset},
 				autoWidth: false,
-				initComplete: function () {$(this).show();$('#resize_wrapper').css('height', $(window).height() - top_offset - $('.dataTables_paginate').outerHeight() - 30);}, // show table (only) after init, adjust height of wrapper
+				initComplete: function () {$(window).resize();$(this).show()}, // show table (only) after init, adjust height of wrapper
         responsive: {details: {renderer: $.fn.dataTable.Responsive.renderer.listHiddenNodes()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
 				fnDrawCallback: function(oSettings) { // hide pagination if not needed
 					if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay() || oSettings._iDisplayLength == -1) {
@@ -54,7 +54,6 @@ $(window).bind('datatables_defaults', function() {
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( false );
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( true );
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
-					$(this).addClass( "dataTableAdditional" );
 					$(this).addClass( "display" );
 
 				}
@@ -63,6 +62,7 @@ $(window).bind('datatables_defaults', function() {
 			$.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss');
 			$.fn.dataTable.moment('YYYY-MM-DD HH:mm:ss');
 			$.fn.dataTable.moment('DD.MM.');
+			$.fn.dataTable.moment('DD.MM.YY');
 			$.fn.dataTable.moment('HH:mm');
 
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
