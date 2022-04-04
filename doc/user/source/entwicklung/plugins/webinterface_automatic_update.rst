@@ -99,7 +99,7 @@ Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleif
 
     {% block **bodytab1** %}
         <div class="container-fluid m-2 table-resize">
-            <table id="#maintable" class="table table-striped table-hover pluginList">
+            <table id="#maintable" class="table table-striped table-hover pluginList dataTableAdditional">
                 <thead>
                     <tr>
                         <th>{{ _('Item') }}</th>
@@ -146,7 +146,7 @@ dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hie
 
     {% block **bodytab1** %}
         <div class="container-fluid m-2 table-resize">
-            <table id="#maintable" class="table table-striped table-hover pluginList">
+            <table id="#maintable" class="table table-striped table-hover pluginList dataTableAdditional">
                 <thead>
                     <tr>
                         ...
@@ -240,6 +240,8 @@ va. in Kombination mit dem standardmäßig aktivierten ``responsive`` Modul der 
 unerwünschten Ergebnissen führen. Insofern ist es empfehlenswert,
 bestimmten Spalten eine konkrete Breite vorzugeben. Dazu sollte im Block ``pluginstyles`` entsprechender
 Code eingefügt werden. Außerdem sind die ``<th>`` Tags natürlich mit den entsprechenden Klassen zu bestücken.
+Außerdem macht es Sinn, der Tabelle selbst die Klasse ``dataTableAdditional`` hinzuzufügen. Dadurch wird
+das table-layout auf fixed gestellt und die Tabelle erst angezeigt, wenn sie fertig initialisiert ist.
 
 
 .. code-block:: css+jinja

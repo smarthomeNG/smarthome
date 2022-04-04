@@ -68,7 +68,7 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
       .. code-block:: HTML
 
         <div class="container-fluid m-2 table-resize">
-           <table id="maintable" class="table table-striped table-hover pluginList">
+           <table id="maintable" class="table table-striped table-hover pluginList dataTableAdditional">
                <thead>
                    <tr>
                        <th class="item">{{ _('Item') }}</th>
