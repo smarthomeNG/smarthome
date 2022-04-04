@@ -272,6 +272,58 @@ anzugeben ist (0 wäre die erste Tabellenspalte, 2 die zweite, etc.).
     } );
 
 
+Hinzufügen von Tabellenzeilen
+-----------------------------
+
+In manchen Fällen kann es notwendig sein, neue Zeilen einer Tabelle dynamisch hinzuzufügen;
+beispielsweise, wenn die letzten durchgeführten Commandos oder Logeinträge ergänzt werden sollen.
+Hierzu ist es nötig, die Funktion ``handleUpdatedData`` entsprechend anzupassen.
+
+In der ersten if-Abfrage wird evaluiert, ob bereits ein Element mit entsprechender ID existiert.
+Falls nicht, wird die Zeile neu angelegt und sanft eingeblendet. Im untenstehenden Code wird zuerst gecheckt,
+ob es eine Datentablle mit der ID "maintable" gibt.
+In der Zeile ``if ( $.fn.dataTable.isDataTable('#maintable') )`` sowie in der darauf folgenden
+Zeile muss '#maintable' durch die tatsächliche ID der zu aktualisierenden Tabelle ersetzt werden.
+Falls nun eine entsprechende Tabelle auf der Seite gefunden wurde, wird diese
+als "table_to_update" definiert (was später für das Hinzufügen einer Zeile mittels row.add genutzt wird).
+
+Durch die Einträge in der Liste ``table_to_update.row.add( [ item, '' ] )`` wird festgelegt, welchen Inhalt
+die Spalten bekommen sollen. Im Beispielfall wird also der Itemname in die erste Spalte und
+ein leerer Wert in die zweite Spalte eingetragen.
+Anschließend wird der zweiten Spalte die relevante ID hinzugefügt, um zukünftig den Wert
+aktualisieren zu können. Möchte man weiteren Spalten ebenfalls
+eine ID zuweisen, ist die Codezeile zu kopieren und die Zahl beim Eintrag ``td:eq(1)`` entsprechend
+zu ändern (0 = erste Spalte, 1 = zweite Spalte, etc.). Abschließend wird der leere Wert schließlich
+mittels ``shngInsertText`` aktualisert und dank Angabe einer Zahl als 4. Parameter x Sekunden lang farblich markiert.
+
+.. code-block:: html+jinja
+
+    {% block pluginscripts %}
+    <script>
+        function handleUpdatedData(response, dataSet=null) {
+            if (dataSet === 'devices_info' || dataSet === null) {
+                var objResponse = JSON.parse(response);
+                for (var item in objResponse) {
+                    if (!document.getElementById(item+'_value')) {
+                        if ( $.fn.dataTable.isDataTable('#maintable') ) {
+                            table_to_update = $('#maintable').DataTable();
+                            newRow = table_to_update.row.add( [ item, '' ] ).draw().node();
+                            $('td:eq(1)', newRow).attr('id', objResponse['item'][item]+'_value');
+                            shngInsertText(item+'_value', objResponse['item'][item]['value'], 'maintable', 5);
+                        }
+                    }
+                    else
+                    {
+                      shngInsertText(item+'_value', objResponse['item'][item]['value'], 'maintable', 2);
+                    }
+
+                }
+            }
+        }
+    </script>
+    {% endblock pluginscripts %}
+
+
 Hervorheben von Änderungen
 --------------------------
 
@@ -281,8 +333,8 @@ von einer CSS Klasse zur anderen. Die Dauer des Effekts kann im letzten Paramete
 ``shngInsertText`` in Sekunden angegeben werden. Eine Dauer von 0 oder keine Angabe sorgen dafür,
 dass kein Highlight Effekt ausgeführt wird. Außerdem wird der Effekt auch nicht aktiviert, wenn der vorige
 Wert ``...`` war (z.B. beim Initialisieren der Tabelle, bevor aktualisierte Werte vom Plugin kommen).
-Die beiden Klassen sind bereits hinterlegt, können aber in der index.html im Block ``pluginStyles``
-bei Bedarf überschrieben werden.
+Die beiden Klassen sind bereits hinterlegt, können aber in der index.html des Plugin webif
+im Block ``pluginStyles`` bei Bedarf überschrieben werden.
 
 .. code-block:: css+jinja
 
