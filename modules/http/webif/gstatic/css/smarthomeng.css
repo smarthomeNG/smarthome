@@ -43,10 +43,10 @@ table td.truncate:active {
   word-break: break-all;
 }
 
-table .notruncate {
+.notruncate {
   overflow: visible;
 }
-table .dataTableAdditional {
+table.dataTableAdditional {
   display: none;
   table-layout: fixed;
 }
