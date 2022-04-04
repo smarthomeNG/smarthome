@@ -36,9 +36,9 @@ $(window).bind('datatables_defaults', function() {
 				fixedHeader: {header: true, // header will always be visible on top of page when scrolling
 				 						 headerOffset: top_offset},
 				autoWidth: false,
-				initComplete: function () {$(window).resize();$(this).show()}, // show table (only) after init, adjust height of wrapper
+				initComplete: function () {$(this).show();setTimeout(function() { $(window).resize(); }, 300);}, // show table (only) after init, adjust height of wrapper after 300ms (for Safari)
         responsive: {details: {renderer: $.fn.dataTable.Responsive.renderer.listHiddenNodes()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
-				fnDrawCallback: function(oSettings) { // hide pagination if not needed
+				drawCallback: function(oSettings) { // hide pagination if not needed
 					if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay() || oSettings._iDisplayLength == -1) {
 						 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
 					} else {
@@ -50,13 +50,17 @@ $(window).bind('datatables_defaults', function() {
 								  }, 'slow');
 							});
 					}
-
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( false );
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( true );
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
 					$(this).addClass( "display" );
+				},
+				createdRow: function (row, data, index) {
+					$(row).hide().fadeIn('slow');
+					$('td', row).addClass('py-1 truncate');
 
 				}
+
 			});
 			// Set date format for correct sorting of columns containing date strings
 			$.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss');
@@ -66,11 +70,13 @@ $(window).bind('datatables_defaults', function() {
 			$.fn.dataTable.moment('HH:mm');
 
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+
 				$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 				$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
 				$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
 				$(function () {
-				    $(window).resize();
+						$(window).resize();
+						setTimeout(function() { $(window).resize(); }, 300); // necessary for Safari
 				});
 			});
 
