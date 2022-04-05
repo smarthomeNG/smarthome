@@ -61,6 +61,20 @@ class Logs():
             print()
             exit(1)
 
+        # Default loglevels are:
+        #  - CRITICAL     50
+        #  - ERROR        40
+        #  - WARNING      30
+        #  - INFO         20
+        #  - DEBUG        10
+
+        # Additionally SmartHomeNG defines the following log levels_
+        #  - NOTICE       29   (31, if logging.yaml has not been adjusted)
+        #  - DBGHIGH      13   Debug high level
+        #  - DBGMED       12   Debug medium level
+        #  - DBGLOW       11   Debug low level
+
+        # adjust config dict from logging.yaml:
         # if logger 'lib.smarthome' is not defined or no level is defined for it,
         # define logger with level 'NOTICE'
         if config_dict['loggers'].get('lib.smarthome', None) is None:
@@ -81,7 +95,12 @@ class Logs():
         else:
             notice_level = 31
 
+        # add SmartHomeNG specific loglevels
         self.add_logging_level('NOTICE', notice_level)
+        self.add_logging_level('DBGHIGH', 13)
+        self.add_logging_level('DBGMED', 12)
+        self.add_logging_level('DBGLOW', 11)
+
         try:
             logging.config.dictConfig(config_dict)
         except Exception as e:
