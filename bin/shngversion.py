@@ -79,8 +79,9 @@ from lib.utils import Version
 
 # Update auf 1.9.1    wg. Release
 # Update auf 1.9.1.1  wg. Kennzeichnung des Stands als "nach dem v1.9.1 Release"
+# Update auf 1.9.1.2  wg. zusätzlicher Log Level"
 
-shNG_version = '1.9.1.1'
+shNG_version = '1.9.1.2'
 shNG_branch = 'develop'
 
 # ---------------------------------------------------------------------------------
