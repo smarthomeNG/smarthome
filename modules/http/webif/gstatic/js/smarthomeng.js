@@ -43,20 +43,56 @@ function shngPost(path, params, method='post') {
   form.submit();
 }
 
-
 /**
- * inserts text into a dom element. To be used for ajax updates
- * @param {string} id of the dom element
- * @param {string} text to insert
+ * Creates a highlight effect by transitioning from one CSS class to another.
+ * Needs jquery ui effect "switchClass"
+ * @param {string} $element dom element
+ * @param {string} highlight duration of effect (fade off)
  */
+ function startAnimation($element, highlight) {
+    $element.stop(true, false);
+    $element.css({ 'background-color' : '' });
+    $element.switchClass("shng_effect_standard", "shng_effect_highlight", highlight*10)
+       .delay(highlight*20).switchClass("shng_effect_highlight", "shng_effect_standard", highlight*1000, 'easeInOutQuad');
+    $element.promise().done( function() {
+      $element.removeClass('shng_effect_standard');$element.removeClass('shng_effect_highlight');
+    });
+ }
 
-function shngInsertText (id, text, table_id=null) {
+ /**
+  * inserts text into a dom element. To be used for ajax updates
+  * @param {string} id of the dom element
+  * @param {string} text to insert
+  */
+function shngInsertText (id, text, table_id=null, highlight=0) {
     if (table_id == null) {
-      document.getElementById(id).innerHTML = text;
+      element = $("#" + $.escapeSelector(id));
+      if (highlight > 0) {
+        old_text = $('#' + $.escapeSelector(id)).text();
+        // compare old value of cell with new one and highlight
+        if (old_text != "..." && old_text != text) {
+          startAnimation(element, highlight);
+        }
+      }
+      // update HTML element
+      element.html(text);
     }
     else {
       try {
-        $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data(text);
+        // check if cell id exists on current page
+        test = $('#' + table_id).DataTable().cell( $("#" + $.escapeSelector(id)), { page:'current'}).data();
+        if ( test ) {
+          if (highlight > 0) {
+            old_text = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data();
+            element = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).node();
+            // compare old value of cell with new one and highlight
+            if (old_text != "..." && old_text != text) {
+              startAnimation($('#' + $.escapeSelector(id)), highlight);
+            }
+          }
+          // update datatable cell
+          $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data(text);
+        }
       }
       catch (e) {
         console.log("Problem setting cell with id " + id + " of table " + table_id + ". Error: " + e);

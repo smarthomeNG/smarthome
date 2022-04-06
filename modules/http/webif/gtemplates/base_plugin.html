@@ -39,17 +39,17 @@
 			{% endif %}
 		</div>
 		<div class="col-sm-3">
-			<h3><img src="/gstatic/img/logo_long.png" alt="shng_logo_long" height="40" valign="top" align="left" style="align: left; display: block;"></h3>
+			<h3 id="webif_plugin_logo"><img src="/gstatic/img/logo_long.png" alt="shng_logo_long" height="40" valign="top" align="left" style="align: left; display: block;"></h3>
 			<div class="m-3">
 			<br>
 			</div>
-			<h5>{{ _('Plugin') }} : <strong>{{ p.get_shortname() }}</strong> v{{ p.get_version() }}</h5>
+			<h5>{{ _('Plugin') }} : <span id="webif_plugin_name"><strong>{{ p.get_shortname() }}</strong></span> v<span id="webif_plugin_version">{{ p.get_version() }}</span></h5>
 			{% if p.get_instance_name() != '' %}
-				<h5>{{ _('Instanz') }}: {{ p.get_instance_name() }}</h5>
+				<h5>{{ _('Instanz') }}: <span id="webif_plugin_instance">{{ p.get_instance_name() }}</span></h5>
 			{% else %}
 				<br>
 			{% endif %}
-			<h6>{{ _('Plugin') }} &nbsp; &nbsp; : {% if p.alive %}{{_('Aktiv')}}{% else %}{{_('Gestoppt')}}{% endif %}</h6>
+			<h6>{{ _('Plugin') }} &nbsp; &nbsp; : <span id="webif_plugin_state">{% if p.alive %}{{_('Aktiv')}}{% else %}{{_('Gestoppt')}}{% endif %}</span></h6>
 		</div>
 
 		<div class="col-sm-7">
@@ -120,7 +120,7 @@
 {% endif %}
 
 
-<div id="webif-tabs" class="container-fluid" style="position: sticky; background-color: white; top:180px; z-index: 8;">
+<div id="webif-tabs" class="container-fluid" style="position: fixed; background-color: white; top:180px; z-index: 8;">
 	<ul class="nav nav-tabs">
 		{% if tabcount == 1 %}
 			<li id="tab_1" class="nav-item"><a class="text-dark nav-link active" href="#bodytab_1">{{ tab1title }}</a></li>
@@ -144,34 +144,34 @@
 	</ul>
 </div>
 
-<div style="margin-left: 10px; margin-right: 10px;" class="tab-content">
+<div style="margin-left: 10px; margin-right: 10px;" class="tab-content" id="resize_wrapper">
 
-	<div id="bodytab_1" class="tab-pane {% if start_tab==1 %}in active{% endif %}" role="tabpanel">
+	<div id="bodytab_1" class="table-resize tab-pane {% if start_tab==1 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab1 %}
 		{% endblock bodytab1 %}
 	</div>
 
-	<div id="bodytab_2" class="tab-pane {% if start_tab==2 %}in active{% endif %}" role="tabpanel">
+	<div id="bodytab_2" class="table-resize tab-pane {% if start_tab==2 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab2 %}
 		{% endblock bodytab2 %}
 	</div>
 
-	<div id="bodytab_3" class="tab-pane {% if start_tab==3 %}in active{% endif %}" role="tabpanel">
+	<div id="bodytab_3" class="table-resize tab-pane {% if start_tab==3 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab3 %}
 		{% endblock bodytab3 %}
 	</div>
 
-	<div id="bodytab_4" class="tab-pane {% if start_tab==4 %}in active{% endif %}" role="tabpanel">
+	<div id="bodytab_4" class="table-resize tab-pane {% if start_tab==4 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab4 %}
 		{% endblock bodytab4 %}
 	</div>
 
-	<div id="bodytab_5" class="tab-pane {% if start_tab==5 %}in active{% endif %}" role="tabpanel">
+	<div id="bodytab_5" class="table-resize tab-pane {% if start_tab==5 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab5 %}
 		{% endblock bodytab5 %}
 	</div>
 
-	<div id="bodytab_6" class="tab-pane {% if start_tab==6 %}in active{% endif %}" role="tabpanel">
+	<div id="bodytab_6" class="table-resize tab-pane {% if start_tab==6 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab6 %}
 		{% endblock bodytab6 %}
 	</div>

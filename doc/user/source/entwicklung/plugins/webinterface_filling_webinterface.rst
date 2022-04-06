@@ -61,31 +61,33 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
       Um im ersten Tab des Webinterface die Items anzuzeigen, die der obige Beispielcode zusammengestellt hat, wird der folgende Code zwischen ``{% block bodytab1 %}`` und ``{% endblock bodytab1 %}`` eingefügt. Es ist sicherzustellen, dass korrekter HTML Code
       für die Tabellen genutzt wird, ua. durch Nutzen der Tags ``<thead>`` und ``<tbody>``
       sowie der jeweiligen End-Tags. Außerdem muss jeder Tabelle eine einzigartige ID vergeben werden.
+      Die Klasse ``table-resize`` ist zwingend dem ``<div>`` Tag, in dem sich die Tabelle befindet, hinzuzufügen,
+      um die automatische Anpassung der Datentabelle an die Fensterhöhe zu ermöglichen
+      (siehe auch index.html im Example-Plugin).
 
       .. code-block:: HTML
 
-         <div class="table-responsive" style="margin-left: 3px; margin-right: 3px;" class="row">
-             <div class="col-sm-12">
-                 <table id="maintable" class="table table-striped table-hover pluginList">
-                     <thead>
-                         <tr>
-                             <th>{{ _('Item') }}</th>
-                             <th>{{ _('Typ') }}</th>
-                             <th>{{ _('knx_dpt') }}</th>
-                         </tr>
-                     </thead>
-                     <tbody>
-                         {% for item in items %}
-                             <tr>
-                                 <td class="py-1">{{ item._path }}</td>
-                                 <td class="py-1">{{ item._type }}</td>
-                                 <td class="py-1">{{ item.conf['knx_dpt'] }}</td>
-                             </tr>
-                         {% endfor %}
-                     </tbody>
-                 </table>
-             </div>
-         </div>
+        <div class="container-fluid m-2 table-resize">
+           <table id="maintable" class="table table-striped table-hover pluginList dataTableAdditional">
+               <thead>
+                   <tr>
+                       <th class="item">{{ _('Item') }}</th>
+                       <th class="typ">{{ _('Typ') }}</th>
+                       <th class="knx_dpt">{{ _('knx_dpt') }}</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   {% for item in items %}
+                       <tr>
+                           <td class="py-1">{{ item._path }}</td>
+                           <td class="py-1">{{ item._type }}</td>
+                           <td class="py-1">{{ item.conf['knx_dpt'] }}</td>
+                       </tr>
+                   {% endfor %}
+               </tbody>
+           </table>
+        </div>
+
 
    3. Folgender Scriptcode muss zwischen ``{% block pluginscripts %}`` und
       ``{% endblock pluginscripts %}`` eingefügt werden, um ein Filtern und Sortieren
@@ -93,9 +95,8 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
       Der Code ``$('#maintable').DataTable( {} );``
       muss für jede Tabelle, für die Filtern/Sortieren ermöglicht werden soll, kopiert werden.
       Dabei ist sicher zu stellen, dass die ID (#maintable) jeweils richtig angepasst wird.
-      Den entsprechenden ``<table>`` Tags sind die entsprechenden ids zu vergeben, außerdem sollte die
-      CSS Klasse ``display`` hinzugefügt werden.
-      Beispiel: ``<table id="maintable" class="table table-striped table-hover pluginList display">``.
+      Die aktuellste Variante des nötigen Codeteils ist dem Sample-Plugin zu entnehmen, dort sind noch
+      weitere relevante Anpassungen zu finden.
 
       .. code-block:: HTML
 

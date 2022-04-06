@@ -98,29 +98,27 @@ Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleif
 .. code-block:: html+jinja
 
     {% block **bodytab1** %}
-        <div class="table-responsive" style="margin-left: 3px; margin-right: 3px;" class="row">
-            <div class="col-sm-12">
-                <table id="#maintable" class="table table-striped table-hover pluginList display">
-                    <thead>
+        <div class="container-fluid m-2 table-resize">
+            <table id="#maintable" class="table table-striped table-hover pluginList dataTableAdditional">
+                <thead>
+                    <tr>
+                        <th>{{ _('Item') }}</th>
+                        <th>{{ _('Typ') }}</th>
+                        <th>{{ _('knx_dpt') }}</th>
+                        <th>{{ _('Wert') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
                         <tr>
-                            <th>{{ _('Item') }}</th>
-                            <th>{{ _('Typ') }}</th>
-                            <th>{{ _('knx_dpt') }}</th>
-                            <th>{{ _('Wert') }}</th>
+                            <td class="py-1">{{ item._path }}</td>
+                            <td class="py-1">{{ item._type }}</td>
+                            <td class="py-1">{{ item.conf['knx_dpt'] }}</td>
+                            <td class="py-1">{{ item._value }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in items %}
-                            <tr>
-                                <td class="py-1">{{ item._path }}</td>
-                                <td class="py-1">{{ item._type }}</td>
-                                <td class="py-1">{{ item.conf['knx_dpt'] }}</td>
-                                <td class="py-1">{{ item._value }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     {% endblock **bodytab1** %}
 
@@ -147,29 +145,23 @@ dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hie
     ...
 
     {% block **bodytab1** %}
-        <div class="table-responsive" style="margin-left: 3px; margin-right: 3px;" class="row">
-            <div class="col-sm-12">
-                <table id="#maintable" class="table table-striped table-hover pluginList display">
-                    <thead>
+        <div class="container-fluid m-2 table-resize">
+            <table id="#maintable" class="table table-striped table-hover pluginList dataTableAdditional">
+                <thead>
+                    <tr>
+                        ...
+                        <th class="value">{{ _('Wert') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
                         <tr>
-                            <th class="item">{{ _('Item') }}</th>
-                            <th class="typ">{{ _('Typ') }}</th>
-                            <th class="dpt">{{ _('knx_dpt') }}</th>
-                            <th class="value">{{ _('Wert') }}</th>
+                            ...
+                            <td id="{{ item }}_value" class="py-1">{{ item._value }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in items %}
-                            <tr>
-                                <td class="py-1">{{ item._path }}</td>
-                                <td class="py-1">{{ item._type }}</td>
-                                <td class="py-1">{{ item.conf['knx_dpt'] }}</td>
-                                <td id="{{ item }}_value" class="py-1">{{ item._value }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     {% endblock **bodytab1** %}
 
@@ -201,7 +193,17 @@ Das folgende Beispiel weist die neuen Daten dem oben vorgestellten <td>-Element 
     {% endblock pluginscripts %}
 
 
-Das nächste Beispiel befüllt dazu analog die <td>-Elemente der Zeilen in der Tabelle im ``bodytab?``:
+Das nächste Beispiel befüllt dazu analog die <td>-Elemente der Zeilen in der Tabelle im ``bodytab?``.
+Die Parameter der shngInsertText-Funktion sind dabei wie folgt:
+
+#. (obligatorisch) ID des HTML Elements, z.B. der Tabellenzelle
+
+#. (obligatorisch) zu schreibender Wert, wird aus dem objResponse dict gelesen
+
+#. (optional) Wenn das Element aus Parameter 0 in einer dataTable ist, muss die ID der Tabelle mitgegeben werden
+
+#. (optional) Möchte man beim Ändern eines Werts einen Highlight-Effekt, kann die Dauer in Sekunden angegeben werden
+
 
 .. code-block:: html+jinja
 
@@ -212,9 +214,9 @@ Das nächste Beispiel befüllt dazu analog die <td>-Elemente der Zeilen in der T
                 var objResponse = JSON.parse(response);
 
                 for (var item in objResponse) {
-                    shngInsertText(item+'_value', objResponse['item'][item]['value']);
+                    shngInsertText(item+'_value', objResponse['item'][item]['value'], null, 2);
                     // bei Tabellen mit datatables Funktion sollte die Zeile lauten:
-                    // shngInsertText(item+'_value', objResponse['item'][item]['value'], 'maintable');
+                    // shngInsertText(item+'_value', objResponse['item'][item]['value'], 'maintable', 2);
                 }
             }
         }
@@ -228,17 +230,19 @@ Sortierbare Tabellen
 Wie erwähnt muss für das Aktivieren von sortier- und durchsuchbaren Tabellen der entsprechende Script-Block
 wie in :doc:`Das Webinterface mit Inhalt füllen </entwicklung/plugins/webinterface_filling_webinterface>`
 unter Punkt 3 beschrieben eingefügt werden. Dabei ist auch zu beachten, dass der zu sortierenden
-Tabelle eine entsprechende ID gegeben wird (im Beispiel oben ``#maintable``) und die Klasse ``display``
-ergänzt wird.
+Tabelle eine entsprechende ID gegeben wird (im Beispiel oben ``#maintable``).
 
 Damit die neuen Daten auch von datatables.js erkannt und korrekt sortiert werden, ist es wichtig,
 dem Aufruf ``shngInsertText`` die Tabellen-ID als dritten Parameter mitzugeben (im Beispiel 'maintable').
 
-Standardmäßig werden die Spalten automatisch so skaliert, dass sich den Inhalten anpassen. Möchte man
-bestimmten Spalten eine konkrete Breite vorgeben, sollte im Block ``pluginstyles`` entsprechender
+Standardmäßig werden die Spalten automatisch so skaliert, dass sie sich den Inhalten anpassen. Dies kann
+va. in Kombination mit dem standardmäßig aktivierten ``responsive`` Modul der Datatables zu
+unerwünschten Ergebnissen führen. Insofern ist es empfehlenswert,
+bestimmten Spalten eine konkrete Breite vorzugeben. Dazu sollte im Block ``pluginstyles`` entsprechender
 Code eingefügt werden. Außerdem sind die ``<th>`` Tags natürlich mit den entsprechenden Klassen zu bestücken.
-Zusätzlich/alternativ kann die Tabelle auch mit dem css Style ``table-layout: fixed;`` versehen werden,
-um die dynamische Anpassung der Spaltenbreite gänzlich zu unterbinden.
+Außerdem macht es Sinn, der Tabelle selbst die Klasse ``dataTableAdditional`` hinzuzufügen. Dadurch wird
+das table-layout auf fixed gestellt und die Tabelle erst angezeigt, wenn sie fertig initialisiert ist.
+
 
 .. code-block:: css+jinja
 
@@ -250,17 +254,13 @@ um die dynamische Anpassung der Spaltenbreite gänzlich zu unterbinden.
       table th.value {
         width: 100px;
       }
-      #maintable {
-         display: none;
-      }
     </style>
     {% endblock pluginstyles %}
 
 
 Sollte der Inhalt einer Spalte erwartungsgemäß sehr breit sein, kann die Spalte stattdessen auch
-als ausklappbare Informationszeile konfiguriert werden. Dann empfiehlt es sich auf jeden Fall,
-wie oben angegeben, die Tabelle per CSS unsichtbar zu machen. Die datatables.js defaults sorgen dafür,
-dass die Tabelle nach der kompletten Inititalisierung angezeigt wird. Dadurch wird ein
+als ausklappbare Informationszeile konfiguriert werden. Die datatables.js defaults sorgen dafür,
+dass die Tabelle erst nach der kompletten Inititalisierung angezeigt wird. Dadurch wird ein
 mögliches Flackern der Seite beim Aufbau verhindert. Die Deklaration der Tabelle im pluginscripts
 Block hat dabei wie folgt auszusehen, wobei bei ``targets`` die interne Nummerierung der Spalten
 anzugeben ist (0 wäre die erste Tabellenspalte, 2 die zweite, etc.).
@@ -270,6 +270,84 @@ anzugeben ist (0 wäre die erste Tabellenspalte, 2 die zweite, etc.).
     table = $('#maintable').DataTable( {
       "columnDefs": [{ "targets": 0, "className": "none"}].concat($.fn.dataTable.defaults.columnDefs)
     } );
+
+
+Hinzufügen von Tabellenzeilen
+-----------------------------
+
+In manchen Fällen kann es notwendig sein, neue Zeilen einer Tabelle dynamisch hinzuzufügen;
+beispielsweise, wenn die letzten durchgeführten Commandos oder Logeinträge ergänzt werden sollen.
+Hierzu ist es nötig, die Funktion ``handleUpdatedData`` entsprechend anzupassen.
+
+In der ersten if-Abfrage wird evaluiert, ob bereits ein Element mit entsprechender ID existiert.
+Falls nicht, wird die Zeile neu angelegt und sanft eingeblendet. Im untenstehenden Code wird zuerst gecheckt,
+ob es eine Datentablle mit der ID "maintable" gibt.
+In der Zeile ``if ( $.fn.dataTable.isDataTable('#maintable') )`` sowie in der darauf folgenden
+Zeile muss '#maintable' durch die tatsächliche ID der zu aktualisierenden Tabelle ersetzt werden.
+Falls nun eine entsprechende Tabelle auf der Seite gefunden wurde, wird diese
+als "table_to_update" definiert (was später für das Hinzufügen einer Zeile mittels row.add genutzt wird).
+
+Durch die Einträge in der Liste ``table_to_update.row.add( [ item, '' ] )`` wird festgelegt, welchen Inhalt
+die Spalten bekommen sollen. Im Beispielfall wird also der Itemname in die erste Spalte und
+ein leerer Wert in die zweite Spalte eingetragen.
+Anschließend wird der zweiten Spalte die relevante ID hinzugefügt, um zukünftig den Wert
+aktualisieren zu können. Möchte man weiteren Spalten ebenfalls
+eine ID zuweisen, ist die Codezeile zu kopieren und die Zahl beim Eintrag ``td:eq(1)`` entsprechend
+zu ändern (0 = erste Spalte, 1 = zweite Spalte, etc.). Abschließend wird der leere Wert schließlich
+mittels ``shngInsertText`` aktualisert und dank Angabe einer Zahl als 4. Parameter x Sekunden lang farblich markiert.
+
+.. code-block:: html+jinja
+
+    {% block pluginscripts %}
+    <script>
+        function handleUpdatedData(response, dataSet=null) {
+            if (dataSet === 'devices_info' || dataSet === null) {
+                var objResponse = JSON.parse(response);
+                for (var item in objResponse) {
+                    if (!document.getElementById(item+'_value')) {
+                        if ( $.fn.dataTable.isDataTable('#maintable') ) {
+                            table_to_update = $('#maintable').DataTable();
+                            newRow = table_to_update.row.add( [ item, '' ] ).draw().node();
+                            $('td:eq(1)', newRow).attr('id', objResponse['item'][item]+'_value');
+                            shngInsertText(item+'_value', objResponse['item'][item]['value'], 'maintable', 5);
+                        }
+                    }
+                    else
+                    {
+                      shngInsertText(item+'_value', objResponse['item'][item]['value'], 'maintable', 2);
+                    }
+
+                }
+            }
+        }
+    </script>
+    {% endblock pluginscripts %}
+
+
+Hervorheben von Änderungen
+--------------------------
+
+Wird über ``shngInsertText`` der Inhalt eines HTML Elements aktualisiert, kann dies optional durch einen
+farbigen Hintergrund hervorgehoben werden. Der jquery UI Effekt ``switchClass`` wechselt dabei sanft
+von einer CSS Klasse zur anderen. Die Dauer des Effekts kann im letzten Parameter des Aufrufs von
+``shngInsertText`` in Sekunden angegeben werden. Eine Dauer von 0 oder keine Angabe sorgen dafür,
+dass kein Highlight Effekt ausgeführt wird. Außerdem wird der Effekt auch nicht aktiviert, wenn der vorige
+Wert ``...`` war (z.B. beim Initialisieren der Tabelle, bevor aktualisierte Werte vom Plugin kommen).
+Die beiden Klassen sind bereits hinterlegt, können aber in der index.html des Plugin webif
+im Block ``pluginStyles`` bei Bedarf überschrieben werden.
+
+.. code-block:: css+jinja
+
+    {% block pluginstyles %}
+    <style>
+        .shng_effect_highlight {
+          background-color: #FFFFE0;
+        }
+        .shng_effect_standard {
+          background-color: none;
+        }
+    </style>
+    {% endblock pluginstyles %}
 
 
 Festlegen des Aktualisierungsintervalls
