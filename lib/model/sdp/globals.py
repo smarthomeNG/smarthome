@@ -110,13 +110,12 @@ ITEM_ATTR_GROUP              = '_read_group'          # trigger read with read g
 ITEM_ATTR_WRITE              = '_write'               # command can be called for writing values
 ITEM_ATTR_READ_GRP           = '_read_group_trigger'  # item triggers reading of read group <foo>
 ITEM_ATTR_LOOKUP             = '_lookup'              # create lookup item <item>.lookup
-ITEM_ATTR_CUSTOM_PREFIX      = '_custom'              # prefix for custom attributes (used internally)
 ITEM_ATTR_CUSTOM1            = '_custom1'             # custom attribute 1
 ITEM_ATTR_CUSTOM2            = '_custom2'             # custom attribute 2
 ITEM_ATTR_CUSTOM3            = '_custom3'             # custom attribute 3
 
 ITEM_ATTRS = (ITEM_ATTR_COMMAND, ITEM_ATTR_READ, ITEM_ATTR_CYCLE, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE, ITEM_ATTR_READ_GRP, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_CUSTOM1, ITEM_ATTR_CUSTOM2, ITEM_ATTR_CUSTOM3)
-ATTR_NAMES = ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ', 'ITEM_ATTR_CYCLE', 'ITEM_ATTR_READ_INIT', 'ITEM_ATTR_GROUP', 'ITEM_ATTR_WRITE', 'ITEM_ATTR_READ_GRP', 'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_CUSTOM_PREFIX', 'ITEM_ATTR_CUSTOM1', 'ITEM_ATTR_CUSTOM2', 'ITEM_ATTR_CUSTOM3')
+ATTR_NAMES = ('ITEM_ATTR_COMMAND', 'ITEM_ATTR_READ', 'ITEM_ATTR_CYCLE', 'ITEM_ATTR_READ_INIT', 'ITEM_ATTR_GROUP', 'ITEM_ATTR_WRITE', 'ITEM_ATTR_READ_GRP', 'ITEM_ATTR_LOOKUP', 'ITEM_ATTR_CUSTOM1', 'ITEM_ATTR_CUSTOM2', 'ITEM_ATTR_CUSTOM3')
 
 # command definition
 COMMAND_READ                 = True                     # used internally
@@ -146,6 +145,9 @@ CMD_IATTR_ENFORCE            = 'enforce'                # add ``enforce_updates:
 CMD_IATTR_INITIAL            = 'initial'                # add ``md_read_initial: true``
 CMD_IATTR_CYCLE              = 'cycle'                  # add ``md_read_cycle: <val>``
 CMD_IATTR_TEMPLATE           = 'item_template'          # add item template <foo>
+CMD_IATTR_CUSTOM1            = 'custom1'                # add item-specific custom attribute 1
+CMD_IATTR_CUSTOM2            = 'custom2'                # add item-specific custom attribute 2
+CMD_IATTR_CUSTOM3            = 'custom3'                # add item-specific custom attribute 3
 
 # commands definition parameters
 COMMAND_PARAMS = (CMD_ATTR_OPCODE, CMD_ATTR_READ, CMD_ATTR_WRITE, CMD_ATTR_ITEM_TYPE, CMD_ATTR_DEV_TYPE,
@@ -153,7 +155,8 @@ COMMAND_PARAMS = (CMD_ATTR_OPCODE, CMD_ATTR_READ, CMD_ATTR_WRITE, CMD_ATTR_ITEM_
                   CMD_ATTR_LOOKUP, CMD_ATTR_PARAMS, CMD_ATTR_ITEM_ATTRS)
 
 COMMAND_ITEM_ATTRS = (CMD_IATTR_RG_LEVELS, CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_ATTRIBUTES, CMD_IATTR_TEMPLATE,
-                      CMD_IATTR_READ_GROUPS, CMD_IATTR_CYCLE, CMD_IATTR_INITIAL, CMD_IATTR_ENFORCE)
+                      CMD_IATTR_READ_GROUPS, CMD_IATTR_CYCLE, CMD_IATTR_INITIAL, CMD_IATTR_ENFORCE,
+                      CMD_IATTR_CUSTOM1, CMD_IATTR_CUSTOM2, CMD_IATTR_CUSTOM3)
 
 # reply pattern substitution tokens, set token in {<token>}
 PATTERN_LOOKUP               = 'LOOKUP'                 # replace with lookup values    

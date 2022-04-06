@@ -46,8 +46,9 @@ from lib.model.sdp.globals import (
     CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_WRITE, CMD_IATTR_ATTRIBUTES,
     CMD_IATTR_CYCLE, CMD_IATTR_ENFORCE, CMD_IATTR_INITIAL,
     CMD_IATTR_LOOKUP_ITEM, CMD_IATTR_READ_GROUPS, CMD_IATTR_RG_LEVELS,
+    CMD_IATTR_CUSTOM1, CMD_IATTR_CUSTOM2, CMD_IATTR_CUSTOM3,
     CMD_IATTR_TEMPLATE, COMMAND_READ, COMMAND_SEP, COMMAND_WRITE, CUSTOM_SEP,
-    INDEX_GENERIC, INDEX_MODEL, ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM_PREFIX,
+    INDEX_GENERIC, INDEX_MODEL, ITEM_ATTR_COMMAND, ITEM_ATTR_CUSTOM1,
     ITEM_ATTR_CYCLE, ITEM_ATTR_GROUP, ITEM_ATTR_LOOKUP, ITEM_ATTR_READ,
     ITEM_ATTR_READ_GRP, ITEM_ATTR_READ_INIT, ITEM_ATTR_WRITE,
     PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT,
@@ -309,8 +310,8 @@ class SmartDevicePlugin(SmartPlugin):
                 # reached top of item tree
                 return None
 
-            if self.has_iattr(parent.conf, ITEM_ATTR_CUSTOM_PREFIX + str(index)):
-                return self.get_iattr_value(parent.conf, ITEM_ATTR_CUSTOM_PREFIX + str(index))
+            if self.has_iattr(parent.conf, ITEM_ATTR_CUSTOM1[:-1] + str(index)):
+                return self.get_iattr_value(parent.conf, ITEM_ATTR_CUSTOM1[:-1] + str(index))
 
             return find_custom_attr(parent, index)
 
@@ -321,8 +322,8 @@ class SmartDevicePlugin(SmartPlugin):
         for index in (1, 2, 3):
 
             val = None
-            if self.has_iattr(item.conf, ITEM_ATTR_CUSTOM_PREFIX + str(index)):
-                val = self.get_iattr_value(item.conf, ITEM_ATTR_CUSTOM_PREFIX + str(index))
+            if self.has_iattr(item.conf, ITEM_ATTR_CUSTOM1[:-1] + str(index)):
+                val = self.get_iattr_value(item.conf, ITEM_ATTR_CUSTOM1[:-1] + str(index))
                 self.logger.debug(f'Item {item} has custom item attribute {index} with value {val}')
             elif self.has_recursive_custom_attribute(index):
                 val = find_custom_attr(item, index)
@@ -744,6 +745,7 @@ class SmartDevicePlugin(SmartPlugin):
         By default, this just forwards the data_dict to the connection instance
         and return the result.
         """
+        self.logger.debug(f'sending {data_dict}')
         return self._connection.send(data_dict)
 
     def on_connect(self, by=None):
@@ -1029,7 +1031,6 @@ class SmartDevicePlugin(SmartPlugin):
         global_vars = globals()
 
         if plugins and global_mod:
-
             new = {}
             keys = list(self.metadata.itemdefinitions.keys())
             for attr in ATTR_NAMES:
@@ -1373,6 +1374,15 @@ class Standalone():
                     cycle = inode.get(CMD_IATTR_CYCLE)
                     if cycle:
                         item[ITEM_ATTR_CYCLE] = cycle
+                    custom = inode.get(CMD_IATTR_CUSTOM1)
+                    if custom is not None:
+                        item[ITEM_ATTR_CUSTOM1] = custom
+                    custom = inode.get(CMD_IATTR_CUSTOM2)
+                    if custom is not None:
+                        item[ITEM_ATTR_CUSTOM1[:-1] + '2'] = custom
+                    custom = inode.get(CMD_IATTR_CUSTOM3)
+                    if custom is not None:
+                        item[ITEM_ATTR_CUSTOM1[:-1] + '3'] = custom
 
                     # custom item attributes: add 1:1
                     attrs = inode.get(CMD_IATTR_ATTRIBUTES)

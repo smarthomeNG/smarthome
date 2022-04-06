@@ -132,6 +132,16 @@ commands = {
             # otherwise specify 'lookup_item': 'fwd' / 'rev' / 'rci'
             'lookup_item': False,
 
+            # create custom[123] item attribute
+            # to override inheriting custom attributes for a single item,
+            # set this to ''
+            #
+            # for this to work, the corresponding item attribute needs to
+            # be defined in plugins/<plugin>/plugin.yaml
+            'custom1': None,
+            'custom2': None,
+            'custom3': None,
+
             # attributes to add to the item definition verbatim
             # e.g. eval: or on_change: attributes. you can even 
             # create special sub-items here (provide as sub-dict)
