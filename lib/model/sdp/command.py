@@ -279,13 +279,6 @@ class SDPCommandStr(SDPCommand):
         while re.match('.*' + regex + '.*', string):
             string = re.sub(regex, cust_func, string)
 
-        # if kwargs and ITEM_ATTR_CUSTOM_PREFIX in kwargs:
-        #     regex = '(MD_CUSTOM([123]))'
-        #     while re.match('.*' + regex + '.*', string):
-        #         index = int(re.match(regex, string).group(2))
-        #         if index in kwargs[ITEM_ATTR_CUSTOM_PREFIX]:
-        #             string = re.sub(regex, kwargs[ITEM_ATTR_CUSTOM_PREFIX][index], string)
-
         if data is not None:
             string = string.replace('{' + CMD_STR_VALUE + '}', str(self._DT.get_send_data(data)))
 
