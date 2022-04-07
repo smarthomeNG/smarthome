@@ -310,20 +310,20 @@ class SmartDevicePlugin(SmartPlugin):
                 # reached top of item tree
                 return None
 
-            if self.has_iattr(parent.conf, ITEM_ATTR_CUSTOM1[:-1] + str(index)):
-                return self.get_iattr_value(parent.conf, ITEM_ATTR_CUSTOM1[:-1] + str(index))
+            if self.has_iattr(parent.conf, self._item_attrs.get('ITEM_ATTR_CUSTOM' + str(index), 'foo')):
+                return self.get_iattr_value(parent.conf, self._item_attrs.get('ITEM_ATTR_CUSTOM' + str(index), 'foo'))
 
             return find_custom_attr(parent, index)
 
-        command = self.get_iattr_value(item.conf, ITEM_ATTR_COMMAND)
+        command = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_COMMAND', 'foo'))
 
         # handle custom item attributes
         self._items_custom[item.id()] = {1: None, 2: None, 3: None}
         for index in (1, 2, 3):
 
             val = None
-            if self.has_iattr(item.conf, ITEM_ATTR_CUSTOM1[:-1] + str(index)):
-                val = self.get_iattr_value(item.conf, ITEM_ATTR_CUSTOM1[:-1] + str(index))
+            if self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_CUSTOM' + str(index), 'foo')):
+                val = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_CUSTOM' + str(index), 'foo'))
                 self.logger.debug(f'Item {item} has custom item attribute {index} with value {val}')
             elif self.has_recursive_custom_attribute(index):
                 val = find_custom_attr(item, index)
@@ -356,7 +356,7 @@ class SmartDevicePlugin(SmartPlugin):
             # and a valid custom token is found
 
             # command marked for reading
-            if self.get_iattr_value(item.conf, ITEM_ATTR_READ):
+            if self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READ', 'foo')):
                 if self.is_valid_command(command, COMMAND_READ):
                     if command not in self._commands_read:
                         self._commands_read[command] = []
@@ -366,7 +366,7 @@ class SmartDevicePlugin(SmartPlugin):
                     self.logger.warning(f'Item {item} requests command {command} for reading, which is not allowed, read configuration is ignored')
 
                 # read in group?
-                group = self.get_iattr_value(item.conf, ITEM_ATTR_GROUP)
+                group = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_GROUP', 'foo'))
                 if group:
                     if isinstance(group, str):
                         group = [group]
@@ -382,34 +382,34 @@ class SmartDevicePlugin(SmartPlugin):
                         self.logger.warning(f'Item {item} wants to be read in group with invalid group identifier "{group}", ignoring.')
 
                 # read on startup?
-                if self.get_iattr_value(item.conf, ITEM_ATTR_READ_INIT):
+                if self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READ_INIT', 'foo')):
                     if command not in self._commands_initial:
                         self._commands_initial.append(command)
                         self.logger.debug(f'Item {item} saved for startup reading command {command}')
 
                 # read cyclically?
-                cycle = self.get_iattr_value(item.conf, ITEM_ATTR_CYCLE)
+                cycle = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_CYCLE', 'foo'))
                 if cycle:
                     # if cycle is already set for command, use the lower value of the two
                     self._commands_cyclic[command] = {'cycle': min(cycle, self._commands_cyclic.get(command, cycle)), 'next': 0}
                     self.logger.debug(f'Item {item} saved for cyclic reading command {command}')
 
             # command marked for writing
-            if self.get_iattr_value(item.conf, ITEM_ATTR_WRITE):
+            if self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_WRITE', 'foo')):
                 if self.is_valid_command(command, COMMAND_WRITE):
                     self._items_write[item.id()] = command
                     self.logger.debug(f'Item {item} saved for writing command {command}')
                     return self.update_item
 
             # pseudo commands
-            if not self.get_iattr_value(item.conf, ITEM_ATTR_READ) and not self.get_iattr_value(item.conf, ITEM_ATTR_WRITE):
+            if not self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READ', 'foo')) and not self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_WRITE', 'foo')):
                 if command not in self._commands_pseudo:
                     self._commands_pseudo[command] = []
                 self._commands_pseudo[command].append(item)
                 self.logger.debug(f'Item {item} saved for pseudo command {command}')
 
         # is read_grp trigger item?
-        grp = self.get_iattr_value(item.conf, ITEM_ATTR_READ_GRP)
+        grp = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READ_GRP', 'foo'))
         if grp:
 
             grp += custom_token
@@ -419,13 +419,13 @@ class SmartDevicePlugin(SmartPlugin):
             item_msg += ' saved for '
 
             # trigger read on startup?
-            if self.get_iattr_value(item.conf, ITEM_ATTR_READ_INIT):
+            if self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READ_INIT', 'foo')):
                 if grp not in self._triggers_initial:
                     self._triggers_initial.append(grp)
                     self.logger.debug(f'{item_msg} startup triggering of read group {grp}')
 
             # read cyclically?
-            cycle = self.get_iattr_value(item.conf, ITEM_ATTR_CYCLE)
+            cycle = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_CYCLE', 'foo'))
             if cycle:
                 # if cycle is already set for command, use the lower value of the two
                 self._triggers_cyclic[grp] = {'cycle': min(cycle, self._triggers_cyclic.get(grp, cycle)), 'next': 0}
@@ -443,7 +443,7 @@ class SmartDevicePlugin(SmartPlugin):
                 self.logger.warning(f'Item {item} wants to trigger group read with invalid group identifier "{grp}", ignoring.')
 
         # is lookup table item?
-        table = self.get_iattr_value(item.conf, ITEM_ATTR_LOOKUP)
+        table = self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_LOOKUP', 'foo'))
         if table:
 
             mode = 'fwd'
@@ -472,7 +472,7 @@ class SmartDevicePlugin(SmartPlugin):
         if self.alive:
 
             self.logger.debug(f'Update_item was called with item "{item}" from caller {caller}, source {source} and dest {dest}')
-            if not self.has_iattr(item.conf, ITEM_ATTR_COMMAND):
+            if not self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_COMMAND', 'foo')):
                 self.logger.warning(f'Update_item was called with item {item}, which is not configured for this plugin. This shouldn\'t happen...')
                 return
 
@@ -639,7 +639,7 @@ class SmartDevicePlugin(SmartPlugin):
                 return
 
             for item in items:
-                self.logger.debug(f'Command {command} updated item {item.id()} with value {value}')
+                self.logger.debug(f'Command {command} wants to update item {item.id()} with value {value}')
                 item(value, self.get_shortname())
 
     def read_all_commands(self, group=''):
@@ -1028,20 +1028,20 @@ class SmartDevicePlugin(SmartPlugin):
 
         plugins = Plugins.get_instance()
         global_mod = sys.modules.get('lib.model.sdp.globals', '')
-        global_vars = globals()
+
+        self._item_attrs = {}
 
         if plugins and global_mod:
-            new = {}
             keys = list(self.metadata.itemdefinitions.keys())
             for attr in ATTR_NAMES:
                 attr_val = getattr(global_mod, attr)
                 for key in keys:
                     if key.endswith(attr_val):
-                        new[attr] = key
+                        self._item_attrs[attr] = key
                         break
 
-            for attr in new:
-                global_vars[attr] = new[attr]
+#
+        print(f'W 0000 000000 {self.get_fullname()}: {keys}\nW 0000 000000 {self._item_attrs}')
 
     def init_webinterface(self, WebInterface=None):
         """"
@@ -1520,7 +1520,7 @@ class Standalone():
                     self.walk(obj[section], section, None, self.create_item, section, 0, '', [], True)
 
                     jdata = json.dumps(self.item_tree)
-                    self.yaml['item_structs'][section] = json.loads(jdata, object_pairs_hook=OrderedDict)
+                    self.yaml['item_structs'][section] = json.loads(jdata, object_pairs_hook=OrderedDict)[section]
 
                 # get model definitions
                 # if not present, fake it to include all sections
