@@ -18,7 +18,9 @@ default_language: de     # default_language is used, where multiple languages ar
 
 # If the standard commend PIP3 does not work when multiple Python3 versions are installed
 # enter the name or full path of the right pip command below
-#pip_command: pip3.5
+#pip_command: "python3 -m pip"
+#or on Windows platform
+#pip_command: "python -m pip"
 
 # Additional directory for modules - is added to sys.path (should not be needed)
 #module_paths: /usr/local/python/lib    # list of path-entries is possible
