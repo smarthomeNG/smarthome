@@ -571,7 +571,7 @@ class Scheduler(threading.Thread):
         next_time = None
         value = None
         now = self.shtime.now()
-        now = now.replace(microsecond=0)
+        #now = now.replace(microsecond=0)
         if job['cycle'] is not None:
             cycle = list(job['cycle'].keys())[0]
             #value = job['cycle'][cycle]
