@@ -10,9 +10,22 @@ Komponenten von Drittanbietern für Webinterfaces
 
 SmartHomeNG liefert eine Reihe von Drittanbieterkomponenten mit dem http-Modul aus, welche für erweiterte und komplexere Webinterfaces wie folgt eingebunden werden können:
 
-   * JQuery 3.4.1:
+   * JQuery 3.6.0:
 
-     * JS: <script src="/gstatic/js/jquery-3.4.1.min.js"></script>
+     * JS: <script src="/gstatic/js/jquery-3.6.0.min.js"></script>
+   * JQuery UI Core and Effects 1.13.1:
+
+     * CSS: <link rel="stylesheet" href="/gstatic/css/jquery-ui.min.css" type="text/css"/>
+     * JS: <script src="/gstatic/js/jquery-ui.min.js"></script>
+   * Datatables 1.11.5 incl. some plugins and extensions:
+
+     * CSS: <link rel="stylesheet" href="/gstatic/datatables/datatables.min.css" type="text/css"/>
+     * JS:
+        * <script src="/gstatic/datatables/datatables.min.js"></script>
+        * <script src="/gstatic/datatables/datatables.defaults.js"></script>
+        * <script src="/gstatic/datatables/dataTables.pageResize.min.js"></script>
+        * <script src="/gstatic/datatables/datetime-moment.min.js"></script>
+        * <script src="/gstatic/datatables/moment.min.js"></script>
    * Bootstrap :
 
      * CSS: <link rel="stylesheet" href="/gstatic/bootstrap/css/bootstrap.min.css" type="text/css"/>
@@ -21,7 +34,7 @@ SmartHomeNG liefert eine Reihe von Drittanbieterkomponenten mit dem http-Modul a
 
       * CSS: <link rel="stylesheet" href="/gstatic/bootstrap-treeview/bootstrap-treeview.css" type="text/css"/>
       * JS: <script src="/gstatic/bootstrap-treeview/bootstrap-treeview.min.js"></script>
-   * Bootstrap Datepicker v1.8.0:
+   * Bootstrap Datepicker v1.9.0:
 
       * CSS: <link rel="stylesheet" href="/gstatic/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" type="text/css"/>
       * JS:
@@ -34,12 +47,12 @@ SmartHomeNG liefert eine Reihe von Drittanbieterkomponenten mit dem http-Modul a
 
       * CSS: <link rel="stylesheet" href="/gstatic/codemirror/lib/codemirror.css"/>
       * JS: <script src="/gstatic/codemirror/lib/codemirror.js"></script>
-   * Font Awesome 5.8.1:
+   * Font Awesome 5.15.4:
 
       * CSS: <link rel="stylesheet" href="/gstatic/fontawesome/css/all.css" type="text/css"/>
 
 Erweiterungen usw., die mit den Komponenten ausgeliefert wurden, finden sich im Ordner ``/modules/http/webif/gstatic``.
 
-Für Vorschläge weiterer "globaler" Komponenten sind wir jederzeit offen. 
-Ansonsten können diese natürlich jederzeit im eigenen Plugin eingebunden und mitgeliefert werden, 
+Für Vorschläge weiterer "globaler" Komponenten sind wir jederzeit offen.
+Ansonsten können diese natürlich jederzeit im eigenen Plugin eingebunden und mitgeliefert werden,
 solange die Open Source-Lizenz der jeweiligen Komponente das erlaubt.
