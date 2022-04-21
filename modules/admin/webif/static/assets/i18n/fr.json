@@ -448,6 +448,11 @@
     "NEW_DEFINITION_FILE": "Nouveau fichier",
     "NEW_LOGIC": "Nouvelle logique",
     "NEW_SCENE": "Nouvelle scène",
+    "RELOAD_SCENES": "Szenen neu laden",
+    "RELOAD_SCENE": "Charge",
+    "NEW_FUNCTION": "Nouvelle bibliothèque",
+    "RELOAD_FUNCTIONS": "Tout recharger",
+    "RELOAD_FUNCTION": "Charger",
     "LINE_WRAPPING": "Renvoie à la ligne",
     "TRIGGER": "Déclencher"
   },
