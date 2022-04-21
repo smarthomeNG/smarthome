@@ -7,6 +7,10 @@ jobs:
         dist: bionic
       - python: 3.8
         dist: focal
+      - python: 3.9
+        dist: focal
+      - python: 3.10
+        dist: focal
 
 env:
     - REPOSITORY_ORIGIN=smarthome
