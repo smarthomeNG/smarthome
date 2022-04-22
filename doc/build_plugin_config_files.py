@@ -461,6 +461,17 @@ def write_configfile(plg, configfile_dir, language='de'):
     write_formatted(fh, get_doc_description(plugin_yaml, language))
 
     # ---------------------------------
+    # write a note block if special requirements exist
+    # ---------------------------------
+    py_versioncomment = str(plugin_yaml.get('py_versioncomment', ''))
+    if py_versioncomment != '':
+        fh.write('.. attention::\n')
+        fh.write('\n')
+        fh.write(f"    {py_versioncomment}\n")
+        fh.write('\n')
+        fh.write('\n')
+
+    # ---------------------------------
     # write Requirements section
     # ---------------------------------
     requirements = get_description(plugin_yaml, 768, language, 'requirements')
