@@ -14,7 +14,7 @@ Alle Plugins
 
    <br />
 
-Dieser Abschnitt enthält eine Liste aller Plugins, unabhängig vom jewiligen Plugin-Typ.
+Dieser Abschnitt enthält eine Liste aller Plugins, unabhängig vom jeweiligen Plugin-Typ.
 
 
 |br|
