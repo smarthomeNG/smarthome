@@ -526,6 +526,8 @@ class Item():
                 time = False
         elif isinstance(time, int):
             time = int(time)
+        elif isinstance(time, float):
+            time = int(time)
         else:
             logger.warning("Item {}: _cast_duration ({}) problem: unable to convert to int".format(self._path, time))
             time = False
