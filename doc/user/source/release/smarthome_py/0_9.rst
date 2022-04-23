@@ -9,7 +9,7 @@ New Plugins
 
 -  Fritzbox Plugin: control anything a FritzBox offers with the web interface.
 -  :doc:`Luxtronic2 Plugin </plugins/luxtronic2/README>`: get state information and control Luxtronic 2.0 heating controllers.
--  :doc:`MPD Plugin </plugins/mpd/README>`: to control Music Player Daemons.
+-  MPD Plugin to control Music Player Daemons.
 -  :doc:`Samsung Smart TV Plugin </plugins/smarttv/README>`: send commands to a SmartTV device.
 -  :doc:`Solarlog Plugin </plugins/solarlog/README>`: to retrieve information from SolarLog devices.
 -  SQLite Plugin: to store the item history in a SQLite database.
