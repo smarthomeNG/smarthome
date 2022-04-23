@@ -324,7 +324,7 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
 #    fh.write(title+'\n')
 #    fh.write('-'*len(title)+'\n')
     if plgtype != type_unclassified:
-        fh.write('.. index:: Plugins; '+plgtype_print+'\n')
+        fh.write('.. index:: Plugin Type; '+plgtype_print+'\n')
         fh.write('\n')
     fh.write('.. include:: /plugins_doc/plugins_'+plgtype+'_header.rst\n')
     fh.write('\n')

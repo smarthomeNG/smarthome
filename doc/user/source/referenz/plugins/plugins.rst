@@ -1,6 +1,6 @@
 
 .. index:: Referenz; Plugins
-.. Index:: Plugins; Referenz
+.. Index:: Plugins Referenz
 
 .. role:: redsup
 .. role:: bluesup

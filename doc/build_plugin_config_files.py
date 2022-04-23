@@ -405,7 +405,10 @@ def write_configfile(plg, configfile_dir, language='de'):
     fh.write('.. |_| unicode:: 0xA0\n')
     fh.write('\n')
 
-    write_heading(fh, f"Plugin '{plgname}'", 1)
+    write_heading(fh, f"Plugin '{plgname}' Konfiguration", 1)
+    fh.write('\n')
+    fh.write(f".. index:: Plugins; {plgname} Konfiguration\n")
+    fh.write('\n')
 
     # --------------------------------------------
     # write image for plugin-type and generic text
