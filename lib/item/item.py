@@ -907,22 +907,26 @@ class Item():
                 if rootpath.rfind('.') == -1:
                     if rootpath == '':
                         relpath = ''
-                        logger.error(
-                            "{}.get_absolutepath(): Relative path trying to access above root level on attribute '{}'".format(
-                                self._path, attribute))
+                        logger.error("{}.get_absolutepath(): Relative path trying to access above root level on attribute '{}'".format(self._path, attribute))
                     else:
                         rootpath = ''
                 else:
                     rootpath = rootpath[:rootpath.rfind('.')]
+
+        trailing_str = ''
+        if relpath.startswith('self') and len(relpath) > 4:
+            if relpath[4]  in "() +-*/<>!=&%":
+                trailing_str = relpath[4:]
+                relpath = ''
 
         if relpath != '':
             if rootpath != '':
                 rootpath += '.' + relpath
             else:
                 rootpath = relpath
-        logger.info(
-            "{}.get_absolutepath('{}'): Result = '{}' (for attribute '{}')".format(self._path, relativepath, rootpath,
-                                                                                   attribute))
+        rootpath += trailing_str
+
+        logger.info("{}.get_absolutepath('{}'): Result = '{}' (for attribute '{}')".format(self._path, relativepath, rootpath, attribute))
         if rootpath[-5:] == '.self':
             rootpath = rootpath.replace('.self', '')
         rootpath = rootpath.replace('.self.', '.')
