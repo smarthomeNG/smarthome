@@ -45,6 +45,12 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
                   # add values to be passed to the Jinja2 template eg: tmpl.render(p=self.plugin, interface=interface, ...)
                   return tmpl.render(p=self.plugin)
 
+                  # Setting pagelength (max. number of table entries per page) for web interface
+                  try:
+                      pagelength = self.plugin.webif_pagelength
+                  except Exception:
+                      pagelength = 100
+
                   # get list of items with the attribute knx_dpt
                   plgitems = []
                   for item in self.items.return_items():
@@ -54,10 +60,27 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
                   # additionally hand over the list of items, sorted by item-path
                   tmpl = self.tplenv.get_template('index.html')
                   return tmpl.render(p=self.plugin,
+                                     webif_pagelength=pagelength,
                                      items=sorted(plgitems, key=lambda k: str.lower(k['_path'])),
                                     )
 
-   2. Das Template ``webif/templates/index.html`` wird zur Anzeige der gewünschten Daten angepasst.
+   2. Im Template ``webif/templates/index.html`` werden Anzahl und Titel der Tabs sowie der Starttab konfiguriert.
+
+      * ``{% set tabcount = 4 %}`` definiert die Anzahl an Tabs. Erfolgt keine Angabe, werden automatisch 4 Tabs angezeigt.
+      * ``{% set start_tab = 2 %}`` definiert, dass Tab 2 zu Beginn aktiv ist.
+      * ``{% set tab1title = "<strong>" ~ p.get_shortname() ~ " Items</strong> (" ~ item_count ~ ")" %}`` sorgt dafür, dass der erste Tab die Überschrift "<Pluginname> Items (<Anzahl>)" erhält. Setzt man den Titel auf "hidden", wird der Tab nicht angezeigt. Dies ist beispielsweise dann sinnvoll, wenn gar keine Inhalte für den Tab vorhanden sind, weil das Plugin vom User entsprechend konfiguriert wurde.
+
+
+      .. code-block:: HTML
+
+        {% if item_count > 0 %}
+            {% set tab1title = "<strong>" ~ p.get_shortname() ~ " Items</strong> (" ~ item_count ~ ")" %}
+        {% else %}
+            {% set tab1title = "hidden" %}
+        {% endif %}
+
+
+   3. Das Template ``webif/templates/index.html`` wird zur Anzeige der gewünschten Daten angepasst.
       Um im ersten Tab des Webinterface die Items anzuzeigen, die der obige Beispielcode zusammengestellt hat, wird der folgende Code zwischen ``{% block bodytab1 %}`` und ``{% endblock bodytab1 %}`` eingefügt. Es ist sicherzustellen, dass korrekter HTML Code
       für die Tabellen genutzt wird, ua. durch Nutzen der Tags ``<thead>`` und ``<tbody>``
       sowie der jeweiligen End-Tags. Außerdem muss jeder Tabelle eine einzigartige ID vergeben werden.
@@ -89,7 +112,7 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
         </div>
 
 
-   3. Folgender Scriptcode muss zwischen ``{% block pluginscripts %}`` und
+   4. Folgender Scriptcode muss zwischen ``{% block pluginscripts %}`` und
       ``{% endblock pluginscripts %}`` eingefügt werden, um ein Filtern und Sortieren
       der Tabellen zu ermöglichen.
       Der Code ``$('#maintable').DataTable( {} );``
@@ -113,4 +136,4 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
           });
         </script>
 
-   4. Das Logo oben links auf der Seite wird automatisch durch das Logo des konfigurierten Plugin-Typs ersetzt. Wenn das Webinterface ein eigenes Logo mitbringen soll, muss das entsprechende Bild im Verzeichnis ``webif/static/img`` mit dem Namen ``plugin_logo`` abgelegt sein. Die zulässigen Dateiformate sind **.png**, **.jpg** oder **.svg**. Dabei sollte die Größe der Bilddatei die Größe des angezeigten Logos (derzeit ca. 180x150 Pixel) nicht überschreiten, um unnötige Datenübertragungen zu vermeiden.
+   5. Das Logo oben links auf der Seite wird automatisch durch das Logo des konfigurierten Plugin-Typs ersetzt. Wenn das Webinterface ein eigenes Logo mitbringen soll, muss das entsprechende Bild im Verzeichnis ``webif/static/img`` mit dem Namen ``plugin_logo`` abgelegt sein. Die zulässigen Dateiformate sind **.png**, **.jpg** oder **.svg**. Dabei sollte die Größe der Bilddatei die Größe des angezeigten Logos (derzeit ca. 180x150 Pixel) nicht überschreiten, um unnötige Datenübertragungen zu vermeiden.
