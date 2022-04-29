@@ -2,6 +2,7 @@
   "MENU": {
     "SYSTEM": "Système",
     "SYSTEM_PROPERTIES": "Propriétés du système",
+    "SYSTEM_CONFIGURATION": "Configuration du système",
     "SERVICES": "Services",
     "ITEMS": "Objets",
     "ITEM_TREE": "Arborescence des objets",
@@ -20,6 +21,7 @@
     "LOGS": "Journaux",
     "LOGS_DISPLAY": "Afficher les journaux",
     "LOGGER_LIST": "Liste des générateurs de journaux",
+    "LOGGING_CONFIGURATION": "Configuration des journaux",
     "CONFIGURATION": "Configuration",
     "LOGIN": "s'identifier"
   },

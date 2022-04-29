@@ -2,6 +2,7 @@
   "MENU": {
     "SYSTEM": "System",
     "SYSTEM_PROPERTIES": "System Properties",
+    "SYSTEM_CONFIGURATION": "System Configuration",
     "SERVICES": "Services",
     "ITEMS": "Items",
     "ITEM_TREE": "Item Tree",
@@ -20,6 +21,7 @@
     "LOGS": "Logs",
     "LOGS_DISPLAY": "Display Logs",
     "LOGGER_LIST": "Logger List",
+    "LOGGING_CONFIGURATION": "Logging Configuration",
     "CONFIGURATION": "Configuration",
     "LOGIN": "Login"
   },

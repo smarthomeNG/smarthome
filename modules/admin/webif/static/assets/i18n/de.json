@@ -2,6 +2,7 @@
   "MENU": {
     "SYSTEM": "System",
     "SYSTEM_PROPERTIES": "System Eigenschaften",
+    "SYSTEM_CONFIGURATION": "System Konfiguration",
     "SERVICES": "Dienste",
     "ITEMS": "Items",
     "ITEM_TREE": "Item Baum",
@@ -11,7 +12,7 @@
     "LOGICS": "Logiken",
     "SCHEDULERS": "Scheduler",
     "PLUGINS": "Plugins",
-    "PLUGINS_LIST": "Liste der Plugins",
+    "PLUGINS_LIST": "Plugin Liste",
     "SCENES": "Szenen",
     "SCENE_LIST": "Szenen Liste",
     "SCENE_CONFIGURATION": "Szenen Konfiguration",
@@ -20,6 +21,7 @@
     "LOGS": "Logs",
     "LOGS_DISPLAY": "Logs Anzeigen",
     "LOGGER_LIST": "Liste der Logger",
+    "LOGGING_CONFIGURATION": "Logging Konfiguration",
     "CONFIGURATION": "Konfiguration",
     "LOGIN": "Login"
   },
