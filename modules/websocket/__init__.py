@@ -146,7 +146,7 @@ class Websocket(Module):
 
         Otherwise don't enter code here
         """
-        self.logger.info("Shutting down websoocket server(s)...")
+        self.logger.info("Shutting down websocket server(s)...")
         self.loop.call_soon_threadsafe(self.loop.stop)
         time.sleep(5)
 
