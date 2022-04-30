@@ -10,7 +10,7 @@
 item_structs
 ------------
 
-Der Abschnitt ``item_structs:`` erlaubt die Definition von Structure Templates, also von Sub-Trees von Items,
+Der Abschnitt ``item_structs:`` erlaubt die Definition von Struktur Templates, also von Sub-Trees von Items,
 die an verschiedenen Stellen in den Item Tree eingefügt werden können.
 
 Definitionen von ``item_structs:`` haben das folgende Format:
@@ -47,7 +47,7 @@ Das erfolgt in den Konfigurationsdateien für Items im Verzeichnis ``../items``:
 
 
 Falls ``struct1`` des oben angegebenen Beispiels in einem Plugin mit dem Namen ``example_plugin`` definiert wurde,
-sieht die Konfiguration um die Structure einzufügen folgendermaßen aus:
+sieht die Konfiguration um die Struktur einzufügen folgendermaßen aus:
 
 .. code:: yaml
 
@@ -55,10 +55,10 @@ sieht die Konfiguration um die Structure einzufügen folgendermaßen aus:
        struct: example_plugin.struct1
 
 
-Geschachtelte Structuren
+Geschachtelte Strukturen
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Beginnend mit SmartHomeNG v1.7 können Struktur Definitionen ineinander geschatelt werden.
+Beginnend mit SmartHomeNG v1.7 können Struktur Definitionen ineinander verschachtelt werden.
 
 Wie Items die eine Struktur mit dem ``struct`` Attribut referenzieren, kann auch eine Struktur Definition eine
 eine andere Struktur referenzieren. SmartHomeNG löst alle Struktur Referenzen in Strukturen auf, bevor der
@@ -79,8 +79,8 @@ Beim Einlesen der Item Definitionen "gewinnt" die Attribut Definition die zuletz
 
 In struct/sub-struct Definitionen hingegen, "gewinnt" die erste Definition eines Attributes.
 
-Beim auflösen von sub-structs soll normalerweise der übergeordnete Level gewinnen. Das ermöglicht es zm Beispiel
-in einer Item Definition eine Attribut Definition zu überschreiben, welche in einer Structure bereits festgelegt wurde.
+Beim auflösen von sub-structs soll normalerweise der übergeordnete Level gewinnen. Das ermöglicht es zum Beispiel
+in einer Item Definition eine Attribut Definition zu überschreiben, welche in einer Struktur bereits festgelegt wurde.
 Damit das so erfolgt, muss das betreffende Attribut im Item in der Reihenfolge vor dem ``struct`` Attribut definiert
 werden. Falls das Attribut im Item erst nach dem ``struct`` Attribut definiert wird, "gewinnt" die Definition in der
 Structure. Dieses Verhalten gilt analog beim verschachteln von Strukturen.
