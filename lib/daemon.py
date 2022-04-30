@@ -186,7 +186,7 @@ def check_sh_is_running(pidfile):
     return isRunning
 
 
-def kill(pidfile, waittime=15):
+def kill(pidfile, waittime=15, pid0_warning=True):
     """
     This method kills the process identified by pidfile.
 
@@ -197,7 +197,7 @@ def kill(pidfile, waittime=15):
     """
 
     pid = read_pidfile(pidfile)
-    if pid == 0:
+    if pid == 0 and pid0_warning:
         logger.error("A Process ID of 0 can not be killed, please kill SmartHomeNG manually")
     elif psutil.pid_exists(pid):
         logger.warning("Stopping SmartHomeNG, please wait...")

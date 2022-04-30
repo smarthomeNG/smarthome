@@ -65,6 +65,7 @@ argparser.add_argument('-p', '--pip3_command', help='set path of pip3 command, i
 arggroup.add_argument('-i', '--interactive', help='open an interactive shell with tab completion and with verbose logging to the logfile', action='store_true')
 arggroup.add_argument('-l', '--logics', help='reload all logics', action='store_true')
 arggroup.add_argument('-r', '--restart', help='restart SmartHomeNG', action='store_true')
+arggroup.add_argument('-R', '--restart_pid0', help='restart SmartHomeNG w/o PID 0 warning', action='store_true')
 arggroup.add_argument('-s', '--stop', help='stop SmartHomeNG', action='store_true')
 arggroup.add_argument('-V', '--version', help='show SmartHomeNG version', action='store_true')
 arggroup.add_argument('--start', help='start SmartHomeNG and detach from console (default)', default=True, action='store_true')
@@ -134,10 +135,7 @@ if core_reqs == 0:
             exit(0)
 
     try:
-        command.append('-r')
-        print(f"command: '{command}'")
-        command = command[0] + ' ' + command[1] + ' -r'
-        print(f"joined command: '{command}'")
+        command = command[0] + ' ' + command[1] + ' -R'
         p = subprocess.Popen(command, shell=True)
         print('Waiting for restart...')
     except subprocess.SubprocessError as e:
@@ -218,6 +216,9 @@ if __name__ == '__main__':
     if args.restart:
         time.sleep(5)
         lib.daemon.kill(PIDFILE, 30)
+    elif args.restart_pid0:
+        time.sleep(5)
+        lib.daemon.kill(PIDFILE, 30, pid0_warning=False)
     elif args.interactive:
         MODE = 'interactive'
         import code
