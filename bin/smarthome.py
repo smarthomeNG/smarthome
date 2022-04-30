@@ -123,10 +123,10 @@ if core_reqs == 0:
     # if we didn't change the working dir (yet), for example...
     # command = [python_bin] + sys.argv
     command = [python_bin, os.path.join(BASE, 'bin', 'smarthome.py')]
-
     # if started with parameter to stay in foreground, don't fork
     if args.foreground or args.interactive or args.debug:
         try:
+            print(f"os.execv: python_bin={python_bin}, sys.argv={sys.argv}")
             # function call doesn't return; this process is replaced by the new one
             os.execv(python_bin, [python_bin] + sys.argv)
         except OSError as e:
@@ -135,11 +135,14 @@ if core_reqs == 0:
 
     try:
         command.append('-r')
+        print(f"command: '{command}'")
+        command = command[0] + ' ' + command[1] + ' -r'
+        print(f"joined command: '{command}'")
         p = subprocess.Popen(command, shell=True)
+        print('Waiting for restart...')
     except subprocess.SubprocessError as e:
         print("Restart command '{}' failed with error {}".format(command,e))
-    time.sleep(10)
-    print()
+    time.sleep(15)
     exit(0)
 elif core_reqs == -1:
     print("ERROR: Unable to install core requirements")
