@@ -719,7 +719,7 @@ class Mqtt(Module):
         """
         if rc == 0:
             self.logger.info(f"Disconnection was successful (rc={rc}'")
-        if rc == 7:
+        elif rc == 7:
             self.logger.warning(f"Disconnected from broker with returncode '{rc}'")
             self._got_disconnected = True
         else:
