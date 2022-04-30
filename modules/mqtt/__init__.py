@@ -72,6 +72,7 @@ class Mqtt(Module):
         try:
             self.broker_hostname = self._parameters['broker_host']
             self.broker_port = self._parameters['broker_port']
+            self.broker_client = self._parameters['broker_client']
             self.broker_monitoring = self._parameters['broker_monitoring']
             self.qos = self._parameters['qos']
             self.last_will_topic = self._parameters['last_will_topic']
@@ -210,7 +211,7 @@ class Mqtt(Module):
         """
         Establish connection to MQTT broker
         """
-        clientname = platform.uname()[1] + '.MQTT-module'
+        clientname = platform.uname()[1] + '.' + self.broker_client
         self.logger.info("Connecting to broker '{}:{}'. Starting mqtt client '{}'".format(self.broker_ip, self.broker_port, clientname))
         self._client = mqtt.Client(client_id=clientname)
 
@@ -716,11 +717,13 @@ class Mqtt(Module):
         """
         Callback function called on disconnect
         """
+        if rc == 0:
+            self.logger.info(f"Disconnection was successful (rc={rc}'")
         if rc == 7:
-            self.logger.warning("Disconnected from broker with returncode '{}' ".format(rc))
+            self.logger.warning(f"Disconnected from broker with returncode '{rc}'")
             self._got_disconnected = True
         else:
-            self.logger.notice("Disconnection returned result '{}' ".format(rc))
+            self.logger.notice(f"Disconnection returned result '{rc}'")
         return
 
 
