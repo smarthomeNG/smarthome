@@ -376,7 +376,10 @@ class Shpypi:
             req_type_display = 'plugin'
         complete_filename = os.path.join(self._sh_dir, 'requirements', req_type + '.txt')
         if logging:
-            self.logger.warning("Installing "+req_type_display+" requirements for the current user, please wait...")
+            try:
+                self.logger.notice("Installing "+req_type_display+" requirements for the current user, please wait...")
+            except:
+                self.logger.warning("Installing "+req_type_display+" requirements for the current user, please wait...")
         else:
             print()
             print("Installing "+req_type_display+" requirements for the current user, please wait...")
@@ -385,7 +388,10 @@ class Shpypi:
             pip_command = pip3_command
         else:
             pip_command = self.get_pip_command()
-        self.logger.warning("> using PIP command: '{}'".format(pip_command))
+        try:
+            self.logger.notice("> using PIP command: '{}'".format(pip_command))
+        except:
+            self.logger.warning("> using PIP command: '{}'".format(pip_command))
         if logging:
             self.logger.info('> '+pip_command+' install -r requirements/'+req_type+'.txt --user --no-warn-script-location')
         else:
@@ -408,7 +414,10 @@ class Shpypi:
                 outfile.write(stderr)
             if 'virtualenv' in stderr and '--user' in stderr:
                 if logging:
-                    self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
+                    try:
+                        self.logger.notice("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
+                    except:
+                        self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
                 else:
                     print()
                     print("Running in a virtualenv environment,")
@@ -421,7 +430,10 @@ class Shpypi:
 
         if stderr == '':
             if logging:
-                self.logger.warning(req_type_display+" requirements installed")
+                try:
+                    self.logger.notice(req_type_display+" requirements installed")
+                except:
+                    self.logger.warning(req_type_display+" requirements installed")
             else:
                 print(req_type_display+" requirements installed")
                 print()
