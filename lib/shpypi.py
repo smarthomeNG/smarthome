@@ -1175,6 +1175,8 @@ class Requirements_files():
 
     def _test_plugin_versions(self, filename):
 
+        # import lib.shyaml here, so test_base_requirements() can be run even if ruamel.yaml package is not installed
+        import lib.shyaml as shyaml
         metaname = filename[:-16] + 'plugin.yaml'
         meta = shyaml.yaml_load(metaname, ignore_notfound=True)
         if meta is None:
