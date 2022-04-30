@@ -46,7 +46,8 @@ try:
 except:
     pass
 
-import lib.shyaml as shyaml
+# Nicht hier importieren!!! shpypi muss auch ohne geladene Packages (hier: ruamel.yaml) lauffähig sein
+# import lib.shyaml as shyaml
 from lib.utils import Utils
 from lib.utils import Version
 from lib.constants import (YAML_FILE)
@@ -284,7 +285,7 @@ class Shpypi:
 
     def test_conf_plugins_requirements(self, plugin_conf_basename, plugins_dir):
         # import lib.shyaml here, so test_base_requirements() can be run even if ruamel.yaml package is not installed
-#        import lib.shyaml as shyaml
+        import lib.shyaml as shyaml
 
         if not os.path.isfile(plugin_conf_basename+ YAML_FILE):
             self.logger.warning("Requirments for configured plugins were not checked because the plugin configuration is not in YAML format")
