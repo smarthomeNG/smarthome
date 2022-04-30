@@ -199,7 +199,7 @@ def kill(pidfile, waittime=15, pid0_warning=True):
     pid = read_pidfile(pidfile)
     if pid == 0 and pid0_warning:
         logger.error("A Process ID of 0 can not be killed, please kill SmartHomeNG manually")
-    elif psutil.pid_exists(pid):
+    if psutil.pid_exists(pid):
         logger.warning("Stopping SmartHomeNG, please wait...")
         p = psutil.Process(pid)
         if p is not None:
@@ -215,5 +215,5 @@ def kill(pidfile, waittime=15, pid0_warning=True):
                     p.wait(timeout=5)
                 except Exception as e:
                     pass
-    else:
+    elif pid != 0:
         logger.warning("No instance of SmartHomeNG running")
