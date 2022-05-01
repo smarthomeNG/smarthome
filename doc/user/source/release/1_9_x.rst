@@ -8,10 +8,10 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 25. April 2022
-       (Documentation: Removed link from old release notes to README.md of ...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 28. April 2022
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 30. April 2022
        (...)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 1. Mai 2022
+       (husky2: Updated description in metadata)
 
 
 Überblick
@@ -55,18 +55,21 @@ Updates in the CORE
 * suggest 'python -m pip' in smarthome.yaml.default
 * prevent multiple logic triggers on same logic
 * sunevent offset in minutes used now for start of event calculation
-* tests: remove python3.6 from testing
-* tests: added python 3.9 and 3.10
+
+* bin.smarthome:
+
+  * Fixed restart after installing core requirements
+  * Option to supress pid-0 warning
 
 * Items:
 
   *  Fix für item attribute prefix 'my\_'
 
-* Logics:
-
-  * ...
-
 * Libs:
+
+  * lib.daemon:
+
+    * Fixed output on pid-0 warning
 
   * lib.item:
 
@@ -87,9 +90,15 @@ Updates in the CORE
     * Adjust logging
     * Prepare connections monitoring
 
+  * lib.shpypi:
+
+    * Corrected import position of lib.shyaml
+    * Adjusted som log levels
+
   * lib.shtime:
 
-    *  Implemented handling for breaking change in pypi package 'holidays' v0.13
+    * Implemented handling for breaking change in pypi package 'holidays' v0.13
+    * Added requirement fpr pytz
 
 * Modules:
 
@@ -97,7 +106,8 @@ Updates in the CORE
 
     * Fixed display of logs in shngadmin for changed file naming convention introduced in shng v1.9
     * Sorting of list of logics is now case insensitive
-    * bumped shngadmin version to 0.5.4
+    * Implemented naming of tab titles according to selected menu page
+    * bumped shngadmin version to 0.6.0
 
   * http:
 
@@ -117,19 +127,18 @@ Updates in the CORE
   * mqtt:
 
     * Fixed bug that prevented the reconnect to broker
+    * Added parameter for client naming, to enable two SmartHomeNG installations to communicate with the same broker
 
   * websocket:
 
     * Updated logging
     * Active cancellation of update_all_series, when smarthomeng leaves running-mode
 
-* Plugins:
-
-  * ...
-
 * tests:
 
-  * ...
+  * Removed python 3.6 from testing
+  * Added python 3.9 and 3.10
+
 
 
 Änderungen bei Plugins
@@ -150,6 +159,10 @@ For details of the changes of the individual plugins, please refer to the docume
 
   * Plugin for controlling Bang & Olufsen devices through Netlink (REST API)
   * Plugin is still under development and should not be used for production use
+
+* husky2: Husqvarna automower plugin (supporting the new API)
+* leveljet: Plugin implements LevelJET water level indicator (www.projet.de)
+* waterkotte: Connection of Waterkotte heat pumps of the EcoTouch series via network
 
 
 Plugin Updates
@@ -182,7 +195,7 @@ Plugin Updates
   * Update WebIF with possibility to adapt table size to screen
   * Debugging for 'button' e.g. DECT440
   * Minor code correction / debugging
-  * Adapt user_doc.rst
+  * Adopt user_doc.rst
   * Update WebIF
   * Implement timeout extension, if request for logs timed out
 
@@ -209,6 +222,10 @@ Plugin Updates
 * jsonread:
 
   * Set maximum Python version in metadata and in requiremtens to 3.9
+
+* knx:
+
+  * Added DPT 'hex' to be able to read out key IDs from (old) Winkhaus locking systems (from PR #601)
 
 * mpd:
 
@@ -242,6 +259,7 @@ Plugin Updates
   * Installing widgets to shwidgets folder for sv 3.0 and above
   * Installing widget icons from sw and ws subfolders to sv icon subfolders
   * Added payload protocol documentation
+  * Fixed handling of infoblock.html when copying templates (for sv >= v3.2)
 
 * smlx:
 
@@ -270,9 +288,15 @@ Plugin Updates
 
   * Changed state from develop to ready
 
-* Withings Health:
+* withings_health:
 
   * Added refresh function as auto refresh with callback seems to be broken without
+
+* zigbee2mqtt:
+
+  * Update WebIF
+  * Implement automated update
+  * Debugging last-seen
 
 * zwave:
 
@@ -321,29 +345,13 @@ Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecate
 plugin takes over the functionality. This plugin is based on the mqtt module and the recent core.
 
 
-Retired Plugins
----------------
-
-The following plugins have been retired. They had been deprecated in one of the preceding releases of SmartHomeNG.
-They have been removed from the plugins repository, but they can still be found on github. Now they reside in
-the **plugin_archive** repository from where they can be downloaded if they are still needed.
-
-* ...
-
-
 Weitere Änderungen
 ==================
-
-Tools
------
-
-* ...
-
 
 Documentation
 -------------
 
 * update requirements for sphinx and myst to more recent versions
 * Added info about max Python version to plugin documentation
-
+* Update komplettanleitung and fixed some typos
 
