@@ -36,9 +36,15 @@ in der Admin GUI benutzt.
 
 .. include:: /referenz/metadata/parameter_keys.rst
 
+- ``duplicate_use:`` Optional: Falls auf ``True`` erfolgt keine Warnung, falls das Item-Attribut in unterschiedlichen
+  Plugins definiert ist. Dazu muss ``duplicate_use`` in allen Plugin Definitionen angegeben werden, in denen das
+  Attribut genutzt wird. Außerdem müssen die Definitionen der Item Attribute in den verschiedenen Plugins
+  übereinstimmen.
 
-Plugins ohne item-attributes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Plugins ohne Item Attribute
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Falls ein Plugin keine Item Attribute hat, wird das durch den folgenden Eintrag in der
 Datei ``plugin.yaml`` angezeigt:

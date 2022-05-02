@@ -19,6 +19,12 @@ oder `UNetbootin <https://unetbootin.github.io/>`__ auf einen USB Stick
 übertragen werden.
 
 
+Diese Komplettanleitung wurde auf einer virtuellen Maschine unter VMWare mit einem
+Debian bullseye 11.3 getestet.
+Andere Linux Derivate können abweichen, man sollte dann mit den Unterschieden umgehen 
+können.
+
+
 .. contents:: Schritte der Installation
    :local:
 
@@ -48,7 +54,7 @@ oder `UNetbootin <https://unetbootin.github.io/>`__ auf einen USB Stick
    zu starten.
 
 
-Im allgemeinen braucht ein Server keine grafische Benutzeroberfläche,
+Im Allgemeinen braucht ein Server keine grafische Benutzeroberfläche,
 also ganz normale Installation wählen. Einige Einstellungen die jetzt
 vorgenommen werden sind:
 
@@ -57,9 +63,8 @@ vorgenommen werden sind:
 - Das **root Passwort bitte leer lassen**
 - Benutzer **smarthome** anlegen
   (bitte gerade am Raspi ein Passwort vergeben, sonst wird SSH für den Benutzer nicht aktiviert)
-- Zeitzone (z.B. Berlin)
-- Festplatte geführt partitionieren und alles verwenden,
-  Änderungen auf Platten schreiben
+- Festplatte geführt partitionieren und gesamten Speicherbereich verwenden, nicht vergessen die
+  Änderungen auch auf die Platten zu schreiben
 
 Jetzt erfolgt die Grundinstallation des Systems aus dem
 Basispaket. Anschließend wird aufgrund der Landesauswahl der
@@ -79,15 +84,12 @@ Wenn keine grafische Benutzeroberfläche gebraucht wird, dann bitte
 
 -  Debian Desktop Environment
 
-**abwählen**:
-
--  Druckserver
+ansonsten sind KDE und Gnome sehr mächtig aber es tut vielleicht ein LXDE auch.
 
 **auswählen**:
 
--  Web Server
--  SSH Server (wird für SSH z.B. via PuTTY oder Bitvise SSH Client
-   benötigt)
+-  Web Server (Apache2)
+-  SSH Server (wird für SSH z.B. via PuTTY oder Bitvise SSH Client benötigt)
 -  Standard-Systemwerkzeuge
 
 Nun ist es Zeit für das nächste Getränk, das Nachladen der zu
@@ -176,45 +178,44 @@ ist sicher.
    verwiesen <https://wiki.debian.org/NetworkConfiguration>`__
 
 
-Optional
---------
+.. tabs::
 
-Bei Verwendung unter VMware: Installation der Open VM Tools
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    .. tab:: Tools für VMWare
 
-Wenn die Installation virtuelle Maschine erfolgt ist, wird von `VMWare
-empfohlen <https://kb.vmware.com/kb/2073803>`__ die Open VM Tools zu
-installieren:
+        Wenn die Installation in einer virtuellen Maschine unter VMWare
+        erfolgt ist, so werden für Debian bullseye 11.3 bereits die
+        open-vm-tools mitinstalliert.
 
-Für die reine Servervariante vom Debian geht das über
+        Für bereits existierende Systeme können die Tools nachinstalliert werden:
 
-.. code-block:: bash
+        Servervariante
 
-   sudo apt-get install open-vm-tools
+        .. code-block:: bash
 
-bei Vorhandensein einer GUI dann alternativ mit
+          sudo apt-get install open-vm-tools
 
-.. code-block:: bash
+        Grafische Benutzeroberfläche
 
-   sudo apt-get install open-vm-tools-desktop
+        .. code-block:: bash
 
-Die automatische Anpassung der Bildschirmgröße funktioniert erst nach
-einem Neustart.
+          sudo apt-get install open-vm-tools-desktop
+
+        Die automatische Anpassung der Bildschirmgröße funktioniert erst nach
+        einem Neustart.
 
 
-Bei Verwendung unter Oracle VM VirtualBox: Installation der Gästeerweiterungen
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    .. tab:: VirtualBox Gasterweiterungen
 
-Um die Gästeerweiterungen zu installieren zuerst unter **Geräte** ->
-**Gästeerweiterungen einlegen** anklicken. Diese nun via Terminal/Shell
-ausführen und den Anweisungen folgen:
+        Um die Gästeerweiterungen zu installieren zuerst unter **Geräte** ->
+        **Gästeerweiterungen einlegen** anklicken. Diese nun via Terminal/Shell
+        ausführen und den Anweisungen folgen:
 
-.. code-block:: bash
+        .. code-block:: bash
 
-   sudo sh /media/cdrom/VBoxLinuxAdditions.run
+           sudo sh /media/cdrom/VBoxLinuxAdditions.run
 
-Nach einem Neustart passt sich nun bspw. bei Verwendung einer GUI die
-Auflösung dynamisch an.
+        Nach einem Neustart passt sich nun bspw. bei Verwendung einer GUI die
+        Auflösung dynamisch an.
 
 
 Restarbeiten am System
@@ -260,8 +261,6 @@ Dort an am Ende anfügen oder wenn bereits vorhanden das Kommentarzeichen ``#`` 
    alias la='ls -A'
    alias ll='ls -l'
    alias ..='cd ..'
-
-
 
 Der Benutzer **smarthome** muß nun abgemeldet und neu angemeldet werden,
 damit die Rechte neu eingelesen werden. Dies ist eine gute Gelegenheit

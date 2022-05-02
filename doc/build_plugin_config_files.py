@@ -44,6 +44,8 @@ These files contain
 - a table with information about the plugins and links to further information
 - an include for a footer file
 
+Further, this program creates the file with the configuration information for the plugins.
+(see: write_configfile())
 """
 
 import os
@@ -403,18 +405,37 @@ def write_configfile(plg, configfile_dir, language='de'):
     fh.write('.. |_| unicode:: 0xA0\n')
     fh.write('\n')
 
-    write_heading(fh, 'Plugin ' + plgname, 1)
+    write_heading(fh, f"Plugin '{plgname}' Konfiguration", 1)
+    fh.write('\n')
+    fh.write(f".. index:: Plugins; {plgname} Konfiguration\n")
+    fh.write('\n')
 
     # --------------------------------------------
     # write image for plugin-type and generic text
     # --------------------------------------------
     plgtype = plugin_yaml.get('type', '').lower()
+    plgstate = plugin_yaml.get('state', '').lower()
     if plgtype != '':
-        fh.write('.. image:: /_static/img/'+plgtype+'.svg\n')
-        fh.write('   :width: 70px\n')
-        fh.write('   :height: 70px\n')
+        cwd = os.getcwd()
+        plglogo = plgname+'/webif/static/img/plugin_logo'
+        if os.path.isfile(plglogo + '.png'):
+            ext = '.png'
+        elif os.path.isfile(plglogo + '.jpg'):
+            ext = '.jpg'
+        elif os.path.isfile(plglogo + '.svg'):
+            ext = '.svg'
+        else:
+            ext = '.???'
+        if os.path.isfile(plglogo+ext):
+            fh.write(".. image:: /plugins/"+plglogo+ext+"\n")
+            fh.write('   :alt: plugin logo\n')
+        else:
+            print(f"Plugin {plgname}: Kein Plugin-Logo gefunden, Typ-Logo verwendet.")
+            fh.write('.. image:: /_static/img/'+plgtype+'.svg\n')
+            fh.write('   :alt: plugin type logo\n')
+        fh.write('   :width: 300px\n')
+        fh.write('   :height: 300px\n')
         fh.write('   :scale: 50 %\n')
-        fh.write('   :alt: protocol plugin\n')
         fh.write('   :align: left\n')
         fh.write('\n')
         fh.write('.. |br| raw:: html\n')
@@ -422,7 +443,20 @@ def write_configfile(plg, configfile_dir, language='de'):
         fh.write('   <br />\n')
         fh.write('\n')
 
-    fh.write('Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die Beschreibung, wie das Plugin '+bold(plgname)+' konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ \n')
+    fh.write('Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die \
+              Beschreibung, wie das Plugin '+bold(plgname)+' konfiguriert wird. Außerdem ist im folgenden \
+              beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ \n')
+    fh.write('\n')
+    fh.write(f"Es handelt sich bei diesem Plugin um ein **{plgtype} Plugin**.\n")
+    if plgstate == 'deprecated':
+        fh.write('\n')
+        fh.write(f"**ACHTUNG**: Dieses Plugin ist als {plgstate} gekennzeichnet. Es wird empfohlen auf eine \
+                 Nachfolgelösung umzusteigen.\n")
+    if plgstate == 'develop':
+        fh.write('\n')
+        fh.write(f"**ACHTUNG**: Dieses Plugin ist als {plgstate} gekennzeichnet. Es kann daher sein, dass es \
+                 noch nicht Feature-Complete oder noch fehlerhaft ist.\n")
+
     fh.write('\n')
     fh.write('\n')
 
@@ -430,12 +464,25 @@ def write_configfile(plg, configfile_dir, language='de'):
     write_formatted(fh, get_doc_description(plugin_yaml, language))
 
     # ---------------------------------
+    # write a note block if special requirements exist
+    # ---------------------------------
+    py_versioncomment = str(plugin_yaml.get('py_versioncomment', ''))
+    if py_versioncomment != '':
+        fh.write('.. attention::\n')
+        fh.write('\n')
+        fh.write(f"    {py_versioncomment}\n")
+        fh.write('\n')
+        fh.write('\n')
+
+    # ---------------------------------
     # write Requirements section
     # ---------------------------------
     requirements = get_description(plugin_yaml, 768, language, 'requirements')
     min_version = str(plugin_yaml.get('sh_minversion', ''))
     max_version = str(plugin_yaml.get('sh_maxversion', ''))
-    if requirements[0] != '' or min_version != '' or max_version != '':
+    min_py_version = str(plugin_yaml.get('py_minversion', ''))
+    max_py_version = str(plugin_yaml.get('py_maxversion', ''))
+    if requirements[0] != '' or min_version != '' or max_version != '' or min_py_version != '' or max_py_version != '':
         write_heading(fh, 'Anforderungen', 2)
         fh.write('\n')
         write_formatted(fh, get_doc_description(plugin_yaml, language, 'requirements'))
@@ -443,6 +490,10 @@ def write_configfile(plg, configfile_dir, language='de'):
             fh.write(' - Minimum SmartHomeNG Version: '+bold(min_version)+'\n')
         if max_version != '':
             fh.write(' - Maximum SmartHomeNG Version: '+bold(max_version)+'\n')
+        if min_py_version != '':
+            fh.write(' - Minimum Python Version: '+bold(min_py_version)+'\n')
+        if max_py_version != '':
+            fh.write(' - Maximum Python Version: '+bold(max_py_version)+'\n')
 
 
     # ---------------------------------

@@ -71,8 +71,14 @@ class WebInterface(SmartPluginWebIf):
         :return: contents of the template after beeing rendered
         """
         tmpl = self.tplenv.get_template('index.html')
+        # Setting pagelength (max. number of table entries per page) for web interface
+        try:
+            pagelength = self.plugin.webif_pagelength
+        except Exception:
+            pagelength = 100
         # add values to be passed to the Jinja2 template eg: tmpl.render(p=self.plugin, interface=interface, ...)
         return tmpl.render(p=self.plugin,
+                           webif_pagelength=pagelength,
                            items=sorted(self.items.return_items(), key=lambda k: str.lower(k['_path'])),
                            item_count=0)
 
@@ -101,4 +107,3 @@ class WebInterface(SmartPluginWebIf):
             # except Exception as e:
             #     self.logger.error("get_data_html exception: {}".format(e))
         return {}
-

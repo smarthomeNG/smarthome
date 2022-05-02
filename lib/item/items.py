@@ -239,6 +239,11 @@ class Items():
 #        self.item_count = len(self.__items)
 #        self._sh.item_count = self.item_count()
 
+        # here goes debug output (if needed) after the initialization of all items
+        #import lib.metadata as metadata
+        #self.logger.notice(f"metadata.all_itemprefixdefinitions: {metadata.all_itemprefixdefinitions.keys()}")
+
+
 
     def add_item(self, path, item):
         """
@@ -455,10 +460,11 @@ class Items():
         else:
             if plugin_name != self.plugin_attributes[attribute_name]['plugin']:
                 if self.plugin_attributes[attribute_name]['meta']['type'] != attribute['type']:
-                    self.logger.error("Plugins '{}' and '{}' define the same item-attribute '{}' with different type definitions {}/{}".format(self.plugin_attributes[attribute_name]['plugin'], plugin_name, attribute_name, self.plugin_attributes[attribute_name]['meta']['type'], attribute['type']))
+                    self.logger.error(f"Plugins '{self.plugin_attributes[attribute_name]['plugin']}' and '{plugin_name}' define the same item-attribute '{attribute_name}' with different type definitions {self.plugin_attributes[attribute_name]['meta']['type']}/{attribute['type']}")
+                elif not self.plugin_attributes[attribute_name]['meta'].get('duplicate_use', False):
+                    self.logger.warning(f"Plugins '{self.plugin_attributes[attribute_name]['plugin']}' and '{plugin_name}' define the same item-attribute '{attribute_name}'")
                 else:
-                    self.logger.warning("Plugins '{}' and '{}' define the same item-attribute '{}'".format(self.plugin_attributes[attribute_name]['plugin'], plugin_name, attribute_name))
-
+                    self.logger.info(f"Plugins '{self.plugin_attributes[attribute_name]['plugin']}' and '{plugin_name}' define the same item-attribute '{attribute_name}'")
 
     def add_plugin_attribute_prefix(self, plugin_name, prefix_name, prefix):
         """

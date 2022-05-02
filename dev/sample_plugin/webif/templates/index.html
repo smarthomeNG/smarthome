@@ -6,12 +6,21 @@
 {% set update_interval = 0 %}
 
 <!--
-	Additional styles go into this block
+	Additional styles go into this block. Examples are for datatables
 -->
 {% block pluginstyles %}
 <style>
   table th.value {
     width: 100px;
+  }
+  These are used for highligt effect in web interface when a value changes. If you don't want to overwrite the
+  default color, you can remove the entries here as the classes are already defined in smarthomeng.css
+  */
+  .shng_effect_highlight {
+    background-color: #FFFFE0;
+  }
+  .shng_effect_standard {
+    background-color: none;
   }
 </style>
 {% endblock pluginstyles %}
@@ -27,7 +36,12 @@
 			myProto = document.getElementById(dataSet);
 			for (item in objResponse) {
 				/*
-				shngInsertText (item+'_value', objResponse[item]['value'], 'maintable');
+        Parameters for shngInsertText:
+          0: mandatory, ID of the HTML element, e.g. the table cell
+          1: mandatory, Value to be written - taken from the objResponse dict
+          2: optional, If element of parameter 0 is in a (data)table, the ID of the table has to be put here
+          3: optional, If you want a visual highlight effect when a value changes, provide the duration in seconds.
+				shngInsertText (item+'_value', objResponse[item]['value'], 'maintable', 5);
 				*/
 			}
 		}
@@ -46,21 +60,48 @@
 			Of course you can also overwrite defaults by putting the option declarations in {} below.
 			*/
 			$(window).trigger('datatables_defaults');
-			try
-				{
-					$('#maintable').DataTable( {} ); // put options into {} if needed
-					$('#<table_id>').DataTable( {} ); // delete or change name
-				}
-			catch (e)
-				{
-					console.log("Datatable JS not loaded, showing standard table without reorder option " + e)
-				}
+      try {
+        /* get pagelength from plugin. Also see hidden span element in headtable block! */
+        webif_pagelength = parseInt(document.getElementById('webif_pagelength').innerHTML);
+        if (webif_pagelength == 0) {
+          resize = true;
+          webif_pagelength = -1;
+        }
+        else {
+          resize = false;
+        }
+      }
+      catch (e) {
+        webif_pagelength = 100;
+        resize = false;
+        console.log("Using default values for page length " + webif_pagelength + ", pageResize: " + resize);
+      }
+      try {
+        /*
+        Copy this part for every datatable on your page. Adjust options if necessary.
+        pageLength and pageResize should be included as they are to adjust it based on the plugin settings
+        */
+        table = $('#maintable').DataTable( {
+          /* If you want to define your own columnDefs options (e.g. for hiding a column by default), use the concat function shown here.
+          columnDefs: [{ "targets": [8], "className": "none"}].concat($.fn.dataTable.defaults.columnDefs),
+          */
+          pageLength: webif_pagelength,
+          pageResize: resize});
+      }
+      catch (e) {
+        console.log("Datatable JS not loaded, showing standard table without reorder option " + e);
+      }
     });
 </script>
 {% endblock pluginscripts %}
 
 
 {% block headtable %}
+<!--
+	This span needs to be put somewhere on the page to read the table pagelength from the plugin / users' plugin.yaml
+-->
+<span id='webif_pagelength' style="display:none">{{ webif_pagelength }}</span>
+
 <table class="table table-striped table-hover">
 	<tbody>
 		<tr>
@@ -122,11 +163,11 @@
 -->
 {% set tab1title = "<strong>" ~ p.get_shortname() ~ " Items</strong> (" ~ item_count ~ ")" %}
 {% block bodytab1 %}
-<div class="container-fluid m-2">
+<div class="container-fluid m-2 table-resize">
 	{{ _('Hier kommt der Inhalt des Webinterfaces hin.') }}
 
 	<!-- set id accordingly -->
-	<table id="maintable" class="table table-striped table-hover pluginList display">
+	<table id="maintable" class="table table-striped table-hover pluginList dataTableAdditional">
 		<thead>
 			<tr>
 			  <th>{{ _('Item') }}</th>
@@ -134,7 +175,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for item in p.get_items() %}
+			{% for item in items %}
 			  {% if p.has_iattr(item.conf, '<plugin_attribute>') %}
 				<tr>
 				  <td class="py-1" id="{{ item._path }}">{{ item._path }}</td>

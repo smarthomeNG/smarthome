@@ -12,12 +12,18 @@ Funktionen und Klassen in Logiken
 Funktionen in Logiken
 =====================
 
-Bei der Nutzung von Funktionen in Logiken ist eine Besonderheit zu beachten:
+Bei der Nutzung von Funktionen in Logiken ist eine Besonderheit zu beachten: Eine Logik verhält sich nicht
+wie ein Python Modul!
 
-Eine Logik verhält sich nicht wie ein Python Modul! Variablen und Funktionen die auf Ebene der Logik definiert werden,
-sind keine globalen Objekte. Sie stehen in Funktionen die innerhalb der Logik definiert werden nicht zur Verfügung.
-Daher müssen Variablen und Funktionen die innerhalb von Funktionen genutzt werden, der Funktion explizit bekannt gemacht
-werden.
+.. important::
+
+    Eine Logik verhält sich nicht wie ein Python Modul! Variablen und Funktionen die auf Ebene der Logik definiert
+    werden, sind keine globalen Objekte. Sie stehen in Funktionen die innerhalb der Logik definiert werden nicht
+    zur Verfügung. Daher müssen Variablen und Funktionen die innerhalb von Funktionen genutzt werden, der Funktion
+    explizit bekannt gemacht werden.
+
+    Sollen in der Logik weitere Python Module genutzt werden, so muss der import der Moduls innerhalb der Funktion
+    erfolgen, die eine Funktion aus dem zu importierenden Python Modul nutzt.
 
 Dafür müssen Funktionen und Variablen der Funktion als Parameter übergeben werden. Das kann geschehen, indem die
 Übergabe für jede Variable/Funktion einzeln erfolgt oder sie können in einem Objekt übergeben werden (was die zu

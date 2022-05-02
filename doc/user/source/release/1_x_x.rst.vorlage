@@ -17,42 +17,27 @@ Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 Überblick
 =========
 
-Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.9.x sind im
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.9.1 sind im
 folgenden in diesen Release Notes beschrieben.
-
-
-Unterstützte Python Versionen
------------------------------
-
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.8 ist Python 3.6.
-(Siehe auch *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
-
-..
-    Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.8 nicht mehr unter älteren Python Versionen läuft,
-    sondern das SmartHomeNG nicht mehr mit älteren Python Versionen getestet wird und das gemeldete Fehler mit älteren
-    Python Versionen nicht mehr zu Buxfixen führen.
-
-    Es werden jedoch zunehmend Features eingesetzt, die erst ab Python 3.6 zur Verfügung stehen.
-    So ist Python 3.6 die minimale Vorraussetzung zur Nutzung des neuen Websocket Moduls.
 
 
 Minimum Python Version
 ----------------------
 
-Die absolute Minimum Python Version in der SmartHomeNG startet wurde auf v3.6 angehoben, da Python 3.5 im
-September 2020 End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen
-auf einer der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
+Die absolute Minimum Python Version in der SmartHomeNG startet, ist **Python 3.6**.
 
-.. important::
+Für das SmartHomeNG Release 1.10 wird die absolute Minimum Python Version auf **Python 3.7** angehoben, da der
+Community Support für Python 3.6 am 23. Dezember 2021 endete.
 
-   Mit dem kommenden Release 1.8 werden die unterstützten Python Versionen
-   :doc:`(wie hier beschrieben) </installation/anforderungen>` auf **Python 3.6, 3.7, 3.8** angehoben. Python 3.6
-   hat eine Reihe sehr interessanter Features und Verbesserungen gebracht, die dann in SmartHomeNG genutzt
-   werden können.
+Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python Versionen (3.8 oder 3.9) aufzusetzen.
 
-   Sollten solche neuen Features in den Core Einzug halten, wird die **Absolute Minimum Python Version** auf 3.6
-   angehoben werden. Sollten die Features nur in Plugins genutzt werden, so können nur solche Plugins nicht genutzt
-   werden, wenn eine ältere Python Version als 3.6 eingesetzt wird.
+
+Unterstützte Python Versionen
+-----------------------------
+
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.9.x ist **Python 3.7**.
+(Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
+zu unterstützten Python Versionen)
 
 
 Änderungen am Core

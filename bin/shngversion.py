@@ -62,24 +62,28 @@ from lib.utils import Version
 # Update auf 1.7.2b wg. Einführung von valid_list_ci in den Metadaten
 # Update auf 1.7.2c wg. SmartPlugin Erweiterung: Update etc/plugin.yaml section
 
-# Update auf 1.8    wg. Release
-# Update auf 1.8a   wg. Kennzeichnung des Stands als "nach dem v1.8 Release"
+# Update auf 1.8      wg. Release
+# Update auf 1.8a     wg. Kennzeichnung des Stands als "nach dem v1.8 Release"
 
-# Update auf 1.8.1  wg. Release
-# Update auf 1.8.1a wg. Kennzeichnung des Stands als "nach dem v1.8.1 Release"
+# Update auf 1.8.1    wg. Release
+# Update auf 1.8.1a   wg. Kennzeichnung des Stands als "nach dem v1.8.1 Release"
 
-# Update auf 1.8.2  wg. Release
-# Update auf 1.8.2a wg. Kennzeichnung des Stands als "nach dem v1.8.2 Release"
-# Update auf 1.8.2b wg. Erweiterung des Item Loggings"
-# Update auf 1.8.2c wg. Wegen Anpassungen an mem-logging / lib.log
-# Update auf 1.8.2d wg. Unterstützung für User-Functions
+# Update auf 1.8.2    wg. Release
+# Update auf 1.8.2a   wg. Kennzeichnung des Stands als "nach dem v1.8.2 Release"
+# Update auf 1.8.2b   wg. Erweiterung des Item Loggings"
+# Update auf 1.8.2c   wg. Wegen Anpassungen an mem-logging / lib.log
+# Update auf 1.8.2d   wg. Unterstützung für User-Functions
 
-# Update auf 1.9.0  wg. Release
-# Update auf 1.9a   wg. Kennzeichnung des Stands als "nach dem v1.9.0 Release"
+# Update auf 1.9.0    wg. Release
+# Update auf 1.9a     wg. Kennzeichnung des Stands als "nach dem v1.9.0 Release"
 
-# Update auf 1.9.1  wg. Release
+# Update auf 1.9.1    wg. Release
+# Update auf 1.9.1.1  wg. Kennzeichnung des Stands als "nach dem v1.9.1 Release"
+# Update auf 1.9.1.2  wg. zusätzlicher Log Level"
 
-shNG_version = '1.9.1'
+# Update auf 1.9.2    wg. Release
+
+shNG_version = '1.9.2'
 shNG_branch = 'master'
 
 # ---------------------------------------------------------------------------------

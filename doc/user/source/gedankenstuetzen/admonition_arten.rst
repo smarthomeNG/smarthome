@@ -1,10 +1,13 @@
-.. index:: Admonition Arten
 
-################
+.. index:: Doku Erstellung; Admonition Arten
+
+================
 Admonition Arten
-################
+================
 
-Diese Information dient nur als Hilfestellung für die Erstellung von Dokumentationsseiten
+.. note::
+
+    Diese Information dient nur als Hilfestellung für die Erstellung von Dokumentationsseiten
 
 
 .. attention::

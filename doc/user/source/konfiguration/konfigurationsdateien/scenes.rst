@@ -109,7 +109,7 @@ Jede einzelne Aktion ist durch die Keys ``item:`` , ``value:`` und ``learn:`` de
 Die Verwendung von Wildcards (*) in den ``item:`` Definitionen ist nicht möglich.
 
 Der Key **item** enthält den Pfad des Items, das verändert werden soll. Der Key **value** enthält
-den Wert auf den das Item gesetzt werden soll. Wenn dem Item Stringwerte zugewiesen werden sollen, 
+den Wert auf den das Item gesetzt werden soll. Wenn dem Item Stringwerte zugewiesen werden sollen,
 müssen diese zweifach in Anführungszeichen angegeben werden, z.B. ``"'Wert'"``, Zahlen können direkt
 angegeben werden, und andere Werte wie z.B. Listen oder dicts müssen einfach in Anführungszeichen
 stehen, z.B. ``"{'key': 'value'}"`` oder ``'["listitem1", "listitem2"]'``. Anstelle eines festen Wertes
@@ -216,6 +216,7 @@ Beispiel muss die Datei den Namen **wohnung.buero.szenen.yaml** tragen.
 <<<<<<< HEAD
         
 =======
+
 
 .. code-block:: yaml
    :caption: Beispiel der Szenen Item-Definition in der items.yaml

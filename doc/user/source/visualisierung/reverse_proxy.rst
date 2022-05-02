@@ -172,7 +172,7 @@ noch einen Block als Schutz gegen Denial of Service Angriffe ergänzen:
        # websocket for shng
        ##
        upstream websocket {
-         server 127.0.0.1:2424;
+         server <SmartHomeNG LAN IP>:2424;
        }
 
        ##

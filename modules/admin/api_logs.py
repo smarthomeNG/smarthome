@@ -86,6 +86,10 @@ class LogsController(RESTResource):
 
                 logfiles = self.get_files_of_log(log_name)
                 logs[log_name] = sorted(logfiles)
+
+                if fn.startswith('smarthome-warnings'):
+                    self.logger.notice(f" - log_name={log_name}, logs[log_name]={logs[log_name]}")
+
         return logs
 
 
@@ -100,7 +104,8 @@ class LogsController(RESTResource):
         """
         logfiles = []
         for fn in self.files:
-            if fn.startswith(log_name+'.log'):
+            #if fn.startswith(log_name+'.log'):
+            if fn.startswith(log_name+'.') and fn.endswith('.log'):
                 size = round(os.path.getsize(os.path.join(self.log_dir, fn)) / 1024, 1)
                 logfiles.append([fn,size])
         return logfiles

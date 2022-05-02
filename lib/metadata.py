@@ -106,6 +106,19 @@ class Metadata():
         self.plugin_functions = None
         self._plugin_functionlist = []
 
+        # dummy 'my_' prefix for user's attributes for logics, etc. (add only, if list is still empty)
+        if all_itemprefixdefinitions == {}:
+            prefix_name = 'my_'
+            all_itemprefixdefinitions[prefix_name] = {'type': 'foo',
+                                                      'description': {'de': 'Attribute für verschiedene Tests',
+                                                                      'en': 'Attributes for various tests'},
+                                                      'listtype': ['foo'], 'listlen': 0, '_addon_name': 'priv_develop',
+                                                      '_addon_type': 'plugin', '_name': 'my_', '_type': 'prefix'}
+            all_itemprefixdefinitions[prefix_name]['_addon_name'] = 'lib_metadata'
+            all_itemprefixdefinitions[prefix_name]['_addon_type'] = 'plugin'
+            all_itemprefixdefinitions[prefix_name]['_name'] = prefix_name
+            all_itemprefixdefinitions[prefix_name]['_type'] = 'prefix'
+
         if self.meta is not None:
             # read paramter and item definition sections
             if self._addon_type == 'module':
@@ -170,14 +183,6 @@ class Metadata():
 
             # build dict for checking of item attributes and their values
             if self.itemprefixdefinitions is not None:
-                # dummy 'my_' prefix for user's attributes for logics, etc. (add only, if list is still empty)
-                if  all_itemprefixdefinitions == {}:
-                    prefix_name = 'my_'
-                    all_itemprefixdefinitions[prefix_name] = {'type': 'foo', 'description': {'de': 'Attribute für verschiedene Tests', 'en': 'Attributes for various tests'}, 'listtype': ['foo'], 'listlen': 0, '_addon_name': 'priv_develop', '_addon_type': 'plugin', '_name': 'my_', '_type': 'prefix'}
-                    all_itemprefixdefinitions[prefix_name]['_addon_name'] = 'lib_metadata'
-                    all_itemprefixdefinitions[prefix_name]['_addon_type'] = 'plugin'
-                    all_itemprefixdefinitions[prefix_name]['_name'] = prefix_name
-                    all_itemprefixdefinitions[prefix_name]['_type'] = 'prefix'
                 # add all prefixes loaded from metadate of the plugin
                 for prefix_name in self.itemprefixdefinitions:
                     all_itemprefixdefinitions[prefix_name] = self.itemprefixdefinitions[prefix_name]
@@ -561,8 +566,15 @@ class Metadata():
                 return result
             return (type(value) is list)
         elif typ == 'dict':
-            #return (type(value) is dict)
-            return (isinstance(value,dict))
+            try:
+                d = dict(value)
+            except:
+                import ast
+                try:
+                    d = ast.literal_eval(value)
+                except:
+                    return False
+            return (isinstance(d,dict))
         elif typ == 'ip':
             if Utils.is_ipv4(value):
                 return True
@@ -644,7 +656,14 @@ class Metadata():
             else:
                 result = [value]
         elif typ == 'dict':
-            result = dict(value)
+            try:
+                result = dict(value)
+            except:
+                import ast
+                try:
+                    result = ast.literal_eval(value)
+                except:
+                    result = {}
         elif typ in ['ip', 'ipv4', 'ipv6', 'mac']:
             result = str(value)
         elif typ in ['knx_ga']:
@@ -664,7 +683,6 @@ class Metadata():
         if definition is not None:
             typ = definition.get('type', 'foo')
             result = self._convert_valuetotype(typ, value)
-
             orig = result
             if 'valid_list_ci' in definition.keys():
                 orig = str(orig).lower()
@@ -742,6 +760,9 @@ class Metadata():
                         while len(value) < definition['listlen']:
                             value.append('')
                         result = value
+            elif definition.get('type', 'foo') in ['dict']:
+                # No real testing for dicts
+                result = value
 
             # test against list of valid entries
             result = self._test_against_valid_list(definition, result)
@@ -976,6 +997,11 @@ class Metadata():
                 if self._get_definition_type(definition, definitions) == 'dict':
                     if definitions[definition].get('default') is not None:
                         value = dict(definitions[definition].get('default'))
+                        #import ast
+                        #try:
+                        #    value = ast.literal_eval(value)
+                        #except:
+                        #    value = {}
                 else:
                     value = definitions[definition].get('default')
                 typ = self._get_definition_type(definition, definitions)
@@ -986,6 +1012,7 @@ class Metadata():
                     if value is None:
                         value = self._get_default_if_none(typ)
                     value = self._expand_listvalues(value, self.parameters[definition])
+                    ###ms
                     if not self._test_value(value, self.parameters[definition]):
                         # Für non-default Prüfung nur Warning
                         logger.error(self._log_premsg+"Invalid data for type '{}' in metadata file '{}': default '{}' for parameter '{}' -> using '{}' instead".format( definitions[definition].get('type'), self.relative_filename, value, definition, self._get_default_if_none(typ) ) )

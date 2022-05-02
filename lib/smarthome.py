@@ -84,6 +84,7 @@ import lib.item
 import lib.log
 import lib.logic
 import lib.module
+import lib.network
 import lib.plugin
 import lib.scene
 import lib.scheduler
@@ -157,7 +158,7 @@ class SmartHome():
         self._etc_dir = os.path.join(self._base_dir, 'etc')
         self._var_dir = os.path.join(self._base_dir, 'var')
         self._lib_dir = os.path.join(self._base_dir,'lib')
-        self._plugins_dir = os.path.join(self.base_dir, 'plugins')
+        self._plugins_dir = os.path.join(self._base_dir, 'plugins')
         self._env_dir = os.path.join(self._lib_dir, 'env' + os.path.sep)
 
         self._env_logic_conf_basename = os.path.join(self._env_dir ,'logic')
@@ -577,6 +578,8 @@ class SmartHome():
         # Init Connections
         #############################################################
         self.connections = lib.connection.Connections()
+        # self.connections = lib.network.Connections()
+        # switch on removing lib.connection
 
         #############################################################
         # Init and start loadable Modules
@@ -632,7 +635,7 @@ class SmartHome():
         self.scenes = lib.scene.Scenes(self)
 
         #############################################################
-        # Start Connections
+        # Start Connections - remove with lib.connection
         #############################################################
         self.scheduler.add('sh.connections', self.connections.check, cycle=10, offset=0)
         self._export_threadinfo()
@@ -644,6 +647,11 @@ class SmartHome():
 
         self.plugins.start()
         self.plugin_start_complete = True
+
+        #############################################################
+        # Start connection monitoring - enable on removing lib.connection
+        #############################################################
+        # self.scheduler.add('sh.connection_monitor', self.connections.check, cycle=10, offset=0)
 
         #############################################################
         # Execute Maintenance Method
@@ -658,6 +666,7 @@ class SmartHome():
         self.shng_status = {'code': 20, 'text': 'Running'}
         self._logger_main.notice("--------------------   SmartHomeNG initialization finished   --------------------")
 
+        # modify/replace on removing lib.connection
         while self.alive:
             try:
                 self.connections.poll()

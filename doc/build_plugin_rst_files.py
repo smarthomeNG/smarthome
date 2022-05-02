@@ -235,11 +235,16 @@ def build_pluginlist( plugin_type='all' ):
             if plugin_yaml != '':
                 section_dict = plugin_yaml.get('plugin')
                 if section_dict != None:
+                    plg_dict['name'] = metaplugin.lower()
+                    plg_dict['version'] = get_version(section_dict)
+                    plg_dict['sh_minversion'] = str(section_dict.get('sh_minversion', ''))
+                    plg_dict['sh_maxversion'] = str(section_dict.get('sh_maxversion', ''))
+                    plg_dict['py_minversion'] = str(section_dict.get('py_minversion', ''))
+                    plg_dict['py_maxversion'] = str(section_dict.get('py_maxversion', ''))
+
                     if section_dict.get('type') != None:
                         if section_dict.get('type').lower() in plugin_types:
                             plgtype = section_dict.get('type').lower()
-                            plg_dict['name'] = metaplugin.lower()
-                            plg_dict['version'] = get_version(section_dict)
                             plg_dict['type'] = plgtype
                             plg_dict['state'] = get_state(section_dict)
                             plg_dict['desc'] = get_description(section_dict, 85, language)
@@ -258,8 +263,6 @@ def build_pluginlist( plugin_type='all' ):
                     plgtype = type_unclassified
 
                 if (plgtype == type_unclassified) and (plugin_yaml != ''):
-                    plg_dict['name'] = metaplugin.lower()
-                    plg_dict['version'] = get_version(section_dict)
                     plg_dict['type'] = type_unclassified
                     plg_dict['desc'] = get_description(section_dict, 85, language)
                     plg_dict['maint'] = get_maintainer(section_dict, 15)
@@ -321,7 +324,7 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
 #    fh.write(title+'\n')
 #    fh.write('-'*len(title)+'\n')
     if plgtype != type_unclassified:
-        fh.write('.. index:: Plugins; '+plgtype_print+'\n')
+        fh.write('.. index:: Plugin Type; '+plgtype_print+'\n')
         fh.write('\n')
     fh.write('.. include:: /plugins_doc/plugins_'+plgtype+'_header.rst\n')
     fh.write('\n')
@@ -424,6 +427,7 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
                     plg['sup'] = "`"+plg['name']+" support <"+plg['sup']+">`_"
                 fh.write('   | {plg:<65.65} | {vers:<8.8} | - {desc:<163.163} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=plg['sup'], maint='', test=''))
             else:
+                fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
                 fh.write(f"   | {'':<65.65} | {'':<8.8} | {'.':<165.165} | {'':<15.15} | {'':<15.15} |\n")
 
             leerzeileausgegeben = False
@@ -432,6 +436,26 @@ def write_rstfile(plgtype='all', plgtype_print='', heading=''):
                     desc = 'Plugin Typ: **' + plg['type'] + '**'
                 else:
                     desc = 'Plugin type: **' + plg['type'] + '**'
+                leerzeileausgegeben = True
+                fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
+                fh.write('   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=desc, maint='', test=''))
+
+            py_maxversion = plg['py_maxversion']
+            if py_maxversion != '':
+                if language == 'de':
+                    desc = 'maximale Python Version: **' + py_maxversion + '**'
+                else:
+                    desc = 'maximum Python version: **' + py_maxversion + '**'
+                leerzeileausgegeben = True
+                fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
+                fh.write('   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=desc, maint='', test=''))
+
+            sh_maxversion = plg['sh_maxversion']
+            if sh_maxversion != '':
+                if language == 'de':
+                    desc = 'maximale SmartHomeNG Version: **' + sh_maxversion + '**'
+                else:
+                    desc = 'maximum version of SmartHomeNG: **' + sh_maxversion + '**'
                 leerzeileausgegeben = True
                 fh.write(f"   | {'':<65.65} | {'':<8.8} | {'':<165.165} | {'':<15.15} | {'':<15.15} |\n")
                 fh.write('   | {plg:<65.65} | {vers:<8.8} | {desc:<165.165} | {maint:<15.15} | {test:<15.15} |\n'.format(plg='', vers='', desc=desc, maint='', test=''))

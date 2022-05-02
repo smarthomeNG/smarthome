@@ -1,4 +1,4 @@
-sphinx>=3.1,<4
+sphinx>=4.5,<5
 sphinx-rtd-theme>=1.0
 
 # create tabs for content for alternative ways to use like | Linux | MacOS | Windows |
@@ -16,7 +16,7 @@ sphinx-tabs
 # the replacement to support Markdown like Readme.md is MyST
 # see at https://www.sphinx-doc.org/en/master/usage/markdown.html and
 # at https://myst-parser.readthedocs.io/en/latest/using/intro.html for a primer on MyST
-myst-parser
+myst-parser<=0.16.1
 
 ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
 ruamel.yaml>=0.15.0,<=0.15.74;python_version=='3.7'

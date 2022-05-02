@@ -46,7 +46,8 @@ try:
 except:
     pass
 
-import lib.shyaml as shyaml
+# Nicht hier importieren!!! shpypi muss auch ohne geladene Packages (hier: ruamel.yaml) lauffähig sein
+# import lib.shyaml as shyaml
 from lib.utils import Utils
 from lib.utils import Version
 from lib.constants import (YAML_FILE)
@@ -284,7 +285,7 @@ class Shpypi:
 
     def test_conf_plugins_requirements(self, plugin_conf_basename, plugins_dir):
         # import lib.shyaml here, so test_base_requirements() can be run even if ruamel.yaml package is not installed
-#        import lib.shyaml as shyaml
+        import lib.shyaml as shyaml
 
         if not os.path.isfile(plugin_conf_basename+ YAML_FILE):
             self.logger.warning("Requirments for configured plugins were not checked because the plugin configuration is not in YAML format")
@@ -375,7 +376,10 @@ class Shpypi:
             req_type_display = 'plugin'
         complete_filename = os.path.join(self._sh_dir, 'requirements', req_type + '.txt')
         if logging:
-            self.logger.warning("Installing "+req_type_display+" requirements for the current user, please wait...")
+            try:
+                self.logger.notice("Installing "+req_type_display+" requirements for the current user, please wait...")
+            except:
+                self.logger.warning("Installing "+req_type_display+" requirements for the current user, please wait...")
         else:
             print()
             print("Installing "+req_type_display+" requirements for the current user, please wait...")
@@ -384,7 +388,10 @@ class Shpypi:
             pip_command = pip3_command
         else:
             pip_command = self.get_pip_command()
-        self.logger.warning("> using PIP command: '{}'".format(pip_command))
+        try:
+            self.logger.notice("> using PIP command: '{}'".format(pip_command))
+        except:
+            self.logger.warning("> using PIP command: '{}'".format(pip_command))
         if logging:
             self.logger.info('> '+pip_command+' install -r requirements/'+req_type+'.txt --user --no-warn-script-location')
         else:
@@ -395,7 +402,7 @@ class Shpypi:
         # ToDo
         # create_directories is available in lib.smarthome.py but shpypi.py might be started prior to SH object creation
         # thus it is needed to create the var/log directory here
-        os.makedirs(os.path.join(self._sh_dir, 'log'), exist_ok=True)
+        os.makedirs(os.path.join(self._sh_dir, 'var'), exist_ok=True)
         os.makedirs(os.path.join(self._sh_dir, 'var', 'log'), exist_ok=True)
 
         pip_log_name = os.path.join(self._sh_dir, 'var', 'log', 'pip3_outout.log')
@@ -407,7 +414,10 @@ class Shpypi:
                 outfile.write(stderr)
             if 'virtualenv' in stderr and '--user' in stderr:
                 if logging:
-                    self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
+                    try:
+                        self.logger.notice("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
+                    except:
+                        self.logger.warning("Running in a virtualenv environment - installing " + req_type_display + " requirements only to actual virtualenv, please wait...")
                 else:
                     print()
                     print("Running in a virtualenv environment,")
@@ -420,7 +430,10 @@ class Shpypi:
 
         if stderr == '':
             if logging:
-                self.logger.warning(req_type_display+" requirements installed")
+                try:
+                    self.logger.notice(req_type_display+" requirements installed")
+                except:
+                    self.logger.warning(req_type_display+" requirements installed")
             else:
                 print(req_type_display+" requirements installed")
                 print()
@@ -1174,6 +1187,8 @@ class Requirements_files():
 
     def _test_plugin_versions(self, filename):
 
+        # import lib.shyaml here, so test_base_requirements() can be run even if ruamel.yaml package is not installed
+        import lib.shyaml as shyaml
         metaname = filename[:-16] + 'plugin.yaml'
         meta = shyaml.yaml_load(metaname, ignore_notfound=True)
         if meta is None:
