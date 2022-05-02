@@ -1,5 +1,5 @@
 ============================
-Release 1.9.x - tt. mmm 2022
+Release 1.9.x - tt. Mai 2022
 ============================
 
 Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
@@ -149,18 +149,18 @@ New Plugins
 
 For details of the changes of the individual plugins, please refer to the documentation of the respective plugin.
 
-* influxdb2:
-
-  * Plugin to store item values in an InfluxData time-series database
-  * Uses the actual InfluxDB API v2
-  * Plugin is still under development and should not be used for production use
-
 * beolink:
 
   * Plugin for controlling Bang & Olufsen devices through Netlink (REST API)
   * Plugin is still under development and should not be used for production use
 
 * husky2: Husqvarna automower plugin (supporting the new API)
+* influxdb2:
+
+  * Plugin to store item values in an InfluxData time-series database
+  * Uses the actual InfluxDB API v2
+  * Plugin is still under development and should not be used for production use
+
 * leveljet: Plugin implements LevelJET water level indicator (www.projet.de)
 * waterkotte: Connection of Waterkotte heat pumps of the EcoTouch series via network
 
@@ -296,7 +296,7 @@ Plugin Updates
 
   * Update WebIF
   * Implement automated update
-  * Debugging last-seen
+  * Added further parsing for last-seen
 
 * zwave:
 
