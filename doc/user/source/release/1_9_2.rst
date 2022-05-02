@@ -1,17 +1,9 @@
-============================
-Release 1.9.x - tt. Mai 2022
-============================
+===========================
+Release 1.9.2 - 2. Mai 2022
+===========================
 
-Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
-
-.. note::
-
-    Diese Release Notes sind ein Arbeitsstand.
-
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 30. April 2022
-       (...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 1. Mai 2022
-       (husky2: Updated description in metadata)
+Dieses Release ist ein Wartungs-Release.
+Außer Bugfixes gibt es  einige neue Features im Core von SmartHomeNG, sowie einige neue Plugins.
 
 
 Überblick
@@ -46,7 +38,7 @@ zu unterstützten Python Versionen)
 Updates in the CORE
 -------------------
 
-* sample plugins:
+* Sample Plugins:
 
   * fix webif example index.html for sample_plugin
   * update example plugin to reflect webif_pagelength attribute and new datatable options.
@@ -63,7 +55,7 @@ Updates in the CORE
 
 * Items:
 
-  *  Fix für item attribute prefix 'my\_'
+  *  Fix for item attribute prefix 'my\_' for Attributes, which are nor defined through plugins
 
 * Libs:
 
