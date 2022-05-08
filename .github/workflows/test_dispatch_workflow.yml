@@ -12,5 +12,5 @@ jobs:
        run: |
          curl -XPOST \
          -H "Authorization: Bearer ${{secrets.PAT_TOKEN}}" -H "Accept:application/vnd.github.v3+json" \
-         -H "Content-Type:application/json" https://api.github.com/repos/smarthomeNG/tests/actions/workflows/unittests.yml/dispatches \
+         -H "Content-Type:application/json" https://api.github.com/repos/smarthomeNG/tests/actions/workflows/unittests_develop.yml/dispatches \
          --data '{"ref": "main" }'
