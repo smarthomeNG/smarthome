@@ -1,5 +1,5 @@
 name: "SmartHomeNG Unittest Workflow"
-on: workflow_dispatch
+  on: workflow_dispatch
 env:
   DEP_PATH: smarthomeng/requirements/all.txt
 jobs:
