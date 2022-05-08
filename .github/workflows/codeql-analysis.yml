@@ -14,9 +14,9 @@ name: "CodeQL"
 on:
   workflow_dispatch:
 
-  push:
-    branches:
-      - develop
+#  push:
+#    branches:
+#      - develop
 
 jobs:
   analyze:
