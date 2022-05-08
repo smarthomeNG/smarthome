@@ -16,8 +16,7 @@ on:
 
   push:
     branches:
-      - plugins
-      - smarthome
+      - develop
 
 jobs:
   analyze:
