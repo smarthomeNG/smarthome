@@ -12,7 +12,7 @@ jobs:
        shell: bash
        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"  
        id: extract_branch
-     - name: Notify Unit Tests
+     - name: Dispatch to Unit Tests
        run: |
          curl -XPOST \
          -H "Authorization: Bearer ${{secrets.PAT_TOKEN}}" -H "Accept:application/vnd.github.v3+json" \
