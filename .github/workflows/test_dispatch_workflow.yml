@@ -1,0 +1,20 @@
+name: "SmartHomeNG Unittest Workflow CORE"
+on: 
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-20.04 #latest
+    steps:
+     - name: Extract branch name
+       shell: bash
+       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"  
+       id: extract_branch
+     - name: Dispatch to Unit Tests
+       run: |
+         curl -XPOST \
+         -H "Authorization: Bearer ${{secrets.PAT_TOKEN}}" -H "Accept:application/vnd.github.v3+json" \
+         -H "Content-Type:application/json" https://api.github.com/repos/smarthomeNG/tests/actions/workflows/unittests.yml/dispatches \
+         --data '{"ref": "main", "inputs": { "branch":"${{steps.extract_branch.outputs.branch}}" }}'
