@@ -7,6 +7,8 @@
 [![Build Status on TravisCI](https://travis-ci.com/smarthomeNG/smarthome.svg?branch=master)](https://travis-ci.com/smarthomeNG/smarthome)
 [![Join the chat at https://gitter.im/smarthomeNG/smarthome](https://badges.gitter.im/smarthomeNG/smarthome.svg)](https://gitter.im/smarthomeNG/smarthome?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+[![Aktuelles Release](https://img.shields.io/github/workflow/status/smarthomeNG/smarthome/SmartHomeNG%20Unittest%20Workflow%20Core/master)](https://github.com/smarthomeNG/smarthome/actions/workflows/unittests.yml)  Github workflow
+
 SmartHomeNG [1] ist eine Software die eine Basis für eine Heimautomation bereitstellt. Über Plugins können spezielle Schnittstellen angesprochen und damit die Funktionalität des Gesamtsystems erweitert werden.
 
 Auf der ([Webseite des Projektes](https://www.smarthomeNG.de)) kann eine [Benutzerdokumentation](https://www.smarthomeNG.de) eingesehen werden.
@@ -24,8 +26,9 @@ Die Kernfunktionalität wird alle 6-9 Monate in einem Release erweitert und frei
 
 ## Aktueller Status der Entwicklung
 
-[![Aktuelle Entwicklung](https://travis-ci.com/smarthomeNG/smarthome.svg?branch=develop)](https://travis-ci.com/smarthomeNG/smarthome)
+[![Aktuelle Entwicklung](https://travis-ci.com/smarthomeNG/smarthome.svg?branch=develop)](https://travis-ci.com/smarthomeNG/smarthome) Travis CI 
 
+[![Aktuelle Entwicklung](https://img.shields.io/github/workflow/status/smarthomeNG/smarthome/SmartHomeNG%20Unittest%20Workflow%20Core/develop)](https://github.com/smarthomeNG/smarthome/actions/workflows/unittests.yml) Github workflow 
 
 ---
 
