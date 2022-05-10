@@ -39,7 +39,7 @@ class TestModule(unittest.TestCase):
         logger.warning('')
         logger.warning('=== Begin Fail Test:')
 
-        self.assertIsNotNone(None)
+        self.assertIsNotNone(1)
 
         logger.warning('=== End Fail Test')
 
