@@ -1,7 +1,5 @@
 name: "SmartHomeNG Unittest Workflow Core"
-on:
-  workflow_dispatch:
-  push:
+on: [workflow_dispatch, push]
 #on:
 #  workflow_dispatch:
 #  push:
