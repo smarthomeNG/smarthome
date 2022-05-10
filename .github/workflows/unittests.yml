@@ -25,12 +25,12 @@ jobs:
           repository: smarthomeNG/smarthome
           ref: develop
           path: smarthomeng
-      #- name: Checkout SmartHomeNG/plugins DEVELOP Branch
-      #  uses: actions/checkout@v2
-      #  with:
-      #    repository: smarthomeNG/plugins
-      #    ref: ${{github.event.inputs.branch}}
-      #    path: smarthomeng/plugins
+      - name: Checkout SmartHomeNG/plugins DEVELOP Branch
+        uses: actions/checkout@v2
+        with:
+          repository: smarthomeNG/plugins
+          ref: develop
+          path: smarthomeng/plugins
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
