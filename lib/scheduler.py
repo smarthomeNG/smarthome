@@ -704,12 +704,12 @@ class Scheduler(threading.Thread):
         logic.mqtt = mqtt
 
         try:
-            if logic.enabled:
+            if logic._enabled:
                 if sh.shng_status['code'] < 20:
                     logger.warning(f"Logik ignoriert, SmartHomeNG ist noch nicht vollständig initialisiert - Logik wurde getriggert durch {trigger}")
                 else:
                     logger.debug(f"Getriggert durch: {trigger}")
-                    exec(logic.bytecode)
+                    exec(logic._bytecode)
                     # store timestamp of last run
                     logic.set_last_run()
                     for method in logic.get_method_triggers():

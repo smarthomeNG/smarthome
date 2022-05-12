@@ -126,11 +126,15 @@ class LogicsController(RESTResource):
         loaded_logic = self.logics.return_logic(logicname)
         if loaded_logic is not None:
             mylogic['name'] = loaded_logic.name
-            mylogic['enabled'] = loaded_logic.enabled
+            try:
+                mylogic['enabled'] = loaded_logic._enabled
+            except Exception as e:
+                self.logger.warning(f"Logic {loaded_logic.name}: Exception {e}")
+                mylogic['enabled'] = loaded_logic.enabled
             mylogic['logictype'] = self.logics.return_logictype(loaded_logic.name)
             mylogic['userlogic'] = self.logics.is_userlogic(loaded_logic.name)
             mylogic['filename'] = loaded_logic.filename
-            mylogic['pathname'] = loaded_logic.pathname
+            mylogic['pathname'] = loaded_logic._pathname
             mylogic['cycle'] = ''
             if hasattr(self.logics.return_logic(logicname), 'cycle'):
                 mylogic['cycle'] = loaded_logic.cycle
@@ -397,7 +401,7 @@ class LogicsController(RESTResource):
         return an object with type info about all logics
         """
         # create a list of dicts, where each dict contains the information for one logic
-        self.logger.info("LogicsController.read()")
+        self.logger.notice("LogicsController.read()")
 
         if self.plugins is None:
             self.plugins = Plugins.get_instance()
