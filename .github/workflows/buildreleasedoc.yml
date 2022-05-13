@@ -60,5 +60,5 @@ jobs:
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: ./smarthomeng/doc/user/build/html # The folder the action should deploy.
-          repositoryName: 'smarthomeNG/documentation'
+          repository-name: 'smarthomeNG/documentation'
 
