@@ -4,8 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - '*'
-      - '!documentation'
+      - 'develop'
 env:
   DEP_PATH: smarthomeng/requirements/all.txt
 jobs:
@@ -14,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ '3.7', '3.8', '3.9', '3.10' ]
+        python-version: [ '3.8' ]
     name: Python ${{ matrix.python-version }}
     steps:
       - name: update OS (Ubuntu)
@@ -40,23 +39,19 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
-
       - name: Print Python Version
         run: python --version
       - run: python3 -m pip install --upgrade pip #==19.3.1
       #- run: pip install tox-travis virtualenv>=20.0.8 --upgrade
-      #- run: pip install sphinx sphinx_rtd_theme recommonmark ruamel.yaml pytest
-      - name: Install requirements for testing
-        run: pip install -r smarthomeng/requirements/test.txt
-      - name: Build Requirements
-        run: python3 smarthomeng/tools/build_requirements.py
-      - name: Show requirements/base.txt
-        run: head smarthomeng/requirements/base.txt -n 12
-      - name: Show requirements/all.txt
-        run: head smarthomeng/requirements/all.txt -n 12
+      - run: pip install sphinx sphinx_rtd_theme recommonmark ruamel.yaml pytest
 
-      - name: Install base.txt
-        run: pip install -r smarthomeng/requirements/base.txt
-      - name: Run Python Unittests
-        working-directory: ./smarthomeng/tests
-        run: pytest
+      - name: Build documentation
+        working-directory: ./smarthomeng/doc
+        run: ./build_doc_local.sh
+
+      - name: Deploy documentation
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: documentation # The branch the action should deploy to.
+          folder: user/build/html # The folder the action should deploy.
+
