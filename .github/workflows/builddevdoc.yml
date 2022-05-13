@@ -53,11 +53,6 @@ jobs:
         working-directory: ./smarthomeng/doc
         run: bash ./build_doc_local.sh
 
-      - name: Display current directory
-        run: pwd
-      - name: Display subtree
-        run: find .
-
       - name: Deploy documentation
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
