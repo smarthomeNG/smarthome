@@ -1,0 +1,179 @@
+.. |_| unicode:: 0xA0
+
+
+=============================
+Plugin 'indego' Konfiguration
+=============================
+
+
+.. index:: Plugins; indego Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **indego** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Indego Plugin zum Auslesen von Bosch Indego Mährobotern mit Connect Ausstattung
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **indego** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+img_pfad
+========
+
+
+Pfad und Dateiname, wo die Kartendatei gespeichert werden soll. Es müssen Schreibrechte für SmartHomeNG bestehen
+
+ - Datentyp: **str**
+ - Standardwert: **/tmp/garden.svg**
+
+
+indego_url
+==========
+
+
+Indego Webseite für den Servicezugriff
+
+ - Datentyp: **str**
+ - Standardwert: **https://api.indego.iot.bosch-si.com/api/v1/**
+
+
+parent_item
+===========
+
+
+Das Eltern Item für alle Kinditems, die diese Instanz betreffen
+
+ - Datentyp: **str**
+ - Standardwert: **indego**
+
+
+password
+========
+
+
+Passwort wie in der Indego App angegeben
+
+ - Datentyp: **str**
+
+
+update_cycle
+============
+
+
+Zeitlicher Abstand zwischen zwei Verbindungen zur Website
+
+ - Datentyp: **int**
+ - Standardwert: **30**
+
+
+user
+====
+
+
+Benutzername wie in der Indego App angegeben
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+indego_add_key
+==============
+
+
+Todo Beschreibung ergänzen
+
+ - Datentyp: **str**
+
+
+indego_command
+==============
+
+
+Todo Beschreibung ergänzen
+
+ - Datentyp: **str**
+
+
+indego_frequency
+================
+
+
+Todo Beschreibung ergänzen
+
+ - Datentyp: **str**
+
+
+indego_smart
+============
+
+
+Todo Beschreibung ergänzen
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/indego/README>` des Plugins zugreifen.

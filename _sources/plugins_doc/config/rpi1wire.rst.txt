@@ -1,0 +1,130 @@
+.. |_| unicode:: 0xA0
+
+
+===============================
+Plugin 'rpi1wire' Konfiguration
+===============================
+
+
+.. index:: Plugins; rpi1wire Konfiguration
+
+.. image:: /plugins/rpi1wire/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **rpi1wire** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin für den Raspberry Pi. Erlaubt den einfachen Zugriff auf 1-Wire Sensoren. Getestet mit Raspberry Pi B und dem Temperatursensor DS18B20
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **rpi1wire** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Zeitlicher Abstand zwischen zwei Abfragen des OneWire
+
+ - Datentyp: **int**
+ - Standardwert: **120**
+
+ - Minimalwert: **1**
+
+dirname
+=======
+
+
+Verzeichnis des Onewire, in dem der RPi die Werte der 1-wire Sensoren hält
+
+ - Datentyp: **str**
+ - Standardwert: **/sys/bus/w1/devices**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+rpi1wire_id
+===========
+
+
+Sensoradresse im Format xx-yyyyyyyyyyyy (Bitte darauf achten, dass bei rein numerischen Sensoradressen diese in ' eingeschlossen werden müssen) oder ein Alias
+
+ - Datentyp: **str**
+
+
+rpi1wire_sys
+============
+
+
+Attribut für Globale Plugin Items zum Triggern eines Update, Anzeigen der Anzahl gefundener Sensoren oder Auflistung der gefundenen Sensoren
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **update** |_| - |_| Startet bei Triggerung ein Update der Sensorliste
+   - **list** |_| - |_| Liste mit allen am Zielort gefundenen Sensoren
+   - **count** |_| - |_| Anzahl der am Zielort gefundenen Sensoren
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

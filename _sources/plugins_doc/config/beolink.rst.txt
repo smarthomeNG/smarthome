@@ -1,0 +1,152 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'beolink' Konfiguration
+==============================
+
+
+.. index:: Plugins; beolink Konfiguration
+
+.. image:: /plugins/beolink/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **beolink** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin zur Ansteuerung von Bang & Olufsen Geräten über Beolink (Netlink) (REST API)
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **beolink** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+rescan_on_start
+===============
+
+
+Subnetz beim Start von SmartHomeNG erneut scannen, um geänderte IP Adressen (wg. DHCP) zu finden.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+scan_fromip
+===========
+
+
+Minimale IP Adresse des zu scannenden Subnetzes
+
+ - Datentyp: **ipv4**
+
+
+scan_toip
+=========
+
+
+Maximale IP Adresse des zu scannenden Subnetzes
+
+ - Datentyp: **ipv4**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+beo_command
+===========
+
+
+B&O Control welches auf dem Bang & Olufsen Gerät angesprochen werden soll
+
+ - Datentyp: **str**
+
+
+beo_id
+======
+
+
+B&O Serial des anzusprechenden Bang & Olufsen Gerätes
+
+ - Datentyp: **str**
+
+
+beo_status
+==========
+
+
+Auszulesende Statusinformation des B&O Gerätes
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **audiomode**
+   - **videomode**
+   - **powerstate**
+   - **stand**
+   - **source**
+   - **volume**
+   - **muted**
+   - **FriendlyName**
+   - **productType**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -1,0 +1,137 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'miflora' Konfiguration
+==============================
+
+
+.. index:: Plugins; miflora Konfiguration
+
+.. image:: /plugins/miflora/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **miflora** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Auslesen von Xiaomi Mi Flora Pflanzensensoren, **seit SmartHomeNG v1.3**
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **miflora** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+bt_addr
+=======
+
+
+Bluetooth-Adresse des MiFlora Pflanzensensors (mit "hcitool lescan" herauszufinden).
+
+ - Datentyp: **str**
+
+
+bt_library
+==========
+
+
+Bluetooth Bibliothek, die verwendet werden soll: gatttool (deprecated), bluepy (empfohlen), pygatt.
+
+ - Datentyp: **str**
+ - Standardwert: **bluepy**
+
+ - Mögliche Werte:
+
+   - **gatttool**
+   - **bluepy**
+   - **pygatt**
+
+
+cycle
+=====
+
+
+(optional) Dieser Parameter muss normalerweise nicht angegeben werden. Er erlaubt es die Update-Frquenz anzupassen (Standard: alle 300 Sekunden).
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+miflora_data_type
+=================
+
+
+Auszulesender Wert. Mögliche Werte: temperature, light, moisture, conductivity, name, firmware, firmware
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **temperature**
+   - **light**
+   - **moisture**
+   - **conductivity**
+   - **name**
+   - **firmware**
+   - **battery**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/miflora/README>` des Plugins zugreifen.

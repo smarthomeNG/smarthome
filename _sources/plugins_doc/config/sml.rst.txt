@@ -1,0 +1,158 @@
+.. |_| unicode:: 0xA0
+
+
+==========================
+Plugin 'sml' Konfiguration
+==========================
+
+
+.. index:: Plugins; sml Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **sml** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Auslesen von Stromzählern via SML-Protokoll
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.1**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **sml** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+device
+======
+
+
+(optional) Legt ein Gerät fest von dem die Daten ausgelesen werden
+
+ - Datentyp: **str**
+ - Standardwert: **raw**
+
+ - Mögliche Werte:
+
+   - **raw**
+   - **hex**
+   - **smart-meter-gateway-com-1**
+
+
+host
+====
+
+
+(optional) Alternativ zu "serialport" kann hier ein Netzwerk-Host hinterlegt werden
+
+ - Datentyp: **str**
+
+
+port
+====
+
+
+(optional) Wenn ein "host" angegeben wurde kann hier der Port festgelegt werden
+
+ - Datentyp: **int**
+
+
+serialport
+==========
+
+
+Gibt die serielle Schnittstelle an von der die Daten gelesen werden (z.B. /dev/ttyUSB0)
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+sml_obis
+========
+
+
+Gibt den OBIS-Code des Wertes an, das in das Item geschrieben werden soll
+
+ - Datentyp: **str**
+
+
+sml_prop
+========
+
+
+Gibt den Eigenschaftstyp an, der in das Item geschrieben werden soll
+
+ - Datentyp: **str**
+ - Standardwert: **valueReal**
+
+ - Mögliche Werte:
+
+   - **objName**
+   - **status**
+   - **valTime**
+   - **unit**
+   - **scalar**
+   - **value**
+   - **signature**
+   - **obis**
+   - **valueReal**
+   - **unitName**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/sml/README>` des Plugins zugreifen.

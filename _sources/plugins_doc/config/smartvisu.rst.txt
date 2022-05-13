@@ -1,0 +1,356 @@
+.. |_| unicode:: 0xA0
+
+
+================================
+Plugin 'smartvisu' Konfiguration
+================================
+
+
+.. index:: Plugins; smartvisu Konfiguration
+
+.. image:: /plugins/smartvisu/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **smartvisu** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+
+
+Beschreibung
+============
+
+smartVISU Unterstützung: Autogenerierung von Seiten; Widget Handling
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.8.1**
+ - Minimum Python Version: **3.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **smartvisu** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+create_masteritem_file
+======================
+
+
+False: Das Plugin unterdrückt die Erzeugung der masteritem.json Datei, die für den Widget Assistenten der smartVISU benötigt wird.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+default_acl
+===========
+
+
+Steuert den Zugriff über smartVISU Nutzdaten-Protokoll - Voreinstellung für alle Items
+
+ - Datentyp: **str**
+ - Standardwert: **rw**
+
+ - Mögliche Werte:
+
+   - **rw** |_| - |_| Lesen/Schreiben
+   - **ro** |_| - |_| Nur Lesen
+   - **deny** |_| - |_| Kein Zugriff
+
+
+generate_pages
+==============
+
+
+Falls True, werden Seiten für smartVISU generiert
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+handle_widgets
+==============
+
+
+Standardmäßig werden Widgets aus den Plugins in die smartVISU kopiert und eingebunden. Dieses kann verhindert werden, wenn dieser Parameter auf False gesetzt wird.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+list_deprecated_warnings
+========================
+
+
+Sollen Deprecated- bzw. Removed Warnungen und Fehler einzeln geloggt werden?
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+overwrite_templates
+===================
+
+
+Sollen in der smartVISU bereits existierende Templates überschrieben werden?
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+smartvisu_dir
+=============
+
+
+Basisverzeichnis der smartVISU. Nur wenn dieser Wert richtig konfiguriert ist, kann das Plugin Seiten für die smartVISU generieren, Widgets installieren, etc.
+
+ - Datentyp: **str**
+ - Standardwert: **/var/www/html/smartvisu**
+
+
+visu_style
+==========
+
+
+Benutzer Style für die generierten Visualisierungs-Seiten
+
+ - Datentyp: **str**
+ - Standardwert: **std**
+
+ - Mögliche Werte:
+
+   - **std**
+   - **blk**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+sv_blocksize
+============
+
+
+Größe des Widget-Blocks auf der smartVISU Seite
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **1**
+   - **2**
+   - **3**
+
+
+sv_heading_center
+=================
+
+
+erlaubt die Angabe eines Widgets, das oben auf einer Raumseite angezeigt wird. Dieses Widget wird angezeigt, ohne in einem Block gekapselt zu sein. Das Widget wird zentriert
+
+ - Datentyp: **str**
+
+
+sv_heading_left
+===============
+
+
+erlaubt die Angabe eines Widgets, das oben auf einer Raumseite angezeigt wird. Dieses Widget wird angezeigt, ohne in einem Block gekapselt zu sein. Das Widget ist nach links ausgerichtet
+
+ - Datentyp: **str**
+
+
+sv_heading_right
+================
+
+
+erlaubt die Angabe eines Widgets, das oben auf einer Raumseite angezeigt wird. Dieses Widget wird angezeigt, ohne in einem Block gekapselt zu sein. Das Widget ist nach rechts ausgerichtet
+
+ - Datentyp: **str**
+
+
+sv_img
+======
+
+
+Bild, das in der Navigation der smartVISU angezeigt wird
+
+ - Datentyp: **str**
+
+
+sv_item_type
+============
+
+
+sv_item_type erlaubt es, items auf anderen Seiten als der Raum-Seite anzuzeigen
+
+ - Datentyp: **str**
+
+
+sv_name1
+========
+
+
+Name des Widgets. Dieser wird als Überschrift im umschließenden Block verwendet.
+
+ - Datentyp: **str**
+
+
+sv_name2
+========
+
+
+Name des zweiten Widgets. Dieser wird als Überschrift im zweiten Abschnitt des umschließenden Block verwendet.
+
+ - Datentyp: **str**
+
+
+sv_nav_aside
+============
+
+
+Ermöglicht die Angabe eines Widgets, das auf der rechten Seite der Navigationsleiste für einen Raum angezeigt wird. (obere Zeile) - Relative Item-Referenzen werden unterstützt
+
+ - Datentyp: **str**
+
+
+sv_nav_aside2
+=============
+
+
+Ermöglicht die Angabe eines Widgets, das auf der rechten Seite der Navigationsleiste für einen Raum angezeigt wird. (untere Zeile) - Relative Item-Referenzen werden unterstützt.
+
+ - Datentyp: **str**
+
+
+sv_overview
+===========
+
+
+Wenn eine Seite sv_page als 'overview' definiert hat, werden Items eines bestimmten Typs angezeigt. Der Name/Bezeichner des Typs wird definiert, indem 'sv_overview' auf einen eindeutigen Namen gesetzt wird. Damit Elemente auf dieser Seite angezeigt werden, müssen die Items 'sv_item_type' definieren und auf den Wert von 'sv_overview' setzen.
+
+ - Datentyp: **str**
+
+
+sv_page
+=======
+
+
+Setzen Sie 'sv_page' auf einen der angegebenen Werte, um eine Seite für dieses Item zu generieren. Jedes Widget unterhalb dieses Elements wird auf der Seite angezeigt
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **room**
+   - **seperator**
+   - **overview**
+   - **category**
+   - **cat_seperator**
+   - **room_lite**
+
+
+sv_widget
+=========
+
+
+Definition des Widgets, welches für das Item verwendet wird. Es können meherere Widgets angegeben werden. Anzeige erfolgt in einem ausklappbaren Block vom Typ 2. Relative Adressierung der items wird unterstützt.
+
+ - Datentyp: **str**
+
+
+sv_widget2
+==========
+
+
+Definition des Widgets, welches für das Item im zweiten Abschnitt des ausklappbaren Blocks angezeigt wird.
+
+ - Datentyp: **str**
+
+
+visu_acl
+========
+
+
+Das Attribut visu_acl steuert die Zugriffsrechte der smartVISU auf das einzelene Item ()
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **rw** |_| - |_| Lesen/Schreiben
+   - **ro** |_| - |_| Nur Lesen
+   - **deny** |_| - |_| Kein Zugriff
+   -  |_| - |_| Standardeinstellung nutzen
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+url(url, clientip= '')
+======================
+
+
+Diese Funktion weist smartVISU Clients an, auf die angegebene Url (Visu Seite) zu wechseln. Die Funktion funktioniert mit smartVISU v2.9 und später. Für smartVISU v2.8 muss ein modifizierter Treiber io_smarthome.js verwendet werden - Beispiel: sh.visu.url('index.php?page=apartement.living', '10.0.0.23')
+
+ - Die Funktion liefert kein Ergebnis
+
+
+url
+---
+
+Die URL zu der smartVISU wechseln soll
+
+ - Datentyp: **str**
+
+
+clientip
+--------
+
+Falls angegeben, werden nur Clients (Browser) die auf dem Host mit der angegebenen IP Adresse laufen angewiesen die Seite zu wechseln.
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

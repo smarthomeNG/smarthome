@@ -1,0 +1,128 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'backend' Konfiguration
+==============================
+
+
+.. index:: Plugins; backend Konfiguration
+
+.. image:: /_static/img/system.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **backend** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als deprecated gekennzeichnet. Es wird empfohlen auf eine                  Nachfolgelösung umzusteigen.
+
+
+
+Beschreibung
+============
+
+Dieses Plugin liefert Informationen über die aktuell laufende SmartHomeNG Installation. Bisher dient es vorwiegend als Support Tool um Anwendern zu helfen, deren Installation nicht richtig läuft.
+
+Einige Highlights:
+
+ - eine Liste der installierten Python Module wird angezeigt und die Versionen werden gegenüber den Requirements und den verfügbaren Versions von PyPI abgeglichen
+ - eine Liste der Items und ihrer Attribute wird angezeigt. Für diverse Item Typen ist der Wert änderbar
+ - eine Liste der Logiken mit nächster Ausführungszeit wird angezeit
+ - Logiken können aktiviert/deaktiviert oder getriggert werden
+ - Logiken können erstellt und editiert werden
+ - eine Liste der aktuellen Scheduler und ihr nächster Ausführungszeitpunkt wird angezeigt
+ - Ein direktes Download der Sqlite Datenbank (nutzt das sqlite Plugins) und der SmartHomeNG Log-Dateien ist möglich
+ - Einige Informationen über häufig genutzte Daemons wie knxd bzw. eibd werden angezeigt
+ - Unterstützt Basic Authentication bei Web-
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **backend** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+developer_mode
+==============
+
+
+Entwickler Modus aktivieren
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+pypi_timeout
+============
+
+
+Timeout bei der Abfrage der pypi Website
+
+ - Datentyp: **int**
+ - Standardwert: **5**
+
+
+updates_allowed
+===============
+
+
+Update von Werten durch das Backend Plugin ist erlaubt
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+**Keine**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/backend/README>` des Plugins zugreifen.

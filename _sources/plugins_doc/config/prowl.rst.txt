@@ -1,0 +1,199 @@
+.. |_| unicode:: 0xA0
+
+
+============================
+Plugin 'prowl' Konfiguration
+============================
+
+
+.. index:: Plugins; prowl Konfiguration
+
+.. image:: /_static/img/web.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **prowl** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Prowl Unterstützung
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.3**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **prowl** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+apikey
+======
+
+
+Der Parameter ist optional. Hier kann ein globaler apikey für den Prowl Service definiert werden
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+prowl_event
+===========
+
+
+Der Text für das Event-Feld. "VAL" wird durch den Item-Wert ersetzt.
+
+ - Datentyp: **str**
+
+
+prowl_swap
+==========
+
+
+Wenn dieses Attribut auf true gesetzt wird, werden die Felder event und description vor dem Senden vertauscht.
+
+ - Datentyp: **bool**
+
+
+prowl_text
+==========
+
+
+Der Text für das Description-Feld. "VAL" wird durch den Item-Wert ersetzt.
+
+ - Datentyp: **str**
+
+
+prowl_url
+=========
+
+
+Die angegebene URL wird mit der Nachricht verschickt.
+
+ - Datentyp: **str**
+
+
+prowl_values
+============
+
+
+Eine Liste von Wert: "Text"-Paaren. Wenn der Item-Wert einem angegebenen Wert entspricht, wird der entsprechende Text als description gesendet.
+
+ - Datentyp: **list(dict)**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+notify(event= '', description= '', priority=None*, url= 'None*', apikey= 'None*', application= 'SmartHomeNG')
+=============================================================================================================
+
+
+Diese Funktion versendet eine Nachricht an Prowl.
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+event
+-----
+
+Typ des Ereignisses
+
+ - Datentyp: **str**
+
+
+description
+-----------
+
+Beschreibung des Ereignisses
+
+ - Datentyp: **str**
+
+
+priority
+--------
+
+Es kann eine Priorität (0-2) angegeben werden, um zwischen Ereignissen auf dem Mobile Device zu differenzieren
+
+ - Datentyp: **int**
+ - Standardwert: **None***
+
+ - Minimalwert: **0**
+ - Maximalwert: **2**
+
+url
+---
+
+Diese URL wird mit der Notification verbunden
+
+ - Datentyp: **str**
+ - Standardwert: **None***
+
+
+apikey
+------
+
+Hier kann ein individueller apikey angegeben werden
+
+ - Datentyp: **str**
+ - Standardwert: **None***
+
+
+application
+-----------
+
+Name der sendenden Applikation
+
+ - Datentyp: **str**
+ - Standardwert: **SmartHomeNG**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

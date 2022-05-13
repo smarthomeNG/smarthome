@@ -1,0 +1,297 @@
+.. |_| unicode:: 0xA0
+
+
+================================
+Plugin 'viessmann' Konfiguration
+================================
+
+
+.. index:: Plugins; viessmann Konfiguration
+
+.. image:: /plugins/viessmann/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **viessmann** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Lesen und Schreiben von Werten einer Viessmann Heizung
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6.0**
+ - Minimum Python Version: **3.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **viessmann** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+heating_type
+============
+
+
+Gerätetype der Heizung
+
+ - Datentyp: **str**
+
+
+protocol
+========
+
+
+Protokoll der Heizung
+
+ - Datentyp: **str**
+ - Standardwert: **P300**
+
+
+serialport
+==========
+
+
+Serieller Port, an dem der Lesekopf angeschlossen ist
+
+ - Datentyp: **str**
+
+
+timeout
+=======
+
+
+Zeitbegrenzung für das Lesen vom seriellen Port in Sekunden
+
+ - Datentyp: **num**
+ - Standardwert: **1.5**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+viess_ba_list
+=============
+
+
+Gibt nach der Initialisierung eine Liste aller für die konfigurierte Heizung gültigen Betriebsarten zurück
+
+ - Datentyp: **bool**
+
+
+viess_init
+==========
+
+
+Konfiguriert, ob der Wert aus der Heizung initialisiert werden soll
+
+ - Datentyp: **bool**
+
+
+viess_read
+==========
+
+
+Liest Wert mit konfiguriertem Kommando aus der Heizung aus
+
+ - Datentyp: **str**
+
+
+viess_read_afterwrite
+=====================
+
+
+Konfiguriert eine Verzögerung in Sekunden nachdem ein Lesekommando nach einem Schreibkommando an die Heizung geschickt wird
+
+ - Datentyp: **num**
+
+
+viess_read_cycle
+================
+
+
+Konfiguriert ein Intervall in Sekunden für das Lesekommando
+
+ - Datentyp: **num**
+
+
+viess_send
+==========
+
+
+Änderung des Items wird mit konfiguriertem Kommando an die Heizung geschickt
+
+ - Datentyp: **str**
+
+
+viess_timer
+===========
+
+
+Liest alle Timer zur übergebenen Anwendung (z.B. Heizkreis_A1M1) und stellt diese für die Nutzung mit UZSU zur Verfügung
+
+ - Datentyp: **str**
+
+
+viess_trigger
+=============
+
+
+Konfiguriert Lesekommandos, die nach einem Schreibvorgang auf das Item aufgerufen werden
+
+ - Datentyp: **list(str)**
+
+
+viess_trigger_afterwrite
+========================
+
+
+Konfiguriert eine Verzögerung in Sekunden, bis ein Trigger ausgeführt werden soll, nachdem ein Wert gesetzt wurde
+
+ - Datentyp: **num**
+
+
+viess_update
+============
+
+
+Liest alle konfigurierten Items neu, wenn es auf True gesetzt wird
+
+ - Datentyp: **bool**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+read_addr(addr)
+===============
+
+
+Stößt das Lesen des angegebenen Datenpunkts an, der nicht an ein Item gebunden sein muss. Es erfolgt keine Zuweisung an ein Item. Rückgabewert ist der gelesene Wert, oder NONE bei Fehler
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+addr
+----
+
+Vierstellige Hex-Adresse des Datenpunktes
+
+ - Datentyp: **str**
+
+
+read_temp_addr(addr, length, unit)
+==================================
+
+
+Stößt das Lesen eines beliebigen Datenpunkts an, der nicht konfiguriert oder bekannt sein muss. Es erfolgt keine Zuweisung an ein Item. Rückgabewert ist der gelesene Wert, oder NONE bei Fehler
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+addr
+----
+
+Vierstellige Hex-Adresse des Datenpunktes
+
+ - Datentyp: **str**
+
+
+length
+------
+
+Länge der Geräteantwort in Bytes (1-8)
+
+ - Datentyp: **int**
+
+ - Minimalwert: **1**
+ - Maximalwert: **8**
+
+unit
+----
+
+Einheitencode für die Konvertierung der Antwort. Muss in der Protokollkonfiguration ``unitset`` in commands.py definiert sein
+
+ - Datentyp: **str**
+
+
+update_all_read_items()
+=======================
+
+
+Stößt das Lesen aller konfigurierten Items an
+
+ - Ergebnistyp der Funktion: **none**
+
+
+write_addr(addr, value)
+=======================
+
+
+Stößt das Schreiben des angegebenen Datenpunkts an, der nicht an ein Item gebunden sein muss. Der übergebene Wert muss zum konfigurierten Datentyp passen
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+addr
+----
+
+Vierstellige Hex-Adresse des Datenpunktes
+
+ - Datentyp: **str**
+
+
+value
+-----
+
+Zu schreibender Wert
+
+ - Datentyp: 
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/viessmann/README>` des Plugins zugreifen.

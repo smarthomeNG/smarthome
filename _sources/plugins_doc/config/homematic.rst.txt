@@ -1,0 +1,152 @@
+.. |_| unicode:: 0xA0
+
+
+================================
+Plugin 'homematic' Konfiguration
+================================
+
+
+.. index:: Plugins; homematic Konfiguration
+
+.. image:: /plugins/homematic/webif/static/img/plugin_logo.jpg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **homematic** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Ansteuerung von HomeMatic Komponenten über eine HomeMatic CCU2 Zentrale. Es werden HomeMatic und HomeMaticIP Geräte unterstützt.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.7**
+ - Minimum Python Version: **3.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **homematic** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+host
+====
+
+
+IP Adresse bzw. Hostname der HomeMatic CCU2 Zentrale
+
+ - Datentyp: **ip**
+ - Standardwert: **homematic-ccu2.local**
+
+
+learnmode_length
+================
+
+
+Dauer des Anlernmodus der HomeMatic CCU2 Zentrale nach Aktivierung durch das Web Interface
+
+ - Datentyp: **int**
+ - Standardwert: **60**
+
+ - Minimalwert: **0**
+ - Maximalwert: **300**
+
+password
+========
+
+
+Passwort für das Login
+
+ - Datentyp: **str**
+
+
+username
+========
+
+
+Username für das Login
+
+ - Datentyp: **str**
+ - Standardwert: **Admin**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+hm_address
+==========
+
+
+Adresse des HomeMatic Devices, welches über die HomeMatic CCU2 Zentrale angesteuert werden soll
+
+ - Datentyp: **str**
+
+
+hm_channel
+==========
+
+
+Optional: Kanal des Devices auf dem die Funktion angesteuert werden soll. Muss nur angegeben werden, wenn die gewünschte Funktion von dem Device mehrfach zur Verfügung gestellt wird
+
+ - Datentyp: **int**
+
+
+hm_function
+===========
+
+
+Name der Funktion des HomeMatic Devices, welche genutzt werden soll
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/homematic/README>` des Plugins zugreifen.

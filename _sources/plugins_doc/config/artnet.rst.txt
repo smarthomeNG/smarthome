@@ -1,0 +1,245 @@
+.. |_| unicode:: 0xA0
+
+
+=============================
+Plugin 'artnet' Konfiguration
+=============================
+
+
+.. index:: Plugins; artnet Konfiguration
+
+.. image:: /plugins/artnet/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **artnet** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Ansteuerung der meisten USB/Netwerk DMX Adapter
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5.1**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **artnet** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+artnet_net
+==========
+
+
+Gibt das ArtNet Net an
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+ - Maximalwert: **127**
+
+artnet_subnet
+=============
+
+
+Gibt das Art-Net Sub-Net an
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+ - Maximalwert: **15**
+
+artnet_universe
+===============
+
+
+Gibt das Art-Net Universe an
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+ - Maximalwert: **15**
+
+ip
+==
+
+
+Gibt die Adresse des angesprochenen Art-Net Node an
+
+ - Datentyp: **ip**
+ - Standardwert: **127.0.0.1**
+
+
+min_channels
+============
+
+
+Gibt an, wie viele Kanäle mindestens gesendet werden müssen, hilfreich für Geräte, die einen vollen Datensatz über alle ihre Kanäle erhalten müssen
+
+ - Datentyp: **int**
+ - Standardwert: **1**
+
+ - Minimalwert: **1**
+ - Maximalwert: **512**
+
+port
+====
+
+
+Gibt den Port des angesprochenen Art-Net Node an
+
+ - Datentyp: **int**
+ - Standardwert: **6454**
+
+
+update_cycle
+============
+
+
+Gibt an, wie oft (Sekunden) die aktuelle Lichtsituation neu verschickt werden soll (optional, 0 deaktiviert dies)
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+artnet_address
+==============
+
+
+Definition der DMX Adresse
+
+ - Datentyp: **int**
+
+ - Minimalwert: **1**
+ - Maximalwert: **512**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+send_frame(values)
+==================
+
+
+Sendet einen vollständingen DMX-Frame
+
+ - Die Funktion liefert kein Ergebnis
+
+
+values
+------
+
+Wertemenge
+
+ - Datentyp: **list(num)**
+
+
+send_frame_starting_at(adr, values)
+===================================
+
+
+Sendet einen Satz an DMX Kanalwerten, beginnend bei einer Startadresse
+
+ - Die Funktion liefert kein Ergebnis
+
+
+adr
+---
+
+Erster zu adressierender DMX-Kanal
+
+ - Datentyp: **num**
+
+ - Minimalwert: **1**
+ - Maximalwert: **512**
+
+values
+------
+
+Werte die ab dem Startkanal gesetzt werden sollen
+
+ - Datentyp: **list(num)**
+
+
+send_single_value(adr, value)
+=============================
+
+
+Sendet einen einzelnen DMX Kanalwert
+
+ - Die Funktion liefert kein Ergebnis
+
+
+adr
+---
+
+Zu adressierender DMX-Kanal
+
+ - Datentyp: **num**
+
+ - Minimalwert: **1**
+ - Maximalwert: **512**
+
+value
+-----
+
+Wert auf den der Kanal gesetzt werden soll
+
+ - Datentyp: **num**
+
+ - Minimalwert: **0**
+ - Maximalwert: **255**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/artnet/README>` des Plugins zugreifen.

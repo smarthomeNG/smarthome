@@ -1,0 +1,144 @@
+.. |_| unicode:: 0xA0
+
+
+===================================
+Plugin 'text_display' Konfiguration
+===================================
+
+
+.. index:: Plugins; text_display Konfiguration
+
+.. image:: /_static/img/system.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **text_display** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin um Text Nachrichten auf Displays (z.B. KNX RTR oder Taster) nacheinander anzuzeigen
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.8.0**
+ - Minimum Python Version: **3.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **text_display** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+**Keine**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+text_display_content_source_item
+================================
+
+
+Pfad zum Item mit dem Nachrichten-Inhalt
+
+ - Datentyp: **str**
+
+
+text_display_cycle_time
+=======================
+
+
+Wie lange soll eine Nachricht bleiben, bevor sie durch die nächste ersetzt wird?
+
+ - Datentyp: **int**
+ - Standardwert: **3**
+
+ - Minimalwert: **1**
+
+text_display_default_message
+============================
+
+
+Wenn es keine Nachrichten gibt, wird dieser Wert einmal gesetzt
+
+ - Datentyp: **str**
+
+
+text_display_sink_for_rings
+===========================
+
+
+Nachrichtenringe: Nachrichten dieser Ringe sollen auf der aktuellen Senke ausgegeben werden
+
+ - Datentyp: **list(str)**
+
+
+text_display_sink_rings_with_prio
+=================================
+
+
+Nachrichtenringe: Nachrichten dieser Ringe sollen andere Nachrichten verdecken
+
+ - Datentyp: **list(str)**
+
+
+text_display_target_ring
+========================
+
+
+Nachrichtenring: Nachrichten auf dem gleichen Ring, werden gleich priorisiert
+
+ - Datentyp: **str**
+ - Standardwert: **fallback**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/text_display/README>` des Plugins zugreifen.

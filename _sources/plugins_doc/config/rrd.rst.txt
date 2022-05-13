@@ -1,0 +1,182 @@
+.. |_| unicode:: 0xA0
+
+
+==========================
+Plugin 'rrd' Konfiguration
+==========================
+
+
+.. index:: Plugins; rrd Konfiguration
+
+.. image:: /_static/img/system.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **rrd** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Unterstützung für Round Robin Datenbanken (rrdtool)
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **rrd** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+rrd_dir
+=======
+
+
+Verzeichnis der rrd Datenbanken. Wenn leer, wird der SmartHomeNG Basis Pfad + /var/rrd genutzt
+
+ - Datentyp: **str**
+
+
+step
+====
+
+
+Zeit zwischen zwei Datenpunkten. Default ist 300 Sekunden.
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+rrd
+===
+
+
+Wenn auf 'yes' gesetzt, werden die Werte des Items in die rrd Datenbank geschrieben. Wenn auf 'init' gesetzt, wird zusätzlich beim Start von SmartHomeNG der Wert aus rrd gelesen.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - 
+   - **yes**
+   - **init**
+
+
+rrd_ds_name
+===========
+
+
+Alternativen Datenquellennamen festlegen. Wird dieser Name festgelegt, so wird nicht der Item Name für den Datenquellennamen verwendet
+
+ - Datentyp: **str**
+
+
+rrd_max
+=======
+
+
+Wird dieses Attribut auf True gesetzt, wird auch der Maximumwert in die Datenbank geschrieben. Standard ist False
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+rrd_min
+=======
+
+
+Wird dieses Attribut auf True gesetzt, wird auch der Minimumwert in die Datenbank geschrieben. Standard ist False
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+rrd_no_series
+=============
+
+
+Wird dieses Attribut auf True gesetzt, werden Daten in die Datenbank geschrieben, können aber nicht durch eine Visu abgerufen werden.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+rrd_step
+========
+
+
+Zeit zwischen zwei Datenpunkten. Default ist der Wert vom Plugin Parameter rrd_step
+
+ - Datentyp: **int**
+
+
+rrd_type
+========
+
+
+Gibt die Art der Datenreihe in der Datenbank an: gauge für Temperaturen, counter für Zähler
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - 
+   - **gauge**
+   - **counter**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/rrd/README>` des Plugins zugreifen.

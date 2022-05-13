@@ -1,0 +1,251 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'network' Konfiguration
+==============================
+
+
+.. index:: Plugins; network Konfiguration
+
+.. image:: /plugins/network/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **network** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **protocol Plugin**.
+
+
+
+Beschreibung
+============
+
+Items über Netzwerkanfragen (UDP/TCP/HTTP GET) ändern und Daten per UDP senden
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9.0**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **network** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+http
+====
+
+
+Port für eingehende HTTP Verbindungen oder 'no' zum Deaktivieren
+
+ - Datentyp: **str**
+ - Standardwert: **no**
+
+
+http_acl
+========
+
+
+Liste von IP-Adressen, von der HTTP-Verbindungen angenommen werden. Standardmäßig wird jede eingehende Verbindung angenommen.
+
+ - Datentyp: **list**
+ - Standardwert: *****
+
+
+ip
+==
+
+
+IP-Adresse, auf der eingehende Verbindungen akzeptiert werden sollen (0.0.0.0 = alle)
+
+ - Datentyp: **ip**
+ - Standardwert: **0.0.0.0**
+
+
+port
+====
+
+
+Port für eingehende Verbindungen
+
+ - Datentyp: **int**
+ - Standardwert: **2727**
+
+ - Minimalwert: **1**
+ - Maximalwert: **65535**
+
+tcp
+===
+
+
+Eingehende TCP-Verbindungen akzeptieren
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+tcp_acl
+=======
+
+
+Liste von IP-Adressen, von der TCP-Verbindungen angenommen werden. Standardmäßig wird jede eingehende Verbindung angenommen.
+
+ - Datentyp: **list**
+ - Standardwert: *****
+
+
+udp
+===
+
+
+Eingehende UDP-Verbindungen akzeptieren
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+udp_acl
+=======
+
+
+Liste von IP-Adressen, von der UDP-Verbindungen angenommen werden. Standardmäßig wird jede eingehende Verbindung angenommen.
+
+ - Datentyp: **list**
+ - Standardwert: *****
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+nw
+==
+
+
+Wenn dieses Attribut auf "True" (oder "yes", etc.) gesetzt wird, kann dieses Item über den generischen Listener des Network-Plugins über TCP und/oder UDP aktualisiert werden.
+
+ - Datentyp: **bool**
+
+
+nw_acl
+======
+
+
+Wie bei dem generischen Plugin-Attribut tcp_acl/udp_acl, kann eine Liste oder eine einzelne IP Adresse konfiguriert werden. Nur von dieser/diesen darf das Item aktualisiert werden. Das Attribut überschreibt die Einstellung in der Pluginkonfiguration.
+
+ - Datentyp: **list**
+
+
+nw_http_listen
+==============
+
+
+Über die nw_http_listen Einstellung kann ein dedizierter Listener spezifiziert werden. Das Argument kann ein Port oder IP:Port sein (z.B.: nw_http_listen: 127.0.0.1:8888 or nw_http_listen: 7777).
+
+ - Datentyp: **str**
+
+
+nw_tcp_listen
+=============
+
+
+Über die nw_tcp_listen Einstellung kann ein dedizierter Listener spezifiziert werden. Das Argument kann ein Port oder IP:Port sein (z.B.: nw_tcp_listen: 127.0.0.1:8888 or nw_tcp_listen: 7777).
+
+ - Datentyp: **str**
+
+
+nw_udp_listen
+=============
+
+
+Über die nw_udp_listen Einstellung kann ein dedizierter Listener spezifiziert werden. Das Argument kann ein Port oder IP:Port sein (z.B.: nw_udp_listen: 127.0.0.1:8888 or nw_udp_listen: 7777).
+
+ - Datentyp: **str**
+
+
+nw_udp_send
+===========
+
+
+Dieses Attribut erlaubt es, einen Host und einen Port zu konfigurieren, an den Updates gesendet werden (z.B.:  nw_udp_send: 10.0.0.1:8888).
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+udp(host, port, data)
+=====================
+
+
+Senden einer Nachricht über UDP
+
+ - Die Funktion liefert kein Ergebnis
+
+
+host
+----
+
+Host oder IP-Adresse des Zieles
+
+ - Datentyp: **str**
+
+
+port
+----
+
+Port auf dem Zielsystem
+
+ - Datentyp: **int**
+
+
+data
+----
+
+Zu übertragende Daten
+
+ - Datentyp: **foo**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

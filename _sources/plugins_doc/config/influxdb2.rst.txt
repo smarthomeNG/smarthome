@@ -1,0 +1,219 @@
+.. |_| unicode:: 0xA0
+
+
+================================
+Plugin 'influxdb2' Konfiguration
+================================
+
+
+.. index:: Plugins; influxdb2 Konfiguration
+
+.. image:: /plugins/influxdb2/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **influxdb2** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Ermöglicht Speicherung von Item Werten in einer InfluxData time-series Datenbank
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **influxdb2** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+api_token
+=========
+
+
+Security Token um auf den Influxdata Server zugreifen zu dürfen
+
+ - Datentyp: **str**
+
+
+bucket
+======
+
+
+Default-Bucket (benannte Lokation) zum speichern von Zeitserien auf dem Influxdata Server
+
+ - Datentyp: **str**
+ - Standardwert: **shng**
+
+
+host
+====
+
+
+Hostname/IP-Adresse des Influxdata Servers
+
+ - Datentyp: **str**
+ - Standardwert: **127.0.0.1**
+
+
+http_port
+=========
+
+
+Portnummer der InfluxData Datenbank für HTTP-Zugr für HTTP-Zugriff
+
+ - Datentyp: **int**
+ - Standardwert: **8086**
+
+ - Minimalwert: **0**
+ - Maximalwert: **65535**
+
+org
+===
+
+
+Organisation zum speichern von Zeitserien auf dem Influxdata Server
+
+ - Datentyp: **str**
+ - Standardwert: **smarthomeng**
+
+
+recognize_database
+==================
+
+
+Steuert ob Items, die das Attribut **database** tragen, in die InfluxDB geschrieben werden sollen
+
+ - Datentyp: **bool**
+
+
+str_value_field
+===============
+
+
+Name des Fields in welches nicht-numerische Item Werte geschrieben werden sollen (Sollte normalerweise auf dem Standardwert bleiben)
+
+ - Datentyp: **str**
+ - Standardwert: **str_value**
+
+
+tags
+====
+
+
+Globale Angabe zusätzlicher Tags, die mit den Werten aller Items gespeichert werden sollen (z.B.: {"raum": "wohnen"})
+
+ - Datentyp: **dict**
+
+
+value_field
+===========
+
+
+Name des Fields in welches der Item Wert geschrieben werden soll (Sollte normalerweise auf dem Standardwert bleiben)
+
+ - Datentyp: **str**
+ - Standardwert: **value**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+database
+========
+
+
+Wenn auf 'yes' oder 'true' gesetzt, werden die Werte des Items in die Datenbank geschrieben. Wenn auf 'init' gesetzt, wird zusätzlich beim Start von SmartHomeNG der Wert des Items aus der Datenbank gelesen.
+
+ - Datentyp: **str**
+
+
+influxdb2
+=========
+
+
+Wenn auf 'yes' oder 'true' gesetzt, werden die Werte des Items in die Datenbank geschrieben. Wenn auf 'init' gesetzt, wird zusätzlich beim Start von SmartHomeNG der Wert des Items aus der Datenbank gelesen.
+
+ - Datentyp: **str**
+
+
+influxdb2_bucket
+================
+
+
+Default-Bucket (benannte Lokation) zum speichern von Zeitserien auf dem Influxdata Server
+
+ - Datentyp: **str**
+
+
+influxdb2_name
+==============
+
+
+In der InfluxDB verwendeter Name für das Item (Optional)
+
+ - Datentyp: **str**
+
+
+influxdb2_tags
+==============
+
+
+Angabe weiterer Tags, die mit dem Wert gespeichert werden sollen (z.B.: {"raum": "wohnen"})
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -1,0 +1,190 @@
+.. |_| unicode:: 0xA0
+
+
+============================
+Plugin 'resol' Konfiguration
+============================
+
+
+.. index:: Plugins; resol Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **resol** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Interface fuer Resol VBUS
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.7.2**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **resol** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Poll Cycle in Sekunden
+
+ - Datentyp: **int**
+ - Standardwert: **60**
+
+
+ip
+==
+
+
+IP Adresse des VBUS LAN
+
+ - Datentyp: **ipv4**
+
+
+password
+========
+
+
+Passwort des DL2
+
+ - Datentyp: **str**
+
+
+port
+====
+
+
+IP port des VBUS LAN
+
+ - Datentyp: **int**
+ - Standardwert: **7053**
+
+ - Minimalwert: **0**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+resol_bituse
+============
+
+
+Byte Bituse Mask
+
+ - Datentyp: **num**
+
+ - Minimalwert: **0**
+
+resol_command
+=============
+
+
+Command hex value
+
+ - Datentyp: **str**
+
+
+resol_destination
+=================
+
+
+Destination hex value
+
+ - Datentyp: **str**
+
+
+resol_factor
+============
+
+
+Ein Skalierungsfaktor pro Byte
+
+ - Datentyp: **list**
+
+ - Minimalwert: **0**
+
+resol_isSigned
+==============
+
+
+Ein bool pro Byte, ob Vorzeichen behaftet (True) oder nicht
+
+ - Datentyp: **list**
+
+
+resol_offset
+============
+
+
+Byte Offset
+
+ - Datentyp: **num**
+
+ - Minimalwert: **0**
+
+resol_source
+============
+
+
+Source hex value
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/resol/README>` des Plugins zugreifen.

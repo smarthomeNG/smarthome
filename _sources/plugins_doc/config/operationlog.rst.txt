@@ -1,0 +1,213 @@
+.. |_| unicode:: 0xA0
+
+
+===================================
+Plugin 'operationlog' Konfiguration
+===================================
+
+
+.. index:: Plugins; operationlog Konfiguration
+
+.. image:: /_static/img/system.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **operationlog** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+
+
+Beschreibung
+============
+
+Implementierung separater Logs
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **operationlog** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cache
+=====
+
+
+Aktiviert die Caching-Funktion für das Log (Log bleibt bei Neustart erhalten)
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+filepattern
+===========
+
+
+Definiert das Namensformat für die Logdateien
+
+ - Datentyp: **str**
+ - Standardwert: **{year:04}-{month:02}-{day:02}-{name}.log**
+
+
+items
+=====
+
+
+Jedes mal wenn ein Item aktualisiert wird, wird ein Logeintrag geschrieben unter der Berücksichtigung der konfigurierten Items und deren Werte als Log Werte   Wird dies nicht angegeben, dann werden die vorgegebenen Zuordnungswerte verwendet:    - item_a --> now    - item_b --> thread info    - item_c --> log level    - item_d --> message
+
+ - Datentyp: **list(str)**
+
+
+logdirectory
+============
+
+
+Vorgabe des Verzeichnisses für die Logfiles
+
+ - Datentyp: **str**
+ - Standardwert: **var/log/operationlog/**
+
+
+logger
+======
+
+
+Schreibt zusätzlich in den angegebenen Python Standard Logger (z.B. "plugins.operationlog")
+
+ - Datentyp: **str**
+
+
+logtofile
+=========
+
+
+Aktiviert das Schreiben von Logeinträgen in eine Datei
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+mapping
+=======
+
+
+Definiert eine Liste mit kommagetrennten Werten die für jede Nachricht geloggt werden. Die folgenden internen Zuordnungen können benutzt werden:   time - Zeitstempel des Eintrags thread - Thread der die Daten erzeugt level - Der log level (Standard ist INFO) message - Die Nachricht   Die Vorgabe sollte beibehalten werden, wenn das Log in SmartVISU angezeigt werden soll, sonst werden die Werte von der SmartVISU für die Darstellung nicht korrekt interpretiert.
+
+ - Datentyp: **list(str)**
+ - Standardwert: **['time', 'thread', 'level', 'message']**
+
+
+maxlen
+======
+
+
+Gibt an, wieviele Einträge im Speicher vorgehalten werden
+
+ - Datentyp: **int**
+ - Standardwert: **50**
+
+
+name
+====
+
+
+Definiert den Namen des Logs
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+olog
+====
+
+
+Wenn gesetzt, werden Item-Änderungen in das angegebene Log geloggt
+
+ - Datentyp: **str**
+
+
+olog_level
+==========
+
+
+Gibt den Log-Level an (DEBUG, INFO, WARNING, ERROR)
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **DEBUG**
+   - **INFO**
+   - **WARNING**
+   - **ERROR**
+
+
+olog_rules
+==========
+
+
+Definiert bestimmte Regel/Mappings für das Logging
+
+ - Datentyp: **str**
+
+
+olog_txt
+========
+
+
+Gibt den Text an, der bei Änderungen geloggt werden soll
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/operationlog/README>` des Plugins zugreifen.

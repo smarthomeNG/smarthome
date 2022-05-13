@@ -1,0 +1,118 @@
+/* override table width restrictions */
+@media screen and (min-width: 767px) {
+
+   .wy-table-responsive table td {
+      /* !important prevents the common CSS stylesheets from overriding
+         this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+   }
+
+   .wy-table-responsive {
+      overflow: visible !important;
+   }
+}
+
+/* the standard rtd themes is first included and then this one here */
+
+.wy-nav-content {
+max-width: 1200px !important;
+}
+
+pre, code, .rst-content tt, .rst-content code, kbd, samp {
+    font-size: 16px !important;
+}
+
+code, .rst-content tt, .rst-content code {
+    font-size: 16px !important;
+}
+
+.sidebar.deprecated {
+    background-color: #fee;
+}
+
+.sidebar.deprecated > p.sidebar-title:after{
+    content: " (deprecated)";
+}
+
+
+.section, h1, h2, h3 {
+    clear: both;
+}
+
+p {
+    font-size: 12pt;
+}
+
+.wy-side-nav-search {
+    display: block;
+    width: 300px;
+    padding: .809em;
+    margin-bottom: .809em;
+    z-index: 200;
+    background-color: #2269aa;
+    text-align: center;
+    padding: .809em;
+    display: block;
+    color: #fcfcfc;
+    margin-bottom: .809em
+}
+.wy-nav-side {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    padding-bottom: 2em;
+    width: 300px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    min-height: 100%;
+    background: #2269aa;
+    z-index: 200
+}
+.wy-nav-content-wrap {
+    background: #FAFAFA;
+    min-height: 100%
+}
+
+.wy-nav-top {
+    background:#2269aa;
+}
+
+/* background: #2980B9; RTD Blau */
+/* background: #2269aa; shng blau */
+/* background: #CEE3F6; */
+/* border: #FAFAFA; */
+/* border: #F2F2F2; */
+/* border: #E6E6E6; */
+/* border: #d8d8d8; */
+/* border: #bdbdbd; */
+
+.redsup  {
+  color: #e74c3c; !important;
+  position: relative; top: -0.5em; font-size: 80%; !important;
+}
+
+.bluesup  {
+  color: #2269aa; !important;
+  position: relative; top: -0.5em; font-size: 80%; !important;
+}
+
+.darkbluesup  {
+  color: #1c3b6c; !important;
+  position: relative; top: -0.5em; font-size: 80%; !important;
+}
+
+.greensup  {
+  color: #27ae60; !important;
+  position: relative; top: -0.5em; font-size: 80%; !important;
+}
+
+.blacksup  {
+  color: #000000; !important;
+  position: relative; top: -0.5em; font-size: 80%; !important;
+}
+
+img.screenshot {
+    border-color: #d8d8d8;
+    border-style: solid;
+    border-width: 1px;
+}

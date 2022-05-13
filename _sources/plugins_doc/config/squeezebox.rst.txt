@@ -1,0 +1,209 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'squeezebox' Konfiguration
+=================================
+
+
+.. index:: Plugins; squeezebox Konfiguration
+
+.. image:: /_static/img/gateway.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **squeezebox** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Anbindung von Squeezebox Devices. Eine laufender Logitech Media Server wird benötigt.
+Getestet mit folgenden Geräten:
+
+ - Logitech Squeezebox Radio
+ - Squeezelite auf Windows, Mac OS X und Linux
+
+Sämtliche Kommandos sollten manuell über die Telnet-Schnittstelle auf Port 9090 getestet werden. Für Abfragen muss hierbei ein "?" am Ende des Befehls stehen, z.B. "<playerid> name ?"
+
+
+Anforderungen
+=============
+
+
+laufender Logitech Media Server
+
+ - Minimum SmartHomeNG Version: **1.3**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **squeezebox** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+autoreconnect
+=============
+
+
+Erneuter Verbindungsaufbau, falls Verbindung unterbrochen
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+connect_cycle
+=============
+
+
+Pause zwischen automatischen Verbindungsversuchen.
+
+ - Datentyp: **int**
+ - Standardwert: **10**
+
+ - Minimalwert: **0**
+
+connect_retries
+===============
+
+
+Anzahl Versuche, die Verbindung erneut aufzubauen
+
+ - Datentyp: **int**
+ - Standardwert: **2**
+
+ - Minimalwert: **0**
+
+host
+====
+
+
+IP des Logitech Media Servers
+
+ - Datentyp: **ip**
+ - Standardwert: **127.0.0.1**
+
+
+port
+====
+
+
+Der Port der CLI Schnittstelle vom Logitech Media Server
+
+ - Datentyp: **int**
+ - Standardwert: **9090**
+
+
+web_port
+========
+
+
+Der Port der Web Schnittstelle vom Logitech Media Server, wird für die Abfrage des aktuellen Album Artworks genutzt.
+
+ - Datentyp: **int**
+ - Standardwert: **9000**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+squeezebox_albumart
+===================
+
+
+Wird genutzt, um die URL zum aktuellen Cover Artwork automatisch zu generieren. Als Wert ist <playerid> anzugeben.
+Der Wert des Items wird auf http://<SERVER IP>:9002/music/current/cover.jpg?player=<PLAYER MAC> gesetzt, wobei die Server IP und der Port aus der Pluginkonfiguration, und die MAC-Adresse aus der playerid Angabe im (Grand)parent Item gelesen wird.
+
+ - Datentyp: **str**
+
+
+squeezebox_init
+===============
+
+
+Wird genutzt, um beim Start des Plugins das Item zu aktualisierenn. Der Befehl ist der CLI Dokumentation des Media Servers zu entnehmen.
+Der Platzhalter <playerid> wird durch die im Parent-Item gesetzte Player-ID ersetzt. Das Fragezeichen wird automatisch an den Befehl angehängt, kann also wegfallen
+
+Beispiel: <playerid> playlist name, um den Namen des Player beim Pluginstart abzufragen
+
+ - Datentyp: **str**
+
+
+squeezebox_playerid
+===================
+
+
+MAC Adresse des Players. Sollte im Parent-Item angegeben werden, um in den anderen Items den <playerid> Platzhalter nutzen zu können.
+
+ - Datentyp: **mac**
+
+
+squeezebox_recv
+===============
+
+
+Wird genutzt, um Änderungen vom Player zu empfangen. Der Befehl ist der CLI Dokumentation des Media Servers zu entnehmen.
+Der Platzhalter <playerid> wird durch die im Parent-Item gesetzte Player-ID ersetzt
+
+Beispiel: <playerid> prefset server volume zum Updaten des Itemwerts durch die Lautstärke des Players
+
+ - Datentyp: **str**
+
+
+squeezebox_send
+===============
+
+
+Wird genutzt, um einen Befehl zu senden. Der Befehl ist der CLI Dokumentation des Media Servers zu entnehmen.
+Folgende Platzhalter können genutzt werden:
+
+ - <playerid>: Wird durch die im Parent-Item gesetzte Player-ID ersetzt
+ - {}: Der Wert des Items wird in diesen Platzhalter geschrieben (sollte nicht verwendet werden, wenn ein fixer oder kein Wert nötig ist).
+
+Beispiel: <playerid> name {} zum Ersetzen des Playernamen durch den Itemwert
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/squeezebox/README>` des Plugins zugreifen.

@@ -1,0 +1,574 @@
+.. |_| unicode:: 0xA0
+
+
+===============================
+Plugin 'avdevice' Konfiguration
+===============================
+
+
+.. index:: Plugins; avdevice Konfiguration
+
+.. image:: /plugins/avdevice/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **avdevice** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Steuerung von diversen AV Geräten über TCP/IP und RS232 Schnittstelle. Das Plugin unterstützt eine Vielzahl von AV-Geräten und wurde mit folgenden Geräten getestet: - Pioneer AV Receiver < 2016 - Denon AV Receiver > 2016 - Epson Projektor < 2010 - Oppo UHD Player
+
+
+Anforderungen
+=============
+
+
+pyserial Python Modul
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **avdevice** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+autoreconnect
+=============
+
+
+Automatischer Versuch, sich mit dem Gerät zu verbinden, wenn keine Rückmeldung kommt oder die Verbindung verloren wurde. Dies sollte nicht notwendig sein, da das Plugin ohnehin bei jedem neuen Senden eines Befehls einen Verbindungsaufbauversuch startet.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+depend0_power0
+==============
+
+
+Wenn das dependson Item abgeschaltet ist, werden alle Poweritems ebenfalls auf 0 gesetzt. Das ist dann relevant, wenn beispielsweise das Gerät eingeschaltet ist, die Steckdose aber ausgeschaltet wird. Durch Aktivieren dieser Funktion werden automatisch die Poweritems auf 0 gesetzt.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+depend0_volume0
+===============
+
+
+Wenn das dependson Item abgeschaltet ist, werden alle Volume Items ebenfalls auf 0 gesetzt. Das ist dann relevant, wenn beispielsweise das Gerät eingeschaltet ist, die Steckdose aber ausgeschaltet wird. Durch Aktivieren dieser Funktion werden automatisch die Poweritems auf 0 gesetzt.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+dependson_item
+==============
+
+
+Wenn das angegebene Item den angegebenen Wert erhält, werden die Befehle gesendet, ansonsten nicht. Das ist insbesondere dann sinnvoll, wenn das Gerät an einer schaltbaren Steckdose hängt.
+
+ - Datentyp: **str**
+
+
+dependson_value
+===============
+
+
+Wenn das angegebene Item den angegebenen Wert erhält, werden die Befehle gesendet, ansonsten nicht. Das ist insbesondere dann sinnvoll, wenn das Gerät an einer schaltbaren Steckdose hängt.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+errorresponse
+=============
+
+
+Standard Fehlermeldungen des Geräts, bei Pioneer beispielsweise ein 'E' gefolgt von einer Nummer. Werden diese Antworten hier nicht angegeben, werden Rückmeldungen unter Umständen deutlich langsamer verarbeitet, aber voraussichtlich trotzdem erkannt.
+
+ - Datentyp: **str**
+ - Standardwert: **E02,E04,E06**
+
+
+forcebuffer
+===========
+
+
+Wenn aus irgendeinem Grund die Antworten nicht gepuffert werden sollen, können hier dennoch Antworten definiert werden, die sehr wohl gepuffert werden. Dies ist besonders wichtig bei Informationen, die schnell hintereinander gesendet werden bzw. wechseln wie Künstler, Musiktitel, Radiostation, etc. Der Defaultwert ist für Pioneer Receiver empfohlen.
+
+ - Datentyp: **str**
+ - Standardwert: **GEH01020,GEH04022,GEH05024,R**
+
+
+ignoreresponse
+==============
+
+
+Das Plugin ignoriert Antworten die mit den hier angegebenen Werten starten, beispielsweise Rückmeldungen für die Menünavigation, etc. Der Defaultwert ist für Pioneer Receiver empfohlen.
+
+ - Datentyp: **str**
+ - Standardwert: **RGB,RGC,RGD,GBH,GHH,VTA,AUA,AUB**
+
+
+inputignoredisplay
+==================
+
+
+Die LCD Anzeige auf dem Gerät wird mitunter sehr häufig aktualisiert, zB bei einem scrollenden Text bei Songtiteln. Um ein ständiges Update und dadurch Konflikte mit tatsächlich relevanten Rückmeldungen zu vermeiden, können hier Source Typen hinterlegt werden. Internet Radio, LAN Streaming, etc. werden empfohlen. Für Pioneer-Receiver werden empfohlen: 26,38,40,41,44,17,02,48,0
+
+ - Datentyp: **str**
+
+
+lineending_response
+===================
+
+
+Zeichnfolge am Ende einer Antwort
+
+ - Datentyp: **str**
+ - Standardwert: **\r\n**
+
+
+lineending_send
+===============
+
+
+Zeichenfolge zum Beenden des Kommandos (z.B. Zeilenende)
+
+ - Datentyp: **str**
+ - Standardwert: **\r**
+
+
+model
+=====
+
+
+Name des Geräts. Es ist notwendig, eine Text-Datei mit dem hier angegebenen Dateinamen (Endung txt) im Pluginunterordner ``models`` anzulegen. Der Aufbau dieser Datei wird im user_doc detailliert beschrieben.
+
+ - Datentyp: **str**
+
+
+reconnectretries
+================
+
+
+Anzahl der Verbindungsversuche bei Verbindungsproblemen. Das ist insbesondere bei TCP Verbindungen von Geräten relevant, die an schaltbaren Steckdosen hängen, da diese oftmals 30-40 Sekunden zum Hochfahren benötigen.
+
+ - Datentyp: **int**
+ - Standardwert: **13**
+
+
+resendwait
+==========
+
+
+Angabe der Pause zwischen Resend Versuchen in Sekunden
+
+ - Datentyp: **float**
+ - Standardwert: **1.0**
+
+
+resetonerror
+============
+
+
+Zurücksetzen des Items auf den vorigen Wert, wenn kein Update durchgeführt werden konnte, zB das Setzen der Lautstärke in einer abgeschalteten Zone. Sobald das dependson Item ausgeschaltet wird oder mehrere Verbindungs- und Sendeversuche fehlgeschlagen sind, wird das Item zurückgesetzt, damit keine falschen Werte in der Visu angezeigt werden.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+responsebuffer
+==============
+
+
+Schnell hintereinander empfangene Werte werden bei einer negativen Attributangabe im Puffer gespeichert und gemeinsam verarbeitet. Der Standardwert sollte dafür sorgen, dass keine Antworten verloren gehen. Einige Receiver antworten unter Umständen immer zuerst mit der Angabe zum auf dem Display gezeigten Wert. Der Puffer sorgt dafür, dass auch eine nachfolgende Rückmeldung evaluiert wird.
+
+ - Datentyp: **int**
+ - Standardwert: **5**
+
+
+rs232_baudrate
+==============
+
+
+Beim Nutzen einer RS232 Schnittstelle ist die benötigte Baudrate anzugeben.
+
+ - Datentyp: **int**
+ - Standardwert: **9600**
+
+
+rs232_port
+==========
+
+
+Beim Nutzen einer RS232 Schnittstelle (empfohlen!) ist die serielle Schnittstelle anzugeben.
+
+ - Datentyp: **str**
+
+
+rs232_timeout
+=============
+
+
+Beim Nutzen einer RS232 Schnittstelle kann ein Timeout zum Lesen und Schreiben definiert werden.
+
+ - Datentyp: **float**
+ - Standardwert: **0.1**
+
+
+secondstokeep
+=============
+
+
+Dauer in Sekunden, wie lange ein Kommando, das nicht erfolgreich war in einem Zwischenspeicher aufbewahrt werden soll. Dies ist besonders bei TCP Verbindungen mit Geräten an schaltbaren Steckdosen relevant, da diese ofmals 30-40 Sekunden zum Hochfahren benötigen.
+
+ - Datentyp: **int**
+ - Standardwert: **50**
+
+
+sendretries
+===========
+
+
+Dieser Wert definiert, wie oft bei einer falschen Antwort versucht werden soll, den Befehl nochmals zu senden.
+
+ - Datentyp: **int**
+ - Standardwert: **10**
+
+
+statusquery
+===========
+
+
+Verbindet sich das Plugin, werden die Werte automatisch abgefragt, auch wenn kein Depend=Init im Item angegeben ist. Sollen nur Items abgefragt werden, bei denen das depend-Attribut auf init gesetzt ist, sollte dieser Wert auf False gestellt werden.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+tcp_ip
+======
+
+
+Beim Nutzen der TCP Verbindungen ist die IP Adresse des Endgeräts anzugeben.
+
+ - Datentyp: **ip**
+ - Standardwert: **0.0.0.0**
+
+
+tcp_port
+========
+
+
+Beim Nutzen der TCP Verbindungen ist der Port anzugeben, auf dem das Gerät Verbindungen zulässt. Für Denon: 23, für Pioneer: 8002.
+
+ - Datentyp: **int**
+ - Standardwert: **23**
+
+
+tcp_timeout
+===========
+
+
+Beim Nutzen der TCP Verbindungen kann ein Timeout angegeben werden.
+
+ - Datentyp: **int**
+ - Standardwert: **1**
+
+
+update_exclude
+==============
+
+
+Caller, bei denen kein Itemupdate vollzogen werden soll. Dies ist hilfreich, um beispielsweise mittels on_change Items abhängig von einem anderen Item zu aktualisieren, ohne dass die Updatefunktion des Plugins getriggert wird (z.B. für play/stop/pause). Es können mehrere durch Komma getrennte Einträge definiert werden.
+
+ - Datentyp: **str**
+
+
+webif_pagelength
+================
+
+
+Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
+Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.
+Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Mögliche Werte:
+
+   - **-1**
+   - **0**
+   - **25**
+   - **50**
+   - **100**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+avdevice
+========
+
+
+Das Attribut muss mit dem Kommando ergänzt werden, das in der Text Datei im Ordner models hinterlegt ist, zB power oder volume Außerdem gibt es zwei spezielle Parameter, die bei Bedarf eingesetzt werden können: - **avdevice: statusupdate**: Dieses Item wird genutzt, um eine komplette Statusabfrage durchzuführen. Es werden alle Query-Kommandos an das Gerät geschickt, was vor allem nach dem Einschalten einer geschaltenen Steckdose relevant ist. - **avdevice: reload**: Dieses Item wird genutzt, um die Textkonfiguration neu zu laden. Dadurch werden das Kommando-File im models Ordner sowie die Dateien im translations Ordner neu gelesen. So ist ein Ausbessern von Befehlen ohne Plugin-Neustart möglich.
+
+ - Datentyp: **str**
+
+
+avdevice_depend
+===============
+
+
+Hier wird der Funktionsname ohne Zonenbezug eingefügt, von dem das Aktualisieren des Items abhängig sein soll. Der Bass des Verstärkers lässt sich beispielsweise nur ändern, wenn Tone aktiviert ist. ``tone = True`` führt dazu, dass das Item nur geändert wird, wenn die Bedingung erfüllt ist. Mehrere Bedingungen werden als ``oder`` interpretiert. Eine genauere Beschreibung ist in den user_doc zu finden.
+
+ - Datentyp: **list(str)**
+
+
+avdevice_init
+=============
+
+
+Über dieses Attribut lässt sich ein anderes Item auf einen bestimmten Wert setzen, sobald das Plugin sich mit dem Gerät verbindet. Der Wert muss bereits als avdevice-Attribut bei einem anderen Item hinterlegt sein.
+
+ - Datentyp: **str**
+
+
+avdevice_speakers
+=================
+
+
+Soll zwischen Lautsprecher A, B und AB umgeschaltet werden, bietet es sich an, dies über dieses Attribut zu definieren. Als Wert muss hier der zu sendende Wert angegeben werden.
+
+ - Datentyp: **str**
+
+
+avdevice_zone0
+==============
+
+
+Das Attribut muss mit dem Kommando ergänzt werden, das in der Text Datei für Zone 0 hinterlegt ist, zB power oder volume.
+
+ - Datentyp: **str**
+
+
+avdevice_zone0_depend
+=====================
+
+
+Hier wird der Funktionsname für Zone 0 eingefügt, von dem das Aktualisieren des Items abhängig sein soll. Der Bass des Verstärkers lässt sich beispielsweise nur ändern, wenn Tone aktiviert ist. ``tone = True`` führt dazu, dass das Item nur geändert wird, wenn die Bedingung erfüllt ist. Mehrere Bedingungen werden als ``oder`` interpretiert.
+
+ - Datentyp: **list(str)**
+
+
+avdevice_zone0_init
+===================
+
+
+Über dieses Attribut lässt sich ein anderes Item in Zone 0 auf einen bestimmten Wert setzen, sobald das Plugin sich mit dem Gerät verbindet. Der Wert muss bereits als avdevice-Attribut bei einem anderen Item hinterlegt sein.
+
+ - Datentyp: **str**
+
+
+avdevice_zone0_speakers
+=======================
+
+
+Soll in Zone 0 zwischen Lautsprecher A, B und AB umgeschaltet werden, bietet es sich an, dies über dieses Attribut zu definieren. Als Wert muss hier der zu sendende Wert angegeben werden.
+
+ - Datentyp: **str**
+
+
+avdevice_zone1
+==============
+
+
+Das Attribut muss mit dem Kommando ergänzt werden, das in der Text Datei für Zone 1 hinterlegt ist, zB power oder volume
+
+ - Datentyp: **str**
+
+
+avdevice_zone1_depend
+=====================
+
+
+Hier wird der Funktionsname für Zone 1 eingefügt, von dem das Aktualisieren des Items abhängig sein soll. Der Bass des Verstärkers lässt sich beispielsweise nur ändern, wenn Tone aktiviert ist. ``tone = True`` führt dazu, dass das Item nur geändert wird, wenn die Bedingung erfüllt ist. Mehrere Bedingungen werden als ``oder`` interpretiert.
+
+ - Datentyp: **list(str)**
+
+
+avdevice_zone1_init
+===================
+
+
+Über dieses Attribut lässt sich ein anderes Item in Zone 1 auf einen bestimmten Wert setzen, sobald das Plugin sich mit dem Gerät verbindet. Der Wert muss bereits als avdevice-Attribut bei einem anderen Item hinterlegt sein.
+
+ - Datentyp: **str**
+
+
+avdevice_zone1_speakers
+=======================
+
+
+Soll in Zone 1 zwischen Lautsprecher A, B und AB umgeschaltet werden, bietet es sich an, dies über dieses Attribut zu definieren. Als Wert muss hier der zu sendende Wert angegeben werden.
+
+ - Datentyp: **str**
+
+
+avdevice_zone2
+==============
+
+
+Das Attribut muss mit dem Kommando ergänzt werden, das in der Text Datei für Zone 2 hinterlegt ist, zB power oder volume
+
+ - Datentyp: **str**
+
+
+avdevice_zone2_depend
+=====================
+
+
+Hier wird der Funktionsname für Zone 2 eingefügt, von dem das Aktualisieren des Items abhängig sein soll. Der Bass des Verstärkers lässt sich beispielsweise nur ändern, wenn Tone aktiviert ist. ``tone = True`` führt dazu, dass das Item nur geändert wird, wenn die Bedingung erfüllt ist. Mehrere Bedingungen werden als ``oder`` interpretiert.
+
+ - Datentyp: **list(str)**
+
+
+avdevice_zone2_init
+===================
+
+
+Über dieses Attribut lässt sich ein anderes Item in Zone 2 auf einen bestimmten Wert setzen, sobald das Plugin sich mit dem Gerät verbindet. Der Wert muss bereits als avdevice-Attribut bei einem anderen Item hinterlegt sein.
+
+ - Datentyp: **str**
+
+
+avdevice_zone2_speakers
+=======================
+
+
+Soll in Zone 2 zwischen Lautsprecher A, B und AB umgeschaltet werden, bietet es sich an, dies über dieses Attribut zu definieren. Als Wert muss hier der zu sendende Wert angegeben werden.
+
+ - Datentyp: **str**
+
+
+avdevice_zone3
+==============
+
+
+Das Attribut muss mit dem Kommando ergänzt werden, das in der Text Datei für Zone 3 hinterlegt ist, zB power oder volume
+
+ - Datentyp: **str**
+
+
+avdevice_zone3_depend
+=====================
+
+
+Hier wird der Funktionsname für Zone 3 eingefügt, von dem das Aktualisieren des Items abhängig sein soll. Der Bass des Verstärkers lässt sich beispielsweise nur ändern, wenn Tone aktiviert ist. ``tone = True`` führt dazu, dass das Item nur geändert wird, wenn die Bedingung erfüllt ist. Mehrere Bedingungen werden als ``oder`` interpretiert.
+
+ - Datentyp: **list(str)**
+
+
+avdevice_zone3_init
+===================
+
+
+Über dieses Attribut lässt sich ein anderes Item in Zone 3 auf einen bestimmten Wert setzen, sobald das Plugin sich mit dem Gerät verbindet. Der Wert muss bereits als avdevice-Attribut bei einem anderen Item hinterlegt sein.
+
+ - Datentyp: **str**
+
+
+avdevice_zone3_speakers
+=======================
+
+
+Soll in Zone 3 zwischen Lautsprecher A, B und AB umgeschaltet werden, bietet es sich an, dies über dieses Attribut zu definieren. Als Wert muss hier der zu sendende Wert angegeben werden.
+
+ - Datentyp: **str**
+
+
+avdevice_zone4
+==============
+
+
+Das Attribut muss mit dem Kommando ergänzt werden, das in der Text Datei für Zone 4 hinterlegt ist, zB power oder volume
+
+ - Datentyp: **str**
+
+
+avdevice_zone4_depend
+=====================
+
+
+Hier wird der Funktionsname für Zone 4 eingefügt, von dem das Aktualisieren des Items abhängig sein soll. Der Bass des Verstärkers lässt sich beispielsweise nur ändern, wenn Tone aktiviert ist. ``tone = True`` führt dazu, dass das Item nur geändert wird, wenn die Bedingung erfüllt ist. Mehrere Bedingungen werden als ``oder`` interpretiert.
+
+ - Datentyp: **list(str)**
+
+
+avdevice_zone4_init
+===================
+
+
+Über dieses Attribut lässt sich ein anderes Item in Zone 4 auf einen bestimmten Wert setzen, sobald das Plugin sich mit dem Gerät verbindet. Der Wert muss bereits als avdevice-Attribut bei einem anderen Item hinterlegt sein.
+
+ - Datentyp: **str**
+
+
+avdevice_zone4_speakers
+=======================
+
+
+Soll in Zone 4 zwischen Lautsprecher A, B und AB umgeschaltet werden, bietet es sich an, dies über dieses Attribut zu definieren. Als Wert muss hier der zu sendende Wert angegeben werden.
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/avdevice/README>` des Plugins zugreifen.

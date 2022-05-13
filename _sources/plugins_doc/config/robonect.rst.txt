@@ -1,0 +1,586 @@
+.. |_| unicode:: 0xA0
+
+
+===============================
+Plugin 'robonect' Konfiguration
+===============================
+
+
+.. index:: Plugins; robonect Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **robonect** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Plugin zum Auslesen von Daten bzw. zum Ansteuern eines Mähroboters mit Robonect HX Modul (https://robonect.de/).
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **robonect** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+(optional) Zeit zwischen zwei Updateläufen. Default ist 60 Sekunden.
+
+ - Datentyp: **int**
+ - Standardwert: **60**
+
+
+ip
+==
+
+
+IP des Mähroboters (only needed when API is used).
+
+ - Datentyp: **ip**
+
+
+mode
+====
+
+
+Art der Anbindung: nur via API (nur Pollen von Daten) oder API + MQTT (für live updates - benötigt das konfigurierte MQTT Modul von SmartHomeNG! Bitte im Robonect unter "Kommunikation" -> "MQTT-Client" das Flag "Einheiten an Werte anfügen" ausschalten).
+
+ - Datentyp: **str**
+ - Standardwert: **api**
+
+ - Mögliche Werte:
+
+   - **api**
+   - **mqtt**
+
+
+password
+========
+
+
+Passwort des Users der Robonect HX Weboberfläche.
+
+ - Datentyp: **str**
+
+
+topic_prefix
+============
+
+
+Prefix für die Topics, wie es in der GUI von Robonect unter MQTT-Client als "Topic" eingestellt wurde. Default: Robonect
+
+ - Datentyp: **str**
+ - Standardwert: **Robonect**
+
+
+user
+====
+
+
+User der Robonect HX Weboberfläche.
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+robonect_battery_index
+======================
+
+
+Index der Batterie, falls nur eine verbaut ist: 0.
+
+ - Datentyp: **num**
+
+
+robonect_data_type
+==================
+
+
+Robonect Datentyp. Für mögliche Werte in die "struct" schauen.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **control**
+   - **control/mode**
+   - **device/name**
+   - **robonect_id**
+   - **robonect_version**
+   - **robonect_version_comment**
+   - **robonect_version_compiled**
+   - **device/serial**
+   - **hardware_serial**
+   - **production_date**
+   - **msw_title**
+   - **msw_version**
+   - **msw_compiled**
+   - **wlan_at-version**
+   - **wlan_sdk-version**
+   - **remotestart_name**
+   - **remotestart_visible**
+   - **remotestart_path**
+   - **remotestart_proportion**
+   - **remotestart_distance**
+   - **mower/status**
+   - **mower/status/text**
+   - **status_text_translated**
+   - **mower/distance**
+   - **mower/stopped**
+   - **mower/status/duration**
+   - **mower/mode**
+   - **mower/mode/text**
+   - **mode_text_translated**
+   - **mower/battery/charge**
+   - **mower/statistic/hours**
+   - **blades_quality**
+   - **blades_hours**
+   - **blades_days**
+   - **mower/error/code**
+   - **mower/error/message**
+   - **error_date**
+   - **error_time**
+   - **error_unix**
+   - **wlan/rssi**
+   - **health/climate/temperature**
+   - **health/climate/humidity**
+   - **date**
+   - **time**
+   - **unix**
+   - **battery_id**
+   - **battery_charge**
+   - **battery_voltage**
+   - **battery_current**
+   - **battery_temperature**
+   - **battery_capacity_full**
+   - **battery_capacity_remaining**
+   - **motor_drive_left_power**
+   - **motor_drive_left_speed**
+   - **motor_drive_left_current**
+   - **motor_drive_right_power**
+   - **motor_drive_right_speed**
+   - **motor_drive_right_current**
+   - **motor_blade_speed**
+   - **motor_blade_current**
+   - **motor_blade_average**
+   - **weather_location_zip**
+   - **weather_location_country**
+   - **weather_rain**
+   - **weather_temperature**
+   - **weather_humidity**
+   - **weather_sunrise**
+   - **weather_sunset**
+   - **weather_day**
+   - **weather_icon**
+   - **weather_condition_toorainy**
+   - **weather_condition_toocold**
+   - **weather_condition_toowarm**
+   - **weather_condition_toodry**
+   - **weather_condition_toowet**
+   - **weather_condition_day**
+   - **weather_condition_night**
+   - **weather_date**
+   - **weather_time**
+   - **weather_unix**
+
+
+robonect_remote_index
+=====================
+
+
+Index des Fernstart-Punkts. Normal: 1 oder 2. Wird nur für Items mit robonect_data_type: remotestart_<...> benötigt.
+
+ - Datentyp: **num**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+get_mode()
+==========
+
+
+Gibt den aktuellen Betriebsmodus des Automowers als Integer zurück.
+
+ - Ergebnistyp der Funktion: **int**
+
+
+get_mode_as_text(mode)
+======================
+
+
+Gibt den aktuellen Betriebsmodus des Automowers als String zurück.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+mode
+----
+
+Betriebsmodus als Integer.
+
+ - Datentyp: **int**
+
+ - Mögliche Werte:
+
+   - **1**
+   - **2**
+   - **3**
+   - **4**
+
+
+get_status()
+============
+
+
+Gibt den aktuellen Status des Automowers als Integer zurück.
+
+ - Ergebnistyp der Funktion: **int**
+
+
+get_status_as_text(status)
+==========================
+
+
+Gibt den Status des Rasenmähers als String zurück.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+status
+------
+
+Status als Integer.
+
+ - Datentyp: **int**
+
+
+is_mower_offline()
+==================
+
+
+Gibt zurück, ob der Automower gerade via API erreicht werden kann.
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+set_mode_via_api(mode, remotestart, after, start, end, duration)
+================================================================
+
+
+Setzt den Betriebsmodus.
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+mode
+----
+
+Betriebsmodus, der gesetzt werden soll ('home','eod','man','auto','job').
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **home**
+   - **eod**
+   - **man**
+   - **auto**
+   - **job**
+
+
+remotestart
+-----------
+
+Fernstartpunkt, entweder 0 (Standard), 1 (Fernstart 1), oder 2 (Fernstart 2) - nur mit mode=job nutzbar.
+
+ - Datentyp: **int**
+
+ - Mögliche Werte:
+
+   - **0**
+   - **1**
+   - **2**
+
+
+after
+-----
+
+Modus, der nach dem Mähauftrag aktiviert werden soll (Standard: letzter Modus). Mögliche Werte 1,2,3,4 (vor V1.0 Beta 8) oder 'home','eod','man','auto','job' - nur mit mode=job nutzbar.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **1**
+   - **2**
+   - **3**
+   - **4**
+   - **home**
+   - **eod**
+   - **man**
+   - **auto**
+   - **job**
+
+
+start
+-----
+
+Startzeit für den Mähauftrag, als String im Format 'HH:MM' (Wenn nicht gesetzt: 0) - nur mit mode=job nutzbar.
+
+ - Datentyp: **str**
+
+
+end
+---
+
+Endzeit für den Mähauftrag, als String im Format 'HH:MM' (Wenn nicht gesetzt: +1h) - nur mit mode=job nutzbar.
+
+ - Datentyp: **str**
+
+
+duration
+--------
+
+Zeitdauer des Mähauftrags in Minuten (nur kombiniert mit dem start oder end Parameter)
+
+ - Datentyp: **int**
+
+
+set_name_via_api(name)
+======================
+
+
+Setzt den Namen des Automowers.
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+name
+----
+
+Name, der gesetzt werden soll.
+
+ - Datentyp: **str**
+
+
+set_remote_via_api(index, name, distance, visible, proportion)
+==============================================================
+
+
+Setzt Informationen für den jeweiligen Fernstart.
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+index
+-----
+
+Fernstart-Index (normal 1 oder 2)
+
+ - Datentyp: **int**
+
+
+name
+----
+
+Name des Fernstart-Ortes.
+
+ - Datentyp: **str**
+
+
+distance
+--------
+
+Fernstartabstand.
+
+ - Datentyp: **int**
+
+
+visible
+-------
+
+Fernstart-Punkt sichtbar?
+
+ - Datentyp: **bool**
+
+
+proportion
+----------
+
+Häufigkeit in %, die der Fernstartpunkt selektiert werden soll.
+
+ - Datentyp: **int**
+
+
+set_timer_via_api(index, enabled, start, end, mo, tu, we, th, fr, sa, su)
+=========================================================================
+
+
+Setzt die Informationen für einen Timer.
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+index
+-----
+
+Index des Timers (beginnend bei 1).
+
+ - Datentyp: **int**
+
+
+enabled
+-------
+
+True: der Timer wird aktiviert, False: deaktiviert.
+
+ - Datentyp: **bool**
+
+
+start
+-----
+
+Startzeit für den Timer, als String im Format 'HH:MM'.
+
+ - Datentyp: **str**
+
+
+end
+---
+
+Endzeit für den Timer, als String im Format 'HH:MM'.
+
+ - Datentyp: **str**
+
+
+mo
+--
+
+True: Montag aktiviert, False: deaktiviert.
+
+ - Datentyp: **bool**
+
+
+tu
+--
+
+True: Dienstag aktiviert, False: deaktiviert.
+
+ - Datentyp: **bool**
+
+
+we
+--
+
+True: Mittwoch aktiviert, False: deaktiviert.
+
+ - Datentyp: **bool**
+
+
+th
+--
+
+True: Donnerstag aktiviert, False: deaktiviert.
+
+ - Datentyp: **bool**
+
+
+fr
+--
+
+True: Freitag aktiviert, False: deaktiviert.
+
+ - Datentyp: **bool**
+
+
+sa
+--
+
+True: Samstag aktiviert, False: deaktiviert.
+
+ - Datentyp: **bool**
+
+
+su
+--
+
+True: Sonntag aktiviert, False: deaktiviert.
+
+ - Datentyp: **bool**
+
+
+start_mower_via_api()
+=====================
+
+
+Startet den derzeit gewählten Modus des Automowers über die Web-API.
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+stop_mower_via_api()
+====================
+
+
+Stoppt den derzeit gewählten Modus des Automowers über die Web-API.
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/robonect/README>` des Plugins zugreifen.

@@ -1,0 +1,120 @@
+.. |_| unicode:: 0xA0
+
+
+===============================
+Plugin 'jsonread' Konfiguration
+===============================
+
+
+.. index:: Plugins; jsonread Konfiguration
+
+.. image:: /plugins/jsonread/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **jsonread** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+json Parser Plugin basierend auf jq
+
+.. attention::
+
+    Die aktuellste Version (2.5.2, released Mai 2021) des benötigten Packages 'pyjq' ist nicht kompatibel mit Python 3.10
+
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.4**
+ - Maximum Python Version: **3.9**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **jsonread** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Das Abfrage-Intervall für die gegebene Datenquelle in Sekunden
+
+ - Datentyp: **int**
+ - Standardwert: **30**
+
+ - Minimalwert: **0**
+
+url
+===
+
+
+URL der JSON Datenquelle. Aktuell unterstützt werden Webprotokolle https:// und http:// sowie ein Dateiadapter file:/// (benötigt wirklich 3 Schrägstriche)
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+jsonread_filter
+===============
+
+
+JQ Pfad um innerhalb eines JSON Datensatzes einen Wert auszuwählen. Dieser Wert wird dem Item dann zugewiesen
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

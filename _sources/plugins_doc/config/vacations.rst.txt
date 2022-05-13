@@ -1,0 +1,159 @@
+.. |_| unicode:: 0xA0
+
+
+================================
+Plugin 'vacations' Konfiguration
+================================
+
+
+.. index:: Plugins; vacations Konfiguration
+
+.. image:: /plugins/vacations/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **vacations** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Ermöglicht den Abruf deutscher Schulferien für die Bundesländer BW, BY, BE, BB, HB, HH, HE, MV, NI, NW, RP, SL, SN, ST, SH, TH.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **vacations** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+**Keine**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+**Keine**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+get_vacation(date, province)
+============================
+
+
+Gibt ein "Vacation" Objekt (siehe https://pypi.org/project/ferien-api/), zu einem Datum zurück (aktuelles Datum, falls der Parameter leer gelassen wird).
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+date
+----
+
+Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
+
+ - Datentyp: **str**
+
+
+province
+--------
+
+Zu prüfendes Bundesland. Default, falls Parameter leer gelassen wird: SHNG Einstellungen aus etc/holidays.yaml.
+
+ - Datentyp: **str**
+
+
+get_vacation_name(date, province)
+=================================
+
+
+Gibt den Namen der Schulferien zu einem Datum zurück (aktuelles Datum, falls der Parameter leer gelassen wird).
+
+ - Ergebnistyp der Funktion: **str**
+
+
+date
+----
+
+Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
+
+ - Datentyp: **str**
+
+
+province
+--------
+
+Zu prüfendes Bundesland. Default, falls Parameter leer gelassen wird: SHNG Einstellungen aus etc/holidays.yaml.
+
+ - Datentyp: **str**
+
+
+is_vacation(date, province)
+===========================
+
+
+Prüft, ob zu einem angegebenen Datum (aktuelles, falls der Parameter leer gelassen wird), Schulferien sind.
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+date
+----
+
+Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
+
+ - Datentyp: **str**
+
+
+province
+--------
+
+Zu prüfendes Bundesland. Default, falls Parameter leer gelassen wird: SHNG Einstellungen aus etc/holidays.yaml.
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

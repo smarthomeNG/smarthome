@@ -1,0 +1,253 @@
+.. |_| unicode:: 0xA0
+
+
+==========================
+Plugin 'hue' Konfiguration
+==========================
+
+
+.. index:: Plugins; hue Konfiguration
+
+.. image:: /_static/img/gateway.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **hue** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Anbindung einer oder mehrerer Philips HUE Bridges
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **hue** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle_bridges
+=============
+
+
+Abfrage-Zyklus für Bridge Updates
+
+ - Datentyp: **int**
+ - Standardwert: **60**
+
+ - Minimalwert: **10**
+
+cycle_lamps
+===========
+
+
+Abfrage-Zyklus für Leuchten Updates
+
+ - Datentyp: **int**
+ - Standardwert: **10**
+
+ - Minimalwert: **5**
+
+default_transitionTime
+======================
+
+
+Zeitraum zwischen den den Checks der Leuchten durch die HUE Bridge selbst
+
+ - Datentyp: **float**
+ - Standardwert: **0.4**
+
+ - Minimalwert: **0**
+
+hue_ip
+======
+
+
+IP Adresse der Philips HUE Bridge
+
+ - Datentyp: **list(ip)**
+
+
+hue_port
+========
+
+
+Port für die the Philips HUE Bridge
+
+ - Datentyp: **list(int)**
+ - Standardwert: **80**
+
+ - Minimalwert: **0**
+
+hue_user
+========
+
+
+User um sich an der Philips HUE Bridge anzumelden
+
+ - Datentyp: **list(str)**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+hue_bridge_id
+=============
+
+
+
+
+ - Datentyp: **num**
+
+
+hue_dim_max
+===========
+
+
+
+
+ - Datentyp: **num**
+
+
+hue_dim_step
+============
+
+
+
+
+ - Datentyp: **num**
+
+
+hue_dim_time
+============
+
+
+
+
+ - Datentyp: **num**
+
+
+hue_group_id
+============
+
+
+
+
+ - Datentyp: **num**
+
+
+hue_lamp_id
+===========
+
+
+
+
+ - Datentyp: **num**
+
+
+hue_lamp_type
+=============
+
+
+
+
+ - Datentyp: **num**
+
+
+hue_listen
+==========
+
+
+
+
+ - Datentyp: **str**
+
+
+hue_listen_group
+================
+
+
+
+
+ - Datentyp: **str**
+
+
+hue_send
+========
+
+
+
+
+ - Datentyp: **str**
+
+
+hue_send_group
+==============
+
+
+
+
+ - Datentyp: **str**
+
+
+hue_transitiontime
+==================
+
+
+
+
+ - Datentyp: **num**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+Keine Funktionen in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/hue/README>` des Plugins zugreifen.

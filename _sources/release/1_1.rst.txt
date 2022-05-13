@@ -1,0 +1,13 @@
+============================
+Release 1.1 - 13. April 2016
+============================
+
+After the last release of SmartHome.py many changes piled up in develop but were never committed into the release.
+Thus many users switched from the master branch to the develop branch. Even people with not so much knowledge
+chose this route.
+
+Finally the original creator of SmartHome.py chose not to continue the development on this software but to create a new
+software. So the decision was made to fork SmartHome.py into SmartHomeNG.
+
+The first action was to consilidate a couple of changes in develop into a new master branch. So this branch here
+incorporates many changes since 2013 and is the first release.

@@ -1,0 +1,127 @@
+.. |_| unicode:: 0xA0
+
+
+==========================
+Plugin 'wol' Konfiguration
+==========================
+
+
+.. index:: Plugins; wol Konfiguration
+
+.. image:: /plugins/wol/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **wol** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **protocol Plugin**.
+
+
+
+Beschreibung
+============
+
+Wake on LAN
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.8**
+ - Minimum Python Version: **3.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **wol** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+**Keine**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+wol_ip
+======
+
+
+Optionales Attribut. Hier kann die IP Adresse des Hosts angegeben werden wenn ein Gerät eines anderen Subnetzes aufgeweckt werden soll
+
+ - Datentyp: **ipv4**
+
+
+wol_mac
+=======
+
+
+MAC Adresse des per WOL aufzuweckenden Gerätes. Die Trennzeichen für die einzelnen MAC Bestandteile sind beliebig wählbar oder können auch weggelassen werden
+
+ - Datentyp: **mac**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+wake_on_lan(mac_adr, ip_adr)
+============================
+
+
+Sendet ein Datenpaket zum Aufwecken
+
+ - Ergebnistyp der Funktion: **str**
+
+
+mac_adr
+-------
+
+MAC Adresse des per WOL aufzuweckenden Gerätes. Die Trennzeichen für die einzelnen MAC Bestandteile sind beliebig wählbar oder können auch weggelassen werden
+
+ - Datentyp: **mac**
+
+
+ip_adr
+------
+
+Optionales Attribut. Hier kann die IP Adresse des Hosts angegeben werden wenn ein Gerät eines anderen Subnetzes aufgeweckt werden soll
+
+ - Datentyp: **ip4**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -1,0 +1,111 @@
+.. |_| unicode:: 0xA0
+
+
+=============================
+Plugin 'sma_em' Konfiguration
+=============================
+
+
+.. index:: Plugins; sma_em Konfiguration
+
+.. image:: /plugins/sma_em/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **sma_em** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Auslesen des SMA Energy Meter Netzwerk Multicasts
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **sma_em** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Zeit in Sekunden, die nach einem empfangenen Multicast (= Datensatz) gewartet werden soll. Default: 10.
+
+ - Datentyp: **int**
+ - Standardwert: **10**
+
+
+serial
+======
+
+
+Seriennummer des SMA Energy Meters.
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+sma_em_data_type
+================
+
+
+Datentyp. Folgende Werte sind möglich: pregard, pregardcounter, psurplus, psurpluscounter, sregard, sregardcounter, ssurplus, ssurpluscounter, qregard, qregardcounter, qsurplus, qsurpluscounter, cosphi, p1regard, p1regardcounter, p1surplus, p1surpluscounter, s1regard, s1regardcounter, s1surplus, s1surpluscounter, q1regard, q1regardcounter, q1surplus, q1surpluscounter, v1, thd1, cosphi1, p2regard, p2regardcounter, p2surplus, p2surpluscounter, s2regard, s2regardcounter, s2surplus, s2surpluscounter, q2regard, q2regardcounter, q2surplus, q2surpluscounter, v2, thd2, cosphi2, p3regard, p3regardcounter, p3surplus, p3surpluscounter, s3regard, s3regardcounter, s3surplus, s3surpluscounter, q3regard, q3regardcounter, q3surplus, q3surpluscounter, v3, thd3, cosphi3.
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/sma_em/README>` des Plugins zugreifen.

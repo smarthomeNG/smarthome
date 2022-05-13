@@ -1,0 +1,208 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'xiaomi_vac' Konfiguration
+=================================
+
+
+.. index:: Plugins; xiaomi_vac Konfiguration
+
+.. image:: /plugins/xiaomi_vac/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **xiaomi_vac** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Zugriff und Steuern eines Xiaomi Saugroboters
+
+
+Anforderungen
+=============
+
+
+Das Plugin benötigt das python-miio Modul. Die richtige Version wird automatisch beim Start von smarthomeNG installiert.
+Die Bibliothek benötigt den Token des Roboters zur Kommunikation. Hierzu ist bitte die `Anleitung auf github <https://python-miio.readthedocs.io/en/latest/discovery.html#installation>`_ zu befolgen.
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **xiaomi_vac** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+ip
+==
+
+
+IP Adresse des Saug-Roboters
+
+ - Datentyp: **ipv4**
+
+
+read_cycle
+==========
+
+
+Standart Zyklus zum Lesen der Paramter vom Gerät
+
+ - Datentyp: **int**
+ - Standardwert: **12**
+
+
+token
+=====
+
+
+Token für die Kommunikation
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+robvac
+======
+
+
+**Befehl oder Abfrage, die an den Roboter gesendet werden soll.**
+Die Befehle richten sich nach der python-miio Bibliothek. Es wird empfohlen, die im Plugin vorhandenen Befehle über ``struct: xiaomi_vac.saugroboter`` einzubinden.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **fanspeed**
+   - **volume**
+   - **set_start**
+   - **set_stop**
+   - **set_pause**
+   - **pause**
+   - **set_home**
+   - **set_spot**
+   - **set_find**
+   - **reset_filtertimer**
+   - **disable_dnd**
+   - **set_dnd**
+   - **dnd_status**
+   - **dnd_start**
+   - **dnd_end**
+   - **dnd_onoff**
+   - **clean_zone**
+   - **zone_cleaning**
+   - **segment_clean**
+   - **segment_status**
+   - **go_to**
+   - **create_nogo_zones**
+   - **reset**
+   - **serial**
+   - **battery**
+   - **active**
+   - **state**
+   - **area**
+   - **clean_time**
+   - **carpet_mode**
+   - **carpetmode_high**
+   - **carpetmode_integral**
+   - **carpetmode_low**
+   - **carpetmode_enabled**
+   - **carpetmode_stall_time**
+   - **error**
+   - **is_error**
+   - **clean_total_count**
+   - **clean_total_area**
+   - **clean_total_duration**
+   - **clean_ids**
+   - **clean_details_last0**
+   - **last0_area**
+   - **last0_complete**
+   - **last0_duration**
+   - **last0_start_date**
+   - **last0_start_time**
+   - **last0_end_date**
+   - **last0_end_time**
+   - **clean_details_last1**
+   - **last1_area**
+   - **last1_complete**
+   - **last1_duration**
+   - **last1_start_date**
+   - **last1_start_time**
+   - **last1_end_date**
+   - **last1_end_time**
+   - **clean_details_last2**
+   - **last2_area**
+   - **last2_complete**
+   - **last2_duration**
+   - **last2_start_date**
+   - **last2_start_time**
+   - **last2_end_date**
+   - **last2_end_time**
+   - **clean_details_last3**
+   - **last3_area**
+   - **last3_complete**
+   - **last3_duration**
+   - **last3_start_date**
+   - **last3_start_time**
+   - **last3_end_date**
+   - **last3_end_time**
+   - **timezone**
+   - **timer**
+   - **side_brush**
+   - **side_brush_left**
+   - **main_brush**
+   - **main_brush_left**
+   - **filter**
+   - **filter_left**
+   - **sensor_dirty**
+   - **sensor_dirty_left**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

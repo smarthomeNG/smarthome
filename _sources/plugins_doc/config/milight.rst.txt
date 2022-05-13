@@ -1,0 +1,220 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'milight' Konfiguration
+==============================
+
+
+.. index:: Plugins; milight Konfiguration
+
+.. image:: /_static/img/gateway.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **milight** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Unterstützung von MiLight Leuchtmitteln
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **milight** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+bricontrol
+==========
+
+
+Gibt an ob RGB Einstellungen nur den Farbton (HUE) oder Farbton und Helligkeit (HUE_AND_LUM) beeinflussen sollen
+
+ - Datentyp: **str**
+ - Standardwert: **HUE_AND_LUM**
+
+ - Mögliche Werte:
+
+   - **HUE**
+   - **HUE_AND_LUM**
+
+
+cutoff
+======
+
+
+Definiert eine Schwelle für Helligkeit. Sinkt der Wert darunter, wird das Licht ausgeschaltet
+
+ - Datentyp: **float**
+ - Standardwert: **10**
+
+
+hue_calibrate
+=============
+
+
+Feinkalibration des Farbtons um Übereinstimmung zwischen verschiedenen Farbkreise oder Tabellen zu erreichen
+
+ - Datentyp: **float**
+ - Standardwert: **0**
+
+
+udp_ip
+======
+
+
+Gibt die IP Adresse der miLight Schnittstelle an. Der default für zu einem Broadcast auf 255.255.255.255
+
+ - Datentyp: **ip**
+ - Standardwert: **255.255.255.255**
+
+
+udp_port
+========
+
+
+Gibt den Port der miLight Schnittstelle an. Version 3 nutzt 8899 als Standard
+
+ - Datentyp: **int**
+ - Standardwert: **8899**
+
+
+white_calibrate
+===============
+
+
+Verschiebung des Weisspunktes
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+milight_col
+===========
+
+
+Spezifiziert den Kanal dessen Farbton geändert werden soll
+
+ - Datentyp: **list(int)**
+
+
+milight_dim
+===========
+
+
+Spezifiziert den Kanal der gedimmt werden soll
+
+ - Datentyp: **list(int)**
+
+
+milight_disco
+=============
+
+
+Aktiviert und invertiert Disco Modus
+
+ - Datentyp: **list(int)**
+
+
+milight_disco_down
+==================
+
+
+Vermindert die Geschwindigkeit des Disco Modus
+
+ - Datentyp: **list(int)**
+
+
+milight_disco_up
+================
+
+
+Erhöht die Geschwindigkeit des Disco Modus
+
+ - Datentyp: **list(int)**
+
+
+milight_rgb
+===========
+
+
+Spezifiziert den Kanal der auf definierten RGB Wert gesetzt werden soll
+
+ - Datentyp: **list(int)**
+
+
+milight_sw
+==========
+
+
+Spezifiziert den Kanal der geschaltet werden soll
+
+ - Datentyp: **list(int)**
+
+
+milight_white
+=============
+
+
+Spezifiziert den Kanal der auf weiß gesetzt werden soll
+
+ - Datentyp: **list(int)**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/milight/README>` des Plugins zugreifen.

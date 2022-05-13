@@ -1,0 +1,266 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'enocean' Konfiguration
+==============================
+
+
+.. index:: Plugins; enocean Konfiguration
+
+.. image:: /plugins/enocean/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **enocean** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Anbindung von EnOcean
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.3**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **enocean** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+log_unknown_messages
+====================
+
+
+Nachrichten von unbekannten Geraeten ins logfile schreiben
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+serialport
+==========
+
+
+Name der Schnittstelle, an der sich der EnOcean Adapter befindet
+
+ - Datentyp: **str**
+ - Standardwert: **/dev/ttyAMA0**
+
+
+tx_id
+=====
+
+
+Unique-ID oder Base-ID des EnOcean Moduls (8-stelliger hex Wert, z.B. FFFF4680)
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+block_dim_value
+===============
+
+
+Wenn True, blockiert den Aktor, so dass der Dimm-Wert nur mit dem gleichen Dimmer verstellt werden kann
+
+ - Datentyp: **str**
+ - Standardwert: **False**
+
+
+block_switch
+============
+
+
+Wenn True, blockiert den Aktor, so dass dieser nur mit dem gleichen Schalter ausgeschaltet werden kann
+
+ - Datentyp: **str**
+ - Standardwert: **False**
+
+
+color
+=====
+
+
+Farbe für RGB-Dimmer
+
+ - Datentyp: **str**
+ - Standardwert: **red**
+
+
+dim_speed
+=========
+
+
+Dimmgeschwindigkeit in %
+
+ - Datentyp: **str**
+ - Standardwert: **50**
+
+
+enocean_device
+==============
+
+
+Enocean Geraetetyp
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **FSUD-230V**
+   - **FUD61NPN-230V**
+   - **FSVA-230V**
+   - **FSM60B**
+   - **FLD61**
+   - **FUD70S-230V**
+   - **FBH63TF**
+   - **NodOn-STP-2-1-03**
+   - **SecuSignal**
+
+
+enocean_rocker_action
+=====================
+
+
+Tasteraktion
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **UNSET**
+   - **TOGGLE**
+   - **SET**
+
+
+enocean_rocker_sequence
+=======================
+
+
+Tastersequenz
+
+ - Datentyp: **str**
+
+
+enocean_rtime
+=============
+
+
+Rolladenverstellzeit (runtime) in s
+
+ - Datentyp: **str**
+ - Standardwert: **60**
+
+
+enocean_rx_eep
+==============
+
+
+EEP Profile des Response Telegramms, z.B. F6_02_03
+
+ - Datentyp: **str**
+
+
+enocean_rx_id
+=============
+
+
+ID des EnOcean Gerätes (Aktor oder Sensor), z.B. 1A794D3
+
+ - Datentyp: **str**
+
+
+enocean_rx_key
+==============
+
+
+Knopf/Schalter-Bezeichnung des EnOcean Gerätes
+
+ - Datentyp: **str**
+ - Standardwert: **A**
+
+
+enocean_tx_eep
+==============
+
+
+EEP Profile des Sende Telegramms, z.B. A5_38_08
+
+ - Datentyp: **str**
+
+
+enocean_tx_id_offset
+====================
+
+
+Offset zur Base-ID, auf welche der Aktor reagiert
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+ - Maximalwert: **127**
+
+ref_level
+=========
+
+
+Referenzwert in % fuer Dimmwert beim Einschalten
+
+ - Datentyp: **str**
+ - Standardwert: **80**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/enocean/README>` des Plugins zugreifen.

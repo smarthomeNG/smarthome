@@ -1,0 +1,125 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'dashbutton' Konfiguration
+=================================
+
+
+.. index:: Plugins; dashbutton Konfiguration
+
+.. image:: /_static/img/gateway.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **dashbutton** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Einbindung von Amazon Dashbuttons
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **dashbutton** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+**Keine**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+dashbutton_mac
+==============
+
+
+MAC Adresse des Dah-Buttons. Es können beliebig viele MAC Adressen mit dem Item verbunden werden.
+
+ - Datentyp: **list**
+
+
+dashbutton_mode
+===============
+
+
+Falls 'flip' gewählt wird, muss der Item type 'bool' sein und das Attribut 'dashbutton_value' wird  ignoriert. In diesem Modus wird der Wert des Items bei Druck auf den Dash-Button umgeschaltet  (0->1 oder 1->0)
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **flip**
+   - **value**
+
+
+dashbutton_reset
+================
+
+
+It is possible to configure a reset timer (in seconds). If there is no item value change after  the configured time in seconds (neither a button press nor another action), the first element of  the list is taken when the item is triggered the next time. This attribute will be ignored, if no  list is passed to the attribute 'dashbutton_value'.
+
+ - Datentyp: **list**
+
+
+dashbutton_value
+================
+
+
+If 'dashbutton_mode' is set to 'value', the attribute 'dashbutton_value' has to be set. It can be  a single value or a list af values. If the attribute value is a list, the values will be processed  in the given order. After the last element of the list is reached, the next button press triggers the  first element of the list. If a item value is changed by another action than a button press and the  new item value is not in the configured list, the next dashbutton press triggers the first element.
+
+ - Datentyp: **list**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/dashbutton/README>` des Plugins zugreifen.

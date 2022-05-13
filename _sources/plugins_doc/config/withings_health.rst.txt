@@ -1,0 +1,162 @@
+.. |_| unicode:: 0xA0
+
+
+======================================
+Plugin 'withings_health' Konfiguration
+======================================
+
+
+.. index:: Plugins; withings_health Konfiguration
+
+.. image:: /plugins/withings_health/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **withings_health** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Anbindung der Nokia Health API mit Oauth2
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.7**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **withings_health** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+client_id
+=========
+
+
+Client ID von https://account.health.nokia.com/partner/dashboard_oauth2
+
+ - Datentyp: **str**
+
+
+consumer_secret
+===============
+
+
+Consumer-Geheimnis von https://account.health.nokia.com/partner/dashboard_oauth2
+
+ - Datentyp: **str**
+ - Standardwert: **300**
+
+
+cycle
+=====
+
+
+Dieser Parameter muss normalerweise nicht angegeben werden. Er erlaubt es die Update-Frquenz anzupassen (Standard: alle 600 Sekunden). Mit dem Standardwert werden die Daten von Nokia Health alle 5 Minuten aktualisiert.
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+user_id
+=======
+
+
+Nokia Health User ID (steht in der URL, wenn man als nomraler User einloggt)
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+withings_type
+=============
+
+
+nh_type kann folgende Werte annehmen: Zwingend für OAuth2: access_token, token_expiry, token_type, refresh_token | Optional: weight, height (wird von Nokia Health nur beim allerersten Messwert geliefert), bmi, bmi_text, fat_ratio, fat_free_mass, fat_mass_weight, diastolic_blood_pressure, systolic_blood_pressure, temperature, body_temperature, skin_temperature, spo2, heart_pulse, hydration, bone_mass, pulse_wave_velocity.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **weight**
+   - **height**
+   - **bmi**
+   - **bmi_text**
+   - **fat_ratio**
+   - **fat_free_mass**
+   - **fat_mass_weight**
+   - **diastolic_blood_pressure**
+   - **systolic_blood_pressure**
+   - **temperature**
+   - **body_temperature**
+   - **skin_temperature**
+   - **spo2**
+   - **heart_rate**
+   - **hydration**
+   - **bone_mass**
+   - **pulse_wave_velocity**
+   - **access_token**
+   - **token_expiry**
+   - **token_type**
+   - **refresh_token**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+get_callback_url()
+==================
+
+
+Gibt die Callback URL des Withings Health Plugins zurück.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/withings_health/README>` des Plugins zugreifen.

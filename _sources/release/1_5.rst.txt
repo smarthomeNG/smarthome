@@ -1,0 +1,223 @@
+:tocdepth: 1
+
+==========================
+Release 1.5 - 8. Juli 2018
+==========================
+
+Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+
+
+Unterstützte Python Versionen
+=============================
+
+Bitte beachten: Seit SmartHomeNG Release 1.4 wollen wir die aktive Unterstützung älterer Python
+Versionen einstellen. Die älteste unterstützte Python Version wird dann Python 3.4 sein. Es kann jedoch sein,
+dass Plugins Funktionalitäten implementieren (z.B. Async IO), die Python 3.5 voraussetzen
+(Siehe *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
+
+Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.5 nicht mehr unter älteren Python
+Versionen läuft. Es bedeutet, dass SmartHomeNG nicht mehr mit älteren Python Versionen getestet
+wird und das gemeldete Fehler mit älteren Python Versionen nicht mehr zu Buxfixen führen.
+
+
+Absolute minimum Python Versionen auf 3.4 angehoben
+===================================================
+
+Die Minimum Python Version in der SmartHomeNG startet wurde von 3.3 auf 3.4 erhöht. Es wird jedoch
+empfohlen Python 3.5 zu nutzen. Es könnte sein, dass Plugins bereits in v1.5 beginnen Async IO zu nutzen
+und hier gibt es zwischen Python 3.4 und 3.5 Unterschiede, so dass diese Plugins dann nicht unter Python 3.4
+lauffähig wären.
+
+
+Neue Funktionen
+===============
+
+
+Neue Funktionen im CORE
+-----------------------
+
+* Rework des Core: Diverse Methoden von bin/smarthome.py in die adäquaten libs verschoben
+* lib.shtime eingefügt und das Zeit- u. Zeitzonen Handling in der lib konzentriert
+* Items:
+
+  * Added option to copy attribute values from parent or grandparent item. For plugin specific attributes only! Configure the child's attribute to '..' to copy from the parent's attribute (with the same name). Use '...' to copy from grandparent.
+* Logiken:
+
+  * Bugfix für das Triggern von Methoden, die via `add_method_trigger()` hinterlegt wurden, bei deaktivierten Logiken
+* Plugins:
+
+  * Bugfix für das Laden von vorangegangenen Versionen eines Plugins, falls'plugin_name' und nicht 'class_path' genutzt wurde.
+  * SmartPlugin: get_version() liefert als erweitertes Format die Version Nummer gefolgt von'(pv)' zurück, falls die geladene Version nicht die aktuellste Version ist.
+  * Einführung eines Standards für Web GUIs von Plugins (siehe auch https://www.smarthomeng.de/jetzt-wird-es-bunt)
+  * Metadaten:
+
+    * Datentypen ipv6 und knx_ga hinzugefügt
+    * Komplexe Listendefinitionen für Parameter/Attribute von Typ **list** implementiert
+    * Lesen der Item Attribut Definitionen aus der plugin.yaml des Plugins implementiert
+* Module:
+
+  * http:
+
+    * Zentrale Basic Auth Konfiguration für alle Webinterfaces von Plugins (incl. Backend)
+    * exportiert ein gstatic Verzeichnis, welches zentral Images und Bibliotheken (z.B. bootstrap und jquery) zur Verfügung stellt. -> Default dabei und für Plugins nutzbar: Bootstrap 4 inkl. Datepicker, JQuery 3.3.1, Codemirror 5.39.0, Font Awesome 5.1.0
+    * Stellt ein gtemplates Verzeichnis zur Verfügung, dessen Inhalt in Webinterfaces von der Template Engine Jinja genutzt werden kann.
+
+      * Stellt Bootstrap 4 für die Webinterfaces zur Verfügung (inkl. Treeview und Datepicker Erweiterung)
+      * Stellt JQuery 3.3.1 für die Webinterfaces zur Verfügung
+      * Stellt aktuelle Codemirror Version für die Webinterfaces zur Verfügung
+      * Stellt aktuelle Font Awesome Version für die Webinterfaces zur Verfügung
+    * Die IP Adresse auf der das http Modul "lauscht" kann jetzt in module.yaml konfiguriert werden, für den Fall dass die automatische Erkennung nicht zum gewünschten Ergebnis führt.
+    * JQuery aktualisiert auf v3.3.1
+    * Font Awesome aktualisiert auf v5.1.0
+    * Bootstrap aktualisiert auf v4.1.1
+    * CodeMirror aktualisiert auf v5.39.0
+* Neue Default Konfiguration für das Logging (als Vorbereitung auf die Logging Konfiguration durch das backend Plugin)
+* Submodule Konfiguration auf github entfernt. Das plugins Repository ist nun unabhängig und kann/muss separat von github installiert werden (siehe Komplettanleitung)
+* Überprüfung ob SmartHomeNG läuft verbessert, indem zusätzlich ein File-Locking verwendet wird
+* Neue Option -r (--restart) für smarthome.py
+* YAML Dateien: Zeilennummern die mit Fehlermeldungen geloggt werden korrigiert, wenn ein Fehler in einer YAML Datei erkannt wird
+
+
+
+
+Entfernte CORE Bibliotheken
+---------------------------
+
+Keine
+
+
+
+Neue Plugins und Plugin-Erweiterungen
+-------------------------------------
+
+* AVDevice:
+
+  * Kommando für "standby" korrigiert
+* AVM:
+
+  * Web GUI incl. Multi-Language Unterstützung
+  * Ausbau des Debug-Loggings für den MonitoringService - da dieser bei einigen Usern sich widersprüchlich verhält
+  * kleinere Bugfixes
+* Backend:
+
+  * Komplettüberarbeitung der GUI auf Basis Bootstrap 4
+  * Beseitung überflüssiger Abhängigkeiten (Google Prettify, bootstrap-refresh, etc.)
+  * Usabilityverbesserungen:
+
+    * Querverlinkung "watch items" -> Item-Details und Item-Details -> Logik
+    * Nutzung des gesamten Browserfensters für Item-Tree, Logfile-Viewer, etc.
+  * Seite Items:
+     * Ist ein Item mit enforce_updates = True gesetzt, so kann man den identischen Wert dadurch senden, dass man in das Eingabfeld klickt und danach wieder neben das Eingabefeld. Die Animation, die beim Senden der Werte kommt, erscheint und die Zeit seit Update wire aktualisiert.
+  * Seite Plugins:
+
+    * Beim Aufklappen der Listeneinträge werden die Attribut-Definition der Items zu dem Plugin angezeigt. (Aus den Metadaten)
+  * Seite 'visu' entfernt. Funktionalität i die Web GUI des Plugins überführt
+* DarkSky:
+
+  * Neues Wetter Plugin mit Web GUI
+* Database:
+
+  * Web GUI incl. Multi-Language Unterstützung, CSV Export, Werte-Anzeige und der Möglichkeit, einzelne historische Wert oder die gesamte Wertehistorie eines Items zu löschen
+  * Prüfung auf laufende Datenbank und, falls keine läuft, verspäteter Verbindungsaufbau
+* EnOcean:
+
+  * Dokumentation und Plugin-Konfiguration vervollständigt
+  * Verbesserungen, Bugfixes, neue Funktionen (z.B. für Rolläden)
+* HomeMatic:
+
+  * Vollständig neu geschriebenes Plugin für HomeMatic CCU2
+  * Multi-Instance fähig
+  * Web GUI incl. Multi-Language Unterstützung
+  * Unterstützt alle bekannten HomeMatic Devices (durch pyhomematic)
+  * Sofortige Auswertung von HomeMatic Ereignissen (ohne zyklisches Pollen durch SamrtHomeNG)
+  * Umfangreiche Web GUI
+  * Anlernen neuer HomeMatic Devices an der CCU2 durch die Web GUI möglich
+  * HomeMaticIP Devices werden unterstützt (Anlernen nur über die CCU2)
+  * Detaillierte Anzeige der Parameter der HomeMatic Devices, die zur Item Konfiguration genutzt werden können
+* JVC D-ILA Control:
+
+   * neu
+* KNX:
+
+  * Web GUI incl. Multi-Language Unterstützung
+* Mail:
+
+  * Neue Funktion "extended": Multipart Nachrichten können versenden werden (bspw. um Bilder mitzuschicken)
+* MPD:
+
+  * weitere Kommandos implementiert (Pause, Play, Mute, etc.)
+  * Statusabfragen refaktoriert (z.B. Volume, Time, Song, etc.)
+  * Datenbankfunktionen implementiert (z.B. Update, Rescan)
+  * weitere Abfragemögichkeiten implementiert/refaktoriert  (z.B. File, Artist, Album, etc.)
+* MQTT:
+
+  * Web GUI incl. Multi-Language Unterstützung
+  * Re-subscribe zu den Topics nach einem Broker-Restart
+  * Topics mit Init-Option: Re-publish Topics nach einem Broker-Restart
+  * Handling nach fehlgeschlagener Anmeldung am Broker verbessert
+* Nokia Health:
+
+  * neues Item - Textuelle Beschreibungen der BMI Werte in Deutsch
+  * Überarbeitung des Plugins für "nokia" PyPi Paket und Access Token (OAuth sollte nun wieder funktionieren)
+  * Web GUI
+* Simulation:
+
+  * Web GUI incl. Multi-Language Unterstützung
+  * Beispiel für SV2.9 Widget in README
+  * Löschen und Anzeigen der Inhalte der Datendatei über WebGUI möglich
+* SMA EM:
+
+  * Web GUI
+  * Erweiterung auf folgende Werte - pregard, pregardcounter, psurplus, psurpluscounter, sregard, sregardcounter, ssurplus, ssurpluscounter, qregard, qregardcounter, qsurplus, qsurpluscounter, cosphi, p1regard, p1regardcounter, p1surplus, p1surpluscounter, s1regard, s1regardcounter, s1surplus, s1surpluscounter, q1regard, q1regardcounter, q1surplus, q1surpluscounter, v1, thd1, cosphi1, p2regard, p2regardcounter, p2surplus, p2surpluscounter, s2regard, s2regardcounter, s2surplus, s2surpluscounter, q2regard, q2regardcounter, q2surplus, q2surpluscounter, v2, thd2, cosphi2, p3regard, p3regardcounter, p3surplus, p3surpluscounter, s3regard, s3regardcounter, s3surplus, s3surpluscounter, q3regard, q3regardcounter, q3surplus, q3surpluscounter, v3, thd3, cosphi3
+* Sonos:
+
+  * Unsubscribe Kommondo fehlertolleranter gemacht
+* Squeezebox:
+
+  * Korrektur von Play, Pause, Stop
+* Tankerkönig:
+
+  * Fehlerbehebungen bei nicht vorhandenen IDs
+* Telegram:
+
+  * Unterstützng mehrerer Chats (via `chat_id` Parameter)
+  * Unterstützung für den Versand von Bildern
+  * Neues Konfigurationsattribut: `telegram_info`
+  * Neue Kommandos um Logiken zu listen (`/lo`) und anzustoßen (`/tr`)
+* visu_websocket:
+
+  * Web GUI incl. Multi-Language Unterstützung
+  * Web GUI ersetzt auch die bisherige Seite im Backend
+* Wunderground:
+
+  * Web GUI incl. Multi-Language Unterstützung
+* Xiaomi:
+
+  * Update-Anpassungen für Version 0.4 des miflora Pypi Pakets (requirements.txt hat sich geändert!) - Auslesen von Werten ist jetzt deutlich stabiler.
+
+
+
+Entfernte Plugins
+-----------------
+
+* DWD:
+
+  * Der deutsche Wetterdienst hat die Publikation der Wetterinfomationen im bisherigen Format eingestellt.
+
+
+Dokumentation
+-------------
+
+* Anwender Dokumentation
+
+  * Diverse URLs in Komplettanleitungen sowie in HW/SW Anforderungen korrigiert
+  * Dokumentation an diversen Stellen erweitert
+
+* Entwickler Dokumentation
+
+  * Web GUI Implementierung hinzugefügt
+  * Multi-Language Unterstützung dokumentiert
+
+* SmartHomeNG Blog
+
+

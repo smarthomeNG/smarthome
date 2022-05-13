@@ -1,0 +1,189 @@
+.. |_| unicode:: 0xA0
+
+
+==========================
+Plugin 'cli' Konfiguration
+==========================
+
+
+.. index:: Plugins; cli Konfiguration
+
+.. image:: /plugins/cli/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **cli** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+
+
+Beschreibung
+============
+
+Command Line Interface für SmartHomeNG - Funktioniert mit SmartHomeNG v1.4 und höher
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9.0**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **cli** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+hashed_password
+===============
+
+
+Hash (SHA-512) des Passwortes zum Login. Hashes können durch das Admin Interface erzeugt werden. Wenn kein Passwort verwendet werden soll wird eine Warnung geloggt. Soll dieses Log unterbleiben, muss für diesen Parameter 'none' eingegeben werden.
+
+ - Datentyp: **str**
+
+
+ip
+==
+
+
+Legt fest auf welchen Netzwerk Interfaces CLI nach Verbindungen lauscht (127.0.0.1 für localhost, 0.0.0.0 für alle Netzwerk Interfaces)
+
+ - Datentyp: **ip**
+ - Standardwert: **127.0.0.1**
+
+
+port
+====
+
+
+Netzwerk Port der für die Verbindung genutzt wird
+
+ - Datentyp: **int**
+ - Standardwert: **2323**
+
+ - Minimalwert: **0**
+ - Maximalwert: **65535**
+
+update
+======
+
+
+Wenn dieser Parameter False ist, ist der CLI Zugriff rein lesend. Um Updates duchführen zu können, muss dieser Parameter auf True gesetzt werden.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+**Keine**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+add_command(command, function, group, usage)
+============================================
+
+
+sh.cli.commands.add_command(command, function, group, usage)
+
+ - Die Funktion liefert kein Ergebnis
+
+
+command
+-------
+
+Name des Kommandos
+
+ - Datentyp: **str**
+
+
+function
+--------
+
+Funktion die aufgerufen werden soll, wenn das Kommando eingegeben wird
+
+ - Datentyp: **function**
+
+
+group
+-----
+
+Kommando Gruppe (item, log, logic, scheduler)
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **item**
+   - **log**
+   - **logic**
+   - **scheduler**
+
+
+usage
+-----
+
+Beschreibung der Kommando-Nutzung
+
+ - Datentyp: **str**
+
+
+remove_command(command)
+=======================
+
+
+sh.cli.commands.remove_command(command)
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+command
+-------
+
+Name des Kommandos
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/cli/README>` des Plugins zugreifen.

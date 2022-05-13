@@ -1,0 +1,39 @@
+=================================
+Release 0.6 - June 21th, 2012
+=================================
+
+Nonfunctional changes
+^^^^^^^^^^^^^^^^^^^^^
+
+-  Redesign of the underlying framework to reduce the number of
+   necessary threads and system footprint.
+
+Features
+^^^^^^^^
+
+-  :doc:`Network plugin </plugins_doc/config/network>` to receive TCP/UDP and send UDP
+   messages and to trigger logics.
+-  :doc:`DMX plugin </plugins_doc/config/dmx>`  accepts now a channel list to bound several channel to one item (value)
+-  :doc:`KNX plugin </plugins_doc/config/knx>` changed class options to ``host`` and ``port``.
+   Adding support for more DPTs. Sending the date/time on the
+   bus.
+-  :doc:`Asterisk plugin </plugins_doc/config/asterisk>` changed class options to
+   ``host`` and ``port``. New functions: db\_write, db\_read and
+   mailbox\_count.
+-  :doc:`1-Wire plugin </plugins_doc/config/onewire>` changed class options to ``host``
+   and ``port``. Supporting the current owfs version (2.8p15). New
+   function `ibutton\_hook <plugins/onewire/#ibuttonhookibutton-item>`_
+   to monitor intrusion attempts.
+-  `Visu plugin three new interactive image elements added:
+   switch, push and set. See the example.html file. JQuery mobile
+   updated to 1.1.0. Websocket default ``port`` changed to 2121.
+-  New `item types </config#item-attributes>`_ list and foo.
+-  New start option ``-d`` to set the log level to debug.
+-  UDP plugin is no longer supported. Please use the generic network
+   plugin instead.
+
+Bug Fixes
+^^^^^^^^^
+
+-  Due to the redesign several bugs are fixed. I hope it will not
+   introduce the same amount of new bugs ;-)

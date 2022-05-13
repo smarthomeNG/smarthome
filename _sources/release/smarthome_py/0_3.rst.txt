@@ -1,0 +1,25 @@
+================================
+Release 0.3 - August 14th, 2011
+================================
+
+Features
+^^^^^^^^
+
+-  `Asterisk plugin </plugins_doc/config/asterisk>` to monitor channels and listen for user events
+-  `item.fade() <config#fade>`_: fade the item to a specified value
+-  `item.area <config#item-attributes>`_: provides access to the area object
+-  `logic.alive <logic/config#logic>`_: safe loop expression for a clean shutdown
+-  `logig crontab <logic/config#crontab>`_: new keyword 'init'
+-  :doc:`CLI plugin </plugins_doc/config/cli>`: new function 'tr' to trigger logics
+
+Nonfunctional changes
+^^^^^^^^^^^^^^^^^^^^^
+
+-  New Logic handling. Logics share worker threads and multiple instances of one logic could run at the same time.
+-  Two new functions to call/trigger a logic: logic.trigger() and sh.trigger().
+-  Every logic provides an 'trigger' object with the reason of the call.
+
+Bug Fixes
+^^^^^^^^^
+
+-  sh.sun.set() and rise provides a timezone aware datetime. :-) And a small fix in computing the dates.

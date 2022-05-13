@@ -1,0 +1,326 @@
+.. |_| unicode:: 0xA0
+
+
+===========================
+Plugin 'join' Konfiguration
+===========================
+
+
+.. index:: Plugins; join Konfiguration
+
+.. image:: /_static/img/web.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **join** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Ermöglicht die Verwendung der Join API (https://joaoapps.com/join/api/)
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **join** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+api_key
+=======
+
+
+Persönlicher Join API key
+
+ - Datentyp: **str**
+
+
+device_id
+=========
+
+
+Join Device ID
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+**Keine**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+send(title= 'None', text= 'None', icon= 'None', find= 'None', smallicon= 'None', device_id= 'None', device_ids= 'None', device_name= 'None', url= 'None', image= 'None', sound= 'None', group= 'None', clipboard= 'None', file= 'None', callnumber= 'None', smsnumber= 'None', smstext= 'None', mmsfile= 'None', wallpaper= 'None', lockwallpaper= 'None', interruptionFilter= 'None', mediaVolume= 'None', ringVolume= 'None', alarmVolume= 'None')
+====================================================================================================================================================================================================================================================================================================================================================================================================================================================
+
+
+send Funktion
+
+ - Ergebnistyp der Funktion: 
+
+
+title
+-----
+
+Titel
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+text
+----
+
+Text
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+icon
+----
+
+Icon
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+find
+----
+
+Find
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+smallicon
+---------
+
+Smallicon
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+device_id
+---------
+
+Device_id
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+device_ids
+----------
+
+Device_ids
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+device_name
+-----------
+
+Device_names
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+url
+---
+
+Url
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+image
+-----
+
+Image
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+sound
+-----
+
+Sound
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+group
+-----
+
+Group
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+clipboard
+---------
+
+Clipboard
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+file
+----
+
+File
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+callnumber
+----------
+
+Callnumber
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+smsnumber
+---------
+
+Smsnumber
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+smstext
+-------
+
+Smstext
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+mmsfile
+-------
+
+Mmsfile
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+wallpaper
+---------
+
+Wallpaper
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+lockwallpaper
+-------------
+
+Lockwallpaper
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+interruptionFilter
+------------------
+
+InterruptionFilter
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+mediaVolume
+-----------
+
+MediaVolume
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+ringVolume
+----------
+
+RingVolume
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+alarmVolume
+-----------
+
+AlarmVolume
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/join/README>` des Plugins zugreifen.

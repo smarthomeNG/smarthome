@@ -1,0 +1,131 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'smarttv' Konfiguration
+==============================
+
+
+.. index:: Plugins; smarttv Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **smarttv** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Dieses Plugin erlaubt es SmartTV Geräte wie z.B. Samsung zu steuern. Es hat zwei Implementierungen (für das alte und das neue API der TVs). Für das neue API muss auf dem TV der Zugriff akzeptiert werden, indem ein Button auf dem TV gedrückt wird, wenn der erste Request eingeht.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.3**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **smarttv** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+delay
+=====
+
+
+(optional) Verzögerung in Sekunden, falls mehr als eine Taste gesendet wird. Reduziert Probleme, wenn bspw. TV-Programme wie "135" aufgerufen werden. Default: 1
+
+ - Datentyp: **int**
+ - Standardwert: **1**
+
+
+host
+====
+
+
+IP Adresse des SmartTV Geräts.
+
+ - Datentyp: **str**
+
+
+port
+====
+
+
+(optional) Im Fall eines Ports zu setzen, der nicht dem Standard entspricht (Standardports siehe tv_version). Default: 55000.
+
+ - Datentyp: **int**
+ - Standardwert: **55000**
+
+
+tv_version
+==========
+
+
+(optional) Erlaubte Werte sind "classic" (Port 55000) oder "samsung_m_series" (Standardport: 8001). Default: "classic".
+
+ - Datentyp: **str**
+ - Standardwert: **classic**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+smarttv
+=======
+
+
+Es gibt zwei Wege das Attribut zu nutzen. * Auf einem Item des Typs `str` mit dem Wert "true": Jeder String der in das Item geschrieben wird, wird an den SmartTV gesendet. * Auf einem Item des Typs `bool` mit dem Wert der zu betätigenden Tasten: Immer wenn das Item auf True gesetzt wird, werden die Tasten an den SmartTV gesendet. Je nach Anwendung sollte über das Setzen von `enforce_updates` nachgedacht werden.
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/smarttv/README>` des Plugins zugreifen.

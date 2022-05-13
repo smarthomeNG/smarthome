@@ -1,0 +1,442 @@
+:tocdepth: 2
+
+===========================
+Release 1.7 - 6. April 2020
+===========================
+
+Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+
+
+Überblick
+=========
+
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.6.1 sind im
+folgenden in diesen Release Notes beschrieben.
+
+
+Unterstützte Python Versionen
+-----------------------------
+
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.7 ist Python 3.5.
+(Siehe auch *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
+
+..
+    Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.7 nicht mehr unter älteren Python Versionen läuft,
+    sondern das SmartHomeNG nicht mehr mit älteren Python Versionen getestet wird und das gemeldete Fehler mit älteren
+    Python Versionen nicht mehr zu Buxfixen führen.
+
+    Es werden jedoch zunehmend Features eingesetzt, die erst ab Python 3.5 zur Verfügung stehen.
+
+
+Absolute Minimum Python Version
+-------------------------------
+
+Die Minimum Python Version in der SmartHomeNG startet wurde auf v3.5 angehoben, da Python 3.4 im Jahr 2019 End-of-Life
+(End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python
+Versionen (3.6 oder 3.7) aufzusetzen.
+
+.. important::
+
+   Mit dem kommenden Release 1.8 werden die unterstützten Python Versionen
+   :doc:`(wie hier beschrieben) </installation/anforderungen>` auf **Python 3.6, 3.7, 3.8** angehoben. Python 3.6
+   hat eine Reihe sehr interessanter Features und Verbesserungen gebracht, die dann in SmartHomeNG genutzt
+   werden können.
+
+   Sollten solche neuen Features in den Core Einzug halten, wird die **Absolute Minimum Python Version** auf 3.6
+   angehoben werden. Sollten die Features nur in Plugins genutzt werden, so können nur solche Plugins nicht genutzt
+   werden, wenn eine ältere Python Version als 3.6 eingesetzt wird.
+
+
+Änderungen am Core
+==================
+
+Bugfixes in the CORE
+--------------------
+
+* lib.scheduler: fixes part of issue 335
+* tools.plugin_metadata_checker: Bug fixes
+* lib.module: Bugfix
+* lib.item: Bugfix - setting an <item>.property.value didn't trigger further actions
+* lib.plugin: Removed call to deprecated Python function
+* lib.module: Removed call to deprecated Python function
+* lib.translation: Bugfix
+* lib.config: Keeping item order when merging structs; improved error handling when referencing non existing structs
+
+
+Updates in the CORE
+-------------------
+
+* Implemented command line option to create backups of the configuration of SmartHomeNG and to restore from such a backup
+* .cer and .key files from /etc are backed up, too
+* Support for national and regional holidays added
+* Support for custom holidays added
+* Added a lot of functions to lib.shtime to simplify date and time handling in logics and plugins
+* Global translation support (lib.translation) added (moved from plugins to a global level)
+* crontab: Implementation of day ranges
+* MQTT Support for logics added (using new mqtt module)
+* New class MqttPlugin to support MQTT usage in plugins (using new mqtt module)
+* Implemented installation of required Python packages
+* Changed datatype of env.system.start from formatted string to datetime
+* Plugin webinterface shows tabs also if only one tab is defined
+* Implemented nesting of structs
+* Structs allow merging of lists in attributes
+
+* Items:
+
+  * Support for dynamic properties. Currently values of plugin-specific attributes are implemented as readonly properties
+  * Function to expand relative pathes extended. Now plugins can hand over parapeters as list to expand multiple
+    definition in one call
+
+* Logics:
+
+  * Support for MQTT implemented
+
+* lib.config: Ignoring files starting with a ´´.´´ that are created when accessing a folder from MacOS
+* lib.config: Bugfix in merge() if itemtree contains pseudo-nodes (nodes without leafs or subnodes)
+* lib.logic: Adjusted log level for triggered logics that are disabled
+* lib.module: Improved error handling when loading modules
+
+* Modules:
+
+  * http:
+
+    * Webinterfaces: Initial version with support for periodic updata of data
+    * Updated datepicker to 1.9.0
+    * Added chartjs library for web interfaces
+    * Implemented a check if ports are already in use
+
+  * admin:
+
+    * Implemented system configuration for holidays and MQTT module
+    * Implemented gui_type: wide_str for system configuration and plugin parameters
+    * Added multiline support for descriptions (system & plugin configuration)
+    * Implemented restore of config backups
+    * Additions to system: IPv6 and process ID
+    * Items: Display of eval and crontab details corrected
+    * Services: Row 'Node-Red service' is only shown, if service is available
+    * Services: YAML syntax checker now resolves structs
+    * List of loaded plugins: Added button which opens list of relevant blog articles
+    * List of Schedulers: Added priority and value to be set for each scheduler
+    * Updated npm packages for Angular gui
+    * Added handling for module parameter **enabled**
+
+  * mqtt:
+
+    * New module to deliver mqtt support for plugins and logics
+
+* Plugins:
+
+  * Configuration parameter **class_name** and **class_path** in **/etc/plugin.yaml** are now DEPRECATED
+  * Support for MQTT implemented
+  * Web interfaces: make all tabs sticky on web interface for better scroll appearance
+
+
+
+Änderungen bei Plugins
+======================
+
+New Plugins
+-----------
+
+For details of the changes of the individual plugins, please refer to the documentation of the respective plugin.
+
+* bose_soundtouch: Plugin for the integration of Bose Soundtouch systems
+* executor: Execute Python statements in the context of SmartHomeNG. Alternative to the interactive mode of SmartHomeNG
+* garminconnect: Allows to retrieve data (stats, heart rate) from Garmin Connect
+* helios_tcp: Allows to communicate via TCP with Helios KWL devices via Helios Easy Controls
+* ksemmodbus: Connect a Kostal Smart Energy Meter via Modbus
+* neato: Plugin to connect a Neato/Vorwerk vacuum cleaning robot to SmartHomeNG
+* rpi1wire: Plugin for the Raspberry Pi. Allows for an easy access to 1-Wire sensors. Tested with a Raspberry Pi B and the temperature sensor DS18B20
+* shelly: Control Shelly devices via mqtt (uses the new mqtt module)
+* snmp: SNMP Queries
+* vacations: Retrieves German school holidays for the federate states of BW, BY, BE, BB, HB, HH, HE, MV, NI, NW, RP, SL, SN, ST, SH, TH.
+* xioami_vac: Access to a Xiaomi vacuum cleaning robot
+* yamahayxc: Plugin to control Yamaha MusicCast devices
+
+
+
+Plugin Updates
+--------------
+
+* alexa4p3:
+
+  * Fixed naming for plugin
+  * Added plugin name as source when setting item values
+
+* apcups:
+
+  * bugfix for string values with spaces
+
+* avdevice:
+
+  * Fixes in plugin.yaml
+
+* avm:
+
+  * Added write support for AVM Dec 301 hkrt devices (command set temperature)
+  * Now using one single item for read and write temperature setpoint; fixed filter for items calls by avm plugin
+  * Changed name of monitoring service thread
+  * Fix for retrieval of HOST data and MultiInstance functionality
+  * Bugfixes for MI handling
+  * Fixed bug in default value for ssl port
+
+* blockly:
+
+  * Updated blockly to Release Q3 Patch 4, Plugin is still in early alpha phase
+
+* darksky:
+
+  * Added hourly and daily data to struct
+  * Fix for multiple items accessing the same match string
+  * Quick Fix Webinterface Item, needs more work though
+  * Added support for multiple items in a key
+  * Compact table appearance, show large text block reduced at first
+
+* Dashbutton:
+
+  * Updated from buggy kamene package to scapy package
+
+* dmx:
+
+  * Converted to SmartPlugin
+
+* gpio:
+
+  * Fix problem with slow raspis after reboot
+
+* ical:
+
+  * Fix for recurring event having multiple exceptions
+  * Fix problems with long lines that are continued on next line
+
+* kathrein:
+
+  * Converted to SmartPlugin
+
+* knx:
+
+  * Added hostname support
+  * Added a CRITICAL log message, if the plugin shuts down due to a 'problem unpacking length' error and invoke
+    a restart of SmartHomeNG
+
+* mailrcv:
+
+  * Added option to set the name of the trashfolder to use
+  * Removed use of smarthome object and used self.scheduler_add instead
+
+* memlog:
+
+  * Improved documentation
+
+* milight:
+
+  * Converted to SmartPlugin
+  * Implemented multi-instance
+
+* miflora:
+
+  * Fixed some namings: scheduler methods of SmartPlugin
+  * Fixed new init parameter access
+  * Added Web Interface with auto update
+  * Added support for all 3 Libraries used in Miflora pypi package
+  * New default library: bluepy (which needs a new package to be installed)
+  * Only instantiate MifloraPoller once
+
+* mqtt:
+
+  * Renamed existing mqtt plugin to mqtt1 and set deprecated flag for this plugin
+  * Reimplemented mqtt plugin derived from class MqttPlugin for using the new mqtt module
+  * Added item attribute **bool_values**: defines which mqtt payload values should be interpreted as True or False
+  * Added gui_type: wide_str for appropriate parameters
+
+* nuki:
+
+  * Added updates for event values in web interface via Ajax
+
+* odlinfo:
+
+  * Small fixes
+
+* onewire:
+
+  * Fixed error handling in case of readout problem (85 °C)
+  * Plugin may use alias names instead of sensor ids
+  * Added simple webinterface
+  * Reworked internals
+  * Fix multiple thread creation after discovery
+  * Fix bug with too many threads started
+  * Plugin fixed bug with alias adressing
+
+* rcswitch:
+
+  * Change type for rcswitch_host to ip
+
+* roomba:
+
+  * Converted to SmartPlugin
+
+* rrd:
+
+  * Converted to SmartPlugin
+
+* rtr:
+
+  * Bugfix in stop_controller()
+  * Fixed stop_item handling
+  * Added check of self.alive before accessing items
+
+* russound
+
+  * Converted to SmartPlugin
+  * Handling of decode error added
+
+* sma_em:
+
+  * Added updates for values in web interface via Ajax
+  * SMA_EM: reworked whole plugin as requested in issue #319
+
+    * Supports multicasts of new versions of energy meter
+    * Item naming changed (look at newly introduced struct or README)
+    * New items for info if consume and supply is active
+    * Introduced scheduler instead of sleeping thread (needed to show that a plugin updated the item, also better for performance)
+
+* smlx:
+
+  * Added parameters for CRC check
+  * Implemented special support for Holley DTZ541 (2018 model with faulty CRC implementation)
+  * Fixes actualTime calculation issue and provides status properties
+  * Fixed issue with calculation of actualTime.
+  * Fixed misinterpretation of Client-ID as OBIS code.
+  * Added properties for Smartmeter status
+
+* solarlog:
+
+  * Converted to SmartPlugin
+  * Bugfixes
+
+* sonos
+
+  * Upgraded to SoCo version 0.19
+  * Added names for various SoCo threads
+
+* speech:
+
+  * Converted to SmartPlugin
+
+* squeezebox:
+
+  * Fix repeat and shuffle playlist
+  * Various bugfixes
+  * Some optimizations
+  * Updates play, pause, stop items every time there is a change
+
+* stateengine:
+
+  * Improved Stateeninge Graph in Web Interface
+  * Documentation updates
+  * Various bugfixes
+  * Fix immediate action run after leaving state
+  * Fix problem running leave actions
+  * Improved collision handling when running multiple evals at the same time
+  * Improved widgets for smartVISU
+
+* telegram:
+
+  * Documentation updates
+  * Prettify thread names for job queue
+  * Removed error message in case welcome_msg or bye_msg are empty
+
+* thz:
+
+  * Added a missing method
+
+* trovis557x:
+
+  * Corrected processing of negative 16-bit register values, also corrected some typos
+
+* uzsu:
+
+  * Added error message when using wrong sv widget
+  * Various bugfixes
+  * Add lastvalue and standard parameters config for interpolation
+
+* visu_websocket:
+
+  * Improved exception handling
+  * visu_websocket: Added warning "Probably no database plugin is configued" if an invalid series for env.* items is requested
+
+
+Outdated Plugins
+----------------
+
+The following plugins were already marked in version v1.6 as *deprecated*. This means that the plugins
+are still working, but are not developed further anymore and are removed from the release of SmartHomeNG
+in the next release. User of these plugins should switch to corresponding succeeding plugins.
+
+* System Plugins
+
+  * sqlite - switch to the **database** plugin
+  * sqlite_visu2_8 - switch to the **database** plugin
+
+* Gateway Plugins
+
+  * tellstick - classic Plugin, not used according to survey in knx-user-forum
+
+* Interface Plugins
+
+  * netio230b - classic plugin, not used according to survey in knx-user-forum
+  * smawb - classic plugin, not used according to survey in knx-user-forum
+
+* Web Plugins
+
+  * alexa - switch to the **alexa4p3** plugin
+  * boxcar - classic Plugin, not used according to survey in knx-user-forum
+  * mail - switch to the **mailsend** and **mailrcv** plugin
+  * openenergymonitor - classic plugin, not used according to survey in knx-user-forum
+  * wunderground - the free API is not provided anymore by Wunderground
+
+
+The following plugins are marked as *deprecated* with SmartHomeNG v1.7, because neither user nor tester have been found:
+
+* Gateway Plugins
+
+  * ecmd
+  * elro
+  * iaqstick
+  * snom
+  * tellstick
+
+* Interface Plugins
+
+  * easymeter
+  * netio230b
+  * smawb
+  * vr100
+
+* Web Plugins
+
+  * boxcar
+  * nma
+
+Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecated*, because the new mqtt
+plugin takes over the functionality. This plugin is based on the mqtt module and the recent core.
+
+
+Documentation
+-------------
+
+* User Documentation
+
+  * Sample module provided in /dev/sample_module
+  * New MQTT support documented
+  * Generic updates and extensions
+  * "Komplettanleitung" revised
+  * Overview image revised
+  * "Arbeiten mit Funktionen in Logiken" added
+  * Section "Beispiele, Tipps & Tricks" added (Thanks to sisamiwe for the examples)
+
+* Developer Documentation
+
+  * Documentation how to create web interfaces for plugins
+  * New MQTT support documented
+  * Generic updates and enhancements

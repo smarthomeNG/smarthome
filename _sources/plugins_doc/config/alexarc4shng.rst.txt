@@ -1,0 +1,174 @@
+.. |_| unicode:: 0xA0
+
+
+===================================
+Plugin 'alexarc4shng' Konfiguration
+===================================
+
+
+.. index:: Plugins; alexarc4shng Konfiguration
+
+.. image:: /plugins/alexarc4shng/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **alexarc4shng** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin zur Steuerung von Amazon Echo Geräten Zugriff via Web-Browser API und Cookie
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5.2**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **alexarc4shng** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+alexa_credentials
+=================
+
+
+Zugangsdaten für das Amazon-Alexa-Web-Site <USER>:<PWD>, base64 encodiert
+
+ - Datentyp: **str**
+
+
+cookiefile
+==========
+
+
+Cookiefile mit komplettem Pfad
+
+ - Datentyp: **str**
+
+
+host
+====
+
+
+Amazon-Host z.b. alexa.amazon.de ohne Protokoll (https)
+
+ - Datentyp: **str**
+ - Standardwert: **alexa.amazon.de**
+
+
+item_2_enable_alexa_rc
+======================
+
+
+Ein Item welches verwendet wird um die Freigabe für die Kommunikation zu erteilen (USZU)
+
+ - Datentyp: **str**
+
+
+login_update_cycle
+==================
+
+
+Sekunden bis zum automatischen refreshen des Cookie-files
+
+ - Datentyp: **num**
+ - Standardwert: **432000**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+**Keine**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+get_last_alexa()
+================
+
+
+Liefert die Geräte-ID des zuletzt verwendeten Alexa-Gerätes zurück
+
+ - Ergebnistyp der Funktion: **str**
+
+
+send_cmd(dvName, cmdName, mValue)
+=================================
+
+
+Sendet einen Befehl an Alexa.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+dvName
+------
+
+Name des Alexa Devices.
+
+ - Datentyp: **str**
+
+
+cmdName
+-------
+
+Name des Befehls, z.b. Text2Speech.
+
+ - Datentyp: **str**
+
+
+mValue
+------
+
+Wert, der gesendet werden soll, numerische Werte ohne Hochkomma als Zahl
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/alexarc4shng/README>` des Plugins zugreifen.

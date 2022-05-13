@@ -1,0 +1,3 @@
+.. include:: /plugins_doc/plugins_unclassified_header.rst
+
+Zurzeit gibt es keine noch nicht klassifizierten Plugins.

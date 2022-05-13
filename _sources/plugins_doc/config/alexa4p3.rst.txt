@@ -1,0 +1,237 @@
+.. |_| unicode:: 0xA0
+
+
+===============================
+Plugin 'alexa4p3' Konfiguration
+===============================
+
+
+.. index:: Plugins; alexa4p3 Konfiguration
+
+.. image:: /plugins/alexa4p3/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **alexa4p3** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Plugin zur Ansteuerung von SmartHomeNG via Amazon Echo bzw. Alexa
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5.2**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **alexa4p3** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+service_port
+============
+
+
+Portnummer auf dem das Plugin die Anfragen von Amazon-Alexa erwartet
+
+ - Datentyp: **int**
+ - Standardwert: **9000**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+alexa_actions
+=============
+
+
+Alexa Aktionen die für diese Gerät bereitgestellt werden
+
+ - Datentyp: **str**
+
+
+alexa_auth_cred
+===============
+
+
+Benutzer und Passwort für Kamerastreams als String im Format USER:PWD
+
+ - Datentyp: **str**
+
+
+alexa_camera_imageUri
+=====================
+
+
+URL für das Standbild einer Kamera
+
+ - Datentyp: **str**
+
+
+alexa_color_value_type
+======================
+
+
+Farbsystem für RGB/HSV Leuchten, Wert = RGB oder HSV, Standardwert ist RGB
+
+ - Datentyp: **str**
+
+
+alexa_csc_uri
+=============
+
+
+URLs der Kamerastreams als String im Format {"Stream1":"192.168.178.9","Stream2":"192.168.178.9/2"},"Stream3":"...."
+
+ - Datentyp: **str**
+
+
+alexa_description
+=================
+
+
+Alexa Gerätename um das Gerät anzusprechen als Standard-Wert wird alexa_name verwendet
+
+ - Datentyp: **str**
+
+
+alexa_device
+============
+
+
+interner Gerätename um das Gerät in smarthomeNG zu indentifizieren (endpoint)
+
+ - Datentyp: **str**
+
+
+alexa_icon
+==========
+
+
+Alexa Kategorie/Symbol welche in der Alexa-App angezeigt wird, Standard-Wert SWITCH
+
+ - Datentyp: **str**
+
+
+alexa_item_range
+================
+
+
+Wertbereich in dem das Gerät eingestellt werden kann z.B. 0-255 oder 0-100, default ist 0-255
+
+ - Datentyp: **str**
+
+
+alexa_item_turn_on
+==================
+
+
+Wert der beim Einschalten zum Item gesendet werden soll
+
+ - Datentyp: **str**
+
+
+alexa_name
+==========
+
+
+Alexa Gerätename um das Gerät anzusprechen as default fall back to alexa_device
+
+ - Datentyp: **str**
+
+
+alexa_proactivelyReported
+=========================
+
+
+legt fest ob die Statuswerte bei Änderung an Amazon / Alexa übermittelt werden sollen, default FALSE
+
+ - Datentyp: **bool**
+
+
+alexa_retrievable
+=================
+
+
+legt fest ob die Statuswerte durch Amazon/Alexa abgefragt werden können, default FALSE
+
+ - Datentyp: **bool**
+
+
+alexa_stream_(1)1(2)(3)
+=======================
+
+
+Streamdefinition (Codecs, Aufloesung, ...)für Kamerastreams, es sind drei Streams moeglich (alexa_stream_1, alexa_stream_2, alexa_stream_3)
+
+ - Datentyp: **str**
+
+
+alexa_thermo_config
+===================
+
+
+moegliche Modi für einen Raumthermostaten, möglich Werte -  0:AUTO 1:HEAT 2:OFF 3:ECO 4:ECO, Standardwert ist = 0:AUTO
+
+ - Datentyp: **str**
+
+
+alexa_types
+===========
+
+
+nur für Payload-V2 benötigt
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/alexa4p3/README>` des Plugins zugreifen.

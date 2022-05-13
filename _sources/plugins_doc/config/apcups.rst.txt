@@ -1,0 +1,123 @@
+.. |_| unicode:: 0xA0
+
+
+=============================
+Plugin 'apcups' Konfiguration
+=============================
+
+
+.. index:: Plugins; apcups Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **apcups** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Unterstützung für smartUPS Geräte der Firma APC
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.3**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **apcups** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Zyklus-Zeit zum Update der Items mit Werten von APCaccess
+
+ - Datentyp: **int**
+
+ - Minimalwert: **0**
+
+host
+====
+
+
+IP Adresse bzw. Hostname der UPS
+
+ - Datentyp: **ipv4**
+ - Standardwert: **127.0.0.1**
+
+
+port
+====
+
+
+Port Nummer der UPS
+
+ - Datentyp: **int**
+ - Standardwert: **3551**
+
+ - Minimalwert: **0**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+apcups
+======
+
+
+Für eine Liste gültiger Werte, "apcaccess" auf der Kommandozeile aufrufen. Dieser Befehl gibt einen Textblock zurück, der eine Liste von ``statusname : value`` Einträgen enthält
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/apcups/README>` des Plugins zugreifen.

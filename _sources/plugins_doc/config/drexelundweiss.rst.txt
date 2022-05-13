@@ -1,0 +1,179 @@
+.. |_| unicode:: 0xA0
+
+
+=====================================
+Plugin 'drexelundweiss' Konfiguration
+=====================================
+
+
+.. index:: Plugins; drexelundweiss Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **drexelundweiss** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Unterstützt Drexel & Weiss USB Devices
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **drexelundweiss** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+LU_ID
+=====
+
+
+ID für Lüftung.
+
+ - Datentyp: **int**
+ - Standardwert: **130**
+
+
+PANEL_ID
+========
+
+
+ID für Touchpanel.
+
+ - Datentyp: **int**
+ - Standardwert: **120**
+
+
+WP_ID
+=====
+
+
+ID für Heizung.
+
+ - Datentyp: **int**
+ - Standardwert: **140**
+
+
+busmonitor
+==========
+
+
+Busmonitor.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+device
+======
+
+
+ID des Geräts, falls die Info nicht automatisch ausgelesen werden kann.
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+
+retrylimit
+==========
+
+
+Maximale Versuche, einen Wert einzulesen.
+
+ - Datentyp: **int**
+ - Standardwert: **100**
+
+
+tty
+===
+
+
+Beim Nutzen einer RS232/USB Schnittstelle ist die serielle Schnittstelle anzugeben.
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+DuW_LU_register
+===============
+
+
+Register für Lüftung entsprechend Textdatei
+
+ - Datentyp: **int**
+
+
+DuW_PANEL_register
+==================
+
+
+Register für Touch Panel entsprechend Textdatei
+
+ - Datentyp: **int**
+
+
+DuW_WP_register
+===============
+
+
+Register für Wärmepumpe entsprechend Textdatei
+
+ - Datentyp: **int**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/drexelundweiss/README>` des Plugins zugreifen.

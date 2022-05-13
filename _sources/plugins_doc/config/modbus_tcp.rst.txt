@@ -1,0 +1,224 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'modbus_tcp' Konfiguration
+=================================
+
+
+.. index:: Plugins; modbus_tcp Konfiguration
+
+.. image:: /plugins/modbus_tcp/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **modbus_tcp** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Plugin zur Geräte-Anbindung über ModBus an SmartHomeNG
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.8**
+ - Minimum Python Version: **3.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **modbus_tcp** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Update Zyklus in Sekunden
+
+ - Datentyp: **num**
+ - Standardwert: **300**
+
+
+host
+====
+
+
+IP Adresse des Modbus-Geraetes
+
+ - Datentyp: **ipv4**
+
+
+port
+====
+
+
+modbus Port
+
+ - Datentyp: **num**
+
+
+slaveUnit
+=========
+
+
+Slave-Addresse der zu lesenden Modbus-Einheit
+
+ - Datentyp: **num**
+ - Standardwert: **1**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+modBusAddress
+=============
+
+
+Register Adresse welche gelesen werden soll
+
+ - Datentyp: **num**
+
+
+modBusByteOrder
+===============
+
+
+Endian.Big oder Endian.Little
+
+ - Datentyp: **str**
+ - Standardwert: **Endian.Big**
+
+ - Mögliche Werte:
+
+   - **Endian.Big**
+   - **Endian.Little**
+
+
+modBusDataType
+==============
+
+
+Datentyp vom zu lesenden Register (bit, int16 uint16 int32 uint32 float32 string16 stringNN)
+
+ - Datentyp: **str**
+ - Standardwert: **uint16**
+
+
+modBusDirection
+===============
+
+
+Datenrichtung
+
+ - Datentyp: **str**
+ - Standardwert: **read**
+
+ - Mögliche Werte:
+
+   - **read**
+   - **read_write**
+   - **write**
+
+
+modBusFactor
+============
+
+
+Faktor mit welchem der gelesene Register-Wert multipliziert wird
+
+ - Datentyp: **num**
+ - Standardwert: **1**
+
+
+modBusObjectType
+================
+
+
+Auswahl welcher Objekt-Type gelesen werden soll
+
+ - Datentyp: **str**
+ - Standardwert: **HoldingRegister**
+
+ - Mögliche Werte:
+
+   - **Coil**
+   - **DiscreteInput**
+   - **InputRegister**
+   - **HoldingRegister**
+
+
+modBusUnit
+==========
+
+
+Slave-Addresse der zu lesenden Modbus-Einheit (Unit aus der plugin-Konfig wird überschrieben)
+
+ - Datentyp: **num**
+ - Standardwert: **1**
+
+
+modBusWordOrder
+===============
+
+
+Endian.Big oder Endian.Little
+
+ - Datentyp: **str**
+ - Standardwert: **Endian.Big**
+
+ - Mögliche Werte:
+
+   - **Endian.Big**
+   - **Endian.Little**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -1,0 +1,214 @@
+.. |_| unicode:: 0xA0
+
+
+=====================================
+Plugin 'sqlite_visu2_8' Konfiguration
+=====================================
+
+
+.. index:: Plugins; sqlite_visu2_8 Konfiguration
+
+.. image:: /_static/img/system.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **sqlite_visu2_8** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als deprecated gekennzeichnet. Es wird empfohlen auf eine                  Nachfolgelösung umzusteigen.
+
+
+
+Beschreibung
+============
+
+Integration einer SQLite Datenbank - zu verwenden für smartVISU v2.8 und höher
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **sqlite_visu2_8** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+dumpfile
+========
+
+
+Falls dumpfile angegeben ist, erzeugt SmartHomeNG jede Nacht einen Datenbank Dump in diese Datei. (kompletter Pfad und Dateiname)
+
+ - Datentyp: **str**
+
+
+path
+====
+
+
+Pfad zur Datenbank Datei (Pfad ohne Dateiname)
+
+ - Datentyp: **str**
+ - Standardwert: **None***
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+sqlite
+======
+
+
+Falls auf 'yes' gesetzt, wird der Wert des Items in die sqlite Datenbank geschrieben.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - 
+   - **yes**
+   - **init**
+   - **True**
+   - **no**
+   - **False**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+cleanup()
+=========
+
+
+Diese Funktion entfernt verwaiste Items, welche nicht mehr in der Item Konfiguration referenziert werden.
+
+ - Ergebnistyp der Funktion: 
+
+
+db(function, start, end= 'now')
+===============================
+
+
+Diese Methode liefert einen Wert, für die gewählte Zeitspanne. Die Funktion legt fest, wie der Wert berechnet wird.
+
+ - Ergebnistyp der Funktion: **num**
+
+
+function
+--------
+
+Funktion die genutzt wird um den Rückgabewert zu berechnen
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **avg**
+   - **max**
+   - **min**
+   - **avg**
+   - **sum**
+
+
+start
+-----
+
+Beginn der Zeitspanne
+
+ - Datentyp: **str**
+
+
+end
+---
+
+Ende der Zeitspanne
+
+ - Datentyp: **str**
+ - Standardwert: **now**
+
+
+dump(filename)
+==============
+
+
+Erzeugt einen Dump der Datenbank in die angegebene Datei
+
+ - Ergebnistyp der Funktion: 
+
+
+filename
+--------
+
+Dateiname für den Datenbank Dump
+
+ - Datentyp: **str**
+
+
+move(old, new)
+==============
+
+
+Diese Funktion benennt Item Einträge um. sh.sql.move('my.old.item', 'my.new.item')
+
+ - Ergebnistyp der Funktion: 
+
+
+old
+---
+
+Alter Item Name
+
+ - Datentyp: **str**
+
+
+new
+---
+
+Neuer Item Name
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/sqlite_visu2_8/README>` des Plugins zugreifen.

@@ -1,0 +1,63 @@
+:tocdepth: 1
+
+==============================
+Release 1.4.2 - 2. Januar 2018
+==============================
+
+Es gibt eine Reihe von Bugfixes und neue Features im Core von SmartHomeNG und den Plugins.
+
+
+
+Neue Funktionen
+===============
+
+
+Neue Funktionen im CORE
+-----------------------
+
+* Spezifische Fehlermeldung hinzugefügt, falls SmartHomeNG keine Konfiguration in ../etc schreiben darf.
+* Items:
+
+  * Attribut **update_by** hinzugefügt
+  * Initialisierung von prev_update und prev_change für Items mit gecachetem Value korrigiert
+
+* Scenes:
+
+  * Bugfix: Fehler beim Start von SmartHomeNG abgefangen, wenn noch keine gelernten Werte gespeichert worden waren.
+
+* conf_to_yaml_converter:
+
+  * Bugfix: Der Konverter unterstützt jetzt Blöcke von Kommentaren die länger als 11 kByte sind. Jetzt sind Kommentarblöcke bis zu 32 kByte erlaubt.
+
+
+
+Neue Plugins und Plugin-Erweiterungen
+-------------------------------------
+
+* Backend:
+
+  * Anzeige für Attribut **update_by** hinzugefügt
+
+* CLI:
+
+  * In der Liste der Logiken wird nun wieder der Zeitpunkt des nächsten Laufs angezeigt
+
+* ComfoAir:
+
+  * Prüfung der **comfoair_trigger** Einstellung korrigiert
+
+* Enigma2:
+
+  * Methode **set_power_state** hinzugefügt
+
+* LIRC:
+
+  * Parameter **instance** ist nun optional und kann dann angegeben werden, wenn Mulit-Instance verwendet wird
+
+* RCSwitch-PI:
+
+  * Fehlender Import im Code, Troubleshooting-Section in der README erweitert
+
+* UZSU
+
+  * Mehr Debug Ausgaben für das Attribut 'active' hinzugefügt

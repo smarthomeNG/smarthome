@@ -1,0 +1,269 @@
+================================
+Release 1.8.2 - 21. Februar 2021
+================================
+
+Dieses ist ein Bugfix Release für SmartHomeNG v1.8
+
+
+Überblick
+=========
+
+Dieses ist ein Bugfix-Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.8 sind im
+folgenden in diesen Release Notes beschrieben. Für die vollständigen Änderungen der Version 1.8
+bitte die Release Notes der Versionen 1.8 und 1.8.1 zu Rate ziehen.
+
+
+Minimum Python Version
+----------------------
+
+Die absolute Minimum Python Version in der SmartHomeNG startet wurde mit SmartHomeNG v1.8 auf v3.6 angehoben,
+da Python 3.5 im September 2020 End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation
+wird jedoch empfohlen auf einer der neueren Python Versionen (3.7 oder 3.8) aufzusetzen.
+
+|
+
+Änderungen am Core
+==================
+
+Bugfixes in the CORE
+--------------------
+
+* lib.backup:
+
+  * Fixed commandline backup with timestamp
+  * Added optional stem to backup filename
+
+* lib.config:
+
+  * Logtext for invalid/empty module.yaml adjusted
+
+* lib.items.item:
+
+  * Undone change to cycle handling
+
+* lib.items.structs:
+
+  * Added ability to return structs without private structs
+
+* lib.metadata:
+
+  * Allow spaces in list definition: 'list(4, str, int, str, str)'
+
+* lib.model.mqttplugin:
+
+  * Log text adjusted, if mqtt module is not loaded
+
+* lib.model.smartplugin:
+
+  * Added handling for float and in parameters in update_config_section()
+  * Log text adjusted, if http module is not loaded
+
+* lib.network:
+
+  * fix host resolve
+
+* lib.orb:
+
+  * Fixed bug that surfaced if elevation was given with decimals instead of an integer
+
+* lib.plugin:
+
+  * Log text adjusted
+
+* lib.shpypi:
+
+  * Only try to get package information for a package 10 times to prevent endless loop if package is not on pypi.org (any more)
+  * Reduced tries on pypi.org per package to 5
+
+* lib.structs:
+
+  * Fixed for merging list of structs
+
+* Modules:
+
+  * admin:
+
+    * Allowd application/x-zip-compressed for restore from windows client; enforce_change added to item details
+    * Added optional stem to backup filename
+    * fixed shtime problem introduced to lib.backup in 1.8.1 release
+    * api_config: Adjusted log levels
+    * auth: Work around a breaking change in PyJWT 2.0.0a1
+    * shngadmin: Added hint to reload shngadmin after changing systemconfig and restart
+
+  * core:
+
+    * Added stem for backup name to metadata of smarthome.yaml
+
+  * websocket:
+
+    * fixed typo
+    * Fix in sv payload protocol, if client info isn't received propperly
+    * Loglevel adjusted
+
+|
+
+Änderungen bei Plugins
+======================
+
+Plugin Updates
+--------------
+
+* avm:
+
+  * Added get_device_log function to retreive log entries on device as array of strings
+  * Added logentries from AVM device to webif
+  * Some improvements to log entry list
+  * Updated version to 1.5.11
+  * Added 2nd function to retreive log data from lua, renamed old function: get_device_log_from_tr064 and get_device_log_from_lua - lua data now shown in webinterface
+  * Fixes in lua code previously committe for aha functionality
+  * Some more improvements of sid handling and url building for lua
+  * Some more improvements for log entry list from sid (timestamp parsing)
+  * More cleaning up
+
+* darksky:
+
+  * improve error handling when response from server is not as expected
+  * Plugin is loaded, even if the web interface cannot be initialized
+  * Handled exception if answer from darksky was not complete
+
+* database:
+
+  * Bug fix in readLogCount()
+
+* deebot_ozmo:
+
+  * Upgraded to deebotozmo lib 1.7.8, python f strings, separate webif __init__ file
+
+* dlms:
+
+  * updated plugin.yaml to use list instead of str
+  * Corrected metadata for itam attribute dlms_obis_code
+
+* enigma2:
+
+  * Fixed bug with wrong type for remote command num (float) -> int - Remote command now working again
+  * Fixed IDs of widget items to README definition
+  * Upgraded version
+  * First minimalistic draft for a web interface
+  * Bugfixes and additions to webif
+  * Added remote command items to webif
+  * Removed unneeded column in webif
+  * Added plugin api to webif
+  * Improvements to plugin api display
+  * Removed init trigger from readme
+
+* homematic:
+
+  * Seperated web interface code
+
+* hue2:
+
+  * Added support for bridges using port different from default port 80; Caught exception for lights that do not support hue and sat attributes/functions
+  * Added port number to create_new_username() and remove_username()
+  * Added support to webinterface for bridge/lights that do not support startup-mode
+  * Added structs für warmwhite and thirdparty lights; handling for bridges with older api versions in web interface
+  * Added states/functions  "alert" and "effect"
+  * Seperated web interface code
+  * Should now be compatible with deconz breidge from Dresden Elektronik
+
+* knx:
+
+  * Write send and status telegrams into knx_busmonitor
+  * Log_own_packets parameter to log sending knx packages in knx_busmonitor
+  * bump version to 1.7.6
+  * Log warning if data encoding for knx raises an error
+
+* kodi:
+
+  * added get_favourites to initcommands
+
+* mailrvc:
+
+  * small fix in docu
+
+* mpd:
+
+  * bugfixes in plugin.yaml
+
+* mqtt:
+
+  * Seperated web interface code
+
+* onewire:
+
+  * update list with ow_sensor entries
+
+* operationlog:
+
+  * Fix default parsing, update docs
+  * Fixes for eval expressions
+
+* prowl:
+
+  * Added support for url parameter
+  * Fix type
+
+* rcswitch:
+
+  * Bugfix in plugin.yaml for shng v1.8.1
+  * updated description for Brennenstuhl RCS 1000 N
+  * update version to 1.2.2
+
+* rtr2:
+
+  * Fixes typos
+
+* shelly:
+
+  * Seperated web interface code
+
+* smartvisu:
+
+  * Corrected handing of 'item' in svgenerator.py to use path instead of item.id()
+  * Removed two log entries
+  * Bug fix in svgenerator
+  * Fixed a bug in template replacement
+
+* sonos:
+
+  * Added dpt3 attributes to plugin metadata
+  * Text-To-Speach: switched to python lib gtts
+  * Do not execute play_snippet/play_tts if speaker does not support stop() function, e.g. in TV mode
+  * Cleaned-up debug logs
+  * Added ifaddr to requirements.txt, ifaddr is used by soco
+
+* stateengine:
+
+  * Removed old type definition for item attribute se_use
+  * Removed further duplicate definitions in item attribute se_use
+  * provide possibility for lower log level (for developement purposes)
+  * Implement se_released_by feature including docu
+  * Build structs on run to also include structs from plugins initialized afterwards
+  * Change shtime for evals
+  * Improve and fix released_by feature on first start
+  * Improve writing to item
+  * Create structs in run method to also include structs from plugins loaded later
+  * Improve shtime handling in evals
+  * Remove unneeded module for structs
+  * Log directory now gets generated even if log level is 0, catch exception if log file is not existing (anymore)
+  * Bump version 1.9.0
+
+tasmota:
+
+  * Bug fix
+
+yamaha:
+
+  * Updates docu to user_doc and adds requests to dependencies
+
+|
+
+Weitere Änderungen
+==================
+
+Documentation
+-------------
+
+* Corrected typos and small documentation updates
+
+

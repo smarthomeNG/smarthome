@@ -1,0 +1,147 @@
+.. |_| unicode:: 0xA0
+
+
+====================================
+Plugin 'garminconnect' Konfiguration
+====================================
+
+
+.. index:: Plugins; garminconnect Konfiguration
+
+.. image:: /plugins/garminconnect/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **garminconnect** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Ermöglicht den Abruf von Daten (Statistiken, Pulswerte) aus Garmin Connect.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **garminconnect** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+email
+=====
+
+
+E-Mail des Garmin Connect Users.
+
+ - Datentyp: **str**
+
+
+is_cn
+=====
+
+
+Flag, ob Garmin Connect in China genutzt wird.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+password
+========
+
+
+Passwort des Garmin Connect Users.
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+**Keine**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+get_heart_rates(date)
+=====================
+
+
+Gibt die Daten zum Puls an einem Datum zurück (aktuelles Datum, falls der Parameter leer gelassen wird).
+
+ - Ergebnistyp der Funktion: **dict**
+
+
+date
+----
+
+Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
+
+ - Datentyp: **str**
+
+
+get_stats(date)
+===============
+
+
+Gibt die Statistiken von Garmin Connect zu einem Datum zurück. Default, wenn Parameter nicht genutzt wird: now()
+
+ - Ergebnistyp der Funktion: **dict**
+
+
+date
+----
+
+Zu prüfendes Datum als String in der Form "yyyy-mm-ddd", "yy-mm-dd", "dd.mm.yyyy" oder "dd.mm.yy". Default, wenn Parameter nicht genutzt wird: now()
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

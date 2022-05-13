@@ -1,0 +1,263 @@
+.. |_| unicode:: 0xA0
+
+
+==========================
+Plugin 'mpd' Konfiguration
+==========================
+
+
+.. index:: Plugins; mpd Konfiguration
+
+.. image:: /plugins/mpd/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **mpd** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Music Player Daemon (MPD) Unterstützung
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.8.2a**
+ - Minimum Python Version: **3.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **mpd** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Gibt an nach wie vielen Sekunden die Statusitems aktualisiert werden
+
+ - Datentyp: **int**
+ - Standardwert: **2**
+
+
+host
+====
+
+
+IP oder Hostname des MPD
+
+ - Datentyp: **ip**
+
+
+port
+====
+
+
+Der Port auf dem MPD lauscht.
+
+ - Datentyp: **int**
+ - Standardwert: **6600**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+mpd_command
+===========
+
+
+Implementiert Anweisungen die genutzt werden um das Abspielen von Musikstücken zu kontrollieren
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **playpause** |_| - |_| bool, 0 oder 1, 1 um Musik abzuspielen, auch genutzt als mpd_status
+   - **mute** |_| - |_| bool, 0 oder 1, 1 um die Lautstärke auf 0% zu setzen, auch genutzt als mpd_status
+   - **volume** |_| - |_| num,  0-100 um die Lautstärke zu setzen, auch genutzt als mpd_status
+   - **repeat** |_| - |_| bool, 0 oder 1, auch genutzt als mpd_status
+   - **random** |_| - |_| bool, 0 oder 1, auch genutzt als mpd_status
+   - **single** |_| - |_| bool, Schaltet Einzelwiedergabe um. Wenn Einzelwiedergabe eingeschaltet ist, stoppt der MPD nach dem aktuellen Titel oder das Musikstück wird wiederholt, wenn der 'repeat' Modus eingeschaltet ist. Auch genutzt als mpd_status
+   - **consume** |_| - |_| bool, Setzt den consume state to STATE, STATE sollte 0 oder 1 sein. Wenn consume aktiviert ist, wird jedes abgespielte Musikstück von der Playliste entfernt, auch genutzt als mpd_status
+   - **next** |_| - |_| bool, Spielt das nächste Musikstück aus der Playliste
+   - **pause** |_| - |_| bool, Schaltet den Pausenstatus um, PAUSE ist 0 oder 1
+   - **play** |_| - |_| num,  Beginnt die Playliste bei Musikstück Nummer <value> abzuspielen
+   - **playid** |_| - |_| num,  Beginnt die Playliste bei Musikstück <value> abzuspielen
+   - **previous** |_| - |_| bool, Spielt das vorhergehende Musikstück aus der Playliste ab
+   - **seek** |_| - |_| str,  Springt zur Zeit TIME (in Sekunden, float) des Eintrags SONGPOS in der Playliste, format: "SONGPOS TIME"
+   - **seekid** |_| - |_| str,  Springt zur Zeit TIME (in Sekunden, float) des Eintrags SONGID in der Playliste, format: "SONGID TIME"
+   - **seekcur** |_| - |_| str,  Springt zur Zeit TIME (in Sekunden, float) innerhalb des aktuellen Musikstücks. Wenn ein Prefix '+' oder '-' angegebene ist, wird die gegebene Zeit relativ zur aktuellen Position berechnet
+   - **stop** |_| - |_| bool, Stoppt das Abspielen
+   - **crossfade** |_| - |_| num,  Setzt Überblendung zwischen Musikstücken
+   - **mixrampdb** |_| - |_| num,  Setzt den Bereich der Überblendung zwischen zwei Musikstücken. Wie überblenden, aber die Laustärken werden nicht angepaßt sondern nur eine Überlappung zwischen den Musikstücken erreicht
+   - **mixrampdelay** |_| - |_| num,  Zusätzlich abgezogene Zeit von der Überlappung die mit mixrampdb berechnet wurde
+   - **setvol** |_| - |_| num,  Setzt die Laustärke auf VOL, der Bereich der Lautstärke ist zwischen 0 und 100
+   - **replay_gain_mode** |_| - |_| str,  Setzt den replay gain Modus. Entweder 'off', 'track', 'album' oder 'auto'
+
+
+mpd_database
+============
+
+
+Implementiert Anweisungen die zur Kontrolle der Datenbank genutzt werden können
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **update** |_| - |_| Aktualisiert die Musikdatenbank, neue Dateien suchen, gelöschte entfernen, geänderte aktualisieren.
+   - **rescan** |_| - |_| Aktualisiert die Musikdatenbank, neue Dateien suchen, gelöschte entfernen, alle Dateien aktualisieren.
+
+
+mpd_localplaylist
+=================
+
+
+Sucht eine lokale Playlist mit einem gegebenen Namen und spielt sie ab wenn sie gefunden wurde
+
+ - Datentyp: **str**
+
+
+mpd_rawcommand
+==============
+
+
+Sendet den angegebenen Wert direkt an MPD
+
+ - Datentyp: **str**
+
+
+mpd_songinfo
+============
+
+
+Implementiert Kommandos und Informationen über das aktuell gespielte Musikstück zu erhalten
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **file** |_| - |_| str,  Pfad der aktuell spielenden Datei
+   - **Last-Modified** |_| - |_| str,  Datum der letzten Änderung des Musikstückes
+   - **Artist** |_| - |_| str,  Artist des aktuell spielenden Musikstückes
+   - **Album** |_| - |_| str,  Album des aktuell spielenden Musikstückes
+   - **Title** |_| - |_| str,  Title des aktuell spielenden Musikstückes
+   - **Track** |_| - |_| str,  Track# des aktuell spielenden Musikstückes
+   - **Time** |_| - |_| str,  Länge des aktuell spielenden Musikstückes
+   - **Pos** |_| - |_| str,  Position des Musikstückes in der Playlist
+   - **Id** |_| - |_| str,  Id des Musikstückes
+
+
+mpd_statistic
+=============
+
+
+Implementiert Anweisungen die zur Statistikabfrage des MPD genutzt werden
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **artists** |_| - |_| num,  Anzahl der Künstler
+   - **albums** |_| - |_| num,  Anzahl der Alben
+   - **songs** |_| - |_| num,  Anzahl der Musikstücke
+   - **uptime** |_| - |_| num,  bisherige Laufzeit des Daemons in Sekunden
+   - **db_playtime** |_| - |_| num,  Summe der Dauer aller Musikstücke in der Datenbank
+   - **db_update** |_| - |_| num,  Letztes Datenbankupdate in UNIX time
+   - **playtime** |_| - |_| num,  Länge der gespielten Musik
+
+
+mpd_status
+==========
+
+
+Implementiert Anweisungen um den MPD Status abzufragen
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **playpause** |_| - |_| bool, 0 or 1, 1 während Musik abgespielt wird, auch als mpd_command genutzt
+   - **mute** |_| - |_| bool, 0 or 1, 1 wenn Laustärke auf 0% gesetzt ist, auch als mpd_command genutzt
+   - **volume** |_| - |_| num,  0-100 oder -1 wenn die Lautsärke nicht ermittelt werden kann, auch als mpd_command genutzt
+   - **repeat** |_| - |_| bool, 0 or 1, auch als mpd_command genutzt
+   - **random** |_| - |_| bool, 0 or 1, auch als mpd_command genutzt
+   - **single** |_| - |_| bool, 0 or 1, auch als mpd_command genutzt
+   - **consume** |_| - |_| bool, 0 or 1, auch als mpd_command genutzt
+   - **playlist** |_| - |_| num,  31-bit unsigned integer, Versionsnummer der Playlist
+   - **playlistlength** |_| - |_| num,  integer, die Länge der Playlist
+   - **mixrampdb** |_| - |_| num,  mixramp threshold in dB
+   - **state** |_| - |_| str,  Play, Stop, oder Pause
+   - **song** |_| - |_| num,  Playlist Musikstücknummer des aktuellen Musikstückes
+   - **songid** |_| - |_| num,  Playlist Musikstück ID des aktuellen Musikstückes
+   - **time** |_| - |_| str,  Gesamte abgelaufene Zeit des aktuell abgespielten/pausierten Musikstückes
+   - **elapsed** |_| - |_| str,  Gesamte abgelaufene Zeit des aktuell abgespielten/pausierten Musikstückes, aber mit höherer Auflösung
+   - **bitrate** |_| - |_| num,  Aktuelle Bitrate in kbps
+   - **audio** |_| - |_| str,  Das Format das vom Decoder beim Apielen gemeldet wurde. format: "samplerate:bits:channels"
+   - **nextsong** |_| - |_| num,  Playlist Nummer des nächsten abzuspielenden Musikstückes
+   - **nextsongid** |_| - |_| num,  Playlist ID des nächsten abzuspielenden Musikstückes
+   - **duration** |_| - |_| num,  Dauer des aktuellen Musikstückes in Sekunden
+   - **xfade** |_| - |_| num,  crossfade in Sekunden
+   - **mixrampdelay** |_| - |_| num,  mixrampdelay in Sekunden
+   - **updating_db** |_| - |_| str,  job id
+   - **error** |_| - |_| str,  Fehlermeldung des MPD
+
+
+mpd_url
+=======
+
+
+Untersucht die gegebene URL und versucht den Stream abzuspielen
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

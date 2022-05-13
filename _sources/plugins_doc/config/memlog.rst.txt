@@ -1,0 +1,130 @@
+.. |_| unicode:: 0xA0
+
+
+=============================
+Plugin 'memlog' Konfiguration
+=============================
+
+
+.. index:: Plugins; memlog Konfiguration
+
+.. image:: /_static/img/system.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **memlog** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+
+
+Beschreibung
+============
+
+Speichern der Logeinträge im Speicher (zur Anzeige in der VISU)
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **memlog** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+items
+=====
+
+
+Jedes mal wenn ein Item aktualisiert wird, wird ein Logeintrag geschrieben unter der Berücksichtigung der konfigurierten Items und deren Werte als Log Werte   Wird dies nicht angegeben, dann werden die vorgegebenen Zuordnungswerte verwendet:    - item_a --> now    - item_b --> thread info    - item_c --> log level    - item_d --> message
+
+ - Datentyp: **list(str)**
+
+
+mappings
+========
+
+
+Definiert eine Liste mit kommagetrennten Werten die für jede Nachricht geloggt werden.  Die folgenden internen Zuordnungen können benutzt werden:   time - Zeitstempel des Eintrags thread - Thread der die Daten erzeugt level - Der log level (Standard ist INFO) message - Die Nachricht   Die Vorgabe sollte beibehalten werden, wenn das Log in SmartVISU angezeigt werden soll,  sonst werden die Werte von der SmartVISU für die Darstellung nicht korrekt interpretiert.
+
+ - Datentyp: **list(str)**
+ - Standardwert: **['time', 'thread', 'level', 'message']**
+
+
+maxlen
+======
+
+
+Legt die maximale Anzahl der Log-Einträge fest
+
+ - Datentyp: **int**
+ - Standardwert: **50**
+
+
+name
+====
+
+
+Name für den Log, kann zum Zugriff genutzt werden
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+memlog
+======
+
+
+Bezeichnet den Namen des Logs in dem die Nachricht aufgezeichnet werden soll. Alle´Einträge werden mit Level INFO erstellt
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/memlog/README>` des Plugins zugreifen.

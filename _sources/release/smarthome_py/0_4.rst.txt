@@ -1,0 +1,8 @@
+================================
+Release 0.4 - October 10th, 2011
+================================
+
+Feature
+^^^^^^^
+
+-  KNX Reply with :doc:`KNX plugin </plugins_doc/config/knx>`

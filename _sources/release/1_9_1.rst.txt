@@ -1,0 +1,376 @@
+============================
+Release 1.9.1 - 13. Feb 2022
+============================
+
+Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+
+
+Überblick
+=========
+
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.9 sind im
+folgenden in diesen Release Notes beschrieben.
+
+
+Unterstützte Python Versionen
+-----------------------------
+
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.9 ist Python 3.6.
+(Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation** zu unterstützten
+Python Versionen)
+
+..
+    Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.9 nicht mehr unter älteren Python Versionen läuft,
+    sondern das SmartHomeNG nicht mehr mit älteren Python Versionen getestet wird und das gemeldete Fehler mit älteren
+    Python Versionen nicht mehr zu Buxfixen führen.
+
+    Es werden jedoch zunehmend Features eingesetzt, die erst ab Python 3.6 zur Verfügung stehen.
+    So ist Python 3.6 die minimale Vorraussetzung zur Nutzung des neuen Websocket Moduls.
+
+
+Minimum Python Version
+----------------------
+
+Die absolute Minimum Python Version in der SmartHomeNG startet wurde auf v3.6 angehoben, da Python 3.5 im
+September 2020 End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen
+auf einer der neueren Python Versionen (3.8 oder 3.9) aufzusetzen.
+
+.. important::
+
+   Mit Release 1.9 werden die unterstützten Python Versionen
+   :ref:`(wie hier beschrieben) <python_versionen>` auf **Python 3.7, 3.8, 3.9** angehoben.
+
+   Die **Absolute Minimum Python Version**, mit der SmartHomeNG startet ist 3.6.
+
+
+
+Änderungen am Core
+==================
+
+Updates to the CORE
+-------------------
+
+* Fixed initialization for cases where logging.yaml contains instructions that thow an exception
+  when SmartHomeNG is not fully configured (requirements installed)
+* If logging.yaml gives an exception, logging.yaml.default is used
+* Changed restart handling, when in debug- or foreground-mode
+
+
+* Logics:
+
+  * Logics are now prevented from beeing executed before SmartHomeNG is in Run-Mode (the initialization has finished)
+    even if triggerd (by e.g. item initialization) during initialization phase
+
+* Libs:
+
+  * lib.item:
+
+    * introduce new property last_trigger(_by/_age) and prev_trigger(_by/_age) and according functions.
+      This way it is possible to figure out what has triggered the eval expression. The property might be
+      especially useful inside the eval expression itself but can also be used to figure out what, when
+      (or if) an eval got triggered (without being updated, because maybe the eval didn't succeed or the
+      value has not changed)
+    * Get relative item path: Fix issue where last character of expression part got truncated and therefore
+      eval expression might get invalid
+    * Fix for eval expressions, if crontab attribute is given with an init value, which is to be used in a
+      numerical calculation
+    * Fix for non numeric values on attribute crontab: init = xyz
+
+  * lib.metadata:
+
+    * Added attribute prefix 'my\_' for user defined attributes (for logics, etc.)
+
+  * lib.network:
+
+    * Fix for udp server eventloop too late
+    * Pass timeout parameter
+    * Add port to connect message
+    * Fix validate_inet_addr return for invalid ip
+    * Fix for clean shutdown if not connected
+    * Added __str__ methods to simplyfy logging
+    * Modified startup/connect logging
+    * Modified __running initialization
+    * Added more debug logging, modified connect_on_send behaviour to respect autoreconnect setting
+    * Added autoconnect parameter
+
+  * lib.orb:
+
+    * Set requirement to ephem max version 4.1.0 because 4.1.3 has a bug or breaking change
+    * Fix never up errors with ephem
+
+  * lib.scheduler:
+
+    * Trigger dict in logics contains now the source (cron, cycle) for scheduler triggers
+    * Fixed bug where value wasn't set correctly on cron triggers
+    * Separated code to start a logic task to is's own method
+    * Implemented 'raise LeaveLogic()' for logics
+    * Small modification for executing logics
+    * Added more details to 'update_by' and 'change_by' on items
+    * Bugfix for 'str' object has no attribute 'get' (line 643)
+
+  * lib.shpypi:
+
+    * Small fixes
+
+  * lib.smarthome:
+
+    * Change getbasedir for user function to avoid deprecated warning
+
+  * lib.triggertimes:
+
+    * Fix a triggertimes with empty params or wrong parameter set size
+    * Enhance debug message 'eventtime is earlier than starttime'
+    * Fix a bug in relation to sunset with offset
+
+
+* Modules:
+
+  * admin:
+
+    * eval syntax checker sets 'value' to the 'path relative to' item, if it is specified
+
+  * http:
+
+    * Added datatables for use in webinterfaces of plugins
+    * datatables: Fix table width in tabs
+    * datatables: Improve defaults and fix some issues
+    * datatables: update to 1.11.4
+
+  * mqtt: Fixed _get_caller_type for logics (see issue #450)
+
+  * websocket:
+
+    * Removed "untested" warning from trigger-logic command
+    * Loglevel for 'no close frame received or sent' reduced to INFO
+
+
+Änderungen bei Plugins
+======================
+
+New Plugins
+-----------
+
+For details of the changes of the individual plugins, please refer to the documentation of the respective plugin.
+
+* zigbee2mqtt: Plugin to control devices which are linked to Zigbee Gateway equipped with Zigbee2MQTT firmware.
+  Communication is handled through the MQTT module of SmartHomeNG.
+
+
+
+Plugin Updates
+--------------
+
+* avdevice:
+
+  * Fix web interface logging (introduces with last commit), remove very old versions
+
+* asterisk:
+
+  * Check connected before calling close in stop
+
+* avm:
+
+  * Created _pv_1_5_12 before merging PR
+  * Connect to Smarthome Devices via AHA-Interface (tested with Fritz 440, Comet Dect)
+    (therefore Plugin AVM smarthome can be depreciated)
+  * Implemented call deflections (tested with Fritzbox 7530)
+  * Renamed parameter "index" to "avm_tam_index"
+  * Code cleanup (add new functions to minimize code repetitions)
+  * Improved error handling
+  * Updated WebIF
+  * Updated documentation
+  * Bumped version to 1.6.1
+
+* casambi: Resend commands on transmission error (e.g. due to sigpipe error) once
+
+* database:
+
+  * Prevent multiple threads for handling database_maxage
+
+* dlms:
+
+  * Enhance returned result
+  * Fixed a bug where no response was returned
+  * Parameter baudrate will be stored to config now
+  * Change parameter name for speed
+
+* enocean:
+
+  * Added support for EEP A5_30_01 and A5_30_03, e.g. water leak sensor
+  * Extended plugin webinterface
+  * Suggest next free device ID (offset) value during teach-in process
+  * New feature "enable/disable logging of unknown devices" via plugin.yaml or WebIf
+  * Added tooltips to WebIf
+
+* garminconnect:
+
+  * Fix for login issues, using PyPi package with latest version (4.1.22) now. Still not 100% perfect, due
+    to the package implementation. But at least working again
+  * Added call to login method before each data retreival to prevent session timeouts
+  * Removed broken logout
+
+* gpio:
+
+  * Fix error handling and log on startup
+  * Slight improvements in webif concerning datatables
+  * Update web interface (datatables, realtime values), convert debug messages to f-strings
+
+* knx:
+
+  * Only execute update_item if plugin is running
+  * Bumped version to 1.8.0
+  * Fix connected bug for init ga
+
+* modbus_tcp:
+
+  * slaveUnit zu Items hinzugefügt
+  * slaveUnit-Bug _regToRead-key (adress.unit)
+  * Bugfix in web interface
+  * Fixes in example.yaml
+  * Feature to write to registers
+  * Bumped version to 1.0.6
+
+* mpd:
+
+  * Fix connection related bug, remove scheduler at stop
+
+* openweathermap:
+
+  * Add struct for airpollution
+  * Bumped to 1.8.4
+  * Changed default update cycle to 900 sec to prevent getting locked out by server, if for example
+    smartVISU is using the same API key
+
+* philips_tv:
+
+  * Minor improvements for webinterface
+
+* rpi1wire:
+
+  * Udpdate WebIF Tables with new functions
+  * Error handling improved
+  * Udpdate WebIF Tables with new functions
+
+* smartvisu:
+
+  * Copy info block.html from _templates dir (for sv 3.2 and up)
+
+* snap7_logo:
+
+  * Unspecified updates
+  * Update to 1.6.0
+
+* sonos:
+
+  * Fix for use with python 3.9 upwards (Thread::isAlive deprecated)
+  * Update SoCo base framework to version 0.26.1
+
+* stateengine:
+
+  * Add gitignore to webif/visualizations folder to make sure folder is created and files in folder are ignored
+  * Minor webif update
+  * Update web interface in real-time and include datatables
+
+* tasmota:
+
+  * Implemented support if TW light sources
+  * Implemented ZIGBEE support;
+  * Updated Docu
+  * Updated WebIF
+  * Bumped version to 1.2.0
+
+* telegram:
+
+  * Fix web interface (using default template)
+  * Webif support datatables
+  * Fix a bug for /info item values
+
+* uzsu:
+
+  * Use sun and moon objects of sh and new orb.py
+  * Remove uzsu\_ from scheduler name
+  * Simplify requirements file: scipy 1.1.0 if python >= 3.7
+  * Major web interface update. Clean code, use automatic update of values, implement datatables, etc.
+  * Removed old uzsu_sun residuum
+
+* viessmann:
+
+  * Fixed log call
+
+* withings_health:
+
+  * Updated requirements so that with 2.4.0 of pypi package auth is working again (hopefully)
+
+
+Outdated Plugins
+----------------
+
+The following plugins were already marked in version v1.6 as *deprecated*. This means that the plugins
+are still working, but are not developed further anymore and are removed from the release of SmartHomeNG
+in the next release. User of these plugins should switch to corresponding succeeding plugins.
+
+* System Plugins
+
+  * backend - use the administration interface instead
+  * sqlite_visu2_8 - switch to the **database** plugin
+
+* Web Plugins
+
+  * wunderground - the free API is not provided anymore by Wunderground
+
+
+The following plugins are marked as *deprecated* with SmartHomeNG v1.7, because neither user nor tester have been found:
+
+* Gateway Plugins
+
+  * ecmd
+  * elro
+  * iaqstick
+  * snom
+  * tellstick
+
+* Interface Plugins
+
+  * easymeter
+  * smawb
+  * vr100
+
+* Web Plugins
+
+  * nma
+
+Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecated*, because the new mqtt
+plugin takes over the functionality. This plugin is based on the mqtt module and the recent core.
+
+
+Retired Plugins
+---------------
+
+The following plugins have been retired. They had been deprecated in one of the preceding releases of SmartHomeNG.
+They have been removed from the plugins repository, but they can still be found on github. Now they reside in
+the **plugin_archive** repository from where they can be downloaded if they are still needed.
+
+* ...
+
+
+Weitere Änderungen
+==================
+
+Tools
+-----
+
+* plugin_metadata_checker.py:
+
+  * Added two checks for plugin name (length and lowercase)
+  * Fixed check for mandatory value given and default value given
+
+
+Documentation
+-------------
+
+* Added "updated_by()" function to reference page
+* Consolidated logic documentation to reference section
+* Added Plugins/All plugins page to navigation
+
+
+

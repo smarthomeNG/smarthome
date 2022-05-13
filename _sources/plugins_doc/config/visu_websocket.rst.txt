@@ -1,0 +1,203 @@
+.. |_| unicode:: 0xA0
+
+
+=====================================
+Plugin 'visu_websocket' Konfiguration
+=====================================
+
+
+.. index:: Plugins; visu_websocket Konfiguration
+
+.. image:: /_static/img/system.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **visu_websocket** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als deprecated gekennzeichnet. Es wird empfohlen auf eine                  Nachfolgelösung umzusteigen.
+
+
+
+Beschreibung
+============
+
+Websocket Protokoll für Visus (smartVISU, etc.)
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9.0**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **visu_websocket** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+acl
+===
+
+
+Steuert den Zugriff über Websocket Protokoll - Voreinstellung für alle Items
+
+ - Datentyp: **str**
+ - Standardwert: **ro**
+
+ - Mögliche Werte:
+
+   - **rw** |_| - |_| Lesen/Schreiben
+   - **ro** |_| - |_| Nur Lesen
+   - **deny** |_| - |_| Kein Zugriff
+   - **True** |_| - |_| Lesen/Schreiben
+   - **yes** |_| - |_| Lesen/Schreiben
+   - **no** |_| - |_| Kein Zugriff
+
+
+ip
+==
+
+
+IP Adresse, falls nicht auf allen IPs des Hosts gelauscht werden soll
+
+ - Datentyp: **ipv4**
+ - Standardwert: **0.0.0.0**
+
+
+port
+====
+
+
+Port der für den Websocket Zugriff verwendet wird
+
+ - Datentyp: **int**
+ - Standardwert: **2424**
+
+ - Minimalwert: **0**
+
+querydef
+========
+
+
+Wenn dieser Wert auf True gesetzt wird, ist es Websocket Clients möglich Item- und Logik Definitionen abzufragen
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+tls
+===
+
+
+TLS benutzen? Falls auf True gesetzt, muss SmartHomeNGs /etc Directory die Zertifikat-Dateien home.crt, home.key und ca.crt enthalten
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+wsproto
+=======
+
+
+Verwendete Version des Websocket Protokolls
+
+ - Datentyp: **int**
+ - Standardwert: **4**
+
+ - Mögliche Werte:
+
+   - **3** |_| - |_| Version 3
+   - **4** |_| - |_| Version 4
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+visu_acl
+========
+
+
+Steuert den Zugriff auf das Item über Websocket Protokoll
+
+ - Datentyp: **str**
+ - Standardwert: **ro**
+
+ - Mögliche Werte:
+
+   - **rw** |_| - |_| Lesen/Schreiben
+   - **ro** |_| - |_| Nur Lesen
+   - **deny** |_| - |_| Kein Zugriff
+   - **True** |_| - |_| Lesen/Schreiben
+   - **yes** |_| - |_| Lesen/Schreiben
+   - **no** |_| - |_| Kein Zugriff
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+url(url, clientip= '')
+======================
+
+
+Diese Funktion weist smartVISU Clients an, auf die angegebene Url (Visu Seite) zu wechseln. Die Funktion funktioniert mit smartVISU v2.9 und später. Für smartVISU v2.8 muss ein modifizierter Treiber io_smarthome.js verwendet werden - Beispiel: sh.visu.url('index.php?page=apartement.living', '10.0.0.23')
+
+ - Die Funktion liefert kein Ergebnis
+
+
+url
+---
+
+Die URL zu der smartVISU wechseln soll
+
+ - Datentyp: **str**
+
+
+clientip
+--------
+
+Falls angegeben, werden nur Clients (Browser) die auf dem Host mit der angegebenen IP Adresse laufen angewiesen die Seite zu wechseln.
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/visu_websocket/README>` des Plugins zugreifen.

@@ -1,0 +1,175 @@
+.. |_| unicode:: 0xA0
+
+
+=============================
+Plugin 'kostal' Konfiguration
+=============================
+
+
+.. index:: Plugins; kostal Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **kostal** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Anbindung eines KOSTAL-Wechselrichters  [KOSTAL](http://www.kostal-solar-electric.com/)    Das Plugin funktioniert aktuell mit den folgenden Inverter Moduln von KOSTAL:   * KOSTAL PIKO 3.0 UI-Version 06.20 (datastructure=json) * KOSTAL PIKO 5.5 UI-Version 05.xx (datastructure=html)   (should work with all KOSTAL PIKO inverters)
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.3**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **kostal** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Zykluszeit
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+datastructure
+=============
+
+
+Format der Datenstrukturen (Falls json verwendet wird, sind keine Credentials notwendig)
+
+ - Datentyp: **str**
+ - Standardwert: **html**
+
+ - Mögliche Werte:
+
+   - **html**
+   - **json**
+
+
+ip
+==
+
+
+IP Adresse des Konverters
+
+ - Datentyp: **ip**
+
+
+passwd
+======
+
+
+Passwort
+
+ - Datentyp: **str**
+ - Standardwert: **pvwr**
+
+
+user
+====
+
+
+Benutzername
+
+ - Datentyp: **str**
+ - Standardwert: **pvserver**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+kostal
+======
+
+
+Art der KOSTAL Daten, die im Item gespeichert werden
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **operation_status** |_| - |_| Status des Kostal Inverters (On, Off, Feed in, starting)
+   - **dcpower** |_| - |_| Summe DC Leistung (alle DC Eingänge); Einheit: Watt
+   - **dc1_v** |_| - |_| DC-Spannung Eingang 1; Einheit: Volt
+   - **dc2_v** |_| - |_| DC-Spannung Eingang 2; Einheit: Volt
+   - **dc3_v** |_| - |_| DC-Spannung Eingang 3; Einheit: Volt
+   - **dc1_a** |_| - |_| DC-Strom Eingang 1; Einheit: Ampere
+   - **dc2_a** |_| - |_| DC-Strom Eingang 2; Einheit: Ampere
+   - **dc3_a** |_| - |_| DC-Strom Eingang 3; Einheit: Ampere
+   - **dc1_w** |_| - |_| DC-Leistung Eingang 1; Einheit: Watt
+   - **dc2_w** |_| - |_| DC-Leistung Eingang 2; Einheit: Watt
+   - **dc3_w** |_| - |_| DC-Leistung Eingang 3; Einheit: Watt
+   - **actot_w** |_| - |_| Summe AC Leistung (alle AC Phasen); Einheit: Watt
+   - **actot_cos** |_| - |_| Summe AC Cos φ
+   - **actot_limitation** |_| - |_| Summe AC Limitierung; Einheit %
+   - **ac1_v** |_| - |_| AC Phase 1 Spannung; Einheit: Volt
+   - **ac2_v** |_| - |_| AC Phase 2 Spannung; Einheit: Volt
+   - **ac3_v** |_| - |_| AC Phase 3 Spannung; Einheit: Volt
+   - **ac1_a** |_| - |_| AC Phase 1 Strom; Einheit: Ampere
+   - **ac2_a** |_| - |_| AC Phase 2 Strom; Einheit: Ampere
+   - **ac3_a** |_| - |_| AC Phase 3 Strom; Einheit: Ampere
+   - **ac1_w** |_| - |_| AC Phase 1 Leistung; Einheit: Watt
+   - **ac2_w** |_| - |_| AC Phase 2 Leistung; Einheit: Watt
+   - **ac3_w** |_| - |_| AC Phase 3 Leistung; Einheit: Watt
+   - **yield_day_kwh** |_| - |_| Ergebnis heute; Einheit kWh
+   - **yield_tot_kwh** |_| - |_| Ergebnis Gesamt; Einheit kWh
+   - **operationtime_h** |_| - |_| Inverter Betriebszeit; Einheit Stunden
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/kostal/README>` des Plugins zugreifen.

@@ -1,0 +1,323 @@
+.. |_| unicode:: 0xA0
+
+
+============================
+Plugin 'sonos' Konfiguration
+============================
+
+
+.. index:: Plugins; sonos Konfiguration
+
+.. image:: /_static/img/gateway.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **sonos** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Anbindung von Sonos Lautsprechern
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5.1**
+ - Minimum Python Version: **3.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **sonos** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+discover_cycle
+==============
+
+
+Zeitintervall, nach dem (erneut) nach (neuen) Lautsprechern im Netzwerk gesucht wird.
+
+ - Datentyp: **int**
+ - Standardwert: **180**
+
+ - Minimalwert: **120**
+
+local_webservice_path
+=====================
+
+
+(optional) In dieses Verzeichnis werden alle TTS-Dateien automatisch gespeichert. Is die Option 'tts' aktiviert, dann muss diese Option gesetzt sein.
+
+ - Datentyp: **str**
+
+
+local_webservice_path_snippet
+=============================
+
+
+(optional) Die eigenen Audio-Snippet Dateien können beim Setzen dieser Option getrennt von den autmotisch generierten TTS-Dateien gespeichert werden. Wird diese Option nicht gesetzt und 'tts' ist aktiviert, so wird der Wert von 'local_webservice_path' für Snippets benutzt.
+
+ - Datentyp: **str**
+
+
+snippet_duration_offset
+=======================
+
+
+(optional) Verlängert die Dauer von Snippet Audio Dateien um einen festen Offset in Sekunden.
+
+ - Datentyp: **num**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+
+speaker_ips
+===========
+
+
+(optional) Die IPs der Lautsprecher können manuell gesetzt werden. Dies kann in einer Container-Umgebung (z.B Docker) mit eingeschränkten Netzwerkzugriff sinnvoll sein.
+
+ - Datentyp: **list**
+
+
+tts
+===
+
+
+(optional) Aktiviert die Google TTS Funktionalität.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+webservice_ip
+=============
+
+
+(optional) Für TTS und die Audio-Snippet-Funktionalität wird ein simpler Webservice gestartet. Die IP-Adresse wird per default automatisch ermittelt, kann hier aber manuell gesetzt werden.
+
+ - Datentyp: **ip**
+
+
+webservice_port
+===============
+
+
+(optional) Webservice-Port
+
+ - Datentyp: **int**
+ - Standardwert: **23500**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+sonos_attrib
+============
+
+
+Empfangsattribut
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **group**
+   - **dpt3_helper**
+   - **vol_dpt3**
+   - **max_volume**
+   - **tts_language**
+   - **tts_volume**
+   - **tts_fade_in**
+   - **start_after**
+   - **snippet_fade_in**
+   - **snippet_volume**
+   - **clear_queue**
+   - **start_track**
+
+
+sonos_dpt3_step
+===============
+
+
+Relatives dpt3 Inkrement
+
+ - Datentyp: **int**
+
+
+sonos_dpt3_time
+===============
+
+
+Dpt3 Zeitinkrement
+
+ - Datentyp: **int**
+
+
+sonos_recv
+==========
+
+
+Empfangsattribut
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **is_initialized**
+   - **volume**
+   - **play**
+   - **is_coordiantor**
+   - **mute**
+   - **stop**
+   - **seek**
+   - **pause**
+   - **track_title**
+   - **track_artist**
+   - **track_uri**
+   - **track_album**
+   - **track_album_art**
+   - **bass**
+   - **treble**
+   - **loudness**
+   - **play_mode**
+   - **radio_show**
+   - **radio_station**
+   - **serial_number**
+   - **software_version**
+   - **hardware_version**
+   - **model**
+   - **uid**
+   - **ip**
+   - **mac_address**
+   - **status**
+   - **additional_zone_members**
+   - **alarms**
+   - **is_coordinator**
+   - **tts_local_mode**
+   - **night_mode**
+   - **dialog_mode**
+   - **buttons_enabled**
+   - **cross_fade**
+   - **coordinator**
+   - **snooze**
+   - **status_light**
+   - **zone_group_members**
+   - **player_name**
+   - **household_id**
+   - **streamtype**
+   - **current_track**
+   - **number_of_tracks**
+   - **current_transport_actions**
+   - **current_valid_play_modes**
+   - **sonos_playlists**
+   - **stream_content**
+   - **current_track_duration**
+
+
+sonos_send
+==========
+
+
+Sendeattribut
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **volume**
+   - **play**
+   - **pause**
+   - **stop**
+   - **mute**
+   - **cross_fade**
+   - **snooze**
+   - **play_mode**
+   - **next**
+   - **previous**
+   - **play_tunein**
+   - **play_url**
+   - **load_sonos_playlist**
+   - **play_snippet**
+   - **play_tts**
+   - **join**
+   - **unjoin**
+   - **volume_up**
+   - **volume_down**
+   - **partymode**
+   - **bass**
+   - **treble**
+   - **loudness**
+   - **playmode**
+   - **seek**
+   - **status**
+   - **alarms**
+   - **get_playlist**
+   - **set_playlist**
+   - **night_mode**
+   - **dialog_mode**
+   - **buttons_enabled**
+   - **cross_fade**
+   - **snooze**
+   - **status_light**
+   - **switch_linein**
+   - **switch_tv**
+
+
+sonos_uid
+=========
+
+
+Sonos unique device ID
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/sonos/README>` des Plugins zugreifen.

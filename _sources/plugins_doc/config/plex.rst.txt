@@ -1,0 +1,152 @@
+.. |_| unicode:: 0xA0
+
+
+===========================
+Plugin 'plex' Konfiguration
+===========================
+
+
+.. index:: Plugins; plex Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **plex** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Erlaubt das Senden von Notifications an Plex Clients (wie RasPlex)
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.1**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **plex** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+displaytime
+===========
+
+
+Anzeigedauer in Millisekunden
+
+ - Datentyp: **int**
+ - Standardwert: **6000**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+plex_host
+=========
+
+
+Hostname oder IP Adresse des Plax Hosts
+
+ - Datentyp: **str**
+
+
+plex_port
+=========
+
+
+Port Nummer auf dem Plex Host
+
+ - Datentyp: **int**
+ - Standardwert: **3005**
+
+ - Minimalwert: **0**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+notify(title, message, image= 'info')
+=====================================
+
+
+Nachrichten an Plex senden
+
+ - Die Funktion liefert kein Ergebnis
+
+
+title
+-----
+
+Titel der Nachricht
+
+ - Datentyp: **str**
+
+
+message
+-------
+
+Nachrichten-text
+
+ - Datentyp: **str**
+
+
+image
+-----
+
+Name des Biled, welches im Nachrichten Dialgo angezeigt werden soll
+
+ - Datentyp: **str**
+ - Standardwert: **info**
+
+ - Mögliche Werte:
+
+   - **info**
+   - **warning**
+   - **error**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/plex/README>` des Plugins zugreifen.

@@ -1,0 +1,177 @@
+.. |_| unicode:: 0xA0
+
+
+===========================
+Plugin 'xmpp' Konfiguration
+===========================
+
+
+.. index:: Plugins; xmpp Konfiguration
+
+.. image:: /_static/img/protocol.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **xmpp** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **protocol Plugin**.
+
+
+
+Beschreibung
+============
+
+Unterstützung des Extensible Messaging and Presence Protocol (XMPP). Unterstützt z.Zt. nur das Senden von Nachrichten.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.3**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **xmpp** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+jid
+===
+
+
+Gibt den Benutzernamen / JID des zu nutzenden Accounts an
+
+ - Datentyp: **str**
+
+
+join
+====
+
+
+Gibt die Liste der Gruppenchats an die automatisch betreten werden sollen (optional)
+
+ - Datentyp: **list(str)**
+
+
+password
+========
+
+
+Gibt das Passwort für den zu nutzenden Account an
+
+ - Datentyp: **str**
+
+
+plugins
+=======
+
+
+Aktiviert weitere Plugins (XEP) (optional)
+
+ - Datentyp: **list(str)**
+
+
+server
+======
+
+
+Gibt die Adresse und Port an (z.B. "127.0.0.1:5222"), zu welchem XMPP-Server eine Verbindung aufgebaut werden soll (optional)
+
+ - Datentyp: **str**
+
+
+use_ipv6
+========
+
+
+Aktiviert die Nutzung von IPv6 zusätzlich zu IPv4 (optional)
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+**Keine**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+send(to, msgsend, mt= 'chat')
+=============================
+
+
+Eine Messgae via xmpp senden
+
+ - Die Funktion liefert kein Ergebnis
+
+
+to
+--
+
+An wen, z.B. 'skender@haxhimolla.im'
+
+ - Datentyp: **str**
+
+
+msgsend
+-------
+
+Text der Message, z.B. 'Hello world'
+
+ - Datentyp: **str**
+
+
+mt
+--
+
+Message Typ, kann 'chat' oder 'groupchat' sein
+
+ - Datentyp: **str**
+ - Standardwert: **chat**
+
+ - Mögliche Werte:
+
+   - **chat**
+   - **groupchat**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/xmpp/README>` des Plugins zugreifen.

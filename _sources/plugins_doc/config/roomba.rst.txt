@@ -1,0 +1,189 @@
+.. |_| unicode:: 0xA0
+
+
+=============================
+Plugin 'roomba' Konfiguration
+=============================
+
+
+.. index:: Plugins; roomba Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **roomba** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Anbindung von iRobot Roomba Staubsaugern
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **roomba** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Zeitlicher Abstand zwischen zwei Abfragen des Roomba. Wird 0 angegeben, wird das Gerät nicht abgefragt
+
+ - Datentyp: **int**
+ - Standardwert: **240**
+
+ - Minimalwert: **0**
+
+socket_addr
+===========
+
+
+Spezifiziert die IP Adresse oder die Bluetooth MAC Adresse der Schnittstelle
+
+ - Datentyp: **str**
+
+
+socket_port
+===========
+
+
+Gibt den Port der Schnittstelle an für den Fall einer tcp Verbindung
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+
+socket_type
+===========
+
+
+Wählt die Schnittstelle für die Kommunikation aus
+
+ - Datentyp: **str**
+ - Standardwert: **bt**
+
+ - Mögliche Werte:
+
+   - **bt**
+   - **tcp**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+roomba_cmd
+==========
+
+
+Sendet die angegebenen Folgen oder Kommandos an den Roomba
+
+ - Datentyp: **list(str)**
+
+
+roomba_get
+==========
+
+
+Weist einem Item einen Sensor Wert zu
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **current**
+   - **temperature**
+   - **voltage**
+   - **buttons_clean**
+   - **capacity**
+   - **charge**
+   - **angle**
+   - **distance**
+   - **buttons_max**
+   - **buttons_clean**
+   - **buttons_spot**
+   - **buttons_power**
+   - **remote_opcode**
+   - **dirt_detect_right**
+   - **dirt_detect_left**
+   - **motor_overcurrent_side_brush**
+   - **motor_overcurrent_vacuum**
+   - **motor_overcurrent_main_brush**
+   - **motor_overcurrent_drive_left**
+   - **virtual_wall**
+   - **cliff_right**
+   - **cliff_front_right**
+   - **cliff_front_left**
+   - **cliff_left**
+   - **wall**
+   - **bumps_wheeldrops_bump_right**
+   - **bumps_wheeldrops_bump_left**
+   - **bumps_wheeldrops_wheeldrop_right**
+   - **bumps_wheeldrops_wheeldrop_left**
+
+
+roomba_raw
+==========
+
+
+Sendet die angegebene Folge an den Roomba
+
+ - Datentyp: **list(str)**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/roomba/README>` des Plugins zugreifen.

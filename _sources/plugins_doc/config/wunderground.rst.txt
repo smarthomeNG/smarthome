@@ -1,0 +1,159 @@
+.. |_| unicode:: 0xA0
+
+
+===================================
+Plugin 'wunderground' Konfiguration
+===================================
+
+
+.. index:: Plugins; wunderground Konfiguration
+
+.. image:: /plugins/wunderground/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **wunderground** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als deprecated gekennzeichnet. Es wird empfohlen auf eine                  Nachfolgelösung umzusteigen.
+
+
+
+Beschreibung
+============
+
+Abfrage der Daten des Wetterdienstes Wunderground.com
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **wunderground** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+apikey
+======
+
+
+Den bei Wunderground registrierten API Key eingeben
+
+ - Datentyp: **str**
+
+
+cycle
+=====
+
+
+Dieser Parameter muss normalerweise nicht angegeben werden. Er erlaubt es die Update-Frquenz anzupassen (Standard: alle 600 Sekunden). Mit dem Standardwert werden die Wetterdaten alle 10 Minuten aktualisiert. Das stellt sicher, dass die maximale Tagesmenge von 500 Requests für den gebührenfreien Account nicht überschritten werden, selbst wenn Wetter für zwei Orte oder für die smartVISU angefordert wird.
+
+ - Datentyp: **int**
+ - Standardwert: **600**
+
+
+item_subtree
+============
+
+
+item_subtree definiert den Teilbaum der Items, welchen das wunderground plugin während der Updates nach dem wug_matchstring Attribut durchsuchen soll.
+
+ - Datentyp: **str**
+
+
+language
+========
+
+
+Definiert die Sprache in der Wunderground Vorhersagedaten liefern soll (en: Englisch, de: Deutsch, fr: Französisch). Für weitere Sprachen bitte die von Wunderground definierten codes verwenden.
+
+ - Datentyp: **str**
+ - Standardwert: **de**
+
+
+location
+========
+
+
+Ort für den die Wetterinformationen angefordert werden sollen
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+wug_datatype
+============
+
+
+wug_datatype kann genutzt werden, um fehlerhafte Daten herauszufiltern, die evtl. von Zeit zu Zeit von einer Wunderground Wetterstation gesendet werden. Diese fehlerhaften Werte werden dann nicht in das Item geschrieben. Dieses Attribut kann die Werte positive und percent annehmen.   - positive: Filtert alle Werte kleiner 0 heraus. - percent: Filtert alle Werte heraus, die kleiner 0 oder größer als 100 sind.
+
+ - Datentyp: **str**
+
+
+wug_matchstring
+===============
+
+
+wug_matchstring enthält eine Zeichenkette, die zum parsen der von Wunderground gesendeten Daten verwendet wird. Item Definitionen mit den üblicherweise verwendeten Mactchstrings sind in der README nachzulesen.
+
+ - Datentyp: **str**
+
+
+wug_xmlstring
+=============
+
+
+Veraltet. Bitte stattdessen wug_matchstring verwenden.
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/wunderground/README>` des Plugins zugreifen.

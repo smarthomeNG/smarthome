@@ -1,0 +1,289 @@
+.. |_| unicode:: 0xA0
+
+
+===============================
+Plugin 'telegram' Konfiguration
+===============================
+
+
+.. index:: Plugins; telegram Konfiguration
+
+.. image:: /plugins/telegram/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **telegram** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Anbindung des Telegram Messenger Service
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.3**
+ - Minimum Python Version: **3.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **telegram** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+bye_msg
+=======
+
+
+Endenachricht, wird an alle vertrauenswürdigen Clients beim Stop des Plugins gesendet.  Ist der Wert leer, wird keine Endenachricht gesendet.
+
+ - Datentyp: **str**
+ - Standardwert: **SmartHomeNG Telegram Plugin stops**
+
+
+long_polling_timeout
+====================
+
+
+Zeit nachdem eine neue Verbindung zum Telegram Server aufgebaut um Updates zu holen
+
+ - Datentyp: **num**
+ - Standardwert: **120**
+
+
+name
+====
+
+
+Name um diese Instanz zu identifizieren
+
+ - Datentyp: **str**
+ - Standardwert: **SmartHomeNG Telegram Gateway**
+
+
+no_access_msg
+=============
+
+
+Mitteilung die der Telegram Benutzer erhält, weil der chat id nicht vertraut wird
+
+ - Datentyp: **str**
+ - Standardwert: **This bot does not know your chat id and thus does not trust it, you are not allowed to use this bot**
+
+
+no_write_access_msg
+===================
+
+
+Mitteilung die der Telegram Benutzer erhält, weil der chat id keine Schreibrechte auf Items hat
+
+ - Datentyp: **str**
+ - Standardwert: **This bot knows your chat id but you are not allowed to use this bot to write to items**
+
+
+pretty_thread_names
+===================
+
+
+Telegram Threads zur leichteren Unterscheidung in der Thread Liste umbenennen
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+token
+=====
+
+
+Geheimer Schlüssel zur Authentifizierung bei Telegram
+
+ - Datentyp: **str**
+
+
+welcome_msg
+===========
+
+
+Willkommensnachricht, wird an alle vertrauenswürdigen Clients beim Start des Plugins gesendet. Ist der Wert leer, wird keine Willkommensnachricht gesendet.
+
+ - Datentyp: **str**
+ - Standardwert: **SmarthomeNG Telegram Plugin is up and running**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+telegram_chat_ids
+=================
+
+
+Ein Item dessen Datentyp dict ist und Paare von ``Chat_id`` und Schreib/Lese- oder Lesezugriff
+
+ - Datentyp: **foo**
+
+
+telegram_condition
+==================
+
+
+Bedingung unter der die Mitteilung gesendet wird
+
+ - Datentyp: **str**
+ - Standardwert: **on_update**
+
+ - Mögliche Werte:
+
+   - **on_update** |_| - |_| Senden nach Wertaktualisierung
+   - **on_change** |_| - |_| Nur senden, wenn sich der Wert des Items gegenüber dem vorherigen Wert geändert hat
+
+
+telegram_info
+=============
+
+
+Item lesen per Telegram Keyboard. Der Wert des Attributes bestimmt das Telegram Keyboard Kommando
+
+ - Datentyp: **str**
+
+
+telegram_message
+================
+
+
+Mitteilung senden wenn sich der Itemwert ändert
+
+ - Datentyp: **str**
+
+
+telegram_message_chat_id
+========================
+
+
+Chat_ID, zu der diese Message gesendet werden soll
+
+ - Datentyp: **num**
+
+
+telegram_text
+=============
+
+
+Mitteilungstext als Itemwert setzen; Das Format ist "user: Chat-ID: msg"
+
+ - Datentyp: **str**
+
+
+telegram_value_match_regex
+==========================
+
+
+Itemwert gegen einen regulären Ausdruck prüfen vor dem Versenden einer Mitteilung
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+msg_broadcast(msg, chat_id)
+===========================
+
+
+Sendet eine Nachricht an einen Empfänger
+
+ - Ergebnistyp der Funktion: **str**
+
+
+msg
+---
+
+Nachricht die verschickt werden soll
+
+ - Datentyp: **str**
+
+
+chat_id
+-------
+
+ID des Chats oder Liste mit Chats denen die Nachricht gesendet werden soll
+
+ - Datentyp: **int**
+
+
+photo_broadcast(photofile_or_url, caption, chat_id)
+===================================================
+
+
+Sendet ein Bild an einen Empfänger
+
+ - Ergebnistyp der Funktion: **str**
+
+
+photofile_or_url
+----------------
+
+Dateiname oder URL eines Bildes
+
+ - Datentyp: **str**
+
+
+caption
+-------
+
+Titel des Bildes
+
+ - Datentyp: **str**
+
+
+chat_id
+-------
+
+ID des Chats oder Liste mit Chats denen das Bild gesendet werden soll
+
+ - Datentyp: **int**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

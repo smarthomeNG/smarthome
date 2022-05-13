@@ -1,0 +1,879 @@
+.. |_| unicode:: 0xA0
+
+
+===================================
+Plugin 'kostalmodbus' Konfiguration
+===================================
+
+
+.. index:: Plugins; kostalmodbus Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **kostalmodbus** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin zur Anbindung von einem Kostal Wechselrichter über Modbus an SmartHomeNG
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+ - Minimum Python Version: **3.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **kostalmodbus** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+inverter_ip
+===========
+
+
+IP Adresse des Wechselrichters
+
+ - Datentyp: **str**
+
+
+modbus_port
+===========
+
+
+Modbus Port
+
+ - Datentyp: **str**
+
+
+update_cycle
+============
+
+
+Update Zyklus in Sekunden
+
+ - Datentyp: **num**
+ - Standardwert: **20**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+kostal_100
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_104
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_106
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_108
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_110
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_112
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_114
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_116
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_118
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_120
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_122
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_124
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_144
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_150
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_152
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_154
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_156
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_158
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_160
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_162
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_164
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_166
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_168
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_170
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_172
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_174
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_178
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_190
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_194
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_200
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_202
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_208
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_210
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_214
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_216
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_218
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_220
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_222
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_224
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_226
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_228
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_230
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_232
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_234
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_236
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_238
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_240
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_242
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_244
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_246
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_248
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_250
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_252
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_254
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_256
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_258
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_260
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_266
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_268
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_270
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_276
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_278
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_280
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_286
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_30
+=========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_32
+=========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_320
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_322
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_324
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_326
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_34
+=========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_36
+=========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_512
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_514
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_515
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_525
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_529
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_531
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_54
+=========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_56
+=========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_575
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_577
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_582
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_586
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_588
+==========
+
+
+
+
+ - Datentyp: **num**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/kostalmodbus/README>` des Plugins zugreifen.

@@ -1,0 +1,188 @@
+.. |_| unicode:: 0xA0
+
+
+===============================
+Plugin 'comfoair' Konfiguration
+===============================
+
+
+.. index:: Plugins; comfoair Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **comfoair** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Unterstützung für Zehnder ComfoAir 350 & 500 KWL
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.3**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **comfoair** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+host
+====
+
+
+Netzwerverbindung: Hostname/IP des KWL Systems
+
+ - Datentyp: **ip**
+
+
+kwltype
+=======
+
+
+Legt den Typ des KWL Systems fest
+
+ - Datentyp: **str**
+ - Standardwert: **comfoair350**
+
+ - Mögliche Werte:
+
+   - **comfoair350**
+   - **comfoair500**
+
+
+port
+====
+
+
+Netzwerkverbindung: Port des KWL Systems
+
+ - Datentyp: **int**
+
+
+serialport
+==========
+
+
+Serielle Verbindung: Device/Port der serielle Schnittstelle zum KWL Systems
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+comfoair_init
+=============
+
+
+Konfiguriert ob der Wert aus dem KWL System initialisiert werden soll.
+
+ - Datentyp: **bool**
+
+
+comfoair_read
+=============
+
+
+Liest Wert mit konfiguriertem Kommand aus dem KWL System aus.
+
+ - Datentyp: **str**
+
+
+comfoair_read_afterwrite
+========================
+
+
+Konfiguriert eine Verzögerung in Sekunden nachdem ein Lesekommando nach einem Schreibkommando an das KWL System geschickt wird.
+
+ - Datentyp: **num**
+
+
+comfoair_read_cycle
+===================
+
+
+Konfiguriert ein Interval in Sekunden für das Lesekommando.
+
+ - Datentyp: **num**
+
+
+comfoair_send
+=============
+
+
+Änderung des Items wird mit konfiguriertem Kommando an das KWL System geschickt.
+
+ - Datentyp: **str**
+
+
+comfoair_trigger
+================
+
+
+Konfiguriert Lesekommandos die nach einem Schreibvorgang auf das Item aufgerufen werden.
+
+ - Datentyp: **list(str)**
+
+
+comfoair_trigger_afterwrite
+===========================
+
+
+Konfiguriert eine Verzögerung in Sekunden bis ein Trigger ausgeführt werden soll nachdem ein Wert gesetzt wurde.
+
+ - Datentyp: **num**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/comfoair/README>` des Plugins zugreifen.

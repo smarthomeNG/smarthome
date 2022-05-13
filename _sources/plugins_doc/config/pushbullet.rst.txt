@@ -1,0 +1,314 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'pushbullet' Konfiguration
+=================================
+
+
+.. index:: Plugins; pushbullet Konfiguration
+
+.. image:: /_static/img/web.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **pushbullet** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Anbindung des Pushbullet Service
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **pushbullet** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+apikey
+======
+
+
+(optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
+
+ - Datentyp: **str**
+
+
+deviceid
+========
+
+
+(optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+**Keine**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+address(name, address, deviceid, apikey)
+========================================
+
+
+Sendet eine Adresse an Pushbullet.
+
+ - Ergebnistyp der Funktion: **str | bool**
+
+
+name
+----
+
+Name der Adresse / des Kontakts.
+
+ - Datentyp: **str**
+
+
+address
+-------
+
+Adresse.
+
+ - Datentyp: **str**
+
+
+deviceid
+--------
+
+(optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
+
+ - Datentyp: **str**
+
+
+apikey
+------
+
+(optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
+
+ - Datentyp: **str**
+
+
+file(filepath, deviceid, apikey, body)
+======================================
+
+
+Sendet eine Datei an Pushbullet.
+
+ - Ergebnistyp der Funktion: **str | bool**
+
+
+filepath
+--------
+
+Pfad der Datei.
+
+ - Datentyp: **str**
+
+
+deviceid
+--------
+
+(optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
+
+ - Datentyp: **str**
+
+
+apikey
+------
+
+(optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
+
+ - Datentyp: **str**
+
+
+body
+----
+
+Inhalt der Nachricht.
+
+ - Datentyp: **str**
+
+
+link(title, url, deviceid, apikey, body)
+========================================
+
+
+Sendet einen Link an Pushbullet.
+
+ - Ergebnistyp der Funktion: **str | bool**
+
+
+title
+-----
+
+Titel des Links.
+
+ - Datentyp: **str**
+
+
+url
+---
+
+URL des Links.
+
+ - Datentyp: **str**
+
+
+deviceid
+--------
+
+(optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
+
+ - Datentyp: **str**
+
+
+apikey
+------
+
+(optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
+
+ - Datentyp: **str**
+
+
+body
+----
+
+Inhalt der Nachricht.
+
+ - Datentyp: **str**
+
+
+list(title, items, deviceid, apikey)
+====================================
+
+
+Sendet eine Liste an Pushbullet.
+
+ - Ergebnistyp der Funktion: **str | bool**
+
+
+title
+-----
+
+Titel der Liste.
+
+ - Datentyp: **str**
+
+
+items
+-----
+
+Items der Liste (als JSON Array).
+
+ - Datentyp: **str**
+
+
+deviceid
+--------
+
+(optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
+
+ - Datentyp: **str**
+
+
+apikey
+------
+
+(optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
+
+ - Datentyp: **str**
+
+
+note(title, body, deviceid, apikey)
+===================================
+
+
+Sendet eine Nachricht an Pushbullet.
+
+ - Ergebnistyp der Funktion: **str | bool**
+
+
+title
+-----
+
+Titel der Nachricht.
+
+ - Datentyp: **str**
+
+
+body
+----
+
+Inhalt der Nachricht.
+
+ - Datentyp: **str**
+
+
+deviceid
+--------
+
+(optional) Id des anzusprechenden Geräts, wo eine Pushbullet App läuft. Auf http://www.pushbullet.com einloggen, Gerät auswählen und den Teil der URL kopieren, der hinter "device_iden=" kommt. Falls nicht gesetzt, muss der Wert explizit in Funktionsaufrufen als Parameter angegeben werden.
+
+ - Datentyp: **str**
+
+
+apikey
+------
+
+(optional) Persönlicher API Key für Pushbullet. Registrierung siehe https://docs.pushbullet.com/. Wenn der Key nicht gesetzt ist, muss er expizit in Funktionsaufrufen gesetzt werden.
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/pushbullet/README>` des Plugins zugreifen.

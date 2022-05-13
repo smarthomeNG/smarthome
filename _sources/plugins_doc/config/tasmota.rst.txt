@@ -1,0 +1,177 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'tasmota' Konfiguration
+==============================
+
+
+.. index:: Plugins; tasmota Konfiguration
+
+.. image:: /plugins/tasmota/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **tasmota** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Plugin zur Steuerung von Switches, die mit Tasmota Firmware ausgestattet sind. Die Kommunikation erfolgt über das MQTT Module von SmartHomeNG.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.7.2**
+ - Minimum Python Version: **3.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **tasmota** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+full_topic
+==========
+
+
+Vollständiges Topic (Prefix und Topic) zur Kommunikation mit den Tasmota Devices
+
+ - Datentyp: **str**
+ - Standardwert: **%prefix%/%topic%/**
+
+
+telemetry_period
+================
+
+
+Zeitabstand in Sekunden in dem die Tasmota Devices Telemetrie Daten senden sollen
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+ - Minimalwert: **10**
+ - Maximalwert: **3600**
+
+webif_pagelength
+================
+
+
+Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden
+
+ - Datentyp: **int**
+ - Standardwert: **100**
+
+ - Mögliche Werte:
+
+   - **-1**
+   - **25**
+   - **50**
+   - **100**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+tasmota_attr
+============
+
+
+Zu lesendes/schreibendes Attribut des Tasmota Devices. Achtung: Nicht jedes Attribut ist auf allen Device-Typen vorhanden.
+
+ - Datentyp: **str**
+ - Standardwert: **relay**
+
+
+tasmota_relay
+=============
+
+
+Nummer des zu schaltenden Relais im Tasmota Device
+
+ - Datentyp: **str**
+ - Standardwert: **1**
+
+ - Mögliche Werte:
+
+   - **1**
+   - **2**
+   - **3**
+   - **4**
+
+
+tasmota_topic
+=============
+
+
+Topic um mit dem Tasmota Device zu kommunizieren (%topic%)
+
+ - Datentyp: **str**
+
+
+tasmota_zb_attr
+===============
+
+
+Schlüssel der Json-Dict, der vom Zigbee-Device bereitgestellt wird; Key aus dem sub-dict 'data' des tasmota_zb_device
+
+ - Datentyp: **str**
+
+
+tasmota_zb_device
+=================
+
+
+Friendly Name oder Kurzname des Zigbee Devices. ACHTUNG: Wird der Kurzname verwendet und beginnt dieser mit 0x, muss die Schreibweise '0x9CB9' verwendet werden
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

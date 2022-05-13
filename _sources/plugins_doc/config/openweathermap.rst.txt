@@ -1,0 +1,306 @@
+.. |_| unicode:: 0xA0
+
+
+=====================================
+Plugin 'openweathermap' Konfiguration
+=====================================
+
+
+.. index:: Plugins; openweathermap Konfiguration
+
+.. image:: /plugins/openweathermap/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **openweathermap** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Wetterdaten über OpenWeatherMap.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9.0**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **openweathermap** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+altitude
+========
+
+
+Altitude des Ortes, für den die Wetterdaten abgerufen werden sollen. Default: SmartHomeNG Settings.
+
+ - Datentyp: **str**
+
+
+cycle
+=====
+
+
+(optional) Zeit zwischen zwei Updateläufen.
+
+ - Datentyp: **int**
+ - Standardwert: **900**
+
+
+key
+===
+
+
+Persönlicher API Key für OpenWeatherMap. Registrierung unter https://openweathermap.org/.
+
+ - Datentyp: **str**
+
+
+lang
+====
+
+
+Sprache der zurückgelieferten Daten. Mögliche Werte siehe https://openweathermap.org/api.
+
+ - Datentyp: **str**
+ - Standardwert: **de**
+
+
+latitude
+========
+
+
+Latitude des Ortes, für den die Wetterdaten abgerufen werden sollen (max. 4 Dezimalstellen). Default: SmartHomeNG Settings
+
+ - Datentyp: **str**
+
+
+longitude
+=========
+
+
+Longitude des Ortes, für den die Wetterdaten abgerufen werden sollen (max. 4 Dezimalstellen). Default: SmartHomeNG Settings.
+
+ - Datentyp: **str**
+
+
+softfail_precipitation
+======================
+
+
+Wenn keine optionalen Niederschlagswerte (Regen/Schnee) geliefert werden, aber eine Aktualisierung passiert ist - was soll geschrieben werden?
+
+ - Datentyp: **str**
+ - Standardwert: **number=0**
+
+ - Mögliche Werte:
+
+   - **number=0**
+   - **number=-1**
+   - **no_update**
+   - **log_info**
+
+
+softfail_wind_gust
+==================
+
+
+Wenn keine Werte für Windböen geliefert werden, aber eine Aktualisierung passiert ist - was soll geschrieben werden?
+
+ - Datentyp: **str**
+ - Standardwert: **relative=../wind_speed**
+
+ - Mögliche Werte:
+
+   - **number=0**
+   - **number=-1**
+   - **no_update**
+   - **relative=../wind_speed**
+   - **log_info**
+
+
+units
+=====
+
+
+Einheit der zurückgelieferten Daten. Mögliche Werte sind imperial und metric.
+
+ - Datentyp: **str**
+ - Standardwert: **metric**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+owm_coord_x
+===========
+
+
+X-Koordinate für die entsprechenden Layer-Bilder-Links von OpenWeatherMap. Nur nutzbar mit owm_matchstring: precipitation_new und clouds_new.
+
+ - Datentyp: **num**
+
+
+owm_coord_y
+===========
+
+
+Y-Koordinate für die entsprechenden Layer-Bilder-Links von OpenWeatherMap. Nur nutzbar mit owm_matchstring: precipitation_new und clouds_new.
+
+ - Datentyp: **num**
+
+
+owm_coord_z
+===========
+
+
+Z-Koordinate für die entsprechenden Layer-Bilder-Links von OpenWeatherMap. Nur nutzbar mit owm_matchstring: precipitation_new und clouds_new.
+
+ - Datentyp: **num**
+
+
+owm_match_prefix
+================
+
+
+Präfix der dem Matchstring vorangestellt wird. Kann in einem struct vererbt werden über ..:.
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+owm_matchstring
+===============
+
+
+Matchstring für die OpenWeatherMap Daten, siehe Beispiele in der README.
+
+ - Datentyp: **str**
+
+
+owm_raw_file
+============
+
+
+Name einer Datenquelle, der JSON hier komplett eingebunden wird
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+get_beaufort_description(speed_in_bft)
+======================================
+
+
+
+
+ - Ergebnistyp der Funktion: **str**
+
+
+speed_in_bft
+------------
+
+Windstärke in bft, integer zwischen 0 und 12
+
+ - Datentyp: **num**
+
+
+get_beaufort_number(speed_in_mps)
+=================================
+
+
+Berechnet den Beaufort-Wert (0 - 12) aus der Windgeschwindigkeit in m/s
+
+ - Ergebnistyp der Funktion: **num**
+
+
+speed_in_mps
+------------
+
+Windstärke in m/s
+
+ - Datentyp: **num**
+
+
+get_raw_data_file(data_source_key)
+==================================
+
+
+Stellt die JSON-Datei der Datenquelle bereit
+
+ - Ergebnistyp der Funktion: **str**
+
+
+data_source_key
+---------------
+
+Datenquelle
+
+ - Datentyp: **str**
+
+
+get_value(owm_matchstring)
+==========================
+
+
+Lädt einen Wert
+
+ - Die Funktion liefert kein Ergebnis
+
+
+owm_matchstring
+---------------
+
+Zum Beispiel /day/0/rain
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

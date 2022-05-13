@@ -1,0 +1,229 @@
+.. |_| unicode:: 0xA0
+
+
+===========================
+Plugin 'kodi' Konfiguration
+===========================
+
+
+.. index:: Plugins; kodi Konfiguration
+
+.. image:: /plugins/kodi/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **kodi** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Anbindung von Kodi (ehemals XBMC)
+
+
+Anforderungen
+=============
+
+
+Es ist eine Kodi Installation v12 oder höher notwendig, bei der in den Einstellungen "Allow programs on other systems to control Kodi" aktiviert ist.
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **kodi** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+autoreconnect
+=============
+
+
+Erneute Verbindungsversuche bei Verlust der Verbindung alle 30 Sekunden
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+command_repeat
+==============
+
+
+Anzahl der Wiederholversuche für unbeantwortete Befehle
+
+ - Datentyp: **int**
+ - Standardwert: **2**
+
+
+command_timeout
+===============
+
+
+Zeit, nach der ein unbeantworteter Befehl erneut gesendet wird
+
+ - Datentyp: **int**
+ - Standardwert: **5**
+
+
+connect_cycle
+=============
+
+
+Pause zwischen Verbindungsversuchen
+
+ - Datentyp: **int**
+ - Standardwert: **5**
+
+
+connect_retries
+===============
+
+
+Anzahl der Verbindungsversuche
+
+ - Datentyp: **int**
+ - Standardwert: **10**
+
+
+host
+====
+
+
+Hostname oder IP-Adresse des Kodi-Systems
+
+ - Datentyp: **ip**
+
+
+port
+====
+
+
+Netzwerkport für die Steuerung des Kodi-Systems
+
+ - Datentyp: **int**
+ - Standardwert: **9090**
+
+ - Minimalwert: **1**
+ - Maximalwert: **65535**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+kodi_item
+=========
+
+
+Der Attributwert hängt von der gewünschten Funktion ab. Siehe Dokumentation für Details.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **quit**
+   - **mute**
+   - **volume**
+   - **action**
+   - **seek**
+   - **audio**
+   - **speed**
+   - **subtitle**
+   - **playpause**
+   - **stop**
+   - **goto**
+   - **power**
+   - **subtitles**
+   - **streams**
+   - **media**
+   - **title**
+   - **player**
+   - **state**
+   - **update**
+   - **macro**
+   - **get_favourites**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+notify(title, message, image= 'None*', display_time=10000)
+==========================================================
+
+
+Diese Funktion ermöglicht es, Mitteilungen an Kodi zu schicken. Beispiel: sh.kodi.notify('Door', 'Ding Dong'). 'kodi' ist dabei der Name der jeweiligen Plugin-Instanz und kein Item-Name.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+title
+-----
+
+Überschrift der Mitteilung
+
+ - Datentyp: **str**
+
+
+message
+-------
+
+Text der Mitteilung
+
+ - Datentyp: **str**
+
+
+image
+-----
+
+URL des anzuzeigenden Bildes (z.B.: "http://smarthome.local/img/phone.png")
+
+ - Datentyp: **str**
+ - Standardwert: **None***
+
+
+display_time
+------------
+
+Dauer der Anzeige in msec
+
+ - Datentyp: **int**
+ - Standardwert: **10000**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/kodi/README>` des Plugins zugreifen.

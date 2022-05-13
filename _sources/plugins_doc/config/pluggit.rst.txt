@@ -1,0 +1,147 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'pluggit' Konfiguration
+==============================
+
+
+.. index:: Plugins; pluggit Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **pluggit** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Anbindung einer KWL Pluggit AP310 über das Modbus Protokoll
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.2**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **pluggit** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Zykluszeit
+
+ - Datentyp: **int**
+ - Standardwert: **50**
+
+
+host
+====
+
+
+Hostname oder IP Adresse des Pluggit Dienstes
+
+ - Datentyp: **str**
+
+
+port
+====
+
+
+Port Nummer des Pluggit Dienstes
+
+ - Datentyp: **int**
+ - Standardwert: **502**
+
+ - Minimalwert: **0**
+ - Maximalwert: **65535**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+pluggit_listen
+==============
+
+
+In das Item zu lesende Daten
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **prmRamIdxUnitMode** |_| - |_| Aktiver Modus der Einheit> 0x0004 Manueller Modus; 0x0008 Wochenprogramm
+   - **prmNumOfWeekProgram** |_| - |_| Nummer des Wochenprogrammes (für Week Programmier-Modus)
+   - **prmRomIdxSpeedLevel** |_| - |_| Geschwindigkeit des Lüfters im manuellen Modus; zeigt den aktuellen Gschwindigkeits-Level [4-0]
+   - **prmFilterRemainingTime** |_| - |_| Verbleibende Zeit der Lebensdauer des Filters (in Tagen)
+   - **prmRamIdxT1** |_| - |_| Frischluft Temperatur in °C
+   - **prmRamIdxT2** |_| - |_| Zuluft Temperatur in °C
+   - **prmRamIdxT3** |_| - |_| Abluft Temperatur in °C
+   - **prmRamIdxT4** |_| - |_| Fortluft Temperatur in °C
+
+
+pluggit_send
+============
+
+
+In die Pluggit Einheit zu schreibender Wert
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **activatePowerBoost** |_| - |_| Bool Variable welche den Unit Mode auf manuellen Modus ändert und den Lüfter Gschwindikeits-Level auf den höchsten Wert (4) setzt.
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/pluggit/README>` des Plugins zugreifen.

@@ -1,0 +1,237 @@
+.. |_| unicode:: 0xA0
+
+
+==================================
+Plugin 'deebot_ozmo' Konfiguration
+==================================
+
+
+.. index:: Plugins; deebot_ozmo Konfiguration
+
+.. image:: /plugins/deebot_ozmo/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **deebot_ozmo** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin für Deebot Ozmo 920 / 950 / 960
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **deebot_ozmo** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+account
+=======
+
+
+Ecovacs Konto Login (Email addresse)
+
+ - Datentyp: **str**
+
+
+continent
+=========
+
+
+Kontinent für API. Autodetect falls leer
+
+ - Datentyp: **str**
+
+
+country
+=======
+
+
+Land für API. Autodetect falls leer
+
+ - Datentyp: **str**
+
+
+device
+======
+
+
+Roboter Name für diese Instanz. Default ist erster in der Liste
+
+ - Datentyp: **str**
+ - Standardwert: **NONE**
+
+
+interval
+========
+
+
+Interval der API Abfragen (Karten updates, Lifespan updates, ...)
+
+ - Datentyp: **int**
+ - Standardwert: **60**
+
+
+password
+========
+
+
+Ecovacs Konto Passwort
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+**Keine**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+charge()
+========
+
+
+Zur Ladestation zurückkehren
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+clean()
+=======
+
+
+Reinigung starten
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+clean_spot_area(area)
+=====================
+
+
+Reinigung starten
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+area
+----
+
+ID des Raumes der geputzt werden soll
+
+ - Datentyp: **num**
+
+
+locate()
+========
+
+
+Deebot lokalisieren
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+pause()
+=======
+
+
+Reinigung pausieren
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+resume()
+========
+
+
+Reinigung fortführen
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+set_fan_speed(speed)
+====================
+
+
+Saugstärke einstellen
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+speed
+-----
+
+Saugstärke
+
+ - Datentyp: **num**
+
+
+set_water_level(level)
+======================
+
+
+Wasser Quantität einstellen
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+level
+-----
+
+Wasser Quanittät
+
+ - Datentyp: **num**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/deebot_ozmo/README>` des Plugins zugreifen.

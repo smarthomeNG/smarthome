@@ -1,0 +1,155 @@
+.. |_| unicode:: 0xA0
+
+
+===========================
+Plugin 'nuki' Konfiguration
+===========================
+
+
+.. index:: Plugins; nuki Konfiguration
+
+.. image:: /plugins/nuki/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **nuki** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Unterstützung für ein NUKI Smart-Lock
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9.0**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **nuki** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+bridge_api_token
+================
+
+
+Token für die Authentifizierung mit der API der NUKI Bridge.
+
+ - Datentyp: **str**
+
+
+bridge_ip
+=========
+
+
+IP-Adresse der NUKI Bridge.
+
+ - Datentyp: **ip**
+
+
+bridge_port
+===========
+
+
+Portnummer der NUKI Bridge.
+
+ - Datentyp: **int**
+
+
+no_wait
+=======
+
+
+(optional) Flag, ob gewartet werden soll, bis die Aktion des Schlosses beendet ist. False kann zu Fehler bei Requests an die NUKI Bridge führen. Default: True
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+protocol
+========
+
+
+(optional) Zu verwendendes Protokoll für die Kommunikaton mit der NUKI Bridge. Default: http.
+
+ - Datentyp: **str**
+ - Standardwert: **http**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+nuki_id
+=======
+
+
+Dieses Attribut weist das Item dem jeweiligen NUKI Smart Lock zu. Die `nuki_id` kann entweder über die REST API der NUKI Bridget (siehe Dokumentation)herausgefunden werden, oder durch Neustart von SmartHomeNG mit dem konfigurierten NUKI Plugin. Der `name` und die `nuki_id` werden in das jeweilige Logfile geschrieben.
+
+ - Datentyp: **str**
+
+
+nuki_trigger
+============
+
+
+Es gibt vier Typen von NUKI Triggern, `action`, `state`, `doorstate` (nur Nuki 2.0!) und `battery`. Ein Item kann nur einen Trigger gleichzeitig haben..
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **state**
+   - **doorstate**
+   - **battery**
+   - **action**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/nuki/README>` des Plugins zugreifen.

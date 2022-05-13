@@ -1,0 +1,188 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'waterkotte' Konfiguration
+=================================
+
+
+.. index:: Plugins; waterkotte Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **waterkotte** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Anbindung von Waterkotte Wärmepumpen der EcoTouch-Reihe mittels Netzwerk
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.3**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **waterkotte** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Zykluszeit
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+ip
+==
+
+
+IP Adresse der Wärmepumpe
+
+ - Datentyp: **ip**
+
+
+passwd
+======
+
+
+Passwort
+
+ - Datentyp: **str**
+ - Standardwert: **waterkotte**
+
+
+user
+====
+
+
+Benutzername
+
+ - Datentyp: **str**
+ - Standardwert: **waterkotte**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+waterkotte
+==========
+
+
+Derzeit implementierte Tags und deren Bedeutung
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **temp_aussen** |_| - |_| Außentemperatur aktuell
+   - **temp_aussen_1h** |_| - |_| Außentemperatur Mittelwert 1h
+   - **temp_aussen_24h** |_| - |_| Außentemperatur Mittelwert 24h
+   - **temp_quelle_ein** |_| - |_| Temperatur Quelle Eingang
+   - **temp_quelle_aus** |_| - |_| Temperatur Quelle Ausgang
+   - **temp_verdampfung** |_| - |_| Temperatur Verdampfung
+   - **temp_sauggas** |_| - |_| Temperatur Sauggas
+   - **druck_verdampfung** |_| - |_| Druck Verdampfung
+   - **temp_soll** |_| - |_| Temperatur Soll ?
+   - **temp_ruecklauf** |_| - |_| Temperatur Rücklauf
+   - **temp_vorlauf** |_| - |_| Temperatur Vorlauf
+   - **temp_kondensation** |_| - |_| Temperatur Kondensation
+   - **druck_kondensation** |_| - |_| Druck Kondensation
+   - **temp_speicher** |_| - |_| Temperatur Speicher ?
+   - **temp_raum** |_| - |_| Raumtemperatur
+   - **temp_raum_1h** |_| - |_| Raumtemperatur Mittelwert 1h
+   - **temp_ww** |_| - |_| Temperatur Warmwasser
+   - **temp_sk** |_| - |_| Temperatur Pool
+   - **pow_comp** |_| - |_| Leistung Kompressor
+   - **pow_therm** |_| - |_| Leistung thermisch gesamt
+   - **pow_cool** |_| - |_| Leistung Kälte
+   - **cop_comp** |_| - |_| Aktueller COP
+   - **cop_cool** |_| - |_| COP Kühlung ?
+   - **temp_hk** |_| - |_| Temperatur Heizkreis
+   - **temp_gefordert_hk** |_| - |_| Temperatur gefordert Heizkreis
+   - **temp_gefordert_ww** |_| - |_| Temperatur gefordert Warmwasser
+   - **temp_soll_ww** |_| - |_| Temperatur Soll Warmwasser
+   - **rpm_hk** |_| - |_| Drehzahl % Heizkreispumpe
+   - **rpm_sole** |_| - |_| Drehzahl % Quellenpumpe
+   - **valve_exp** |_| - |_| Expansionsventil Öffnung %
+   - **jaz_wp** |_| - |_| Jahresarbeitszahl Wärmepumpe
+   - **oh1_verdichter** |_| - |_| Betriebsstunden Verdichter 31..16
+   - **oh2_verdichter** |_| - |_| Betriebsstunden Verdichter 15..0
+   - **oh1_heizstab** |_| - |_| Betriebsstunden Heizstab 31..16
+   - **oh2_heizstab** |_| - |_| Betriebsstunden Heizstab 15..0
+   - **oh1_heizpumpe** |_| - |_| Betriebsstunden Heizkreispumpe 31..16
+   - **oh2_heizpumpe** |_| - |_| Betriebsstunden Heizkreispumpe 15..0
+   - **oh1_solepumpe** |_| - |_| Betriebsstunden Quellenpumpe 31..16
+   - **oh2_solepumpe** |_| - |_| Betriebsstunden Quellenpumpe 15..0
+   - **cop_jan** |_| - |_| COP Januar
+   - **cop_feb** |_| - |_| COP Februar
+   - **cop_mar** |_| - |_| COP März
+   - **cop_apr** |_| - |_| COP April
+   - **cop_may** |_| - |_| COP Mai
+   - **cop_jun** |_| - |_| COP Juni
+   - **cop_jul** |_| - |_| COP Juli
+   - **cop_aug** |_| - |_| COP August
+   - **cop_sep** |_| - |_| COP September
+   - **cop_oct** |_| - |_| COP Oktober
+   - **cop_nov** |_| - |_| COP November
+   - **cop_dec** |_| - |_| COP Dezember
+   - **f121** |_| - |_| Fehler F121
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

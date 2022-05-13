@@ -1,0 +1,151 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'traffic' Konfiguration
+==============================
+
+
+.. index:: Plugins; traffic Konfiguration
+
+.. image:: /_static/img/web.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **traffic** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Abfrage der Reisezeit über die kostenlose Google Directions API. Für einen eigenen Key siehe https://developers.google.com/maps/documentation/directions/intro?hl=de#traffic-model.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **traffic** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+apikey
+======
+
+
+Persönlicher API Key für die kostenlose "Google Directions API". Für einen eigenen Key siehe https://developers.google.com/maps/documentation/directions/intro?hl=de#traffic-model.
+
+ - Datentyp: **str**
+
+
+language
+========
+
+
+(optional) Sprache, in der bspw. Routinganweisungen bezogen werden sollen. Default: deutsch.
+
+ - Datentyp: **str**
+ - Standardwert: **de**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+**Keine**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+get_route_info(origin, destination, alternatives, departure_time, mode)
+=======================================================================
+
+
+Ermittelt Infos zu einer Fahrtroute via Google Directions.
+
+ - Ergebnistyp der Funktion: **dict**
+
+
+origin
+------
+
+Startpunkt der Route, kann eine Adresse, Geokoordinaten, etc. sein.
+
+ - Datentyp: **str**
+
+
+destination
+-----------
+
+Ziel der Route, kann eine Adresse, Geokoordinaten, etc. sein.
+
+ - Datentyp: **str**
+
+
+alternatives
+------------
+
+Rückgabe alternativer Routen. Default: False
+
+ - Datentyp: **bool**
+
+
+departure_time
+--------------
+
+Spezifiziert die gewünschte Abfahrtszeit als Timestamp (Sekunden seit 1.1.1970 UTC). Alternativ kann 'now' für den aktuellen Zeitpunkt gesetzt werden. Default: 'now'.
+
+ - Datentyp: **str**
+
+
+mode
+----
+
+Travel Mode, mögliche Werte 'driving', 'walking', 'bicycling', 'transit'. Default: 'driving'.
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/traffic/README>` des Plugins zugreifen.

@@ -1,0 +1,160 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'luxtronic2' Konfiguration
+=================================
+
+
+.. index:: Plugins; luxtronic2 Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **luxtronic2** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Integration von Systemen die eine Luxtronic-Steuerung haben (z.B Heizungen)
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.3**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **luxtronic2** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+host
+====
+
+
+Gibt den Host des Gerätes an
+
+ - Datentyp: **str**
+
+
+port
+====
+
+
+Gibt den Port des Gerätes an
+
+ - Datentyp: **int**
+ - Standardwert: **8888**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+lux2
+====
+
+
+Gibt einen Parameterwert an, der automatisch dekodiert werden (z.B. Umwandlung Betriebsart zu einem Text)
+
+ - Datentyp: **int**
+
+ - Mögliche Werte:
+
+   - **10**
+   - **11**
+   - **12**
+   - **14** |_| - |_| Temperatur Heißgas
+   - **15**
+   - **16** |_| - |_| Temperatur Mittelwert
+   - **18** |_| - |_| Temperatur Warmwasser SOLL
+   - **19**
+   - **20**
+   - **56** |_| - |_| Betriebsstunden Verdichter
+   - **57** |_| - |_| Impulse Verdichter
+   - **60** |_| - |_| Betriebsstunden Zusatzheizung
+   - **63** |_| - |_| Betriebsstunden Wärmepumpe Gesamt
+   - **64** |_| - |_| Betriebsstunden Wärmepumpe Heizung
+   - **65** |_| - |_| Betriebsstunden Wärmepumpe Warmwasser
+   - **119** |_| - |_| Betriebs-Modus
+   - **151**
+   - **152**
+   - **159** |_| - |_| Temperatur Zuluft
+
+
+lux2_a
+======
+
+
+Gibt einen Attributwert an, der ausgelesen werden soll (Zugriff ist nur lesend)
+
+ - Datentyp: **int**
+
+
+lux2_c
+======
+
+
+Gibt einen berechneten Attributwert an (Zugriff ist nur lesend)
+
+ - Datentyp: **int**
+
+
+lux2_p
+======
+
+
+Gibt einen Attributwert für einen Parameter an (Zugriff lesend und schreibend)
+
+ - Datentyp: **int**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/luxtronic2/README>` des Plugins zugreifen.

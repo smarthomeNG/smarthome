@@ -1,0 +1,164 @@
+.. |_| unicode:: 0xA0
+
+
+==========================
+Plugin 'thz' Konfiguration
+==========================
+
+
+.. index:: Plugins; thz Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **thz** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Abfrage von Tecalor oder Stiebel Eltron Wärmepumpen
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **thz** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+baudrate
+========
+
+
+Geschwindigkeit der seriellen Schnittstelle. (Aktuelle Modelle nutzen 115200 bps, ältere nur 57600 bps oder sogar nur 9600 bps.
+
+ - Datentyp: **int**
+ - Standardwert: **115200**
+
+
+max_update_period
+=================
+
+
+Interval für die Abfrage von selten aktualisierten Daten (z.B. Zähler die nur einmal am Tag geändert werden), sollte wesentlich höher sein als der Parameter poll_period. Angabe in Sekunden.
+
+ - Datentyp: **int**
+ - Standardwert: **43200**
+
+
+min_update_period
+=================
+
+
+Interval für die Abfrage sich ständig ändernder Daten (z.B. Temperatur), sollte höher sein als der Parameter poll_period. Angabe in Sekunden.
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+poll_period
+===========
+
+
+Intervall in dem die Daten von der Wärmepumpe abgefragt werden. Angabe in Sekunden.
+
+ - Datentyp: **int**
+ - Standardwert: **30**
+
+
+serial_port
+===========
+
+
+Serielle Schnittstelle an der die Wärmepumpe angeschlossen ist.
+
+ - Datentyp: **str**
+ - Standardwert: **/dev/ttyUSB0**
+
+
+server_host
+===========
+
+
+IP Adresse auf der der interne UDP Server lauscht
+
+ - Datentyp: **str**
+ - Standardwert: **0.0.0.0**
+
+
+server_port
+===========
+
+
+Port auf dem der interne Server lauscht
+
+ - Datentyp: **int**
+ - Standardwert: **57483**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+thz
+===
+
+
+Beschreibt einen Parameter Typ als Zeichenkette (z.B. comPortStatus, logRegister, logFullScan)
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/thz/README>` des Plugins zugreifen.

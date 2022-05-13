@@ -1,0 +1,168 @@
+.. |_| unicode:: 0xA0
+
+
+===============================
+Plugin 'rcswitch' Konfiguration
+===============================
+
+
+.. index:: Plugins; rcswitch Konfiguration
+
+.. image:: /_static/img/gateway.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **rcswitch** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Schalten von 433 MHz Funksteckdosen z.B. für Brennenstuhl RCS 1000 N
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.2**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **rcswitch** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+rcswitch_dir
+============
+
+
+Pfad des rc-Switches - Muss auf das Verzeichnis zeigenm in dem der rcswitch-pi Sende-Befehl gefunden  werden kann.
+
+ - Datentyp: **str**
+ - Standardwert: **/usr/local/bin/rcswitch-pi**
+
+
+rcswitch_host
+=============
+
+
+IP oder HOSTNAME des rcswitch hosts, falls das System nicht auf dieser SmartHomeNG-Maschine läuft.  Achtung: Auf dem Remote Host muss ein SSH Server installiert sein.
+
+ - Datentyp: **ip**
+
+
+rcswitch_password
+=================
+
+
+Passwort auf dem Remote Host
+
+ - Datentyp: **str**
+
+
+rcswitch_sendDuration
+=====================
+
+
+Minimale Zeit zwischen dem Senden von Befehlen in Sekundene
+
+ - Datentyp: **num**
+ - Standardwert: **0.5**
+
+ - Minimalwert: **0.0**
+ - Maximalwert: **2.0**
+
+rcswitch_user
+=============
+
+
+User auf dem Remote Host
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+rc_code
+=======
+
+
+Code des Devices - Muss in der Form von 5 binären Digits angegeben werden [00000 - 11111]
+
+ - Datentyp: **str**
+
+
+rc_device
+=========
+
+
+Nummer (oder Buchstabe) des Device
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **1**
+   - **2**
+   - **3**
+   - **4**
+   - **5**
+   - **a**
+   - **b**
+   - **c**
+   - **d**
+   - **e**
+   - **A**
+   - **B**
+   - **C**
+   - **D**
+   - **E**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/rcswitch/README>` des Plugins zugreifen.

@@ -1,0 +1,194 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'helios_tcp' Konfiguration
+=================================
+
+
+.. index:: Plugins; helios_tcp Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **helios_tcp** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Erlaubt die Kommunikation über TCP mit Helios KWL Geräten mit Helios Easy Controls
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **helios_tcp** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+helios_ip
+=========
+
+
+IP-Adresse des Lüftungsgerätes
+
+ - Datentyp: **ipv4**
+
+
+update_cycle
+============
+
+
+Dauer zwischen der Abfrage der Werte in der Lüftungsanlage in Sekunden
+
+ - Datentyp: **int**
+ - Standardwert: **60**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+helios_tcp
+==========
+
+
+Name des Attributs der Lüftungsanlage, welches auf das Item geschrieben wird
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **outside_temp**
+   - **exhaust_temp**
+   - **inside_temp**
+   - **incoming_temp**
+   - **pre_heating_temp**
+   - **post_heating_temp**
+   - **post_heating_reflux_temp**
+   - **error_count**
+   - **warning_count**
+   - **info_count**
+   - **fan_in_rpm**
+   - **fan_out_rpm**
+   - **internal_humidity**
+   - **sensor1_humidity**
+   - **sensor2_humidity**
+   - **sensor3_humidity**
+   - **sensor4_humidity**
+   - **sensor5_humidity**
+   - **sensor6_humidity**
+   - **sensor7_humidity**
+   - **sensor8_humidity**
+   - **sensor1_temperature**
+   - **sensor2_temperature**
+   - **sensor3_temperature**
+   - **sensor4_temperature**
+   - **sensor5_temperature**
+   - **sensor6_temperature**
+   - **sensor7_temperature**
+   - **sensor8_temperature**
+   - **sensor1_co2**
+   - **sensor2_co2**
+   - **sensor3_co2**
+   - **sensor4_co2**
+   - **sensor5_co2**
+   - **sensor6_co2**
+   - **sensor7_co2**
+   - **sensor8_co2**
+   - **sensor1_voc**
+   - **sensor2_voc**
+   - **sensor3_voc**
+   - **sensor4_voc**
+   - **sensor5_voc**
+   - **sensor6_voc**
+   - **sensor7_voc**
+   - **sensor8_voc**
+   - **filter_remaining**
+   - **boost_remaining**
+   - **sleep_remaining**
+   - **fan_level_percent**
+   - **bypass_open**
+   - **humidity_control_status**
+   - **humidity_control_target**
+   - **co2_control_status**
+   - **co2_control_target**
+   - **voc_control_status**
+   - **voc_control_target**
+   - **comfort_temperature**
+   - **fan_in_voltage_level1**
+   - **fan_out_voltage_level1**
+   - **fan_in_voltage_level2**
+   - **fan_out_voltage_level2**
+   - **fan_in_voltage_level3**
+   - **fan_out_voltage_level3**
+   - **fan_in_voltage_level4**
+   - **fan_out_voltage_level4**
+   - **manual_mode**
+   - **filter_change**
+   - **filter_changeinterval**
+   - **bypass_roomtemperature**
+   - **bypass_minoutsidetemp**
+   - **fan_level**
+   - **fan_in_level**
+   - **fan_out_level**
+   - **boost_duration**
+   - **boost_level**
+   - **boost_on**
+   - **sleep_duration**
+   - **sleep_level**
+   - **sleep_on**
+   - **preheating_status**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

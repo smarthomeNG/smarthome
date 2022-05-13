@@ -1,0 +1,70 @@
+:tocdepth: 1
+
+=============================
+Release 1.5.1 - 15. Juli 2018
+=============================
+
+Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+
+
+Unterstützte Python Versionen
+=============================
+
+Bitte beachten: Seit SmartHomeNG Release 1.4 wollen wir die aktive Unterstützung älterer Python
+Versionen einstellen. Die älteste unterstützte Python Version wird dann Python 3.4 sein. Es kann jedoch sein,
+dass Plugins Funktionalitäten implementieren (z.B. Async IO), die Python 3.5 voraussetzen
+(Siehe *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
+
+Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.5 nicht mehr unter älteren Python
+Versionen läuft. Es bedeutet, dass SmartHomeNG nicht mehr mit älteren Python Versionen getestet
+wird und das gemeldete Fehler mit älteren Python Versionen nicht mehr zu Buxfixen führen.
+
+Bitte auch die Release Notes für Version 1.5 unter `https://www.smarthomeNG.de/user/release <../../user/release/1_5.html>`_ beachten.
+
+
+
+
+Bugfixes im CORE
+----------------
+
+* tools/build_requirements.py erweitert, um doppelte Requirements Package mit unterschiedlichen Versionen zu verhindern.
+* requirements/all.txt neu erzeugt
+* Python Version and Plattform Information zum Logging baim Start hinzugefügt
+* Bug in string_to_list() beseitigt, der verhinderte, dass reine Strings in eine Liste der Länge 1 gewandelt wurden.
+
+
+
+Updates im CORE
+---------------
+
+* Module http:
+  * Updated Bootstrap to v4.1.2
+
+
+
+Neue Plugin Versionen
+---------------------
+
+Für Details zu den inhaltlichen Änderungen der einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins konsultieren.
+
+
+* avdevice:
+
+  * Neue Version 1.3.6 des Plugins
+* dlms:
+
+  * Neue Version 1.5.1 des Plugins
+* webservices:
+
+  * Neue Version 1.5.0.3 des Plugins
+
+
+
+Dokumentation
+-------------
+
+* Anwender Dokumentation
+
+  * Hinweis zum Neubau der Python Requiremments zur Installationsanleitung hinzugefügt
+
+

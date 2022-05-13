@@ -1,0 +1,153 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'mailrcv' Konfiguration
+==============================
+
+
+.. index:: Plugins; mailrcv Konfiguration
+
+.. image:: /plugins/mailrcv/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **mailrcv** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Empfangen von eMails via imap
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **mailrcv** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Abfrage-Intervall für das IMAP Postfach
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+host
+====
+
+
+Adresse des IMAP Hosts
+
+ - Datentyp: **str**
+
+
+password
+========
+
+
+Passwort für die Anmeldung am IMAP host
+
+ - Datentyp: **str**
+
+
+port
+====
+
+
+Port des IMAP service (bitte 143 nutzen, fals tls deaktiviert wird)
+
+ - Datentyp: **int**
+ - Standardwert: **993**
+
+ - Minimalwert: **0**
+ - Maximalwert: **65535**
+
+tls
+===
+
+
+tls zur Verschlüsselung nutzen
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+trashfolder
+===========
+
+
+Name des Müll-Ordners auf dem IMAP-Server
+
+ - Datentyp: **str**
+ - Standardwert: **Trash**
+
+
+username
+========
+
+
+Username für die Anmeldung am IMAP host
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+**Keine**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/mailrcv/README>` des Plugins zugreifen.

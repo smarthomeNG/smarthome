@@ -1,0 +1,201 @@
+.. |_| unicode:: 0xA0
+
+
+===============================
+Plugin 'influxdb' Konfiguration
+===============================
+
+
+.. index:: Plugins; influxdb Konfiguration
+
+.. image:: /_static/img/system.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **influxdb** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+
+
+Beschreibung
+============
+
+Ermöglicht Speicherung von Item Werten in einer InfluxData time-series Datenbank
+
+
+Anforderungen
+=============
+
+
+influxdb database
+
+ - Minimum SmartHomeNG Version: **1.1**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **influxdb** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+fields
+======
+
+
+Globale Angabe zusätzlicher Felder
+
+ - Datentyp: **dict**
+
+
+host
+====
+
+
+Hostname der InfluxData Datenbank
+
+ - Datentyp: **str**
+ - Standardwert: **localhost**
+
+
+http_port
+=========
+
+
+Portnummer der InfluxData Datenbank für HTTP-Zugriff
+
+ - Datentyp: **int**
+ - Standardwert: **8086**
+
+ - Minimalwert: **0**
+ - Maximalwert: **65535**
+
+keyword
+=======
+
+
+Dieser Parameter legt fest, auf welches Item-Attribut das Plugin reaagiert.  (Wenn hier ein anderer Wert als 'influxdb' angegeben wird, können in Zukunft Items nicht über das  graphische Admin-Interface für dieses Plugin konfiguriert werden)
+
+ - Datentyp: **str**
+ - Standardwert: **influxdb**
+
+
+tags
+====
+
+
+Globale Angabe zusätzlicher Tags
+
+ - Datentyp: **dict**
+
+
+udp_port
+========
+
+
+Portnummer der InfluxData Datenbank
+
+ - Datentyp: **int**
+ - Standardwert: **8089**
+
+ - Minimalwert: **0**
+ - Maximalwert: **65535**
+
+value_field
+===========
+
+
+?
+
+ - Datentyp: **str**
+ - Standardwert: **value**
+
+
+write_http
+==========
+
+
+Bei True werden die Werte mit HTTP und bei False mit UDP in die Datenbank geschrieben.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+influxdb
+========
+
+
+Diesem Attribut einen Wert zuweisen, um den Item Wert durch das influxdata Plugin zu speichern
+
+ - Datentyp: **foo**
+
+
+influxdb_fields
+===============
+
+
+Das Schlüssel-Wert-Paar in einer InfluxDB-Datenstruktur, die Metadaten und den tatsächlichen Datenwert aufzeichnet.
+
+ - Datentyp: **dict**
+
+
+influxdb_name
+=============
+
+
+Name unter dem die Werte gespeichert werden sollen
+
+ - Datentyp: **str**
+
+
+influxdb_tags
+=============
+
+
+Angabe weitere Tags, die mit dem Wert gespeichert werden sollen (z.B.: {"room": "dining"}
+
+ - Datentyp: **dict**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/influxdb/README>` des Plugins zugreifen.

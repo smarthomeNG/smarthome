@@ -1,0 +1,251 @@
+.. |_| unicode:: 0xA0
+
+
+==========================
+Plugin 'rtr' Konfiguration
+==========================
+
+
+.. index:: Plugins; rtr Konfiguration
+
+.. image:: /_static/img/system.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **rtr** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+
+
+Beschreibung
+============
+
+Raum Temperatur Regler
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **rtr** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle_time
+==========
+
+
+Abständen in Sekunden, in denen die Regelung arbeitet. Dieser Wert sollte nur geändert werden, wenn man weiss was man tut!
+
+ - Datentyp: **int**
+ - Standardwert: **60**
+
+
+defaultBoostTime
+================
+
+
+Legt die Standard Zeit in Minuten fest, nachdem die Boost-Temperatur automatisch zurück auf Standard gesetzt wird
+
+ - Datentyp: **int**
+ - Standardwert: **240**
+
+
+defaultOnExpiredTimer
+=====================
+
+
+Wenn nicht aktiviert, werden beim wiederherstellen von abgelaufenen Timern die Temperaturen nicht zurück auf Default gesetzt
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+defaultValveProtect
+===================
+
+
+Wenn Wahr wird für alle Regler Ventilschutz voreingestellt
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+default_Ki
+==========
+
+
+Standard Integralfaktor für erstellte Items
+
+ - Datentyp: **int**
+ - Standardwert: **15**
+
+
+default_Kp
+==========
+
+
+Standard Verstärkungsfaktor für erstellte Items
+
+ - Datentyp: **int**
+ - Standardwert: **10**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+rtr_Ki
+======
+
+
+Ordnet dem Item einen vom Standard abweichenden Integralfaktor zu. Muss auf dem selben Item wie rtr_current gesetzt werden
+
+ - Datentyp: **int**
+
+
+rtr_Kp
+======
+
+
+Ordnet dem Item einen vom Standard abweichenden Verstärkungsfaktor zu. Muss auf dem selben Item wie rtr_current gesetzt werden
+
+ - Datentyp: **int**
+
+
+rtr_actuator
+============
+
+
+Ordnet das Item dem Controller mit gegebener ID als Stellgröße zu
+
+ - Datentyp: **int**
+
+
+rtr_current
+===========
+
+
+Ordnet das Item dem Regler/Controller mit gegebener ID als Ist-Wert zu
+
+ - Datentyp: **int**
+
+
+rtr_hvac_mode
+=============
+
+
+Setzt den Modus
+
+ - Datentyp: **int**
+
+
+rtr_setpoint
+============
+
+
+Ordnet das Item dem Regler/Controller mit gegebener ID als Soll-Wert zu
+
+ - Datentyp: **int**
+
+
+rtr_stops
+=========
+
+
+Ordnet das Item dem einen oder mehreren Controllern per ID als Stop-Objekt zu. Kann nur auf einem Item vom Typ Bool gesetzt werden. Ist der Item Wert True, Pausiert die Regelung
+
+ - Datentyp: **list(int)**
+
+
+rtr_temp_boost
+==============
+
+
+Ordnet dem Regler eine Boost-Temperatur zu, auf die rtr_setpoint beim aufruf der Funktion boost gesetzt wird. Muss auf dem selben Item wie rtr_setpoint gesetzt werden
+
+ - Datentyp: **float**
+
+
+rtr_temp_boost_time
+===================
+
+
+Ordnet dem Regler eine Standard Zeit für den Boost in Minten zu und überschreibt somit den globalen Standard defaultBoostTime. Muss auf dem selben Item wie rtr_setpoint gesetzt werden
+
+ - Datentyp: **int**
+
+
+rtr_temp_default
+================
+
+
+Ordnet dem Regler/Controller eine Standard Temperatur zu, auf die rtr_setpoint zurück gesetzt wird. Muss auf dem selben Item wie rtr_setpoint gesetzt werden
+
+ - Datentyp: **float**
+
+
+rtr_temp_drop
+=============
+
+
+Ordnet dem Regler/Controller eine Absenk-Temperatur zu, auf die rtr_setpoint beim aufruf der Funktion drop gesetzt wird. Muss auf dem selben Item wie rtr_setpoint gesetzt werden
+
+ - Datentyp: **float**
+
+
+rtr_valve_protect
+=================
+
+
+Aktiviert den Ventilschutz für diesen Controller
+
+ - Datentyp: **bool**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/rtr/README>` des Plugins zugreifen.

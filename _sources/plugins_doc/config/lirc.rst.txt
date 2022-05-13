@@ -1,0 +1,174 @@
+.. |_| unicode:: 0xA0
+
+
+===========================
+Plugin 'lirc' Konfiguration
+===========================
+
+
+.. index:: Plugins; lirc Konfiguration
+
+.. image:: /plugins/lirc/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **lirc** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Sendet Kommandos an lircd, das wiederum IR-Signale an Geräte mit IR-Schnittstelle versendet
+
+
+Anforderungen
+=============
+
+
+Zumindest ein laufender lirc Service mit einem IR-Transmitter, optional ein IR-Receiver (um Remotecodes zu lernen oder Befehel via IR zu empfangen), und eine Konfigurationsdatei für die zu simulierende Fernbedienung.
+Diese Datei kann durch Einlesen mittels irrecord oder Herunterladen einer passenden Datei aus entsprechenden Datenbanken erstellt werden.
+Weitere Informationen sind unter http://www.lirc.org/html/lircd.html und http://lirc-remotes.sourceforge.net/ zu finden.
+
+ - Minimum SmartHomeNG Version: **1.3**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **lirc** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+autoreconnect
+=============
+
+
+Erneuter Verbindungsaufbau, falls Verbindung unterbrochen
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+connect_cycle
+=============
+
+
+Pause zwischen automatischen Verbindungsversuchen.
+
+ - Datentyp: **int**
+ - Standardwert: **10**
+
+ - Minimalwert: **0**
+ - Maximalwert: **1000**
+
+connect_retries
+===============
+
+
+Anzahl Versuche, die Verbindung erneut aufzubauen
+
+ - Datentyp: **int**
+ - Standardwert: **2**
+
+ - Minimalwert: **0**
+
+host
+====
+
+
+IP oder Hostname des lircd
+
+ - Datentyp: **str**
+
+
+lirc_host
+=========
+
+
+Veraltet - bitte "host" nutzen
+
+ - Datentyp: **str**
+
+
+lirc_port
+=========
+
+
+Veraltet - bitte "port" nutzen
+
+ - Datentyp: **int**
+ - Standardwert: **8765**
+
+
+port
+====
+
+
+Der Port, auf dem lircd lauscht.
+
+ - Datentyp: **int**
+ - Standardwert: **8765**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+lirc_key
+========
+
+
+Name der Taste auf der Fernbedienung. Der Name muss dem Namen der Fernbedienung in lircd entsprechen.
+
+ - Datentyp: **str**
+
+
+lirc_remote
+===========
+
+
+Name der Fernbedienung. Der Name muss dem Namen der Fernbedienung in lircd entsprechen.
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -1,0 +1,52 @@
+:tocdepth: 1
+
+==========================
+Release 1.2 - 16. Mai 2016
+==========================
+
+New CORE features
+-----------------
+
+* further improved logging (Konfiguration via ``etc/logging.yaml``)
+* new env.location Items:
+
+ - env.location.sunrise.azimut.degrees
+ - env.location.sunrise.azimut.radians
+ - env.location.sunrise.elevation.degrees
+ - env.location.sunrise.elevation.radians
+ - env.location.sunset.azimut.degrees
+ - env.location.sunset.azimut.radians
+ - env.location.sunset.elevation.degrees
+ - env.location.sunset.elevation.radians
+ - env.location.sun_position.azimut.degrees
+ - env.location.sun_position.azimut.radians
+ - env.location.sun_position.elevation.degrees
+ - env.location.sun_position.elevation.radians
+
+* SmartPlugin as Base class for any new plugin
+
+ - Basic check and conversion of plugin attributes and values for data types by means of Utils.py which is part of the base plugin class now
+ - version numbers for SmartPlugins (attribut PLUGIN_VERSION at SmartPlugin is mandatory)
+ - Ability of plugins to be running with multiple instances  (instance Attribut in ``etc/plugin.conf``,
+   binding of Items with ``item@\<instance_name\>`` (Attribut ALLOW_MULTIINSTANCE=False|True mandatory)
+
+* unit tests for functions within the CORE Libs
+
+Removed CORE Libs
+-----------------
+
+Nothing so far
+
+New Plugins
+-----------
+* backend: mini web application to view information about system, SmartHomeNG backend data (`more info <https://github.com/smarthomeNG/smarthome/blob/develop/plugins/backend/README.md>`_)
+* avm: access to AVM FRITZ!Boxes, WLAN repeater, DECT plugs, etc. (`avm plugin <https://github.com/smarthomeNG/smarthome/tree/develop/plugins/avm>`_)
+* tankerkoenig: gas prices
+* simulation: record and play of sequences `simulation <https://github.com/smarthomeNG/smarthome/tree/develop/plugins/simulation>`_
+* enigma2: plugin to access Enigma2 kompatible Sat receiver via openwebif `enigma2 plugin <https://github.com/smarthomeNG/smarthome/tree/develop/plugins/enigma2>`_
+* split of VISU plugins into two separate plugins `<https://github.com/smarthomeNG/smarthome/wiki/Visu_Unterstützung_in_v1.2>`_
+* visu_websocket and visu_smartvisu (`improvement of automatic page generation for smartVISU <https://github.com/smarthomeNG/smarthome/wiki/Visu_smartvisu_autogen_in_v1.2>`_)
+
+Removed Plugins
+---------------
+* Whatsapp

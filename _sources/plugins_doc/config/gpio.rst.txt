@@ -1,0 +1,192 @@
+.. |_| unicode:: 0xA0
+
+
+===========================
+Plugin 'gpio' Konfiguration
+===========================
+
+
+.. index:: Plugins; gpio Konfiguration
+
+.. image:: /plugins/gpio/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **gpio** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+GPIO-Unterstützung für den Rasberry Pi.
+Dieses Plugin unterstützt über das RPi.GPIO-Modul das Einbinden von externen Sensoren und Aktoren, die direkt am Raspberry Pi angeschlossen werden. Damit ist es beispielsweise möglich, den Zustand von Reedkontakten einzulesen oder LEDs zu aktivieren und beispielsweise eine `Posteinwurferkennung <https://redaktion.knx-user-forum.de/posteinwurferkennung/>`_ zu basteln. Leider sind die GPIOs für die Raspberry Pi <=3+ rein digital, sodass analoge Signale z.B. eines Distanzsensors nur über Umwege abgegriffen werden können.
+
+
+Anforderungen
+=============
+
+
+RPi.GPIO Python Modul
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **gpio** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+bouncetime
+==========
+
+
+Prellzeit in ms, um Änderungen innerhalb kurzer Zeit zu verhindern.
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+initretries
+===========
+
+
+Anzahl an Versuchen zum Pluginstart, Listen-Events für die Pins zu erstellen.
+
+ - Datentyp: **int**
+ - Standardwert: **10**
+
+
+mode
+====
+
+
+**Zuweisungsmethode der Pinbelegung.**
+Hier wird der GPIO PIN Modus deklariert, der die Nummerierung der Pins definiert. `Mehr Infos über GPIO Header <https://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/>`_
+
+ - Datentyp: **str**
+ - Standardwert: **BOARD**
+
+ - Mögliche Werte:
+
+   - **board**
+   - **bcm**
+   - **BOARD**
+   - **BCM**
+
+
+pullupdown
+==========
+
+
+**Globale Pullup-/Pulldown-Konfiguration**
+Hier wird festgelegt, was die systemweite Vorgabe der Pullup-/Pulldown-Konfiguration sein soll. Diese Einstellung kann je Item individuell überschrieben werden.
+
+ - Datentyp: **str**
+ - Standardwert: **up**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+gpio_in
+=======
+
+
+**Pin Nummer für den GPIO Eingang.**
+Angabe der Pin Nummer, an der beispielsweise ein Sensor o.ä. angeschlossen ist. Die Nummer hängt vom Modus in den Plugin-Paramtern ab!
+
+ - Datentyp: **int**
+
+
+gpio_init
+=========
+
+
+**Startwert für GPIO Ausgang**
+Dieser Wert wird bei Initialisierung des Plugins auf dem Ausgang gesetzt.
+
+ - Datentyp: **bool**
+
+
+gpio_invert
+===========
+
+
+**Ein-/Ausgabewerte an/aus invertieren**
+Vertauscht die Zuordnung von Itemwert zu GPIO-Ein-/Ausgabe zu True->low/0, False->high/1. Beachte: ein konfigurierter Initialwert wird auch invertiert.
+
+ - Datentyp: **bool**
+
+
+gpio_out
+========
+
+
+**Pin Nummer für den GPIO Ausgang.**
+Die Nummer hängt vom Modus in den Plugin-Paramtern ab! Der Ausgang wird zum Pluginstart automatisch aktualisiert, sollte also nicht im Item als gpio_in und gpio_out definiert werden.
+
+ - Datentyp: **int**
+
+
+gpio_pud
+========
+
+
+**Pullup-/Pulldown-Konfiguration**
+Hier wird festgelegt, ob der jeweilige Pin den Software-Pullup bzw. -Pulldown aktivieren soll oder nicht. Wenn keine Angabe erfolgt, wird die globale Voreinstellung übernommen (vgl. Plugin-Parameter "pullupdown").
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **up**
+   - **UP**
+   - **down**
+   - **DOWN**
+   - **none**
+   - **NONE**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/gpio/README>` des Plugins zugreifen.

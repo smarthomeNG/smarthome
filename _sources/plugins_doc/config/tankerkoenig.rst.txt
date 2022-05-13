@@ -1,0 +1,183 @@
+.. |_| unicode:: 0xA0
+
+
+===================================
+Plugin 'tankerkoenig' Konfiguration
+===================================
+
+
+.. index:: Plugins; tankerkoenig Konfiguration
+
+.. image:: /_static/img/web.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **tankerkoenig** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Benzinpreise über die API von Tankerkönig. Bitte sicherstellen, die API nicht zu oft aufzurufen. Bitte Hinweise unter https://creativecommons.tankerkoenig.de/#techInfo beachten!
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **tankerkoenig** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+apikey
+======
+
+
+Persönlicher API Key für TankerKoenig. Registrierung unter https://creativecommons.tankerkoenig.de.
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+tankerkoenig_id
+===============
+
+
+Id der Tankstelle auf tankerkoenig.de
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+get_petrol_station_detail(id)
+=============================
+
+
+Diese Funktion gibt Details über eine Tankstelle als DICT mit folgenden Keys zurück: 'e5', 'e10', 'diesel', 'street', 'houseNumber', 'postCode', 'place', 'brand', 'id', 'lng', 'name', 'lat', 'isOpen'
+
+ - Ergebnistyp der Funktion: **dict**
+
+
+id
+--
+
+UUID für die anzufragende Tankstelle.
+
+ - Datentyp: **str**
+
+
+get_petrol_station_prices(ids)
+==============================
+
+
+Gibt ein DICT mit Preisen für ein Array an Tankstellen-IDs zurück. Benutzung wird vom Tankerkoenig Team aus Performanzgründen empfeohlen!!!
+
+ - Ergebnistyp der Funktion: **dict**
+
+
+ids
+---
+
+Array der Tankstellen IDs, für die Preise angefragt werden sollen.
+
+ - Datentyp: **list(str)**
+
+
+get_petrol_stations(lat, lon, type, sort, rad)
+==============================================
+
+
+Diese Funktion liefert ein DICT mit den Tankstellen im Umkreis.
+
+ - Ergebnistyp der Funktion: **dict**
+
+
+lat
+---
+
+Breitengrad des Mittelpunkts der Anfrage.
+
+ - Datentyp: **float**
+
+
+lon
+---
+
+Längengrad des Mittelpunkts der Anfrage.
+
+ - Datentyp: **float**
+
+
+type
+----
+
+Typ des Benzins: 'e5', 'e10', 'diesel' oder 'all'.
+
+ - Datentyp: **str**
+
+
+sort
+----
+
+Sortierreihenfolge der Ergebnisse, 'price' oder 'dist'.
+
+ - Datentyp: **str**
+
+
+rad
+---
+
+Suchradius in km, Max: 25
+
+ - Datentyp: **float**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/tankerkoenig/README>` des Plugins zugreifen.

@@ -1,0 +1,132 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'datalog' Konfiguration
+==============================
+
+
+.. index:: Plugins; datalog Konfiguration
+
+.. image:: /_static/img/system.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **datalog** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+
+
+Beschreibung
+============
+
+Loggen von Daten in ein anderes Logfile als das Standard Log
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **datalog** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Der cycle Parameter definiert das Intervall, in welchem die Daten in die Log Dateien geschrieben werden.
+
+ - Datentyp: **int**
+ - Standardwert: **10**
+
+
+filepatterns
+============
+
+
+Angabe einer Dictionary von Mustern, welche die Dateinamen der Log-Dateien spezifizieren.  Dazu wird ein Key-Value-Pair Syntax benutzt, was bedeutet, dass mehrere Muster oder Logdateien  spezifiziert werden können.  Platzhalter, welche im `filepatterns` Parameter genutzt werden können: * `log` - Type des Logs (z.B. 'default' im Default Wert) * `year` - aktuelles Jahr * `month` - aktueller Monat * `day` - aktueller Tag
+
+ - Datentyp: **dict**
+ - Standardwert: **OrderedDict([('default', '{log}-{year}-{month}-{day}.csv')])**
+
+
+logpatterns
+===========
+
+
+Der logpatterns Parameter konfiguriert das Format in dem die Daten in die Log-Datei geschrieben  werden. Dazu wird ein Key-Value-Pair Syntax benutzt, was bedeutet, dass mehrere Muster  spezifiziert werden können.   Ein Log-Pattern wird verwendet, wenn die Extenstion des Dateinames dem Key entspricht.
+
+ - Datentyp: **dict**
+ - Standardwert: **OrderedDict([('csv', '{time};{item};{value}\n')])**
+
+
+path
+====
+
+
+Spezifiziert das Verzeichnis in welches geloggt wird. Alle log Dateien werden in dieses  Verzeichnis geschrieben. Es ist nicht möglich verschiedene Logs in unterschiedliche  Verzeichnisse zu schreiben.
+
+ - Datentyp: **str**
+ - Standardwert: **var/log/data**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+datalog
+=======
+
+
+Liste des Logs in die der Wert geschrieben werden soll.
+
+ - Datentyp: **list(str)**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/datalog/README>` des Plugins zugreifen.

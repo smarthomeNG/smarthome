@@ -1,0 +1,120 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'simulation' Konfiguration
+=================================
+
+
+.. index:: Plugins; simulation Konfiguration
+
+.. image:: /plugins/simulation/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **simulation** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+
+
+Beschreibung
+============
+
+Dieses Plugin erlaubt es, Anwesenheit zu simulieren, wenn niemand zuhause ist.
+Um dies zu bewerkstelligen, nimmt es durchgehen die Daten aller konfigurierten Items auf und schreibt diese Events in eine Datei. Hierbei handelt es sich um ein Textfile, in dem jedes Event in eine eigene Zeile geschrieben wird. Diese Datei kann in einem Texteditor verändert werden, allerdings ist dabei darauf zu achten, dass die Syntax beibehalten bleibt.
+Auf Abruf kann das Plugin die Aufzeichnungen wieder abspielen.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **simulation** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+callers
+=======
+
+
+(optional) Liste von Event-Sourcen, um Events aufzuzeichnen. Wenn ein Item geändert wird, werden nur Events von Callern aus der Liste mit dem Plugin aufgezeichnet.
+
+ - Datentyp: **list(str)**
+
+
+data_file
+=========
+
+
+Voller Pfad zum Datenfile (Textdatei).
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+sim
+===
+
+
+Entweder der Wert "track", "state", "control", "message" oder "tank". Außer "track" dürfen die Werte nur exakt einem Item zugeordnet werden. Sie dienen der internen Datenhaltung des Plugins. "track" dient dazu, den Wert eines Items mit dem Plugin aufzuzeichnen. Es darf daher auch in mehreren Items gesetzt werden. Es werden nur Items mit dem Typ bool und num unterstüzt.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **track**
+   - **state**
+   - **control**
+   - **message**
+   - **tank**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/simulation/README>` des Plugins zugreifen.

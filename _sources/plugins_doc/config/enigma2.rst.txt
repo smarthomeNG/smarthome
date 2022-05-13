@@ -1,0 +1,282 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'enigma2' Konfiguration
+==============================
+
+
+.. index:: Plugins; enigma2 Konfiguration
+
+.. image:: /plugins/enigma2/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **enigma2** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Plugin zur Einbindung von Enigma2 kompatiblen Sat-Receivern mit openwebif
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **enigma2** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+(optional) Zeit zwischen zwei Updateläufen. Default ist 300 Sekunden.
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+fast_cycle
+==========
+
+
+(optional) Zeit zwischen zwei Updateläufen für besondere Items, die schneller geupdated werden. Default ist 10 Sekunden.
+
+ - Datentyp: **int**
+ - Standardwert: **10**
+
+
+host
+====
+
+
+(optional) Hostname oder IP-Adresse des Geräts auf dem OpenWebIF läuft.
+
+ - Datentyp: **str**
+ - Standardwert: **dreambox**
+
+
+password
+========
+
+
+(optional) Passwort für den Login. Wird aus Sicherheitsgründen empfohlen.
+
+ - Datentyp: **str**
+
+
+port
+====
+
+
+Port des OpenWebIF.
+
+ - Datentyp: **int**
+ - Standardwert: **80**
+
+
+ssl
+===
+
+
+(optional) Mit True wird das OpenWebIF via https, mit False via http angesprochen.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+username
+========
+
+
+(optional) Nutzername für den Login.
+
+ - Datentyp: **str**
+
+
+verify
+======
+
+
+(optional) Schaltet die Zertifikate-Prüfung an oder aus. Normalerweise False.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+enigma2_data_type
+=================
+
+
+Datentyp für Plugin-Items. Siehe README.
+
+ - Datentyp: **str**
+
+
+enigma2_page
+============
+
+
+Notwendig für bestimmte Plugin-Items. Siehe README.
+
+ - Datentyp: **str**
+
+
+enigma2_remote_command_id
+=========================
+
+
+Notwendig für bestimmte Plugin-Items. Siehe README.
+
+ - Datentyp: **int**
+
+
+sref
+====
+
+
+Referenz auf Services (bspw. Sender), siehe README.
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+get_answer()
+============
+
+
+Diese Funktion prüft, ob eine Antwort zu einer gesendeten Nachricht eingegangen ist. Dabei ist der Timeout zu beachten, bis eine Message beantwortet werden muss. - Beispiel: sh.vusolo2.get_answer()
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+get_audio_tracks()
+==================
+
+
+Diese Funktion liefert eine Liste von dicts mit den folgenden Keys: 'e2audiotrackdescription' (str), 'e2audiotrackid' (int), 'e2audiotrackpid' (int), 'e2audiotrackactive' (bool) - Beispiel: sh.vusolo2.get_audio_tracks()
+
+ - Ergebnistyp der Funktion: **list**
+
+
+send_message(messagetext, messagetype=1, timeout=10)
+====================================================
+
+
+Sendet eine Nachricht an das Enigma2 Device - Beispiel: sh.vusolo2.send_message('Testnachricht', 1, 10)
+
+ - Die Funktion liefert kein Ergebnis
+
+
+messagetext
+-----------
+
+Anzuzeigender Text
+
+ - Datentyp: **str**
+
+
+messagetype
+-----------
+
+messagetype bestimmt die Art, wie die Nachricht angezeigt werden soll
+
+ - Datentyp: **int**
+ - Standardwert: **1**
+
+ - Mögliche Werte:
+
+   - **0** |_| - |_| Ja/Nein
+   - **1** |_| - |_| Info
+   - **2** |_| - |_| Mitteilung
+   - **3** |_| - |_| Achtung
+
+
+timeout
+-------
+
+Anzeigedauer der Nachricht in Sekunden
+
+ - Datentyp: **int**
+ - Standardwert: **10**
+
+
+set_power_state(value)
+======================
+
+
+Setzt den Power-Status auf einen bestimmten Wert - Beispiel (toggle standby): sh.vusolo2.set_power_state(0)
+
+ - Die Funktion liefert kein Ergebnis
+
+
+value
+-----
+
+Status in den die Enigma2 Box versetzt werden soll
+
+ - Datentyp: **int**
+
+ - Mögliche Werte:
+
+   - **0** |_| - |_| Toggle Standby
+   - **1** |_| - |_| Deepstandby
+   - **2** |_| - |_| Reboot
+   - **3** |_| - |_| Restart Enigma2
+   - **4** |_| - |_| Wakeup from Standby
+   - **5** |_| - |_| Standby
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/enigma2/README>` des Plugins zugreifen.

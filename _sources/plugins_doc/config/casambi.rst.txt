@@ -1,0 +1,153 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'casambi' Konfiguration
+==============================
+
+
+.. index:: Plugins; casambi Konfiguration
+
+.. image:: /_static/img/gateway.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **casambi** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Gateway plugin fuer Casambi
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.7**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **casambi** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+api_key
+=======
+
+
+Casambi API key
+
+ - Datentyp: **str**
+
+
+email
+=====
+
+
+Emailadresse des Casambi Accounts
+
+ - Datentyp: **str**
+
+
+password
+========
+
+
+Passwort des Casambi Accounts
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+casambi_id
+==========
+
+
+Casambi Geraete ID
+
+ - Datentyp: **num**
+
+ - Minimalwert: **0**
+
+casambi_rx_key
+==============
+
+
+Key fuer den Empfang von Statusinformationen
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **ON**
+   - **DIMMER**
+   - **VERTICAL**
+   - **CCT**
+   - **BACKEND_ONLINE_STAT**
+
+
+casambi_tx_key
+==============
+
+
+Key fuer das Senden von Kommandos ins Casambi Netzwerk
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **ON**
+   - **DIMMER**
+   - **VERTICAL**
+   - **CCT**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

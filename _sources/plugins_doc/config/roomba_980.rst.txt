@@ -1,0 +1,186 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'roomba_980' Konfiguration
+=================================
+
+
+.. index:: Plugins; roomba_980 Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **roomba_980** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Anbindung von iRobot Roomba Staubsaugern der Serie 900
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **roomba_980** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+adress
+======
+
+
+Die IP Adresse des roomba Staubsaugers
+
+ - Datentyp: **str**
+ - Standardwert: **True**
+
+
+blid
+====
+
+
+Die blid des roomba Staubsaugers -> kann mit der getpassword.py ausgelesen werden
+
+ - Datentyp: **str**
+ - Standardwert: **True**
+
+
+cycle
+=====
+
+
+update des items alle x Sekunden, default wert 900
+
+ - Datentyp: **num**
+ - Standardwert: **False**
+
+
+roombaPassword
+==============
+
+
+Das Passwort des roomba Staubsaugers -> kann mit der getpassword.py ausgelesen werden
+
+ - Datentyp: **str**
+ - Standardwert: **True**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+dock
+====
+
+
+Roomba fährt zur Homebase
+
+ - Datentyp: **bool**
+
+
+start
+=====
+
+
+Startet die Reinigung
+
+ - Datentyp: **bool**
+
+
+status_batterie
+===============
+
+
+Batterie ladewert in Prozent
+
+ - Datentyp: **num**
+
+
+status_bin_full
+===============
+
+
+Wahr wenn der Auffangbehälter voll ist
+
+ - Datentyp: **bool**
+
+
+status_cleanMissionStatus_error
+===============================
+
+
+Fehlernummer, 0 ist OK
+
+ - Datentyp: **num**
+
+
+status_cleanMissionStatus_phase
+===============================
+
+
+Status was der Roomba gerade macht -> run / charge / stock / ...
+
+ - Datentyp: **str**
+
+
+stop
+====
+
+
+Stoppt die Reinigung
+
+ - Datentyp: **bool**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/roomba_980/README>` des Plugins zugreifen.

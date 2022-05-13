@@ -1,0 +1,736 @@
+.. |_| unicode:: 0xA0
+
+
+==========================
+Plugin 'avm' Konfiguration
+==========================
+
+
+.. index:: Plugins; avm Konfiguration
+
+.. image:: /plugins/avm/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **avm** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Ansteuerung von AVM FRITZ!Boxen, WLAN-Repeatern, DECT Steckdosen, etc.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **avm** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+avm_home_automation
+===================
+
+
+(optional) Aktiviert oder deaktiviert den Zugriff auf AVM HomeAutomation Geräte mit dem AHA HTTP Interface.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+call_monitor
+============
+
+
+(optional) Aktiviert oder deaktiviert den MonitoringService, welcher auf den Call Monitor des FritzDevice verbindet. Der Call Monitor muss über ein verbundenes Telefon via #96*5* aktiviert sein.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+call_monitor_incoming_filter
+============================
+
+
+(optional) Spezielle Rufnummern ausfiltern, die vom Callmonitor ignoriert werden sollen.
+
+ - Datentyp: **str**
+
+
+cycle
+=====
+
+
+(optional) Zeit zwischen zwei Updateläufen. Default ist 300 Sekunden.
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+ - Minimalwert: **30**
+ - Maximalwert: **1080**
+
+host
+====
+
+
+(optional) Hostname oder IP-Adresse des FritzDevice.
+
+ - Datentyp: **str**
+ - Standardwert: **fritz.box**
+
+
+log_entry_count
+===============
+
+
+(optional) Anzahl der Log-Messages, die verarbeitet/bereitgestellt werden. 0 = alle
+
+ - Datentyp: **int**
+ - Standardwert: **200**
+
+
+password
+========
+
+
+(optional) Passwort für den Login. Wird in der Regel immer benötigt und aus Sicherheitsgründen empfohlen.
+
+ - Datentyp: **str**
+
+
+port
+====
+
+
+(optional) Port des FritzDevice, normalerweise 49433 für https oder 49000 für http
+
+ - Datentyp: **int**
+ - Standardwert: **49443**
+
+
+ssl
+===
+
+
+(optional) Mit True wird das FritzDevice via https, mit False via http angesprochen.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+username
+========
+
+
+(optional) Nutzername für den Login. Kann für manche Features benötigt werden! (Speziell für Fritz!OS 7 ist die Konfiguration der Fritz!Box auf `Anmeldung mit FRITZ!Box-Benutzernamen und Kennwort` notwendig
+
+ - Datentyp: **str**
+
+
+verify
+======
+
+
+(optional) Schaltet die Zertifikate-Prüfung an oder aus. Normalerweise False.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+webif_pagelength
+================
+
+
+Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
+Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.
+Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Mögliche Werte:
+
+   - **-1**
+   - **0**
+   - **25**
+   - **50**
+   - **100**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+ain
+===
+
+
+Definition der AktorIdentifikationsnummer (AIN) Items vom avm_data_type `aha_device`. Nur für diese Items mandatory!
+
+ - Datentyp: **str**
+
+
+avm_ain
+=======
+
+
+Definition der AktorIdentifikationsNummer (AIN) Items vom avm_data_types für `AHA-Interface`. Nur für diese Items mandatory!
+
+ - Datentyp: **str**
+
+
+avm_data_type
+=============
+
+
+AVM Datentyp des jeweiligen Items.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **uptime**
+   - **serial_number**
+   - **software_version**
+   - **hardware_version**
+   - **myfritz_status**
+   - **monitor_trigger**
+   - **is_call_incoming**
+   - **call_duration_incoming**
+   - **last_caller_incoming**
+   - **last_number_incoming**
+   - **last_called_number_incoming**
+   - **last_call_date_incoming**
+   - **call_event_incoming**
+   - **is_call_outgoing**
+   - **call_duration_outgoing**
+   - **last_caller_outgoing**
+   - **last_number_outgoing**
+   - **last_called_number_outgoing**
+   - **last_call_date_outgoing**
+   - **call_event_outgoing**
+   - **call_direction**
+   - **call_event**
+   - **tam**
+   - **tam_name**
+   - **tam_old_message_number**
+   - **tam_new_message_number**
+   - **tam_total_message_number**
+   - **wan_connection_status**
+   - **wan_connection_error**
+   - **wan_is_connected**
+   - **wan_uptime**
+   - **wan_ip**
+   - **wan_upstream**
+   - **wan_downstream**
+   - **wan_total_packets_sent**
+   - **wan_total_packets_received**
+   - **wan_current_packets_sent**
+   - **wan_current_packets_received**
+   - **wan_total_bytes_sent**
+   - **wan_total_bytes_received**
+   - **wan_current_bytes_sent**
+   - **wan_current_bytes_received**
+   - **wan_link**
+   - **wlanconfig**
+   - **wlanconfig_ssid**
+   - **wlan_guest_time_remaining**
+   - **network_device**
+   - **device_ip**
+   - **device_connection_type**
+   - **device_hostname**
+   - **connection_status**
+   - **aha_device**
+   - **hkr_device**
+   - **set_temperature**
+   - **temperature**
+   - **set_temperature_reduced**
+   - **set_temperature_comfort**
+   - **firmware_version**
+   - **number_of_deflections**
+   - **deflection_details**
+   - **deflections_details**
+   - **deflection_enable**
+   - **deflection_type**
+   - **deflection_number**
+   - **deflection_to_number**
+   - **deflection_mode**
+   - **deflection_outgoing**
+   - **deflection_phonebook_id**
+   - **device_id**
+   - **manufacturer**
+   - **product_name**
+   - **fw_version**
+   - **connected**
+   - **device_name**
+   - **tx_busy**
+   - **device_functions**
+   - **set_target_temperature**
+   - **target_temperature**
+   - **current_temperature**
+   - **temperature_reduced**
+   - **temperature_comfort**
+   - **temperature_offset**
+   - **set_window_open**
+   - **window_open**
+   - **windowopenactiveendtime**
+   - **set_hkr_boost**
+   - **hkr_boost**
+   - **boostactiveendtime**
+   - **summer_active**
+   - **holiday_active**
+   - **battery_low**
+   - **battery_level**
+   - **lock**
+   - **device_lock**
+   - **errorcode**
+   - **set_simpleonoff**
+   - **simpleonoff**
+   - **set_level**
+   - **level**
+   - **set_levelpercentage**
+   - **levelpercentage**
+   - **set_hue**
+   - **hue**
+   - **set_saturation**
+   - **saturation**
+   - **set_colortemperature**
+   - **colortemperature**
+   - **switch_state**
+   - **switch_mode**
+   - **switch_toggle**
+   - **power**
+   - **energy**
+   - **voltage**
+   - **humidity**
+   - **alert_state**
+
+
+avm_deflection_index
+====================
+
+
+Index für die Rufumleitung, normalerweise für die erste eine "1".
+
+ - Datentyp: **int**
+
+ - Minimalwert: **1**
+ - Maximalwert: **32**
+
+avm_incoming_allowed
+====================
+
+
+(optional) Definition der erlaubten eingehenden Rufnummer in Items vom avm_data_type `monitor_trigger`.
+
+ - Datentyp: **str**
+
+
+avm_mac
+=======
+
+
+Definition der MAC Adresse für Items vom avm_data_type `network_device`. Nur für diese Items mandatory!
+
+ - Datentyp: **mac**
+
+
+avm_read_after_write
+====================
+
+
+Konfiguriert eine Verzögerung in Sekunden nachdem ein Lesekommando nach einem Schreibkommando gesendet wird.
+
+ - Datentyp: **int**
+
+
+avm_tam_index
+=============
+
+
+Index für den Anrufbeantworter, normalerweise für den ersten eine "1". Es werden bis zu 5 Anrufbeantworter vom Gerät unterstützt.
+
+ - Datentyp: **int**
+
+ - Minimalwert: **1**
+ - Maximalwert: **5**
+
+avm_target_number
+=================
+
+
+(optional) Definition der erlaubten angerufenen Rufnummer in Items vom avm_data_type `monitor_trigger`.
+
+ - Datentyp: **str**
+
+
+avm_wlan_index
+==============
+
+
+(optional) Definition des Wlans ueber index: (1: 2.4Ghz, 2: 5Ghz, 3: Gaeste).
+
+ - Datentyp: **int**
+
+ - Minimalwert: **1**
+ - Maximalwert: **3**
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+cancel_call()
+=============
+
+
+Beendet einen aktiven Anruf.
+
+ - Die Funktion liefert kein Ergebnis
+
+
+get_call_origin()
+=================
+
+
+Gib den Namen des Telefons zurück, das aktuell als 'call origin' gesetzt ist.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+get_calllist(filter_incoming= '', phonebook_id=0)
+=================================================
+
+
+Ermittelt ein Array mit dicts aller Einträge der Anrufliste (Attribute 'Id', 'Type', 'Caller', 'Called', 'CalledNumber', 'Name', 'Numbertype', 'Device', 'Port', 'Date',' Duration' (einige optional)).
+
+ - Ergebnistyp der Funktion: **list(dict(str))**
+
+
+filter_incoming
+---------------
+
+Filter, um nur die Anrufe zu erhalten, die zu einer bestimmten angerufenen Nummer gehören.
+
+ - Datentyp: **str**
+
+
+phonebook_id
+------------
+
+ID des Telefonbuchs, in dem nachgeschlagen werden soll.
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+
+get_contact_name_by_phone_number(phone_number, phonebook_id=0)
+==============================================================
+
+
+Durchsucht das Telefonbuch mit einer (vollständigen) Telefonnummer nach Kontakten. Falls kein Name gefunden wird, wird die Telefonnummer zurückgeliefert.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+phone_number
+------------
+
+Vollständige Telefonnummer
+
+ - Datentyp: **str**
+
+
+phonebook_id
+------------
+
+ID des Telefonbuchs, in dem nachgeschlagen werden soll.
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+
+get_deflection(deflection_id)
+=============================
+
+
+Liefert die Details der Rufumleitung der angegebenen ID zurück (Default-ID = 0)
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+deflection_id
+-------------
+
+Identifikator der abzufragenden Rufumleitung.
+
+ - Datentyp: **int**
+
+
+get_deflections()
+=================
+
+
+Liefert die Details aller Rufumleitungen zurück.
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+get_device_log_from_lua()
+=========================
+
+
+Ermittelt die Logeinträge auf dem Gerät über die LUA Schnittstelle /query.lua?mq_log=logger:status/log.
+
+ - Ergebnistyp der Funktion: **list(list(str))**
+
+
+get_device_log_from_tr064()
+===========================
+
+
+Ermittelt die Logeinträge auf dem Gerät über die TR-064 Schnittstelle.
+
+ - Ergebnistyp der Funktion: **list(str)**
+
+
+get_host_details(index)
+=======================
+
+
+Ermittelt die Informationen zu einem Host an einem angegebenen Index.
+
+ - Ergebnistyp der Funktion: **dict(str)**
+
+
+index
+-----
+
+Index
+
+ - Datentyp: **int**
+
+
+get_hosts(only_active)
+======================
+
+
+Ermittelt ein Array mit den Namen aller verbundener Hosts.
+
+ - Ergebnistyp der Funktion: **list(dict(str))**
+
+
+only_active
+-----------
+
+True, wenn nur aktuell aktive Hosts zurückgegeben werden sollen.
+
+ - Datentyp: **bool**
+
+
+get_number_of_deflections()
+===========================
+
+
+Liefert die Anzahl der Rufumleitungen zurück.
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+get_phone_name(index)
+=====================
+
+
+Gibt den Namen eines Telefons an einem Index zurück. Der zurückgegebene Wert kann in 'set_call_origin' verwendet werden.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+index
+-----
+
+Index
+
+ - Datentyp: **int**
+
+
+get_phone_numbers_by_name(name, phonebook_id=0)
+===============================================
+
+
+Durchsucht das Telefonbuch mit einem Namen nach nach Kontakten und liefert die zugehörigen Telefonnummern.
+
+ - Ergebnistyp der Funktion: **dict(dict(str))**
+
+
+name
+----
+
+Anteiliger oder vollständiger Name des Kontakts.
+
+ - Datentyp: **str**
+
+
+phonebook_id
+------------
+
+ID des Telefonbuchs, in dem nachgeschlagen werden soll.
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+
+is_host_active(mac_address)
+===========================
+
+
+Prüft, ob eine MAC Adresse auf dem Gerät aktiv ist. Das kann bspw. für die Umsetzung einer Präsenzerkennung genutzt werden.
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+mac_address
+-----------
+
+MAC Adresse
+
+ - Datentyp: **mac**
+
+
+reboot()
+========
+
+
+Startet das Gerät neu.
+
+ - Die Funktion liefert kein Ergebnis
+
+
+reconnect()
+===========
+
+
+Verbindet das Gerät neu mit dem WAN (Wide Area Network).
+
+ - Die Funktion liefert kein Ergebnis
+
+
+set_call_origin(phone_name)
+===========================
+
+
+Setzt den 'call origin', bspw. vor dem Aufruf von 'start_call'.
+
+ - Die Funktion liefert kein Ergebnis
+
+
+phone_name
+----------
+
+Identifikator des Telefons, dass als 'call origin' gesetzt werden soll. Bspw. zwei Sterne gefolgt von '610' für ein internes Gerät.
+
+ - Datentyp: **mac**
+
+
+set_deflection_enable(deflection_id, enable)
+============================================
+
+
+Schaltet die Rufumleitung mit angegebener ID an oder aus.
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+deflection_id
+-------------
+
+Identifikator der abzufragenden Rufumleitung.
+
+ - Datentyp: **int**
+
+
+enable
+------
+
+An / Aus
+
+ - Datentyp: **bool**
+
+
+start_call(phone_number)
+========================
+
+
+Startet einen Anruf an eine übergebene Telefonnummer (intern oder extern).
+
+ - Die Funktion liefert kein Ergebnis
+
+
+phone_number
+------------
+
+Vollständige Telefonnummer, die angerufen werden soll.
+
+ - Datentyp: **str**
+
+
+wol(mac_address)
+================
+
+
+Sendet einen WOL (WakeOnLAN) Befehl an eine MAC Adresse.
+
+ - Die Funktion liefert kein Ergebnis
+
+
+mac_address
+-----------
+
+MAC Adresse
+
+ - Datentyp: **mac**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

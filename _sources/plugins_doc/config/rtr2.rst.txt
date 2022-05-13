@@ -1,0 +1,259 @@
+.. |_| unicode:: 0xA0
+
+
+===========================
+Plugin 'rtr2' Konfiguration
+===========================
+
+
+.. index:: Plugins; rtr2 Konfiguration
+
+.. image:: /plugins/rtr2/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **rtr2** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+
+
+Beschreibung
+============
+
+Raum Temperatur Regler v2
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.8.0**
+ - Minimum Python Version: **3.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **rtr2** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+comfort_temp
+============
+
+
+Standard Vorgabe für die Temperatur im Komfort Modus
+
+ - Datentyp: **num**
+ - Standardwert: **22.0**
+
+
+default_Ki
+==========
+
+
+Gebäuchliche Werte: Wasserheizung=120 Min, Fußbodenheitzung=150 Min, Split Unit=60 Min
+
+ - Datentyp: **num**
+ - Standardwert: **120**
+
+
+default_Kp
+==========
+
+
+Gebäuchliche Werte: Wasserheizung=4 K, Fußbodenheitzung=4 K, Split Unit=4 K
+
+ - Datentyp: **num**
+ - Standardwert: **4**
+
+
+fixed_reduction
+===============
+
+
+Soll die Temperatur Differenz zwischen Komfort Modus und den anderen Modi konstant sein?
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+frost_temp
+==========
+
+
+Standard Vorgabe für die Temperatur im Frostschutz Modus
+
+ - Datentyp: **num**
+ - Standardwert: **7.0**
+
+
+hvac_mode
+=========
+
+
+Modus Standard Vorgabe: 1=Komfort, 2=Standby, 3=Nacht, 4=Frostschutz
+
+ - Datentyp: **int**
+ - Standardwert: **2**
+
+ - Minimalwert: **1**
+ - Maximalwert: **4**
+
+max_output
+==========
+
+
+Standard Vorgabe für den maximalen Stellwert der Regler.
+
+ - Datentyp: **num**
+ - Standardwert: **100**
+
+ - Minimalwert: **20**
+ - Maximalwert: **100**
+
+min_output
+==========
+
+
+Standard Vorgabe für den minimalen Stellwert der Regler.
+
+ - Datentyp: **num**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+ - Maximalwert: **25**
+
+night_reduction
+===============
+
+
+Standard Vorgabe für die Temperatur im Nacht Modus (bei Nachtabsenkung)
+
+ - Datentyp: **num**
+ - Standardwert: **3.0**
+
+
+standby_reduction
+=================
+
+
+Standard Vorgabe für die Temperatur im Standby Modus
+
+ - Datentyp: **num**
+ - Standardwert: **1.0**
+
+
+valve_protect
+=============
+
+
+Standard Vorgabe für die Aktivierung der Ventilschutz Einstellung der Regler.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+rtr2_controller_settings
+========================
+
+
+Initale Einstellungen für den Controller, falls abweichend von den Plugin Standardwerten
+
+ - Datentyp: **list**
+
+
+rtr2_function
+=============
+
+
+Anzusteuernde Funktion für den gewählten rtr
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   -  |_| - |_| <noch keine Funktion gewählt>
+   - **comfort_mode** |_| - |_| Mode 'comfort' setzen -> bool, r/w
+   - **standby_mode** |_| - |_| Mode 'standby' setzen -> bool, r/w
+   - **night_mode** |_| - |_| Mode 'night' setzen -> bool, r/w
+   - **frost_mode** |_| - |_| Mode 'frost' setzen -> bool, r/w
+   - **hvac_mode** |_| - |_| Mode 'hvac' setzen -> num, r/w
+   - **heating_status** |_| - |_| Heiz Status -> bool, r/o
+   - **lock_status** |_| - |_| Sperr Status -> bool, r/w (r/o)
+   - **temp_set** |_| - |_| Soll Temp setzen -> num, r/o
+   - **temp_actual** |_| - |_| Ist Temp setzen -> num, w/o
+   - **control_output** |_| - |_| Stellwert -> num, r/o
+   - **setting_temp_comfort** |_| - |_| Setting: Komfort Temp setzen -> num, r/w
+   - **setting_temp_standby** |_| - |_| Setting: Standby Temp setzen -> num, r/w
+   - **setting_temp_night** |_| - |_| Setting: Nacht Temp setzen -> num, r/w
+   - **setting_night_reduction** |_| - |_| Setting: Nachtabsenkung setzen -> num, r/w
+   - **setting_standby_reduction** |_| - |_| Setting: Standby-Absenkung setzen -> num, r/w
+   - **setting_fixed_reduction** |_| - |_| Setting: Feste Absenkung -> bool, r/w
+   - **setting_temp_frost** |_| - |_| Setting: Frostschutz Temp setzen -> num, r/w
+   - **setting_min_output** |_| - |_| Setting: Minimaler Stellwert -> num(0-25), r/w
+   - **setting_max_output** |_| - |_| Setting: Maximaler Stellwert -> num(25-100), r/w
+
+
+rtr2_id
+=======
+
+
+ID des anzusteuernden rtr. Die Funktion des Items wird mit 'rtr2_function' festgelegt.
+
+ - Datentyp: **str**
+
+
+rtr2_settings
+=============
+
+
+Initale Einstellungen für den Rtr
+
+ - Datentyp: **list**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

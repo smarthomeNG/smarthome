@@ -1,0 +1,304 @@
+.. |_| unicode:: 0xA0
+
+
+==================================
+Plugin 'homeconnect' Konfiguration
+==================================
+
+
+.. index:: Plugins; homeconnect Konfiguration
+
+.. image:: /plugins/homeconnect/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **homeconnect** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Anbindung der BSH/Siemens HomeConnect Schnittstelle mit Oauth2
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.7**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **homeconnect** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+client_id
+=========
+
+
+Client ID von https://developer.home-connect.com/
+
+ - Datentyp: **str**
+
+
+client_secret
+=============
+
+
+Client Secret von https://developer.home-connect.com/
+
+ - Datentyp: **str**
+
+
+cycle
+=====
+
+
+Dieser Parameter muss normalerweise nicht angegeben werden. Er erlaubt es die Update-Frquenz anzupassen (Standard: alle 600 Sekunden). Mit dem Standardwert werden die Daten von Nokia Health alle 5 Minuten aktualisiert.
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+simulate
+========
+
+
+Aktiviert den Simulationsmodus, um gegen virtuelle Geräte (Appliances) zu testen.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+ha_id
+=====
+
+
+haId des jeweiligen Items (siehe Appliance Liste im WebInterface des Plugins).
+
+ - Datentyp: **str**
+
+
+homeconnect_data_type
+=====================
+
+
+HomeConnect Datentyp des jeweiligen Items.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **status**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+get_hc()
+========
+
+
+Gibt das HomeConnect Objekt des HomeConnect Plugins zurück.
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+get_program_options(ha_id, program_key)
+=======================================
+
+
+Gibt die selektierten Programme einer Appliance zurück.
+
+ - Ergebnistyp der Funktion: **list(str)**
+
+
+ha_id
+-----
+
+ha_id der Appliance (im Web-Interface des Plugins zu sehen)
+
+ - Datentyp: **str**
+
+
+program_key
+-----------
+
+program_key des Programms, dessen Optionen zurückgegeben werden sollen (im Web-Interface des Plugins zu sehen)
+
+ - Datentyp: **str**
+
+
+get_programs_active(ha_id)
+==========================
+
+
+Gibt die aktiven Programme einer Appliance zurück.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+ha_id
+-----
+
+ha_id der Appliance (im Web-Interface des Plugins zu sehen)
+
+ - Datentyp: **str**
+
+
+get_programs_available(ha_id)
+=============================
+
+
+Gibt die verfügbaren Programme einer Appliance zurück.
+
+ - Ergebnistyp der Funktion: **list(str)**
+
+
+ha_id
+-----
+
+ha_id der Appliance (im Web-Interface des Plugins zu sehen)
+
+ - Datentyp: **str**
+
+
+get_programs_selected(ha_id)
+============================
+
+
+Gibt die selektierten Programme einer Appliance zurück.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+ha_id
+-----
+
+ha_id der Appliance (im Web-Interface des Plugins zu sehen)
+
+ - Datentyp: **str**
+
+
+get_redirect_url()
+==================
+
+
+Gibt die Redirect URL des HomeConnect Plugins zurück.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+start_program(ha_id, program_key, options)
+==========================================
+
+
+Startet das Programm einer Appliance.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+ha_id
+-----
+
+ha_id der Appliance (im Web-Interface des Plugins zu sehen)
+
+ - Datentyp: **str**
+
+
+program_key
+-----------
+
+program_key des Programms, das ausgeführt werden soll (im Web-Interface des Plugins zu sehen)
+
+ - Datentyp: **str**
+
+
+options
+-------
+
+Optionen des Programms, das ausgeführt werden soll (im Web-Interface des Plugins zu sehen)
+
+ - Datentyp: **str**
+
+
+stop_program(ha_id, program_key, options)
+=========================================
+
+
+Stoppt das Programm einer Appliance.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+ha_id
+-----
+
+ha_id der Appliance (im Web-Interface des Plugins zu sehen)
+
+ - Datentyp: **str**
+
+
+program_key
+-----------
+
+program_key des Programms, das gestoppt werden soll (im Web-Interface des Plugins zu sehen)
+
+ - Datentyp: **str**
+
+
+options
+-------
+
+Optionen des Programms, das gestoppt werden soll (im Web-Interface des Plugins zu sehen)
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/homeconnect/README>` des Plugins zugreifen.

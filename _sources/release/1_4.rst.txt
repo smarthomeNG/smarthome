@@ -1,0 +1,235 @@
+:tocdepth: 1
+
+===============================
+Release 1.4 - 17. Dezember 2017
+===============================
+
+Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+
+
+Unterstützte Python Versionen
+=============================
+
+Bitte beachten: Ab SmartHomeNG Release 1.4 wollen wir die aktive Unterstützung älterer Python
+Versionen einstellen. Die älteste unterstützte Python Version wird dann Python 3.4 sein.
+(Siehe *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
+
+Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.4 nicht mehr unter älteren Python
+Versionen läuft. Es bedeutet, dass SmartHomeNG nicht mehr mit älteren Python Versionen getestet
+wird und das gemeldete Fehler mit älteren Python Versionen nicht mehr zu Buxfixen führen.
+
+
+Absolute minimum Python Versionen auf 3.3 angehoben
+===================================================
+
+Die Minimum Python Version in der SmartHomeNG startet wurde von 3.2 auf 3.3 erhöht. Aufgrund
+der größeren Änderungen zwischen Python 3.2 und 3.3 war es schon bisher problematisch SmartHomeNG
+mit Plugins in eine Python 3.2 zum Laufen zu bringen.
+
+
+Neue Funktionen
+===============
+
+
+Neue Funktionen im CORE
+-----------------------
+
+* Ladbare Core Module:
+
+  * Module-Loader: Ermöglicht ladbare Module zur Erweiterung der Core Funktionalität.
+  * Der Module-Loader unterstützt die Prüfung der Parameter gegen Metadaten (analog zu den Plugins).
+  * http-Modul: Ermöglicht Plugins selbst über CherryPy Webinterfaces zur Verfügung zu stellen
+  * Rudimentäres Module API implementiert
+
+* SmartPlugin Klasse erweitert
+* Warnung, falls LANG Environment Variable nicht sinnvoll gesetzt ist.
+* Items:
+
+  * Für die Vorbelegung des Wertes von Items in den Konfigurationsdateien kann nun `initial_value:` analog zu `value` verwendet werden.Zur Vermeidung von Verwechslungen zum namensgleichen `value` in Ausdrücken wie bei `eval`.
+  * Attribute `on_update` und `on_change` eingeführt. Mit Hilfe dieser Item Attribute können die Werte anderer Items gesetzt werden.
+  * Funktionen prev_update_age() und prev_update() hinzugefügt.
+
+* Plugins:
+
+  * Plugins können ein Webinterface implementieren (durch Nutzung des http-Moduls)
+  * Unterstützung mehrerer Versionen eines Plugins. Vorgänger-Versionen von Plugins können mit einem Plugin ausgeliefert werden und durch Angebe der Versionsnummer in /etc/plugin.yaml statt der aktuellen Version geladen werden.
+  * Anwender und Entwickler Dokumentation kann dynamisch um Plugin Dokumentation ergänzt werden. (Durch Erstellen der Dateien user_doc.rst bzw. develpoer_doc.rst)
+
+* Scheduler:
+
+  * Implementierung eigener Nammensräume für Scheduler von Items, Logiken und Plugins, um mögliche Kollisionen durch Namensgleichheiten zu vermeiden. (ist besonders zu beachten, fall man `sh.scheduler.change()` für Scheduler von Logiken nutzt. Dort muss dem Scheduler Namen ein `logic.` vorangestellt werden)
+
+* Einführung von Plugin Metadaten:
+
+  * Erweiterung der Plugins um eine Metadaten-Datei.
+  * Metadaten zu Plugins werden in einer plugin.yaml im Plugin Verzeichnis abgelegt.
+  * Bei existierenden Plugin-Metadaten wird die Versionsverträglichkeit zwischen SmartHomeNG und Plugin geprüft
+  * Bei existierenden Parameter Definitionen in den Plugin-Metadaten werden die in /etc/plugin.yaml konfigurierten Werte auf formale Gültigkeit (Datentyp, min/max Werte, Werteliste, etc.) geprüft.
+  * Neues Parameter Interface für Plugins: Bei existierenden Parameter Definitionen in den Plugin-Metadaten werden die geprüften Werte im Ziel-Datentyp in einem Dict an das gestartete Plugin übergeben.
+  * Angabe des `classname` in den Metadaten ermöglicht einfachere Konfiguration: Nur `plugin_name:` muss in /etc/plugin.yaml angegeben werden, statt `class_path:` und `class_name:` (`classname` ist zu den Metadaten aller Plugins hinzugefügt worden)
+  * Klassifizierung der Plugins in den Metadaten zur bessern Übersicht. Die Klassifizierung wird zur Erstellung der Doku herangezogen.
+
+* Szenen:
+
+  * Unterstützung des YAML Formates für die Konfiguration von Szenen
+  * Einführung eines API für Szenen
+  * Szenen können statt absolute Werte für Items zu definieren, auch Eval-Ausdrücke definieren. In den Eval-Ausdrücken ist die Referenzierung von Items sowohl absolut, als auch relativ zum Szenen-Item möglich
+  * Im YAML Format können Namen für die Stati einer Szene vergeben werden
+
+* Logiken:
+
+  * Methode last_run() hinzugefügt
+  * Logics API:
+
+    * Implementierung eines APIs für Logiken
+    * Das enable/disable von Logiken über das API wird persistiert (bleibt also auch über einen Neustart von SmartHomeNG erhalten)
+    * Das API ermöglicht den Plugins Backend, Blockly und CLI ein erweitertes Handling von Logiken (z.B. Update der Logik-Konfiguration) falls das neue Konfigurationsformat (yaml) verwendet wird.
+    * Details des API sind der Entwickler Dokumentation zu entnehmen
+
+  * Zugriff auf das Logics-API aus Logiken heraus
+  * Möglichkeit persistenter Variablen für Logiken dokumentiert
+
+* Neue Kommandozeilen Option um den Ort der Verzeichnisse mit den Konfigurationsdateien (/etc, /items und /logics) ändern zu können.
+
+
+
+Entfernte CORE Bibliotheken
+---------------------------
+
+Keine
+
+
+
+Neue Plugins und Plugin-Erweiterungen
+-------------------------------------
+
+* Allgemein:
+
+  * sample_plugin basierend auf erweiterter SmartPlugin Klasse (unter /dev/sample_plugin)
+  * sample_plugin mit Web-Interface (unter /dev/sample_plugin_webif)
+
+* Blockly: Graphischer Logik Editor mit Integration in das Backend Plugin (noch Expermental)
+* WebServices Plugin, dass das neue Web-Interface nutzt
+* Nokia Health Plugin
+* AV Device:
+
+  * Änderung der txt Konfigurationsdatei (Achtung! Bestehende Dateien müssen aktualisiert werden!)
+  * Unterstützt nun neben Pioneer AV Receivern auch die wichtigsten Funktionen von Denon AV-Geräten
+  * Optimierte Konfiguration von zusätzlichen Funktionen und Geräten
+  * Unterstützung der Konfigurationsüberprüfung mittels avdevice/plugin.yaml
+  * Optimierung vieler Funktionen wie erneutes Senden eines Befehl, wenn die erwartete Antwort nicht empfangen werden kann, Reset auf letzten bekannten Wert, Abfrage der aktuellen Einstellungen für sämtliche Zonen, etc.
+
+* Backend:
+
+  * Das Backend Plugin nutzt/benötigt nun das http-Modul
+  * Integration des Blockly Plugins um Logiken über Webinterface visuell zu konfigurieren (über Logik-Liste oder Plugin-Liste)
+  * Systeminfo:
+
+    * Aufteilung in zwei Reiter (Systemeigenschaften und PyPI Check)
+    * PyPi Check prüft nun gegen die Requirements von SmartHomeNG
+
+  * Dienste:
+
+    * YAML Syntax Checker hinzugefügt
+    * Eval Syntax Checker hinzugefügt
+    * Syntax Highlighting im CONF-YAML Konverter
+
+  * Items:
+
+    * Anzeige von **update_age** "Alter (Update)" hinzugefügt
+    * Anzeige von **prev_update_age** "vorh. Alter (Update)" und **prev_update** "vorheriges Update" hinzugefügt
+
+  * Logiken:
+
+    * Erstellen neuer Logiken
+    * Konfiguration der Logiken (etc/logic.yaml) ist zur Laufzeit änderbar
+    * Logiken können entladen und geladen werden.
+    * Editieren von Logiken
+
+      * Erweiterungen des CodeMirror Logikeditors (Python Sourcecode)
+
+        * Full Screen Modus via F11
+        * Automatische Anpassung an Browserfenster
+        * Autocomplete für Python Befehle und Item-Pfade
+        * Optionale Zeilenumbrüche
+
+      * Löschen von Logiken
+      * Integration für das Blockly Plugin
+      * Anzeige des Zeitpunkts des letzten Laufs auf der Logik-Detail Seite
+
+    * Scheduler:
+
+      * Anzeige der Item-Schedules, Logik-Schedules, Plugin-Schedules und sonstiger Schedules erfolgt auf eigenen Reitern
+
+    * Plugins:
+
+      * Erweiterte Anzeige der Pluginliste
+      * Anzeige der Konfigurationseinstellungen aus der plugin.yaml/.conf durch Klick auf das jeweilige Plugin in der Liste
+      * Verlinkung auf Webinterfaces von Plugins (falls diese implementiert sind)
+
+    * Szenen:
+
+      * Neue Seite zur Anzeige der definierten Szenen hinzugefügt
+
+    * Threads:
+
+      * Verbesserte Anzeige der aktiven Threads
+
+* CLI:
+
+  * Umstellung auf das Logics-API
+  * Erweiterter Hilfe Befehl: mit help [group] kann (statt der vollständigen Hilfe) die Hilfe zu einer Gruppe von Befehlen (item, log, logic, scheduler) angezeigt werden.
+  * neuer Befehl zu Anzeige detaillierter Informationen zu einer Logik
+  * Überarbeitung der Ausgabe der Threadliste
+  * Einführung einer neuen (logischeren) Befehlsbenennung: Beispiel: Alle Befehle für Logiken beginnen mit 'l'. Die alten Befehle funktionieren weiterhin (bis auf Namens-Kollisionen).
+
+* Simulation:
+
+  * Unterstützung eines Filters, so dass nur bestimmte caller erlaubt sind (bspw. KNX oder Visu)
+
+* Pushover Plugin zum Versenden von Notifizierungen auf Geräte wie z.B. Smartphones
+* DataLog Plugin enthaelt ein Fix fuer das Feld `stamp`
+* Weitere Plugins auf SmartPlugin umgestellt: datalog, memlog, comfoair, artnet, luxtronic2
+* SMA Plugin prueft auf Bluetooth Support in Python um den Nutzer auf fehlende Unterstuetzung hinzuweisen
+* Enocean:
+
+  * Unterstützung für einfache Schalter (Protokoll D2-01-07), wie z.B. Peha d 451 fu-ebi pf o.t. nr. 00364476
+  * Unterstützung für Eltako Heligkeitssensor (FAH60)
+  * Lernmethoden restrukturiert und erweitert
+
+* KNX Plugin: Typo Fix in enable_stats() / disable_stats()
+* DLMS Plugin: Pruefsummenbehandlung wieder eingefuehrt/aktiviert
+* LIRCD Plugin: Neues Plugin um via lircd IR Kommandos zu verschicken
+* MPD Plugin: Unterstützung um Playlists zu laden und abzuspielen
+* Database-Plugin mit neuen Aggregatsfunktionen:
+
+  * `sum` - Liefert summierte Werte über den abgefragten Zeitraum zurück
+  * `count` - Liefert summierte Anzahl über den abgefragen Zeitraum zurück (kann mit einer Bedingung kombiniert werden z.B. `count>10`)
+  * `diff` - Liefert die jeweiligen Differenzen der Werte über den abgefragten Zeitraum zurück
+  * `raw` - Liefert alle Werte für den abgefragten Zeitraum zurück ohne eine Aggregation durchzuführen
+
+* XBMC: Neues Kommando `shutdown` wurde implementiert
+* visu_smartvisu:
+
+  * Verbesserte Anzeige der **Category** Seite auf mobilen Endgeräten
+  * Initialer Support für smartVISU v2.9 hinzugefügt
+
+* visu_websocket:
+
+  * Reagiert nun bei Logiken auf Änderungen an visu_acl ohne Neustart von SmartHomeNG
+  * Protokollerweiterung für spätere smartVISU Versionen
+
+
+Entfernte Plugins
+-----------------
+
+Bisher keine
+
+
+Dokumentation
+-------------
+
+* Erweiterte Entwickler Dokumentation (English) im Web
+* Initiale Version der Anwenderdokumentation (Deutsch) im Web
+
+

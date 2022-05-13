@@ -1,0 +1,143 @@
+.. |_| unicode:: 0xA0
+
+
+=============================
+Plugin 'sma_mb' Konfiguration
+=============================
+
+
+.. index:: Plugins; sma_mb Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **sma_mb** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Dieses Plugin liest die aktuellen Werte eines SMA-Wechselrichters per SMA Speedwire Feldbus/Modbus aus
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.7**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **sma_mb** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Update Zyklus in Sekunden
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+host
+====
+
+
+IP Adresse des SMA Wechselrichters
+
+ - Datentyp: **ipv4**
+
+
+port
+====
+
+
+Modbus Port
+
+ - Datentyp: **int**
+ - Standardwert: **502**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+smamb_datatype
+==============
+
+
+SMA Datentyp
+
+ - Datentyp: **str**
+ - Standardwert: **U32**
+
+ - Mögliche Werte:
+
+   - **S16** |_| - |_| 16-Bit Integer, mit Vorzeichen
+   - **U16** |_| - |_| 16-Bit Integer, ohne Vorzeichen
+   - **S32** |_| - |_| 32-Bit Integer, mit Vorzeichen
+   - **U32** |_| - |_| 32-Bit Integer, ohne Vorzeichen
+   - **S64** |_| - |_| 64-Bit Integer, mit Vorzeichen
+   - **U64** |_| - |_| 64-Bit Integer, ohne Vorzeichen
+   - **STR08** |_| - |_| String aus 8 Registern (ergibt einen String mit bis zu 16 Zeichen)
+   - **STR12** |_| - |_| String aus 12 Registern (ergibt einen String mit bis zu 24 Zeichen)
+   - **STR16** |_| - |_| String aus 16 Registern (ergibt einen String mit bis zu 32 Zeichen)
+
+
+smamb_register
+==============
+
+
+Das Modbus-Register des SMA Modbus-Profils
+
+ - Datentyp: **int**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/sma_mb/README>` des Plugins zugreifen.

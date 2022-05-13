@@ -1,0 +1,99 @@
+:tocdepth: 1
+
+============================
+Release 1.3 - 5. August 2017
+============================
+
+There are a lot of new features for the core of SmartHomeNG anf the plugins.
+
+New CORE features
+-----------------
+
+* Support for YAML as unified format for configuration files
+* Extended checking of item-names for validity (reject if they are Python reserved words)
+* Long lines in Config files (old format: item.conf, plugin.conf) can be divided into multiple lines for better readability
+* Relative addressing of items in config files has been implemented
+
+* The autotimes attribute of items has been extended. Instead of constant values, items can be specified for time and value parameters
+* For item attributes autotimer und cycle you can choose if the assigned value should be of type string (as before) or of the item's type
+* The different possibilities of specifying a duration (time attribute autotimer und cycle) have been extended
+
+* Python module "math" is now supported in eval expressions
+* Matching of items based on their value is possible
+* Integration of external libraries is now possible using the module_paths setting in the global configuration of SmartHomeNG
+
+* It is now possible to reload, deactivate or activate logics at runtime using the backend plugin or the CLI plugin
+
+* It is prevented to start SmartHomeNG as root user
+
+
+
+Removed CORE Libs
+-----------------
+
+Nothing so far
+
+New Plugins
+-----------
+
+* 2N Intercom Plugin
+* Amazon Alexa Plugin
+* Amazon Dashbutton Plugin
+* Database Plugin, welches den o.g. DB-API2 Layer nutzt - Installations-/Migrationsanleitung siehe hier
+* gpio Plugin
+* Helios / Vallox KWL Plugin
+* influxdata Plugin
+* odlinfo Plugin (data about radioaktive radiation)
+* sma em Plugin (read out SMA energy meters)
+* xiaomi Mi Flora Plant Sensor Plugin
+* yamaha Plugin
+* Traffic (Google Directions API) Plugin
+* MVG_Live Plugin
+* Logitech Harmony Plugin
+* Nuki Lock Plugin
+* Wunderground Plugin
+* Join API Plugin
+* NUT Plugin
+* telegram
+
+
+Changes to existing Plugins
+---------------------------
+* DWD Plugin: Bugfix für die forecast Methode
+* Squeezebox Plugin (updates, SmartPlugin migration)
+* systemair Plugin (updates, SmartPlugin migration)
+* Kostal Plugin (in addition to HTML-format, JSON-format is now supported - names have changed!)
+* KNX Plugin: New feature Poll of a GA (via knx_poll)
+* RTR-Plugin: Bugfixes
+* OpenEnergyMonitor: Plugin folder name is now lower-case. Configuration in etc/plugin.yaml (or etc/plugin.conf) has to be changed.
+
+
+* Extensions to backend plugin
+    * Polish translation
+    * Systeminfo
+        * pypi packet check incl. requirements
+    * Services
+        * Impelemtation of a converter to convert configurations-snippets from CONF-format to YAML-format
+    * Logics
+        * Browser-based Logic-code-editor
+        * Extended information for Logics
+        * Store and reload logics. During reload, the configuration is re-read from etc/logics.yaml (or etc/logics.conf)
+    * Plugins
+        * Extended information for plugins
+    * Logging
+        * List of configured loggers with the option to display all configured logfiles
+
+* Extensions to AVM plugin
+    * New functions get_phone_name und get_call_origin (incl. documented CURLs)
+    * 4 new AVM_dData_types: 'wan_current_packets_sent', 'wan_current_packets_received', 'wan_current_bytes_sent', 'wan_current_bytes_received'
+    * New method get_phone_numbers_by_name
+
+* Extension to visu_websocket plugin
+    * Function url() added to trigger a page change on smartVISU clients. (Needs a modified io_smarthome.py.js driver in smartVISU 2.8 or alternatively the not yet released smartVISU 2.9)
+
+
+Removed Plugins
+---------------
+
+* modbus plugin (Does not function with actual Python versions and is not maintained/supported any more by author)
+* visu plugin (superseded by visu_websocket and visu_smartvisu)

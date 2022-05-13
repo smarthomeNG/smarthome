@@ -1,0 +1,127 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'influxdata' Konfiguration
+=================================
+
+
+.. index:: Plugins; influxdata Konfiguration
+
+.. image:: /_static/img/system.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **influxdata** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als deprecated gekennzeichnet. Es wird empfohlen auf eine                  Nachfolgelösung umzusteigen.
+
+
+
+Beschreibung
+============
+
+Ermöglicht Speicherung von Daten in InfluxData TSDB z.B. zur Erzeugung von Graphen mit Grafana oder Chronograf (Plugin aus 2016)
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.1**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **influxdata** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+influx_host
+===========
+
+
+Hostname der InfluxData Datenbank
+
+ - Datentyp: **str**
+ - Standardwert: **localhost**
+
+
+influx_keyword
+==============
+
+
+Dieser Parameter legt fest, auf welches Item-Attribut das Plugin reaagiert.  (Wenn hier ein anderer Wert als 'influx' angegeben wird, können in Zukunft Items nicht über das  graphische Admin-Interface für dieses Plugin konfiguriert werden)
+
+ - Datentyp: **str**
+ - Standardwert: **influx**
+
+
+influx_port
+===========
+
+
+Portnummer der InfluxData Datenbank
+
+ - Datentyp: **int**
+ - Standardwert: **8089**
+
+ - Minimalwert: **0**
+ - Maximalwert: **65535**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+influx
+======
+
+
+Diesem Attribut einen Wert zuweisen, um den Item Wert durch das influxdata Plugin zu speichern
+
+ - Datentyp: **foo**
+ - Standardwert: **None'**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/influxdata/README>` des Plugins zugreifen.

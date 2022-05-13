@@ -1,0 +1,139 @@
+.. |_| unicode:: 0xA0
+
+
+===========================
+Plugin 'ebus' Konfiguration
+===========================
+
+
+.. index:: Plugins; ebus Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **ebus** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Unterstützt eBus Heizungen (z.B. Vailant, Wolf, Kromschroeder) - Dieses Plugin verbindet sich zu einem ebusd Deamon (http://www.cometvisu.de/wiki/Ebusd), welcher mit einer eBus Heizung kommuniziert. Voraussetzungen: Ein ebusd Deamon läuft auf dem Netzwerk. (Anmerkung: Der ebusd benötigt ein ebus-Interface um mit ihm zu kommunizieren.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **ebus** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Cycle Zeit zur Abfrage jedes Items
+
+ - Datentyp: **int**
+ - Standardwert: **240**
+
+ - Minimalwert: **0**
+
+host
+====
+
+
+IP Adresse des ebusd Deamons
+
+ - Datentyp: **ip**
+ - Standardwert: **127.0.0.1**
+
+
+port
+====
+
+
+Port auf dem der ebusd Deamon lauscht
+
+ - Datentyp: **int**
+ - Standardwert: **8888**
+
+ - Minimalwert: **0**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+ebus_cmd
+========
+
+
+ebus_cmd ist das Kommando, welches durch die Telnet Verbindung zum ebusd übertragen wird - z.B. 'cir2 heat_pump_curr', 'mv yield_sum' or 'short hw_load'
+
+ - Datentyp: **str**
+
+
+ebus_type
+=========
+
+
+ebus_type legt fest, ob vom ebusd Deamon nur gelesen werden soll oder ob auch Daten an ebusd übertragen werden sollen.
+
+ - Datentyp: **str**
+ - Standardwert: **get**
+
+ - Mögliche Werte:
+
+   - **get** |_| - |_| get
+   - **set** |_| - |_| set
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -1,0 +1,155 @@
+.. |_| unicode:: 0xA0
+
+
+===========================
+Plugin 'mqtt' Konfiguration
+===========================
+
+
+.. index:: Plugins; mqtt Konfiguration
+
+.. image:: /plugins/mqtt/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **mqtt** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **protocol Plugin**.
+
+
+
+Beschreibung
+============
+
+MQTT Plugin, welches das MQTT Module von SmartHomeNG zur Kommunikation nutzt.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.7**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **mqtt** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+**Keine**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+mqtt_bool_values
+================
+
+
+Gewünschte Werte (im MQTT Payload) für boolsche Items (z.B. ['Falsch','Wahr'])
+
+ - Datentyp: **list**
+ - Standardwert: **None***
+
+
+mqtt_qos
+========
+
+
+mqtt_qos definert den Quality of Service Level, der für dieses Item bei der Kommunikation mit dem Broker genutzt wird. Falls nicht angegeben, wird das globale Setting des Plugins genutzt.
+
+ - Datentyp: **int**
+
+ - Mögliche Werte:
+
+   - **0**
+   - **1**
+   - **2**
+
+
+mqtt_retain
+===========
+
+
+Wenn mqtt_retain auf True gesetzt ist, werden MQTT Messages für dieses Item mit gesetztem Reatin Flag gesendet.
+
+
+ - Datentyp: **bool**
+
+
+mqtt_topic
+==========
+
+
+Wenn mqtt_topic konfiguriert ist, wird das Topic für ein- und ausgehende Messages verwendet. Dabei werden evtl. konfigurierte seperate Werte für mqtt_topic_out und mqtt_topic_in überschrieben.
+
+ - Datentyp: **str**
+
+
+mqtt_topic_in
+=============
+
+
+mqtt_topic_in definiert das MQTT Topic, welches abonniert wird. Bei Empfang einer Message mit diesem Topic, wird die Payload benutzt um den Wert des Items zu setzen.
+
+ - Datentyp: **str**
+
+
+mqtt_topic_init
+===============
+
+
+mqtt_topic_init ist äquivalent zu mqtt_topic_out, außer dass das Topic beim Start von SmartHomeNG initialisiert (also eine MQTT message gesendet) wird.
+
+ - Datentyp: **str**
+
+
+mqtt_topic_out
+==============
+
+
+mqtt_topic_out definiert das MQTT Topic unter dem der Wert des Items als Payload publiziert wird.
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/mqtt/README>` des Plugins zugreifen.

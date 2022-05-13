@@ -1,0 +1,226 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'onewire' Konfiguration
+==============================
+
+
+.. index:: Plugins; onewire Konfiguration
+
+.. image:: /_static/img/gateway.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **onewire** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+1-Wire Unterstützung über owserver
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **onewire** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+button_wait
+===========
+
+
+Zeitraum zwischen zwei Anfragen an einen iButton Busmaster
+
+ - Datentyp: **num**
+ - Standardwert: **0.5**
+
+
+cycle
+=====
+
+
+Zeitraum in Sekunden zwischen zwei Sensor-Abfragezyklen. Wenn dieser Wert zu stark gesenkt wird, kann das den Bus durch erhöhten Stromverbrauch destabilisieren.
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+cycle_discovery
+===============
+
+
+Zeitraum in Sekunden zwischen zwei Auflistungen aller Sensoren. Wenn dieser Wert zu stark gesenkt wird, kann das den Bus durch erhöhten Stromverbrauch destabilisieren.
+
+ - Datentyp: **int**
+ - Standardwert: **600**
+
+
+host
+====
+
+
+owserver Hostname oder IP Adresse
+
+ - Datentyp: **ip**
+ - Standardwert: **127.0.0.1**
+
+
+io_wait
+=======
+
+
+Zeitraum zwischen zwei Anfragen an den 1-wire I/O Chip.
+
+ - Datentyp: **num**
+ - Standardwert: **5**
+
+
+log_counter_cycle_discovery_time
+================================
+
+
+Anzahl der Messungen der tatsächlichen Abfragezeit für Sensorauflistung. Der Zähler wird heruntergezählt und wenn er auf 0 steht wird nicht mehr geloggt. Wird er auf -1 gesetzt, wird dauerhaft geloggt.
+
+ - Datentyp: **int**
+ - Standardwert: **5**
+
+
+log_counter_cycle_time
+======================
+
+
+Anzahl der Messungen der tatsächlichen Abfragezeit für Sensor-Abfragezyklen.  Der Zähler wird heruntergezählt und wenn er auf 0 steht wird nicht mehr geloggt. Wird er auf -1 gesetzt, wird dauerhaft geloggt.
+
+ - Datentyp: **int**
+ - Standardwert: **5**
+
+
+log_counter_io_loop_time
+========================
+
+
+Anzahl der Messungen der tatsächlichen Abfragezeit für IO. Der Zähler wird heruntergezählt und wenn er auf 0 steht wird nicht mehr geloggt. Wird er auf -1 gesetzt, wird dauerhaft geloggt.
+
+ - Datentyp: **num**
+ - Standardwert: **10**
+
+
+port
+====
+
+
+owserver Port
+
+ - Datentyp: **int**
+ - Standardwert: **4304**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+ow_addr
+=======
+
+
+Sensoradresse im Format xx.yyyyyyyyyyyy (Bitte darauf achten, dass bei rein numerischen Sensoradressen diese in '' eingeschlossen werden müssen) oder ein Alias (use_ow_aliases muss dafür True sein)
+
+ - Datentyp: **str**
+
+
+ow_sensor
+=========
+
+
+Sensortyp. Unterstützte Typen sind in der Plugin Dokumentation zu finden
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **T** |_| - |_| Temperatur
+   - **T9** |_| - |_| Temperatur (9 Bit)
+   - **T10** |_| - |_| Temperatur (10 Bit)
+   - **T11** |_| - |_| Temperatur (11 Bit)
+   - **T12** |_| - |_| Temperatur (12 Bit)
+   - **H** |_| - |_| Feuchtigkeit
+   - **L** |_| - |_| Lichtstärke
+   - **V** |_| - |_| Spannung
+   - **IA** |_| - |_| Eingang A
+   - **IB** |_| - |_| Eingang B
+   - **I0** |_| - |_| Eingang 0
+   - **I1** |_| - |_| Eingang 1
+   - **I2** |_| - |_| Eingang 2
+   - **I3** |_| - |_| Eingang 3
+   - **I4** |_| - |_| Eingang 4
+   - **I5** |_| - |_| Eingang 5
+   - **I6** |_| - |_| Eingang 6
+   - **I7** |_| - |_| Eingang 7
+   - **OA** |_| - |_| Ausgang A
+   - **OB** |_| - |_| Ausgang B
+   - **O0** |_| - |_| Ausgang 0
+   - **O1** |_| - |_| Ausgang 1
+   - **O2** |_| - |_| Ausgang 2
+   - **O3** |_| - |_| Ausgang 3
+   - **O4** |_| - |_| Ausgang 4
+   - **O5** |_| - |_| Ausgang 5
+   - **O6** |_| - |_| Ausgang 6
+   - **O7** |_| - |_| Ausgang 7
+   - **VDD** |_| - |_| Busspannung
+   - **BM** |_| - |_| Busmaster
+   - **B** |_| - |_| iButton
+   - **VOC** |_| - |_| VOC Sensor
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

@@ -1,0 +1,250 @@
+:tocdepth: 2
+
+==============================
+Release 1.7.1 - 14. April 2020
+==============================
+
+Dieses ist ein Hotfix Release. Die vollständigen Änderungen der Version v1.7 bitte :doc:`hier </release/1_7>`
+nachlesen.
+
+
+Überblick
+=========
+
+Dieses ist ein Wartungs-Release für SmartHomeNG v1.7. Die Änderungen gegenüber dem Release v1.7 sind im
+folgenden in diesen Release Notes beschrieben.
+
+
+Unterstützte Python Versionen
+-----------------------------
+
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.7 ist Python 3.5.
+(Siehe auch *Hard- u. Software Anforderungen* im Abschnitt *Installation* zu unterstützten Python Versionen)
+
+..
+    Das bedeutet nicht unbedingt, dass SmartHomeNG ab Release 1.7 nicht mehr unter älteren Python Versionen läuft,
+    sondern das SmartHomeNG nicht mehr mit älteren Python Versionen getestet wird und das gemeldete Fehler mit älteren
+    Python Versionen nicht mehr zu Buxfixen führen.
+
+    Es werden jedoch zunehmend Features eingesetzt, die erst ab Python 3.5 zur Verfügung stehen.
+
+
+Absolute Minimum Python Version
+-------------------------------
+
+Die Minimum Python Version in der SmartHomeNG startet wurde auf v3.5 angehoben, da Python 3.4 im Jahr 2019 End-of-Life
+(End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python
+Versionen (3.6 oder 3.7) aufzusetzen.
+
+.. important::
+
+   Mit dem kommenden Release 1.8 werden die unterstützten Python Versionen
+   :doc:`(wie hier beschrieben) </installation/anforderungen>` auf **Python 3.6, 3.7, 3.8** angehoben. Python 3.6
+   hat eine Reihe sehr interessanter Features und Verbesserungen gebracht, die dann in SmartHomeNG genutzt
+   werden können.
+
+   Sollten solche neuen Features in den Core Einzug halten, wird die **Absolute Minimum Python Version** auf 3.6
+   angehoben werden. Sollten die Features nur in Plugins genutzt werden, so können nur solche Plugins nicht genutzt
+   werden, wenn eine ältere Python Version als 3.6 eingesetzt wird.
+
+
+Änderungen am Core
+==================
+
+Bugfixes in the CORE
+--------------------
+
+* lib.shpypi:
+
+  * Fixed bug for requirements that are python-version specific and do not contain complete version requirements
+
+* Modules:
+
+  * admin:
+
+    * Fixed bug in scheduler display which showed, if a crontab definition was assigning the value None
+    * shngadmin: Fixed bug where the instance name of a multi-instance plugin could not be configured, if the plugin
+      had no parameters defined
+
+
+Updates in the CORE
+-------------------
+
+* Updated .gitignore
+
+* lib.shpypi:
+
+  * Added way to configure PIP3 command to use, if problems arise with multiple Python3 environments on the computer
+
+* Modules:
+
+  * admin:
+
+    * shngadmin: Plugins page - added icon to signal if a plugin is still in development mode
+
+* tools:
+
+  * Updated plugin_metadata_checker
+  * Added Check for **mandantory** and **default** used together
+  * Added script to get pid of running SmartHomeNG instance
+
+
+Änderungen bei Plugins
+======================
+
+New Plugins
+-----------
+
+For details of the changes of the individual plugins, please refer to the documentation of the respective plugin.
+
+* alexarc4shng: AlexaRc4ShNG - Plugin zur Steuerung von Amazon Echo Geräten Zugriff via Web-Browser API und Cookie
+
+
+Plugin Updates
+--------------
+
+* Div. plugins
+
+  * Updated metadata (e.g. added or adjusted **state** attribute)
+
+* alexa4p3
+
+  * Version 1.0.2: New Features (including web interface)
+
+* co2meter
+
+  * migrated to get_parameter_value
+
+* comfoair
+
+  * Changes port to type int
+
+* database
+
+  * switched to parameter handling via get_parameter_value()
+
+* enigma2
+
+  * switched init method to new get_parameter_value
+  * adjusted port in eval example, as port is int now
+
+* enocean
+
+  * switched from argument passing to get_parameter_value function; added doc and support thread links.
+
+* homematic
+
+  * Changed some log entries from WARNING to INFO
+
+* ical
+
+  * reworked date extraction including proper time zone handling. Fixes various problems in start and end time handling
+    due to incomplete time zone handling. Plugin now outputs all dates/times in local time zone defined by smarthomeNG
+    config
+  * added handling of logging login data in calendar uris
+
+* influxdb
+
+  * Quick fix to allow configuration of non-standard port number
+
+* logo
+
+  * updates parameter passing in init
+
+* onewire
+
+  * add Support Thread link to plugin.yaml
+
+* Prowl
+
+  * updates init param passing
+
+* rcswitch
+
+  * update to prevent Errors if not all parameters are configured
+
+* russound
+
+   * improve log and fix caller origin bug
+
+* uzsu
+
+  * update error message if uzsu dict is wrong
+
+* webservices
+
+  * adjusted init method to get_parameter_value and other small changes
+
+* xiaomi_vac
+
+  * fix metadata and small issues
+  * added docu and locale
+
+* yamahayxc
+
+  * Update to 1.0.6 includes minor fixes and alarm clock functionality for supported devices
+
+
+Outdated Plugins
+----------------
+
+The following plugins were already marked in version v1.6 as *deprecated*. This means that the plugins
+are still working, but are not developed further anymore and are removed from the release of SmartHomeNG
+in the next release. User of these plugins should switch to corresponding succeeding plugins.
+
+* System Plugins
+
+  * sqlite - switch to the **database** plugin
+  * sqlite_visu2_8 - switch to the **database** plugin
+
+* Gateway Plugins
+
+  * tellstick - classic Plugin, not used according to survey in knx-user-forum
+
+* Interface Plugins
+
+  * netio230b - classic plugin, not used according to survey in knx-user-forum
+  * smawb - classic plugin, not used according to survey in knx-user-forum
+
+* Web Plugins
+
+  * alexa - switch to the **alexa4p3** plugin
+  * boxcar - classic Plugin, not used according to survey in knx-user-forum
+  * mail - switch to the **mailsend** and **mailrcv** plugin
+  * openenergymonitor - classic plugin, not used according to survey in knx-user-forum
+  * wunderground - the free API is not provided anymore by Wunderground
+
+
+The following plugins are marked as *deprecated* with SmartHomeNG v1.7, because neither user nor tester have been found:
+
+* Gateway Plugins
+
+  * ecmd
+  * elro
+  * iaqstick
+  * snom
+  * tellstick
+
+* Interface Plugins
+
+  * easymeter
+  * netio230b
+  * smawb
+  * vr100
+
+* Web Plugins
+
+  * boxcar
+  * nma
+
+Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecated*, because the new mqtt
+plugin takes over the functionality. This plugin is based on the mqtt module and the recent core.
+
+
+Documentation
+-------------
+
+* Sample Plugin:
+
+  * Updated with parameter-examples in metadata
+

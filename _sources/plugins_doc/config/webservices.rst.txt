@@ -1,0 +1,121 @@
+.. |_| unicode:: 0xA0
+
+
+==================================
+Plugin 'webservices' Konfiguration
+==================================
+
+
+.. index:: Plugins; webservices Konfiguration
+
+.. image:: /plugins/webservices/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **webservices** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Implementierung eines Webservice interfaces
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **webservices** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+mode
+====
+
+
+(optional) Modus des Plugins: "all", wenn die Webservice-Schnittstelle alle Items der SmartHomeNG Instanz verfügbar machen soll (default). Ansonsten werden nur Items ausgeliefert, die einem Set via webservices_set zugeordnet sind.
+
+ - Datentyp: **str**
+ - Standardwert: **all**
+
+
+use_service_auth
+================
+
+
+(optional) use_service_auth regelt, ob der für das mod_http konfigurierte service_user und das service_password für den Zugriff auf die Webservices genutzt werden sollen.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+webservices_data
+================
+
+
+(optional) webservices_data dient dazu, die Rückgabedaten von Items zu limitieren. Wird als Wert "val" eingegeben, so wird nur der Pfadname und der Wert zurückgegeben, sonst zusätzlich alle Metainformationen.
+
+ - Datentyp: **str**
+
+
+webservices_set
+===============
+
+
+(optional) webservices_set enthält eine Zeichenkette, die zum Bündeln von Items in sets genutzt wird. Das Set steht unter http://<SmartHomeNG URL>;<WS Port>/[rest|ws]/itemset/<setname> bereit.
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

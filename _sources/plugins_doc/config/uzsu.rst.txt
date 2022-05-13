@@ -1,0 +1,289 @@
+.. |_| unicode:: 0xA0
+
+
+===========================
+Plugin 'uzsu' Konfiguration
+===========================
+
+
+.. index:: Plugins; uzsu Konfiguration
+
+.. image:: /plugins/uzsu/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **uzsu** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+
+
+Beschreibung
+============
+
+Dieses Plugin ermöglicht gezielte Schaltvorgänge von Items zu bestimmten Uhrzeiten oder abhängig vom Sonnenstand. Die automatischen Schaltungen können dabei pro Wochentag separat definiert werden.
+Außerdem ermöglicht eine Interpolationsfunktion das Errechnen von Werten zwischen zwei manuell angelegten Schaltzeiten, wodurch z.B. Lichtkurven über den Tagesverlauf umgesetzt werden können.
+
+
+Anforderungen
+=============
+
+
+Das Plugin benötigt die folgende Software:
+
+ - libatlas-base-dev: Zumindest auf einem Raspberry Pi mit Debian Stretch ist der Befehl nötig: ``sudo apt install libatlas-base-dev``
+ - Bei neueren SciPy Versionen kann auf einem Raspi der Build trotzdem scheitern. Es ist dann empfohlen, die aktuellste passende Datei (armv6 = Raspi1, armv7 = Rest) von hier herunterzuladen und ``pip3 install scipy*.whl`` zu starten: https://www.piwheels.org/simple/scipy/
+ - Python Modul scipy: ``pip3 install scipy``. Es wird empfohlen, zuerst die Pythonmodule zu aktualisieren, aber unbedingt darauf zu achten, dass die Requirements von SmarthomeNG erfüllt bleiben! Sollte die Installation via pip nicht funktionieren: ``sudo apt update && sudo apt install -y python3-scipy``
+
+
+ - Minimum SmartHomeNG Version: **1.5**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **uzsu** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+backintime
+==========
+
+
+Standardmaximalalter eines UZSU Eintrags in Minuten, um beim Plugin-Start versäumte Einträge nachzuholen. Kann pro UZSU individuell konfiguriert werden.
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+
+interpolation_interval
+======================
+
+
+Standardintervall in Minuten, in dem ein interpolierter Wert erneut errechnet werden soll. Kann pro UZSU individuell konfiguriert werden.
+
+ - Datentyp: **int**
+ - Standardwert: **5**
+
+ - Minimalwert: **0**
+
+interpolation_precision
+=======================
+
+
+Anzahl an Dezimalstellen bei der Berechnung der Interpolation
+
+ - Datentyp: **int**
+ - Standardwert: **2**
+
+ - Minimalwert: **0**
+ - Maximalwert: **4**
+
+interpolation_type
+==================
+
+
+Standardintervall in Minuten, in dem ein interpolierter Wert erneut errechnet werden soll. Kann pro UZSU individuell konfiguriert werden.
+
+ - Datentyp: **str**
+ - Standardwert: **none**
+
+ - Mögliche Werte:
+
+   - **none**
+   - **cubic**
+   - **linear**
+
+
+remove_duplicates
+=================
+
+
+Falls True, werden Einträge mit exakt den selben Einstellungen, aber unterschiedlichem Wert durch einen neu getätigten Eintrag ersetzt
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+suncalculation_cron
+===================
+
+
+Cron-Angabe, wann für die UZSU Einträge mit Sonnenstandbezug die errechnete Uhrzeit ins dict Item geschrieben werden soll. Diese "calculated" Einträge sind relevant für diverse UZSU Widgets der SmartVisu.
+
+ - Datentyp: **str**
+ - Standardwert: **0 0 * ***
+
+
+webif_pagelength
+================
+
+
+Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
+Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.
+Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.
+
+ - Datentyp: **int**
+ - Standardwert: **100**
+
+ - Mögliche Werte:
+
+   - **-1**
+   - **0**
+   - **25**
+   - **50**
+   - **100**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+uzsu_item
+=========
+
+
+**Das Item, das durch die UZSU geschaltet werden soll:**
+Im items Ordner ist pro Item, das geschaltet werden soll, ein UZSU Item-Eintrag mit ``type: dict`` zu erstellen. Die Hierarchie spielt dabei keine Rolle, es wird allerdings empfohlen, das UZSU Item als Kind des zu schaltenden Items zu deklarieren und die relative Item-Referenzierung ``".."`` für den Parameter ``uzsu_item`` zu nutzen. Es wird dringend empfohlen, ``cache: True`` zu setzen, damit die Einstellungen bei einem Neustart nicht verloren gehen.
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+activate()
+==========
+
+
+Abfrage oder Setzen, ob die uzsu aktiv ist oder nicht.
+ - Leer: Abfrage
+ - True: aktivieren
+ - False: deaktivieren
+
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+clear()
+=======
+
+
+Löschen der UZSU Einträge eines Items.
+ - Leer: nichts ausführen
+ - True: löschen
+
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+interpolation(type= 'none', interval=5, backintime=0)
+=====================================================
+
+
+Abfrage (leerer Parameter) oder Setzen der Interpolationseinstellungen
+
+ - Ergebnistyp der Funktion: **dict**
+
+
+type
+----
+
+Interpolationstyp:
+ - linear: konstant gleiche Zwischenberechnung
+ - cubic: Spline-Interpolation mit verzögertem Start und sanftem Verlangsamen
+ - none: keine Interpolation
+
+
+ - Datentyp: **str**
+ - Standardwert: **none**
+
+
+interval
+--------
+
+Intervall in Minuten, in dem der interpolierte Wert aktualisiert werden soll
+
+ - Datentyp: **int**
+ - Standardwert: **5**
+
+
+backintime
+----------
+
+Maximales Alter eines UZSU Eintrags in Minuten, um beim Plugin-Start versäumte Einträge nachzuholen.
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+
+lastvalue(by= 'None')
+=====================
+
+
+Abfrage des zuletzt gesetzten Werts. Kann z.B. beim Aktivieren der UZSU genutzt werden, um sofort auf den gewünschten Wert zu schalten.
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+by
+--
+
+Für eine entsprechende Info im Logfile kann hier z.B. der Itemname, der den Wert abruft eingetragen werden
+
+ - Datentyp: **str**
+ - Standardwert: **None**
+
+
+planned()
+=========
+
+
+Abfrage des nächsten Aktualisierungszeitpunkts. Ist keine Aktualisierung geplant, z.B. weil das UZSU Item nicht aktiviert ist, wird None zurückgegeben, ansonsten ein Dictionary mit den Einträgen Zeit und Wert.
+
+ - Ergebnistyp der Funktion: **dict**
+
+
+resume()
+========
+
+
+Fortsetzen der UZSU Evaluierung: Aktivieren des Items und Setzen des zuletzt festgelegten Wertes.
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/uzsu/README>` des Plugins zugreifen.

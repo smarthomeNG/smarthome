@@ -1,0 +1,158 @@
+.. |_| unicode:: 0xA0
+
+
+=============================
+Plugin 'husky2' Konfiguration
+=============================
+
+
+.. index:: Plugins; husky2 Konfiguration
+
+.. image:: /plugins/husky2/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **husky2** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Husqvarna Automower Plugin (unterstützt das neue API)
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.8**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **husky2** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+apikey
+======
+
+
+Husqvarna api key
+
+ - Datentyp: **str**
+
+
+device
+======
+
+
+(optional) ID oder Name des Mähroboters, falls mehrere im Benutzkonto registriert sind
+
+ - Datentyp: **str**
+
+
+historylength
+=============
+
+
+(optional) Anzahl der Statusmeldungen die im Arbeitsspeicher für die Anzeige im Webinterface gespeichert werden sollen
+
+ - Datentyp: **num**
+ - Standardwert: **200**
+
+
+password
+========
+
+
+Passwort für den Login
+
+ - Datentyp: **str**
+
+
+userid
+======
+
+
+Benutzer ID für den Husqvarna Service
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+husky_control
+=============
+
+
+Das Item, mit dem der Mähroboter gesteuert werden soll (z.B. Start Kommando)
+
+ - Datentyp: **str**
+
+
+husky_info
+==========
+
+
+Das Item, welches mit allgemeinen Informationen (z.B. Modell) durch das Plugin beschrieben werden soll
+
+ - Datentyp: **str**
+
+
+husky_state
+===========
+
+
+Das Item, welches mit Status Informationen (z.B. Aktivität) durch das Plugin beschrieben werden soll
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

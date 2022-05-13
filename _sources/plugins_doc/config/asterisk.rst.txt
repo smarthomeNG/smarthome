@@ -1,0 +1,273 @@
+.. |_| unicode:: 0xA0
+
+
+===============================
+Plugin 'asterisk' Konfiguration
+===============================
+
+
+.. index:: Plugins; asterisk Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **asterisk** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Ansteuerung einer Asterisk Telefonanlage
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9.0**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **asterisk** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+host
+====
+
+
+IP oder Hostname
+
+ - Datentyp: **ip**
+ - Standardwert: **127.0.0.1**
+
+
+password
+========
+
+
+Passwort für die Authentifizierung
+
+ - Datentyp: **str**
+
+
+port
+====
+
+
+Der Port für den Zugriff aus Asterisk
+
+ - Datentyp: **int**
+ - Standardwert: **5038**
+
+
+username
+========
+
+
+Benutzername für die Authentifizierung
+
+ - Datentyp: **str**
+ - Standardwert: **admin**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+ast_box
+=======
+
+
+Die Mailbox Nummer dieses Gerätes.
+
+ - Datentyp: **str**
+
+
+ast_db
+======
+
+
+Datenbank Eintrag der geändert wird bei einer Änderung des Items.
+
+ - Datentyp: **str**
+
+
+ast_dev
+=======
+
+
+Asterisk Gerät wie in der ``sip.conf`` eingetragen
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+call(source, dest, context, callerid)
+=====================================
+
+
+Einen Anruf starten mit einem Kontext und einer optionalen Caller ID
+
+ - Ergebnistyp der Funktion: 
+
+
+source
+------
+
+Quelle des Anrufes, z.B. 'SIP/200'
+
+ - Datentyp: **str**
+
+
+dest
+----
+
+Ziel des Anrufes, z.B. '240'
+
+ - Datentyp: **str**
+
+
+context
+-------
+
+Kontext des Anrufes, z.B. 'Tür'
+
+ - Datentyp: **str**
+
+
+callerid
+--------
+
+Optionale Caller ID des Anrufes
+
+ - Datentyp: **str**
+
+
+db_read(key)
+============
+
+
+Einen Werte aus der Asterisk Datenbank lesen
+
+ - Ergebnistyp der Funktion: **str**
+
+
+key
+---
+
+Schlüssel in der Asterisk Datenbank
+
+ - Datentyp: **str**
+
+
+db_write(key, value)
+====================
+
+
+Ein Schlüssel/Wertepaar in die Asterisk Datenbank schreiben
+
+ - Ergebnistyp der Funktion: 
+
+
+key
+---
+
+Schlüssel in der Asterisk Datenbank
+
+ - Datentyp: **str**
+
+
+value
+-----
+
+Wert in der Asterisk Datenbank
+
+ - Datentyp: **str**
+
+
+hangup(device)
+==============
+
+
+Verbindungen für ein Gerät beenden
+
+ - Ergebnistyp der Funktion: 
+
+
+device
+------
+
+Gerätekennung
+
+ - Datentyp: **str**
+
+
+mailbox_count(mailbox, context)
+===============================
+
+
+Fragt die Anzahl der Nachrichten einer Mailbox ab, Rückgabewert is ein Tupel (alte Mitteilungen, neue Mitteilungen)
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+mailbox
+-------
+
+Mailbox die abgefragt werden soll
+
+ - Datentyp: **str**
+
+
+context
+-------
+
+Kontext der Mailbox Abfrage
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/asterisk/README>` des Plugins zugreifen.

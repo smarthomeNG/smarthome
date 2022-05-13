@@ -1,0 +1,149 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'ksemmodbus' Konfiguration
+=================================
+
+
+.. index:: Plugins; ksemmodbus Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **ksemmodbus** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin zur Anbindung von einem Kostal Smart Energy Meter über Modbus an SmartHomeNG
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **ksemmodbus** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+ksem_ip
+=======
+
+
+IP Adresse des Kostal Smart Energy Meter
+
+ - Datentyp: **str**
+
+
+modbus_port
+===========
+
+
+Modbus Port
+
+ - Datentyp: **str**
+
+
+update_cycle
+============
+
+
+Update Zyklus in Sekunden
+
+ - Datentyp: **num**
+ - Standardwert: **20**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+ksem_0
+======
+
+
+
+
+ - Datentyp: **num**
+
+
+ksem_2
+======
+
+
+
+
+ - Datentyp: **num**
+
+
+ksem_512
+========
+
+
+
+
+ - Datentyp: **num**
+
+
+ksem_516
+========
+
+
+
+
+ - Datentyp: **num**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/ksemmodbus/README>` des Plugins zugreifen.

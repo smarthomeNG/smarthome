@@ -1,0 +1,113 @@
+=================================
+Release 1.0 - November 14th, 2013
+=================================
+
+Last official release for SmartHome.py.
+Implements the change to Python 3.x!!! (for x >= 2)
+
+With Contributions from:
+------------------------
+
+-  Daniel (mode)
+-  Jan N. Klug
+-  Lars Bernau (lbernau)
+-  Marcus (mannmawg)
+-  Mark Hönisch
+-  Matthias Lemke
+-  Mike Pieper
+-  Mirko Hirsch
+-  mptei
+-  Niko Will
+-  Oliver Hinckel
+-  Robert Budde
+-  xtcommerce
+
+New Plugins
+-----------
+
+-  Artnet
+-  Boxcar
+-  DLMS
+-  easymeter
+-  eBusd
+-  ecmd
+-  eta_pu
+-  Hue
+-  iaqstick
+-  Kostal
+-  NetIO230B
+-  NMA
+-  SMA
+-  Squeezebox
+-  vr100
+-  wettercom
+
+Base Features
+-------------
+
+-  sh.match_items, eval_trigger and watch_item: supports item
+   attribute matches by ``:attribute`` e.g. ``*:my`` every item with the
+   attribute my.
+-  New item methods:
+      - item.timer and autotimer to set a item value after the specified time
+      - age()
+      - prev_age()
+      - last_change()
+      - prev_change()
+      - last_update()
+      - prev_value()
+- New sh.tools methods:
+     - sh.tools.dt2ts(dt)
+     - sh.tools.dt2js(dt)
+     - sh.tools.rel2abs(temp, hum)
+-  New smarthome.py start options:
+     - -V: shows the Version
+     - -i: starts the interactive mode
+
+Plugin Features
+---------------
+
+-  Asterisk: ``ast_db`` attribute to control Asterisk database entries
+-  KNX: new ``knx_status`` attribute
+-  Network: new attribute ``nw_udp_send`` to send UDP packets on an item change.
+-  RRDTool: use ``rrd = init`` to initialize the item value with the last database entry.
+-  SQLite: use ``sqlite = init`` to initialize the item value with the last database entry.
+
+Changes:
+--------
+
+-  Python 3.2 migration
+-  Visu: new attributes ``acl`` and ``visu_acl``
+-  predefined items env.core and env.system tree used by smartVISU
+-  SQLite: Due to code changes that lead to to huge speed improvements the database structure changed and has to be deleted. This will take place at the first start.
+-  1-Wire: adding DS18S20 support
+-  new config separator for multiple entries: |
+-  improving logic response time
+
+Migrate:
+--------
+
+If you want to migrate to the new (Python) version, you have to do the following steps:
+
+.. code-block:: bash
+
+   # install the base
+   $ sudo apt-get install python3 python3-dev python3-setuptools  
+   $ sudo easy_install3 pip
+   $ sudo pip-3.2 install ephem
+
+   # to convert your old configuration !very important!
+   $ ./tools/conf2-1.0.sh
+
+   # change your logic files to python3 syntax
+   $ 2to3-3.2 -f idioms -f all -w yourlogicfile.py
+
+   # remove the old python pyc files
+   $ find . -name *.pyc -type f -print0 | xargs -0 /bin/rm -f
+
+   # if you want to use the RRDTool plugin
+   $ sudo apt-get install librrd-dev
+   $ cd lib/3rd/rrdtool
+   $ sudo python3 setup.py install
+
+

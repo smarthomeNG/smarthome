@@ -1,0 +1,217 @@
+.. |_| unicode:: 0xA0
+
+
+============================
+Plugin 'neato' Konfiguration
+============================
+
+
+.. index:: Plugins; neato Konfiguration
+
+.. image:: /plugins/neato/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **neato** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Plugin zur Anbindung von einem Neato/Vorwerk Staubsauger Robotor an SmartHomeNG
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.8.0**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **neato** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+account_email
+=============
+
+
+E-Mail Adresse des Neato/Vorwerk Accounts
+
+ - Datentyp: **str**
+
+
+account_pass
+============
+
+
+Kennwort des Neato/Vorwerk Accounts
+
+ - Datentyp: **str**
+
+
+robot_vendor
+============
+
+
+Hersteller des Roboters
+
+ - Datentyp: **str**
+ - Standardwert: **neato**
+
+ - Mögliche Werte:
+
+   - **neato** |_| - |_| Neato Roboter
+   - **vorwerk** |_| - |_| Vorwerk Roboter
+
+
+token
+=====
+
+
+Oauth token fuer Vorwerk Login (basierend auf MyKobold Anmeldeverfahren)
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+neato_attribute
+===============
+
+
+Neato Attributes: Name Befehl Zustand Alarm Text Zustand Aktion ist angedockt Reinigungsplan aktiv laed gerade Ladestand Nachricht fahr zur Basis reinige Einzelraum
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **name**
+   - **command**
+   - **state**
+   - **alert**
+   - **state_action**
+   - **is_docked**
+   - **is_schedule_enabled**
+   - **is_charging**
+   - **charge_percentage**
+   - **message**
+   - **command_goToBaseAvailable**
+   - **clean_room**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+disable_schedule()
+==================
+
+
+Deaktiviert den Reinigunsplan.
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+dismiss_current_alert()
+=======================
+
+
+Loescht aktuelle Alarme
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+enable_schedule()
+=================
+
+
+Aktiviert den Reinigunsplan.
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+get_map_boundaries(map_id)
+==========================
+
+
+Gibt im logfile die verfuebaren Raeume aus
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+map_id
+------
+
+Karten ID
+
+ - Datentyp: **str**
+
+
+start_robot(boundary_id, map_id)
+================================
+
+
+Aktiviert Reinigung
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+boundary_id
+-----------
+
+Zimmer ID (ASCII hex Darstellung)
+
+ - Datentyp: **str**
+
+
+map_id
+------
+
+Karten ID
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/neato/README>` des Plugins zugreifen.

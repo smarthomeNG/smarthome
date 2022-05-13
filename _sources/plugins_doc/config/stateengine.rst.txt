@@ -1,0 +1,384 @@
+.. |_| unicode:: 0xA0
+
+
+==================================
+Plugin 'stateengine' Konfiguration
+==================================
+
+
+.. index:: Plugins; stateengine Konfiguration
+
+.. image:: /plugins/stateengine/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **stateengine** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+
+
+Beschreibung
+============
+
+Der ursprüngliche Zweck dieses Plugins war es, Jalousien zu steuern. Mit den steigenden Anforderungen hat es sich jedoch zu einem flexiblen Zustandsautomaten entwickelt, mit dem nahezu alles gesteuert werden kann. Im Prinzip ist es ein `endlicher Automat <https://de.wikipedia.org/wiki/Endlicher_Automat>`_. Dabei arbeitet das Plugin nicht mit Events, die zu konkreten Zuständen führen, sondern mit einer hierarchischen Evaluierung der Zustände.
+
+
+Anforderungen
+=============
+
+
+Das Plugin benötigt die folgende Software, um die State Engine im Webinterface visuell darzustellen:
+
+ - graphviz: ``sudo apt install graphviz``
+ - Python Modul pydotplus: ``pip3 install pydotplus``
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **stateengine** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+instant_leaveaction
+===================
+
+
+Ist dieser Parameter auf True gesetzt, werden "on leave" Aktionen sofort ausgeführt, wenn der aktuelle Zustand nicht mehr eingenommen wird. Standardmäßig werden die Aktionen erst direkt vor dem Eintreten in einen neuen Zustand getriggert.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+lamella_offset
+==============
+
+
+Gibt es ein Problem mit dem automatischen Ausrichten der Lamellen mittels sun_tracking Funktion, kann ein globaler Offset eingestellt werden, der für alle Aufrufe besagter Funktion berücksichtigt wird.
+
+ - Datentyp: **num**
+ - Standardwert: **0**
+
+ - Minimalwert: **-90**
+ - Maximalwert: **90**
+
+lamella_open_value
+==================
+
+
+Je nach Lamellenart muss die sonnenstandsbezogene Berechnung der Lamellenausrichtung angepasst werden. Für z-Lamellen kann hier der standardmäßige Wert 0 gewählt werden, hat man jedoch normale Lamellen, die sich nach oben und unten drehen, werden die Lamellen in der Regel bei 50% komplett offen, also waagrecht stehen. Somit sollte hier der Wert 50 angegeben werden, um eine korrekte Ausrichtung beim Nutzen der sun_tracking Funktion zu gewährleisten.
+
+ - Datentyp: **num**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+ - Maximalwert: **100**
+
+log_directory
+=============
+
+
+**Verzeichnis für die Protokolldateien:**
+Die Logdateien der erweiterten Protokollierung werden in das hier angegebene Verzeichnis geschrieben.
+Wenn der angegebene Verzeichnisname mit "/" beginnt wird er als absoluter Verzeichnisname behandelt. Alle anderen Verzeichnisnamen werden als Unterverzeichnisse des smarthomeNG Basisverzeichnisses behandelt. Das angegebene Verzeichnis wird angelegt, wenn es nicht existiert.
+Wenn hier kein abweichendes Verzeichnis angegeben ist, wird das Verzeichnis ``<smarthome_base_directory>/var/log/stateengine/`` verwendet.
+
+ - Datentyp: **str**
+ - Standardwert: **var/log/stateengine/**
+
+
+log_level
+=========
+
+
+**Erweiterte Protokollierung:**
+Bei einem Wert von 1 oder 2 wird pro Item eine eigene Logdatei im unter log_directory angegebenen Verzeichnis angelegt. Wenn der Parameter nicht angegeben oder auf 0 gestellt ist, ist die erweiterte Protokollierung deaktiviert.
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Mögliche Werte:
+
+   - **0** |_| - |_| deaktiviert
+   - **1** |_| - |_| Info
+   - **2** |_| - |_| Debug
+   - **3** |_| - |_| Develop
+
+
+log_maxage
+==========
+
+
+**Log Rotation für erweiterte Protokollierung:**
+Alte Protokolldateien können nach einer bestimmten Zeit automatisch gelöscht werden. Durch diesen Parameter wird die Anzahl der Tage festgelegt, nach der die Dateien gelöscht werden sollen. Das Löschen ist ausgesetzt, solange der Parameter den Wert 0 hat. Wenn der Parameter auf einen anderen Wert gesetzt wird, wird das Alter der Dateien im Protokollverzeichnis ``log_directory`` täglich geprüft und überalterte Dateien werden gelöscht.
+
+**Achtung:**
+Die Löschfunktionalität prüft und löscht alle Dateien im Protokollverzeichnis, ob sie Protokolldateien sind oder nicht. Daher sollten keine anderen Dateien in diesem Verzeichnis abgelegt werden!
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+
+startup_delay_default
+=====================
+
+
+**Vorgabewert für die Startverzögerung der ersten Zustandsermittlung beim Start von smarthomeNG:**
+Beim Starten von smarthomeNG dauert es üblicherweise einige Sekunden, bis alle Items initialisiert sind. Um zu verhindern, dass die erste Zustandsermittlung stattfindet, bevor alle Items ihren Initialwert haben, wird die erste Zustandsermittlung verzögert. Die Dauer der Verzögerung kann bei den Objekt-Items angegeben werden. Wenn bei einem Objekt-Item kein Wert angegeben ist, wird der hier angegebene Standardwert verwendet.
+
+ - Zahl größer 0: Angabe der Startverzögerung in Sekunden. Während der Startverzögerung sind die Auslöser der Zustandsermittlung inaktiv.
+ - 0: Keine Startverzögerung. Die erste Zustandsermittlung wird direkt nach der Initialisierung des Objekt-Items durchgeführt.
+ - -1: Es wird keine erste Zustandsermittlung durchgeführt.
+
+Ohne Angabe dieses Parameters wird der Standardwert von 10 Sekunden angenommen.
+
+ - Datentyp: **int**
+ - Standardwert: **10**
+
+ - Minimalwert: **-1**
+ - Maximalwert: **600**
+
+suspend_time_default
+====================
+
+
+**Vorgabezeit zur Unterbrechung der automatischen Steuerung nach manuellen Aktionen:**
+Nach manuellen Aktionen kann die Automatik für eine bestimmte Zeit Unterbrochen werden. Die Dauer dieser Unterbrechungen kann bei den Objekt-Items angegeben werden. Die Einheit für den Wert sind Sekunden. Wenn bei einem Objekt-Item kein Wert angegeben ist, wird der hier angegebene Standardwert verwendet. Wenn kein abweichender Standardwert in der Plugin-Konfiguration angegeben ist, ist der Vorgabewert 3600 Sekunden (1 Stunde)
+
+ - Datentyp: **int**
+ - Standardwert: **3600**
+
+ - Minimalwert: **1**
+ - Maximalwert: **86400**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+se_hasreleased_item
+===================
+
+
+**ID des Items, in dem interne Informationen für das released_by Feature gespeichert werden:**
+Ein Dictionary mit den Stati als Keys, die ein se_released_by Attribut haben und den Stati/Items als Values, die jene Items bereits aufgelöst haben und somit erst bei erneutem Wechsel von "can not be entered" auf "can be entered" den enstprechenden Status released, also (vorübergehend) auflösen.
+
+ - Datentyp: **str**
+
+
+se_instant_leaveaction
+======================
+
+
+Ist dieser Parameter auf True gesetzt, werden "on leave" Aktionen sofort ausgeführt, wenn der aktuelle Zustand nicht mehr eingenommen wird. Standardmäßig werden die Aktionen erst direkt vor dem Eintreten in einen neuen Zustand getriggert.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+se_item_suspend_end
+===================
+
+
+**Id des Items, in dem das Ende der Suspendzeit abgelegt werden soll:**
+Für Visualisierungszwecke kann der Inhalt des hier verknüpften Items angezeigt werden. Dadurch ist ersichtlich, bis wann die Statusevaluierung noch ausgesetzt wird.
+
+ - Datentyp: **str**
+
+
+se_item_suspend_start
+=====================
+
+
+**Id des Items, in dem der Start der Suspendzeit abgelegt werden soll:**
+Für Visualisierungszwecke kann der Inhalt des hier verknüpften Items z.B. im clock.countdown Widget der SmartVisu genutzt werden.
+
+ - Datentyp: **str**
+
+
+se_lastconditionset_item_id
+===========================
+
+
+**ID des Items, in dem der Name des aktuellen Zustandsets abgelegt wird:**
+In das hier verknüpfte Item wird der Name des zuletzt aktiven Zustandsets abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden.
+
+ - Datentyp: **str**
+
+
+se_lastconditionset_item_name
+=============================
+
+
+**Name des Items, in dem der Name des aktuellen Zustandsets abgelegt wird:**
+In das hier verknüpfte Item wird der Name des zuletzt aktiven Zustandsets abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden.
+
+ - Datentyp: **str**
+
+
+se_laststate_item_id
+====================
+
+
+**Id des Items, in dem der aktuelle Zustand abgelegt wird:**
+In das hier verknüpfte Item wird die Id des aktuellen Zustands abgelegt. Das Item kann mit dem Attribut ``cache: yes`` versehen werden, dann bleibt der vorherige Zustand bei einem Neustart von smarthomeNG erhalten.
+
+ - Datentyp: **str**
+
+
+se_laststate_item_name
+======================
+
+
+**Id des Items, in dem der Name des aktuellen Zustands abgelegt wird:**
+In das hier verknüpfte Item wird der Name des aktuellen Zustands abgelegt. Das Item kann für Displayzwecke und Bedingungen verwendet werden.
+
+ - Datentyp: **str**
+
+
+se_log_level
+============
+
+
+Das global angegebene Loglevel kann für jedes SE item individuell überschrieben werden. Somit ist es einfacher möglich, bestimme State Engines zu debuggen.
+
+ - Datentyp: **int**
+
+ - Mögliche Werte:
+
+   - **0** |_| - |_| deaktiviert
+   - **1** |_| - |_| Info
+   - **2** |_| - |_| Debug
+   - **3** |_| - |_| Develop
+
+
+se_plugin
+=========
+
+
+Kennzeichnet das Item als Objekt-Item des StateEngine-Plugins. Ist der Wert nicht "active", werden keine Zustände evaluiert.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **active** |_| - |_| Aktiviert die State Machine
+   - **inactive** |_| - |_| Jeder andere Wert deaktiviert die State Machine
+
+
+se_released_by
+==============
+
+
+Definieren von untergeordneten Zuständen, die den aktuellen Zustand auflösen können
+
+ - Datentyp: **list(str)**
+
+
+se_repeat_actions
+=================
+
+
+**Wiederholen der Aktionen bei unverändertem Zustand:**
+Im Normalfall werden Aktionen jedesmal ausgeführt wenn der aktuelle Zustand neu ermittelt wurde. Dies ist unabhängig davon, ob sich der Zustand bei der Neuermittlung geändert hat oder nicht. Durch die Angabe von ``se_repeat_actions: false`` werden die Aktionen nur beim erstmaligen Aktivieren des Zustands ausgeführt. Diese Option ist auch für jede Aktion separat verfügbar, um vom hier angegebenen Wert abzuweichen.
+
+ - Datentyp: **bool**
+
+
+se_shouldnotrelease_item
+========================
+
+
+**ID des Items, in dem interne Informationen für das released_by Feature gespeichert werden:**
+Ein Dictionary mit den Stati als Keys, die ein se_released_by Attribut haben und den Stati/Items als Values, die zuvor schon aktiv waren und erst bei einem erneuten Wechsel von "can not be entered" auf "can be entered" den entsprechenden Status released, also (vorübergehend) auflöst.
+
+ - Datentyp: **str**
+
+
+se_startup_delay
+================
+
+
+**Startverzögerung der ersten Zustandsermittlung beim Start von smarthomeNG:**
+Beim Starten von smarthomeNG dauert es üblicherweise einige Sekunden, bis alle Items initialisiert sind. Um zu verhindern, dass die erste Zustandsermittlung stattfindet, bevor alle Items ihren Initialwert haben, wird die erste Zustandsermittlung verzögert. Zustandsermittlungen, die durch Items oder Timer vor Ablauf der Startverzögerung ausgelöst werden, werden nicht durchgeführt. Die zulässigen Werte für ``se_startup_delay`` sind identisch mit den zulässigen Werten für den Plugin-Parameter ``startup_delay_default``.
+
+ - Datentyp: **int**
+
+ - Minimalwert: **-1**
+ - Maximalwert: **600**
+
+se_suspend_time
+===============
+
+
+**Unterbrechung der automatischen Steuerung nach manuellen Aktionen:**
+Nach manuellen Aktionen kann die Automatik für eine bestimmte Zeit Unterbrochen werden. Wird die Dauer nicht im Objekt-Item definiert, wird die Standarddauer aus der Plugin Konfiguration oder der Standardwert von 3600 Sekunden (1 Stunde) angenommen.
+
+ - Datentyp: **foo**
+
+ - Minimalwert: **1**
+ - Maximalwert: **86400**
+
+se_use
+======
+
+
+Vorgabezustände werden als Item an beliebiger Stelle innerhalb der Item-Struktur definiert. Im konkreten Zustands-Item kann das Vorgabezustand-Item oder ein beliebiges struct über das Attribut se_use referenziert werden. Die zu nützenden Templates können auch über die **eval:** Deklaration zu Beginn des Werts unter Einbezug eines validen Eval-Ausdrucks dynamisch zur Laufzeit gesetzt werden.
+
+ - Datentyp: **list(str)**
+
+
+type
+====
+
+
+Datentyp des Objekt-Items. Muss "bool" sein.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **bool** |_| - |_| Der Item Typ muss auf bool gestellt werden!
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

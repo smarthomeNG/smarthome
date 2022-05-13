@@ -1,0 +1,176 @@
+.. |_| unicode:: 0xA0
+
+
+====================================
+Plugin 'avm_smarthome' Konfiguration
+====================================
+
+
+.. index:: Plugins; avm_smarthome Konfiguration
+
+.. image:: /plugins/avm_smarthome/webif/static/img/plugin_logo.jpg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **avm_smarthome** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als deprecated gekennzeichnet. Es wird empfohlen auf eine                  Nachfolgelösung umzusteigen.
+
+
+
+Beschreibung
+============
+
+AVM Smarthome Plugin für DECT Steckdosen, Heizkörperthermostate DECT301 und Comet DECT und DECT \ Smart-Home-Sensor basierend auf HTTP GET Request - \ Diese Funktionalität wurde inzwischen in das avm Plugin integriert
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.8**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **avm_smarthome** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+(optional) Zeit zwischen zwei Updateläufen. Default ist 300 Sekunden.
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+host
+====
+
+
+(optional) Hostname oder IP-Adresse des FritzDevice.
+
+ - Datentyp: **str**
+ - Standardwert: **fritz.box**
+
+
+password
+========
+
+
+(optional) Passwort für den Login. Wird in der Regel immer benötigt und aus Sicherheitsgründen empfohlen.
+
+ - Datentyp: **str**
+
+
+username
+========
+
+
+Nutzername für den Login an der Fritz!Box auf `Anmeldung mit FRITZ!Box-Benutzernamen und Kennwort` notwendig
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+avm_ain
+=======
+
+
+Definition der Aktor Identifikationsnummer (AIN) für die folgenden Items
+
+ - Datentyp: **str**
+
+
+avm_smarthome_data
+==================
+
+
+AVM smarthome Datentyp des jeweiligen Items.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **name**
+   - **avm_ain**
+   - **identifier**
+   - **productname**
+   - **manufacturer**
+   - **firmware_version**
+   - **present**
+   - **lock**
+   - **device_lock**
+   - **has_switch**
+   - **has_temperature_sensor**
+   - **has_thermostat**
+   - **has_alarm**
+   - **target_temperature**
+   - **set_temperature**
+   - **comfort_temperature**
+   - **eco_temperature**
+   - **battery_low**
+   - **battery_level**
+   - **window_open**
+   - **summer_active**
+   - **holiday_active**
+   - **switch_state**
+   - **power**
+   - **energy**
+   - **voltage**
+   - **set_switch_state_on**
+   - **set_switch_state_off**
+   - **set_switch_state_toggle**
+   - **temperature**
+   - **offset**
+   - **alert_state**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

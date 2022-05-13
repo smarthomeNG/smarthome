@@ -1,0 +1,218 @@
+.. |_| unicode:: 0xA0
+
+
+============================
+Plugin 'unifi' Konfiguration
+============================
+
+
+.. index:: Plugins; unifi Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **unifi** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin um einige Features von UniFi Controllern auszulesen und fernzusteuern
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9.0**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **unifi** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+poll_cycle_time
+===============
+
+
+(optional) Zeit zwischen zwei Updateläufen. Default ist 60 Sekunden.
+
+ - Datentyp: **int**
+ - Standardwert: **60**
+
+
+unifi_controller_url
+====================
+
+
+Basis URL des Controller, z.B. https://unifi:8443
+
+ - Datentyp: **str**
+
+
+unifi_password
+==============
+
+
+Passwort für den Login.
+
+ - Datentyp: **str**
+
+
+unifi_site_id
+=============
+
+
+UniFi Site Id.
+
+ - Datentyp: **str**
+ - Standardwert: **default**
+
+
+unifi_user
+==========
+
+
+Nutzername für den Login am Controller.
+
+ - Datentyp: **str**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+unifi_ap_mac
+============
+
+
+Definition der MAC Adresse für Items vom unifi_type `ap_*`. Nur für diese Items mandatory!
+
+ - Datentyp: **mac**
+
+
+unifi_client_mac
+================
+
+
+Definition der MAC Adresse für Items vom unifi_type `client_*`. Nur für diese Items mandatory!
+
+ - Datentyp: **mac**
+
+
+unifi_device_mac
+================
+
+
+Definition der MAC Adresse für Items vom unifi_type `device_*`. Nur für diese Items mandatory!
+
+ - Datentyp: **mac**
+
+
+unifi_switch_mac
+================
+
+
+Definition der MAC Adresse für Items vom unifi_type `switch_*`. Nur für diese Items mandatory!
+
+ - Datentyp: **mac**
+
+
+unifi_switch_port_no
+====================
+
+
+Definition der Portnummer an den ein Gerät an einen UniFi Switch angeschlossen ist
+
+ - Datentyp: **int**
+
+ - Minimalwert: **1**
+ - Maximalwert: **54**
+
+unifi_switch_port_profile_off
+=============================
+
+
+Name des zu selektierenden Portprofils wenn dieses Gerät Aus sein soll.
+
+ - Datentyp: **str**
+
+
+unifi_switch_port_profile_on
+============================
+
+
+Name des zu selektierenden Portprofils wenn dieses Gerät An sein soll.
+
+ - Datentyp: **str**
+
+
+unifi_type
+==========
+
+
+UniFi Datentyp des jeweiligen Items.
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **client_present**
+   - **client_ip**
+   - **client_hostname**
+   - **client_present_at_ap**
+   - **switch_port_enabled**
+   - **switch_port_profile**
+   - **ap_enabled**
+   - **device_ip**
+   - **device_name**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/unifi/README>` des Plugins zugreifen.

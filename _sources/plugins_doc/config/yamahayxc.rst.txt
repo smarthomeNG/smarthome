@@ -1,0 +1,133 @@
+.. |_| unicode:: 0xA0
+
+
+================================
+Plugin 'yamahayxc' Konfiguration
+================================
+
+
+.. index:: Plugins; yamahayxc Konfiguration
+
+.. image:: /_static/img/interface.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **yamahayxc** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+
+
+Beschreibung
+============
+
+Dieses Plugin ermöglicht, Yamaha MusicCast-Geräte in SmartHomeNG einzubinden.
+
+Dabei ist es möglich, verschiedene Geräte aus SmartHomeNG aus anzusprechen und zu steuern, als auch über SmartHomeNG auszulesen.
+
+Die Steuerungsmöglichkeiten umfassen (derzeit) unter Anderem:
+
+ - Gerät ein-/ausschalten, Standby, Sleep-Timer
+ - Wiedergabequelle auswählen (geräteabhängig, z.B. NetRadio, Radio, NetUSB, Streamingdienste)
+ - Wiedergabesteuerung (Play/Pause/Stop/nächster,vorheriger Titel/Vor-,Zurückspulen)
+ - Lautstärkesteuerung
+ - Anwahl von Favoriten und Presets (geräteabhängig)
+ - Stellen und De-/Aktivieren des Weckers (geräteabhängig)
+
+Die Möglichkeiten, Statusinformationen abzurufen, umfassen (derzeit) u.a.
+
+ - Gerätestatus (an/aus/Standby), 
+ - Lautstärke, Stummschaltung,
+ - aktuelle Wiedergabequelle,
+ - aktueller Wiedergabestatus (Play/Pause/...),
+ - aktueller Titel (quellenabhängig),
+ - aktuelle Wiedergabeposition (quellenabhängig),
+ - Coverbild des aktuellen Titels
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.3**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **yamahayxc** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+**Keine**
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+yamahayxc_cmd
+=============
+
+
+Kommando, das dem aktuellen Item zugeordnet ist
+
+ - Datentyp: **str**
+
+
+yamahayxc_host
+==============
+
+
+Hostname für das Yamaha-Gerät. Gilt für alle untergeordneten Items.
+
+ - Datentyp: **str**
+
+
+yamahayxc_zone
+==============
+
+
+Ausgewählte Zone
+
+ - Datentyp: **str**
+ - Standardwert: **main**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.
