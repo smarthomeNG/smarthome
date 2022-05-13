@@ -43,9 +43,11 @@ jobs:
         run: python --version
       - run: python3 -m pip install --upgrade pip #==19.3.1
       #- run: pip install tox-travis virtualenv>=20.0.8 --upgrade
-      #- run: pip install sphinx sphinx_rtd_theme recommonmark ruamel.yaml pytest
+
       - name: Install requirements for documentation build
         run: pip install -r smarthomeng/doc/requirements.txt
+      - run: pip install attrs  # install seperatly until requirements in master branch are updated
+
       - name: List installed packages
         run: pip list
 
