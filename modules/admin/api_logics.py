@@ -401,7 +401,7 @@ class LogicsController(RESTResource):
         return an object with type info about all logics
         """
         # create a list of dicts, where each dict contains the information for one logic
-        self.logger.notice("LogicsController.read()")
+        self.logger.info("LogicsController.read()")
 
         if self.plugins is None:
             self.plugins = Plugins.get_instance()

@@ -1,4 +1,4 @@
-name: "SmartHomeNG Unittest Workflow Core"
+name: "Build documentation from develop"
 #on: [workflow_dispatch, push]
 on:
   workflow_dispatch:
@@ -47,7 +47,7 @@ jobs:
 
       - name: Build documentation
         working-directory: ./smarthomeng/doc
-        run: ./build_doc_local.sh
+        run: bash ./build_doc_local.sh
 
       - name: Deploy documentation
         uses: JamesIves/github-pages-deploy-action@v4.3.3

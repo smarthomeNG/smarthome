@@ -114,6 +114,13 @@ class TestModule(unittest.TestCase):
         # test_version_compare('1.2', '1.2.3.4.5', '<=')
         # test_version_compare('1.2', '1.2.3.4.5', '>=')
 
+        self.assertTrue(Version.compare('1.2.3a', [1,2,3,4,5], '<'))
+        self.assertTrue(Version.compare('1.2.3a', [1,2,3,104,5], '<'))
+        self.assertFalse(Version.compare('1.2', '1.2.3.4.5', '>'))
+        self.assertFalse(Version.compare('1.2', '1.2.3.4.5', '='))
+        self.assertTrue(Version.compare('1.2', '1.2.3.4.5', '<='))
+        self.assertFalse(Version.compare('1.2', '1.2.3.4.5', '>='))
+
         logger.warning('=== End test_version_numbers:')
 
 if __name__ == '__main__':
