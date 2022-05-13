@@ -65,6 +65,6 @@ jobs:
       - name: Deploy documentation
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
-          branch: documentation # The branch the action should deploy to.
+          branch: release_doc # The branch the action should deploy to.
           folder: ./smarthomeng/doc/user/build/html # The folder the action should deploy.
 
