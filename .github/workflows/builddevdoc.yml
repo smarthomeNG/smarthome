@@ -45,8 +45,7 @@ jobs:
       #- run: pip install tox-travis virtualenv>=20.0.8 --upgrade
       #- run: pip install sphinx sphinx_rtd_theme recommonmark ruamel.yaml pytest
       - name: Install requirements for documentation build
-        run: pip install -r smarthomeng/doc/requirements/test.txt
-
+        run: pip install -r smarthomeng/doc/requirements.txt
 
       - name: Build documentation
         working-directory: ./smarthomeng/doc
