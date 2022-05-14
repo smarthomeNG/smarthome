@@ -145,7 +145,7 @@ def get_shng_version():
 def get_shng_version_date():
     now = datetime.datetime.now()
 
-    if branch == 'master':
+    if shNG_branch == 'master':
         return shNG_releasedate
     else:
         return now.strftime("%d. %B %Y")
