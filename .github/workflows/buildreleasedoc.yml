@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'develop'
+      - 'master'
 env:
   DEP_PATH: smarthomeng/requirements/all.txt
 jobs:
@@ -54,13 +54,6 @@ jobs:
       - name: Build documentation
         working-directory: ./smarthomeng/doc
         run: bash ./build_doc_local.sh
-
-      #- name: Deploy documentation
-      #  uses: JamesIves/github-pages-deploy-action@v4.3.3
-      #  with:
-      #    branch: gh-pages # The branch the action should deploy to.
-      #    folder: ./smarthomeng/doc/user/build/html # The folder the action should deploy.
-      #    repository-name: 'smarthomeNG/documentation'
 
       - name: Deploy documentation
         uses: JamesIves/github-pages-deploy-action@v4.3.3

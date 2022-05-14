@@ -53,16 +53,16 @@ jobs:
         working-directory: ./smarthomeng/doc
         run: bash ./build_doc_local.sh
 
-      - name: Deploy documentation
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
-        with:
-          branch: develop_doc # The branch the action should deploy to.
-          folder: ./smarthomeng/doc/user/build/html # The folder the action should deploy.
+      #- name: Deploy documentation
+      #  uses: JamesIves/github-pages-deploy-action@v4.3.3
+      #  with:
+      #    branch: develop_doc # The branch the action should deploy to.
+      #    folder: ./smarthomeng/doc/user/build/html # The folder the action should deploy.
 
-      - name: Deploy documentation
+      - name: Deploy documentation to seperate repo dev_doc
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: ./smarthomeng/doc/user/build/html # The folder the action should deploy.
-          repository-name: 'smarthomeNG/documentation'
+          repository-name: 'smarthomeNG/dev_doc'
           token: ${{ secrets.PAT_TOKEN }}
