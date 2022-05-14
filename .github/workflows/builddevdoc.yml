@@ -51,13 +51,13 @@ jobs:
 
       - name: Build Requirements for SmartHomeNG
         run: python3 smarthomeng/tools/build_requirements.py
-      #- name: Install SmartHomeNG all requirements
-      #  # base requirements are needed for pytest to run
-      #  run: pip install -r smarthomeng/requirements/all.txt
+      - name: Install SmartHomeNG all requirements
+        # base requirements are needed for building of documentation
+        run: pip install -r smarthomeng/requirements/base.txt
 
       - name: Build documentation
-        working-directory: ./smarthomeng
-        run: bash ./doc/build_doc_local.sh
+        working-directory: ./smarthomeng/doc
+        run: bash ./build_doc_local.sh
 
       #- name: Deploy documentation
       #  uses: JamesIves/github-pages-deploy-action@v4.3.3
