@@ -23,6 +23,7 @@
 import os
 import sys
 import subprocess
+import datetime
 
 sys.path.append('..')
 
@@ -86,6 +87,7 @@ from lib.utils import Version
 
 shNG_version = '1.9.2.1'
 shNG_branch = 'develop'
+shNG_releasedate = '2. Mai 2022'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
 
 # ---------------------------------------------------------------------------------
 FileBASE = None
@@ -139,6 +141,14 @@ def get_shng_version():
     else:
         VERSION += '-'+commit_short+'.'+branch
     return VERSION
+
+def get_shng_version_date():
+    now = datetime.datetime.now()
+
+    if branch == 'master':
+        return shNG_releasedate
+    else:
+        return now.strftime("%d. %B %Y")
 
 def get_shng_branch():
     commit, commit_short, branch, describe = _get_git_data()

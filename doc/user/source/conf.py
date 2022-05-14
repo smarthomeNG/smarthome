@@ -22,7 +22,6 @@ import datetime
 now = datetime.datetime.now()
 import calendar
 
-today = str(now.day) + '. ' + calendar.month_name[now.month] + ' ' + str(now.year)
 
 # -- General configuration -----------------------------------------------------
 
@@ -102,7 +101,7 @@ if os.path.isfile(os.getcwd()+'/doc_version.flg'):
 else:
     release = shngversion.get_shng_docversion()
     commit, commit_short, branch, describe = shngversion._get_git_data()
-release += ' (Stand ' + today
+release += ' (Stand ' + shngversion.get_shng_version_date()
 if branch != 'master':
     release += ', commit '+commit_short
 release += ')'
