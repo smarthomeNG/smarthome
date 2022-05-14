@@ -5,8 +5,7 @@ on:
   push:
     branches:
       - 'master'
-env:
-  DEP_PATH: smarthomeng/requirements/all.txt
+
 jobs:
   build:
     runs-on: ubuntu-20.04 #latest
@@ -48,6 +47,11 @@ jobs:
         run: pip install -r smarthomeng/doc/requirements.txt
       - run: pip install attrs  # install seperatly until requirements in master branch are updated
 
+      - name: Build Requirements for SmartHomeNG
+        run: python3 smarthomeng/tools/build_requirements.py
+      - name: Install SmartHomeNG base requirements
+        # base requirements are needed for building of documentation
+        run: pip install -r smarthomeng/requirements/base.txt
       - name: List installed packages
         run: pip list
 
@@ -61,3 +65,10 @@ jobs:
           branch: release_doc # The branch the action should deploy to.
           folder: ./smarthomeng/doc/user/build/html # The folder the action should deploy.
 
+      #- name: Deploy documentation to seperate repo smarthome
+      #  uses: JamesIves/github-pages-deploy-action@v4.3.3
+      #  with:
+      #    branch: release_doc # The branch the action should deploy to.
+      #    folder: ./smarthomeng/doc/user/build/html # The folder the action should deploy.
+      #    repository-name: 'smarthomeNG/smarthome'
+      #    token: ${{ secrets.PAT_TOKEN }}
