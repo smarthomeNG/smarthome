@@ -25,8 +25,6 @@ beautifulsoup4>=4.1.0
 # testing with pytest
 pytest>=3.6.0
 
-dateutil
-
 #This is a plugin which will terminate tests after a certain timeout
 #pytest-timeout>=1.0.0
 

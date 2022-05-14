@@ -6,8 +6,7 @@ on:
     branches:
       - '*'
       - '!dev_doc'
-#env:
-#  DEP_PATH: smarthomeng/requirements/all.txt
+
 jobs:
   build:
     runs-on: ubuntu-20.04 #latest
@@ -23,39 +22,33 @@ jobs:
       - run: sudo apt-get install librrd-dev libpython3-dev
       - run: sudo apt-get install gcc --only-upgrade
       - uses: actions/checkout@v2
-      - name: Checkout SmartHomeNG DEVELOP Branch
+
+      - name: Checkout SmartHomeNG CORE DEVELOP Branch
         uses: actions/checkout@v2
         with:
           repository: smarthomeNG/smarthome
           ref: develop
           path: smarthomeng
-      - name: Checkout SmartHomeNG/plugins DEVELOP Branch
+      - name: Checkout SmartHomeNG plugins DEVELOP Branch
         uses: actions/checkout@v2
         with:
           repository: smarthomeNG/plugins
           ref: develop
           path: smarthomeng/plugins
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
-
-      - name: Print Python Version
-        run: python --version
       - run: python3 -m pip install --upgrade pip #==19.3.1
-      #- run: pip install sphinx sphinx_rtd_theme recommonmark ruamel.yaml pytest
-      - name: Install requirements for testing
+
+      - name: Install requirements for unit testing
         run: pip install -r smarthomeng/tests/requirements.txt
-
-      - name: Build Requirements
+      - name: Build Requirements for SmartHomeNG
         run: python3 smarthomeng/tools/build_requirements.py
-      #- name: Show requirements/base.txt
-      #  run: head smarthomeng/requirements/base.txt -n 12
-      #- name: Show requirements/all.txt
-      #  run: head smarthomeng/requirements/all.txt -n 12
-
-      - name: Install base.txt
+      - name: Install SmartHomeNG base requirements
+        # base requirements are needed for pytest to run
         run: pip install -r smarthomeng/requirements/base.txt
       - name: Run Python Unittests
         working-directory: ./smarthomeng/tests
