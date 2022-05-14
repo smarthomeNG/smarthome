@@ -46,7 +46,7 @@ jobs:
       - run: python3 -m pip install --upgrade pip #==19.3.1
       #- run: pip install sphinx sphinx_rtd_theme recommonmark ruamel.yaml pytest
       - name: Install requirements for testing
-        run: pip install -r smarthomeng/requirements/test.txt
+        run: pip install -r smarthomeng/tests/requirements.txt
 
       - name: Build Requirements
         run: python3 smarthomeng/tools/build_requirements.py
