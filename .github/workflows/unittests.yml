@@ -55,8 +55,8 @@ jobs:
       #- name: Show requirements/all.txt
       #  run: head smarthomeng/requirements/all.txt -n 12
 
-      #- name: Install base.txt
-      #  run: pip install -r smarthomeng/requirements/base.txt
+      - name: Install base.txt
+        run: pip install -r smarthomeng/requirements/base.txt
       - name: Run Python Unittests
         working-directory: ./smarthomeng/tests
         run: pytest
