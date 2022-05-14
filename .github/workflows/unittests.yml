@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - '*'
-      - '!dev_doc'
+      - '!release_doc'
 
 jobs:
   build:
