@@ -4,10 +4,9 @@
 
 ![Github Tag](https://img.shields.io/github/v/release/smarthomeng/smarthome?sort=semver)
 ![Made with Python](https://img.shields.io/badge/made%20with-python-blue.svg)
-[![Build Status on TravisCI](https://travis-ci.com/smarthomeNG/smarthome.svg?branch=master)](https://travis-ci.com/smarthomeNG/smarthome)
+[![Aktuelles Release](https://img.shields.io/github/workflow/status/smarthomeNG/smarthome/SmartHomeNG%20Unittest%20Workflow%20Core/master)](https://github.com/smarthomeNG/smarthome/actions/workflows/unittests.yml)
 [![Join the chat at https://gitter.im/smarthomeNG/smarthome](https://badges.gitter.im/smarthomeNG/smarthome.svg)](https://gitter.im/smarthomeNG/smarthome?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Aktuelles Release](https://img.shields.io/github/workflow/status/smarthomeNG/smarthome/SmartHomeNG%20Unittest%20Workflow%20Core/master)](https://github.com/smarthomeNG/smarthome/actions/workflows/unittests.yml)  Github workflow
 
 SmartHomeNG [1] ist eine Software die eine Basis für eine Heimautomation bereitstellt. Über Plugins können spezielle Schnittstellen angesprochen und damit die Funktionalität des Gesamtsystems erweitert werden.
 
@@ -24,11 +23,10 @@ Die Kernfunktionalität wird alle 6-9 Monate in einem Release erweitert und frei
 | <a href="https://www.jetbrains.com/?from=SmartHomeNG"><img src="https://smarthomeng.de/images/pycharm-logo.png" width="80" height="70"></a> | SmartHomeNG wird mit der Pycharm IDE entwickelt. |
 | <a href="https://www.jetbrains.com/?from=SmartHomeNG"><img src="https://smarthomeng.de/images/webstorm-logo.png" width="70" height="70"></a> | Das Admin Interface von SmartHomeNG wird mit WebStorm IDE entwickelt. |
 
-## Aktueller Status der Entwicklung
+## Aktueller Status des develop Branches
 
-[![Aktuelle Entwicklung](https://travis-ci.com/smarthomeNG/smarthome.svg?branch=develop)](https://travis-ci.com/smarthomeNG/smarthome) Travis CI 
 
-[![Aktuelle Entwicklung](https://img.shields.io/github/workflow/status/smarthomeNG/smarthome/SmartHomeNG%20Unittest%20Workflow%20Core/develop)](https://github.com/smarthomeNG/smarthome/actions/workflows/unittests.yml) Github workflow 
+[![Aktuelle Entwicklung](https://img.shields.io/github/workflow/status/smarthomeNG/smarthome/SmartHomeNG%20Unittest%20Workflow%20Core/develop)](https://github.com/smarthomeNG/smarthome/actions/workflows/unittests.yml)
 
 ---
 
@@ -36,7 +34,7 @@ Die Kernfunktionalität wird alle 6-9 Monate in einem Release erweitert und frei
 
 SmartHomeNG [1] is a software that serves as a basis for home automation. It interconnects multiple devices using plugins to access their specific interfaces.
 
-User documentation ([german](https://www.smarthomeNG.de/user)) and developer documentation ([part of the user documentation](https://www.smarthomeng.de/user/entwicklung/entwicklung.html)) can be found on [www.smarthomeNG.de](https://www.smarthomeNG.de)
+User documentation ([german](http://docs.smarthomeNG.de)) and developer documentation ([now part of the unified documentation](http://docs.smarthomeng.de/entwicklung/entwicklung.html)) can be found on [www.smarthomeNG.de](https://www.smarthomeNG.de)
 
 Additional information can be found in the [SmartHomeNG Wiki](https://github.com/smarthomeNG/smarthome/wiki).
 
