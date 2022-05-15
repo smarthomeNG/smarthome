@@ -6,6 +6,7 @@
 [![Made with Angular](https://img.shields.io/badge/made%20with-Angular-blue.svg)](https://angular.io)
 [![Forum](https://img.shields.io/badge/forum-KNX_User_Forum-brightgreen.svg)](https://knx-user-forum.de/forum/supportforen/smarthome-py)
 [![Chat on Gitter](https://img.shields.io/badge/chat-On_Gitter-brightgreen)](https://gitter.im/smarthomeNG/smarthome?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Website smarthomeng.de](https://img.shields.io/website-up-down-green-red/http/smarthomeng.de.svg)](http://smarthomeng.de/)
 [![GitHub forks](https://badgen.net/github/forks/smarthomeNG/smarthome/)](https://GitHub.com/smarthomeNG/smarthome/network/)
 [![GitHub license](https://img.shields.io/github/license/smarthomeNG/smarthome.svg)](https://github.com/smarthomeNG/smarthome/blob/master/LICENSE)
 
