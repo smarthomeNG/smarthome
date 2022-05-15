@@ -330,7 +330,7 @@ class Items():
         regex, __, attr = regex.partition(':')
         #regex = regex.replace('.', '\.').replace('*', '.*') + '$'
         regex = regex.replace(r'.', '\.').replace('*', '.*') + '$'
-        regex = re.compile(regex)1
+        regex = re.compile(regex)
         attr, __, val = attr.partition('[')
         val = val.rstrip(']')
         if attr != '' and val != '':
