@@ -2,11 +2,14 @@
 
 # SmartHomeNG
 
-![Github Tag](https://img.shields.io/github/v/release/smarthomeng/smarthome?sort=semver)
 ![Made with Python](https://img.shields.io/badge/made%20with-python-blue.svg)
-[![Aktuelles Release](https://img.shields.io/github/workflow/status/smarthomeNG/smarthome/SmartHomeNG%20Unittest%20Workflow%20Core/master)](https://github.com/smarthomeNG/smarthome/actions/workflows/unittests.yml)
-[![Join the chat at https://gitter.im/smarthomeNG/smarthome](https://badges.gitter.im/smarthomeNG/smarthome.svg)](https://gitter.im/smarthomeNG/smarthome?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![KNX-User-Forum](https://img.shields.io/badge/discussions-KNX_User_Forum-brightgreen)](https://knx-user-forum.de/forum/supportforen/smarthome-py)
+[![Chat on Gitter](https://img.shields.io/badge/chat-On_Gitter-brightgreen)](https://gitter.im/smarthomeNG/smarthome?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![GitHub forks](https://badgen.net/github/forks/smarthomeNG/smarthome/)](https://GitHub.com/smarthomeNG/smarthome/network/)
+[![GitHub license](https://img.shields.io/github/license/smarthomeNG/smarthome.svg)](https://github.com/smarthomeNG/smarthome/blob/master/LICENSE)
 
+![Github Tag](https://img.shields.io/github/v/release/smarthomeng/smarthome?sort=semver)
+[![Aktuelles Release](https://img.shields.io/github/workflow/status/smarthomeNG/smarthome/Unittest%20Workflow%20Core/master)](https://github.com/smarthomeNG/smarthome/actions/workflows/unittests.yml)
 
 SmartHomeNG [1] ist eine Software die eine Basis für eine Heimautomation bereitstellt. Über Plugins können spezielle Schnittstellen angesprochen und damit die Funktionalität des Gesamtsystems erweitert werden.
 
@@ -23,11 +26,8 @@ Die Kernfunktionalität wird alle 6-9 Monate in einem Release erweitert und frei
 | <a href="https://www.jetbrains.com/?from=SmartHomeNG"><img src="https://smarthomeng.de/images/pycharm-logo.png" width="80" height="70"></a> | SmartHomeNG wird mit der Pycharm IDE entwickelt. |
 | <a href="https://www.jetbrains.com/?from=SmartHomeNG"><img src="https://smarthomeng.de/images/webstorm-logo.png" width="70" height="70"></a> | Das Admin Interface von SmartHomeNG wird mit WebStorm IDE entwickelt. |
 
-## Aktueller Status des develop Branches
-
-
-[![Aktuelle Entwicklung](https://img.shields.io/github/workflow/status/smarthomeNG/smarthome/SmartHomeNG%20Unittest%20Workflow%20Core/develop)](https://github.com/smarthomeNG/smarthome/actions/workflows/unittests.yml)
-
+<nr>
+    
 ---
 
 # SmartHomeNG and other languages
