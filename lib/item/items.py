@@ -328,8 +328,9 @@ class Items():
         """
 
         regex, __, attr = regex.partition(':')
-        regex = regex.replace('.', '\.').replace('*', '.*') + '$'
-        regex = re.compile(regex)
+        #regex = regex.replace('.', '\.').replace('*', '.*') + '$'
+        regex = regex.replace(r'.', '\.').replace('*', '.*') + '$'
+        regex = re.compile(regex)1
         attr, __, val = attr.partition('[')
         val = val.rstrip(']')
         if attr != '' and val != '':
