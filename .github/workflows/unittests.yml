@@ -29,13 +29,14 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - name: Checkout SmartHomeNG CORE ${{steps.extract_branch.outputs.branch} Branch
+      - name: Checkout SmartHomeNG CORE ${{steps.extract_branch.outputs.branch}} Branch
         uses: actions/checkout@v2
         with:
           repository: smarthomeNG/smarthome
           ref: ${{steps.extract_branch.outputs.branch}}
           path: smarthomeng
-      - name: Checkout SmartHomeNG plugins ${{steps.extract_branch.outputs.branch} Branch
+          
+      - name: Checkout SmartHomeNG plugins ${{steps.extract_branch.outputs.branch}} Branch
         uses: actions/checkout@v2
         with:
           repository: smarthomeNG/plugins
