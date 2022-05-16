@@ -1,4 +1,4 @@
-name: "Unittest Workflow Core"
+name: "Unittests Core"
 #on: [workflow_dispatch, push]
 on:
   workflow_dispatch:
@@ -25,17 +25,18 @@ jobs:
 
       #- uses: actions/checkout@v2
 
+     - name: Get branch name
+         run: echo ${GITHUB_REF#refs/heads/}
+
       - name: Checkout SmartHomeNG CORE DEVELOP Branch
         uses: actions/checkout@v2
         with:
           repository: smarthomeNG/smarthome
-          ref: develop
           path: ''
       - name: Checkout SmartHomeNG plugins DEVELOP Branch
         uses: actions/checkout@v2
         with:
           repository: smarthomeNG/plugins
-          ref: develop
           path: plugins
 
 
