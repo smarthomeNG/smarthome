@@ -46,7 +46,7 @@ jobs:
           path: smarthomeng
     
     - name: Checkout repository PLUGINS ${{steps.extract_branch.outputs.branch}} Branch
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
           repository: smarthomeNG/smarthome
           ref: ${{steps.extract_branch.outputs.branch}}
