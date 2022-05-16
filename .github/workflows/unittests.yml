@@ -36,7 +36,7 @@ jobs:
           ref: ${{steps.extract_branch.outputs.branch}}
           path: smarthomeng
           
-      - name: Checkout SmartHomeNG PLUGINS ${{steps.extract_branch.outputs.branch}} Branch
+      - name: Checkout SmartHomeNG plugins ${{steps.extract_branch.outputs.branch}} Branch
         uses: actions/checkout@v2
         with:
           repository: smarthomeNG/plugins
