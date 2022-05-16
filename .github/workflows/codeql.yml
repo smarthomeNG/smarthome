@@ -32,19 +32,24 @@ jobs:
         # Learn more about CodeQL language support at https://git.io/codeql-language-support
 
     steps:
+    
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
 
-    - name: Checkout repository
+    - name: Checkout repository SMARTHOME ${{steps.extract_branch.outputs.branch}} Branch
       uses: actions/checkout@v2
       with:
           repository: smarthomeNG/smarthome
-          ref: develop
+          ref: ${{steps.extract_branch.outputs.branch}}
           path: smarthomeng
     
-    - name: Checkout repository
+    - name: Checkout repository PLUGINS ${{steps.extract_branch.outputs.branch}} Branch
       uses: actions/checkout@v2
       with:
           repository: smarthomeNG/smarthome
-          ref: develop
+          ref: ${{steps.extract_branch.outputs.branch}}
           path: plugins
     
     # Initializes the CodeQL tools for scanning.
