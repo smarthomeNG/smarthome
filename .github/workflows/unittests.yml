@@ -45,7 +45,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
-      - run: python3 -m pip install --upgrade pip #==19.3.1
+      - run: python3 -m pip install --upgrade pip
 
       - name: Install requirements for unit testing
         run: pip install -r tests/requirements.txt
@@ -57,6 +57,6 @@ jobs:
 
       # ---  up to here, the workflow is identical for CORE and PLUGINS  ---
 
-      - name: Run Python Unittests for CORE
+      - name: '>>> Run Python Unittests for CORE <<<'
         working-directory: ./tests
         run: pytest
