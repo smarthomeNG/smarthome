@@ -13,11 +13,7 @@ name: "CodeQL"
 
 on:
   workflow_dispatch:
-
   push:
-    branches:
-      - plugins
-      - smarthome
 
 jobs:
   analyze:
