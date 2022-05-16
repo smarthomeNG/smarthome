@@ -23,18 +23,16 @@ jobs:
           sudo apt-get install librrd-dev libpython3-dev
           sudo apt-get install gcc --only-upgrade
 
-      #- uses: actions/checkout@v2
-
-     - name: Get branch name
-         run: echo ${GITHUB_REF#refs/heads/}
+      - name: Get branch name
+        run: echo ${GITHUB_REF#refs/heads/}
 
       - name: Checkout SmartHomeNG CORE DEVELOP Branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: smarthomeNG/smarthome
           path: ''
       - name: Checkout SmartHomeNG plugins DEVELOP Branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: smarthomeNG/plugins
           path: plugins
