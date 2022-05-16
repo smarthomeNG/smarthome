@@ -24,14 +24,15 @@ jobs:
           sudo apt-get install gcc --only-upgrade
 
       - name: Get branch name
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo ${GITHUB_REF#refs/heads/}
         id: extract_branch
 
       - name: Checkout core from ${{steps.extract_branch.outputs.branch}} branch
         uses: actions/checkout@v3
         with:
           repository: smarthomeNG/smarthome
-          path: ''
       - name: Checkout plugins from ${{steps.extract_branch.outputs.branch}} branch
         uses: actions/checkout@v3
         with:
@@ -39,9 +40,8 @@ jobs:
           ref: ${{steps.extract_branch.outputs.branch}}
           path: plugins
 
-
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
