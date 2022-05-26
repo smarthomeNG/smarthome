@@ -1,0 +1,21 @@
+name: "Comment if PR goes to wrong branch"
+
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - '*'
+      - '!develop'
+
+jobs:
+    comment_pr:
+      runs-on: ubuntu-latest
+      name: Comment on wrong branch
+      steps:
+        - name: Comment PR
+          uses: thollander/actions-comment-pull-request@v1
+          with:
+            message: 'Pull requests should only be placed against the develop branch'
+            reactions: '-1'
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

@@ -2,6 +2,9 @@ name: "Unittests Core"
 #on: [workflow_dispatch, push]
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - 'develop'
   push:
     branches:
       - '*'
@@ -33,6 +36,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: smarthomeNG/smarthome
+          ref: ${{steps.extract_branch.outputs.branch}}
       - name: Checkout plugins from ${{steps.extract_branch.outputs.branch}} branch
         uses: actions/checkout@v3
         with:
