@@ -3,7 +3,7 @@
 #   |            This file contains all                |
 #   |            requirements needed for               |
 #   |              automated testing                   |
-#   |             by tox/pytest                        |
+#   |                by tox/pytest                     |
 #   |                                                  |
 #   |               INSTALL WITH:                      |
 #   | pip3 install -r tests/requirements.txt --user    |
@@ -49,7 +49,7 @@ pytest>=3.6.0
 #pydocstyle>=1.0.0
 
 # the following needs to be exactly the same as in requirements/base.txt
-# otherwise inconsistent requirements will occur in Travis/Tox/Testing
+# otherwise inconsistent requirements will occur in Tox/Testing
 ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
 ruamel.yaml>=0.15.0,<=0.15.74;python_version=='3.7'
 ruamel.yaml>=0.15.78,<=0.16.8;python_version>='3.8'

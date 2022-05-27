@@ -1238,7 +1238,6 @@ class Requirements_files():
         certain selection subpath.
         Currently selection is one of 'modules', 'lib', 'plugins'
 
-        When testing with travis the self.sh_basedir will be something like "/home/travis/build/<repo owner>/smarthome"
         On a native Linux without specialities this is normally "/usr/local/smarthome"
         When inspecting the plugins then all requirements.txt for previous plugin versions should be omitted from the list.
         The names of previous plugins subdirectories start with "_pv"

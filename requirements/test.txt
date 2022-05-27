@@ -3,7 +3,7 @@
 #   |            This file contains all                |
 #   |            requirements needed for               |
 #   |              automated testing                   |
-#   |             by travis/tox/pytest                 |
+#   |                by tox/pytest                     |
 #   |                                                  |
 #   |               INSTALL WITH:                      |
 #   | pip3 install -r requirements/test.txt --user     |

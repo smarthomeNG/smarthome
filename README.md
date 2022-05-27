@@ -67,7 +67,7 @@ This readme file contains basic information about the root directories of SmartH
 |modules    | here are all loadable core-modules located (one subdirectory for every module) |
 |plugins    | here are all plugins located (one subdirectory for every plugin). The plugins have to be installed from a separate repository (smarthomeNG/plugins) |
 |scenes     | the scenes are stored here |
-|tests      | the code for the automated travis tests is stored here |
+|tests      | the code for the automated tests is stored here |
 |tools      | there are some tools which help you with creating an initial configuration |
 |var 	    | everything that is changed by smarthome is put here, e.g. logfiles, cache, sqlite database etc. |
 
