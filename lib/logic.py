@@ -157,7 +157,7 @@ class Logics():
         logic = Logic(self._sh, name, config[name], self)
         if hasattr(logic, '_bytecode'):
             self._logics[name] = logic
-            self.scheduler.add(self._logicname_prefix+name, logic, logic.prio, logic._crontab, logic._cycle)
+            self.scheduler.add(self._logicname_prefix+name, logic, logic._prio, logic._crontab, logic._cycle)
         else:
             return False
         # plugin hook
@@ -376,7 +376,7 @@ class Logics():
             info['watch_item'] = ''
         info['userlogic'] = self.is_userlogic(logic.name)
         info['logictype'] = self.return_logictype(logic.name)
-        info['filename'] = logic.filename
+        info['filename'] = logic._filename
         info['pathname'] = logic._pathname
         try:
             info['description'] = logic.description
@@ -570,12 +570,12 @@ class Logics():
         filename = ''
         if name in self._userlogics:
             try:
-                filename = self._userlogics[name].get('filename', '')
+                filename = self._userlogics[name].get('_filename', '')
             except:
                 logger.warning("return_logictype: self._userlogics[name] = '{}'".format(str(self._userlogics[name])))
                 logger.warning("return_logictype: self._userlogics = '{}'".format(str(self._userlogics)))
         elif name in self._systemlogics:
-            filename = self._systemlogics[name].get('filename', '')
+            filename = self._systemlogics[name].get('_filename', '')
             logic_type = 'Python'
         else:
             logger.info("return_logictype: name {} is not loaded".format(name))
@@ -950,10 +950,12 @@ class Logic():
         #self.enabled = self._enabled
         self._crontab = None
         self._cycle = None
-        self.prio = 3
+        self._prio = 3
         #self.last = None
         self._last_run = None
-        self.conf = attributes
+        self._trigger_dict = None
+        self._watch_item = []
+        self._conf = attributes
         self.scheduler = Logics.get_instance().scheduler
         self.__methods_to_trigger = []
         if attributes != 'None':
@@ -961,13 +963,17 @@ class Logic():
             for attribute in attributes:
                 if attribute == 'pathname':
                     vars(self)['_pathname'] = attributes[attribute]
+                elif attribute == 'filename':
+                    vars(self)['_filename'] = attributes[attribute]
+                elif attribute == 'watch_item':
+                    vars(self)['_watch_item'] = attributes[attribute]
                 elif attribute == 'cycle':
                     vars(self)['_cycle'] = attributes[attribute]
                 elif attribute == 'crontab':
                     vars(self)['_crontab'] = attributes[attribute]
                 elif attribute != 'enabled':
                     vars(self)[attribute] = attributes[attribute]
-            self.prio = int(self.prio)
+            self._prio = int(self._prio)
             self._generate_bytecode()
         else:
             logger.error("Logic {} is not configured correctly (configuration has no attibutes)".format(self._name))
@@ -984,7 +990,7 @@ class Logic():
 
     def __call__(self, caller='Logic', source=None, value=None, dest=None, dt=None):
         if self._enabled:
-            self.scheduler.trigger(self._logicname_prefix+self._name, self, prio=self.prio, by=caller, source=source, dest=dest, value=value, dt=dt)
+            self.scheduler.trigger(self._logicname_prefix+self._name, self, prio=self._prio, by=caller, source=source, dest=dest, value=value, dt=dt)
 
     @property
     def name(self):
@@ -1037,15 +1043,22 @@ class Logic():
         return
 
 
-    #@property
-    #def filename(self):
+    @property
+    def filename(self):
         """
         Property: filename
 
         :return: filename of the logic
         :rtype: str
         """
-    #    return self._filename
+        return self._filename
+
+    @filename.setter
+    def filename(self, value):
+
+        self.log_readonly_warning('filename', value)
+        return
+
 
     @property
     def pathname(self):
@@ -1061,6 +1074,23 @@ class Logic():
     def pathname(self, value):
 
         self.log_readonly_warning('pathname', value)
+        return
+
+
+    @property
+    def conf(self):
+        """
+        Property: conf
+
+        :return: conf of the logic
+        :rtype: collections.OrderedDict
+        """
+        return self._conf
+
+    @conf.setter
+    def conf(self, value):
+
+        self.log_readonly_warning('conf', value)
         return
 
 
@@ -1095,6 +1125,60 @@ class Logic():
     def crontab(self, value):
 
         self.log_readonly_warning('crontab', value)
+        return
+
+
+    @property
+    def prio(self):
+        """
+        Property: prio
+
+        :return: prio attribute of the logic
+        :rtype: str
+        """
+        return self._prio
+
+    @prio.setter
+    def prio(self, value):
+
+        #self.log_readonly_warning('prio', value)
+        self._prio = value
+        return
+
+
+    @property
+    def trigger_dict(self):
+        """
+        Property: trigger_dict
+
+        :return: trigger_dict attribute of the logic
+        :rtype: dict
+        """
+        return self._trigger_dict
+
+    @trigger_dict.setter
+    def trigger_dict(self, value):
+
+        #self.log_readonly_warning('trigger_dict', value)
+        self._trigger_dict = value
+        return
+
+
+    @property
+    def watch_item(self):
+        """
+        Property: watch_item
+
+        :return: watch_item attribute of the logic
+        :rtype: list
+        """
+        return self._watch_item
+
+    @watch_item.setter
+    def watch_item(self, value):
+
+        #self.log_readonly_warning('watch_item', value)
+        self._watch_item = value
         return
 
 
@@ -1137,7 +1221,7 @@ class Logic():
 
     def trigger(self, by='Logic', source=None, value=None, dest=None, dt=None):
         if self._enabled:
-            self.scheduler.trigger(self._logicname_prefix+self._name, self, prio=self.prio, by=by, source=source, dest=dest, value=value, dt=dt)
+            self.scheduler.trigger(self._logicname_prefix+self._name, self, prio=self._prio, by=by, source=source, dest=dest, value=value, dt=dt)
         else:
             logger.info("trigger: Logic '{}' not triggered because it is disabled".format(self._name))
 
