@@ -695,7 +695,7 @@ class Scheduler(threading.Thread):
         logic.items = self.items
         logic.trigger_dict = trigger  # logic.trigger has naming conflict with method logic.trigger of lib.item
 
-        logics = logic._logics
+        #logics = logic._logics
 
         if not self.mqtt:
             if _lib_modules_found:
@@ -717,6 +717,7 @@ class Scheduler(threading.Thread):
                     logic_globals['items'] = self.items
                     logic_globals['trigger'] = logic.trigger_dict
                     logic_globals['logic'] = logic
+                    logic_globals['logics'] = logic._logics
 
                     # execute logic
                     logger.debug(f"Getriggert durch: {trigger}")

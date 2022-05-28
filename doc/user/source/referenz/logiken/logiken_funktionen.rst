@@ -15,7 +15,9 @@ Funktionen in Logiken
 Bei der Nutzung von Funktionen in Logiken ist eine Besonderheit zu beachten: Eine Logik verhält sich nicht
 wie ein Python Modul!
 
-.. important::
+.. note::
+
+    **Bis zu SmartHomeNG v1.9.2 gilt:**
 
     Eine Logik verhält sich nicht wie ein Python Modul! Variablen und Funktionen die auf Ebene der Logik definiert
     werden, sind keine globalen Objekte. Sie stehen in Funktionen die innerhalb der Logik definiert werden nicht
@@ -24,6 +26,17 @@ wie ein Python Modul!
 
     Sollen in der Logik weitere Python Module genutzt werden, so muss der import der Moduls innerhalb der Funktion
     erfolgen, die eine Funktion aus dem zu importierenden Python Modul nutzt.
+
+.. important::
+
+    **Mit dem nachfolgenden Release wurde ein global Environment für Logiken eingeführt.**
+
+    Ab diesem Release stehen Variablen, wie in der Hauptroutine der Logik definiert wurden auch in Funktionen
+    innerhalb der Logik zur Verfügung. Das gleiche gilt für Module, die in der Hauptroutine der Logik importiert
+    wurden.
+
+    Daher ist es auch nicht mehr notwendig, das logic Objekt als Parameter an die Funktionen innerhalb einer
+    Logik zu übergeben.
 
 Dafür müssen Funktionen und Variablen der Funktion als Parameter übergeben werden. Das kann geschehen, indem die
 Übergabe für jede Variable/Funktion einzeln erfolgt oder sie können in einem Objekt übergeben werden (was die zu
@@ -40,6 +53,9 @@ Aufrufen der Funktion nicht angegeben zu werden.
 
 Das folgende Beispiel verdeutlicht das Vorgehen:
 
+bis SmartHomeNG v1.9.2
+----------------------
+
 .. code-block:: python
 
     # Variablen, die in Funktionen genutzt werden sollen, müssen dem logic Objekt zugewiesen werden
@@ -49,11 +65,11 @@ Das folgende Beispiel verdeutlicht das Vorgehen:
 
     # Funktionen definieren und anschließend dem logic Objekt zuweisen
     def func1(wert, logic=logic):
-        logger.warning("Funktion 1: wert = {}".format(wert))
+        logic.logger.warning("Funktion 1: wert = {}".format(wert))
     logic.func1 = func1
 
     def func2(logic=logic):
-        logger.warning("Funktion 2")
+        logic.logger.warning("Funktion 2")
         logic.func1(2)
     logic.func2 = func2
 
@@ -65,9 +81,31 @@ Das folgende Beispiel verdeutlicht das Vorgehen:
 Um aus Funktionen heraus auf das **sh** Objekt zugreifen zu können, sollte auch dieses (wie im obigen Beispiel) als
 Variable im **logic** Objekt abgelegt werden.
 
+in Versionen nach SmartHomeNG v1.9.2
+------------------------------------
+
+In neueren Versionen von SmartHomeNG kann der Syntax deutlich vereinfacht werden. Der alte Syntax ist jedoch weiterhin
+gültig.
+
+.. code-block:: python
+
+    # Funktionen definieren und anschließend dem logic Objekt zuweisen
+    def func1(wert):
+        logger.warning("Funktion 1: wert = {}".format(wert))
+
+    def func2(logic=logic):
+        logger.warning("Funktion 2")
+        func1(2)
+
+
+    # Main Routine der Logik
+    func1(1)
+    func2()
+
 
 .. index:: Klassen; Logiken
 .. index:: Logiken; Klassen
+
 
 Klassen in Logiken
 ==================
