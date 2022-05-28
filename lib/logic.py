@@ -570,12 +570,12 @@ class Logics():
         filename = ''
         if name in self._userlogics:
             try:
-                filename = self._userlogics[name].get('_filename', '')
+                filename = self._userlogics[name].get('filename', '')
             except:
                 logger.warning("return_logictype: self._userlogics[name] = '{}'".format(str(self._userlogics[name])))
                 logger.warning("return_logictype: self._userlogics = '{}'".format(str(self._userlogics)))
         elif name in self._systemlogics:
-            filename = self._systemlogics[name].get('_filename', '')
+            filename = self._systemlogics[name].get('filename', '')
             logic_type = 'Python'
         else:
             logger.info("return_logictype: name {} is not loaded".format(name))
