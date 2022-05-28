@@ -29,9 +29,9 @@ wie ein Python Modul!
 
 .. important::
 
-    **Mit dem nachfolgenden Release wurde ein global Environment für Logiken eingeführt.**
+    **Ab dem nachfolgenden Release v1.9.3 wurde ein global Environment für Logiken eingeführt**
 
-    Ab diesem Release stehen Variablen, wie in der Hauptroutine der Logik definiert wurden auch in Funktionen
+    Ab diesem Release stehen Variablen, die in der Hauptroutine der Logik definiert wurden auch in Funktionen
     innerhalb der Logik zur Verfügung. Das gleiche gilt für Module, die in der Hauptroutine der Logik importiert
     wurden.
 
@@ -113,6 +113,9 @@ Klassen in Logiken
 In Logiken können auch Klassen definiert werden. Damit diese Klassen in Funktionen zur Verfügung stehen,
 muss auch hier (wie bei Funktionen) die Klasse dem Logik Objekt zugewiesen werden (letzte Zeile im folgenden Beispiel):
 
+bis SmartHomeNG v1.9.2
+----------------------
+
 .. code-block:: python
 
     class triggervalue():
@@ -146,3 +149,47 @@ muss **logic** beim Erstellen einer Instanz mit übergeben werden:
 
 
 
+in Versionen nach SmartHomeNG v1.9.2
+------------------------------------
+
+In neueren Versionen von SmartHomeNG kann der Syntax vereinfacht werden. Der alte Syntax ist jedoch weiterhin
+gültig.
+
+.. code-block:: python
+
+    class triggervalue():
+
+        def __init__(self, init_value=None, trigger_item=None):
+            self.trigger_item = trigger_item
+            self.value = init_value
+            self.changed = False
+            self._last_value = init_value
+            if self.trigger_item is not None:
+                self.value = logic.items.return_item(trigger_item)()
+                self.changed = (logic.trigger_dict['source'] == trigger_item)
+                self._last_value = None
+
+        def set(self, newvalue):
+            if self.trigger_item is None:
+                self._last_value = self.value
+                self.value = newvalue
+                self.changed = self.value != self._last_value
+                return self.changed
+            return self.changed
+
+Wenn in einer Klasse auf Elemente des **logic** Objektes zugegriffen werden soll (wie in dem obigen Beispiel),
+muss **logic** beim Erstellen einer Instanz mit übergeben werden:
+
+.. code-block:: python
+
+        freigabe_sued = triggervalue(trigger_item='beschattung.beschattungsautomatik.sued')
+
+Zu beachten ist hierbei, dass das Weglassen der Zeile
+
+.. code-block:: python
+
+    logic.triggervalue = triggervalue
+
+und das Ansprechen der Objektes ohne den Präfix ``logic.`` dazu führt, dass das Objekt nur während des Laufed
+der Logik existiert. Wird hingegen das Objekt im logic Objekt abgelegt, existert das Objekt mis zum Neustart
+von SmartHomeNG (Siehe dazu auch **Persistente Variablen**).
