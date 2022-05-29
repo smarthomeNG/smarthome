@@ -3,7 +3,7 @@ Release 1.x.x - tt. mmm 2022
 ============================
 
 Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
-sowie einige neue Plugins.
+sowie Updates zu einigen Plugins.
 
 .. only: comment
 
@@ -14,10 +14,10 @@ sowie einige neue Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. ...
-       (...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. ...
-       (...)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 28. Mai 2022
+       (Documentation undates; bump version to 1.9.2.2)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 27. Mai 2022
+       (remove Travis-CI settings)
 
 
 Überblick
@@ -47,6 +47,12 @@ Automatisierte Tests von SmartHomeNG werden nur in den unterstützten Python Ver
 zu unterstützten Python Versionen)
 
 
+Allgemeine Änderungen
+=====================
+
+* Die automatisierten Unit Tests von SmartHomeNG wurden von Travis auf Github Workflows umgestellt.
+
+
 Änderungen am Core
 ==================
 
@@ -71,13 +77,41 @@ Updates in the CORE
 
 * Libs:
 
-  * lib. ...:
+  * lib.db:
+
+    * Fixed deprecation warnings
+
+  * lib.item:
+
+    * Fixed deprecation warnings
+
+  * lib.logic:
+
+    * Implemented r/o attributes as properties
+    * Implemented some logic properties to distinguish them from the list of local variables of that logic
+
+  * lib.metadata:
+
+    * Fixed deprecation warnings
+
+  * lib.scheduler:
+
+    * Setting up a global environment when executing a logic (containing e.g. logger and logic variables)
+
+* lib.smarthome:
+
+    * Fixed deprecation warnings
+
+  * lib.userfunction:
+
+    * Bugfix
 
 * Modules:
 
-  * ...:
+  * modules.admin:
 
-    * ...
+    * Bugfix to show logs with old and new naming convention
+    * Loglevels adjusted in api_loggers.py
 
 * Plugins:
 
@@ -107,9 +141,47 @@ Plugin Updates
 Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
-* <name>:
 
-  * ...
+* avm:
+
+  *Improvement for HKRs: Allow set temperature to be set directly to value 126.5 (off/frost protection mode).
+
+* backend:
+
+  * Fixed deprecation warnings
+
+* casambi:
+
+  * Minor fix for casambi_id (now integer instead of num)
+
+* database:
+
+  * Reinserted 'duplicate_use' to metadata for item_attribute 'database'
+
+* hue2:
+
+  * Changed requirements to resolve conflict with appletv plugin
+
+* knx:
+
+  * Fixed deprecation warnings
+
+* nut:
+
+  * Fixed initialization of parent class (smartPlugin)
+
+* resol:
+
+  * Minor improvement-> cleaned-up update_item method
+
+* sonos:
+
+  * Added appdirs to requirements.txt (needed for SoCo framework)
+  * improved webinterface - list discovered speakers
+
+* telegram:
+
+  * Restrict version be <14.0 since then async will be used
 
 
 Outdated Plugins

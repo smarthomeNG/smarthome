@@ -81,8 +81,8 @@ bis SmartHomeNG v1.9.2
 Um aus Funktionen heraus auf das **sh** Objekt zugreifen zu können, sollte auch dieses (wie im obigen Beispiel) als
 Variable im **logic** Objekt abgelegt werden.
 
-in Versionen nach SmartHomeNG v1.9.2
-------------------------------------
+ab SmartHomeNG v1.9.3
+---------------------
 
 In neueren Versionen von SmartHomeNG kann der Syntax deutlich vereinfacht werden. Der alte Syntax ist jedoch weiterhin
 gültig.
@@ -149,8 +149,8 @@ muss **logic** beim Erstellen einer Instanz mit übergeben werden:
 
 
 
-in Versionen nach SmartHomeNG v1.9.2
-------------------------------------
+ab SmartHomeNG v1.9.3
+---------------------
 
 In neueren Versionen von SmartHomeNG kann der Syntax vereinfacht werden. Der alte Syntax ist jedoch weiterhin
 gültig.
