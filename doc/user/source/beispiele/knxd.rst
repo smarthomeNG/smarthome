@@ -27,6 +27,7 @@ busware.de
 ----------
 
 * **TPUART USB Modul**
+    *KNXD_OPTS="-e 1.1.251 -E 1.1.240:8 -c -DTRS -b tpuarts:/dev/ttyKNX0"*, wobei *-e* eine freie Busadresse für den knxd ist und *-E* den Adressbereich darstellt, den der knx-Server an seine Clients vergibt. Das USB-Modul wird mit */dev/xxx* angegeben.
 
 * **RTC-Onewire-TPUART Erweiterung für Raspberry Pi (ROT)**
 
