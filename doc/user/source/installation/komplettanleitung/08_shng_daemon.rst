@@ -23,7 +23,7 @@ Zum Einrichten den Texteditor starten mit
 
 .. code-block:: bash
 
-   sudo nano /lib/systemd/system/smarthome.service
+   sudo nano /etc/systemd/system/smarthome.service
 
 und folgenden Text hineinkopieren:
 

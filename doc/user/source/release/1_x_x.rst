@@ -46,12 +46,14 @@ Automatisierte Tests von SmartHomeNG werden nur in den unterstützten Python Ver
 (Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
 zu unterstützten Python Versionen)
 
+|
 
 Allgemeine Änderungen
 =====================
 
 * Die automatisierten Unit Tests von SmartHomeNG wurden von Travis auf Github Workflows umgestellt.
 
+|
 
 Änderungen am Core
 ==================
@@ -98,7 +100,7 @@ Updates in the CORE
 
     * Setting up a global environment when executing a logic (containing e.g. logger and logic variables)
 
-* lib.smarthome:
+  * lib.smarthome:
 
     * Fixed deprecation warnings
 
@@ -121,6 +123,7 @@ Updates in the CORE
 
   * ...
 
+|
 
 Änderungen bei Plugins
 ======================
@@ -238,6 +241,7 @@ Repositiory aufgenommen.
 
 * ...
 
+|
 
 Weitere Änderungen
 ==================

@@ -46,6 +46,7 @@ Automatisierte Tests von SmartHomeNG werden nur in den unterstützten Python Ver
 (Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
 zu unterstützten Python Versionen)
 
+|
 
 Änderungen am Core
 ==================
@@ -87,6 +88,7 @@ Updates in the CORE
 
   * ...
 
+|
 
 Änderungen bei Plugins
 ======================
@@ -166,6 +168,7 @@ Repositiory aufgenommen.
 
 * ...
 
+|
 
 Weitere Änderungen
 ==================

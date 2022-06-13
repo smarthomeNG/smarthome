@@ -82,7 +82,7 @@ shversion = shngversion.get_shng_main_version()
 
 # General information about the project.
 #project = u'SmartHomeNG'
-project = u'Anwenderdokumentation '
+project = u'Dokumentation '
 copyright = u'2016-2022 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp'
 
 # The full version, including alpha/beta/rc tags.
