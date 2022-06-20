@@ -472,7 +472,7 @@ class SmartDevicePlugin(SmartPlugin):
         if self.alive:
 
             self.logger.debug(f'Update_item was called with item "{item}" from caller {caller}, source {source} and dest {dest}')
-            if not self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_COMMAND', 'foo')):
+            if not (self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_COMMAND', 'foo')) or self.has_iattr(item.conf, self._item_attrs.get('ITEM_ATTR_READ_GRP', 'foo'))):
                 self.logger.warning(f'Update_item was called with item {item}, which is not configured for this plugin. This shouldn\'t happen...')
                 return
 
