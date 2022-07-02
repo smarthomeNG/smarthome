@@ -430,7 +430,13 @@ class Websocket(Module):
         # items = []
 
         self.logs = self._sh.logs.return_logs()
-        self._sh.add_event_listener(['log'], self.update_visulog)
+
+        # Prevent the event listener for event types "log" from being added multiple times:
+        known_log_listeners = self._sh.return_event_listeners(event='log')
+        if self.update_visulog not in known_log_listeners:
+            self._sh.add_event_listener(['log'], self.update_visulog)
+        else:
+            self.logger.debug(f"smartVISU_protocol_v4: self.update_visulog function already subscribed as event listener")
 
         client_addr = self.client_address(websocket)
         client_ip = websocket.remote_address[0]
@@ -1141,6 +1147,7 @@ class Websocket(Module):
         :return:
         """
         if event != 'log':
+            self.logger.warning(f"update_visulog: Unknown event {event} received.")
             return
 
         log_data = data.copy()  # don't filter the orignal data dict
