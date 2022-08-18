@@ -38,6 +38,10 @@ $(window).bind('datatables_defaults', function() {
 				autoWidth: false,
 				initComplete: function () {$(this).show();setTimeout(function() { $(window).resize(); }, 300);}, // show table (only) after init, adjust height of wrapper after 300ms (for Safari)
         responsive: {details: {renderer: $.fn.dataTable.Responsive.renderer.listHiddenNodes()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
+				preDrawCallback: function (oSettings) {
+        	pageScrollPos = $(oSettings.nTableWrapper).find('.dataTables_scrollBody').scrollTop();
+					bodyScrollPos = $('html, body').scrollTop();
+    		},
 				drawCallback: function(oSettings) { // hide pagination if not needed
 					if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay() || oSettings._iDisplayLength == -1) {
 						 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
@@ -50,15 +54,20 @@ $(window).bind('datatables_defaults', function() {
 								  }, 'slow');
 							});
 					}
+					$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( false );
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( true );
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
+					$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
+					$('html, body').scrollTop(bodyScrollPos);
 					$(this).addClass( "display" );
 				},
 				createdRow: function (row, data, index) {
 					$(row).hide().fadeIn('slow');
 					$('td', row).addClass('py-1 truncate');
-
+					$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
+					$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
 				}
 
 			});
