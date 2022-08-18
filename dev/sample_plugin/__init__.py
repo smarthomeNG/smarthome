@@ -68,7 +68,7 @@ class SamplePlugin(SmartPlugin):
 
         # webif_pagelength should be included in all plugins using a web interface
         # It is used to overwrite the default max number of entries per page in the tables
-        # self.webif_pagelength = self.get_parameter_value('webif_pagelength')
+        self.webif_pagelength = self.get_parameter_value('webif_pagelength')
 
         # cycle time in seconds, only needed, if hardware/interface needs to be
         # polled for value changes by adding a scheduler entry in the run method of this plugin

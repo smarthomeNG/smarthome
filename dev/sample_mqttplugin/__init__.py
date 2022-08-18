@@ -62,6 +62,10 @@ class SampleMqttPlugin(MqttPlugin):
         # get the parameters for the plugin (as defined in metadata plugin.yaml):
         # self.param1 = self.get_parameter_value('param1')
 
+        # webif_pagelength should be included in all plugins using a web interface
+        # It is used to overwrite the default max number of entries per page in the tables
+        self.webif_pagelength = self.get_parameter_value('webif_pagelength')
+        
         # Initialization code goes here
 
         # On initialization error use:
@@ -160,4 +164,3 @@ class SampleMqttPlugin(MqttPlugin):
                 self.logger.debug(
                     f"update_item was called with item {item.property.path} from caller {caller}, source {source} and dest {dest}")
             pass
-
