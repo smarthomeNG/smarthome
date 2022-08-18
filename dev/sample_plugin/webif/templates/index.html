@@ -63,9 +63,10 @@
       try {
         /* get pagelength from plugin. Also see hidden span element in headtable block! */
         webif_pagelength = parseInt(document.getElementById('webif_pagelength').innerHTML);
-        if (webif_pagelength == 0) {
+        if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
           resize = true;
           webif_pagelength = -1;
+  				console.log('Activating automatic table resize');
         }
         else {
           resize = false;
@@ -89,7 +90,7 @@
           pageResize: resize});
       }
       catch (e) {
-        console.log("Datatable JS not loaded, showing standard table without reorder option " + e);
+        console.warn("Datatable JS not loaded, showing standard table without reorder option " + e);
       }
     });
 </script>
