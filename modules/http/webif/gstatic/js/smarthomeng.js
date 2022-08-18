@@ -82,8 +82,9 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
         // check if cell id exists on current page
         test = $('#' + table_id).DataTable().cell( $("#" + $.escapeSelector(id)), { page:'current'}).data();
         if ( test ) {
+          old_text = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data();
           if (highlight > 0) {
-            old_text = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data();
+
             element = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).node();
             // compare old value of cell with new one and highlight
             if (old_text != "..." && old_text != text) {
@@ -92,10 +93,14 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
           }
           // update datatable cell
           $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data(text);
+          if (old_text != text) {
+            console.log("Redrawing table because new cell data found: " + text);
+            $('#' + table_id).DataTable().draw(false);
+          }
         }
       }
       catch (e) {
-        console.log("Problem setting cell with id " + id + " of table " + table_id + ". Error: " + e);
+        console.warn("Problem setting cell with id " + id + " of table " + table_id + ". Error: " + e);
       }
     }
 }
