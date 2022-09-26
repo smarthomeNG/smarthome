@@ -39,7 +39,7 @@ import bin.shngversion as shngversion
 
 from lib.shpypi import Shpypi
 from lib.shtime import Shtime
-from lib.utils import Utils
+from lib.utils import Utils, running_virtual
 import lib.config
 import lib.daemon
 
@@ -272,6 +272,7 @@ class SystemData:
             response['pypath'] = sys.executable
         else:
             response['pypath'] = self._sh.python_bin
+        response['pyvirtual'] = lib.utils.running_virtual()
         response['ip'] = ip
         response['ipv6'] = ipv6
         if os.name != 'nt':
