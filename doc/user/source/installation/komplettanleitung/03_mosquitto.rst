@@ -59,8 +59,8 @@ Der Service kann dann mit den folgenden Befehlen gestartet, gestoppt und neu ges
 
 .. code-Block:: bash
 
-   sudo systemctl start mosquitto
-   sudo systemctl stop mosquitto
+   systemctl start mosquitto
+   systemctl stop mosquitto
    systemctl restart mosquitto
 
 

@@ -1,5 +1,5 @@
 ============================
-Release 1.x.x - tt. mmm 2022
+Release 1.9.x - tt. mmm 2022
 ============================
 
 Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
@@ -14,10 +14,10 @@ sowie Updates zu einigen Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 28. Mai 2022
-       (Documentation undates; bump version to 1.9.2.2)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 27. Mai 2022
-       (remove Travis-CI settings)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 24. Sept 2022
+       (doc installation regarding knx/knxd)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 25. Sept 2022
+       (russound plugin: provide two functions to suspend and activate plugin…)
 
 
 Überblick
@@ -115,6 +115,11 @@ Updates in the CORE
     * Bugfix to show logs with old and new naming convention
     * Loglevels adjusted in api_loggers.py
 
+  * modules.websocket:
+
+    * Prevent event listener for event type log from being registered multiple times. Otherwise,
+      this error could lead to multiple entries in status.log widgets.
+
 * Plugins:
 
   * ...
@@ -127,6 +132,16 @@ Updates in the CORE
 
 Änderungen bei Plugins
 ======================
+
+Allgmein
+
+* Workflows:
+
+  * Disabled unittests on PRs for the moment because the workflow didn't handle it correctly
+  * Removed lines that trigger test on pull_request
+  * Removed disabled triggers on test_dispatch_workflow.yml
+  * Changed comment for 'PR to wrong branch'
+
 
 Neue Plugins
 ------------
@@ -147,7 +162,8 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
 * avm:
 
-  *Improvement for HKRs: Allow set temperature to be set directly to value 126.5 (off/frost protection mode).
+  * Improvement for HKRs: Allow set temperature to be set directly to value 126.5 (off/frost protection mode).
+  * Minor fix for error handling
 
 * backend:
 
@@ -161,30 +177,126 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Reinserted 'duplicate_use' to metadata for item_attribute 'database'
 
+* enocean:
+
+  * Added plausibility check for powermeters
+
 * hue2:
 
   * Changed requirements to resolve conflict with appletv plugin
+
+* husky2:
+
+  * Added aioautomower version to requirements
+  * Corrected item structure
+  * Fixed type error, corrected cases and updated valid lists
+  * Removed unused command from list
+  * Corrected cases
+  * Added version info to doc
+  * Changed login method to client credentials using apisecret
+  * Added possibility to store last gps points in gpspoints item
+  * Updated version of openlayers
+  * Switched order of lat lng in gpspoints item
+  * Switched order of lat lng for webif
+  * Changed aioautomower version to 2022.9.0
+  * Fixed token refresh by doing a re login
+  * Removed unused items.yaml file
+  * Updated user doc
+  * Corrected token expiration in webif and close asyncio event loop on plugin stop
+  * Added debug messages to plugin logger on token refresh
+  * Raised plugin version to 2.1.0
+  * Added missing activity and added note to user doc
+  * Added unknown command to error log
+  * Fixed to early closing of session on plugin stop
+  * Added SV widget to show actual position and path of mower in google maps
+  * Added eventloop stop before close
+  * Added zoom level and path color to widget options
+  * Removed not existing park command
+  * Renamed SV widget
+  * Packed asyncio eventloop into thread
 
 * knx:
 
   * Fixed deprecation warnings
 
+* modbus_tcp:
+
+  * Keep connection open and use locking to ensure thread safety
+
+* mpd:
+
+  * Fixed bugs with network data receive and parsing
+  * Increase version number
+
+* neato:
+
+  * Added decoding of command availability status, e.g. "start" command available
+  * If start command with persistent map is rejected due to "not_on_charge_base" error,
+    retry start with non-persistent map
+
 * nut:
 
   * Fixed initialization of parent class (smartPlugin)
 
+* openweathermap:
+
+  * Update SV widget import
+
+* pluggit:
+
+  * Created a previous version (v1.2.3) before accepting pull request
+
 * resol:
 
   * Minor improvement-> cleaned-up update_item method
+  * Added frame CRC check
+
+* rtr:
+
+  * Update SV widget import
+
+* rtr2:
+
+  * Update SV widget import
+
+* russound:
+
+  * Provide two functions to suspend and activate plugin without reload
+
+* simulation:
+
+  * Update SV widget import
 
 * sonos:
 
   * Added appdirs to requirements.txt (needed for SoCo framework)
   * improved webinterface - list discovered speakers
+  * Fixed play_tunein command; catched ConnectionResetError
+  * Catched WebIf exception occurring for offline speaker
+
+* stateengine:
+
+  * Fix release state (issue when defined after suspend state)
+  * Fix release state
+  * Adapt widget to new SV icon handling
+  * Fix typo in log
+  * Improve laststate and lastconditionset handling
+  * Update laststate after running entry actions instead of before
+  * Fix handling of relative item declarations plus minor improvements
+  * Introduce option to get previous state (before laststate) and previous
+    conditionset being used for actions and conditions
+  * Add SV widget namespace import
+  * Set proper defaults in widget Twig / php otherwise throws warnings
 
 * telegram:
 
   * Restrict version be <14.0 since then async will be used
+
+xiaomi_vac:
+
+  * Fix issue if no cleaning details are found.
+  * Fix issue when no cleaning details are found (after new firmware flash or reset).
+  * Bump to version 1.2.1
 
 
 Outdated Plugins
@@ -255,7 +367,7 @@ Tools
 Dokumentation
 -------------
 
-* ...
+* Multiple updates
 * ...
 
 
