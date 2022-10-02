@@ -87,10 +87,9 @@ Filter
   - **module**: Loggendes Module (regex)
   - **msg**: Log Message (regex)
   - **timestamp**: Zeitpunkt des Logeintrages (regex)
-  - **invert**: Über **invert** kann das durch die obigen Parameter erzeugte Filter Ergebnis invertiert werden
+  - **invert**: False/True. Über **invert** kann das durch die obigen Parameter erzeugte Filter Ergebnis invertiert werden
 
-Bis auf **invert** können alle Parameter Listen von Strings sein. Diese Strings können Regular Expressions
-enthalten.
+Bis auf **invert** können alle Parameter Listen von Regular Expressions sein.
 
 Benutzung des Filters
 ---------------------
@@ -113,4 +112,3 @@ Um den Filter in einem Log-Handler anzuwenden, muss der Filter noch in der Konfi
 Handlers im Abschnitt ``handlers:`` konfiguriert werden.
 
 |
-
