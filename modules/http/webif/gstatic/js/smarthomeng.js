@@ -157,3 +157,80 @@ function shngGetUpdatedData(dataSet=null) {
     });
     }
 }
+
+
+/**
+ * replaces the body attribs onload approach. The major difference is that all parameters like activate
+ * autorefresh and refreshrate can be changed by scripts and forms, etc. It's based on:
+ * https://stackoverflow.com/questions/30725455/change-setinterval-value-dynamically
+ * start parameters: function, interval, start directly, repeat
+ * set_interval parameters: interval, start directly
+*/
+
+function timer() {
+  var timer = {
+      running: false,
+      iv: 0,
+      timeout: false,
+      rp: false,
+      cb : function(){},
+      start : function(cb,iv,sd,rp){
+          var elm = this;
+          clearInterval(this.timeout);
+          this.running = true;
+          if(cb) this.cb = cb;
+          if(iv) this.iv = iv;
+          if(rp != null) this.rp = rp;
+          if(sd) elm.execute(elm);
+					if(iv <= 0)
+						console.log("Initializing timer " + this.timeout + ", but not running because interval is 0");
+					else
+          	this.timeout = setTimeout(function(){elm.execute(elm)}, this.iv);
+      },
+      execute : function(e){
+          if(!e.running) return false;
+          e.cb();
+          if(this.rp)
+            e.start();
+          else {
+            this.running = false;
+            clearInterval(this.timeout);
+            clearTimeout(this.timeout);
+          }
+      },
+      stop : function(){
+          this.running = false;
+					console.log("Stopping timer " + this.timeout + " because stop command received");
+      },
+      update : function(params){
+          for (key in params)
+            if(params[key] != null) window[key] = params[key];
+          console.log("Updating timer method with: " + JSON.stringify(params));
+          document.getElementById("update_active").checked = window.update_active;
+          document.getElementById("update_interval").value = window.update_interval / 1000;
+          if (window.update_interval > 0 && window.update_active == true)
+          {
+            window.refresh.set_interval(window.update_interval, true);
+          }
+          else
+          {
+            window.refresh.stop();
+            document.getElementById("update_active").checked = false;
+          }
+      },
+      set_interval : function(iv,sd){
+          clearInterval(this.timeout);
+					if (iv == 0)
+						{
+							console.log("Stopping timer " + this.timeout + " because interval is set to " + iv);
+							this.stop();
+						}
+					else
+						{
+            	this.start(false,iv,sd);
+							// console.log("Starting timer " + this.timeout + " with interval " + iv + " instatrigger " + sd);
+						}
+      }
+  };
+  return timer;
+}
