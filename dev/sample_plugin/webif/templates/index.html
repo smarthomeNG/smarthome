@@ -94,6 +94,17 @@
       }
     });
 </script>
+<!--
+This is an example on how to update the page refresh method. You can set the dataSet, update interval, special parameters or (de)activate the auto refresh
+In the example the update is deactivated on the 12th of December 2022 (what might make no sense at all)
+<script>
+  var today = new Date();
+  var today_date = String(today.getDate()) + String(today.getMonth() + 1) + today.getFullYear();
+  let test_date = "12122022";
+  if (today_date === test_date)
+      window.refresh.update({dataSet:'test', update_params:'specialitem', update_interval: 2000, update_active:false});
+  </script>
+-->
 {% endblock pluginscripts %}
 
 
