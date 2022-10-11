@@ -122,23 +122,27 @@
 
 <div id="webif-tabs" class="container-fluid" style="position: fixed; background-color: white; top:180px; z-index: 8;">
 	<ul class="nav nav-tabs">
-		{% if tabcount == 1 %}
+		{% if tabcount == 1 and tab1title != "hidden" %}
 			<li id="tab_1" class="nav-item"><a class="text-dark nav-link active" href="#bodytab_1">{{ tab1title }}</a></li>
 		{% endif %}
 		{% if tabcount > 1 %}
-			<li id="tab_1" class="nav-item"><a class="text-dark nav-link {% if start_tab==1 %}active{% endif %}" data-toggle="tab" href="#bodytab_1">{{ tab1title }}</a></li>
-			<li id="tab_2" class="nav-item"><a class="text-dark nav-link {% if start_tab==2 %}active{% endif %}" data-toggle="tab" href="#bodytab_2">{{ tab2title }}</a></li>
+			{% if tab1title != "hidden" %}
+				<li id="tab_1" class="nav-item"><a class="text-dark nav-link {% if start_tab==1 %}active{% endif %}" data-toggle="tab" href="#bodytab_1">{{ tab1title }}</a></li>
+			{% endif %}
+			{% if tab2title != "hidden" %}
+				<li id="tab_2" class="nav-item"><a class="text-dark nav-link {% if start_tab==2 %}active{% endif %}" data-toggle="tab" href="#bodytab_2">{{ tab2title }}</a></li>
+			{% endif %}
 		{% endif %}
-		{% if tabcount > 2 %}
+		{% if tabcount > 2 and tab3title != "hidden" %}
 			<li id="tab_3" class="nav-item"><a class="text-dark nav-link {% if start_tab==3 %}active{% endif %}" data-toggle="tab" href="#bodytab_3">{{ tab3title }}</a></li>
 		{% endif %}
-		{% if tabcount > 3 %}
+		{% if tabcount > 3 and tab4title != "hidden" %}
 			<li id="tab_4" class="nav-item"><a class="text-dark nav-link {% if start_tab==4 %}active{% endif %}" data-toggle="tab" href="#bodytab_4">{{ tab4title }}</a></li>
 		{% endif %}
-		{% if tabcount > 4 %}
+		{% if tabcount > 4 and tab5title != "hidden" %}
 			<li id="tab_5" class="nav-item"><a class="text-dark nav-link {% if start_tab==5 %}active{% endif %}" data-toggle="tab" href="#bodytab_5">{{ tab5title }}</a></li>
 		{% endif %}
-		{% if tabcount > 5 %}
+		{% if tabcount > 5 and tab6title != "hidden" %}
 			<li id="tab_6" class="nav-item"><a class="text-dark nav-link {% if start_tab==6 %}active{% endif %}" data-toggle="tab" href="#bodytab_6">{{ tab6title }}</a></li>
 		{% endif %}
 	</ul>
