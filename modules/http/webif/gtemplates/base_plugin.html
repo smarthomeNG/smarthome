@@ -5,14 +5,58 @@
 {% endblock title %}
 
 <!--
-	set onload= attribute of <body> tag to periodically update data of web interface
+	add additional attributes for body tag if body_attribs is set in the plugin index.html
 -->
 {%- block body_attribs %}
-	{%- if update_interval is defined and update_interval > 0 %} onload="setInterval(shngGetUpdatedData, {{ update_interval }})"
+	{%- if body_attribs is defined %} {{ body_attribs }}"
 	{%- endif %}
 {%- endblock body_attribs %}
 
+{%- block scripts %}
+{{ super() }}
+<script>
+	// Make refresh variable, dataSet and update_params available for plugins html files.
+	window.refresh = new timer();
+	{%- if dataSet is defined %}
+	  window.dataSet = '{{ dataSet }}';
+	{%- else %}
+	  window.dataSet = '';
+	{%- endif %}
+	{%- if update_params is defined %}
+	  window.update_params = '{{ update_params }}';
+	{%- else %}
+	  window.update_params = '';
+	{%- endif %}
+	{%- if update_interval is defined %}
+	  window.update_interval = {{ update_interval }};
+	  {%- if update_interval > 0 %}
+	    window.update_active = true;
+	  {%- else %}
+	    window.update_active = false;
+	  {%- endif %}
+	{%- else %}
+	  window.update_interval = '';
+	  window.update_active = false;
+	{%- endif %}
 
+	// Start page refresh method
+	{%- if update_interval is defined and update_interval > 0 %}
+	  // update_interval defines the time between refreshes in ms
+	  refresh.start(function(){
+	      shngGetUpdatedData();
+	  }, window.update_interval, false, true);
+	  console.log("Starting autorefresh with dataset " + window.dataSet + " and params " + window.update_params + " on start using interval " + window.update_interval + " refresh: " + window.update_active);
+	{%- else %}
+	  // update_interval is set to 0 so no update will happen. Refresh still has to be started to work.
+	  refresh.start(function(){
+	      shngGetUpdatedData();
+	  }, 0, false, true);
+	  console.log("Initializing autorefresh (not active) with dataset " + window.dataSet + " and params " + window.update_params + " using interval " + window.update_interval);
+	{%- endif %}
+</script>
+
+<script src="/gstatic/js/smarthomeng_pageupdate.js"></script>
+{%- endblock scripts %}
 {% block content %}
 
 {% if scroll_heading is not defined %}
@@ -64,7 +108,11 @@
 						{% endblock %}
 					</td>
 					<td colspan="2" align="right">
-						<form action="" method="post">
+						<form action="" method="post">{{_('Auto')}}
+							<span id="autorefresh">
+								<input type="checkbox" id="update_active" name="update_active" value="active" oninput="set_update_interval()">
+								<input style="width:60px" type = "number" id = "update_interval" name="update_interval" min="0" oninput="set_update_interval()"> s
+							</span>
 						<button id="reload" class="btn btn-shng btn-sm" name="reload" type="submit" value="on"><i class="fas fa-redo"></i>&nbsp;&nbsp;&nbsp;{{_('Aktualisieren')}}&nbsp;</button>
 						<button id="close" class="btn btn-shng btn-sm" title="{{ 'Schließen' }}" onclick="window.close();" ><i class="fas fa-times"></i>&nbsp;&nbsp;&nbsp;{{_('Schließen')}}&nbsp;</button>
 						</form>
