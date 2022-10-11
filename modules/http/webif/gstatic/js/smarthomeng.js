@@ -112,19 +112,37 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
  */
 function shngGetUpdatedData(dataSet=null) {
     if (dataSet) {
-    $.ajax({
-        url: "get_data.html",
-        type: "GET",
-        data: { dataSet : dataSet
-              },
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
-                handleUpdatedData(response, dataSet);
-        },
-        error: function () {
-            console.warn("Error - while getting updated data for dataSet :"+dataSet)
-        }
-    });
+      if (update_params) {
+        console.log("Running page update with dataSet: " + dataSet + " and params: " + update_params);
+        $.ajax({
+            url: "get_data.html",
+            type: "GET",
+            data: { dataSet : dataSet, params: update_params
+                  },
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                    handleUpdatedData(response, dataSet, update_params);
+            },
+            error: function () {
+                console.warn("Error - while getting updated data for dataSet: "+dataSet)
+            }
+        });
+      } else {
+        console.log("Running page update with dataSet: " + dataSet);
+        $.ajax({
+            url: "get_data.html",
+            type: "GET",
+            data: { dataSet : dataSet
+                  },
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                    handleUpdatedData(response, dataSet);
+            },
+            error: function () {
+                console.warn("Error - while getting updated data for dataSet: "+dataSet)
+            }
+        });
+      }
     } else {
     $.ajax({
         url: "get_data.html",
