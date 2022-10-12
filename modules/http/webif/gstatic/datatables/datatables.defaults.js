@@ -37,7 +37,7 @@ $(window).bind('datatables_defaults', function() {
 				 						 headerOffset: top_offset},
 				autoWidth: false,
 				initComplete: function () {$(this).show();setTimeout(function() { $(window).resize(); }, 300);}, // show table (only) after init, adjust height of wrapper after 300ms (for Safari)
-        responsive: {details: {renderer: $.fn.dataTable.Responsive.renderer.listHiddenNodes()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
+        responsive: {details: {renderer: $.fn.dataTable.Responsive.renderer.listHidden()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
 				preDrawCallback: function (oSettings) {
         	pageScrollPos = $(oSettings.nTableWrapper).find('.dataTables_scrollBody').scrollTop();
 					bodyScrollPos = $('html, body').scrollTop();
