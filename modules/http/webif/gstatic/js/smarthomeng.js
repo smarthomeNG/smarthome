@@ -65,6 +65,10 @@ function shngPost(path, params, method='post') {
   * @param {string} text to insert
   */
 function shngInsertText (id, text, table_id=null, highlight=0) {
+    if (typeof text == 'undefined') {
+      console.log("Text for id " + id + " is undefined. Doing nothing.");
+      return;
+    }
     if (table_id == null) {
       element = $("#" + $.escapeSelector(id));
       if (highlight > 0) {
@@ -92,9 +96,9 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
             }
           }
           // update datatable cell
-          $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data(text);
           if (old_text != text) {
-            console.log("Redrawing table because new cell data found: " + text);
+            $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data(text);
+            console.log("Redrawing table because new cell data found: " + text + " for id " + id + ", old text: " + old_text);
             $('#' + table_id).DataTable().draw(false);
           }
         }
