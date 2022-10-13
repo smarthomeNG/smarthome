@@ -28,9 +28,13 @@
 	  window.update_params = '';
 	{%- endif %}
 	{%- if update_interval is defined %}
-	  window.update_interval = {{ update_interval }};
+	  window.update_interval = {{ update_interval|int }};
 	  {%- if update_interval > 0 %}
-	    window.update_active = true;
+			{%- if update_active is defined %}
+				window.update_active = {{ update_active|lower }};
+			{%- else %}
+	    	window.update_active = true;
+			{%- endif %}
 	  {%- else %}
 	    window.update_active = false;
 	  {%- endif %}
@@ -40,7 +44,7 @@
 	{%- endif %}
 
 	// Start page refresh method
-	{%- if update_interval is defined and update_interval > 0 %}
+	{%- if update_interval is defined and update_interval > 0 and update_active %}
 	  // update_interval defines the time between refreshes in ms
 	  refresh.start(function(){
 	      shngGetUpdatedData();
@@ -111,7 +115,7 @@
 						<form action="" method="post">{{_('Auto')}}
 							<span id="autorefresh">
 								<input type="checkbox" id="update_active" name="update_active" value="active" oninput="set_update_interval()">
-								<input style="width:60px" type = "number" id = "update_interval" name="update_interval" min="0" oninput="set_update_interval()"> s
+								<input style="width:60px" type="number" id="update_interval" name="update_interval" min="0" oninput="set_update_interval()"> s
 							</span>
 						<button id="reload" class="btn btn-shng btn-sm" name="reload" type="submit" value="on"><i class="fas fa-redo"></i>&nbsp;&nbsp;&nbsp;{{_('Aktualisieren')}}&nbsp;</button>
 						<button id="close" class="btn btn-shng btn-sm" title="{{ 'Schließen' }}" onclick="window.close();" ><i class="fas fa-times"></i>&nbsp;&nbsp;&nbsp;{{_('Schließen')}}&nbsp;</button>
