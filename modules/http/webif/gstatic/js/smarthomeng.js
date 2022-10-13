@@ -87,8 +87,8 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
         test = $('#' + table_id).DataTable().cell( $("#" + $.escapeSelector(id)), { page:'current'}).data();
         if ( test ) {
           old_text = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data();
+          alternative_old_text = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data().replaceAll('"', '&quot;');
           if (highlight > 0) {
-
             element = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).node();
             // compare old value of cell with new one and highlight
             if (old_text != "..." && old_text != text) {
@@ -96,7 +96,7 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
             }
           }
           // update datatable cell
-          if (old_text != text) {
+          if (old_text != text && alternative_old_text != text) {
             $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data(text);
             console.log("Redrawing table because new cell data found: " + text + " for id " + id + ", old text: " + old_text);
             $('#' + table_id).DataTable().draw(false);
