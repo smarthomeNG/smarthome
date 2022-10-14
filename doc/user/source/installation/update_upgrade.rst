@@ -26,6 +26,7 @@ Die Reihenfolge ist prinzipiell folgende:
 
 - Über das Admin-Interface via **Dienste -> Konfiguration - letzte Sicherung -> Herunterladen** 
   eine Sicherung der Konfiguration erstellen (ein ZIP Archiv wird über den Browser heruntergeladen)
+
 - SmartHomeNG selbst beenden beispielsweise mit 
 
   .. code:: bash
@@ -100,14 +101,14 @@ Jede SmartHomeNG Version erhöht die Anforderungen an die benötigte Python Vers
 :doc:`/installation/anforderungen` daher sollte vor dem Update von SmarthomeNG 
 das Betriebssystem aktualisiert werden.
 
-Bei **Linux** systemen ist damit ein Distributionsupgrade gemeint. Für die aktuelle SmartHomeNG 1.8 also zum Beispiel 
-ein Upgrade auf Debian Buster (10.7). Welche Debian Version welche Python Version mitbringt,
+Bei **Linux** Systemen ist damit ein Distributionsupgrade gemeint. Für die aktuelle SmartHomeNG 1.9 also zum Beispiel 
+ein Upgrade auf Debian Bullseye (11.3). Welche Debian Version welche Python Version mitbringt,
 kann im `Debian Wiki <https://wiki.debian.org/Python>`__ nachgelesen werden.
 
 Zusätzlich müssen noch die in der Komplettanleitung :doc:`/installation/komplettanleitung/02_smarthomeng`
 unter *zusätzliche Linux Pakete installieren* angegebenen Pakete installiert werden.
 
-Für Windows bietet sich eine manuelle Installation von Python 3.8 in der letzten Revision an.
+Für Windows bietet sich eine manuelle Installation von Python 3.9 in der letzten Revision an.
 
 SmartHomeNG 1.8 oder höher wird benötigte Python Bibliotheken selbständig beim ersten Programmstart installieren.
 
@@ -158,25 +159,25 @@ einen Pull durchführen:
 
     .. note::
 
-      Es kann durchaus vorkommen, das das ``git pull`` abgebrochen wird mit einer
-      Fehlermeldung der Art:
+        Es kann durchaus vorkommen, das das ``git pull`` abgebrochen wird mit einer
+        Fehlermeldung der Art:
 
-      .. code-block: python
+        .. code-block: python
 
-         error: Ihre lokalen Änderungen in den folgenden Dateien würden durch den
-         Merge überschrieben werden:
-         requirements/all.txt
-         Bitte committen oder stashen Sie Ihre Änderungen, bevor sie mergen.
-         Abbruch
+            error: Ihre lokalen Änderungen in den folgenden Dateien würden durch den
+            Merge überschrieben werden:
+            requirements/all.txt
+            Bitte committen oder stashen Sie Ihre Änderungen, bevor sie mergen.
+            Abbruch
 
-      In diesem Fall würde ein ``git checkout -- requirements/all.txt`` aus dem
-      aktuellen Branch die fragliche Datei auschecken und damit für ``git pull``
-      wieder überschreibbar machen.
+        In diesem Fall würde ein ``git checkout -- requirements/all.txt`` aus dem
+        aktuellen Branch die fragliche Datei auschecken und damit für ``git pull``
+        wieder überschreibbar machen.
 
 Anschließend müssen noch benötigte Pakete aktualisiert werden.
-Diese werden von Pypi bereitgestellt. Bei SmartHomeNG gibt es zum einen den
-Programmkern und die Plugins. Die Abhängigkeiten von externen Bibliotheken
-sind für den Programmkern und die Plugins aufgeteilt.
+Diese werden von `Pypi <https://Pypi.org>`_  bereitgestellt.
+Bei SmartHomeNG gibt es zum einen den Programmkern und die Plugins. 
+Die Abhängigkeiten von externen Bibliotheken sind für den Programmkern und die Plugins aufgeteilt.
 Um eine Liste der Abhängigkeiten zu erstellen, gibt es ein Skript das unter
 anderem alle Plugin Unterverzeichnisse durchläuft und die Abhängigkeiten
 der Plugins ermittelt. Dies Skript wird aufgerufen mit:
@@ -245,7 +246,7 @@ Upgrade von Smarthome.py
 
 Das letzte Release von Smarthome.py wurde am 14. November 2013 veröffentlicht. 
 Zu der Zeit war *Debian Wheezy* (7.x) gerade ein halbes Jahr alt, *systemd* war 
-in den Kinderschuhen und den eibd mußte man sich selbst kopieren.
+in den Kinderschuhen und den eibd (Vorgänger von knxd) mußte man sich selbst kopieren und übersetzen.
 Es gibt daher in vielen Bereichen etliche Entwicklungsschübe die es rechtfertigen
 eine vollständige Neuinstallation vorzuschlagen. Trotzdem sollte es möglich sein,
 relativ problemlos auf SmartHomeNG umzusteigen.

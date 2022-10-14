@@ -1,23 +1,29 @@
-==========================
-Release 1.x - tt. mmm 2022
-==========================
+============================
+Release 1.9.x - tt. mmm 2022
+============================
 
-Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
+sowie Updates zu einigen Plugins.
+
+.. only: comment
+
+    Dieses Release ist ein Feature-Release. Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
+
 
 .. note::
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. ...
-       (...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. ...
-       (...)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 24. Sept 2022
+       (doc installation regarding knx/knxd)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 25. Sept 2022
+       (russound plugin: provide two functions to suspend and activate plugin…)
 
 
 Überblick
 =========
 
-Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.9.1 sind im
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.9.2 sind im
 folgenden in diesen Release Notes beschrieben.
 
 
@@ -36,9 +42,18 @@ Unterstützte Python Versionen
 -----------------------------
 
 Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.9.x ist **Python 3.7**.
+Automatisierte Tests von SmartHomeNG werden nur in den unterstützten Python Versionen durchgeführt.
 (Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
 zu unterstützten Python Versionen)
 
+|
+
+Allgemeine Änderungen
+=====================
+
+* Die automatisierten Unit Tests von SmartHomeNG wurden von Travis auf Github Workflows umgestellt.
+
+|
 
 Änderungen am Core
 ==================
@@ -64,13 +79,46 @@ Updates in the CORE
 
 * Libs:
 
-  * lib. ...:
+  * lib.db:
+
+    * Fixed deprecation warnings
+
+  * lib.item:
+
+    * Fixed deprecation warnings
+
+  * lib.logic:
+
+    * Implemented r/o attributes as properties
+    * Implemented some logic properties to distinguish them from the list of local variables of that logic
+
+  * lib.metadata:
+
+    * Fixed deprecation warnings
+
+  * lib.scheduler:
+
+    * Setting up a global environment when executing a logic (containing e.g. logger and logic variables)
+
+  * lib.smarthome:
+
+    * Fixed deprecation warnings
+
+  * lib.userfunction:
+
+    * Bugfix
 
 * Modules:
 
-  * ...:
+  * modules.admin:
 
-    * ...
+    * Bugfix to show logs with old and new naming convention
+    * Loglevels adjusted in api_loggers.py
+
+  * modules.websocket:
+
+    * Prevent event listener for event type log from being registered multiple times. Otherwise,
+      this error could lead to multiple entries in status.log widgets.
 
 * Plugins:
 
@@ -80,34 +128,184 @@ Updates in the CORE
 
   * ...
 
+|
 
 Änderungen bei Plugins
 ======================
 
-New Plugins
------------
+Allgmein
 
-For details of the changes of the individual plugins, please refer to the documentation of the respective plugin.
+* Workflows:
 
-* zigbee2mqtt: Plugin to control devices which are linked to Zigbee Gateway equipped with Zigbee2MQTT firmware.
-  Communication is handled through the MQTT module of SmartHomeNG.
+  * Disabled unittests on PRs for the moment because the workflow didn't handle it correctly
+  * Removed lines that trigger test on pull_request
+  * Removed disabled triggers on test_dispatch_workflow.yml
+  * Changed comment for 'PR to wrong branch'
+
+
+Neue Plugins
+------------
+
+Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* <Name>: ...
 
 
 
 Plugin Updates
 --------------
 
-* <name>:
+Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
-  * ...
+
+* avm:
+
+  * Improvement for HKRs: Allow set temperature to be set directly to value 126.5 (off/frost protection mode).
+  * Minor fix for error handling
+
+* backend:
+
+  * Fixed deprecation warnings
+
+* casambi:
+
+  * Minor fix for casambi_id (now integer instead of num)
+
+* database:
+
+  * Reinserted 'duplicate_use' to metadata for item_attribute 'database'
+
+* enocean:
+
+  * Added plausibility check for powermeters
+
+* hue2:
+
+  * Changed requirements to resolve conflict with appletv plugin
+
+* husky2:
+
+  * Added aioautomower version to requirements
+  * Corrected item structure
+  * Fixed type error, corrected cases and updated valid lists
+  * Removed unused command from list
+  * Corrected cases
+  * Added version info to doc
+  * Changed login method to client credentials using apisecret
+  * Added possibility to store last gps points in gpspoints item
+  * Updated version of openlayers
+  * Switched order of lat lng in gpspoints item
+  * Switched order of lat lng for webif
+  * Changed aioautomower version to 2022.9.0
+  * Fixed token refresh by doing a re login
+  * Removed unused items.yaml file
+  * Updated user doc
+  * Corrected token expiration in webif and close asyncio event loop on plugin stop
+  * Added debug messages to plugin logger on token refresh
+  * Raised plugin version to 2.1.0
+  * Added missing activity and added note to user doc
+  * Added unknown command to error log
+  * Fixed to early closing of session on plugin stop
+  * Added SV widget to show actual position and path of mower in google maps
+  * Added eventloop stop before close
+  * Added zoom level and path color to widget options
+  * Removed not existing park command
+  * Renamed SV widget
+  * Packed asyncio eventloop into thread
+
+* knx:
+
+  * Fixed deprecation warnings
+
+* modbus_tcp:
+
+  * Keep connection open and use locking to ensure thread safety
+
+* mpd:
+
+  * Fixed bugs with network data receive and parsing
+  * Increase version number
+
+* neato:
+
+  * Added decoding of command availability status, e.g. "start" command available
+  * If start command with persistent map is rejected due to "not_on_charge_base" error,
+    retry start with non-persistent map
+
+* nut:
+
+  * Fixed initialization of parent class (smartPlugin)
+
+* openweathermap:
+
+  * Update SV widget import
+
+* pluggit:
+
+  * Created a previous version (v1.2.3) before accepting pull request
+
+* resol:
+
+  * Minor improvement-> cleaned-up update_item method
+  * Added frame CRC check
+
+* rtr:
+
+  * Update SV widget import
+
+* rtr2:
+
+  * Update SV widget import
+
+* russound:
+
+  * Provide two functions to suspend and activate plugin without reload
+
+* simulation:
+
+  * Update SV widget import
+
+* sonos:
+
+  * Added appdirs to requirements.txt (needed for SoCo framework)
+  * improved webinterface - list discovered speakers
+  * Fixed play_tunein command; catched ConnectionResetError
+  * Catched WebIf exception occurring for offline speaker
+
+* stateengine:
+
+  * Fix release state (issue when defined after suspend state)
+  * Fix release state
+  * Adapt widget to new SV icon handling
+  * Fix typo in log
+  * Improve laststate and lastconditionset handling
+  * Update laststate after running entry actions instead of before
+  * Fix handling of relative item declarations plus minor improvements
+  * Introduce option to get previous state (before laststate) and previous
+    conditionset being used for actions and conditions
+  * Add SV widget namespace import
+  * Set proper defaults in widget Twig / php otherwise throws warnings
+
+* telegram:
+
+  * Restrict version be <14.0 since then async will be used
+
+xiaomi_vac:
+
+  * Fix issue if no cleaning details are found.
+  * Fix issue when no cleaning details are found (after new firmware flash or reset).
+  * Bump to version 1.2.1
 
 
 Outdated Plugins
 ----------------
 
-The following plugins were already marked in version v1.6 as *deprecated*. This means that the plugins
-are still working, but are not developed further anymore and are removed from the release of SmartHomeNG
-in the next release. User of these plugins should switch to corresponding succeeding plugins.
+Die folgenden Plugins wurden bereits in v1.6 als *deprecated* (veraltet) markiert. Das bedeutet, dass diese
+Plugins zwar noch funktionsfähig sind, aber nicht mehr weiter entwickelt werden. Sie werden in einem kommenden
+Release von SmartHomeNG entfernt werden. Anwender dieser Plugins sollten auf geeignete Nachfolge-Plugins
+wechseln.
 
 * System Plugins
 
@@ -119,7 +317,8 @@ in the next release. User of these plugins should switch to corresponding succee
   * wunderground - the free API is not provided anymore by Wunderground
 
 
-The following plugins are marked as *deprecated* with SmartHomeNG v1.7, because neither user nor tester have been found:
+Die folgenden Plugins wurden in v1.7 als *deprecated* (veraltet) markiert, weil kein Nutzer oder Tester
+dieser Plugins gefunden werden konnte:
 
 * Gateway Plugins
 
@@ -139,19 +338,22 @@ The following plugins are marked as *deprecated* with SmartHomeNG v1.7, because 
 
   * nma
 
-Moreover, the previous mqtt plugin was renamed to mqtt1 and marked as *deprecated*, because the new mqtt
-plugin takes over the functionality. This plugin is based on the mqtt module and the recent core.
+Weiterhin wurde das bisherige mqtt Plugin zu mqtt1 umbenannt und als *deprecated* markiert, da das neue mqtt
+Plugin diese Funktionalität übernimmt. Das neue mqtt Plugin nutzt dazu das mqtt Modul des aktuellen Cores
+von SmartHomeNG.
 
 
 Retired Plugins
 ---------------
 
-The following plugins have been retired. They had been deprecated in one of the preceding releases of SmartHomeNG.
-They have been removed from the plugins repository, but they can still be found on github. Now they reside in
-the **plugin_archive** repository from where they can be downloaded if they are still needed.
+Die folgenden Plugins wurden *retired* (in den RUhestand geschickt). Sie waren in einem der vorangegangenen
+Releases von SmartHomeNG als *deprecated* markiert worden. Diese Plugins wurden aus dem **plugins** Repository
+entfernt, stehen jedoch als Referenz weiterhin zur Verfügung. Diese Plugins wurden in das **plugin_archive**
+Repositiory aufgenommen.
 
 * ...
 
+|
 
 Weitere Änderungen
 ==================
@@ -162,10 +364,10 @@ Tools
 * ...
 
 
-Documentation
+Dokumentation
 -------------
 
-* ...
+* Multiple updates
 * ...
 
 

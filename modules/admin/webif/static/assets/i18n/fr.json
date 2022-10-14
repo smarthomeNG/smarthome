@@ -2,6 +2,7 @@
   "MENU": {
     "SYSTEM": "Système",
     "SYSTEM_PROPERTIES": "Propriétés du système",
+    "SYSTEM_CONFIGURATION": "Configuration du système",
     "SERVICES": "Services",
     "ITEMS": "Objets",
     "ITEM_TREE": "Arborescence des objets",
@@ -20,6 +21,7 @@
     "LOGS": "Journaux",
     "LOGS_DISPLAY": "Afficher les journaux",
     "LOGGER_LIST": "Liste des générateurs de journaux",
+    "LOGGING_CONFIGURATION": "Configuration des journaux",
     "CONFIGURATION": "Configuration",
     "LOGIN": "s'identifier"
   },
@@ -448,6 +450,11 @@
     "NEW_DEFINITION_FILE": "Nouveau fichier",
     "NEW_LOGIC": "Nouvelle logique",
     "NEW_SCENE": "Nouvelle scène",
+    "RELOAD_SCENES": "Szenen neu laden",
+    "RELOAD_SCENE": "Charge",
+    "NEW_FUNCTION": "Nouvelle bibliothèque",
+    "RELOAD_FUNCTIONS": "Tout recharger",
+    "RELOAD_FUNCTION": "Charger",
     "LINE_WRAPPING": "Renvoie à la ligne",
     "TRIGGER": "Déclencher"
   },

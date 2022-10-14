@@ -22,7 +22,6 @@ import datetime
 now = datetime.datetime.now()
 import calendar
 
-today = str(now.day) + '. ' + calendar.month_name[now.month] + ' ' + str(now.year)
 
 # -- General configuration -----------------------------------------------------
 
@@ -83,7 +82,7 @@ shversion = shngversion.get_shng_main_version()
 
 # General information about the project.
 #project = u'SmartHomeNG'
-project = u'Anwenderdokumentation '
+project = u'Dokumentation '
 copyright = u'2016-2022 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp'
 
 # The full version, including alpha/beta/rc tags.
@@ -102,7 +101,7 @@ if os.path.isfile(os.getcwd()+'/doc_version.flg'):
 else:
     release = shngversion.get_shng_docversion()
     commit, commit_short, branch, describe = shngversion._get_git_data()
-release += ' (Stand ' + today
+release += ' (Stand ' + shngversion.get_shng_version_date()
 if branch != 'master':
     release += ', commit '+commit_short
 release += ')'

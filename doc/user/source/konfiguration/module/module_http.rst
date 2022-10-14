@@ -13,10 +13,10 @@
 Module http
 ===========
 
-Dieses Modul erlaubt es Plugins eine Webschnittstelle zu implementieren. Die API wird weiter
-unten beschrieben. Das erste Plugin zur Nutzung dieser API ist das Backend-Plugin.
+Der vom Module http zur Verfügung gestellte Webserver wird genutzt um die Admin GUI zur Verfügung zu stellen.
 
-Es implementiert auch die Basisauthentifizierung für den Zugriff auf Webinterfaces und Webservices.
+Weiterhin erlaubt es dieses Modul in Plugins eine Webschnittstelle zu implementieren. Die API wird weiter
+unten beschrieben. Es implementiert auch die Basisauthentifizierung für den Zugriff auf Webinterfaces und Webservices.
 
 Über Webinterfaces können Plugins Webseiten zur Verfügung stellen, um bei Befarf eine GUI für
 bestimmte Features anzubieten.

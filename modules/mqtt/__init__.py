@@ -72,6 +72,7 @@ class Mqtt(Module):
         try:
             self.broker_hostname = self._parameters['broker_host']
             self.broker_port = self._parameters['broker_port']
+            self.broker_client = self._parameters['broker_client']
             self.broker_monitoring = self._parameters['broker_monitoring']
             self.qos = self._parameters['qos']
             self.last_will_topic = self._parameters['last_will_topic']
@@ -159,6 +160,7 @@ class Mqtt(Module):
 
         self._network_connected_to_broker = False
         self._connected = False
+        self._got_disconnected = False
         self._connect_result = ''
 
         # tls ...
@@ -209,7 +211,7 @@ class Mqtt(Module):
         """
         Establish connection to MQTT broker
         """
-        clientname = platform.uname()[1] + '.MQTT-module'
+        clientname = platform.uname()[1] + '.' + self.broker_client
         self.logger.info("Connecting to broker '{}:{}'. Starting mqtt client '{}'".format(self.broker_ip, self.broker_port, clientname))
         self._client = mqtt.Client(client_id=clientname)
 
@@ -256,6 +258,7 @@ class Mqtt(Module):
         if not from_init:
             self.logger.warning("MQTT broker has been reached. Connection is starting")
         self._network_connected_to_broker = True
+
         return True
 
 
@@ -339,7 +342,7 @@ class Mqtt(Module):
     #  methods to handle mqtt
     # ----------------------------------------------------------------------------------------
 
-    def _add_subscription_definition(self, topic, subscription_source, subscriber_type, callback, payload_type, bool_values):
+    def _add_subscription_definition(self, topic, subscription_source, subscriber_type, callback, payload_type, bool_values, qos=None):
         """
         Add a subscription definition to a defined topic in the _subscribed_topics data
 
@@ -350,12 +353,13 @@ class Mqtt(Module):
         :param payload_type:
         """
         if self._subscribed_topics[topic].get(subscription_source, None):
-            self.logger.info("_add_subscription_definition: Subscription to topic '{}' for logic '{}' already exists, overwriting it".format(topic, subscription_source))
+            self.logger.warning("_add_subscription_definition: Subscription to topic '{}' from subscription_source '{}' already exisis, overwriting it".format(topic, subscription_source))
         self._subscribed_topics[topic][subscription_source] = {}
         self._subscribed_topics[topic][subscription_source]['subscriber_type'] = subscriber_type.lower()
         self._subscribed_topics[topic][subscription_source]['callback'] = callback
         self._subscribed_topics[topic][subscription_source]['payload_type'] = payload_type
         self._subscribed_topics[topic][subscription_source]['bool_values'] = bool_values
+        #self._subscribed_topics[topic]['qos'] = qos
         self.logger.info("_add_subscription_definition: {} '{}' is subscribing to topic '{}'".format(subscriber_type, subscription_source, topic))
         return
 
@@ -406,7 +410,7 @@ class Mqtt(Module):
                 # add topic
                 self._subscribed_topics[topic] = {}
                 # add subscription definition
-                self._add_subscription_definition(topic, source, source_type, callback, payload_type, bool_values)
+                self._add_subscription_definition(topic, source, source_type, callback, payload_type, bool_values, qos)
 
             # subscribe to topic
             try:
@@ -418,7 +422,7 @@ class Mqtt(Module):
             self.logger.info("subscribe_topic: A MQTT Subscription to topic '{}' already exists".format(topic))
             with self._subscribed_topics_lock:
                 # add subscription definition
-                self._add_subscription_definition(topic, source, source_type, callback, payload_type, bool_values)
+                self._add_subscription_definition(topic, source, source_type, callback, payload_type, bool_values, qos)
         return
 
 
@@ -570,21 +574,27 @@ class Mqtt(Module):
     # ----------------------------------------------------------------------------------------
 
 
-    def _get_qos_forTopic(self, item):
+    def _get_qos_forTopic(self, topic, item):
         """
         Return the configured QoS for a topic/item as an integer
 
         :param item:      item to get the QoS for
         :return:          Quality of Service (0..2)
         """
-        qos = self.get_iattr_value(item.conf, 'mqtt_qos')
+        #qos = self.get_iattr_value(item.conf, 'mqtt_qos')
+        #qos = item.get('qos', None)
+        #qos = self._subscribed_topics[topic]['qos']
+        qos = None
         if qos == None:
             qos = self.qos
         return int(qos)
 
 
     def _on_mqtt_log(self, client, userdata, level, buf):
-        # self.logger.info("_on_log: {}".format(buf))
+        if str(buf).startswith('Caught exception'):
+            self.logger.error("_on_log: {}".format(buf))
+        else:
+            self.logger.debug("_on_log: {}".format(buf))
         return
 
 
@@ -676,7 +686,11 @@ class Mqtt(Module):
         self._connect_result = mqtt.connack_string(rc)
 
         if rc == 0:
-            self.logger.info("Connection returned result '{}' (userdata={}) ".format(mqtt.connack_string(rc), userdata))
+            if self._got_disconnected:
+                self.logger.notice("Reconnected to broker")
+                self._got_disconnected = False
+            else:
+                self.logger.info("Connection returned result '{}' (userdata={}) ".format(mqtt.connack_string(rc), userdata))
             self._connected = True
 
             self._subscribe_broker_infos()
@@ -684,8 +698,8 @@ class Mqtt(Module):
             # subscribe to topics to listen for items
             for topic in self._subscribed_topics:
                 item = self._subscribed_topics[topic]
-                self._client.subscribe(topic, qos=self._get_qos_forTopic(item))
-                self.logger.info("Listening on topic '{}' for item '{}'".format(topic, item.id()))
+                self._client.subscribe(topic, qos=self._get_qos_forTopic(topic, item))
+                #self.logger.info("Listening on topic '{}' for item '{}'".format(topic, item.id()))
 
             self.logger.info("self._subscribed_topics = {}".format(self._subscribed_topics))
 
@@ -703,7 +717,13 @@ class Mqtt(Module):
         """
         Callback function called on disconnect
         """
-        self.logger.info("Disconnection returned result '{}' ".format(rc))
+        if rc == 0:
+            self.logger.info(f"Disconnection was successful (rc={rc}'")
+        elif rc == 7:
+            self.logger.warning(f"Disconnected from broker with returncode '{rc}'")
+            self._got_disconnected = True
+        else:
+            self.logger.notice(f"Disconnection returned result '{rc}'")
         return
 
 

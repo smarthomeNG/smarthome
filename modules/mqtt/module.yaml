@@ -60,6 +60,13 @@ parameters:
                  In a standard setup you should not need to configure this parameter.
                  '
 
+    broker_client:
+        type: str
+        default: 'MQTT-module'
+        description:
+            de: 'Client Name für die Broker Kommunikation - Muss nur angegeben werden, falls mehrere SmartHomeNG Installationen zeitgleich mit dem selben Broker kommunizieren sollen'
+            en: 'Client name for broker communication - Must only be specified if multiple SmartHomeNG installations should communicate concurrently with the same broker'
+
     user:
         type: str
         default: ''

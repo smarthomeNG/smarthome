@@ -4,8 +4,8 @@
 SmartHomeNG
 ===========
 
-Anwenderdokumentation
-=====================
+Dokumentation
+=============
 
 SmartHomeNG ist ein System das als Metagateway zwischen verschiedenen "Dingen" fungiert und
 dient der Verbindung unterschiedlicher Geräte-Schnittstellen. Die Standard-Schnittstelle eines
@@ -22,6 +22,11 @@ Das System kann flexibel durch Plugins erweitert werden, wobei die Plugins in fo
 - **System**: Systemnahe Erweiterungen wie Datenbank Anbindung, Visu Anbindung, universelle Zeitschaltuhr,
   Stateengine (endlicher Automat), ...
 
+Die Dokumentation richten sich sowohl an reine Anwender, als auch an Entwickler, die Plugins oder komplexe
+Logiken erstellen wollen. Informationen zur Entwicklung sind in den Abschnitten :doc:`Entwicklung <./entwicklung/entwicklung>`
+und :doc:`Referenz <./referenz/referenz>` zu finden.
+
+
 Diese Dokumentation reflektiert das aktuelle Release:
 
 - **Version des Core**: |release|
@@ -32,7 +37,7 @@ oder im `Chat auf gitter.im <https://gitter.im/smarthomeNG/smarthome>`_ .
 
 .. note::
 
-   **Anmerkungen** und **Änderungswünsche** zu dieser Anwenderdokumentation bitte auf
+   **Anmerkungen** und **Änderungswünsche** zu dieser Dokumentation bitte auf
    `dieser Feedback Seite <https://www.smarthomeng.de/feedback-zur-dokumentation>`_ hinterlassen.
 
 ..    :titlesonly:

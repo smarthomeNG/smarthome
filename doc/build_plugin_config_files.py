@@ -405,7 +405,10 @@ def write_configfile(plg, configfile_dir, language='de'):
     fh.write('.. |_| unicode:: 0xA0\n')
     fh.write('\n')
 
-    write_heading(fh, f"Plugin '{plgname}'", 1)
+    write_heading(fh, f"Plugin '{plgname}' Konfiguration", 1)
+    fh.write('\n')
+    fh.write(f".. index:: Plugins; {plgname} Konfiguration\n")
+    fh.write('\n')
 
     # --------------------------------------------
     # write image for plugin-type and generic text
@@ -459,6 +462,17 @@ def write_configfile(plg, configfile_dir, language='de'):
 
     write_heading(fh, 'Beschreibung', 2)
     write_formatted(fh, get_doc_description(plugin_yaml, language))
+
+    # ---------------------------------
+    # write a note block if special requirements exist
+    # ---------------------------------
+    py_versioncomment = str(plugin_yaml.get('py_versioncomment', ''))
+    if py_versioncomment != '':
+        fh.write('.. attention::\n')
+        fh.write('\n')
+        fh.write(f"    {py_versioncomment}\n")
+        fh.write('\n')
+        fh.write('\n')
 
     # ---------------------------------
     # write Requirements section

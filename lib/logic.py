@@ -100,7 +100,7 @@ class Logics():
         self._logic_dir = smarthome._logic_dir
         self._workers = []
         self._logics = {}
-        self._bytecode = {}
+        #self._bytecode = {}
         self.alive = True
 
         global _logics_instance
@@ -155,9 +155,9 @@ class Logics():
             return False
         logger.debug("Logic: {}".format(name))
         logic = Logic(self._sh, name, config[name], self)
-        if hasattr(logic, 'bytecode'):
+        if hasattr(logic, '_bytecode'):
             self._logics[name] = logic
-            self.scheduler.add(self._logicname_prefix+name, logic, logic.prio, logic.crontab, logic.cycle)
+            self.scheduler.add(self._logicname_prefix+name, logic, logic._prio, logic._crontab, logic._cycle)
         else:
             return False
         # plugin hook
@@ -362,22 +362,22 @@ class Logics():
         if logic == None:
             return info
 
-        info['name'] = logic.name
-        info['enabled'] = logic.enabled
+        info['name'] = logic._name
+        info['enabled'] = logic._enabled
 
         if self.scheduler.return_next(self._logicname_prefix+logic.name):
             info['next_exec'] = self.scheduler.return_next(self._logicname_prefix+logic.name).strftime('%Y-%m-%d %H:%M:%S%z')
 
-        info['cycle'] = logic.cycle
-        info['crontab'] = logic.crontab
+        info['cycle'] = logic._cycle
+        info['crontab'] = logic._crontab
         try:
             info['watch_item'] = logic.watch_item
         except:
             info['watch_item'] = ''
         info['userlogic'] = self.is_userlogic(logic.name)
         info['logictype'] = self.return_logictype(logic.name)
-        info['filename'] = logic.filename
-        info['pathname'] = logic.pathname
+        info['filename'] = logic._filename
+        info['pathname'] = logic._pathname
         try:
             info['description'] = logic.description
         except:
@@ -421,7 +421,7 @@ class Logics():
         mylogic.enable()
 #        self.set_config_section_key(name, 'enabled', True)
         self.set_config_section_key(name, 'enabled', None)
-        return mylogic.enabled
+        return mylogic._enabled
 
 
     def disable_logic(self, name):
@@ -434,7 +434,7 @@ class Logics():
             return False
         mylogic.disable()
         self.set_config_section_key(name, 'enabled', False)
-        return mylogic.enabled
+        return mylogic._enabled
 
 
     def toggle_logic(self, name):
@@ -445,12 +445,12 @@ class Logics():
         if mylogic is None:
             logger.warning("logics.toggle_logic: No logic found with name {}".format(name))
             return False
-        if mylogic.enabled:
+        if mylogic._enabled:
             mylogic.disable()
         else:
             logger.info("toggle_logic: name = {}".format(name))
             mylogic.enable()
-        return mylogic.enabled
+        return mylogic._enabled
 
 
     def trigger_logic(self, name, by='unknown', source=None, value=None):
@@ -471,7 +471,7 @@ class Logics():
         Returns True if userlogic and False if systemlogic or unknown
         """
         try:
-            pathname = str(self.return_logic(name).pathname)
+            pathname = str(self.return_logic(name)._pathname)
         except:
             return False
         return os.path.basename(os.path.dirname(pathname)) == 'logics'
@@ -518,9 +518,9 @@ class Logics():
         if mylogic == None:
             return False
 
-        mylogic.enabled = False
-        mylogic.cycle = None
-        mylogic.crontab = None
+        mylogic._enabled = False
+        mylogic._cycle = None
+        mylogic._crontab = None
 
         # Scheduler entfernen
         self.scheduler.remove(self._logicname_prefix+name)
@@ -552,7 +552,7 @@ class Logics():
         if mylogic is None:
             return None
         else:
-            return mylogic.crontab
+            return mylogic._crontab
 
 
     def return_logictype(self, name):
@@ -691,11 +691,11 @@ class Logics():
 
         # load /etc/logic.yaml
         conf_filename = os.path.join(self._get_etc_dir(), 'logic')
-        conf = shyaml.yaml_load_roundtrip(conf_filename)
+        _conf = shyaml.yaml_load_roundtrip(conf_filename)
 
         config_list = []
-        if conf is not None:
-            section_dict = conf.get(section, {})
+        if _conf is not None:
+            section_dict = _conf.get(section, {})
 #            logger.warning("read_config_section: read_config_section('{}') = {}".format(section, str(section_dict) ))
             for key in section_dict:
                 if isinstance(section_dict[key], list):
@@ -930,6 +930,8 @@ class Logics():
 
 
 # ------------------------------------------------------------------------------------
+#   Class Logic
+# ------------------------------------------------------------------------------------
 
 class Logic():
     """
@@ -941,60 +943,262 @@ class Logic():
     def __init__(self, smarthome, name, attributes, logics):
         self.sh = smarthome               # initialize to use 'logic.sh' in logics
         self.logger = logger              # initialize to use 'logic.logger' in logics
-        self.name = name
+        self._name = name
         self.shtime = logics.shtime
-        self.lname = "Logic '"+name+"'"   # string is to be used in item assignements sh.xxx(<value>, logic.lname)
         self._logics = logics             # access to the logics api
-        self.enabled = True if 'enabled' not in attributes else Utils.to_bool(attributes['enabled'])
-        self.crontab = None
-        self.cycle = None
-        self.prio = 3
-        self.last = None
+        self._enabled = True if 'enabled' not in attributes else Utils.to_bool(attributes['enabled'])
+        #self.enabled = self._enabled
+        self._crontab = None
+        self._cycle = None
+        self._prio = 3
+        #self.last = None
         self._last_run = None
-        self.conf = attributes
+        self._trigger_dict = None
+        self._watch_item = []
+        self._conf = attributes
         self.scheduler = Logics.get_instance().scheduler
         self.__methods_to_trigger = []
         if attributes != 'None':
             # Fills crontab, cycle and other parameters
             for attribute in attributes:
-                if attribute != 'enabled':
+                if attribute == 'pathname':
+                    vars(self)['_pathname'] = attributes[attribute]
+                elif attribute == 'filename':
+                    vars(self)['_filename'] = attributes[attribute]
+                elif attribute == 'watch_item':
+                    vars(self)['_watch_item'] = attributes[attribute]
+                elif attribute == 'cycle':
+                    vars(self)['_cycle'] = attributes[attribute]
+                elif attribute == 'crontab':
+                    vars(self)['_crontab'] = attributes[attribute]
+                elif attribute != 'enabled':
                     vars(self)[attribute] = attributes[attribute]
-            self.prio = int(self.prio)
+            self._prio = int(self._prio)
             self._generate_bytecode()
         else:
-            logger.error("Logic {} is not configured correctly (configuration has no attibutes)".format(self.name))
+            logger.error("Logic {} is not configured correctly (configuration has no attibutes)".format(self._name))
 
 
     def id(self):
         """
         Returns the id of the loaded logic
         """
-        return self.name
+        return self._name
 
     def __str__(self):
-        return self.name
+        return self._name
 
     def __call__(self, caller='Logic', source=None, value=None, dest=None, dt=None):
-        if self.enabled:
-            self.scheduler.trigger(self._logicname_prefix+self.name, self, prio=self.prio, by=caller, source=source, dest=dest, value=value, dt=dt)
+        if self._enabled:
+            self.scheduler.trigger(self._logicname_prefix+self._name, self, prio=self._prio, by=caller, source=source, dest=dest, value=value, dt=dt)
+
+    @property
+    def name(self):
+        """
+        Property: name
+
+        :param value: name of the logic
+        :type value: str
+
+        :return: name of the item
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, value):
+
+        self.logger.warning(f"'logic.name' is a readonly property and the value '{value}' can not be assigned to it")
+        #if not isinstance(value, str):
+        #    self._cast_warning(value)
+        #    value = '{}'.format(value)
+        #if value == '':
+        #    self._item._name = self._item._path
+        #else:
+        #    self._item._name = value
+        return
+
+    def log_readonly_warning(self, prop, value):
+
+        self.logger.warning(f"'logic.{prop}' is a readonly property and the value '{value}' can not be assigned to it")
+
+
+    @property
+    def lname(self):
+        """
+        Property: lname
+
+        :param value: string with the name of the logic for information in value assignements to items
+        :type value: str
+
+        :return: name of the item
+        :rtype: str
+        """
+        return "Logic ' "+self._name+"'"   # string is to be used in item assignements sh.xxx(<value>, logic.lname)
+
+    @lname.setter
+    def lname(self, value):
+
+        self.log_readonly_warning('lname', value)
+        return
+
+
+    @property
+    def filename(self):
+        """
+        Property: filename
+
+        :return: filename of the logic
+        :rtype: str
+        """
+        return self._filename
+
+    @filename.setter
+    def filename(self, value):
+
+        self.log_readonly_warning('filename', value)
+        return
+
+
+    @property
+    def pathname(self):
+        """
+        Property: pathname
+
+        :return: pathname of the logic
+        :rtype: str
+        """
+        return self._pathname
+
+    @pathname.setter
+    def pathname(self, value):
+
+        self.log_readonly_warning('pathname', value)
+        return
+
+
+    @property
+    def conf(self):
+        """
+        Property: conf
+
+        :return: conf of the logic
+        :rtype: collections.OrderedDict
+        """
+        return self._conf
+
+    @conf.setter
+    def conf(self, value):
+
+        self.log_readonly_warning('conf', value)
+        return
+
+
+    @property
+    def cycle(self):
+        """
+        Property: cycle
+
+        :return: cycle attribute of the logic
+        :rtype: str
+        """
+        return self._cycle
+
+    @cycle.setter
+    def cycle(self, value):
+
+        self.log_readonly_warning('cycle', value)
+        return
+
+
+    @property
+    def crontab(self):
+        """
+        Property: crontab
+
+        :return: crontab attribute of the logic
+        :rtype: str
+        """
+        return self._crontab
+
+    @crontab.setter
+    def crontab(self, value):
+
+        self.log_readonly_warning('crontab', value)
+        return
+
+
+    @property
+    def prio(self):
+        """
+        Property: prio
+
+        :return: prio attribute of the logic
+        :rtype: str
+        """
+        return self._prio
+
+    @prio.setter
+    def prio(self, value):
+
+        #self.log_readonly_warning('prio', value)
+        self._prio = value
+        return
+
+
+    @property
+    def trigger_dict(self):
+        """
+        Property: trigger_dict
+
+        :return: trigger_dict attribute of the logic
+        :rtype: dict
+        """
+        return self._trigger_dict
+
+    @trigger_dict.setter
+    def trigger_dict(self, value):
+
+        #self.log_readonly_warning('trigger_dict', value)
+        self._trigger_dict = value
+        return
+
+
+    @property
+    def watch_item(self):
+        """
+        Property: watch_item
+
+        :return: watch_item attribute of the logic
+        :rtype: list
+        """
+        return self._watch_item
+
+    @watch_item.setter
+    def watch_item(self, value):
+
+        #self.log_readonly_warning('watch_item', value)
+        self._watch_item = value
+        return
+
 
     def enable(self):
         """
         Enables the loaded logic
         """
-        self.enabled = True
+        self._enabled = True
 
     def disable(self):
         """
         Disables the loaded logic
         """
-        self.enabled = False
+        self._enabled = False
 
     def is_enabled(self):
         """
         Is the loaded logic enabled?
         """
-        return self.enabled
+        return self._enabled
 
     def last_run(self):
         """
@@ -1016,26 +1220,26 @@ class Logic():
 
 
     def trigger(self, by='Logic', source=None, value=None, dest=None, dt=None):
-        if self.enabled:
-            self.scheduler.trigger(self._logicname_prefix+self.name, self, prio=self.prio, by=by, source=source, dest=dest, value=value, dt=dt)
+        if self._enabled:
+            self.scheduler.trigger(self._logicname_prefix+self._name, self, prio=self._prio, by=by, source=source, dest=dest, value=value, dt=dt)
         else:
-            logger.info("trigger: Logic '{}' not triggered because it is disabled".format(self.name))
+            logger.info("trigger: Logic '{}' not triggered because it is disabled".format(self._name))
 
     def _generate_bytecode(self):
-        if hasattr(self, 'pathname'):
-            if not os.access(self.pathname, os.R_OK):
-                logger.warning("{}: Could not access logic file ({}) => ignoring.".format(self.name, self.pathname))
+        if hasattr(self, '_pathname'):
+            if not os.access(self._pathname, os.R_OK):
+                logger.warning("{}: Could not access logic file ({}) => ignoring.".format(self._name, self._pathname))
                 return
             try:
-                f = open(self.pathname, encoding='UTF-8')
+                f = open(self._pathname, encoding='UTF-8')
                 code = f.read()
                 f.close()
                 code = code.lstrip('\ufeff')  # remove BOM
-                self.bytecode = compile(code, self.pathname, 'exec')
+                self._bytecode = compile(code, self._pathname, 'exec')
             except Exception as e:
                 logger.exception("Exception: {}".format(e))
         else:
-            logger.warning("{}: No filename specified => ignoring.".format(self.name))
+            logger.warning("{}: No pathname specified => ignoring.".format(self._name))
 
     def add_method_trigger(self, method):
         self.__methods_to_trigger.append(method)

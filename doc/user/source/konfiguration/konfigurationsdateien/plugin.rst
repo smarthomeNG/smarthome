@@ -1,7 +1,9 @@
-.. index:: Plugins; Konfigurationsdatei /etc/plugin.yaml
+
+.. index:: Plugin Konfiguration; Konfigurationsdatei /etc/plugin.yaml
 .. index:: Konfigurationsdateien; /etc/plugin.yaml
 
 .. _`plugin.yaml`:
+
 
 plugin.yaml
 ===========

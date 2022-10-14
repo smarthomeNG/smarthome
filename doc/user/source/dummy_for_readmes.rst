@@ -9,7 +9,6 @@
    :titlesonly:
    :hidden:
 
-   /admonition_arten.rst
    /dev/README.md
    /dev/sample_module/README.md
    /dev/sample_mqttplugin/user_doc.rst
@@ -20,6 +19,7 @@
    /modules/mqtt/README.md
    /ideen_kommendes_release.rst
    /vorlagen/*
+   /gedankenstuetzen/*
 
 .. toctree::
    :maxdepth: 2

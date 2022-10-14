@@ -105,8 +105,8 @@ die in der Konfigurationsdatei ../etc/smarthome.yaml abgelegt sind.
 Der Button ```Core neu starten``` wir erst aktiv, wenn geänderte Einstellungen gesichert wurden.
 
 
-.. index:: Konfiguration; http
-.. index:: http; Konfiguration (Admin GUI)
+.. index:: Konfiguration; http Modul
+.. index:: http Modul; Konfiguration (Admin GUI)
 
 Http Modul
 ==========
@@ -121,8 +121,8 @@ sind.
    :class: screenshot
 
 
-.. index:: Konfiguration; Admin Modul
-.. index:: Admin Modul; Konfiguration
+.. index:: Konfiguration; admin Modul
+.. index:: admin Modul; Konfiguration
 
 Admin Modul
 ===========
@@ -147,8 +147,8 @@ Administrations-Interfaces nach Ablauf der halben Gültigkeits-Dauer das Token e
 mit **login_experiation** festgelegte Dauer gültig ist.
 
 
-.. index:: Konfiguration; mqtt
-.. index:: mqtt Konfiguration
+.. index:: Konfiguration; mqtt Modul
+.. index:: mqtt Modul; Konfiguration
 
 MQTT Modul
 ==========

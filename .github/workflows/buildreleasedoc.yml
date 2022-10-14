@@ -1,0 +1,74 @@
+name: "Build doc from master"
+#on: [workflow_dispatch, push]
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04 #latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ '3.8' ]
+    name: Python ${{ matrix.python-version }}
+    steps:
+      - name: update OS (Ubuntu)
+        run: sudo apt-get update
+      - run: sudo apt-get install libudev-dev
+      - run: sudo apt-get install librrd-dev libpython3-dev
+      - run: sudo apt-get install gcc --only-upgrade
+      - uses: actions/checkout@v2
+      - name: Checkout SmartHomeNG DEVELOP Branch
+        uses: actions/checkout@v2
+        with:
+          repository: smarthomeNG/smarthome
+          ref: master
+          path: smarthomeng
+      - name: Checkout SmartHomeNG/plugins DEVELOP Branch
+        uses: actions/checkout@v2
+        with:
+          repository: smarthomeNG/plugins
+          ref: master
+          path: smarthomeng/plugins
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
+      - name: Print Python Version
+        run: python --version
+      - run: python3 -m pip install --upgrade pip #==19.3.1
+      #- run: pip install tox-travis virtualenv>=20.0.8 --upgrade
+
+      - name: Install requirements for documentation build
+        run: pip install -r smarthomeng/doc/requirements.txt
+      - run: pip install attrs  # install seperatly until requirements in master branch are updated
+
+      - name: Build Requirements for SmartHomeNG
+        run: python3 smarthomeng/tools/build_requirements.py
+      - name: Install SmartHomeNG base requirements
+        # base requirements are needed for building of documentation
+        run: pip install -r smarthomeng/requirements/base.txt
+      - name: List installed packages
+        run: pip list
+
+      - name: Build documentation
+        working-directory: ./smarthomeng/doc
+        run: bash ./build_doc_local.sh
+
+      - name: Deploy documentation
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: release_doc # The branch the action should deploy to.
+          folder: ./smarthomeng/doc/user/build/html # The folder the action should deploy.
+
+      #- name: Deploy documentation to seperate repo smarthome
+      #  uses: JamesIves/github-pages-deploy-action@v4.3.3
+      #  with:
+      #    branch: release_doc # The branch the action should deploy to.
+      #    folder: ./smarthomeng/doc/user/build/html # The folder the action should deploy.
+      #    repository-name: 'smarthomeNG/smarthome'
+      #    token: ${{ secrets.PAT_TOKEN }}

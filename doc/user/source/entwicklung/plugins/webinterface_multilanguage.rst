@@ -13,27 +13,25 @@ Im Beispiel des Abschnitts **Webinterface mit Inhalt füllen**
 
       .. code-block:: HTML
 
-         <div class="table-responsive" style="margin-left: 3px; margin-right: 3px;" class="row">
-             <div class="col-sm-12">
-                 <table class="table table-striped table-hover pluginList">
-                     <thead>
-                         <tr>
-                             <th>{{ _('Item') }}</th>
-                             <th>{{ _('Typ') }}</th>
-                             <th>{{ _('knx_dpt') }}</th>
-                         </tr>
-                     </thead>
-                     <tbody>
-                         {% for item in items %}
-                             <tr>
-                                 <td class="py-1">{{ item._path }}</td>
-                                 <td class="py-1">{{ item._type }}</td>
-                                 <td class="py-1">{{ item.conf['knx_dpt'] }}</td>
-                             </tr>
-                         {% endfor %}
-                     </tbody>
-                 </table>
-             </div>
+        <div class="container-fluid m-2 table-resize">
+           <table id="maintable" class="table table-striped table-hover pluginList dataTableAdditional">
+               <thead>
+                   <tr>
+                       <th>{{ _('Item') }}</th>
+                       <th>{{ _('Typ') }}</th>
+                       <th>{{ _('knx_dpt') }}</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   {% for item in items %}
+                       <tr>
+                           <td class="py-1">{{ item._path }}</td>
+                           <td class="py-1">{{ item._type }}</td>
+                           <td class="py-1">{{ item.conf['knx_dpt'] }}</td>
+                       </tr>
+                   {% endfor %}
+               </tbody>
+           </table>
          </div>
 
 sind die drei Spaltenüberschriften als mehrsprachig deklariert. Üblicherweise würden diese Überschriften wie folgt aussehen:
@@ -53,4 +51,3 @@ Um als mehrsprachig deklariert zu werden, muss der Text sowohl als Argument der 
          <th>{{ _('knx_dpt') }}</th>
 
 Mehrsprachigkeit ist detailliert auf der Seite :doc:`Multi-Language Support <multilanguage>` beschrieben.
-
