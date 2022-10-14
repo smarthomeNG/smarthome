@@ -120,9 +120,9 @@
 -->
 {% set tab1title = "<strong>" ~ p.get_shortname() ~ " Items</strong> (" ~ item_count ~ ")" %}
 {% block bodytab1 %}
-<div class="container-fluid m-2 table-resize dataTableAdditional">
+<div class="container-fluid m-2" id="resize_wrapper">
 	{{ _('Hier kommt der Inhalt des Webinterfaces hin.') }}
-	<table class="table table-striped table-hover pluginList" id="maintable">
+	<table class="table table-striped table-hover pluginList display" id="maintable">
 		<thead>
 		<tr>
 			<th>Item</th>
