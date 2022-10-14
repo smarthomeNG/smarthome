@@ -98,7 +98,7 @@ Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleif
 .. code-block:: html+jinja
 
     {% block **bodytab1** %}
-        <div class="container-fluid m-2 table-resize">
+        <div class="container-fluid m-2" id="resize_wrapper">
             <table id="#maintable" class="table table-striped table-hover pluginList dataTableAdditional">
                 <thead>
                     <tr>
@@ -145,7 +145,7 @@ dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hie
     ...
 
     {% block **bodytab1** %}
-        <div class="container-fluid m-2 table-resize">
+        <div class="container-fluid m-2" id="resize_wrapper">
             <table id="#maintable" class="table table-striped table-hover pluginList dataTableAdditional">
                 <thead>
                     <tr>
@@ -268,6 +268,8 @@ anzugeben ist (0 wäre die erste Tabellenspalte, 2 die zweite, etc.).
 .. code-block:: html+jinja
 
     table = $('#maintable').DataTable( {
+      "pageLength": webif_pagelength,
+      "pageResize": resize,
       "columnDefs": [{ "targets": 0, "className": "none"}].concat($.fn.dataTable.defaults.columnDefs)
     } );
 
