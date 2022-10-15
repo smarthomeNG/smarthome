@@ -22,12 +22,12 @@
 		{%- if dataSet is defined %}
 		  window.dataSet = '{{ dataSet }}';
 		{%- else %}
-		  window.dataSet = '';
+		  window.dataSet = null;
 		{%- endif %}
 		{%- if update_params is defined %}
 		  window.update_params = '{{ update_params }}';
 		{%- else %}
-		  window.update_params = '';
+		  window.update_params = null;
 		{%- endif %}
 		{%- if update_interval is defined %}
 		  window.update_interval = {{ update_interval|int }};
@@ -35,14 +35,20 @@
 				{%- if update_active is defined %}
 					window.update_active = {{ update_active|lower }};
 				{%- else %}
-		    	window.update_active = true;
+					{% set update_active = true %}
 				{%- endif %}
 		  {%- else %}
-		    window.update_active = false;
+				{% set update_active = false %}
 		  {%- endif %}
 		{%- else %}
-		  window.update_interval = '';
-		  window.update_active = false;
+		  window.update_interval = 0;
+		  {% set update_active = false %}
+		{%- endif %}
+		window.update_active = {{ update_active|lower }};
+		{%- if update_blocked is defined %}
+			window.update_blocked = {{ update_blocked|lower }};
+		{%- else %}
+			window.update_blocked = false;
 		{%- endif %}
 
 		// Start page refresh method
