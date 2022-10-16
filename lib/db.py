@@ -89,31 +89,31 @@ class Database():
         'pyformat' : {'input_token' : '?', 'output_token' : '%(arg{0})s', 'output_name' : 'arg{0}'}
       },
       'format' : {
-        'qmark'    : {'input_token' : re.compile('%\w+'), 'output_token' : '?'},
+        'qmark'    : {'input_token' : re.compile(r'%\w+'), 'output_token' : '?'},
         'format'   : {},
-        'numeric'  : {'input_token' : re.compile('%\w+'), 'output_token' : ':{0}'},
-        'named'    : {'input_token' : re.compile('%\w+'), 'output_token' : ':arg{0}', 'output_name' : 'arg{0}'},
-        'pyformat' : {'input_token' : re.compile('%\w+'), 'output_token' : '%(arg{0})s', 'output_name' : 'arg{0}'}
+        'numeric'  : {'input_token' : re.compile(r'%\w+'), 'output_token' : ':{0}'},
+        'named'    : {'input_token' : re.compile(r'%\w+'), 'output_token' : ':arg{0}', 'output_name' : 'arg{0}'},
+        'pyformat' : {'input_token' : re.compile(r'%\w+'), 'output_token' : '%(arg{0})s', 'output_name' : 'arg{0}'}
       },
       'numeric' : {
-        'qmark'    : {'input_token' : re.compile(':(\d+)'), 'output_token' : '?', 'input_name' : '{1}'},
-        'format'   : {'input_token' : re.compile(':(\d+)'), 'output_token' : '%s', 'input_name' : '{1}'},
+        'qmark'    : {'input_token' : re.compile(r':(\d+)'), 'output_token' : '?', 'input_name' : '{1}'},
+        'format'   : {'input_token' : re.compile(r':(\d+)'), 'output_token' : '%s', 'input_name' : '{1}'},
         'numeric'  : {},
-        'named'    : {'input_token' : re.compile(':(\d+)'), 'output_token' : ':arg{1}', 'input_name' : '{1}', 'output_name' : 'arg{1}'},
-        'pyformat' : {'input_token' : re.compile(':(\d+)'), 'output_token' : '%(arg{1})s', 'output_name' : 'arg{1}'}
+        'named'    : {'input_token' : re.compile(r':(\d+)'), 'output_token' : ':arg{1}', 'input_name' : '{1}', 'output_name' : 'arg{1}'},
+        'pyformat' : {'input_token' : re.compile(r':(\d+)'), 'output_token' : '%(arg{1})s', 'output_name' : 'arg{1}'}
       },
       'named' : {
-        'qmark'    : {'input_token' : re.compile(':(\w+)'), 'output_token' : '?', 'input_name' : '{1}'},
-        'format'   : {'input_token' : re.compile(':(\w+)'), 'output_token' : '%s', 'input_name' : '{1}'},
-        'numeric'  : {'input_token' : re.compile(':(\w+)'), 'output_token' : ':{0}', 'input_name' : '{1}'},
+        'qmark'    : {'input_token' : re.compile(r':(\w+)'), 'output_token' : '?', 'input_name' : '{1}'},
+        'format'   : {'input_token' : re.compile(r':(\w+)'), 'output_token' : '%s', 'input_name' : '{1}'},
+        'numeric'  : {'input_token' : re.compile(r':(\w+)'), 'output_token' : ':{0}', 'input_name' : '{1}'},
         'named'    : {},
-        'pyformat' : {'input_token' : re.compile(':(\w+)'), 'output_token' : '%({1})s', 'input_name' : '{1}', 'output_name' : '{1}'}
+        'pyformat' : {'input_token' : re.compile(r':(\w+)'), 'output_token' : '%({1})s', 'input_name' : '{1}', 'output_name' : '{1}'}
       },
       'pyformat' : {
-        'qmark'    : {'input_token' : re.compile('%\((\w+)\)\w+'), 'output_token' : '?', 'input_name' : '{1}'},
-        'format'   : {'input_token' : re.compile('%\((\w+)\)\w+'), 'output_token' : '%s', 'input_name' : '{1}'},
-        'numeric'  : {'input_token' : re.compile('%\((\w+)\)\w+'), 'output_token' : ':{0}', 'input_name' : '{1}'},
-        'named'    : {'input_token' : re.compile('%\((\w+)\)\w+'), 'output_token' : ':{1}', 'input_name' : '{1}', 'output_name' : '{1}'},
+        'qmark'    : {'input_token' : re.compile(r'%\((\w+)\)\w+'), 'output_token' : '?', 'input_name' : '{1}'},
+        'format'   : {'input_token' : re.compile(r'%\((\w+)\)\w+'), 'output_token' : '%s', 'input_name' : '{1}'},
+        'numeric'  : {'input_token' : re.compile(r'%\((\w+)\)\w+'), 'output_token' : ':{0}', 'input_name' : '{1}'},
+        'named'    : {'input_token' : re.compile(r'%\((\w+)\)\w+'), 'output_token' : ':{1}', 'input_name' : '{1}', 'output_name' : '{1}'},
         'pyformat' : {}
       },
     }

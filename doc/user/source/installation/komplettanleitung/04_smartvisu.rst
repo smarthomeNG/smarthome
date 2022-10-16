@@ -1,5 +1,5 @@
 
-.. index:: smartVISU installieren
+.. index:: smartVISU; Installation
 
 .. role:: bluesup
 .. role:: redsup
@@ -49,9 +49,9 @@ das für den **Apache2** Webserver zugänglich ist:
 
 Bitte auf den **Punkt** am Ende des **git clone** Kommandos achten!
 
-Eine Besonderheit des Apache Webservers ist sein spezieller Umgang mit einem Ordner namens "icons" im Root-Verzeichnis. Da smartVISU einen solchen Ordner verwendet, sollte sie immer wie oben angegeben in einem Unterverzeichnis angelegt werden, damit keine Konflikte entstehen. Dies gilt auch für Docker-Umgebungen. 
+Eine Besonderheit des Apache Webservers ist sein spezieller Umgang mit einem Ordner namens "icons" im Root-Verzeichnis. Da smartVISU einen solchen Ordner verwendet, sollte sie immer wie oben angegeben in einem Unterverzeichnis angelegt werden, damit keine Konflikte entstehen. Dies gilt auch für Docker-Umgebungen.
 
-Für den ordnungsgemäßen Betrieb braucht die SmartVISU noch das SmartHomeNG Plugin **smartvisu** und das **Websocket-Modul** (oder 
+Für den ordnungsgemäßen Betrieb braucht die SmartVISU noch das SmartHomeNG Plugin **smartvisu** und das **Websocket-Modul** (oder
 "visu_websocket", das aber seit v1.8 deprecated ist). Beide sind in der **plugin.yaml.default** und **module.yaml.default** bereits vorkonfiguriert
 und werden beim ersten Start nach einer frischen Installation in die Einstellungen
 übernommen.
@@ -134,7 +134,7 @@ SmartHomeNG Plugin **visu\_smartvisu**
     smartVISU. Eine umfassende aktuelle Kurzanleitung kann nachinstalliert werden. Wie das geht, ist weiter
     oben beschrieben.
     Zudem gibt es seit smartVISU v3.0 den Widget Assistenten, mit dem die benötigten Widgets parametriert,
-    getestet und in die Zwischenablage kopiert werden können. Der Widget Assistent ist über das 
+    getestet und in die Zwischenablage kopiert werden können. Der Widget Assistent ist über das
     Systemmenü zu erreichen.
 
 Mit dem Plugin **smartvisu** können aus der Definition der Items in SmartHomeNG automatisch Visuseiten

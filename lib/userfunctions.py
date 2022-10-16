@@ -68,7 +68,7 @@ def import_user_module(m):
         except:
             exec( f"{m}._DESCRIPTION = _uf_description" )
 
-        _logger.notice(translate("Imported userfunctions from '{mmodule}' v{version} - {description}", {'module': m, 'version':_uf_version, 'description': _uf_description}))
+        _logger.notice(translate("Imported userfunctions from '{module}' v{version} - {description}", {'module': m, 'version':_uf_version, 'description': _uf_description}))
 
         return True
 
@@ -133,6 +133,7 @@ def reload(userlib):
             return True
     else:
         if import_user_module(userlib):
+            _user_modules.append(userlib)
             #_logger.notice(translate("Reload: Loaded new userfunctions '{module}'", {'module': userlib}))
             return True
         else:

@@ -1,7 +1,7 @@
 :tocdepth: 4
 
 .. index:: Visualisierung mit smartVISU
-.. index:: smartVISU
+.. index:: smartVISU; Visualisierung mit smartVISU
 
 ###############################################
 Visualisierung mit smartVISU :greensup:`Update`

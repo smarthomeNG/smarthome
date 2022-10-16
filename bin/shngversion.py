@@ -23,6 +23,7 @@
 import os
 import sys
 import subprocess
+import datetime
 
 sys.path.append('..')
 
@@ -81,8 +82,13 @@ from lib.utils import Version
 # Update auf 1.9.1.1  wg. Kennzeichnung des Stands als "nach dem v1.9.1 Release"
 # Update auf 1.9.1.2  wg. zusätzlicher Log Level"
 
-shNG_version = '1.9.1.2'
+# Update auf 1.9.2    wg. Release
+# Update auf 1.9.2.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.9.2 Release"
+# Update auf 1.9.2.2  wg. Globals innerhalb von Logiken"
+
+shNG_version = '1.9.2.2'
 shNG_branch = 'develop'
+shNG_releasedate = '2. Mai 2022'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
 
 # ---------------------------------------------------------------------------------
 FileBASE = None
@@ -136,6 +142,14 @@ def get_shng_version():
     else:
         VERSION += '-'+commit_short+'.'+branch
     return VERSION
+
+def get_shng_version_date():
+    now = datetime.datetime.now()
+
+    if shNG_branch == 'master':
+        return shNG_releasedate
+    else:
+        return now.strftime("%d. %B %Y")
 
 def get_shng_branch():
     commit, commit_short, branch, describe = _get_git_data()

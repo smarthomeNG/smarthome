@@ -16,6 +16,7 @@ sphinx-tabs
 # the replacement to support Markdown like Readme.md is MyST
 # see at https://www.sphinx-doc.org/en/master/usage/markdown.html and
 # at https://myst-parser.readthedocs.io/en/latest/using/intro.html for a primer on MyST
+attrs
 myst-parser<=0.16.1
 
 ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'

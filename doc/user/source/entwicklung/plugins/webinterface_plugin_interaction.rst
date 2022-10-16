@@ -125,6 +125,7 @@ Tabellen in einem ``bodytab?`` können mit einer Schleife befüllt werden, das i
 .. code-block:: html+jinja
 
     {% block **bodytab1** %}
+
         <div class="container-fluid m-2" id="resize_wrapper">
             <table id="maintable" class="table table-striped table-hover pluginList display">
                 <thead>

@@ -196,10 +196,8 @@ Version aktuelle Python Version und die zwei Vorgängerversionen.**
 
   "v1.2 und davor",  "diverse",     "Python 3.2, 3.3, 3.4"
   "v1.3",            "Python 3.5",  "Python 3.3, 3.4, 3.5"
-  "v1.4",            "Python 3.6",  "Python 3.4, 3.5, 3.6"
-  "v1.5",            "Python 3.6",  "Python 3.4, 3.5, 3.6"
-  "v1.6",            "Python 3.7",  "Python 3.5, 3.6, 3.7"
-  "v1.7",            "Python 3.7",  "Python 3.5, 3.6, 3.7"
+  "v1.4, v1.5",      "Python 3.6",  "Python 3.4, 3.5, 3.6"
+  "v1.6, v1.7",      "Python 3.7",  "Python 3.5, 3.6, 3.7"
   "v1.8",            "Python 3.8",  "Python 3.6, 3.7, 3.8"
   "v1.9",            "Python 3.9",  "Python 3.7, 3.8, 3.9"
   "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10"

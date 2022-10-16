@@ -219,7 +219,7 @@ class SmartHome():
         # set default timezone to UTC
         self.shtime = Shtime(self)
 
-        threading.currentThread().name = 'Main'
+        threading.current_thread().name = 'Main'
         self.alive = True
 
         import bin.shngversion

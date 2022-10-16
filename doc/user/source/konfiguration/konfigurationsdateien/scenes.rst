@@ -215,6 +215,7 @@ Beispiel muss die Datei den Namen **wohnung.buero.szenen.yaml** tragen.
         - {item: wohnung.buero.dreieckschrank.onoff, value: True, learn: false}
 
 
+
 .. code-block:: yaml
    :caption: Beispiel der Szenen Item-Definition in der items.yaml
 

@@ -59,7 +59,8 @@ source_encoding = 'utf-8-sig'
 master_doc = 'index'
 
 # To get rid of the ¶ sign on descriptions over a box
-html_add_permalinks = ""
+#html_add_permalinks = ""
+html_permalinks = True
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
