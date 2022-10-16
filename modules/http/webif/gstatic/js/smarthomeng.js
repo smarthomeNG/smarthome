@@ -86,17 +86,20 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
         // check if cell id exists on current page
         test = $('#' + table_id).DataTable().cell( $("#" + $.escapeSelector(id)), { page:'current'}).data();
         if ( test ) {
-          old_text = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data().replace(/\s\s+/g, ' ');;
-          alternative_old_text = old_text.replaceAll('"', '&quot;');
+          // fix HTML entities and quotation
+          old_text = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data().replace(/\s\s+/g, ' ').replace(/[\u00A0-\u9999]/g, function(i) { return '&#'+i.charCodeAt(0)+';'; }).trim().normalize("NFKC");
+          alternative_old_text = old_text.replaceAll('"', '&quot;').replace(/[\u00A0-\u9999]/g, function(i) { return '&#'+i.charCodeAt(0)+';'; }).trim().normalize("NFKC");
+          let new_content = (old_text !== text.replace(/[\u00A0-\u9999]/g, function(i) { return '&#'+i.charCodeAt(0)+';'; }).normalize("NFKC") && alternative_old_text !== text.replace(/[\u00A0-\u9999]/g, function(i) { return '&#'+i.charCodeAt(0)+';'; }).trim().normalize("NFKC"));
+
           if (highlight > 0) {
             element = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).node();
             // compare old value of cell with new one and highlight
-            if (old_text != "..." && old_text != text) {
+            if (old_text != "..." && new_content) {
               startAnimation($('#' + $.escapeSelector(id)), highlight);
             }
           }
           // update datatable cell
-          if (old_text != text && alternative_old_text != text) {
+          if (new_content) {
             $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data(text);
             console.log("Redrawing table because new cell data found: " + text + " for id " + id + ", old text: " + old_text);
             $('#' + table_id).DataTable().draw(false);
