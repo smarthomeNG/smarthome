@@ -86,8 +86,8 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
         // check if cell id exists on current page
         test = $('#' + table_id).DataTable().cell( $("#" + $.escapeSelector(id)), { page:'current'}).data();
         if ( test ) {
-          old_text = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data();
-          alternative_old_text = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data().replaceAll('"', '&quot;');
+          old_text = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data().replace(/\s\s+/g, ' ');;
+          alternative_old_text = old_text.replaceAll('"', '&quot;');
           if (highlight > 0) {
             element = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).node();
             // compare old value of cell with new one and highlight
@@ -114,7 +114,9 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
  * fires an ajax request to get actual data from the plugin
  * @param {string} optional name of dataset to get. Only needed, if the webinterface gets multiple different datasets from the plugin
  */
-function shngGetUpdatedData(dataSet=null) {
+function shngGetUpdatedData(dataSet=null, update_params=null) {
+    if (dataSet == null) dataSet = window.dataSet;
+    if (update_params == null) update_params = window.update_params;
     if (dataSet) {
       if (update_params) {
         console.log("Running page update with dataSet: " + dataSet + " and params: " + update_params);
@@ -148,6 +150,7 @@ function shngGetUpdatedData(dataSet=null) {
         });
       }
     } else {
+      console.log("Running page update.");
     $.ajax({
         url: "get_data.html",
         type: "GET",
@@ -177,18 +180,17 @@ function timer() {
       iv: 0,
       timeout: false,
       rp: false,
+      name: false,
       cb : function(){},
       start : function(cb,iv,sd,rp){
           var elm = this;
           clearInterval(this.timeout);
           this.running = true;
-          if(cb) this.cb = cb;
+          if(cb) {this.cb = cb; this.name = cb.toString().match(/{([^}]+)}/)[1].replace(/\r?\n|\r/g, "").replace(';', '').replace(/\s\s+/g, '')};
           if(iv) this.iv = iv;
           if(rp != null) this.rp = rp;
           if(sd) elm.execute(elm);
-					if(iv <= 0)
-						console.log("Initializing timer " + this.timeout + ", but not running because interval is 0");
-					else
+					if(iv != 0)
           	this.timeout = setTimeout(function(){elm.execute(elm)}, this.iv);
       },
       execute : function(e){
@@ -204,14 +206,14 @@ function timer() {
       },
       stop : function(){
           this.running = false;
-					console.log("Stopping timer " + this.timeout + " because stop command received");
+					console.log("Stopping timer " + this.name + " because stop command received");
       },
       update : function(params){
           for (key in params)
             if(params[key] != null) window[key] = params[key];
-          console.log("Updating timer method with: " + JSON.stringify(params));
           document.getElementById("update_active").checked = window.update_active;
           document.getElementById("update_interval").value = window.update_interval / 1000;
+          console.log("Updating timer " + this.name + " with params: " + JSON.stringify(params) + " interval is " + window.update_interval + ", active " + window.update_active);
           if (window.update_interval > 0 && window.update_active == true)
           {
             window.refresh.set_interval(window.update_interval, true);
@@ -226,13 +228,13 @@ function timer() {
           clearInterval(this.timeout);
 					if (iv == 0)
 						{
-							console.log("Stopping timer " + this.timeout + " because interval is set to " + iv);
+							console.log("Stopping timer " + this.name + " because interval is set to " + iv);
 							this.stop();
 						}
 					else
 						{
             	this.start(false,iv,sd);
-							// console.log("Starting timer " + this.timeout + " with interval " + iv + " instatrigger " + sd);
+							console.log("Starting timer " + this.name + " with interval " + iv + " instatrigger " + sd);
 						}
       }
   };
