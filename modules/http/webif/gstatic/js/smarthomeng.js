@@ -65,16 +65,30 @@ function shngPost(path, params, method='post') {
   * @param {string} text to insert
   */
 function shngInsertText (id, text, table_id=null, highlight=0) {
+
+    function sanitize(text, spaces=false, quotes=false, entities=true, trim=true, normalize=true) {
+      text = text.toString();
+      if (spaces) text = text.replace(/\s\s+/g, ' ');
+      if (quotes) text = text.replaceAll('"', '&quot;');
+      if (entities) text = text.replace(/[\u00A0-\u9999]/g, function(i) { return '&#'+i.charCodeAt(0)+';'; });
+      if (trim) text = text.trim();
+      if (normalize) text = text.normalize("NFKC");
+      return text;
+    }
+
     if (typeof text == 'undefined') {
       console.log("Text for id " + id + " is undefined. Doing nothing.");
       return;
     }
+    text = text.toString();
     if (table_id == null) {
       element = $("#" + $.escapeSelector(id));
       if (highlight > 0) {
-        old_text = $('#' + $.escapeSelector(id)).text();
+        let old_text = sanitize($('#' + $.escapeSelector(id)).text(), true);
+        let alternative_old_text = sanitize(old_text, false, true);
+        let new_content = (old_text !== sanitize(text)) && (alternative_old_text !== sanitize(text));
         // compare old value of cell with new one and highlight
-        if (old_text != "..." && old_text != text) {
+        if (old_text != "..." && new_content) {
           startAnimation(element, highlight);
         }
       }
@@ -87,9 +101,9 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
         test = $('#' + table_id).DataTable().cell( $("#" + $.escapeSelector(id)), { page:'current'}).data();
         if ( test ) {
           // fix HTML entities and quotation
-          old_text = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data().replace(/\s\s+/g, ' ').replace(/[\u00A0-\u9999]/g, function(i) { return '&#'+i.charCodeAt(0)+';'; }).trim().normalize("NFKC");
-          alternative_old_text = old_text.replaceAll('"', '&quot;').replace(/[\u00A0-\u9999]/g, function(i) { return '&#'+i.charCodeAt(0)+';'; }).trim().normalize("NFKC");
-          let new_content = (old_text !== text.replace(/[\u00A0-\u9999]/g, function(i) { return '&#'+i.charCodeAt(0)+';'; }).normalize("NFKC") && alternative_old_text !== text.replace(/[\u00A0-\u9999]/g, function(i) { return '&#'+i.charCodeAt(0)+';'; }).trim().normalize("NFKC"));
+          let old_text = sanitize($('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).data(), true);
+          let alternative_old_text = sanitize(old_text, false, true);
+          let new_content = (old_text !== sanitize(text)) && (alternative_old_text !== sanitize(text));
 
           if (highlight > 0) {
             element = $('#' + table_id).DataTable().cell( $('#' + $.escapeSelector(id)) ).node();
