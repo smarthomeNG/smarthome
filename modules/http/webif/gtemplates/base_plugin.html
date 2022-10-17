@@ -39,6 +39,8 @@
 				{%- else %}
 					{% set update_active = true %}
 				{%- endif %}
+			{%- else %}
+				{% set update_active = false %}
 		  {%- endif %}
 		{%- else %}
 		  window.update_interval = 0;
