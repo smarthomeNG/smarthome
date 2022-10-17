@@ -106,7 +106,7 @@
 			{% else %}
 				<br>
 			{% endif %}
-			<h6>{{ _('Plugin') }} &nbsp; &nbsp; : <span id="webif_plugin_state">{% if p.alive %}{{_('Aktiv')}}{% else %}{{_('Gestoppt')}}{% endif %}</span></h6>
+			<h6>{{ _('Plugin') }} &nbsp; &nbsp; : <span id="webif_plugin_state">{% if p.alive %}{{ _('Aktiv') }}{% else %}{{ _('Gestoppt') }}{% endif %}</span></h6>
 		</div>
 
 		<div class="col-sm-7">
@@ -122,12 +122,12 @@
 					</td>
 					<td colspan="2" align="right">
 							<span id="autorefresh">
-								{{_('Auto')}}
-								<input type="checkbox" id="update_active" name="update_active" value="active" oninput="set_update_interval()">
-								<input style="width:60px" type = "number" id = "update_interval" name="update_interval" min="0" oninput="set_update_interval()"> s
+								{{ _('Autom. Aktualisierung') }}
+								<input title="{{ _('(De)Aktiviere automatische Seitenaktualisierung') }}" type="checkbox" id="update_active" name="update_active" value="active" oninput="set_update_interval()">
+								<input title="{{ _('Aktualisierungsintervall in Sekunden') }}" style="width:60px" type="number" id="update_interval" name="update_interval" min="0" oninput="set_update_interval()"> {{ _('Sekunden') }}
 							</span>
-						<button id="reload" class="btn btn-shng btn-sm" onclick="window.location.reload();"><i class="fas fa-redo"></i>&nbsp;&nbsp;&nbsp;{{_('Aktualisieren')}}&nbsp;</button>
-						<button id="close" class="btn btn-shng btn-sm" title="{{ 'Schließen' }}" onclick="window.close();" ><i class="fas fa-times"></i>&nbsp;&nbsp;&nbsp;{{_('Schließen')}}&nbsp;</button>
+						<button id="reload" class="btn btn-shng btn-sm" onclick="window.location.reload();"><i class="fas fa-redo"></i>&nbsp;&nbsp;&nbsp;{{ _('Aktualisieren') }}&nbsp;</button>
+						<button id="close" class="btn btn-shng btn-sm" title="{{ 'Schließen' }}" onclick="window.close();" ><i class="fas fa-times"></i>&nbsp;&nbsp;&nbsp;{{ _('Schließen') }}&nbsp;</button>
 					</td>
 				</tr>
 			</table>

@@ -7,6 +7,7 @@ function set_update_active() {
     $('input[name=update_active]').attr('disabled','disabled');
     document.getElementById("update_active").checked = false;
     window.update_active = false;
+    $('input[name=update_active]').attr('title', 'Automatische Aktualisierung nicht möglich/deaktiviert');
   }
   else
   {
