@@ -24,6 +24,7 @@ $(window).bind('datatables_defaults', function() {
 		{
 			top_offset = $('#webif-navbar').outerHeight() + $('#webif-tabs').outerHeight();
 			// Set datatable useful defaults
+			$.extend( $.fn.dataTable.ext.classes, { "sTable": "table table-striped table-hover pluginList display dataTable dataTableAdditional" });
 			$.extend( $.fn.dataTable.defaults, {
 				lengthMenu: [ [25, 50, 100, -1], [25, 50, 100, "All"] ], // pagination menu
 				pageResize: false,
