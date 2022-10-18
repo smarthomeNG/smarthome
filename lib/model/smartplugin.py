@@ -77,7 +77,7 @@ class SmartPlugin(SmartObject, Utils):
         has to be overwritten with the code needed for de-initialization
 
         If called without parameters, all registered items are unregistered.
-        items is a list of items.
+        items is a list of items (or a single Item() object).
         """
         if self.alive:
             self.stop()
@@ -137,8 +137,8 @@ class SmartPlugin(SmartObject, Utils):
         """
         Remove configuration data for an item (and remove the item from the device_command's list
 
-        :param item_path: Path of the item (item.property.path / item.id()) to remove
-        :type item_path: str
+        :param item: item to remove
+        :type item: Item
 
         :return: True, if the information has been removed
         :rtype: bool
@@ -196,13 +196,13 @@ class SmartPlugin(SmartObject, Utils):
         """
         Return list of stored items
         """
-        return [self._item_dict[item]['item'] for item in self._item_dict]
+        return [self._item_dict[item_path]['item'] for item_path in self._item_dict]
 
     def get_trigger_items(self):
         """
         Return list of stored items which were marked by register_updating()
         """
-        return [self._item_dict[item]['item'] for item in self._item_dict if self._item_dict[item]['has_trigger_method']]
+        return [self._item_dict[item_path]['item'] for item_path in self._item_dict if self._item_dict[item_path]['has_trigger_method']]
 
     def get_items_for_command(self, device_command):
         """
