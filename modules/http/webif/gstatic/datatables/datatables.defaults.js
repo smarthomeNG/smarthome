@@ -37,7 +37,10 @@ $(window).bind('datatables_defaults', function() {
 				fixedHeader: {header: true, // header will always be visible on top of page when scrolling
 				 						 headerOffset: top_offset},
 				autoWidth: false,
-				initComplete: function () {$(this).show(); setTimeout(function() { $(window).resize(); }, 300);}, // show table (only) after init, adjust height of wrapper after 300ms (for Safari)
+				initComplete: function () {$(this).show();
+					$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+					$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
+					setTimeout(function() { $(window).resize(); }, 300);}, // show table (only) after init, adjust height of wrapper after 300ms (for Safari)
         responsive: {details: {renderer: $.fn.dataTable.Responsive.renderer.listHidden()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
 				preDrawCallback: function (oSettings) {
         	pageScrollPos = $(oSettings.nTableWrapper).find('.dataTables_scrollBody').scrollTop();
@@ -55,14 +58,15 @@ $(window).bind('datatables_defaults', function() {
 								  }, 'slow');
 							});
 					}
-					$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( false );
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( true );
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
-					$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
+
 					$('html, body').scrollTop(bodyScrollPos);
 					$(this).addClass( "display" );
-					window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count();
+					if (typeof window.row_count !== 'undefined') {
+						window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count();
+					}
 				},
 				createdRow: function (row, data, index) {
 					$(row).hide().fadeIn('slow');
@@ -70,7 +74,9 @@ $(window).bind('datatables_defaults', function() {
 					$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
 					$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
-					window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count();
+					if (typeof window.row_count !== 'undefined') {
+						window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count();
+					}
 				}
 
 			});
