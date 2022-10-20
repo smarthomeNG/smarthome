@@ -98,8 +98,8 @@ Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleif
 .. code-block:: html+jinja
 
     {% block **bodytab1** %}
-        <div class="container-fluid m-2" id="resize_wrapper">
-            <table id="#maintable" class="table table-striped table-hover pluginList dataTableAdditional">
+        <div class="container-fluid m-2 table-resize">
+            <table id="maintable">
                 <thead>
                     <tr>
                         <th>{{ _('Item') }}</th>
@@ -145,8 +145,8 @@ dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hie
     ...
 
     {% block **bodytab1** %}
-        <div class="container-fluid m-2" id="resize_wrapper">
-            <table id="#maintable" class="table table-striped table-hover pluginList dataTableAdditional">
+        <div class="container-fluid m-2 table-resize">
+            <table id="maintable">
                 <thead>
                     <tr>
                         ...
@@ -230,7 +230,7 @@ Sortierbare Tabellen
 Wie erwähnt muss für das Aktivieren von sortier- und durchsuchbaren Tabellen der entsprechende Script-Block
 wie in :doc:`Das Webinterface mit Inhalt füllen </entwicklung/plugins/webinterface_filling_webinterface>`
 unter Punkt 3 beschrieben eingefügt werden. Dabei ist auch zu beachten, dass der zu sortierenden
-Tabelle eine entsprechende ID gegeben wird (im Beispiel oben ``#maintable``).
+Tabelle eine entsprechende ID gegeben wird (im Beispiel oben ``maintable``).
 
 Damit die neuen Daten auch von datatables.js erkannt und korrekt sortiert werden, ist es wichtig,
 dem Aufruf ``shngInsertText`` die Tabellen-ID als dritten Parameter mitzugeben (im Beispiel 'maintable').

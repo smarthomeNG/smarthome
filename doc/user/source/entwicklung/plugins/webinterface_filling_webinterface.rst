@@ -117,14 +117,14 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
       Um im ersten Tab des Webinterface die Items anzuzeigen, die der obige Beispielcode zusammengestellt hat, wird der folgende Code zwischen ``{% block bodytab1 %}`` und ``{% endblock bodytab1 %}`` eingefügt. Es ist sicherzustellen, dass korrekter HTML Code
       für die Tabellen genutzt wird, ua. durch Nutzen der Tags ``<thead>`` und ``<tbody>``
       sowie der jeweiligen End-Tags. Außerdem muss jeder Tabelle eine einzigartige ID vergeben werden.
-      Die ID ``resize_wrapper`` ist zwingend dem ``<div>`` Tag, in dem sich die Tabelle befindet, hinzuzufügen,
+      Die Klasse``table-resize`` ist zwingend dem ``<div>`` Tag, in dem sich die Tabelle befindet, hinzuzufügen,
       um die automatische Anpassung der Datentabelle an die Fensterhöhe zu ermöglichen
       (siehe auch index.html im Example-Plugin).
 
       .. code-block:: html+jinja
 
-        <div class="container-fluid m-2" id="resize_wrapper">
-           <table id="maintable" class="table table-striped table-hover pluginList display">
+        <div class="container-fluid m-2 table-resize">
+           <table id="maintable">
                <thead>
                    <tr>
                        <th class="item">{{ _('Item') }}</th>
@@ -163,9 +163,10 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
             try {
               /* get pagelength from plugin. Also see hidden span element in bodytab1 block! */
               webif_pagelength = parseInt(document.getElementById('webif_pagelength').innerHTML);
-              if (webif_pagelength == 0) {
+              if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
                 resize = true;
                 webif_pagelength = -1;
+        				console.log('Activating automatic table resize');
               }
               else {
                 resize = false;
@@ -195,4 +196,3 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
 
 
    6. Das Logo oben links auf der Seite wird automatisch durch das Logo des konfigurierten Plugin-Typs ersetzt. Wenn das Webinterface ein eigenes Logo mitbringen soll, muss das entsprechende Bild im Verzeichnis ``webif/static/img`` mit dem Namen ``plugin_logo`` abgelegt sein. Die zulässigen Dateiformate sind **.png**, **.jpg** oder **.svg**. Dabei sollte die Größe der Bilddatei die Größe des angezeigten Logos (derzeit ca. 180x150 Pixel) nicht überschreiten, um unnötige Datenübertragungen zu vermeiden.
-

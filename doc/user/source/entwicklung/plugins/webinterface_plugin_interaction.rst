@@ -126,8 +126,8 @@ Tabellen in einem ``bodytab?`` können mit einer Schleife befüllt werden, das i
 
     {% block **bodytab1** %}
 
-        <div class="container-fluid m-2" id="resize_wrapper">
-            <table id="maintable" class="table table-striped table-hover pluginList display">
+        <div class="container-fluid m-2 table-resize">
+            <table id="maintable">
                 <thead>
                     <tr>
                         <th>{{ _('Attribut 1') }}</th>
@@ -159,7 +159,7 @@ Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable au
 .. code-block:: html+jinja
 
     {% block headtable %}
-        <table id="maintable" class="table table-striped table-hover display">
+        <table id="maintable">
             <tbody>
                 <tr>
                     <td class="py-1"><strong>Scanne von IP</strong></td>
@@ -174,8 +174,8 @@ Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable au
     ...
 
     {% block **bodytab1** %}
-        <div class="container-fluid m-2 id="resize_wrapper"">
-            <table id="maintable" class="table table-striped table-hover pluginList display">
+        <div class="container-fluid m-2 table-resize">
+            <table id="maintable">
                 <thead>
                     <tr>
                         <th>{{ _('Attribut 1') }}</th>
@@ -227,12 +227,12 @@ in jeder Zeile stehen soll, dann bietet es sich an, statt einzelnen Button-Eleme
 .. code-block:: html+jinja
 
     {% block bodytab1 %}
-      <div class="container-fluid m-2" id="resize_wrapper">
+      <div class="container-fluid m-2 table-resize">
 
           <form id="button_pressed" action="" method="post">
 
               <input type="hidden" id="button" name="button" value="" />
-              <table id="maintable" class="table table-striped table-hover pluginList display">
+              <table id="maintable">
                   <thead>
                       <tr>
                           <th>{{ _('Attribut 1') }}</th>
