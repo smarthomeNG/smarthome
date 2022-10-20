@@ -115,7 +115,7 @@ class SmartPlugin(SmartObject, Utils):
         :rtype: bool
         """
         if item.path() in self._item_dict:
-            self.logging.warning("Trying to add an existing item")
+            self.logging.warning(f"Trying to add an existing item: {item.path()}")
             return False
 
         self._item_dict[item.path()] = {
@@ -136,6 +136,7 @@ class SmartPlugin(SmartObject, Utils):
     def remove_item(self, item):
         """
         Remove configuration data for an item (and remove the item from the device_command's list
+        Plugin needs to be stopped, else we return an error
 
         :param item: item to remove
         :type item: Item
@@ -143,6 +144,10 @@ class SmartPlugin(SmartObject, Utils):
         :return: True, if the information has been removed
         :rtype: bool
         """
+        # check if plugin is running
+        if self.alive:
+            return False
+
         if item.path() not in self._item_dict:
             # There is no information stored for that item
             return False
