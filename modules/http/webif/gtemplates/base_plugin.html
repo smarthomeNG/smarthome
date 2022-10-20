@@ -24,7 +24,7 @@
 		window.update_interval = 0;
 		window.update_active = false;
 		window.update_blocked = false;
-		// window.row_count = 0; If you want to get the row count on the current page, put this line in the resepctive plugin index.html
+		window.row_count = 0;
 		{%- if dataSet is defined %}
 		  window.dataSet = '{{ dataSet }}';
 		{%- endif %}
@@ -129,7 +129,7 @@
 								<input title="{{ _('Aktualisierungsintervall in Sekunden') }}" style="width:60px" type="number" id="update_interval" name="update_interval" min="0" oninput="set_update_interval()"> {{ _('Sekunden') }}
 							</span>
 						<button id="reload" class="btn btn-shng btn-sm" onclick="window.location.reload();"><i class="fas fa-redo"></i>&nbsp;&nbsp;&nbsp;{{ _('Aktualisieren') }}&nbsp;</button>
-						<button id="close" class="btn btn-shng btn-sm" title="{{ _('Schließen') }}" onclick="window.close();" ><i class="fas fa-times"></i>&nbsp;&nbsp;&nbsp;{{ _('Schließen') }}&nbsp;</button>
+						<button id="close" class="btn btn-shng btn-sm" title="{{ 'Schließen' }}" onclick="window.close();" ><i class="fas fa-times"></i>&nbsp;&nbsp;&nbsp;{{ _('Schließen') }}&nbsp;</button>
 					</td>
 				</tr>
 			</table>
