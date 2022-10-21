@@ -157,8 +157,12 @@ class SmartPlugin(SmartObject, Utils):
             # There is no information stored for that item
             return False
 
+        # remove data from item_dict early in case of concurrent actions
+        data = self._item_dict[item.path()]
+        del self._item_dict[item.path()]
+
         # remove item from self._item_lookup_dict if present
-        command = self._item_dict[item.path()].get('device_command')
+        command = data.get('device_command')
         if command:
             # if a device_command was given for the item, the item is being removed from the list of the device_command
             if item in self._item_lookup_dict[command]:
@@ -167,7 +171,6 @@ class SmartPlugin(SmartObject, Utils):
         # unregister item update method
         self.unparse_item(item)
 
-        del self._item_dict[item.path()]
         return True
 
 # TODO: harmonize name with key name self._item_dict['has_trigger_method']
