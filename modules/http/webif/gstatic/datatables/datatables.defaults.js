@@ -38,15 +38,18 @@ $(window).bind('datatables_defaults', function() {
 				 						 headerOffset: top_offset},
 				autoWidth: false,
 				initComplete: function () {$(this).show();
-					$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-					$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
-					setTimeout(function() { $(window).resize(); }, 300);}, // show table (only) after init, adjust height of wrapper after 300ms (for Safari)
+					this.api().columns.adjust();
+					this.api().responsive.recalc();
+					setTimeout(function() { $(window).resize();  }, 2000);// show table (only) after init, adjust height of wrapper after 2s
+				},
         responsive: {details: {renderer: $.fn.dataTable.Responsive.renderer.listHidden()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
 				preDrawCallback: function (oSettings) {
+
         	pageScrollPos = $(oSettings.nTableWrapper).find('.dataTables_scrollBody').scrollTop();
 					bodyScrollPos = $('html, body').scrollTop();
     		},
 				drawCallback: function(oSettings) { // hide pagination if not needed
+					$(window).resize();
 					if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay() || oSettings._iDisplayLength == -1) {
 						 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
 					} else {
@@ -58,9 +61,9 @@ $(window).bind('datatables_defaults', function() {
 								  }, 'slow');
 							});
 					}
-					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( false );
-					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( true );
-					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
+					this.api().fixedHeader.enable( false );
+					this.api().fixedHeader.enable( true );
+					this.api().fixedHeader.adjust();
 
 					$('html, body').scrollTop(bodyScrollPos);
 					$(this).addClass( "display" );
@@ -71,9 +74,9 @@ $(window).bind('datatables_defaults', function() {
 				createdRow: function (row, data, index) {
 					$(row).hide().fadeIn('slow');
 					$('td', row).addClass('py-1 truncate');
-					$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
-					$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
+					this.api().columns.adjust();
+					this.api().fixedHeader.adjust();
+					this.api().responsive.recalc();
 					if (typeof window.row_count !== 'undefined') {
 						window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count();
 					}
