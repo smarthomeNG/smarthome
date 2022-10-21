@@ -55,8 +55,8 @@ class SmartPlugin(SmartObject, Utils):
     _classname = ''       #: Classname of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
     shtime = None         #: Variable containing a pointer to the SmartHomeNG time handling object; is initialized during loading of the plugin; :Warning: Don't change it
 
-    _stop_on_item_change = True  # Plugin needs to be stopped on/before item changes
-                                 # needed by self.remove_item(), don't change unless you know how and why
+    _stop_on_item_change = True     # Plugin needs to be stopped on/before item changes
+                                    # needed by self.remove_item(), don't change unless you know how and why
 
     _pluginname_prefix = 'plugins.'
 
@@ -149,12 +149,14 @@ class SmartPlugin(SmartObject, Utils):
         # check if plugin is running
         if self.alive:
             if self._stop_on_item_change:
+                self.logger.debug(f'stopping plugin for removal of item {item.path()}')
                 self.stop()
             else:
-                return False
+                self.logger.debug(f'not stopping plugin for removal of item {item.path()}')
 
         if item.path() not in self._item_dict:
             # There is no information stored for that item
+            self.logger.debug(f'item {item.path()} not associated to this plugin, doing nothing')
             return False
 
         # remove data from item_dict early in case of concurrent actions
