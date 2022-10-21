@@ -55,6 +55,9 @@ class SmartPlugin(SmartObject, Utils):
     _classname = ''       #: Classname of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
     shtime = None         #: Variable containing a pointer to the SmartHomeNG time handling object; is initialized during loading of the plugin; :Warning: Don't change it
 
+    _stop_on_item_change = True  # Plugin needs to be stopped on/before item changes
+                                 # needed by self.remove_item(), don't change unless you know how and why
+
     _pluginname_prefix = 'plugins.'
 
     _item_dict = {}         # dict to hold the items assigned to the plugin and their plugin specific information
@@ -136,7 +139,6 @@ class SmartPlugin(SmartObject, Utils):
     def remove_item(self, item):
         """
         Remove configuration data for an item (and remove the item from the device_command's list
-        Plugin needs to be stopped, else we return an error
 
         :param item: item to remove
         :type item: Item
@@ -146,7 +148,10 @@ class SmartPlugin(SmartObject, Utils):
         """
         # check if plugin is running
         if self.alive:
-            return False
+            if self._stop_on_item_change:
+                self.stop()
+            else:
+                return False
 
         if item.path() not in self._item_dict:
             # There is no information stored for that item
