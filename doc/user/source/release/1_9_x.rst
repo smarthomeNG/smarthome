@@ -14,8 +14,8 @@ sowie Updates zu einigen Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 4. Okt 2022
-       (Merge pull request #501 docu: update logging filters referenc)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 27. Okt 2022
+       (lib.shpypi: ...)
      - Berücksichtigt sind Commits im plugins Repository bis incl. 26. Okt 2022
        (...)
 

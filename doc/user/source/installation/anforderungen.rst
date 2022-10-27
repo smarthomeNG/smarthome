@@ -192,15 +192,17 @@ soll ist folgende:
 Version aktuelle Python Version und die zwei Vorgängerversionen.**
 
 .. csv-table:: Zur Verdeutlichung
-  :header: "SmartHomeNG", "akt. Python zu Entwicklungsstart", "unterstützte Python Versionen"
+  :header: "SmartHomeNG", "akt. Python zu Entwicklungsstart", "unterstützte Python Versionen", "min. Version mit der SmartHomeNG startet"
 
-  "v1.2 und davor",  "diverse",     "Python 3.2, 3.3, 3.4"
-  "v1.3",            "Python 3.5",  "Python 3.3, 3.4, 3.5"
-  "v1.4, v1.5",      "Python 3.6",  "Python 3.4, 3.5, 3.6"
-  "v1.6, v1.7",      "Python 3.7",  "Python 3.5, 3.6, 3.7"
-  "v1.8",            "Python 3.8",  "Python 3.6, 3.7, 3.8"
-  "v1.9",            "Python 3.9",  "Python 3.7, 3.8, 3.9"
-  "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10"
+  "v1.2 und davor",  "diverse",     "Python 3.2, 3.3, 3.4", "Python 3.2"
+  "v1.3",            "Python 3.5",  "Python 3.3, 3.4, 3.5", "Python 3.2"
+  "v1.4",            "Python 3.6",  "Python 3.4, 3.5, 3.6", "Python 3.3"
+  "v1.5",            "Python 3.6",  "Python 3.4, 3.5, 3.6", "Python 3.4"
+  "v1.6",            "Python 3.7",  "Python 3.5, 3.6, 3.7", "Python 3.4"
+  "v1.7",            "Python 3.7",  "Python 3.5, 3.6, 3.7", "Python 3.5"
+  "v1.8",            "Python 3.8",  "Python 3.6, 3.7, 3.8", "Python 3.6"
+  "v1.9",            "Python 3.9",  "Python 3.7, 3.8, 3.9", "Python 3.7"
+  "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10", "tbd"
 
 Das bedeutet nicht automatisch, dass SmartHomeNG mit älteren Python Versionen nicht mehr funktioniert,
 die Entwicklung wird nur nicht mehr mit älteren Versionen getestet. Zudem bekommen ältere Python Versionen keine
