@@ -14,10 +14,10 @@ sowie Updates zu einigen Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 24. Sept 2022
-       (doc installation regarding knx/knxd)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 25. Sept 2022
-       (russound plugin: provide two functions to suspend and activate plugin…)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 4. Okt 2022
+       (Merge pull request #501 docu: update logging filters referenc)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 26. Okt 2022
+       (...)
 
 
 Überblick
@@ -86,6 +86,7 @@ Updates in the CORE
   * lib.item:
 
     * Fixed deprecation warnings
+    * Small fix/improvement for logging caller on initialization
 
   * lib.logic:
 
@@ -100,6 +101,14 @@ Updates in the CORE
 
     * Setting up a global environment when executing a logic (containing e.g. logger and logic variables)
 
+  * lib.shpypi:
+
+    * Extended logging of potential problem when consolidating requirements
+
+  * lib.shtime:
+
+    * Got rid of use of pytz module
+
   * lib.smarthome:
 
     * Fixed deprecation warnings
@@ -107,6 +116,10 @@ Updates in the CORE
   * lib.userfunction:
 
     * Bugfix
+
+  * lib.utils:
+
+    * Added running_virtual() function
 
 * Modules:
 
@@ -149,7 +162,14 @@ Neue Plugins
 Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
-* <Name>: ...
+* solarforecast:
+
+  * Initial version of new solar forecast cloud plugin
+
+* rpi_info:
+
+  * Initial Release
+
 
 
 
@@ -176,6 +196,18 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * database:
 
   * Reinserted 'duplicate_use' to metadata for item_attribute 'database'
+  * Added new feature to suppress standard db rewrite on plugin shutdown via item attribute
+    database_write_on_shutdown; E.g. useful for constantly increasing items that are sampled at low frequency.
+    The attribute is optional. By default, a rewrite for all db items on smarthomeNG shutdown is enabled.
+  * Added documentation for new database_write_on_shutdown feature
+  * Enhanced cleaning process for maxage
+  * Updated and improved web interface to automatically refresh datatables,
+    implement webif_pagelength config parameter
+  * Fix webinterface to show pages even when no connection to database is possible, disable CSV export
+    if item not found (e.g. database not connected)
+  * Make table invisible on init to load faster
+  * Improved rounding in web interface
+  * Set default webif_pagelength to 0 = pageResize
 
 * enocean:
 
@@ -241,6 +273,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * openweathermap:
 
   * Update SV widget import
+  * Added matchstring for dt_weekday
 
 * pluggit:
 
@@ -267,12 +300,23 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Update SV widget import
 
+* smlx:
+
+  * Update user_doc.rst
+  * Update plugin.yaml
+  * Create WebIF
+  * Code Cosmetics
+  * Add lock, that just one poll cycle can be active
+
 * sonos:
 
   * Added appdirs to requirements.txt (needed for SoCo framework)
   * improved webinterface - list discovered speakers
   * Fixed play_tunein command; catched ConnectionResetError
   * Catched WebIf exception occurring for offline speaker
+  * Fixed speaker discovery and handling in the case of single offline speakers
+  * Updated SoCo framework to version 0.28.1
+  * Added lxml python package to requirements (needed for SoCo version 0.28.1)
 
 * stateengine:
 
@@ -292,7 +336,39 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Restrict version be <14.0 since then async will be used
 
-xiaomi_vac:
+* uzsu:
+
+  * If uzsu is updated by update_sun, no dry run is triggered to limit unneccessary CPU load
+  * Fixes:
+    * If one series entry has an error other entries are now still calculated (previously seriesCalculation was canceled on first issue)
+    * If no end or starttime is given (e.g. in visu) for a series automatically start and end of the day are set to 00:00 and 23:59
+    * If series interval is too high for multiple series triggers the UZSU is now still correctly scheduled once at the given start time
+    * Minor log improvement
+    * Scheduler now also gets created if time series is more than 1 day in the future
+    * Minor code improvements
+    * Add maxCalculatedCount to series dict (for visu and debugging), fix issues with time series starting in the past
+    * Improved internal dict handling. Dict gets updated correctly on run. Interpolation dict always gets extended if necessary.
+    * Internal fix update seriesCalculated: implement correct maxCountCalculated
+    * Improved web interface. Items get filles at start correclty (without init ... bla bla)
+    * Improve log handling and fix maxCountCalculated if interval is set too high
+    * Fix and improve datatable handling in webif
+    * Changed min shng version to 1.6 and get rid of some code lines checking for lower versions
+    * Updated requirements for scipy to hopefully solve issues with installs on Raspis
+
+* vacations:
+
+  * Added try catch to catch current issue with lib and (potentially) changed api. plugin however not working so far,
+    until lib is updated.
+  * Bumped dependency to ferien-api>=0.3.7
+  * Fixed table layout
+
+* viessmann:
+
+  * Corrected method "_bytes2int"
+  * Writing values back to Heating Controller need to be in byteorder = 'little'
+  * Bumped version to 1.2.3
+
+* xiaomi_vac:
 
   * Fix issue if no cleaning details are found.
   * Fix issue when no cleaning details are found (after new firmware flash or reset).
@@ -367,7 +443,10 @@ Tools
 Dokumentation
 -------------
 
+* Update logging filters reference: make clear the entries have to be regular expressions
+* Added additional example for logging filters in logging best practices
+* Added include /etc/nginx/proxy_params; to reverse proxy docu
 * Multiple updates
-* ...
+
 
 
