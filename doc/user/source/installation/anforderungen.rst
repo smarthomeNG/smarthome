@@ -219,11 +219,11 @@ ist in der folgenden Tabelle aufgelistet:
 .. csv-table:: Aktive Python Releases (wie auf python.org dokumentiert)
   :header: "Python Version", "Maintenance Status", "Erstes Release", "Support Ende"
 
-  "3.7",   "security",  "27. Juni 2018",     "27. Juni 2023"
-  "3.8",   "security",  "14. Oktober 2019",  "Oktober 2024"
-  "3.9",   "security",  "5. Oktober 2020",   "Oktober 2025"
-  "3.10",  "bugfix",    "4. Oktober 2021",   "Oktober 2026"
-  "3.11",  "bugfix",    "24. Oktober 2022",  "Oktober 2027"
+  "3.7",   "security",  "27\. Juni 2018",     "27\. Juni 2023"
+  "3.8",   "security",  "14\. Oktober 2019",  "Oktober 2024"
+  "3.9",   "security",  "5\. Oktober 2020",   "Oktober 2025"
+  "3.10",  "bugfix",    "4\. Oktober 2021",   "Oktober 2026"
+  "3.11",  "bugfix",    "24\. Oktober 2022",  "Oktober 2027"
 
 
 
