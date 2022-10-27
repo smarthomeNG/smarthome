@@ -1390,7 +1390,8 @@ class Requirements_files():
                                       1])
                             packagelist_consolidated.append(p)
                     elif p['req'][0][0] == '==':
-                        print('p Gleichheit ' + package_consolidated['req'][0][1] + ' / ' + p['req'][0][1])
+                        print("p Gleichheit p['key']=" + p['key'] + ': >' + package_consolidated['req'][0][1] + '< / >' + p['req'][0][1] + '<')
+                        print('p=' + p)
                     elif package_consolidated['req'][0][0] == '':
                         # if consolidated version has no special requirements
                         self.logger.debug("_consolidate_requirements: package_consolidated requirement w/o version - pkg={}".format(package_consolidated['pkg']))
