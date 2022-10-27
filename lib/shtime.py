@@ -26,11 +26,16 @@ except:
     HOLIDAYS_imported = False
 
 
+#try:
+#    from zoneinfo import ZoneInfo
+#except ImportError:
+#    from backports.zoneinfo import ZoneInfo
+
+
 import datetime
-import dateutil
-import pytz
-from dateutil.tz import tzlocal
-from dateutil import parser
+#import pytz
+import dateutil.tz as tz
+import dateutil.parser
 import dateutil.relativedelta
 import json
 import logging
@@ -76,7 +81,7 @@ class Shtime:
 #        global TZ
         self._tz = 'UTC'
         os.environ['TZ'] = self._tz
-        self.set_tzinfo(dateutil.tz.gettz('UTC'))
+        self.set_tzinfo(tz.gettz('UTC'))
 
 
     # -----------------------------------------------------------------------------------------------------
@@ -121,25 +126,27 @@ class Shtime:
         return lib_translate(txt, vars, additional_translations='lib/shtime')
 
 
-    def set_tz(self, tz):
+    def set_tz(self, tzone):
         """
         set timezone info from name of timezone
 
-        :param tz: Name of the timezone (like 'Europe/Berlin')
-        :type: tz: str
+        :param tzone: Name of the timezone (like 'Europe/Berlin')
+        :type: tzone: str
         """
-        tzinfo = dateutil.tz.gettz(tz)
+        tzinfo = tz.gettz(tzone)        # type: tzfile
         self.logger.info(f"set_tz: tz={tz} -> tzinfo={tzinfo}")
         if tzinfo is not None:
 #            TZ = tzinfo
-            self._tz = tz
+            self._tz = tzone
             os.environ['TZ'] = self._tz
 #             self._tzinfo = TZ
             self.set_tzinfo(tzinfo)
-            self._timezone = pytz.timezone(tz)
+            #self._timezone = pytz.timezone(tzone)
+            self._timezone = tz.gettz(tzone)
         else:
-            self.logger.warning(self.translate("Problem parsing timezone '{tz}' - Using UTC").format(tz=tz))
-            self._timezone = pytz.timezone("UTC")
+            self.logger.warning(self.translate("Problem parsing timezone '{tz}' - Using UTC").format(tz=tzone))
+            #self._timezone = pytz.timezone("UTC")
+            self._timezone = tz.gettz("UTC")
         self.logger.info(f"self.set_tz: -> self._timezone={self._timezone}")
         self.logger.info(f"self.set_tz: -> self._tzinfo={self._tzinfo}")
         return
@@ -167,7 +174,7 @@ class Shtime:
         """
 
         if self._tzinfo is None:
-            self._tzinfo = dateutil.tz.gettz('UTC')
+            self._tzinfo = tz.gettz()
         # tz aware 'localtime'
         return datetime.datetime.now(self._tzinfo)
 
@@ -188,21 +195,33 @@ class Shtime:
         Returns the info about the actual local timezone
 
         :return: Timezone info
-        :rtype: dateutil.tz.tz.tzfile
+        :rtype: tz.tz.tzfile
         """
 
         return self._tzinfo
 
 
+    def tzlocal(self):
+        """
+        POSSIBLE REPLACEMENT FOR tz.tzlocal
+        :return:
+        """
+        now = datetime.datetime.now()
+        local_now = now.astimezone()
+        local_tz = local_now.tzinfo
+        local_tzname = local_tz.tzname(local_now)
+        return local_tzname
+
+
     def tzname(self):
         """
-        Returns the name about the actual local timezone (e.g. CET)
+        Returns the name about the actual local timezone (e.g. CEST)
 
-        :return: timezone string (like: 'CET')
+        :return: timezone string (like: 'CEST' or 'CET')
         :rtype: str
         """
 
-        return datetime.datetime.now(tzlocal()).tzname()
+        return datetime.datetime.now(tz.tzlocal()).tzname()
 
 
     def tznameST(self):
@@ -213,7 +232,7 @@ class Shtime:
         :rtype: str
         """
 
-        jan = datetime.datetime.fromtimestamp(datetime.datetime.timestamp(datetime.datetime(2020, 1, 1)), tzlocal())
+        jan = datetime.datetime.fromtimestamp(datetime.datetime.timestamp(datetime.datetime(2020, 1, 1)), tz.tzlocal())
         return jan.strftime("%Z")
 
 
@@ -225,7 +244,7 @@ class Shtime:
         :rtype: str
         """
 
-        jul = datetime.datetime.fromtimestamp(datetime.datetime.timestamp(datetime.datetime(2020, 7, 1)), tzlocal())
+        jul = datetime.datetime.fromtimestamp(datetime.datetime.timestamp(datetime.datetime(2020, 7, 1)), tz.tzlocal())
         return jul.strftime("%Z")
 
 
@@ -239,7 +258,7 @@ class Shtime:
 
         # tz aware utc time
         if self._utctz is None:
-            self._utctz = dateutil.tz.gettz('UTC')
+            self._utctz = tz.gettz('UTC')
         return datetime.datetime.now(self._utctz)
 
 
@@ -248,7 +267,7 @@ class Shtime:
         Returns the info about the GMT timezone
 
         :return: Timezone info
-        :rtype: dateutil.tz.tz.tzfile
+        :rtype: tz.tz.tzfile
         """
 
         return self._utctz
@@ -472,7 +491,8 @@ class Shtime:
         else:
             raise TypeError(self.translate("Cannot convert type '{key}' to datetime").format(key=type(key)))
         if isinstance(key, datetime.datetime) and key.tzinfo is None:
-            key = self._timezone.localize(key)
+            # key = self._timezone.localize(key)   # uses a pytz method
+            key = key.astimezone(self._timezone)
         return key
 
 
