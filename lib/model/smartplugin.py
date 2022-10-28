@@ -28,13 +28,13 @@ from lib.shtime import Shtime
 from lib.module import Modules
 import lib.shyaml as shyaml
 from lib.utils import Utils
-from lib.item.items import Items
-from lib.item.item import Item
+# from lib.item.items import Items  ## circular import, as lib.item.items imports plugins imports smartplugin
+# from lib.item.item import Item    ## not needed in any case
 from lib.translation import translate as lib_translate
 import logging
 import os
 
-shitems = Items.get_instance()
+# shitems = Items.get_instance()  ## obsolete?
 
 
 class SmartPlugin(SmartObject, Utils):
