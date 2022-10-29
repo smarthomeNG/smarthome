@@ -14,10 +14,10 @@ sowie Updates zu einigen Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 27. Okt 2022
-       (lib.shpypi: ...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 26. Okt 2022
-       (...)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 29. Okt 2022
+       (http module: Improve datatables, ...)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 29. Okt 2022
+       (Merge pull request #641 from ivan73/develop ...)
 
 
 Überblick
@@ -128,6 +128,10 @@ Updates in the CORE
     * Bugfix to show logs with old and new naming convention
     * Loglevels adjusted in api_loggers.py
 
+  * modules.http:
+
+    * Improve datatables, implement new auto refresh functionality
+
   * modules.websocket:
 
     * Prevent event listener for event type log from being registered multiple times. Otherwise,
@@ -216,6 +220,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * hue2:
 
   * Changed requirements to resolve conflict with appletv plugin
+  * Added feature to change multiple functions at once
 
 * husky2:
 
@@ -247,6 +252,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Renamed SV widget
   * Packed asyncio eventloop into thread
 
+* influxdb2:
+
+  * Reduced logging level in initialization phase
+
 * knx:
 
   * Fixed deprecation warnings
@@ -254,11 +263,17 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * modbus_tcp:
 
   * Keep connection open and use locking to ensure thread safety
+  * Fixed bug undeclared variable (TypeStr)
 
 * mpd:
 
   * Fixed bugs with network data receive and parsing
   * Increase version number
+
+* mqtt:
+
+  * simplify webif index.html based on newest changes in http module
+  * Use datatables in web interface
 
 * neato:
 
@@ -278,6 +293,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * pluggit:
 
   * Created a previous version (v1.2.3) before accepting pull request
+  * Plugin Rewrite as version v2.0.3
 
 * resol:
 
@@ -354,6 +370,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
     * Fix and improve datatable handling in webif
     * Changed min shng version to 1.6 and get rid of some code lines checking for lower versions
     * Updated requirements for scipy to hopefully solve issues with installs on Raspis
+    * Improve code, data handling, webIF and series calculation
 
 * vacations:
 
