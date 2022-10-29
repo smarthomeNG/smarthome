@@ -99,7 +99,7 @@ Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleif
 
     {% block **bodytab1** %}
         <div class="container-fluid m-2 table-resize">
-            <table id="#maintable" class="table table-striped table-hover pluginList dataTableAdditional">
+            <table id="maintable">
                 <thead>
                     <tr>
                         <th>{{ _('Item') }}</th>
@@ -146,7 +146,7 @@ dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hie
 
     {% block **bodytab1** %}
         <div class="container-fluid m-2 table-resize">
-            <table id="#maintable" class="table table-striped table-hover pluginList dataTableAdditional">
+            <table id="maintable">
                 <thead>
                     <tr>
                         ...
@@ -230,7 +230,7 @@ Sortierbare Tabellen
 Wie erwähnt muss für das Aktivieren von sortier- und durchsuchbaren Tabellen der entsprechende Script-Block
 wie in :doc:`Das Webinterface mit Inhalt füllen </entwicklung/plugins/webinterface_filling_webinterface>`
 unter Punkt 3 beschrieben eingefügt werden. Dabei ist auch zu beachten, dass der zu sortierenden
-Tabelle eine entsprechende ID gegeben wird (im Beispiel oben ``#maintable``).
+Tabelle eine entsprechende ID gegeben wird (im Beispiel oben ``maintable``).
 
 Damit die neuen Daten auch von datatables.js erkannt und korrekt sortiert werden, ist es wichtig,
 dem Aufruf ``shngInsertText`` die Tabellen-ID als dritten Parameter mitzugeben (im Beispiel 'maintable').
@@ -268,6 +268,8 @@ anzugeben ist (0 wäre die erste Tabellenspalte, 2 die zweite, etc.).
 .. code-block:: html+jinja
 
     table = $('#maintable').DataTable( {
+      "pageLength": webif_pagelength,
+      "pageResize": resize,
       "columnDefs": [{ "targets": 0, "className": "none"}].concat($.fn.dataTable.defaults.columnDefs)
     } );
 
@@ -350,17 +352,98 @@ im Block ``pluginStyles`` bei Bedarf überschrieben werden.
     {% endblock pluginstyles %}
 
 
-Festlegen des Aktualisierungsintervalls
----------------------------------------
+Festlegen des Aktualisierungsintervalls, dataSets und weiteren Parametern
+-------------------------------------------------------------------------
 
-Zu Beginn der Templatedatei ``webif/templates/index.html`` findet sich die folgende Zeile:
+Zu Beginn der Templatedatei ``webif/templates/index.html`` finden sich die folgenden Zeilen:
 
 .. code-block:: css+jinja
 
    {% set update_interval = 0 %}
+   {% set update_active = false %}
+   {% set dataSet = 'item_details' %}
+   {% set update_params = item_id %}
 
-Diese wird auf den gewünschten Wert in Millisekunden gesetzt. Dabei muss sichergestellt sein, dass das gewählte Intervall lang genug ist, dass die Python-Methode ``get_data_html()`` des Plugins die Daten liefern kann, bevor das Intervall abläuft. Wenn nur Daten zurückgegeben werden, die von anderen Routinen und Threads des Plugins bereits bereitgestellt wurden, kann ein Update-Intervall von ca. 1000 ms gewählt werden. Wenn die Python-Methode ``get_data_html()`` selbst noch weitere Routinen ausführen muss, sollte das Update-Intervall wahrscheinlich nicht kleiner als 5000 ms sein.
+Das Intervall wird via ``update_interval`` auf den gewünschten Wert in Millisekunden gesetzt. Dabei muss sichergestellt sein, dass das gewählte Intervall lang genug ist, dass die Python-Methode ``get_data_html()`` des Plugins die Daten liefern kann, bevor das Intervall abläuft. Wenn nur Daten zurückgegeben werden, die von anderen Routinen und Threads des Plugins bereits bereitgestellt wurden, kann ein Update-Intervall von ca. 1000 ms gewählt werden. Wenn die Python-Methode ``get_data_html()`` selbst noch weitere Routinen ausführen muss, sollte das Update-Intervall wahrscheinlich nicht kleiner als 5000 ms sein.
 
 .. warning::
 
     Das Intervall darf nicht zu klein sein. Die Dauer **MUSS** länger sein als die notwendige Zeit zur Ausführung der Python-Methode ``get_data_html()``.
+
+Durch ``update_active`` wird festgelegt, ob die automatische Aktualisierung zum Start aktiviert oder deaktiviert sein soll. Dies
+kann hilfreich sein, um z.B. ein optimales Updateintervall anzugeben, aber dem User zu überlassen, die automatische Aktualisierung
+einzuschalten. Im Kopfbereich des Web Interfaces ist dazu neben dem "Aktualisieren"-Button sowohl eine Checkbox zum (De)Aktivieren,
+als auch ein Feld für die Adaptierung des Intervalls vorgesehen.
+
+Möchte man verschiedene dataSets nutzen, kann durch den entsprechenden Parameter ``dataSet`` ein entsprechender Name angegeben werden.
+Außerdem ist es möglich, zusätzliche Parameter zu definieren, die der Methode zur Verfügung gestellt werden soll.
+Dazu sollte die Methode get_data_html in der webif __init__.py entsprechend angepasst werden. Das vereinfachte Beispiel ist dem
+Database Plugin entnommen, das zwei Tabs mit verschiedenen Daten anzeigt, die eben auch unterschiedliche Rückmeldungen aus dem
+Plugin erhalten.
+
+.. code-block:: python
+
+    @cherrypy.expose
+    def get_data_html(self, dataSet=None, params=None):
+        """
+        Return data to update the webpage
+
+        For the standard update mechanism of the web interface, the dataSet to return the data for is None
+
+        :param dataSet: Dataset for which the data should be returned (standard: None)
+        :return: dict with the data needed to update the web page.
+        """
+        self.logger.debug("Page Refresh for Dataset: {}, params: {}".format(dataSet, params))
+        if dataSet == 'overview':
+            # get the new data
+            data = self.plugin._webdata
+            try:
+                data = json.dumps(data)
+                return data
+            except Exception as e:
+                self.logger.error(f"get_data_html exception: {e}")
+        if dataSet == "item_details":
+            item_id = params
+            if item_id is not None:
+                rows = self.plugin.readLogs(item_id, time_start=time_start, time_end=time_end)
+            else:
+                rows = []
+            try:
+                data = json.dumps(rows)
+                if data:
+                    return data
+                else:
+                    return None
+            except Exception as e:
+                self.logger.error(f"get_data_html exception: {e}")
+
+        return {}
+
+Dynamische Anpassung des Aktualisierungsintervalls, dataSets und weiteren Parametern
+------------------------------------------------------------------------------------
+
+Unter Umständen ist es sinnvoll, diverse Parameter der automatischen Aktualisierung durch ein Script (oder einen Button)
+anzupassen. Die Parameter werden dabei durch Aufruf von ``window.refresh.update({});`` in Form eines Dictionary aktualisiert.
+Die möglichen Schlüsselwörter des Dictionaries sind dabei:
+
+- dataSet: zur Angabe der Inhalte, die vom Plugin angefordert werden sollen
+- update_params: etwaige zusätzliche Parameter für die get_data_html Methode
+- update_interval: das Updateintervall in Millisekunden
+- update_active: Aktivieren oder Deaktivieren der automatischen Aktualisierung
+
+Das folgende fiktive Beispiel zeigt einen Script Block, bei dem die Aktualisierung ausgeschaltet wird,
+wenn wir den 12.12.2022 haben (was vermutlich wenig Sinn macht und daher angepasst werden sollte).
+
+.. code-block:: html+jinja
+
+    <!--
+    This is an example on how to update the page refresh method. You can set the dataSet, update interval, special parameters or (de)activate the auto refresh
+    In the example the update is deactivated on the 12th of December 2022 (what might make no sense at all)
+    -->
+    <script>
+      var today = new Date();
+      var today_date = String(today.getDate()) + String(today.getMonth() + 1) + today.getFullYear();
+      let test_date = "12122022";
+      if (today_date === test_date)
+          window.refresh.update({dataSet:'test', update_params:'specialitem', update_interval: 2000, update_active:false});
+    </script>

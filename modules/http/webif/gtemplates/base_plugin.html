@@ -5,15 +5,74 @@
 {% endblock title %}
 
 <!--
-	set onload= attribute of <body> tag to periodically update data of web interface
+	add additional attributes for body tag if body_attribs is set in the plugin index.html
 -->
-{%- block body_attribs %}
-	{%- if update_interval is defined and update_interval > 0 %} onload="setInterval(shngGetUpdatedData, {{ update_interval }})"
-	{%- endif %}
+{% block body_attribs -%}
+	{% if body_attribs is defined %} {{ body_attribs }}"
+	{% endif %}
 {%- endblock body_attribs %}
 
+{% block scripts -%}
+{{ super() }}
 
-{% block content %}
+<script>
+	function initVariables() {
+		// Make refresh variable, dataSet and update_params available for plugins html files.
+		window.refresh = new timer();
+		window.dataSet = null;
+		window.update_params = null;
+		window.update_interval = 0;
+		window.update_active = false;
+		window.update_blocked = false;
+		// window.row_count = 0; If you want to get the row count on the current page, put this line in the resepctive plugin index.html
+		{%- if dataSet is defined %}
+		  window.dataSet = '{{ dataSet }}';
+		{%- endif %}
+		{%- if update_params is defined %}
+		  window.update_params = '{{ update_params }}';
+		{%- endif %}
+		{%- if update_interval is defined %}
+		  window.update_interval = {{ update_interval|int }};
+		  {%- if update_interval > 0 %}
+				{%- if update_active is defined %}
+					window.update_active = {{ update_active|lower }};
+				{%- else %}
+					{% set update_active = true %}
+				{%- endif %}
+			{%- else %}
+				{% set update_active = false %}
+		  {%- endif %}
+		{%- else %}
+		  window.update_interval = 0;
+		  {% set update_active = false %}
+		{%- endif %}
+		window.update_active = {{ update_active|lower }};
+		{%- if update_blocked is defined %}
+			window.update_blocked = {{ update_blocked|lower }};
+		{%- endif %}
+
+		// Start page refresh method
+		{%- if update_interval is defined and update_interval > 0 and update_active %}
+		  // update_interval defines the time between refreshes in ms
+		  refresh.start(function(){
+		      shngGetUpdatedData();
+		  }, window.update_interval, false, true);
+		  console.log("Starting autorefresh with dataset " + window.dataSet + " and params " + window.update_params + " on start using interval " + window.update_interval + " refresh: " + window.update_active);
+		{%- else %}
+		  // update_interval is set to 0 so no update will happen. Refresh still has to be started to work.
+		  refresh.start(function(){
+		      shngGetUpdatedData();
+		  }, 0, false, true);
+		  console.log("Initializing autorefresh (not active) with dataset " + window.dataSet + " and params " + window.update_params + " using interval " + window.update_interval);
+		{%- endif %}
+	}
+  initVariables();
+</script>
+
+<script src="/gstatic/js/smarthomeng_pageupdate.js"></script>
+{%- endblock scripts %}
+
+{% block content -%}
 
 {% if scroll_heading is not defined %}
 <div id="webif-navbar" style="position: fixed; top: 0; width: 100%; height: 180px; background: RGB(255, 255, 255); z-index: 10;">
@@ -49,7 +108,7 @@
 			{% else %}
 				<br>
 			{% endif %}
-			<h6>{{ _('Plugin') }} &nbsp; &nbsp; : <span id="webif_plugin_state">{% if p.alive %}{{_('Aktiv')}}{% else %}{{_('Gestoppt')}}{% endif %}</span></h6>
+			<h6>{{ _('Plugin') }} &nbsp; &nbsp; : <span id="webif_plugin_state">{% if p.alive %}{{ _('Aktiv') }}{% else %}{{ _('Gestoppt') }}{% endif %}</span></h6>
 		</div>
 
 		<div class="col-sm-7">
@@ -61,13 +120,16 @@
 				<tr>
 					<td colspan="3">
 						{% block buttons %}
-						{% endblock %}
+						{% endblock buttons %}
 					</td>
 					<td colspan="2" align="right">
-						<form action="" method="post">
-						<button id="reload" class="btn btn-shng btn-sm" name="reload" type="submit" value="on"><i class="fas fa-redo"></i>&nbsp;&nbsp;&nbsp;{{_('Aktualisieren')}}&nbsp;</button>
-						<button id="close" class="btn btn-shng btn-sm" title="{{ 'Schließen' }}" onclick="window.close();" ><i class="fas fa-times"></i>&nbsp;&nbsp;&nbsp;{{_('Schließen')}}&nbsp;</button>
-						</form>
+							<span id="autorefresh">
+								{{ _('Autom. Aktualisierung') }}
+								<input title="{{ _('(De)Aktiviere automatische Seitenaktualisierung') }}" type="checkbox" id="update_active" name="update_active" value="active" oninput="set_update_interval()">
+								<input title="{{ _('Aktualisierungsintervall in Sekunden') }}" style="width:60px" type="number" id="update_interval" name="update_interval" min="0" oninput="set_update_interval()"> {{ _('Sekunden') }}
+							</span>
+						<button id="reload" class="btn btn-shng btn-sm" onclick="window.location.reload();"><i class="fas fa-redo"></i>&nbsp;&nbsp;&nbsp;{{ _('Aktualisieren') }}&nbsp;</button>
+						<button id="close" class="btn btn-shng btn-sm" title="{{ _('Schließen') }}" onclick="window.close();" ><i class="fas fa-times"></i>&nbsp;&nbsp;&nbsp;{{ _('Schließen') }}&nbsp;</button>
 					</td>
 				</tr>
 			</table>
@@ -182,7 +244,7 @@
 </div>
 
 
-{% endblock content %}
+{%- endblock content %}
 
 {% if scroll_heading is not defined %}
 </div>
