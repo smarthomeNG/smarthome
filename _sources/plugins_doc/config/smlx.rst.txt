@@ -8,8 +8,8 @@ Plugin 'smlx' Konfiguration
 
 .. index:: Plugins; smlx Konfiguration
 
-.. image:: /_static/img/gateway.svg
-   :alt: plugin type logo
+.. image:: /plugins/smlx/webif/static/img/plugin_logo.png
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %
@@ -175,7 +175,7 @@ xor_in
 ======
 
 
-Initaler Wert für XOR Berechnung
+Initialer Wert für XOR Berechnung
 
  - Datentyp: **int**
  - Standardwert: **65535**
@@ -215,6 +215,34 @@ sml_prop
 Andere Eigenschaft des Obis Codes nutzen, z.B. unitName
 
  - Datentyp: **str**
+ - Standardwert: **valueReal**
+
+ - Mögliche Werte:
+
+   - **valueReal**
+   - **unitName**
+   - **actualTime**
+   - **statRun**
+   - **statFraudMagnet**
+   - **statFraudCover**
+   - **statEnergyTotal**
+   - **statEnergyL1**
+   - **statEnergyL2**
+   - **statEnergyL3**
+   - **statRotaryField**
+   - **statBackstop**
+   - **statCalFault**
+   - **statVoltageL1**
+   - **statVoltageL2**
+   - **statVoltageL3**
+   - **obis**
+   - **objName**
+   - **status**
+   - **valTime**
+   - **unit**
+   - **scaler**
+   - **value**
+   - **signature**
 
 
 ===============

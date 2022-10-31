@@ -6,10 +6,11 @@ Ein Plugin um diverse Husqvarna Automower (R) mit SmartHomeNG ansteuern zu könn
 Anforderungen
 -------------
 Zur Verwendung des Plugins wird zusätzlich zu einem gültigen Benutzerkonto, welches für die Automower Connect App
-verwendet wird, auch ein API-Key benötigt. Dieser Key muss in der Plugin-Konfiguration hinterlegt werden.
-Dazu auf https://developer.husqvarnagroup.cloud/apps mit dem bereits aus der App vorhandenen Benutzernamen und
-Passwort anmelden und eine neue Applikation erstellen. Abschließend der Applikation noch die "Authentication API" und
-die "Automower Connect API" zu zuweisen.
+verwendet wird, auch ein API-Key und dessen Api-Secret benötigt. Diese müssen in der Plugin-Konfiguration hinterlegt
+werden. Dazu auf https://developer.husqvarnagroup.cloud/applications mit dem bereits aus der App vorhandenen
+Benutzernamen und Passwort anmelden und eine neue Applikation erstellen. Als redirect URL kann dabei z.B.
+"http://localhost:8080" eingetragen werden. Abschließend der Applikation noch die "Authentication API" und die
+"Automower Connect API" zu zuweisen.
 
 Notwendige Software
 ~~~~~~~~~~~~~~~~~~~
@@ -34,17 +35,19 @@ Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wur
 
     am315x:
         plugin_name: husky2
-        userid: email@domain.de
-        password: mysecret
         apikey: mykey
+        apisecret: mysecret
 
+Items
+~~~~~
 
+Die husky_state Attribute können die Werte wie in der Dokumentation von Husqvarna
+( https://developer.husqvarnagroup.cloud/apis/automower-connect-api#status%20description%20and%20error%20codes )
+beschrieben annehmen. Zu beachten ist jedoch, dass diese ebenfalls in die Sprachen, die in der locale.yaml definiert
+sind, übersetzt werden. Somit ist bei einer Überprüfung auf einen bestimmten Zustand, der Status in der jeweiligen
+Sprache zu verwenden. Z.B. die Aktivität "GOING_HOME" entspricht in deutsch "Unterwegs zur Ladestation". Genauso
+werden auch Fehlermeldungen gehandhabt. Für die vollständige Auflistung bitte in der locale.yaml nachlesen.
 
-items.yaml
-~~~~~~~~~~
-
-Als grundlegende Struktur für die Kommunikation wird empfohlen das Item-Struktur Template zu verwenden. Dieses kann
-anschließend natürlich nach belieben aus- und umgebaut werden.
 
 Funktionen
 ~~~~~~~~~~
@@ -63,6 +66,25 @@ Beispielhafte Nutzung des Plugins mit SmartVisu:
 .. image:: assets/state_sv.png
    :class: screenshot
 
+SV Widget
+---------
+
+Für die Anzeige der aktuellen Position sowie den Pfad zwischen den letzten Positionen des Mähers, steht das widget
+map zur Verfügung. Dieses ist auf basis von https://www.smarthomeng.de/google-maps-widget-fuer-smartvisu-2-9 mit
+google maps erstellt worden. Das widget benötigt generell einen google maps api key, für Testzwecke
+kann es jedoch auch ohne diesen verwendet werden.
+
+Nachfolgend sind die Parameter für das Widget aufgelistet.
+
+.. code-block:: html
+
+    {{ husky2.map(id, name, latitude, longitude, gpspoints, mapskey, zoomlevel, pathcolor) }}
+
+Eine Beispielhafte Verwendung könnte dabei so aussehen:
+
+.. code-block:: html
+
+    {{ husky2.map('', 'mower.info.device', 'mower.state.latitude', 'mower.state.longitude', 'mower.state.gpspoints', '4ADdsf665dSF53fdg5DGdasfg43SDF51', 19, '#3afd02') }}
 
 Web Interface
 -------------

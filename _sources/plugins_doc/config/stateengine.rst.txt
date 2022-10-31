@@ -288,6 +288,66 @@ Kennzeichnet das Item als Objekt-Item des StateEngine-Plugins. Ist der Wert nich
    - **inactive** |_| - |_| Jeder andere Wert deaktiviert die State Machine
 
 
+se_previousconditionset_item_id
+===============================
+
+
+**ID des Items, in dem der Name des vorherigen Zustandsets abgelegt wird:**
+In das hier verknüpfte Item wird der Name des vorherigen Zustandsets abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden.
+
+ - Datentyp: **str**
+
+
+se_previousconditionset_item_name
+=================================
+
+
+**Name des Items, in dem der Name des vorherigen Zustandsets abgelegt wird:**
+In das hier verknüpfte Item wird der Name des vorherigen Zustandsets abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden.
+
+ - Datentyp: **str**
+
+
+se_previousstate_conditionset_item_id
+=====================================
+
+
+**ID des Items, in dem der Name des Zustandsets vom vorherigen Zustand abgelegt wird:**
+In das hier verknüpfte Item wird der Name des Zustandssets des vorherigen Zustands abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden.
+
+ - Datentyp: **str**
+
+
+se_previousstate_conditionset_item_name
+=======================================
+
+
+**Name des Items, in dem der Name des Zustandsets vom vorherigen Zustand abgelegt wird:**
+In das hier verknüpfte Item wird der Name des Zustandssets des vorherigen Zustands abgelegt. Das Item kann für Displayzwecke, Aktionen und Bedingungen genutzt werden.
+
+ - Datentyp: **str**
+
+
+se_previousstate_item_id
+========================
+
+
+**Id des Items, in dem der vorherige Zustand abgelegt wird:**
+In das hier verknüpfte Item wird die Id des vorherigen Zustands abgelegt. Das Item kann mit dem Attribut ``cache: yes`` versehen werden, dann bleibt der vor-vorherige Zustand bei einem Neustart von smarthomeNG erhalten.
+
+ - Datentyp: **str**
+
+
+se_previousstate_item_name
+==========================
+
+
+**Id des Items, in dem der Name des vorherigen Zustands abgelegt wird:**
+In das hier verknüpfte Item wird der Name des vorigen Zustands abgelegt. Das Item kann für Displayzwecke und Bedingungen verwendet werden.
+
+ - Datentyp: **str**
+
+
 se_released_by
 ==============
 

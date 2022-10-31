@@ -119,7 +119,9 @@ Das hat die selbe Wirkung, als hätte man ohne Struktur Template folgende Item-K
 
 .. code-block:: yaml
 
-        test_leuchte:
+    test_leuchte:
+        hue2_id: 3
+
         name: Vorlage-Struktur für eine Hue Leuchte
         type: foo
         hue2_resource: light
@@ -146,7 +148,7 @@ Das hat die selbe Wirkung, als hätte man ohne Struktur Template folgende Item-K
             type: num
             hue2_resource: ..:.
             hue2_id: ..:.
-            hue2_functione: sat
+            hue2_function: sat
 
         ct:
             type: num

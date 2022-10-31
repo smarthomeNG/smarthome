@@ -28,7 +28,7 @@ Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 Beschreibung
 ============
 
-Zugriff und Steuern eines Xiaomi Saugroboters
+Zugriff und Steuern eines Xiaomi Saugroboters. Es wird empfohlen, den Staubsauger mit der neuesten Valetudo Firmware zu bespielen und MQTT anstelle dieses Plugins zu nutzen.
 
 
 Anforderungen
@@ -36,7 +36,7 @@ Anforderungen
 
 
 Das Plugin benötigt das python-miio Modul. Die richtige Version wird automatisch beim Start von smarthomeNG installiert.
-Die Bibliothek benötigt den Token des Roboters zur Kommunikation. Hierzu ist bitte die `Anleitung auf github <https://python-miio.readthedocs.io/en/latest/discovery.html#installation>`_ zu befolgen.
+Die Bibliothek benötigt den Token des Roboters zur Kommunikation. Hierzu ist bitte die `Anleitung auf github <https://python-miio.readthedocs.io/en/latest/discovery.html#installation>`_ zu befolgen. Bei neueren Valetudo Versionen ist das Token im Log als LocalSecret hinterlegt. Dieses muss hier https://gchq.github.io/CyberChef/#recipe=To_Hex in ein 32 Zeichen langes Token umgewandelt werden.
 
  - Minimum SmartHomeNG Version: **1.4**
 

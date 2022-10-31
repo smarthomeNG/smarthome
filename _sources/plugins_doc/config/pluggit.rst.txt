@@ -8,8 +8,8 @@ Plugin 'pluggit' Konfiguration
 
 .. index:: Plugins; pluggit Konfiguration
 
-.. image:: /_static/img/interface.svg
-   :alt: plugin type logo
+.. image:: /plugins/pluggit/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %
@@ -28,7 +28,7 @@ Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 Beschreibung
 ============
 
-Anbindung einer KWL Pluggit AP310 über das Modbus Protokoll
+Anbindung einer KWL Pluggit AP310 über das Modbus-Protokoll.
 
 
 Anforderungen
@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.2**
+ - Minimum SmartHomeNG Version: **1.8**
 
 Konfiguration
 =============
@@ -58,7 +58,7 @@ cycle
 =====
 
 
-Zykluszeit
+Zykluszeit.
 
  - Datentyp: **int**
  - Standardwert: **50**
@@ -68,7 +68,7 @@ host
 ====
 
 
-Hostname oder IP Adresse des Pluggit Dienstes
+Hostname oder IP Adresse des Pluggit Dienstes.
 
  - Datentyp: **str**
 
@@ -77,7 +77,7 @@ port
 ====
 
 
-Port Nummer des Pluggit Dienstes
+Port Nummer des Pluggit Dienstes.
 
  - Datentyp: **int**
  - Standardwert: **502**
@@ -93,37 +93,31 @@ Item Attribute
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
 
-pluggit_listen
-==============
+pluggit_convert
+===============
 
 
-In das Item zu lesende Daten
+Wandelt den gelesenen oder den zu schreibenden Wert in bzw. von ein anderes Format um.
 
  - Datentyp: **str**
 
- - Mögliche Werte:
 
-   - **prmRamIdxUnitMode** |_| - |_| Aktiver Modus der Einheit> 0x0004 Manueller Modus; 0x0008 Wochenprogramm
-   - **prmNumOfWeekProgram** |_| - |_| Nummer des Wochenprogrammes (für Week Programmier-Modus)
-   - **prmRomIdxSpeedLevel** |_| - |_| Geschwindigkeit des Lüfters im manuellen Modus; zeigt den aktuellen Gschwindigkeits-Level [4-0]
-   - **prmFilterRemainingTime** |_| - |_| Verbleibende Zeit der Lebensdauer des Filters (in Tagen)
-   - **prmRamIdxT1** |_| - |_| Frischluft Temperatur in °C
-   - **prmRamIdxT2** |_| - |_| Zuluft Temperatur in °C
-   - **prmRamIdxT3** |_| - |_| Abluft Temperatur in °C
-   - **prmRamIdxT4** |_| - |_| Fortluft Temperatur in °C
-
-
-pluggit_send
+pluggit_read
 ============
 
 
-In die Pluggit Einheit zu schreibender Wert
+Aus der Pluggit-Einheit zu lesende Daten.
 
  - Datentyp: **str**
 
- - Mögliche Werte:
 
-   - **activatePowerBoost** |_| - |_| Bool Variable welche den Unit Mode auf manuellen Modus ändert und den Lüfter Gschwindikeits-Level auf den höchsten Wert (4) setzt.
+pluggit_write
+=============
+
+
+In die Pluggit-Einheit zu schreibender Wert.
+
+ - Datentyp: **str**
 
 
 ===============
@@ -142,6 +136,6 @@ Plugin Functions
 
 Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
 
-**Keine**
+Keine Funktionen in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/pluggit/README>` des Plugins zugreifen.

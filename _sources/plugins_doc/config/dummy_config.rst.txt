@@ -107,6 +107,7 @@
    roomba.rst
    roomba_980.rst
    rpi1wire.rst
+   rpi_info.rst
    rrd.rst
    rtr.rst
    rtr2.rst
@@ -124,6 +125,7 @@
    snap7_logo.rst
    snmp.rst
    snom.rst
+   solarforecast.rst
    solarlog.rst
    sonos.rst
    speech.rst

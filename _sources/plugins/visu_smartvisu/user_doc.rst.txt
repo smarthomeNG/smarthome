@@ -28,9 +28,6 @@ v2.9 (master branch).
 
     Dieses Plugin wird in einem der kommenden Releases aus SmartHomeNG entfernt werden.
 
-
-
-
 .. Ab SmartHomeNG v1.7.x werden
     die Visu Seiten im Verzeichnis ``smarthomeng`` erstellt! Dazu bitte beim
     entsprechenden Plugin die Doku lesen.

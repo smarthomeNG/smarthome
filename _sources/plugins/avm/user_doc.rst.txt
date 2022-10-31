@@ -5,6 +5,10 @@ AVM
 Changelog
 ---------
 
+1.6.8
+~~~~~
+- HKR: Allow set temperature to be set directly to value 126.5 (off=frost protection mode). Until now, a bug mapped value off (=126.5) to maximum heating (=127).
+
 1.6.7
 ~~~~~
 - Implement plugin configuration "avm_home_automation" to use AHA (AVM HomeAutomation) Interface (Default: False)

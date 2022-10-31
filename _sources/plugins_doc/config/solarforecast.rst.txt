@@ -1,0 +1,160 @@
+.. |_| unicode:: 0xA0
+
+
+====================================
+Plugin 'solarforecast' Konfiguration
+====================================
+
+
+.. index:: Plugins; solarforecast Konfiguration
+
+.. image:: /_static/img/web.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **solarforecast** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin zur Anbindung an eine Web-basierte Solaretragsvorhersage
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.8.0**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **solarforecast** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+azimuth
+=======
+
+
+Azimutwinkel der Panelausrichtung. 0 Grad enstspricht Sueden
+
+ - Datentyp: **num**
+
+
+declination
+===========
+
+
+Declinationswinkel Solaranlage in Grad
+
+ - Datentyp: **num**
+
+
+kwp
+===
+
+
+Leistung der Solaranlage in kW Peak
+
+ - Datentyp: **num**
+
+
+latitude
+========
+
+
+Breitengrad der Solaranlage in dezimalen Grad
+
+ - Datentyp: **num**
+
+
+longitude
+=========
+
+
+Laengengrad der Solaranlage in dezimalen Grad
+
+ - Datentyp: **num**
+
+
+service
+=======
+
+
+Webservice fuer Vorhersage
+
+ - Datentyp: **str**
+ - Standardwert: **solarforecast**
+
+ - Mögliche Werte:
+
+   - **solarforecast** |_| - |_| solar.forecast
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+solarforecast_attribute
+=======================
+
+
+Solarforecast Attribute: Vorhersage Leistung morgen Vorhersage Leistung heute Datum morgen Datum heute
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **power_tomorrow**
+   - **power_today**
+   - **date_tomorrow**
+   - **date_today**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

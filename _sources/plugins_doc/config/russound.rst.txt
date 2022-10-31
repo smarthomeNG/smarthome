@@ -109,6 +109,23 @@ Plugin Functions
 
 Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
 
-**Keine**
+
+activate()
+==========
+
+
+Startet die Kommunikation mit Russound neu
+
+ - Ergebnistyp der Funktion: **foo**
+
+
+suspend()
+=========
+
+
+Schliesst vorübergehend die Kommunikation mit Russound
+
+ - Ergebnistyp der Funktion: **foo**
+
 
 .. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/russound/README>` des Plugins zugreifen.

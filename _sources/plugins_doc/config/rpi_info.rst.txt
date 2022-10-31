@@ -1,0 +1,268 @@
+.. |_| unicode:: 0xA0
+
+
+===============================
+Plugin 'rpi_info' Konfiguration
+===============================
+
+
+.. index:: Plugins; rpi_info Konfiguration
+
+.. image:: /plugins/rpi_info/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **rpi_info** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **interface Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin zum Auslesen Informationen über den Host Raspberry Pi
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.8**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **rpi_info** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+poll_cycle
+==========
+
+
+Zyklus, in dem die Informationen abgefragt werden sollen.
+
+ - Datentyp: **int**
+ - Standardwert: **120**
+
+
+webif_pagelength
+================
+
+
+Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
+Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.
+Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.
+
+ - Datentyp: **int**
+ - Standardwert: **100**
+
+ - Mögliche Werte:
+
+   - **-1**
+   - **0**
+   - **25**
+   - **50**
+   - **100**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+rpiinfo_func
+============
+
+
+Funktion des Rpi_Info Plugins
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **uptime**
+   - **uptime_string**
+   - **cpu_temperature**
+   - **frequency**
+   - **under_voltage**
+   - **frequency_capped**
+   - **throttled**
+   - **temperature_limit**
+   - **under_voltage_last_reboot**
+   - **throttled_last_reboot**
+   - **frequency_capped_last_reboot**
+   - **temperature_limit_last_reboot**
+
+
+rpiinfo_sys
+===========
+
+
+Attribut für globale Plugin Items zum Triggern eines Update
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **update** |_| - |_| Startet bei Triggerung ein Update der Daten
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+cpu_temp()
+==========
+
+
+Temperatur der CPU in °C
+
+ - Ergebnistyp der Funktion: **num**
+
+
+frequency()
+===========
+
+
+CPU-Taktrate
+
+ - Ergebnistyp der Funktion: **int**
+
+
+frequency_capped()
+==================
+
+
+Ist die Taktrate der CPU begrenzt
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+frequency_capped_last_reboot()
+==============================
+
+
+Wurde seit dem letzten Neustart die Taktrate reduziert
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+suspend()
+=========
+
+
+Pausiert das Plugins
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+temperature_limit()
+===================
+
+
+Temperaturlimit der CPU erreicht
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+temperature_limit_last_reboot()
+===============================
+
+
+Wurde seit dem letzten Neustart das Temperaturlimit erreicht
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+throttled()
+===========
+
+
+Ist der RPI aktuell gedrosselt
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+throttled_last_reboot()
+=======================
+
+
+Wurde der RPI seit dem letzten Neustart gedrosselt
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+under_voltage()
+===============
+
+
+Unterspannung detektiert
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+under_voltage_last_reboot()
+===========================
+
+
+Wurde seit dem letzten Neustart Unterspannung festgestellt
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+uptime()
+========
+
+
+Laufzeit des RPi
+
+ - Ergebnistyp der Funktion: **int**
+
+
+uptime_str()
+============
+
+
+Laufzeit des RPi as String
+
+ - Ergebnistyp der Funktion: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

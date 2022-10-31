@@ -36,7 +36,7 @@ plugin.yaml
 Das Plugin muss nur einmal instantiiert werden. Es ist nicht nötig/möglich mehrere Instanzen zu verwalten.
 
 .. code-block:: yaml
-   :linenos:
+    :linenos:
 
     text_display:
         plugin_name: text_display
@@ -59,12 +59,16 @@ Die Folgenden Anforderungen werden im nachfolgenden Beispiel umgesetzt:
 * Wenn eine neue Nachricht auf dem Fritzbox Anrufbeantworter vorliegt, soll die Nachricht "AB prüfen" angezeigt werden. (Nachrichtenring "wichtiger_als_fenster")
 * Wenn jemand anruft, soll "T: <Name>" bzw. "T: <Nummer>" auf den Displays angezeigt werden, die Anruflogik liegt dabei im AVM-Plugin. (Nachrichtenring "anruf")
 
-Relevant sind letztlich nur die text_display_... Attribute. Letzten Endes werden mit den ganzen Konstruktionen außen herum nur einfache Booleanwerte erzeugt, die aussagen, ob die Nachricht angezeigt werden sollte oder nicht. Damit die Nachrichten noch etwas mehr Informationsgehalt haben, sind einige Nachrichtentexte mit Informationen von anderen Items angereichert worden.
+Relevant sind letztlich nur die text_display_... Attribute. Letzten Endes werden mit den ganzen Konstruktionen außen herum nur einfache Booleanwerte erzeugt,
+die aussagen, ob die Nachricht angezeigt werden sollte oder nicht. Damit die Nachrichten noch etwas mehr Informationsgehalt haben,
+sind einige Nachrichtentexte mit Informationen von anderen Items angereichert worden.
 
 Nachrichtensenke
 ~~~~~~~~~~~~~~~~
 
-In diesem Beispiel werden die Nachrichten auf die KNX-GA a/b/c geschickt. Liegt keine Nachricht vor, wird ein Leerzeichen als Text geschickt, damit z.B. auf den MDT Glastastern keine alten Nachrichten stehen bleiben. Lässt man die Default-Konfiguration einfach weg, wird kein Wert gesendet. Auf den MDT-RTR ist das der einfachste Weg, die Nachricht verschwinden zu lassen.
+In diesem Beispiel werden die Nachrichten auf die KNX-GA a/b/c geschickt. Liegt keine Nachricht vor, wird ein Leerzeichen als Text geschickt, 
+damit z.B. auf den MDT Glastastern keine alten Nachrichten stehen bleiben. Lässt man die Default-Konfiguration einfach weg, wird kein Wert gesendet. 
+Auf den MDT-RTR ist das der einfachste Weg, die Nachricht verschwinden zu lassen.
 
 .. code:: yaml
 

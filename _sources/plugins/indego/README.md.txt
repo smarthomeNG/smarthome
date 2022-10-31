@@ -15,18 +15,18 @@ With this plugin you can send following commands to your Indego Connect Mower:
 - set /get the smart mowing frequency (-100 for the lowest mowing frequency +100 for the highest frequency, in my case "0" worked the best)
 
 And get information:
-1. Download the actual Map of your garden with a visualisation of the part that had been mowed in the actual session and that needs to be mowed. You also see the position of the mower (yellow point). As the Map is only updated from time to time the position is not very accurate.
+1. Download the actual Map of your garden with a visualization of the part that had been mowed in the actual session and that needs to be mowed. You also see the position of the mower (yellow point). As the Map is only updated from time to time the position is not very accurate.
 2. See the percentage of what had been mowed 
 3. See the status of the mower (like docked, mowing, learning garden, going back to the station)
 4. See history data of your Mower (like overall mowing time, charge time, next planned smart mowing time and date
 5. See user data, like Username, Mode, Firmware version, serial number
 6. Get alert messages and the date they occurred and delete them from the server afterwards
-7. Get very accurate weather forecast for your address for the next four days, (incl. exp. sunshine hours, possibility of rain, amount of rain for diffrent daytimes)
+7. Get very accurate weather forecast for your address for the next four days, (incl. exp. sunshine hours, possibility of rain, amount of rain for different daytimes)
 
 The plugin does not offer the possibility to set the times of mowing, this can be handled in the app, or for example here: http://grauonline.de/alexwww/indego/indego.html
 Please note that you cannot connect with multiple devices at a time with the server. If you connect with the app, the plugin will loose the connection (and try to authenticate again, which will make the authentication of the app invalid). You should avoid to be connecting with the app and the plugin at a time, because it will start the authentication procedure again and again.
 
-Feel free to implement the missing functions in the plugin, as I don't change them, I have no need to be able to change the mowing dates with the calender or the location of the mower.
+Feel free to implement the missing functions in the plugin, as I don't change them, I have no need to be able to change the mowing dates with the calendar or the location of the mower.
 If you have a problem please start logging the plugins output in debug mode and check the server responses and Plugin outputs. 
 From time to time Bosch is adding something, so you might also find new features if you have a look at the server response in debug mode.
 For developing you can use a REST client (for example https://github.com/chao/RESTClient)
@@ -80,9 +80,9 @@ Any logics supported?
 ### logic.yaml
 Please refer to the documentation generated from plugin.yaml metadata.
 
-### Integration into SmartVisu
+### Integration into SmartVISU
 
-#### for SmartVISU Version 2.9 (aka develop)
+#### for SmartVISU Version 
 **Todo here** 
 You can use the dropins folder for SmartVISU for all additional stuff without affecting the ``git pull`` mechanism 
 
@@ -92,30 +92,10 @@ and here
 https://github.com/Martin-Gleiss/smartvisu/blob/develop/dropins/README.md
 
 
-#### for SmartVISU Version < = 2.8 (aka master)
-
-In smartVISU_dropins you will find resources for usage with SmartVISU.
-
-copy all png files in ``smartVISU_dropins\lib\weather\pics`` to the folder ``[your smartVISU home]\lib\weather\pics``
-
-copy all svg files in ``smartVISU_dropins\icons`` to the folder ``[your smartVISU home]\icons\ws"
-
-copy ``smartVISU_dropins\pages\your pages folder\widget_basic_input.html`` and 
-``smartVISU_dropins\pages\your pages folder\widget_basic_large_symbol.html`` to your pages folder at ``[your smartVISU home]\pages\{your folder}``
-
-copy ``smartVISU_dropins\pages\your pages folder\indego.html`` to ``[your smartVISU home]\pages\{your folder}\indego.html``
-
-Edit ``[your smartVISU home]\pages\{your folder}\indego.html`` and adjust the path of the map in line 22 
-``{{ multimedia.image('image3', {path where your map is saved, defined in plugin conf img_pfad}, 'corner','20s') }} </br>``
-
-Please be aware that SmartHomeNG user as well as the Webserver needs to have access to the image file! 
-
 ## Methods
 Please refer to the documentation generated from plugin.yaml metadata.
 
-
 ## Examples
-
 
 You need the following item structure for the plugin to work (which is provided as example.yaml)
 The base item ``indego`` may be changed to something else but it is mandatory.

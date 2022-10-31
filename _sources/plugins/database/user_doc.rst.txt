@@ -7,18 +7,11 @@ database
 
 Database plugin, mit Unterstützung für SQLite 3 und MySQL.
 
-Verwenden Sie dieses Plugin, um das Log der Elementwerte in einer Datenbank zu speichern. Es unterstützt
+Verwenden Sie dieses Plugin, um Itemwerte in einer Datenbank zu speichern. Es unterstützt
 verschiedene Datenbanken, die eine Python DB API 2 <http://www.python.org/dev/peps/pep-0249/>`_ Implementierung
 bereitstellen (z. B. `SQLite <http://docs.python.org/3.2/library/sqlite3.html>`_
 welches bereits mit Python oder MySQL gebundeled ist, und über das
 `Implementierungsmodul <https://wiki.python.org/moin/MySQL>`_ verwendet wird).
-
-Use this plugin to store the log of item values into a database. It supports
-different databases which provides a [Python DB API 2](http://www.python.org/dev/peps/pep-0249/)
-implementation (e.g. [SQLite](http://docs.python.org/3.2/library/sqlite3.html)
-which is already bundled with Python or MySQL by using a
-[implementation module](https://wiki.python.org/moin/MySQL)).
-
 
 Konfiguration
 =============
@@ -30,6 +23,12 @@ Die Informationen zur Konfiguration des Plugins sind unter :doc:`/plugins_doc/co
    Falls mehrere Instanzen des Plugins konfiguriert werden sollen, ist darauf zu achten, dass für eine der Instanzen
    **KEIN** **instance** Attribut konfiguriert werden darf, da sonst die Systemdaten nicht gespeichert werden und
    Abfragen aus dem Admin Interface und der smartVISU ins Leere laufen und Fehlermeldungen produzieren.
+
+Standarmässig schreibt das Plugin vor dem Beenden von SmarthomeNG alle am Plugin registrierten Items nochmal mit aktuellem
+Wert in die Datenbank. Die kann durch Setzen des Item Attributes database_write_on_shutdown: False unterdrückt werden.
+Ein typischer Anwendungsfall sind zum Beispiel monoton steigende Werte wie Zählerstände, die selten geschrieben werden
+und für die doppelte Einträge durch smarthomeNG Neustarts stoerend in Datenbank und optionalen Plots in einer
+Visualisierung sind.
 
 
 Web Interface
@@ -76,29 +75,32 @@ Auf der Detailseite zu den Item Einträgen werden die geloggten Werte angezeigt:
 Aufbau der Datenbank
 ====================
 
-Das Plugin erzeugt folgende Datenbank Struktur:
+Das Plugin erzeugt und verwendet zwei Tabellen in der Datenbank:
 
-  * Table `item` - the item table contains all items and thier last known value
-  * Table `log` - the history log of the item values
+  * Table `item` - Die Tabelle beinhaltet alle Items und ihren letzten bekannten Wert
+  * Table `log` - Die Tabelle listet alle historischen Werte der Items auf
 
 
-Die `item` Tabelle enthält die folgenden Columns:
+Die `item` Tabelle enthält die folgenden Spalten:
 
-  * Column `id` - a unique ID which is incremented by one for each new item
-  * Column `name` - the item's ID / name
-  * Column `time` - the unix timestamp in microseconds of last change
-  * Column `val_str` - the string value if type is `str`
-  * Column `val_num` - the number value if type is `num`
-  * Column `val_bool` - the boolean value if type is `bool` or `num`
-  * Column `changed` - the unix timestamp in microseconds of record change
+  * Column `id` - Eine eindeutige Kennung die für jedes neue Item inkrementiert wird
+  * Column `name` - Der ItemName
+  * Column `time` - Ein UNIX Zeitstempel in eine Auflösung von Mikrosekunden
+  * Column `val_str` - Der Itemwert als Zeichenkette wenn das Item den Typ `str` hat
+  * Column `val_num` - Der Itemwert als Zahl, wenn das Item den Typ `num` hat
+  * Column `val_bool` - Der Itemwert als Wahrheitswert, das Item den Typ `bool` oder `num` hat
+  * Column `changed` - Ein UNIX Zeitstempel (in einer Auflösung von Mikrosekunden) der letzen Änderung
 
-Die `log` Tabelle enthält die folgenden Columns:
+Die `log` Tabelle enthält die folgenden Spalten:
 
-  * Column `time` - the unix timestamp in microseconds of value
-  * Column `item_id` - the reference to the unique ID in `item` table
-  * Column `duration` - the duration in microseconds
-  * Column `val_str` - the string value if type is `str`
-  * Column `val_num` - the number value if type is `num`
-  * Column `val_bool` - the boolean value if type is `bool` or `num`
-  * Column `changed` - the unix timestamp in microseconds of record change
+  * Column `time` - Ein UNIX Zeitstempel in eine Auflösung von Mikrosekunden
+  * Column `item_id` - Eine Referenz auf eine eindeutige Kennung eines Items in der Tabelle ìtem
+  * Column `duration` - Die Dauer in Mikrosekunden
+  * Column `val_str` - Der Itemwert als Zeichenkette wenn das Item den Typ `str` hat
+  * Column `val_num` - Der Itemwert als Zahl, wenn das Item den Typ `num` hat
+  * Column `val_bool` - Der Itemwert als Wahrheitswert, das Item den Typ `bool` oder `num` hat
+  * Column `changed` - Ein UNIX Zeitstempel (in einer Auflösung von Mikrosekunden) der letzen Änderung
 
+Es gibt aktuell nur eine Möglichkeit die Anzahl der Datensätze pro Item zu begrenzen: 
+Durch die Angabe des Item Attributs ``database_maxage`` wird das maximale Alter der Einträge eines Items begrenzt.
+Regelmässig werden Werte deren Zeitstempel älter ist als die angegebene Zeitspanne aus der Datenbank gelöscht.

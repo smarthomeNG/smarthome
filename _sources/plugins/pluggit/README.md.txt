@@ -1,129 +1,55 @@
-# PLUGGIT
+# pluggit
+SmartHomeNG plugin pluggit
 
-## Requirements
+Das SmartHomeNG plugin für eine Pluggit AP310 KWL
 
-This plugin is based on the lib pymodbus (branch python3):
-https://github.com/bashwork/pymodbus
-https://github.com/bashwork/pymodbus/tree/python3
+## Einbindung in der plugin.yaml mit:
 
-## Supported Hardware
-
-It is currently working and tested with:
-
-  * Pluggit AP310
-
-## Configuration
-
-### plugin.yaml
-
-The plugin can be configured like this:
-
-```yaml
+```python
 pluggit:
     class_name: Pluggit
     class_path: plugins.pluggit
-    host: 192.168.0.222
-    # cycle: 300
+    host: 192.168.1.4
+    #cycle: 300
 ```
 
-This plugin retrieves data from the KWL Pluggit AP310 based on the modbus register description from the official pluggit homepage ( http://www.pluggit.com/portal/de/faq/bms-building-management-system/verbindung-mit-building-management-system-9737 )
+host = IP-Adresse der pluggit  
+cycle = Update-Interfall der abzufragenden Werte (optional)
 
-The data retrieval is done by establishing a modbus tcp network connection via modbus port 502.
-You need to configure the host (or IP) address of your pluggit KWL.
+## Einbindung in den Items per Item-Struct:
 
-The cycle parameter defines the update interval and defaults to 300 seconds.
-
-### items.yaml
-
-#### pluggit
-
-This attribute references the information to retrieve by the plugin.
-The following list of information can be specified:
-
-  * prmRamIdxUnitMode: Active Unit mode> 0x0004 Manual Mode; 0x0008 WeekProgram
-  * prmNumOfWeekProgram: Number of the Active Week Program (for Week Program mode)
-  * prmRomIdxSpeedLevel: Speed level of Fans in Manual mode; shows a current speed level [4-0]; used for changing of the fan speed level
-  * prmFilterRemainingTime: Remaining time of the Filter Lifetime (Days)
-  * prmRamIdxT1: Frischluft temperature in degree
-  * prmRamIdxT2: Zuluft temperature in degree
-  * prmRamIdxT3: Abluft temperature in degree
-  * prmRamIdxT4: Fortluft temperature in degree
-  * prmRamIdxBypassActualState: Bypass state> Closed 0x0000; In process 0x0001; Closing 0x0020; Opening 0x0040; Opened 0x00FF
-  * activatePowerBoost: bool variable that changes the Unit Mode to manual mode and sets the fan speed level to the highest level (4)
-
-#### Example
-
-Example configuration which shows the current unit mode, the actual week program, the fan speed, the remaining filter lifetime and the bypass state.
-
-```yaml
-pluggit:
-    type: foo
-
-    unitMode:
-        type: str
-        visu_acl: ro
-        enforce_updates: 'true'
-        pluggit_listen: prmRamIdxUnitMode
-
-    weekProgram:
-        type: num
-        visu_acl: ro
-        enforce_updates: 'true'
-        pluggit_listen: prmNumOfWeekProgram
-
-    fanSpeed:
-        type: num
-        visu_acl: ro
-        enforce_updates: 'true'
-        pluggit_listen: prmRomIdxSpeedLevel
-
-    remainingFilterLifetime:
-        type: num
-        visu_acl: ro
-        enforce_updates: 'true'
-        pluggit_listen: prmFilterRemainingTime
-
-    frischluft:
-        type: num
-        visu_acl: ro
-        enforce_updates: 'true'
-        pluggit_listen: prmRamIdxT1
-
-    zuluft:
-        type: num
-        visu_acl: ro
-        enforce_updates: 'true'
-        pluggit_listen: prmRamIdxT2
-
-    abluft:
-        type: num
-        visu_acl: ro
-        enforce_updates: 'true'
-        pluggit_listen: prmRamIdxT3
-
-    fortluft:
-        type: num
-        visu_acl: ro
-        enforce_updates: 'true'
-        pluggit_listen: prmRamIdxT4
-
-    bypassState:
-        type: str
-        visu_acl: ro
-        enforce_updates: 'true'
-        pluggit_listen: prmRamIdxBypassActualState
-
-    activatePowerBoost:
-        type: bool
-        visu_acl: rw
-        enforce_updates: 'true'
-        pluggit_send: activatePowerBoost
+```python
+struct: pluggit.pluggit
 ```
 
-## logic.yaml
+## Änderungen:
 
-No logic related stuff implemented.
+V2.0.3 - 25.10.2022
+- Support für pymodbus 3.0
 
-## Methods
+22.05.2022:
+- Fehler mit manuellem Bypass behoben
 
-No methods provided currently.
+16.02.2022:
+- CurentUnitMode.ManualBypass dem Item-struct zugefügt
+- Log-Level für verschiedene Ausgaben angepasst
+- CurrentUnitMode.AwayMode repariert
+
+24.02.2021:
+- Item-struct um Zugriffe für SmartVISU erweitert
+- item_attribut um pluggit_convert erweitert
+- scheduler.remove eingebaut
+
+29.08.2020:
+ - bool-Werte konnten nicht geschrieben werden
+
+## Folgende Vorteile ergeben sich zu dem Plugin 1.x
+
+- wesentlich mehr Parameter der pluggit können abgefragt werden
+- einige Parameter lassen sich auch schreiben
+- die Werte können intern auch konvertiert werden, sodass man eine vernünftige Ausgabe erhält
+
+## Es fehlen auch noch ein paar Dinge:
+
+- die Programmierung des Auto-Wochenprogramms ist noch nicht implementiert
+- eine Dokumentation der Parameter

@@ -82,7 +82,7 @@ Requests sent from the Visu to SmartHomeNG
 item
 ~~~~
 
-With the **``item``** command a client requests to change the value of
+With the **item** command a client requests to change the value of
 an item. The example requests the item with the id
 "wohnung.buero.schreibtischleuchte.onoff" to be turned off:
 
@@ -94,12 +94,12 @@ an item. The example requests the item with the id
   "val":"0"
   }
 
-The plugin does not send an answer to the **``item``** command.
+The plugin does not send an answer to the **item** command.
 
 monitor
 ~~~~~~~
 
-With the **``monitor``** command a client requests the actual value of a
+With the **monitor** command a client requests the actual value of a
 list of items. The list of the requested item names has to be comma
 seperated. Take a look at the following example:
 
@@ -154,7 +154,7 @@ example:
 ping
 ~~~~
 
-With the **``ping``** command a client checks if the connection to the
+With the **ping** command a client checks if the connection to the
 plugin is alive.
 
 .. code-block:: JSON
@@ -170,10 +170,10 @@ The plugin answers with:
 logic
 ~~~~~
 
-With the **``logic``** command a client requests a logic to be triggered
-or enabled/disabled. **``name``** is the name of the logic, as defined in
-**``etc/logic.yaml``**. Furthermore, in **``etc/logic.yaml``** the
-attribute **``visu_acl``** for that logic has to be set to **True**.
+With the **logic** command a client requests a logic to be triggered
+or enabled/disabled. **name** is the name of the logic, as defined in
+``etc/logic.yaml``. Furthermore, in ``etc/logic.yaml`` the
+attribute ``visu_acl`` for that logic has to be set to ``True``.
 
 .. code-block:: JSON
 
@@ -200,9 +200,9 @@ The plugin does not send an answer to the **``logic``** command.
 series
 ~~~~~~
 
-With the **``series``** command a client requests a series of values for
+With the **series** command a client requests a series of values for
 an item. The values which are requested are stored in a database using
-the sqlite plugin. The **``series``** command only returns data for
+the sqlite plugin. The **series** command only returns data for
 items which are configured to store data via the **sqlite** plugin.
 
 The series command is for instance used by SmartVISU to get data for the
@@ -220,15 +220,16 @@ values of the last 48 hours:
    "count":100
   }
 
-The attribute **``series``** defines which function is used to return
+The attribute ``series`` defines which function is used to return
 the values for the series. The possible functions are **min**, **max**,
 **avg** and **sum**. These functions are implemented in the **sqlite**
 plugin v1.0. The new sqlite plugin (v2.8) implements the functions
 **min**, **max**, **avg** and **on**. **on** returns the percentage (as
 float from 0.00 to 1.00) where the value has been greater than 0.
 
-If the **``end``** attribute is ommitted, **"end":"now"** is assumed by
-the plugin. If the **``count``** attribute is ommitted, **"count":100**
+If the ``end`` attribute is ommitted, **"end":"now"** is assumed by
+the plugin. 
+If the ``count`` attribute is ommitted, **"count":100**
 is assumed by the plugin.
 
 The answer to the request above could look like this:
@@ -292,7 +293,7 @@ updates for series values after a defined period of time. For example:
 series_cancel
 ~~~~~~~~~~~~~
 
-With the **``series_cancel``** command a client requests the updates for a series that it has
+With the **series_cancel** command a client requests the updates for a series that it has
 subscribed to earlier.
 
 .. code-block:: JSON
@@ -327,7 +328,7 @@ or
 log
 ~~~
 
-With the **``log``** command a client requests the last entries of a
+With the **log** command a client requests the last entries of a
 specified log. The example command requests the last 5 log entries of
 the core log:
 
@@ -355,7 +356,7 @@ The plugin answers with a message like this:
 proto
 ~~~~~
 
-With the **``proto``** command a client requests the WebSocket protocol
+With the **proto** command a client requests the WebSocket protocol
 version, it wants to use for communication:
 
 .. code-block:: JSON
@@ -378,7 +379,7 @@ identity
 
 --> This command is new with **SmartHomeNG 1.3**
 
-With the **``identity``** command a client sends information about
+With the **identity** command a client sends information about
 itself to SmartHomeNG. The command should be issued right after opening
 a connection.
 
@@ -400,7 +401,7 @@ list\_items
 
 --> This command is new with **SmartHomeNG 1.4**
 
-With the **``list_items``** command a client requests the list of items
+With the **list_items** command a client requests the list of items
 that are defined in SmartHomeNG:
 
 .. code-block:: JSON
@@ -431,7 +432,7 @@ list\_logics
 
 --> This command is new with **SmartHomeNG 1.4**
 
-With the **``list_logics``** command a client requests the list of
+With the **list_logics** command a client requests the list of
 logics that can be triggered by the client:
 
 .. code-block:: JSON
@@ -464,8 +465,8 @@ Requests sent from SmartHomeNG to the Visu
 dialog
 ~~~~~~
 
-**``dialog``** is a command sent from the plugin to the smartVISU clients.
-With the **``dialog``** command the smartVISU client can be instructed to
+**dialog** is a command sent from the plugin to the smartVISU clients.
+With the **dialog** command the smartVISU client can be instructed to
 display a dialog.
 
 The following command instructs smartVISU to display a dialog:
@@ -474,7 +475,7 @@ The following command instructs smartVISU to display a dialog:
 
   {"cmd": "dialog", "header": "This is the dialog header", "content": "This is the dialog message"}
 
-The smartVISU client does not send an answer to the **``dialog``** command.
+The smartVISU client does not send an answer to the **dialog** command.
 
 url
 ~~~
@@ -484,7 +485,7 @@ url
 --> This command works with **smartVISU 2.9** and up, for **smartVISU
 2.8** a modified driver **``io_smarthome.py``** is needed.
 
-**``url``** is a command sent from the plugin to the smartVISU clients.
+**url** is a command sent from the plugin to the smartVISU clients.
 With the **``url``** command the smartVISU client can be instructed to
 change to another page.
 
@@ -494,6 +495,6 @@ The following command instructs smartVISU to change to the main page:
 
   {"cmd":"url", "url": "index.php"}
 
-The smartVISU client does not send an answer to the **``url``** command.
+The smartVISU client does not send an answer to the **url** command.
 
 

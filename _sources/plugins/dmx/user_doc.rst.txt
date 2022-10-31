@@ -27,17 +27,17 @@ plugin.yaml
        serialport: /dev/usbtty...
        # interface = nanodmx
 
-Bei `` interface`` kann zwischen `` nanodmx`` und `` enttec`` gewählt werden.
+Bei ``interface`` kann zwischen ``nanodmx`` und ``enttec`` gewählt werden.
 Standardmäßig wird nanodmx verwendet.
 
 Die serielle Schnittstelle muss mit der tatsächlichen Schnittstelle übereinstimmen. Unter Linux könnte es sein
 notwendig, um eine udev-Regel zu erstellen. Für ein NanoDMX-Gerät bereitgestellt über
-`` / dev / usbtty-1-2.4`` könnte die folgende udev-Regel passen:
+``/dev/usbtty-1-2.4`` könnte die folgende udev-Regel passen:
 
 .. code :: bash
 
-   # /etc/udev/rules.d/80-smarthome.rules
-   SUBSYSTEMS=="usb",KERNEL=="ttyACM*",ATTRS{product}=="NanoDMX Interface",SYMLINK+="usbtty-%b"
+    # /etc/udev/rules.d/80-smarthome.rules
+    SUBSYSTEMS=="usb",KERNEL=="ttyACM*",ATTRS{product}=="NanoDMX Interface",SYMLINK+="usbtty-%b"
 
 In der Online-Hilfe für Linux kann die Erstellung von udev Regeln nachgelesen werden.
 

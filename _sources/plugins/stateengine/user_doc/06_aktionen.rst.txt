@@ -321,13 +321,30 @@ Aktionen werden in aufsteigender Reihenfolge der zugewiesenen Zahlen ausgeführt
 
 .. code-block:: yaml
 
-      'conditionset: ["regex:enter_(.*)_test", "eval:sh.itemX.property.name"]'
+      'conditionset: ["regex:enter_(.*)_test", "eval:sh.itemX.property.value"]'
 
 Über das Attribut wird festgelegt, dass die Aktion nur dann ausgeführt werden
 soll, wenn der Zustand durch die angegebene Bedingungsgruppe eingenommen wurde.
-Zum Vergleich wird immer der volle Pfad der Bedingungsgruppe herangezogen.
+Zum Vergleich wird immer der volle Pfad (die ID) der Bedingungsgruppe herangezogen.
 Conditionset erlaubt sowohl einzelne Werte mittels value, regex oder eval, als auch eine Liste.
-Wichtig ist, reguläre Ausdrücke unter Anführungszeichen zu setzen (und dann Hochkomma um den gesamten Eintrag).
+Die Liste kann zum einen wie oben angeführt mit eckigen Klammern, als auch wie gewohnt mit
+"-" in einzelnen Zeilen (siehe unten) angegeben werden. Wichtig ist, im ersten Fall reguläre Ausdrücke
+unter Anführungszeichen zu setzen (und dann Hochkomma um den gesamten Eintrag). Im zweiten Fall sind keine
+Anführungszeichen notwendig.
+
+Die einzelnen Angaben einer Liste werden als ``OR`` evaluiert.
+
+.. code-block:: yaml
+
+screens:
+    conditionset_to_check:
+        type: str
+        value: "screens.osten_s1.automatik.rules.abend.enter_abend"
+
+      conditionset:
+        - regex:enter_(.*)_test
+        - eval:sh.screens.conditionset_to_check.property.name
+
 Der gesamte Pfad könnte wie folgt evaluiert werden:
 
 .. code-block:: yaml
@@ -362,6 +379,26 @@ regnet hingegen auf den Wert, der in den Settings hinterlegt ist.
 
         enter_regen:
             diverse andere Bedingungen
+
+**previousconditionset: <conditionset regex>**
+
+.. code-block:: yaml
+
+      previousconditionset: regex:enter_(.*)_test"
+
+Über das Attribut wird festgelegt, dass die Aktion nur dann ausgeführt werden
+soll, wenn die vorherige Bedingungsgruppe des aktuellen Zustands mit dem angegebenen Ausdruck übereinstimmt.
+Die Abfrage erfolgt dabei nach den gleichen Regeln wie bei ``conditionset`` oben angegeben.
+
+**previousstate_conditionset: <conditionset regex>**
+
+.. code-block:: yaml
+
+      previousstate_conditionset: regex:enter_(.*)_test"
+
+Über das Attribut wird festgelegt, dass die Aktion nur dann ausgeführt werden
+soll, wenn die Bedingungsgruppe, mit der der vorherige Zustand eingenommen wurde, mit dem angegebenen Ausdruck übereinstimmt.
+Die Abfrage erfolgt dabei ebenfalls nach den gleichen Regeln wie bei ``conditionset`` oben angegeben.
 
 Templates für Aktionen
 ----------------------

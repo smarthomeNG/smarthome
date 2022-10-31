@@ -320,3 +320,34 @@ auf True gesetzt - aber nur, wenn zuvor der x-Zustand aktiv war.
 
                     enter_normal:
                         se_value_wind: True
+
+**previous.conditionset_id:**
+*Die Id der Bedingungsgruppe, die beim vorigen Durchlauf aktiv war*
+
+**previous.conditionset_name:**
+*Der Name der Bedingungsgruppe, die beim vorigen Durchlauf aktiv war*
+
+Bei den previous.conditionset Variablen spielt es keine Rolle, ob ein neuer Zustand eingenommen wurde oder nicht.
+Beispiel: Ein Item ist aktuell im Zustand "Suspend" auf Grund einer manuellen Triggerung,
+also der Bedingungsgruppe "enter_manuell". Die Variable ``previous.conditionset_name``
+beinhaltet nun den Namen der Bedingungsgruppe vom vorherigen Zustand. Bei einer erneuten
+Zustandsevaluierung bleibt (höchstwahrscheinlich) das Item im Zustand suspend auf Grund
+der Bedingungsgruppe "enter_stay". Die Variable beinhaltet nun den Wert der vorigen Gruppe "enter_manuell".
+
+**previous.state_id:**
+*Die Id des vorherigen Zustands*
+
+In dieser Variable ist die ID des Zustands gespeichert, der vor dem Eintreten in den aktuellen
+Zustand aktiv gewesen ist. Ansonsten gelten alle vorhin beschriebenen Regeln.
+
+**previous.state_name:**
+*Der Name des vorherigen Zustands*
+
+In dieser Variable ist der Name des Zustands gespeichert, der vor dem Eintreten in den aktuellen
+Zustand aktiv gewesen ist. Ansonsten gelten alle vorhin beschriebenen Regeln.
+
+**previous.state_conditionset_id:**
+*Die Id der Bedingungsgruppe, die beim vorigen Zustand zuletzt aktiv war*
+
+**previous.state_conditionset_name:**
+*Der Name der Bedingungsgruppe, die beim vorigen Zustand zuletzt aktiv war*

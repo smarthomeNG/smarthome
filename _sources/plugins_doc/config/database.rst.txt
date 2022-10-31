@@ -83,6 +83,17 @@ Dump Cycle bestimmt wie oft die Daten auf Platte geschrieben werden (in Sekunden
  - Standardwert: **60**
 
 
+default_maxage
+==============
+
+
+Falls dieser Parameter einen Wert größer 0 enthält: Standard maxage für Items, die kein maxage gesetzt haben
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Minimalwert: **0**
+
 driver
 ======
 
@@ -92,6 +103,17 @@ Spezifiziert das DB-API2 Treiber Modul
  - Datentyp: **str**
  - Standardwert: **sqlite3**
 
+
+max_delete_logentries
+=====================
+
+
+Maximal auf einmal zu löschende Anzahl an Log Einträgen mit dem database_maxage Attribut, reduziert die Belastung der Datenbank bei alten Datenbeständen
+
+ - Datentyp: **int**
+ - Standardwert: **1500**
+
+ - Minimalwert: **20**
 
 precision
 =========
@@ -110,6 +132,36 @@ prefix
 Enthält ein Prefix welches vor die Datenbanktabellen des Plugins geschrieben wird
 
  - Datentyp: **str**
+
+
+removeold_cycle
+===============
+
+
+Remove old Cycle bestimmt wie oft die Prüfung auf veraltete Daten gestartet werden soll (in Sekunden).
+
+ - Datentyp: **int**
+ - Standardwert: **91**
+
+
+webif_pagelength
+================
+
+
+Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
+Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.
+Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+ - Mögliche Werte:
+
+   - **-1**
+   - **0**
+   - **25**
+   - **50**
+   - **100**
 
 
 ==============
@@ -148,6 +200,16 @@ Maximales Alter (in Tagen) der Logeinträge, die für dieses Item gespeichert we
  - Datentyp: **num**
 
  - Minimalwert: **0**
+
+database_write_on_shutdown
+==========================
+
+
+Muss normalerweise nicht konfiguriert werden, dann wird der Standard 'True' genutzt. Das bedeutet, dass das item vor dem Beenden von smarthomeNG nochmal in die DB geschrieben wird (auch wenn keine echte Aenderung statt fand). Wird das Attribut auf 'False' gesetzt, wird das Schreiben beim Beenden unterdrueckt.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
 
 ===============
 Logik Parameter

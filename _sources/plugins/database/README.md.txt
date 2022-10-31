@@ -111,6 +111,13 @@ Use "rw" to specify that changes will also populate to the database, use "ro" to
 changes on the items and do not populate them to the database. Only read items from the database
 when using the methods described below for retrieving data.
 
+#### database_write_on_shutdown
+By default, every item with set database attribute is rewritten into the database on 
+plugin shutdown. This is done no matter if the item has been updated or not. 
+These values with double entries in the database do not represent the actual value behavior
+especially for items, that are monotonously increasing but rarely updated. 
+By setting this attribute to False, a rewrite on plugin shutdown will be prevented.
+
 ## Functions
 This plugin adds functions to retrieve data for items.
 

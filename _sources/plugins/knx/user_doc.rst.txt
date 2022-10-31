@@ -169,6 +169,21 @@ Der zweite Tab zeigt Statistiken zu den Gruppenadressen:
 .. image:: assets/tab2_ga_statistics.png
    :class: screenshot
 
+
+.. hint::
+
+   Wenn es Items gibt, die mit dem Attribut ``knx_cache`` und einer Gruppenadresse konfiguriert wurden wird SmartHomeNG beim Start
+   diese Gruppenadressen vom knxd abfragen.
+   Wenn die Werte der Gruppenadressen zu diesem Zeitpunkt nicht im knxd vorliegen wird dieser eine Leseanforderung absetzten um die Werte zubekoammen.
+   Schlägt der Versuch fehl oder sind aus anderem Grund keine Werte im Cache des knxd vorhanden dann sendet dieser ein fehlerhaftes Datenpaket
+   in dem nur Absender und Empfängeradresse enthalten sind. Die weiteren 2 Bytes mit Kontroll und Dateninformationen fehlen jedoch.
+   Daraus lässt sich auch nicht feststellen, ob die Empfängeradresse eine physikalische Adresse oder eine Gruppenadresse ist.
+   Das Plugin merkt sich diese Empfängeradresse, interpretiert sie als Gruppenadresse und speichert sie in einer internen Liste.
+   Im Webinterface werden alle Items mit ``knx_cache`` und der zugeordneten Gruppenadresse mit dieser Liste verglichen.
+   Taucht die Gruppenadresse dort auf, wird der Eintrag rot eingefärbt als Hinweis das die Konfiguration überprüft werden sollte.
+   Oftmals haben knx Geräte für eine Gruppenadresse die mit knx_cache ausgelesenwerden soll kein Leseflag in der ETS gesetzt bekommen.
+   Es ist möglich den Loglevel mit dem diese fehlerhaften Rückmeldungen geloggt werden in der Plugin Konfiguration festzulegen.
+
 Der dritte Tab zeigt Statistiken zu den physikalischen Adressen:
 
 .. image:: assets/tab3_pa_statistics.png

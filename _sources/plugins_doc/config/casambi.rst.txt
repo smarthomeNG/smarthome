@@ -95,7 +95,7 @@ casambi_id
 
 Casambi Geraete ID
 
- - Datentyp: **num**
+ - Datentyp: **int**
 
  - Minimalwert: **0**
 

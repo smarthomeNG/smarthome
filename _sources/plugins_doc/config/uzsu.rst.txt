@@ -43,7 +43,7 @@ Das Plugin benötigt die folgende Software:
  - Python Modul scipy: ``pip3 install scipy``. Es wird empfohlen, zuerst die Pythonmodule zu aktualisieren, aber unbedingt darauf zu achten, dass die Requirements von SmarthomeNG erfüllt bleiben! Sollte die Installation via pip nicht funktionieren: ``sudo apt update && sudo apt install -y python3-scipy``
 
 
- - Minimum SmartHomeNG Version: **1.5**
+ - Minimum SmartHomeNG Version: **1.6**
 
 Konfiguration
 =============

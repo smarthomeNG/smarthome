@@ -282,6 +282,7 @@ Die folgenden "besonderen" Bedingungsnamen können verwendet werden
 
 **time**
 *Aktuelle Uhreit*
+
 Die Werte für ``se_value_time``, ``se_min_time`` und
 ``se_max_time`` müssen im Format "hh:mm" (":") angegeben werden.
 Es wird ein 24 Stunden-Zeitformat verwendet. Beispiele: "08:00"
@@ -292,15 +293,18 @@ oder Hochkommas!
 
 **weekday**
 *Wochentag*
+
 0 = Montag, 1 = Dienstag, 2 = Mittwoch, 3 = Donnerstag, 4 =
 Freitag, 5 = Samstag, 6 = Sonntag
 
 **month**
 *Monat*
+
 1 = Januar, ..., 12 = Dezember
 
 **sun_azimut**
 *Sonnenstand (Horizontalwinkel)*
+
 Der Azimut (Horizontalwinkel) ist die Kompassrichtung, in der die
 Sonne steht. Der Azimut wird von smarthomeNg auf Basis der
 aktuellen Zeit sowie der konfigurierten geographischen Position
@@ -311,6 +315,7 @@ Osten, 180 → Sonne exakt im Süden, 270 → Sonne exakt im Westen
 
 **sun_altitude**
 *Sonnenstand (Vertikalwinkel)*
+
 Die Altitude (Vertikalwikel) ist der Winkel, in dem die Sonne über
 dem Horizont steht. Die Altitude wird von smarthomeNG auf Basis
 der aktuellen Zeit sowie der konfigurierten geographischen
@@ -323,22 +328,26 @@ Sonnenaufgang/Sonnenuntergang, 90 → Sonne exakt im Zenith
 
 **age**
 *Zeit seit der letzten Änderung des Zustands (Sekunden)*
+
 Das Alter wird über die letzte Änderung des Items, das als
 ``se_laststate_item_id`` angegeben ist, ermittelt.
 
 **condition_age**
 *Zeit seit der letzten Änderung des Bedingungssets (Sekunden)*
+
 Das Alter wird über die letzte Änderung des Items, das als
 ``se_lastconditionset_item_id`` angegeben ist, ermittelt.
 
 **random**
 *Zufallszahl zwischen 0 und 100*
+
 Wenn etwas zufällig mit einer Wahrscheinlichkeit von 60% passieren
 soll, kan beispielsweise die Bedingung ``se_max_random: 60``
 verwendet werden.
 
 **laststate**
 *Id des Zustandsitems des aktuellen Status*
+
 Die Abfrage se_value_laststate ist besonders wichtig für
 Bedingungsabfragen, die über das Verbleiben im aktuellen Zustand
 bestimmen (z.b. enter_stay). So können aber auch Stati übersprungen
@@ -348,14 +357,56 @@ Wichtig: Hier muss die vollständige Item-Id angegeben werden
 
 **lastconditionset_id/name**
 *Id des Bedingungssets des aktuellen Status*
+
 Wie bei laststate sind auch die lastconditionset Bedingungsabfragen
 primär relevant für Abfragen zum Verbleiben in einem Zustand. Gerade bei
 komplexeren Bedingungssets macht es oftmals Sinn, nach dem Set zu fragen,
 das denn nun wirklich für die letzte Zustandsbestimmung relevant war.
 
+**previousconditionset_id/name**
+*Id des vorherigen Bedingungssets*
+
+Hier kann das vorhergehende Bedinungsset mit einem Ausdruck/Wert verglichen werden.
+Dabei spielt es keine Rolle, ob der Zustand gerade gewechselt wurde oder z.B. auf Grund
+einer anderen Bedingungsgruppe beibehalten wird.
+Beispiel: Ein Item ist aktuell im Zustand "Suspend" auf Grund einer manuellen Triggerung,
+also der Bedingungsgruppe "enter_manuell". ``se_value_previousconditionset_name``
+beinhaltet nun den Namen der Bedingungsgruppe vom vorherigen Zustand. Bei einer erneuten
+Zustandsevaluierung bleibt (höchstwahrscheinlich) das Item im Zustand suspend auf Grund
+der Bedingungsgruppe "enter_stay". Die Abfrage beinhaltet nun den Wert der vorigen Gruppe "enter_manuell".
+
+**previousstate**
+*Id des Zustandsitems des vorherigen Status*
+
+Die Abfrage se_value_previousstate kann genutzt werden, um beispielsweise
+zu verhindern, dass ein Zustand nach dem Aktivieren eines anderen Zustands
+erneut eingenommen wird.
+Beispiel: Im Normalfall wäre folgende Zustandsabfolge möglich, sofern die
+entsprechenden Bedingungen erfüllt sind: Abend - Nacht - Abend.
+Durch die folgende Angabe würde der Zustand Abend kein zweites Mal (nach Nacht)
+eingenommen werden.
+
+.. code-block:: yaml
+
+  abend:
+    enter_abend:
+       se_value_previousstate: var:current.state_id
+       se_negate_previousstate: True
+
+**previousstate_conditionset_id/name**
+*Id des zuletzt aktiven Bedingungssets des vorherigen Status*
+
+Durch diese Bedingung kann festgelegt werden, welche ID oder welchen Namen die zuletzt
+aktive Bedingungsgruppe des vorherigen Zustands haben darf.
+Beispiel: Der Zustand Suspend wird durch enter_manuell eingenommen. Bei der nächsten
+Evaluierung bleibt der Zustand auf Grund von enter_stay aktiv. Der Zustand wird schließlich verlassen,
+stattdessen ist nun z.B. der Sperrzustand (lock) aktiv. ``se_value_previousstate_conditionset_name``
+gibt nun ``enter_stay`` zurück.
+
 **trigger_item, trigger_caller, trigger_source, trigger_dest**
 *item, caller, source und dest-Werte, durch die die
 Zustandsermittlung direkt ausgelöst wurde*
+
 Über diese vier Bedingungen kann der direkte Auslöser der
 Zustandsermittlung abgeprüft werden, also die Änderung, die
 smarthomeNG veranlasst, die Zustandsermittlung des
@@ -364,6 +415,7 @@ stateengine-Plugins aufzurufen.
 **original_item, original_caller, original_source**
 *item, caller, source und dest-Werte, durch die die
 Zustandsermittlung ursprünglich ausgelöst wurde*
+
 Über diese vier Bedingungen kann der ursprüngliche Auslöser der
 Zustandsermittlung abgeprüft werden. Beim Aufruf der
 Zustandsermittung über einen ``eval_trigger`` Eintrag wird über
