@@ -218,6 +218,7 @@ Beispiel muss die Datei den Namen **wohnung.buero.szenen.yaml** tragen.
 =======
 
 
+
 .. code-block:: yaml
    :caption: Beispiel der Szenen Item-Definition in der items.yaml
 

@@ -33,10 +33,6 @@ A detailed description (in german language) about the way the workflow is used f
   * get the repository: `git clone --recursive https://github.com/smarthomeNG/smarthome.git` (The --recursive option ensures, that a version of the plugins are checked out as well)
   * create your own (local) branch (from develop) `git checkout -b myplugin develop`
 
-## Python Version
-
-You should only use Python =< 3.4 methods. If not make it clear in the documentation what kind of Python version you need.
-
 ## Coding style
 
 Your code should conform to [pep 8](http://www.python.org/dev/peps/pep-0008/). (I'm ignoring "E501 line too long".)

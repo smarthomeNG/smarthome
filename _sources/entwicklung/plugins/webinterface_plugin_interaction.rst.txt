@@ -125,8 +125,9 @@ Tabellen in einem ``bodytab?`` können mit einer Schleife befüllt werden, das i
 .. code-block:: html+jinja
 
     {% block **bodytab1** %}
+
         <div class="container-fluid m-2 table-resize">
-            <table id="maintable" class="table table-striped table-hover pluginList dataTableAdditional">
+            <table id="maintable">
                 <thead>
                     <tr>
                         <th>{{ _('Attribut 1') }}</th>
@@ -158,7 +159,7 @@ Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable au
 .. code-block:: html+jinja
 
     {% block headtable %}
-        <table id="maintable" class="table table-striped table-hover dataTableAdditional">
+        <table id="maintable">
             <tbody>
                 <tr>
                     <td class="py-1"><strong>Scanne von IP</strong></td>
@@ -174,7 +175,7 @@ Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable au
 
     {% block **bodytab1** %}
         <div class="container-fluid m-2 table-resize">
-            <table id="maintable" class="table table-striped table-hover pluginList dataTableAdditional">
+            <table id="maintable">
                 <thead>
                     <tr>
                         <th>{{ _('Attribut 1') }}</th>
@@ -231,7 +232,7 @@ in jeder Zeile stehen soll, dann bietet es sich an, statt einzelnen Button-Eleme
           <form id="button_pressed" action="" method="post">
 
               <input type="hidden" id="button" name="button" value="" />
-              <table id="maintable" class="table table-striped table-hover pluginList dataTableAdditional">
+              <table id="maintable">
                   <thead>
                       <tr>
                           <th>{{ _('Attribut 1') }}</th>
@@ -320,8 +321,8 @@ Dort werden dann die Handler für die aktiven Elemente eingefügt.
                 // festen Wert per AJAX senden
                 $.post('submit', {clear: "true"}, function(data) {
 
-                    // Ergebnis in Feld #fromip schreiben
-                    shngInsertText('fromip', data.ip)
+                    // Ergebnis in Feld #fromip schreiben. Der dritte Parameter muss mit der Tabellen-ID identisch sein.
+                    shngInsertText('fromip', data.ip, 'maintable')
                 });
                 return false ;
             });
@@ -339,12 +340,12 @@ Dort werden dann die Handler für die aktiven Elemente eingefügt.
                     var row = $("#button").val()
                     var id = row + "_value"
 
-                    // nur die betroffene Zeile ändern
-                    shngInserText(id, data.wert)
+                    // nur die betroffene Zeile ändern. Der dritte Parameter muss mit der Tabellen-ID identisch sein.
+                    shngInserText(id, data.wert, 'maintable')
 
                     // alternativ kann auch ein ganzes Feld übertragen werden...
                     for (var row in data) {
-                            shngInsertText(row + "_value", data.row.wert)
+                            shngInsertText(row + "_value", data.row.wert, 'maintable')
                     }
                 });
                 return false ;

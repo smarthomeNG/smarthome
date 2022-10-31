@@ -24,7 +24,7 @@ Features
    and ``port``. Supporting the current owfs version (2.8p15). New
    function `ibutton\_hook <plugins/onewire/#ibuttonhookibutton-item>`_
    to monitor intrusion attempts.
--  `Visu plugin three new interactive image elements added:
+-  Visu plugin three new interactive image elements added:
    switch, push and set. See the example.html file. JQuery mobile
    updated to 1.1.0. Websocket default ``port`` changed to 2121.
 -  New `item types </config#item-attributes>`_ list and foo.

@@ -79,8 +79,7 @@ Am Beispiel der Küche zeigt die folgende Konfiguration, wie die zusätzlichen I
 
 Wie in den bisherigen Releases:
 
-- ``sv_page`` zeigt an, dass
-  [wohnung.kochen] ein Raum ist und für diesen ein Navigationseintrag und eine Seite generiert werden soll.
+- ``sv_page`` zeigt an, dass [wohnung.kochen] ein Raum ist und für diesen ein Navigationseintrag und eine Seite generiert werden soll.
 - ``sv_img`` gibt an, welches Icon in der Navigation und auf der Seite angezeigt werden soll.
 
 Neu:
@@ -145,7 +144,7 @@ Konfigurationsdatei, wie die Navigation konfiguriert wird:
 
 
 ``sv_page`` ist zum Generieren eines Eintrages für die
-Konfigurations-Navigation auf den Seitentyp **``category``**
+Konfigurations-Navigation auf den Seitentyp ``category``
 einzustellen.
 
 
@@ -168,7 +167,7 @@ sondern die Navigation auf der Konfigurationsseite.
 
 Das Beispiel zeigt folgende Trenner: - Tests - Kategorien
 
-Am Beispiel des Trenners **``Tests``** zeigt die folgende Konfiguration,
+Am Beispiel des Trenners ``Tests`` zeigt die folgende Konfiguration,
 wie Trenner konfiguriert werden:
 
 .. code-block:: yaml
@@ -194,9 +193,9 @@ wie Trenner konfiguriert werden:
 
 ``sv_page`` ist zum generieren eines Trenners auf einen speziellen
 Seitentyp einzustellen. - Wenn ein Trenner in die normale Raumnavigation
-eingefügt werden soll, so muss **``sv_page = separator``** angegeben
+eingefügt werden soll, so muss ``sv_page: separator`` angegeben
 werden. - Wenn ein Trenner in die Konfigurationsnavigation eingefügt
-werden soll, so muss **``sv_page = cat_separator``** angegeben werden.
+werden soll, so muss ``sv_page: cat_separator`` angegeben werden.
 
 
 .. index:: smartVISU Autogenerierung; Unterschiedliche Visu-Styles
@@ -210,7 +209,7 @@ unterstützt.
 Das folgende Beispiel zeigt die Möglichkeiten zur Auswahl des Styles der
 für smartVISU generierten Seiten.
 
-Bisher wurden Blöcke generiert, die so aussahen (Style ‘Standard’):
+Bisher wurden Blöcke generiert, die so aussahen (Style \‘Standard\’):
 
 .. figure:: assets/style_std.jpg
    :alt: Style Standard
@@ -258,9 +257,9 @@ automatischen generieren von smartVISU Seiten immer Blöcke der Größe
 Im aktuellen Release können auch Blöcke der Größen **1** (groß) und
 **3** (klein) in die Seiten generiert werden.
 
-Dieses kann als Item-Attribut **``sv_blocksize``** festgelegt werden.
+Dieses kann als Item-Attribut ``sv_blocksize`` festgelegt werden.
 
-Am Beispiel des Trenners **``Tests``** zeigt die folgende Konfiguration,
+Am Beispiel des Trenners ``Tests`` zeigt die folgende Konfiguration,
 wie Trenner konfiguriert werden:
 
 .. code-block:: yaml
@@ -422,7 +421,7 @@ beim Start von SmartHomeNG eingelesen werden. Seit SmartHomeNG v1.8 ist es mögl
 (inclusive Icons und Sidebar Infos) in einer zentralen Datei zu konfigurieren und damit die Reihenfolge aus
 den Item-Definitionen zu übersteuern.
 
-In der Datei ```../etc/visu.yaml``` können auch die Einstellungen für die Attribute **sv_img**, **sv_nav_aside**
+In der Datei ``../etc/visu.yaml`` können auch die Einstellungen für die Attribute **sv_img**, **sv_nav_aside**
 und **sv_nav_aside2** übersteuert und die Position von Trennern in der Navigation festgelegt werden.
 
 Die Struktur der Datei ist folgende:
@@ -481,7 +480,7 @@ selben Namen hatte wie die erste Seite.
 Nun werden die Widgets aus dem zweiten Teilbaum in diesem Fall nicht mehr in eine eigene Seite generiert,
 sondern an die erste Seite angefügt.
 
-Falls es erwünscht ist zwei Navigationseinträge mit dem selben Namen zu haben (z.B. **Bad**  wenn die Navigation
+Falls es erwünscht ist zwei Navigationseinträge mit dem selben Namen zu haben (z.B. **Bad**)  wenn die Navigation
 durch Trenner "Erdgeschoss" und "Obergeschoss" strukturiert ist, so muss an den Namen der Definition für den
 zweiten Teilbaum nur ein Leerzeichen angefügt werden:
 
