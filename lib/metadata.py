@@ -1243,7 +1243,8 @@ class Metadata():
         # get rid of non numeric parts
         vlist = []
         for v in vsplit:
-            v = re.findall('\d+', v )[0]
+            #v = re.findall('\d+', v )[0]
+            v = re.findall(r'\d+', v )[0]
             vi = 0
             try:
                 vi = int(v)

@@ -299,21 +299,25 @@ NGINX mit ``sudo systemctl restart nginx`` neu starten.
        location @loc_websocket {
                proxy_pass http://websocket;
                include /etc/nginx/headers.conf;
+               include /etc/nginx/proxy_params;
        }
 
        location @loc_smartvisu {
                proxy_pass http://<SmartHomeNG LAN IP>/$request_uri;
                include /etc/nginx/headers.conf;
+               include /etc/nginx/proxy_params;
        }
 
        location @loc_alexa {
            proxy_pass http://<SmartHomeNG LAN IP>:<Alexa Plugin Port>/;
            include /etc/nginx/headers.conf;
+           include /etc/nginx/proxy_params;
        }
 
        location @loc_shng {
            proxy_pass http://<SmartHomeNG LAN IP>:<Network Plugin Port>/;
            include /etc/nginx/headers.conf;
+           include /etc/nginx/proxy_params;
        }
    }
 

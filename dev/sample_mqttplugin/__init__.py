@@ -60,7 +60,16 @@ class SampleMqttPlugin(MqttPlugin):
         super().__init__()
 
         # get the parameters for the plugin (as defined in metadata plugin.yaml):
-        # self.param1 = self.get_parameter_value('param1')
+        try:
+            # webif_pagelength should be included in all plugins using a web interface
+            # It is used to overwrite the default max number of entries per page in the tables
+            self.webif_pagelength = self.get_parameter_value('webif_pagelength')
+            # self.param1 = self.get_parameter_value('param1')
+            pass
+        except KeyError as e:
+            self.logger.critical("Plugin '{}': Inconsistent plugin (invalid metadata definition: {} not defined)".format(self.get_shortname(), e))
+            self._init_complete = False
+            return
 
         # Initialization code goes here
 
@@ -160,4 +169,3 @@ class SampleMqttPlugin(MqttPlugin):
                 self.logger.debug(
                     f"update_item was called with item {item.property.path} from caller {caller}, source {source} and dest {dest}")
             pass
-

@@ -77,3 +77,8 @@ Die Datei ``dev/sample_plugin/webif/templates/index.html`` sollte als Grundlage 
 SmartHomeNG liefert eine Reihe Komponenten von Drittherstellern mit, die für die Gestaltung des Webinterfaces genutzt werden können. Erweiterungen dieser Komponenten usw. finden sich im Ordner ``/modules/http/webif/gstatic``.
 
 Wenn das Plugin darüber hinaus noch Komponenten benötigt, werden diese im Ordner ``webif/static`` des Plugins abgelegt.
+
+
+Version History
+---------------
+

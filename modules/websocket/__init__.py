@@ -430,7 +430,13 @@ class Websocket(Module):
         # items = []
 
         self.logs = self._sh.logs.return_logs()
-        self._sh.add_event_listener(['log'], self.update_visulog)
+
+        # Prevent the event listener for event types "log" from being added multiple times:
+        known_log_listeners = self._sh.return_event_listeners(event='log')
+        if self.update_visulog not in known_log_listeners:
+            self._sh.add_event_listener(['log'], self.update_visulog)
+        else:
+            self.logger.debug(f"smartVISU_protocol_v4: self.update_visulog function already subscribed as event listener")
 
         client_addr = self.client_address(websocket)
         client_ip = websocket.remote_address[0]
@@ -571,11 +577,15 @@ class Websocket(Module):
         except Exception as e:
             ex = str(e)
             if str(e).startswith(('code = 1005', 'code = 1006', 'no close frame received or sent')) or str(e).endswith('keepalive ping timeout; no close frame received'):
-                self.logger.info(f"smartVISU_protocol_v4 error: Client {self.build_log_info(client_addr)} - {e}")
+                self.logger.warning(f"smartVISU_protocol_v4 error: Client {self.build_log_info(client_addr)} - {e}")
             else:
                 self.logger.error(f"smartVISU_protocol_v4 exception: Client {self.build_log_info(client_addr)} - {ex}")
 
-        # Remove client from monitoring dict and from dict of active clients
+        # ms: Test wg. "iPad Sleep"
+        #if str(e).startswith('no close frame received or sent'):
+        #    return
+
+        # Remove client from monitoring dict and from dict of active clients     #ms: Block eingerückt am 26.10.22
         del(self.sv_monitor_items[client_addr])
         try:
             del(self.sv_clients[client_addr])
@@ -1141,6 +1151,7 @@ class Websocket(Module):
         :return:
         """
         if event != 'log':
+            self.logger.warning(f"update_visulog: Unknown event {event} received.")
             return
 
         log_data = data.copy()  # don't filter the orignal data dict

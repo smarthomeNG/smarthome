@@ -9,20 +9,19 @@ knxd installieren
 =================
 
 Der knxd implementiert Zugriffe auf verschiedenste Schnittstellen zum KNX Bus (z.B. IP-Router, IP-Schnittstelle,
-USB-Schnittstelle, etc.) und bietet dafür eine dokumentierte Softwareschnittstelle für Programme an. SmartHomeNG
-nutzt den knxd über seine tcp Schnittstelle um Daten auf den KNX Bus zu schreiben oder zu lesen. Wer keinen KNX-Bus
-einsetzt, kann diesen Installationsschritt überspringen.
+USB-Schnittstelle, etc.) und bietet dafür eine dokumentierte Softwareschnittstelle für Programme an.
+
+SmartHomeNG nutzt den knxd über seine tcp Schnittstelle um Daten auf den KNX Bus zu schreiben oder zu lesen.
+Wer KNX nicht verwendet, kann diesen Installationsschritt überspringen.
 
 .. contents:: Schritte der Installation
    :local:
 
 
+knxd unter Debian installieren
+==============================
 
-knxd unter Debian Buster installieren
-=====================================
-
-Ab dem Buster Release, ist knxd als Installationspaket in der Distribution enthalten. Die in Buster enthaltene
-knxd Version ist 0.14.
+Ab Debian 10 (Buster) ist knxd als Installationspaket in der Distribution enthalten.
 
 Das fertige knxd Paket kann mit folgenden Kommandos installiert werden:
 
@@ -30,9 +29,45 @@ Das fertige knxd Paket kann mit folgenden Kommandos installiert werden:
 .. code-block:: bash
 
     sudo apt-get update
-    sudo apt-get install -t buster knxd knxd-tools
+    sudo apt-get install knxd knxd-tools
 
-Anschließend mit der Konfiguration gemäß Abschnitt `knxd konfigurieren <#knxd-konfigurieren>`__ fortfahren.
+knxd konfigurieren
+==================
+
+Als nächstes muss die Konfiguration des knxd für die zu verwendende
+Schnittstelle angepasst werden. Dazu wird bei Systemen mit systemd die
+Datei **/etc/knxd.conf** bearbeitet:
+
+.. code-block:: bash
+
+    sudo nano /etc/knxd.conf
+
+Die Originalzeile ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -u /tmp/eib -b ip:"`` 
+am besten mit einem ``#`` zum Kommentar machen und in der Zeile darunter dann die
+gewählten Parameter eintragen.
+
+Details zu Schnittstellen finden sich auf der `Github-Seite vom knxd <https://github.com/knxd/knxd>`__.
+Der Parameter **-c** stellt den knxd so ein, das er einen Cache nutzt.
+Danach folgen die Optionen für die Verwendung der eingesetzten physikalischen Schnittstelle:
+
+-  IP Schnittstelle: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b ipt:<IP der knx Schnittstelle>"``
+-  IP Router: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b ip:<Multicast IP>"``
+-  TP UARTS: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b tpuarts:/dev/knx"``
+-  USB-Interface: Bitte `Wiki zum knxd <https://github.com/knxd/knxd/wiki>`__ konsultieren.
+
+
+Es kann sein, das bei ``KNXD_OPTS`` hinter dem **-c** bei einigen Interfaces noch ein ``--send-delay=30`` eingefügt
+werden muß um Telegrammverlust bei hohen Lasten zu minimieren. Die 30 bedeutet dabei eine zusätzliche Wartezeit
+von 30msec. Es wird damit zwischen den Paketen eine kleine Pause eingelegt um ein überfahren der Schnittstelle
+zu vermeiden. Der Parameter **--no-tunnel-client-queuing** ist obsolet und sollte nicht mehr eingesetzt werden.
+
+.. note::
+
+   Einige IP Schnittstellen (besonders ältere) unterstützen nur einen Tunnel. Das bedeutet, dass z.B. ETS und
+   knxd (SmartHomeNG) nicht gleichzeitig an solchen Schnittstellen betrieben werden können.
+
+knxd testen
+============
 
 Nachdem knxd installiert, konfiguriert und der Dienst gestartet ist, kann mit folgendem Kommando geprüft
 werden, ob eine funktionsfähige Verbindung zum KNX Bus besteht. Dazu das folgende Kommando eingeben:
@@ -56,112 +91,6 @@ Damit protokolliert knxtool mit, welche Pakete auf dem Bus übertragen werden. D
     Write from 1.1.243 to 12/3/13: 45 31 60 00
 
 Das Protokollieren kann mit Ctrl-C beendet werden.
-
-
-knxd unter älteren Debian Versionen installieren
-================================================
-
-In älteren Debian Linux Versionen ist kein Installationspaket für knxd enthalten. Unter diesen Versionen
-muss knxd zuerst aus dem Quellcode compiliert werden.
-
-Grundsätzlich findet sich auf der `knxd-Seite <https://github.com/knxd/knxd>`__ die Anleitung für die
-Installation. Auf der Github Seite kann unter **Code** immer der Branch ausgewählt werden. Jeder Branch
-hat sein eigenes Read.me.
-
-.. important::
-
-    Der knxd wird derzeit aktiv weiterentwickelt. Auch bitte **vor** der
-    Installation hier noch einen Blick auf `knxd-Seite <https://github.com/knxd/knxd>`__ werfen
-    um aktuelles nicht zu verpassen.
-
-    Diese Anleitung ist eher eine historische Referenz und wird nicht regelmäßig aktualisiert.
-
-Die folgenden Installationsschritte beziehen sich auf Version **0.14**.
-
-
-zusätzliche Pakete zum Bau installieren
----------------------------------------
-
-Zunächst müssen für den Bau einige grundlegende Tools installiert
-werden:
-
-.. code-block:: bash
-
-    sudo apt-get install git-core build-essential dh-systemd autoconf libtool libusb-1.0-0-dev pkg-config libsystemd-dev libev-dev cmake
-
-
-Quellcode laden, compilieren und ein Paket schnüren
----------------------------------------------------
-
-Zunächst den Quellcode für den knxd vom github laden und sicherstellen,
-das der 0.14 branch gewählt wird:
-
-.. code-block:: bash
-
-    git clone https://github.com/knxd/knxd.git
-    cd knxd
-    git checkout v0.14
-
-Im Unterverzeichnis ``tools``\ findet sich ein Skript was benötigt wird
-um libfmt herunterzuladen und zu bauen
-
-.. code-block:: bash
-
-    tools/get_libfmt
-
-Dann übersetzen und das Paket schnüren:
-
-.. code-block:: bash
-
-    dpkg-buildpackage -b -uc
-
-Wichtig ist, das am Ende der Paketerstellung keine Fehler gemeldet
-wurden.
-
-Sollte die Paketerstellung fehlerfrei ablaufen, dann kann das Paket nun
-noch installiert werden mit:
-
-.. code-block:: bash
-
-    cd ..
-    sudo dpkg -i knxd_*.deb knxd-tools_*.deb
-
-
-knxd konfigurieren
-==================
-
-Als nächstes muss die Konfiguration des knxd für die zu verwendende
-Schnittstelle angepasst werden. Dazu wird bei Systemen mit systemd die
-Datei **/etc/knxd.conf** bearbeitet:
-
-.. code-block:: bash
-
-    sudo nano /etc/knxd.conf
-
-Die Originalzeile ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -u /tmp/eib -b
-ip:"`` am besten mit einem ``#`` zum Kommentar machen und in der Zeile darunter dann die
-gewählten Parameter eintragen.
-
-Details zu Schnittstellen finden sich auf der `Github-Seite vom knxd <https://github.com/knxd/knxd>`__.
-Der Parameter **-c** stellt den knxd so ein, das er einen Cache nutzt. Danach folgen die Optionen für
-die Verwendung der Schnittstelle:
-
--  IP Schnittstelle: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b ipt:<IP der knx Schnittstelle>"``
--  IP Router: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b ip:<Multicast IP>"``
--  TP UARTS: ``KNXD_OPTS="-e 0.0.1 -E 0.0.2:8 -c -b tpuarts:/dev/knx"``
--  USB-Interface: Bitte `Wiki zum knxd <https://github.com/knxd/knxd/wiki>`__ konsultieren.
-
-
-Es kann sein, das bei ``KNXD_OPTS`` hinter dem **-c** bei einigen Interfaces noch ein ``--send-delay=30`` eingefügt
-werden muß um Telegrammverlust bei hohen Lasten zu minimieren. Die 30 bedeutet dabei eine zusätzliche Wartezeit
-von 30msec. Es wird damit zwischen den Paketen eine kleine Pause eingelegt um ein überfahren der Schnittstelle
-zu vermeiden. Der Parameter **--no-tunnel-client-queuing** ist obsolet und sollte nicht mehr eingesetzt werden.
-
-.. note::
-
-   Einige IP Schnittstellen (besonders ältere) unterstützen nur einen Tunnel. Das bedeutet, dass z.B. ETS und
-   knxd (SmartHomeNG) nicht gleichzeitig an solchen Schnittstellen betrieben werden können.
-
 
 knxd und systemd
 ================

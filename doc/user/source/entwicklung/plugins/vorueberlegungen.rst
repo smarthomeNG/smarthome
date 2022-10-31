@@ -32,7 +32,7 @@ Python Version
 --------------
 
 Je nachdem unter welcher Python Version SmartHomeNG läuft, stehen Python Features zur Verfügung, oder eben auch nicht.
-Es sollten nach Möglichkeit nur Python Features genutzt werden, die nereits in der ältesten unterstützten Python
+Es sollten nach Möglichkeit nur Python Features genutzt werden, die bereits in der ältesten unterstützten Python
 Version (siehe ...) zur Verfügung stehen. Dadurch ist das Plugin am felxibelsten einsetzbar.
 
 Sollte auf ein Python Features zurück gegriffen werden (müssen), welches erst in neueren Python Versionen zur

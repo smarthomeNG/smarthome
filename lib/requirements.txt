@@ -4,7 +4,6 @@ ephem>=3.7,<=4.1.0
 # lib.shtime:
 python-dateutil>=2.5.3
 holidays>=0.9.11
-pytz
 
 # lib.daemon:
 psutil

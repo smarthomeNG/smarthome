@@ -1238,7 +1238,6 @@ class Requirements_files():
         certain selection subpath.
         Currently selection is one of 'modules', 'lib', 'plugins'
 
-        When testing with travis the self.sh_basedir will be something like "/home/travis/build/<repo owner>/smarthome"
         On a native Linux without specialities this is normally "/usr/local/smarthome"
         When inspecting the plugins then all requirements.txt for previous plugin versions should be omitted from the list.
         The names of previous plugins subdirectories start with "_pv"
@@ -1391,7 +1390,8 @@ class Requirements_files():
                                       1])
                             packagelist_consolidated.append(p)
                     elif p['req'][0][0] == '==':
-                        print('p Gleichheit ' + package_consolidated['req'][0][1] + ' / ' + p['req'][0][1])
+                        print("p Gleichheit p['key']=" + p['key'] + ': >' + package_consolidated['req'][0][1] + '< / >' + p['req'][0][1] + '<')
+                        print('p=' + p)
                     elif package_consolidated['req'][0][0] == '':
                         # if consolidated version has no special requirements
                         self.logger.debug("_consolidate_requirements: package_consolidated requirement w/o version - pkg={}".format(package_consolidated['pkg']))

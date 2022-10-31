@@ -22,6 +22,7 @@
 #  along with SmartHomeNG. If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
+__docformat__ = 'reStructuredText'
 
 #########################################################################
 #
@@ -112,7 +113,7 @@ import lib.userfunctions as uf
 class SmartHome():
     """
     SmartHome ist the main class of SmartHomeNG. All other objects can be addressed relative to
-    the main oject, which is an instance of this class. Mostly it is reffered to as ``sh``, ``_sh`` or ``smarthome``.
+    the main oject, which is an instance of this class. Mostly it is referred to as ``sh``, ``_sh`` or ``smarthome``.
     """
 
     # default values, if values are not specified in smarthome.yaml
@@ -219,7 +220,7 @@ class SmartHome():
         # set default timezone to UTC
         self.shtime = Shtime(self)
 
-        threading.currentThread().name = 'Main'
+        threading.current_thread().name = 'Main'
         self.alive = True
 
         import bin.shngversion
@@ -681,7 +682,7 @@ class SmartHome():
         self.shng_status = {'code': 31, 'text': 'Stopping'}
 
         self.alive = False
-        self._logger.info("stop: Number of Threads: {}".format(threading.activeCount()))
+        self._logger.info(f"stop: Number of Threads: {threading.activeCount()}")
 
         self.items.stop()
         self.scheduler.stop()
@@ -732,6 +733,9 @@ class SmartHome():
         just quit and let the user restart manually.
         """
         if self._mode in ['foreground', 'debug', 'interactive']:
+            if source != '':
+                source = ', initiated by ' + source
+            self._logger_main.notice(f"--------------------   SmartHomeNG should restart{source} but is in {self._mode} mode and thus will just try to stop  --------------------")
             self.stop()
 
         if self.shng_status['code'] == 30:
@@ -740,22 +744,21 @@ class SmartHome():
             self.shng_status = {'code': 30, 'text': 'Restarting'}
             if source != '':
                 source = ', initiated by ' + source
-            self._logger_main.notice("--------------------   SmartHomeNG restarting" + source + "   --------------------")
+            self._logger_main.notice(f"--------------------   SmartHomeNG restarting{source}   --------------------")
             # python_bin could contain spaces (at least on windows)
             python_bin = sys.executable
             if ' ' in python_bin:
-                python_bin = '"'+python_bin+'"'
+                python_bin = f'"{python_bin}"'
             command = python_bin + ' ' + os.path.join(self._base_dir, 'bin', 'smarthome.py') + ' -r'
-            self._logger.info("Restart command = '{}'".format(command))
+            self._logger.info(f"Restart command = '{command}'")
             try:
                 p = subprocess.Popen(command, shell=True)
                 exit(5)  # exit code 5 -> for systemctl to restart SmartHomeNG
             except subprocess.SubprocessError as e:
-                self._logger.error("Restart command '{}' failed with error {}".format(command,e))
+                self._logger.error(f"Restart command '{command}' failed with error {e}")
 
 
     def list_threads(self, txt):
-
         cp_threads = 0
         http_threads = 0
         for thread in threading.enumerate():
