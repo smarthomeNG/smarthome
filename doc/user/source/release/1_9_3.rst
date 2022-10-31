@@ -93,6 +93,7 @@ Allgemeine Änderungen
   * lib.smarthome:
 
     * Fixed deprecation warnings
+    *  log stop when restarting in interactive, foreground or debug mode, see #493
 
   * lib.userfunction:
 
