@@ -577,11 +577,15 @@ class Websocket(Module):
         except Exception as e:
             ex = str(e)
             if str(e).startswith(('code = 1005', 'code = 1006', 'no close frame received or sent')) or str(e).endswith('keepalive ping timeout; no close frame received'):
-                self.logger.info(f"smartVISU_protocol_v4 error: Client {self.build_log_info(client_addr)} - {e}")
+                self.logger.warning(f"smartVISU_protocol_v4 error: Client {self.build_log_info(client_addr)} - {e}")
             else:
                 self.logger.error(f"smartVISU_protocol_v4 exception: Client {self.build_log_info(client_addr)} - {ex}")
 
-        # Remove client from monitoring dict and from dict of active clients
+        # ms: Test wg. "iPad Sleep"
+        #if str(e).startswith('no close frame received or sent'):
+        #    return
+
+        # Remove client from monitoring dict and from dict of active clients     #ms: Block eingerückt am 26.10.22
         del(self.sv_monitor_items[client_addr])
         try:
             del(self.sv_clients[client_addr])

@@ -251,7 +251,7 @@ class ServicesController(RESTResource):
                 if not file.find(".") == 0:  # filter .gitignore etc.
                     self.items = Items.get_instance()
                     item = self.items.return_item(file)
-                    no_cache_file = False;
+                    no_cache_file = False
                     if item is None:
                         self.logger.debug("cachecheck: no item {}".format(file))
                         no_cache_file = True

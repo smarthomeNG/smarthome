@@ -1,5 +1,5 @@
 ============================
-Release 1.9.x - tt. mmm 2022
+Release 1.9.3 - 31. Okt 2022
 ============================
 
 Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
@@ -57,25 +57,6 @@ Allgemeine Änderungen
 
 Änderungen am Core
 ==================
-
-Bugfixes in the CORE
---------------------
-
-* ...
-
-
-Updates in the CORE
--------------------
-
-* ...
-
-* Items:
-
-  * ...
-
-* Logics:
-
-  * ...
 
 * Libs:
 
@@ -137,14 +118,6 @@ Updates in the CORE
     * Prevent event listener for event type log from being registered multiple times. Otherwise,
       this error could lead to multiple entries in status.log widgets.
 
-* Plugins:
-
-  * ...
-
-* tests:
-
-  * ...
-
 |
 
 Änderungen bei Plugins
@@ -197,6 +170,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Minor fix for casambi_id (now integer instead of num)
 
+* darksky:
+
+  * Added database_maxage: 731 to items in struct, which had no max_age before.
+
 * database:
 
   * Reinserted 'duplicate_use' to metadata for item_attribute 'database'
@@ -212,6 +189,14 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Make table invisible on init to load faster
   * Improved rounding in web interface
   * Set default webif_pagelength to 0 = pageResize
+  * Fix column widths and optimize responsive priority for webif
+  * Added parameter removeold_cycle
+  * Added log entry when dumping data, if dump was skipped before
+  * Added total count of log entries to web interface
+  * Fix bug with timestamp being None
+  * Translate rest of user_doc into german
+  * Added parameter default_maxage
+  *Increased default value for max_delete_logentries to 1500
 
 * enocean:
 
@@ -259,6 +244,12 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * knx:
 
   * Fixed deprecation warnings
+  * Add handling for knxd message being too short, e.g. for cache read
+  * Recognize incomplete knx telegrams delivered by knxd cache read
+  * Show items without knxd cache responses in red in webinterface
+  * Bump up version number
+  * Make log level for knxd cache problems configurable
+  * user_doc: Webinterface section describes knxd cache read problems at start and log levels
 
 * modbus_tcp:
 
@@ -464,6 +455,7 @@ Dokumentation
 * Added additional example for logging filters in logging best practices
 * Added include /etc/nginx/proxy_params; to reverse proxy docu
 * Multiple updates
+* Allow shpinx versions 5.x (<6)
 
 
 
