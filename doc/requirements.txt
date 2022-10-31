@@ -1,9 +1,9 @@
-sphinx>=4.5,<5
+sphinx>=4,<6
 sphinx-rtd-theme>=1.0
 
 # create tabs for content for alternative ways to use like | Linux | MacOS | Windows |
 # https://sphinx-tabs.readthedocs.io/en/latest/
-sphinx-tabs
+sphinx-tabs>=3.4.0
 
 # the following extensions create collapsible parts of documentation
 # sphinx-panels seem to be most extensive
@@ -17,7 +17,8 @@ sphinx-tabs
 # see at https://www.sphinx-doc.org/en/master/usage/markdown.html and
 # at https://myst-parser.readthedocs.io/en/latest/using/intro.html for a primer on MyST
 attrs
-myst-parser<=0.16.1
+#myst-parser<=0.16.1
+myst-parser
 
 ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
 ruamel.yaml>=0.15.0,<=0.15.74;python_version=='3.7'
