@@ -317,6 +317,25 @@ Da das Datum als YYYY-MM-DD HH:MM:SS angegeben wird, können natürlich auch
 nur in bestimmten Monaten Einträge geschrieben werden. Für die Fälle, in denen
 jemand gerne eine Logdatei pro Kalendermonat hätte ;)
 
+Möchte man bestimmte Sonderzeichen in der Message angeben, ist es u.U.
+notwendig, diese zu escapen.
+Hierbei ist zu beachten, dass doppelte ``\\`` benutzt werden müssen.
+Möchte man mehrere verschiedene Logeinträge abfangen, können diese als Liste
+angegeben werden.
+
+.. code-block:: yaml
+
+  filter:
+      filter_eintrag_mitSonderzeichen:
+          (): lib.logutils.Filter
+          msg: ["(.*)\\(TCP_Client_192\\.0\\.1\\.1:9621\\) TCP connection failed(.*)", "Error.*TCP_Client.*"]
+
+Erläuterung der RegEx:
+Die Einträge ``(.*)`` stehen für "beliebige Anzahl an beliebigen Zeichen", wobei
+die Klammern auch weggelassen werden könnten. Wichtig ist, dass nun vor die
+Klammern und Punkte in der abzufangenden Mitteilung ein doppelter Backslash
+gesetzt wird.
+
 Erweitertes Logging für die Plugin Entwicklung
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

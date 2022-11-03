@@ -38,11 +38,11 @@ For development, the latest development version is about to installed. This is d
    sudo chown -R smarthome:smarthome /usr/local/smarthome
 
    cd smarthome
-   git clone -b develop git://github.com/smarthomeNG/smarthome.git .
+   git clone -b develop https://github.com/smarthomeNG/smarthome.git .
 
    mkdir plugins
    cd plugins
-   git clone -b develop git://github.com/smarthomeNG/plugins.git .
+   git clone -b develop https://github.com/smarthomeNG/plugins.git .
 
 Please notice the dot at the end of the **git** commands!
 

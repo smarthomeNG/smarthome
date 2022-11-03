@@ -27,8 +27,8 @@ lib.network
 
 |
 
-daemonzize überarbeiten
------------------------
+daemonize überarbeiten
+----------------------
 
 die Systemlogik für "daemonize" bzw. "im Vordergrund bleiben" ist kaputt.
 Spätestens die Methoden stop und restart können damit so nicht umgehen.

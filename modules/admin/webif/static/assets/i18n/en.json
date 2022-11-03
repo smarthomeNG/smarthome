@@ -2,6 +2,7 @@
   "MENU": {
     "SYSTEM": "System",
     "SYSTEM_PROPERTIES": "System Properties",
+    "SYSTEM_CONFIGURATION": "System Configuration",
     "SERVICES": "Services",
     "ITEMS": "Items",
     "ITEM_TREE": "Item Tree",
@@ -20,6 +21,7 @@
     "LOGS": "Logs",
     "LOGS_DISPLAY": "Display Logs",
     "LOGGER_LIST": "Logger List",
+    "LOGGING_CONFIGURATION": "Logging Configuration",
     "CONFIGURATION": "Configuration",
     "LOGIN": "Login"
   },
@@ -450,6 +452,11 @@
     "NEW_DEFINITION_FILE": "New File",
     "NEW_LOGIC": "New Logic",
     "NEW_SCENE": "New Scene",
+    "RELOAD_SCENES": "Reload scenes",
+    "RELOAD_SCENE": "Load",
+    "NEW_FUNCTION": "New library",
+    "RELOAD_FUNCTIONS": "Reload all",
+    "RELOAD_FUNCTION": "Load",
     "LINE_WRAPPING": "Line Wrapping",
     "TRIGGER": "Trigger"
   },

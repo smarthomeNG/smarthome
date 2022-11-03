@@ -694,7 +694,12 @@ def execute_subprocess(commandline, wait=True):
 
 
 def running_virtual():
-    """ Return if we run in a virtual environment. """
-    # Check supports venv && virtualenv
+    """
+    Return if we run in a virtual environment (venv or virtualenv).
+    """
+
+    # The check for sys.real_prefix covers virtualenv,
+    # the equality of non-empty sys.base_prefix with sys.prefix covers venv.
     return (getattr(sys, 'base_prefix', sys.prefix) != sys.prefix or
             hasattr(sys, 'real_prefix'))
+

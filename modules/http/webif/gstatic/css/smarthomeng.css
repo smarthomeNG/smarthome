@@ -31,13 +31,60 @@ plusIconlist-group-item.py-2.node-tree.node-selected {
   background-color: #ecf3f8;
 }
 
-table .truncate {
+table td.truncate {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-table .notruncate {
+table td.truncate:active {
+  text-overflow: clip;
+  white-space: normal;
+  word-break: break-all;
+}
+
+.notruncate {
   overflow: visible;
+}
+
+table.dataTableAdditional {
+  display: none;
+  table-layout: fixed;
+}
+
+tr.even td.sorting_1 {
+background-color: rgba(0,0,0,.21);
+}
+
+tr.odd td.sorting_1 {
+background-color: rgba(0,0,0,.16);
+}
+
+tr.even td.sorting_2 {
+background-color: rgba(0,0,0,.14);
+}
+
+tr.odd td.sorting_2 {
+background-color: rgba(0,0,0,.09);
+}
+
+tr.even td.sorting_3 {
+background-color: rgba(0,0,0,.07);
+}
+
+tr.odd td.sorting_3 {
+background-color: rgba(0,0,0,.03);
+}
+
+/* this is necessary for correct auto pageResize of datatables */
+.table-resize {
+  height: 100%;
+  box-sizing: border-box;
+}
+.tab-content {
+  position:absolute;
+  top:230px;
+  width: 98%;
 }
 
 .minusIcon {
@@ -255,4 +302,13 @@ a.text-shng:focus, a.text-shng:hover {
 .shng_heading {
   color: #4d4d4d;
   font-weight: bold;
+}
+/*
+These are necessary for highligt effect in web interface when a value changes. Can be overwritten in own index.html
+*/
+.shng_effect_highlight {
+  background-color: #FFFFE0;
+}
+.shng_effect_standard {
+  background-color: none;
 }

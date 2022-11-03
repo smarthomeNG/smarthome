@@ -571,7 +571,7 @@ class Scheduler(threading.Thread):
         next_time = None
         value = None
         now = self.shtime.now()
-        now = now.replace(microsecond=0)
+        #now = now.replace(microsecond=0)
         if job['cycle'] is not None:
             cycle = list(job['cycle'].keys())[0]
             #value = job['cycle'][cycle]
@@ -683,33 +683,45 @@ class Scheduler(threading.Thread):
         trigger = {'by': by, 'source': source, 'source_details': source_details, 'dest': dest, 'value': value}  # noqa
 
         # following variables are assigned to be available during logic execution
-        sh = self._sh  # noqa
-        shtime = self.shtime
-        items = self.items
+        #sh = self._sh  # noqa
+        #shtime = self.shtime
+        #items = self.items
 
         # set the logic environment here (for use within functions in logics):
         #logic = obj  # noqa
-        logic.sh = sh
+        logic.sh = self._sh
         logic.logger = logger
-        logic.shtime = shtime
-        logic.items = items
+        logic.shtime = self.shtime
+        logic.items = self.items
         logic.trigger_dict = trigger  # logic.trigger has naming conflict with method logic.trigger of lib.item
 
-        logics = logic._logics
+        #logics = logic._logics
 
         if not self.mqtt:
             if _lib_modules_found:
                 self.mqtt = Modules.get_instance().get_module('mqtt')
-        mqtt = self.mqtt
-        logic.mqtt = mqtt
+        #mqtt = self.mqtt
+        logic.mqtt = self.mqtt
 
         try:
-            if logic.enabled:
-                if sh.shng_status['code'] < 20:
+            if logic._enabled:
+                if self._sh.shng_status['code'] < 20:
                     logger.warning(f"Logik ignoriert, SmartHomeNG ist noch nicht vollständig initialisiert - Logik wurde getriggert durch {trigger}")
                 else:
+                    # set up "globals" environment for the logic
+                    logic_globals = dict(globals())
+                    logic_globals['sh'] = self._sh
+                    logic_globals['logger'] = logic.logger
+                    logic_globals['mqtt'] = self.mqtt
+                    logic_globals['shtime'] = self.shtime
+                    logic_globals['items'] = self.items
+                    logic_globals['trigger'] = logic.trigger_dict
+                    logic_globals['logic'] = logic
+                    logic_globals['logics'] = logic._logics
+
+                    # execute logic
                     logger.debug(f"Getriggert durch: {trigger}")
-                    exec(logic.bytecode)
+                    exec(logic._bytecode, logic_globals)
                     # store timestamp of last run
                     logic.set_last_run()
                     for method in logic.get_method_triggers():

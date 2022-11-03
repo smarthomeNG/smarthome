@@ -87,7 +87,8 @@ class Orb():
         See also this thread at `Stackoverflow <https://stackoverflow.com/questions/26428904/pyephem-advances-observer-date-on-neveruperror>`_
         dated back to 2015 where the creator of pyephem writes:
         
-        > Second answer: As long as each thread has its own Moon and Observer objects, it should be able to do its own computations without ruining those of any other threads.
+        > Second answer: As long as each thread has its own Moon and Observer objects, 
+          it should be able to do its own computations without ruining those of any other threads.
 
         :return: tuple of observer and celestial body
         """
@@ -147,7 +148,7 @@ class Orb():
     def noon(self, doff=0, moff=0, dt=None):
         observer, orb = self.get_observer_and_orb()
         if dt is not None:
-            observer.date = dt - dt.utcoffset()
+            observer.date = dt - dt.utcoffset() - dateutil.relativedelta.relativedelta(minutes=moff)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         else:
             observer.date = datetime.datetime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
@@ -164,7 +165,7 @@ class Orb():
     def midnight(self, doff=0, moff=0, dt=None):
         observer, orb = self.get_observer_and_orb()
         if dt is not None:
-            observer.date = dt - dt.utcoffset()
+            observer.date = dt - dt.utcoffset() - dateutil.relativedelta.relativedelta(minutes=moff)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         else:
             observer.date = datetime.datetime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
@@ -190,7 +191,7 @@ class Orb():
         observer, orb = self.get_observer_and_orb()
         # workaround if rise is 0.001 seconds in the past
         if dt is not None:
-            observer.date = dt - dt.utcoffset()
+            observer.date = dt - dt.utcoffset() - dateutil.relativedelta.relativedelta(minutes=moff)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         else:
             observer.date = datetime.datetime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)
@@ -219,7 +220,7 @@ class Orb():
         observer, orb = self.get_observer_and_orb()
         # workaround if set is 0.001 seconds in the past
         if dt is not None:
-            observer.date = dt - dt.utcoffset()
+            observer.date = dt - dt.utcoffset() - dateutil.relativedelta.relativedelta(minutes=moff)
             date_utc = (observer.date.datetime()).replace(tzinfo=tzutc())
         else:
             observer.date = datetime.datetime.utcnow() - dateutil.relativedelta.relativedelta(minutes=moff) + dateutil.relativedelta.relativedelta(seconds=2)

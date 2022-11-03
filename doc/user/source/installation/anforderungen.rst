@@ -1,6 +1,8 @@
 :tocdepth: 2
 
 .. index:: Linux, MacOS, Unix, Windows
+.. index:: Hardware Anforderungen
+.. index:: Software Anforderungen
 
 ===============================
 Hard- u. Software Anforderungen
@@ -19,7 +21,7 @@ Hardware
 ========
 
 Ein beliebiger Rechner mit x86 or x64 CPU sollte funktionieren, genauso
-wie Rechner mit einer ARM CPU wie Raspberry Pi.
+wie Rechner mit einer ARM CPU wie zum Beispiel ein Raspberry Pi.
 
 Häufig verwendete Hardware ist:
 
@@ -169,21 +171,20 @@ Python Versionen
 Minimum Python Version
 ----------------------
 
-Die absolute Minimum Python Version in der SmartHomeNG startet wurde auf **Python 3.6** angehoben, da Python 3.5 im
-September 2020 End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen
-auf einer der neueren Python Versionen (3.8 oder 3.9) aufzusetzen.
+Die absolute Minimum Python Version in der SmartHomeNG startet wurde mit SmartHomeNG v1.9 auf **Python 3.7** angehoben,
+da Features verwendet werden, die Unter Python 3.6 und davor nicht vorhanden sind und da Python 3.6 im Dezember 2021
+End-of-Life (End of security fixes) gegangen ist. Bei einer Neuinstallation wird jedoch empfohlen auf einer der
+neueren Python Versionen (3.8, 3.9 oder 3.10) aufzusetzen.
 
-Für das SmartHomeNG Release 1.10 wird die absolute Minimum Python Version auf **Python 3.7** angehoben, da der
-Community Support für Python 3.6 am 23. Dezember 2021 endete.
-
-Die aktuelle Version von SmartHomeNG setzt Python der Version 3.6 oder neuer voraus. Bei Einsatz einer älteren
+Die aktuelle Version von SmartHomeNG setzt Python der **Version 3.7** oder neuer voraus. Bei Einsatz einer älteren
 Python Version, startet SmartHomeNG nicht.
 
 
 Unterstützte Python Versionen
 -----------------------------
 
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.9.x ist **Python 3.7**.
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.9.x ist **Python 3.7**. (Diese Version
+muss nicht mit der *Minimum Python Version* übereinstimmen.
 
 Die Grundregel nach der sich der Support für Python Versionen richten
 soll ist folgende:
@@ -192,23 +193,50 @@ soll ist folgende:
 Version aktuelle Python Version und die zwei Vorgängerversionen.**
 
 .. csv-table:: Zur Verdeutlichung
-  :header: "SmartHomeNG", "akt. Python zu Entwicklungsstart", "unterstützte Python Versionen"
+  :header: "SmartHomeNG", "akt. Python zu Entwicklungsstart", "unterstützte Python Versionen", "minimale Python Version"
 
-  "v1.2 und davor",  "diverse",     "Python 3.2, 3.3, 3.4"
-  "v1.3",            "Python 3.5",  "Python 3.3, 3.4, 3.5"
-  "v1.4",            "Python 3.6",  "Python 3.4, 3.5, 3.6"
-  "v1.5",            "Python 3.6",  "Python 3.4, 3.5, 3.6"
-  "v1.6",            "Python 3.7",  "Python 3.5, 3.6, 3.7"
-  "v1.7",            "Python 3.7",  "Python 3.5, 3.6, 3.7"
-  "v1.8",            "Python 3.8",  "Python 3.6, 3.7, 3.8"
-  "v1.9",            "Python 3.9",  "Python 3.7, 3.8, 3.9"
-  "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10"
+  "v1.2 und davor",  "diverse",     "Python 3.2, 3.3, 3.4", "Python 3.2"
+  "v1.3",            "Python 3.5",  "Python 3.3, 3.4, 3.5", "Python 3.2"
+  "v1.4",            "Python 3.6",  "Python 3.4, 3.5, 3.6", "Python 3.3"
+  "v1.5",            "Python 3.6",  "Python 3.4, 3.5, 3.6", "Python 3.4"
+  "v1.6",            "Python 3.7",  "Python 3.5, 3.6, 3.7", "Python 3.4"
+  "v1.7",            "Python 3.7",  "Python 3.5, 3.6, 3.7", "Python 3.5"
+  "v1.8",            "Python 3.8",  "Python 3.6, 3.7, 3.8", "Python 3.6"
+  "v1.9",            "Python 3.9",  "Python 3.7, 3.8, 3.9", "Python 3.7"
+  "v1.10",           "Python 3.10", "Python 3.8, 3.9, 3.10", "tbd"
 
-Das bedeutet nicht automatisch, dass SmartHomeNG mit älteren Python Versionen nicht mehr funktioniert,
-die Entwicklung wird nur nicht mehr mit älteren Versionen getestet. Zudem bekommen ältere Python Versionen keine
-Bugfixes mehr sondern nur noch Sicherheits-Updates.
+Wenn die eingesetzte Python Version nicht in den unterstützen Python Versionen aufgelistet ist, bedeutet das nicht
+automatisch, dass SmartHomeNG mit älteren/neueren Python Versionen nicht funktioniert. Die Entwicklung wird nur
+nicht (mehr) mit anderen Versionen getestet.
 
-Beispiele für Linux-System und mitgeliefere Software Versionen:
+Die minimale Python Version mit der die jewilige SmartHomeNG Version startet, ist in der Tabelle oben angegeben.
+Ältere Python Versionen können nicht genutzt werden, da die SmartHomeNG Version Python Features nutzt, die in
+den älteren Versionen noch nicht implementiert waren.
+
+Zudem bekommen ältere Python Versionen keine Bugfixes mehr sondern nur noch Sicherheits-Updates bzw. fallen ganz
+als dem Python Lifecycle und erhalten keinerlei Updates mehr. Das Supportende der verschiedenen Python Versionen
+ist in der folgenden Tabelle aufgelistet:
+
+.. csv-table:: Aktive Python Releases (wie auf python.org dokumentiert)
+  :header: "Python Version", "Maintenance Status", "Erstes Release", "Support Ende"
+
+  "3.4",   "end of life",  "15\. März 2014",       "18\. März 2019"
+  "3.5",   "end of life",  "12\. September 2015",  "13\. September 2020"
+  "3.6",   "end of life",  "22\. Dezember 2016",   "13\. Dezember 2021"
+  "3.7",   "security",     "27\. Juni 2018",       "27\. Juni 2023"
+  "3.8",   "security",     "14\. Oktober 2019",    "Oktober 2024"
+  "3.9",   "security",     "5\. Oktober 2020",     "Oktober 2025"
+  "3.10",  "bugfix",       "4\. Oktober 2021",     "Oktober 2026"
+  "3.11",  "bugfix",       "24\. Oktober 2022",    "Oktober 2027"
+
+
+Python Versionen unter Linux
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Linux Distributionen bringen eine installierte Version von Python mit. Die installierte Python Version ist abhängig
+von der Linux Distribution.
+
+Hier sind einige Beispiele für Linux-System und mitgeliefere Software Versionen:
 
    * Debian 9 (Stretch) beinhaltet Python 3.5 und PHP 7.0
    * Debian 10 (Buster) beinhaltet Python 3.7 und PHP 7.3

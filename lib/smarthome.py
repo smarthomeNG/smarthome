@@ -22,6 +22,7 @@
 #  along with SmartHomeNG. If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
+__docformat__ = 'reStructuredText'
 
 #########################################################################
 #
@@ -84,6 +85,7 @@ import lib.item
 import lib.log
 import lib.logic
 import lib.module
+import lib.network
 import lib.plugin
 import lib.scene
 import lib.scheduler
@@ -111,7 +113,7 @@ import lib.userfunctions as uf
 class SmartHome():
     """
     SmartHome ist the main class of SmartHomeNG. All other objects can be addressed relative to
-    the main oject, which is an instance of this class. Mostly it is reffered to as ``sh``, ``_sh`` or ``smarthome``.
+    the main oject, which is an instance of this class. Mostly it is referred to as ``sh``, ``_sh`` or ``smarthome``.
     """
 
     # default values, if values are not specified in smarthome.yaml
@@ -157,7 +159,7 @@ class SmartHome():
         self._etc_dir = os.path.join(self._base_dir, 'etc')
         self._var_dir = os.path.join(self._base_dir, 'var')
         self._lib_dir = os.path.join(self._base_dir,'lib')
-        self._plugins_dir = os.path.join(self.base_dir, 'plugins')
+        self._plugins_dir = os.path.join(self._base_dir, 'plugins')
         self._env_dir = os.path.join(self._lib_dir, 'env' + os.path.sep)
 
         self._env_logic_conf_basename = os.path.join(self._env_dir ,'logic')
@@ -218,7 +220,7 @@ class SmartHome():
         # set default timezone to UTC
         self.shtime = Shtime(self)
 
-        threading.currentThread().name = 'Main'
+        threading.current_thread().name = 'Main'
         self.alive = True
 
         import bin.shngversion
@@ -577,6 +579,8 @@ class SmartHome():
         # Init Connections
         #############################################################
         self.connections = lib.connection.Connections()
+        # self.connections = lib.network.Connections()
+        # switch on removing lib.connection
 
         #############################################################
         # Init and start loadable Modules
@@ -632,7 +636,7 @@ class SmartHome():
         self.scenes = lib.scene.Scenes(self)
 
         #############################################################
-        # Start Connections
+        # Start Connections - remove with lib.connection
         #############################################################
         self.scheduler.add('sh.connections', self.connections.check, cycle=10, offset=0)
         self._export_threadinfo()
@@ -644,6 +648,11 @@ class SmartHome():
 
         self.plugins.start()
         self.plugin_start_complete = True
+
+        #############################################################
+        # Start connection monitoring - enable on removing lib.connection
+        #############################################################
+        # self.scheduler.add('sh.connection_monitor', self.connections.check, cycle=10, offset=0)
 
         #############################################################
         # Execute Maintenance Method
@@ -658,6 +667,7 @@ class SmartHome():
         self.shng_status = {'code': 20, 'text': 'Running'}
         self._logger_main.notice("--------------------   SmartHomeNG initialization finished   --------------------")
 
+        # modify/replace on removing lib.connection
         while self.alive:
             try:
                 self.connections.poll()
@@ -672,7 +682,7 @@ class SmartHome():
         self.shng_status = {'code': 31, 'text': 'Stopping'}
 
         self.alive = False
-        self._logger.info("stop: Number of Threads: {}".format(threading.activeCount()))
+        self._logger.info(f"stop: Number of Threads: {threading.activeCount()}")
 
         self.items.stop()
         self.scheduler.stop()
@@ -723,6 +733,9 @@ class SmartHome():
         just quit and let the user restart manually.
         """
         if self._mode in ['foreground', 'debug', 'interactive']:
+            if source != '':
+                source = ', initiated by ' + source
+            self._logger_main.notice(f"--------------------   SmartHomeNG should restart{source} but is in {self._mode} mode and thus will just try to stop  --------------------")
             self.stop()
 
         if self.shng_status['code'] == 30:
@@ -731,22 +744,21 @@ class SmartHome():
             self.shng_status = {'code': 30, 'text': 'Restarting'}
             if source != '':
                 source = ', initiated by ' + source
-            self._logger_main.notice("--------------------   SmartHomeNG restarting" + source + "   --------------------")
+            self._logger_main.notice(f"--------------------   SmartHomeNG restarting{source}   --------------------")
             # python_bin could contain spaces (at least on windows)
             python_bin = sys.executable
             if ' ' in python_bin:
-                python_bin = '"'+python_bin+'"'
+                python_bin = f'"{python_bin}"'
             command = python_bin + ' ' + os.path.join(self._base_dir, 'bin', 'smarthome.py') + ' -r'
-            self._logger.info("Restart command = '{}'".format(command))
+            self._logger.info(f"Restart command = '{command}'")
             try:
                 p = subprocess.Popen(command, shell=True)
                 exit(5)  # exit code 5 -> for systemctl to restart SmartHomeNG
             except subprocess.SubprocessError as e:
-                self._logger.error("Restart command '{}' failed with error {}".format(command,e))
+                self._logger.error(f"Restart command '{command}' failed with error {e}")
 
 
     def list_threads(self, txt):
-
         cp_threads = 0
         http_threads = 0
         for thread in threading.enumerate():

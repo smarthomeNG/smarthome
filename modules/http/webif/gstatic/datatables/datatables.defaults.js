@@ -22,38 +22,85 @@ $(window).bind('datatables_defaults', function() {
 	};
 	try
 		{
-
+			top_offset = $('#webif-navbar').outerHeight() + $('#webif-tabs').outerHeight();
 			// Set datatable useful defaults
+			$.extend( $.fn.dataTable.ext.classes, { "sTable": "table table-striped table-hover pluginList display dataTable dataTableAdditional" });
 			$.extend( $.fn.dataTable.defaults, {
 				lengthMenu: [ [25, 50, 100, -1], [25, 50, 100, "All"] ], // pagination menu
-				pageLength: 100, // default to "all"
+				pageResize: false,
+				lengthChange: true,
+				paging: true,
+				pageLength: 100, // default to "100"
 				pagingType: "full_numbers", // include first and last in pagination menu
 				colReorder: true, // enable colomn reorder by drag and drop
 				columnDefs: [{ targets: '_all', className: 'truncate' }],
 				fixedHeader: {header: true, // header will always be visible on top of page when scrolling
-				 						 headerOffset: $('#webif-navbar').outerHeight() + $('#webif-tabs').outerHeight()},
+				 						 headerOffset: top_offset},
 				autoWidth: false,
-				initComplete: function () {$(this).show();}, // show table (only) after init
-        responsive: {details: {renderer: $.fn.dataTable.Responsive.renderer.listHiddenNodes()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
-				fnDrawCallback: function(oSettings) { // hide pagination if not needed
+				initComplete: function () {$(this).show();
+					this.api().columns.adjust();
+					this.api().responsive.recalc();
+					setTimeout(function() { $(window).resize();  }, 2000);// show table (only) after init, adjust height of wrapper after 2s
+				},
+        responsive: {details: {renderer: $.fn.dataTable.Responsive.renderer.listHidden()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
+				preDrawCallback: function (oSettings) {
+
+        	pageScrollPos = $(oSettings.nTableWrapper).find('.dataTables_scrollBody').scrollTop();
+					bodyScrollPos = $('html, body').scrollTop();
+    		},
+				drawCallback: function(oSettings) { // hide pagination if not needed
+					$(window).resize();
 					if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay() || oSettings._iDisplayLength == -1) {
 						 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
 					} else {
 							$(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+							$(oSettings.nTableWrapper).find('.paginate_button').on('click', function(){
+								// scroll to top on page change
+								  $('html, body').animate({
+									  scrollTop: $('#'+oSettings.sTableId).offset().top - top_offset
+								  }, 'slow');
+							});
 					}
-					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( false );
-					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.enable( true );
-					$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
+					this.api().fixedHeader.enable( false );
+					this.api().fixedHeader.enable( true );
+					this.api().fixedHeader.adjust();
+
+					$('html, body').scrollTop(bodyScrollPos);
+					$(this).addClass( "display" );
+					if (typeof window.row_count !== 'undefined') {
+						window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count();
+					}
+				},
+				createdRow: function (row, data, index) {
+					$(row).hide().fadeIn('slow');
+					$('td', row).addClass('py-1 truncate');
+					this.api().columns.adjust();
+					this.api().fixedHeader.adjust();
+					this.api().responsive.recalc();
+					if (typeof window.row_count !== 'undefined') {
+						window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count();
+					}
 				}
+
 			});
 			// Set date format for correct sorting of columns containing date strings
 			$.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss');
 			$.fn.dataTable.moment('YYYY-MM-DD HH:mm:ss');
+			$.fn.dataTable.moment('DD.MM.');
+			$.fn.dataTable.moment('DD.MM.YY');
+			$.fn.dataTable.moment('HH:mm');
+
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+
 				$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 				$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
 				$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
+				$(function () {
+						$(window).resize();
+						setTimeout(function() { $(window).resize(); }, 300); // necessary for Safari
+				});
 			});
+
 		}
 	catch (e)
 		{

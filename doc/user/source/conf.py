@@ -22,7 +22,6 @@ import datetime
 now = datetime.datetime.now()
 import calendar
 
-today = str(now.day) + '. ' + calendar.month_name[now.month] + ' ' + str(now.year)
 
 # -- General configuration -----------------------------------------------------
 
@@ -70,7 +69,8 @@ source_encoding = 'utf-8-sig'
 master_doc = 'index'
 
 # To get rid of the ¶ sign on descriptions over a box
-html_add_permalinks = ""
+#html_add_permalinks = "" is deprecated since version 3.5
+html_permalinks = True
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -82,7 +82,7 @@ shversion = shngversion.get_shng_main_version()
 
 # General information about the project.
 #project = u'SmartHomeNG'
-project = u'Anwenderdokumentation '
+project = u'Dokumentation '
 copyright = u'2016-2022 SmartHomeNG Team  -  SmartHomeNG is based on smarthome.py © Marcus Popp'
 
 # The full version, including alpha/beta/rc tags.
@@ -101,7 +101,7 @@ if os.path.isfile(os.getcwd()+'/doc_version.flg'):
 else:
     release = shngversion.get_shng_docversion()
     commit, commit_short, branch, describe = shngversion._get_git_data()
-release += ' (Stand ' + today
+release += ' (Stand ' + shngversion.get_shng_version_date()
 if branch != 'master':
     release += ', commit '+commit_short
 release += ')'

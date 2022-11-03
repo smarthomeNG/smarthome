@@ -286,6 +286,7 @@ class Modules():
                  self._modules.append(self._moduledict[name])
                  return self.loadedmodule
             else:
+                logger.error(f"Module {name} not started: Module version mismatch")
                 return None
         else:
             logger.error("Modules: Module '{}' initialization failed, module not loaded".format(classpath.split('.')[1]))

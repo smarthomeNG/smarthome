@@ -55,28 +55,28 @@ Dazu dient die Methode ``submit()``:
                 return json.dumps(result_dict).encode('utf-8')
 
 
-Die Anzahl und die Namen der Funktionsparameter (im Beispiel nur ``param1``) müssen dem Bedarf und den Definitionen im Webinterface entsprechen. 
+Die Anzahl und die Namen der Funktionsparameter (im Beispiel nur ``param1``) müssen dem Bedarf und den Definitionen im Webinterface entsprechen.
 Mehrere Variablen können einzeln (dann jeweils als eigener Parameter) oder gesammelt
 in einem Dictionary Objekt übergeben werden. Das muss in der weiteren Verarbeitung berücksichtigt sein.
 
-Der Block mit dem Kommentar "verarbeite die Daten" ruft beispielhaft nur eine beliebige Funktion des Plugins auf, 
-um die Daten zu verarbeiten und einen entsprechenden Rückgabewert zu erhalten. 
+Der Block mit dem Kommentar "verarbeite die Daten" ruft beispielhaft nur eine beliebige Funktion des Plugins auf,
+um die Daten zu verarbeiten und einen entsprechenden Rückgabewert zu erhalten.
 Hier sind beliebige zusätzliche Verarbeitungen denkbar, wie z.B. Überprüfung der übergebenen
-Werte auf Vollständigkeit und Gültigkeit, ggf. Transformation von Daten, auch umfangreichere 
-Interaktionen mit dem Plugin sind möglich. Weiterhin können die Daten, die zurückgegeben werden sollen, 
+Werte auf Vollständigkeit und Gültigkeit, ggf. Transformation von Daten, auch umfangreichere
+Interaktionen mit dem Plugin sind möglich. Weiterhin können die Daten, die zurückgegeben werden sollen,
 formatiert und in ein Dictionary gekapselt werden.
 
-Generell empfiehlt sich, als Rückgabewert nur ein Dictionary anzugeben; 
-zum Einen, weil die Daten für den Transport per JSON verkapselt werden, was Dictionaries nativ übergeben kann, 
+Generell empfiehlt sich, als Rückgabewert nur ein Dictionary anzugeben;
+zum Einen, weil die Daten für den Transport per JSON verkapselt werden, was Dictionaries nativ übergeben kann,
 zum Anderen weil Dictionaries im Javascript der Webseite als Objekte direkt angesprochen werden können.
 
 Das Dictionary
 
 .. code-block:: PYTHON
 
-    result_dict = { 
-                    "kategorie1": { 
-                        "attr1": "...", 
+    result_dict = {
+                    "kategorie1": {
+                        "attr1": "...",
                         "attr2": "...",
                         "wert": "..."
                     },
@@ -118,41 +118,40 @@ Normalerweise sieht das ``headtable`` wie folgt aus:
     {% endblock headtable %}
 
 
-Tabelle in einem ``bodytab?`` können mit einer Schleife befüllt werden, das ist auf der Seite 
+Tabellen in einem ``bodytab?`` können mit einer Schleife befüllt werden, das ist auf der Seite
 :doc:`Webinterface mit Inhalt füllen <webinterface_filling_webinterface>` näher beschrieben:
 
 
 .. code-block:: html+jinja
 
     {% block **bodytab1** %}
-        <div class="table-responsive" style="margin-left: 3px; margin-right: 3px;" class="row">
-            <div class="col-sm-12">
-                <table class="table table-striped table-hover pluginList">
-                    <thead>
+
+        <div class="container-fluid m-2 table-resize">
+            <table id="maintable">
+                <thead>
+                    <tr>
+                        <th>{{ _('Attribut 1') }}</th>
+                        <th>{{ _('Attribut 2') }}</th>
+                        <th>{{ _('aktualisieren') }}</th>
+                        <th>{{ _('Wert') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for elem in data %}
                         <tr>
-                            <th>{{ _('Attribut 1') }}</th>
-                            <th>{{ _('Attribut 2') }}</th>
-                            <th>{{ _('aktualisieren') }}</th>
-                            <th>{{ _('Wert') }}</th>
+                            <td>{{ data[elem]['attr1'] }}</td>
+                            <td>{{ data[elem]['attr2'] }}</td>
+                            <td> <!-- leer --> </td>
+                            <td>{{ data[elem]['wert']</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for elem in data %}
-                            <tr>
-                                <td>{{ data[elem]['attr1'] }}</td>
-                                <td>{{ data[elem]['attr2'] }}</td>
-                                <td> <!-- leer --> </td>
-                                <td>{{ data[elem]['wert']</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     {% endblock **bodytab1** %}
 
 
-Um das nachträgliche Zuweisen von Werten an die <td>-Elemente zu ermöglichen, 
+Um das nachträgliche Zuweisen von Werten an die <td>-Elemente zu ermöglichen,
 muss bei diesen eine ID ergänzt werden.
 Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable aus der for-Schleife:
 
@@ -160,7 +159,7 @@ Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable au
 .. code-block:: html+jinja
 
     {% block headtable %}
-        <table class="table table-striped table-hover">
+        <table id="maintable">
             <tbody>
                 <tr>
                     <td class="py-1"><strong>Scanne von IP</strong></td>
@@ -175,29 +174,27 @@ Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable au
     ...
 
     {% block **bodytab1** %}
-        <div class="table-responsive" style="margin-left: 3px; margin-right: 3px;" class="row">
-            <div class="col-sm-12">
-                <table class="table table-striped table-hover pluginList">
-                    <thead>
+        <div class="container-fluid m-2 table-resize">
+            <table id="maintable">
+                <thead>
+                    <tr>
+                        <th>{{ _('Attribut 1') }}</th>
+                        <th>{{ _('Attribut 2') }}</th>
+                        <th>{{ _('aktualisieren') }}</th>
+                        <th>{{ _('Wert') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for elem in data %}
                         <tr>
-                            <th>{{ _('Attribut 1') }}</th>
-                            <th>{{ _('Attribut 2') }}</th>
-                            <th>{{ _('aktualisieren') }}</th>
-                            <th>{{ _('Wert') }}</th>
+                            <td>{{ data[elem]['attr1'] }}</td>
+                            <td>{{ data[elem]['attr2'] }}</td>
+                            <td> <!-- leer --> </td>
+                            <td id="{{ elem }}_value">{{ data[elem]['wert']</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for elem in data %}
-                            <tr>
-                                <td>{{ data[elem]['attr1'] }}</td>
-                                <td>{{ data[elem]['attr2'] }}</td>
-                                <td> <!-- leer --> </td>
-                                <td id="{{ elem }}_value">{{ data[elem]['wert']</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     {% endblock **bodytab1** %}
 
@@ -220,8 +217,8 @@ wo standardmäßig schon die Buttons "Aktualisieren" und "Schließen" vorhanden 
 
 Dabei ist wichtig, dass die ID (hier: "clear") vergeben und eindeutig im gesamten Template ist.
 
-Wenn nur ein Button eingefügt werden soll, ist das die einfachste Variante. 
-Wie weiter unten beschrieben, ist für jeden Button, der auf diese Weise implementiert wird, 
+Wenn nur ein Button eingefügt werden soll, ist das die einfachste Variante.
+Wie weiter unten beschrieben, ist für jeden Button, der auf diese Weise implementiert wird,
 eine eigene Handler-Routine erforderlich.
 
 Wenn mehrere Buttons dieser Art vorgesehen sind, oder z.B. in einer Wertetabelle ein Button
@@ -230,51 +227,49 @@ in jeder Zeile stehen soll, dann bietet es sich an, statt einzelnen Button-Eleme
 .. code-block:: html+jinja
 
     {% block bodytab1 %}
-    <div class="table-responsive" style="margin-left: 2px; margin-right: 2px;" class="row">
-        <div class="col-sm-12">
+      <div class="container-fluid m-2 table-resize">
 
-            <form id="button_pressed" action="" method="post">
+          <form id="button_pressed" action="" method="post">
 
-                <input type="hidden" id="button" name="button" value="" />
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>{{ _('Attribut 1') }}</th>
-                            <th>{{ _('Attribut 2') }}</th>
-                            <th>{{ _('aktualisieren') }}</th>
-                            <th>{{ _('Wert') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for elem in data %}
-                            <tr>
-                                <td>{{ data[elem]['attr1'] }}</td>
-                                <td>{{ data[elem]['attr2'] }}</td>
-                                <td>
-                                    <button 
-                                        class="btn btn-shng btn-sm" 
-                                        type="button" 
-                                        onclick="$('#button').val('{{ elem }}');$('#button_pressed').submit();"
-                                    >lesen
-                                    </button>
-                                </td>
-                                <td id="{{ elem }}_value">{{ data[elem]['wert']</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+              <input type="hidden" id="button" name="button" value="" />
+              <table id="maintable">
+                  <thead>
+                      <tr>
+                          <th>{{ _('Attribut 1') }}</th>
+                          <th>{{ _('Attribut 2') }}</th>
+                          <th>{{ _('aktualisieren') }}</th>
+                          <th>{{ _('Wert') }}</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for elem in data %}
+                          <tr>
+                              <td>{{ data[elem]['attr1'] }}</td>
+                              <td>{{ data[elem]['attr2'] }}</td>
+                              <td>
+                                  <button
+                                      class="btn btn-shng btn-sm"
+                                      type="button"
+                                      onclick="$('#button').val('{{ elem }}');$('#button_pressed').submit();"
+                                  >lesen
+                                  </button>
+                              </td>
+                              <td id="{{ elem }}_value">{{ data[elem]['wert']</td>
+                          </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
 
-            </form>
+          </form>
 
-        </div>
-    </div>
+      </div>
     {% endblock bodytab1 %}
 
 
 In der Tabellenspalte mit den Buttons wird in jeder Zeile ein Button eingefügt.
-Durch den Ausdruck ``{{ elem }}`` wird jedem Button der entsprechende Zeilenwert 
-in den Button-Code eingefügt. Um die eindeutige Zuordnung sicher zu stellen, 
-wird die for-Variable der Tabelle verwendet. Natürlich können auch andere Werte verwendet werden, 
+Durch den Ausdruck ``{{ elem }}`` wird jedem Button der entsprechende Zeilenwert
+in den Button-Code eingefügt. Um die eindeutige Zuordnung sicher zu stellen,
+wird die for-Variable der Tabelle verwendet. Natürlich können auch andere Werte verwendet werden,
 z.B. Inhalte aus dem ``data`` Dictionary. Dann muss sicher gestellt sein, dass die Werte eindeutig sind.
 
 Die Definition der aktiven Elemente ist damit abgeschlossen.
@@ -283,14 +278,14 @@ Die Definition der aktiven Elemente ist damit abgeschlossen.
 Javascript-Funktion zum Handling implementieren
 -----------------------------------------------
 
-Normalerweise werden Buttons und Formulare an den Webserver gesendet, welcher daraufhin eine 
-neue Webseite an den Browser schickt. 
-Um zu verhindern, dass bei jeder Interaktion eine neue Seite geladen wird, 
-benötigen die aktiven Elemente sogenannte handler-Methoden. 
-Gleichzeitig empfangen die handler die Antwortdaten vom Plugin und fügen diese in die entsprechenden DOM-Elemente ein. 
+Normalerweise werden Buttons und Formulare an den Webserver gesendet, welcher daraufhin eine
+neue Webseite an den Browser schickt.
+Um zu verhindern, dass bei jeder Interaktion eine neue Seite geladen wird,
+benötigen die aktiven Elemente sogenannte handler-Methoden.
+Gleichzeitig empfangen die handler die Antwortdaten vom Plugin und fügen diese in die entsprechenden DOM-Elemente ein.
 
 Diese handler müssen auf der Webseite im Block ``pluginscripts`` eingefügt werden.
-Falls dort noch kein Handler für das ``$(document).ready()``-Event vorhanden ist, wird dieser mit hinzugefügt; 
+Falls dort noch kein Handler für das ``$(document).ready()``-Event vorhanden ist, wird dieser mit hinzugefügt;
 ansonsten werden die neuen Handler in den document.ready-Handler eingefügt.
 
 
@@ -319,38 +314,38 @@ Dort werden dann die Handler für die aktiven Elemente eingefügt.
 
             // Handler für einfachen Button - das "click"-Element wird abgefangen
             $("#clear").click(function(e) {
-         
+
                 // keine HTML-Aktion ausführen (z.B. Formular senden)
                 e.preventDefault();
 
                 // festen Wert per AJAX senden
                 $.post('submit', {clear: "true"}, function(data) {
-         
-                    // Ergebnis in Feld #fromip schreiben
-                    shngInsertText('fromip', data.ip)
+
+                    // Ergebnis in Feld #fromip schreiben. Der dritte Parameter muss mit der Tabellen-ID identisch sein.
+                    shngInsertText('fromip', data.ip, 'maintable')
                 });
                 return false ;
             });
 
             // Handler für Formular - das "submit"-Element (Senden) wird abgefangen
             $("#button_pressed").submit(function(e) {
-         
+
                 // keine HTML-Aktion ausführen (z.B. Formular senden)
                 e.preventDefault();
 
                 // die Kennung des gedrückten Buttons per AJAX senden
                 $.post('submit', {button: $("#button").val()}, function(data) {
-     
+
                     // Zeile ermitteln
                     var row = $("#button").val()
                     var id = row + "_value"
 
-                    // nur die betroffene Zeile ändern
-                    shngInserText(id, data.wert)
+                    // nur die betroffene Zeile ändern. Der dritte Parameter muss mit der Tabellen-ID identisch sein.
+                    shngInserText(id, data.wert, 'maintable')
 
                     // alternativ kann auch ein ganzes Feld übertragen werden...
                     for (var row in data) {
-                            shngInsertText(row + "_value", data.row.wert)
+                            shngInsertText(row + "_value", data.row.wert, 'maintable')
                     }
                 });
                 return false ;
@@ -362,7 +357,6 @@ Dort werden dann die Handler für die aktiven Elemente eingefügt.
     {% endblock pluginscripts %}
 
 
-In der Implementation ist zu beachten, dass die Werte vom Plugin so strukturiert sind, 
-dass sie verarbeitet werden können. Sowohl die gewählte Datenstruktur als auch die davon 
+In der Implementation ist zu beachten, dass die Werte vom Plugin so strukturiert sind,
+dass sie verarbeitet werden können. Sowohl die gewählte Datenstruktur als auch die davon
 abhängige Implementation der Handler können sich in Struktur und Umfang erheblich vom Beispiel unterscheiden.
-

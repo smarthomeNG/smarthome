@@ -43,8 +43,8 @@ unter dem später SmartHomeNG laufen soll, **nicht als root**.
    sudo chown -R smarthome:smarthome /usr/local/smarthome
 
    cd smarthome
-   git clone git://github.com/smarthomeNG/smarthome.git .
-   git clone git://github.com/smarthomeNG/plugins.git plugins
+   git clone https://github.com/smarthomeNG/smarthome.git .
+   git clone https://github.com/smarthomeNG/plugins.git plugins
 
 Bitte auf den **Punkt** am Ende des ersten **git clone** Kommandos achten!
 
@@ -104,11 +104,11 @@ Weitere Python Bibliotheken installieren
       .. code-block:: bash
 
          cd /usr/local/smarthome
-         pip3 install -r requirements/base.txt --user
+         python3 -m pip install -r requirements/base.txt --user
 
       .. attention::
 
-          In früheren Beschreibungen wurde die globale Installation von Python Packages mit dem sudo Kommando
+          In früheren Beschreibungen wurde die globale Installation von Python Packages mit dem **sudo** Kommando
           beschrieben:
 
              sudo pip3 install -r requirements/base.txt
@@ -122,7 +122,7 @@ Weitere Python Bibliotheken installieren
           Falls mehrere Python3 Versionen installiert sind, kann es zu Problemen kommen, da pip die Bibliotheken immer nur
           in eine der installierten Python 3 Versionen installiert.
 
-          Um sicherzustellen, dass die Bibliotheken in die Python3 Version installiert werden, muss pip3 aus genau dieser
+          Um sicherzustellen, dass die Bibliotheken in die Python3 Version installiert werden, muss pip aus genau dieser
           Python3 Umgebung aufgerufen werden.
 
           Um das sicherzustellen, ist statt

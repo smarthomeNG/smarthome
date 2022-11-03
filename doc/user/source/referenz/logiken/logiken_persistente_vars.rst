@@ -7,11 +7,11 @@
 .. role:: greensup
 .. role:: blacksup
 
-=====================
-Persistente Variablen
-=====================
+=================================
+Persistente Variablen und Objekte
+=================================
 
-Normale Variablen innerhalb von Logiken sind nur für den jeweiligen Lauf gültig. Es ist jedoch
+Normale Variablen und Objekte innerhalb von Logiken sind nur für den jeweiligen Lauf gültig. Es ist jedoch
 in einigen Fällen notwendig, Werte zwischen verschiedenen Läufen einer Logik zu übergeben.
 
 Solche persistente Variablen sind in Logiken von SmartHomeNG möglich, es sind jedoch einige
@@ -21,7 +21,7 @@ Dinge zu beachten:
   des Laufs von SmartHomeNG. Bei einem Neustart von SmartHomeNG gehen diese Werte verloren.
   Der Wert einer solchen Variablen geht auch verloren, wenn die Logik über das Backend während
   der Laufzeit von SmartHomeNG gespeichert und neu geladen wird.
-- Beim 1. Lauf einer Logik nach dem Start von SmartHomeNG existieren diese Variablen nicht. Der
+- Beim 1. Lauf einer Logik nach dem Start von SmartHomeNG existieren diese Variablen/Objekte nicht. Der
   erste Zugriff innerhalb einer Logik muss deshalb in einen **if not hasattr():** Ausdruck
   eingebunden werden.
 - Diese Variablen sind **lokal zur Logik**. Sie stehen außerhalb der Logik, die sie definiert hat,

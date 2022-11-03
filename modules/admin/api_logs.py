@@ -81,11 +81,13 @@ class LogsController(RESTResource):
         """
         logs = {}
         for fn in self.files:
-            if os.path.splitext(fn)[1] == '.log':
-                log_name = os.path.splitext(fn)[0]
+            fnl = fn.split('.')
+            if (len(fnl) == 2) and (fnl[1] == 'log'):
+                log_name = fnl[0]
 
                 logfiles = self.get_files_of_log(log_name)
                 logs[log_name] = sorted(logfiles)
+
         return logs
 
 
@@ -100,7 +102,8 @@ class LogsController(RESTResource):
         """
         logfiles = []
         for fn in self.files:
-            if fn.startswith(log_name+'.log'):
+            #if fn.startswith(log_name+'.log'):
+            if (fn.startswith(log_name+'.') and fn.endswith('.log')) or fn.startswith(log_name+'.log'):
                 size = round(os.path.getsize(os.path.join(self.log_dir, fn)) / 1024, 1)
                 logfiles.append([fn,size])
         return logfiles
@@ -121,10 +124,14 @@ class LogsController(RESTResource):
             chunk = 1
 
         # get names of files in log directory
-        self.files = sorted(os.listdir(self.log_dir))
+        wrkl = sorted(os.listdir(self.log_dir))
+        self.files = []
+        for fn in wrkl:
+            if not(fn.startswith('.')):
+                if os.path.isfile(os.path.join(self.log_dir, fn)):
+                    self.files.append(fn)
         # get names of logs (from filenames enting with '.log')
         logs = self.get_logs()
-
         if id is None:
             # get list of existing logs and name of default log
             logs = self.get_logs_with_files()

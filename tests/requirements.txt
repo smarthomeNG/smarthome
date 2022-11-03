@@ -1,16 +1,56 @@
-
 #   +--------------------------------------------------+
 #   |                 SmartHomeNG                      |
-#   |                                                  |
-#   |       Requirements to run the test cases         |
+#   |            This file contains all                |
+#   |            requirements needed for               |
+#   |              automated testing                   |
+#   |                by tox/pytest                     |
 #   |                                                  |
 #   |               INSTALL WITH:                      |
 #   | pip3 install -r tests/requirements.txt --user    |
 #   +--------------------------------------------------+
 
-# Package needed to run the tests
-pytest
-
+# scrape information from webpages
+# e.g. blockly plugin which is in alpha stadium
 # required by tests of blockly plugin
-bs4
+#bs4
+beautifulsoup4>=4.1.0
+
+# Flake8 is a Python static code analysis tool
+#flake8>=2.5.1
+
+# Pylint is a Python static code analysis tool
+# which looks for programming errors, helps enforcing a
+# coding standard, sniffs for code smells and
+# offers simple refactoring suggestions
+#pylint>=1.5.3
+
+# testing with pytest
+pytest>=3.6.0
+
+# used by tests/mock/core.py:
+#python-dateutil
+
+#This is a plugin which will terminate tests after a certain timeout
+#pytest-timeout>=1.0.0
+
+# This plugin for pytest produces coverage reports
+#pytest-cov>=2.2.0
+
+# coveralls.io is a service for publishing coverage stats online
+#coveralls>=1.1
+
+# Betamax intercepts every request you make and
+# attempts to find a matching request that has already been intercepted and recorded.
+# old requirement: betamax==0.5.1
+#betamax
+
+# pydocstyle is a static analysis tool for checking compliance
+# with Python docstring conventions
+#pydocstyle>=1.0.0
+
+# the following needs to be exactly the same as in requirements/base.txt
+# otherwise inconsistent requirements will occur in Tox/Testing
+ruamel.yaml>=0.13.7,<=0.15.74;python_version<'3.7'
+ruamel.yaml>=0.15.0,<=0.15.74;python_version=='3.7'
+ruamel.yaml>=0.15.78,<=0.16.8;python_version>='3.8'
 
