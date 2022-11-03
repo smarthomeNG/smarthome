@@ -46,10 +46,36 @@ table td.truncate:active {
 .notruncate {
   overflow: visible;
 }
+
 table.dataTableAdditional {
   display: none;
   table-layout: fixed;
 }
+
+tr.even td.sorting_1 {
+background-color: rgba(0,0,0,.21);
+}
+
+tr.odd td.sorting_1 {
+background-color: rgba(0,0,0,.16);
+}
+
+tr.even td.sorting_2 {
+background-color: rgba(0,0,0,.14);
+}
+
+tr.odd td.sorting_2 {
+background-color: rgba(0,0,0,.09);
+}
+
+tr.even td.sorting_3 {
+background-color: rgba(0,0,0,.07);
+}
+
+tr.odd td.sorting_3 {
+background-color: rgba(0,0,0,.03);
+}
+
 /* this is necessary for correct auto pageResize of datatables */
 .table-resize {
   height: 100%;

@@ -409,7 +409,7 @@ class Item():
                 self.__prev_update = self.__prev_change
 
                 # Write item value to log, if Item has attribute log_change set
-                self._log_on_change(self._value, 'Init', 'Cache', None)
+                self._log_on_change(self._value, self.__changed_by, 'Cache', None)
             except Exception as e:
                 if str(e).startswith('[Errno 2]'):
                     logger.info("Item {}: No cached value: {}".format(self._path, e))
@@ -1234,9 +1234,9 @@ class Item():
         """
         if self._trigger:
             # Only if item has an eval_trigger
-            if self._eval:
+            if self._eval and not self._cache:
                 # Only if item has an eval expression
-                self._sh.trigger(name=self._path, obj=self.__run_eval, by='Init', value={'value': self._value, 'caller': 'Init'})
+                self._sh.trigger(name=self._path, obj=self.__run_eval, by='Init', value={'value': self._value, 'caller': 'Init:Eval'})
                 return True
         return False
 
