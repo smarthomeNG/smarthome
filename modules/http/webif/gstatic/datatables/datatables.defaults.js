@@ -33,7 +33,8 @@ $(window).bind('datatables_defaults', function() {
 				pageLength: 100, // default to "100"
 				pagingType: "full_numbers", // include first and last in pagination menu
 				colReorder: true, // enable colomn reorder by drag and drop
-				columnDefs: [{ targets: '_all', className: 'truncate' }],
+				columnDefs: [{className: 'dtr-control datatable-responsive', orderable: false, targets: 0}, { targets: '_all', className: 'truncate' }],
+				order: [[1, 'asc']],
 				fixedHeader: {header: true, // header will always be visible on top of page when scrolling
 				 						 headerOffset: top_offset},
 				autoWidth: false,
@@ -42,7 +43,7 @@ $(window).bind('datatables_defaults', function() {
 					this.api().responsive.recalc();
 					setTimeout(function() { $(window).resize();  }, 2000);// show table (only) after init, adjust height of wrapper after 2s
 				},
-        responsive: {details: {renderer: $.fn.dataTable.Responsive.renderer.listHidden()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
+        responsive: {details: {type: 'column', renderer: $.fn.dataTable.Responsive.renderer.listHidden()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
 				preDrawCallback: function (oSettings) {
 
         	pageScrollPos = $(oSettings.nTableWrapper).find('.dataTables_scrollBody').scrollTop();

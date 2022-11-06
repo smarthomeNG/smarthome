@@ -47,6 +47,9 @@ table td.truncate:active {
   overflow: visible;
 }
 
+table th.datatable-responsive {
+  width: 10px;
+}
 table.dataTableAdditional {
   display: none;
   table-layout: fixed;
