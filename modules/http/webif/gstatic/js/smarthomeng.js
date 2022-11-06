@@ -182,6 +182,56 @@ function shngGetUpdatedData(dataSet=null, update_params=null) {
     }
 }
 
+function changeVisibility() {
+  let width = $( "#webif-toprow" ).outerWidth(true) - 15;
+  let headminwidth = parseInt($( "#webif-headtable > table" ).css('min-width'), 10);
+  let headwidth = $( "#webif-headtable" ).width();
+  let buttonswidth = $( "#webif-custombuttons" ).width() + $( "#webif-autorefresh" ).width() + $( "#webif-reload_orig" ).width() + $( "#webif-close_orig" ).width() + $( "#webif-seconds_orig" ).width() + 60;
+  let logowidth = $( "#webif-pluginlogo" ).outerWidth(true);
+  let infowidth = $( "#webif-plugininfo" ).outerWidth(true);
+  let total = width - headwidth - infowidth - logowidth;
+  let prev_infodisplay = $( "#webif-plugininfo" ).css("display");
+  let prev_logodisplay = $( "#webif-pluginlogo" ).css("display");
+  console.log("Widthes " + width + "-" + headminwidth + "-" + infowidth + "-" + logowidth + "=" + total);
+  console.log("secondswidth " + headwidth + "-" + buttonswidth);
+
+  if (width - infowidth - headminwidth <= 0) {
+    $( "#webif-plugininfo" ).css("display", "none");
+    $( "#webif-pluginlogo" ).css("display", "none");
+    $( "#webif-headtable" ).attr('class', 'col-sm-12');
+    console.log("info + head widthes < 0");
+  }
+  else if (width - headminwidth - infowidth - logowidth <= 0) {
+    $( "#webif-pluginlogo" ).css("display", "none");
+    $( "#webif-plugininfo" ).css("display", "");
+    $( "#webif-headtable" ).attr('class', 'col-sm-9');
+    console.log("All widthes < 0");
+  }
+  else {
+    $( "#webif-plugininfo" ).css("display", "");
+    $( "#webif-pluginlogo" ).css("display", "");
+    $( "#webif-headtable" ).attr('class', 'col-sm-7');
+  }
+  headwidth = $( "#webif-headtable" ).width();
+  if (headwidth - buttonswidth <= 0) {
+    $( "#webif-seconds" ).text(" s");
+    $( "#webif-reload" ).text("");
+    $( "#webif-close" ).text("");
+    console.log("secondswidth " + headwidth + "-" + buttonswidth);
+  }
+  else {
+    $( "#webif-seconds" ).text($( "#webif-seconds_orig" ).text());
+    $( "#webif-reload" ).text($( "#webif-reload_orig" ).text());
+    $( "#webif-close" ).text($( "#webif-close_orig" ).text());
+  }
+  let infodisplay = $( "#webif-plugininfo" ).css("display");
+  let logodisplay = $( "#webif-pluginlogo" ).css("display");
+  if (prev_logodisplay == "none" && logodisplay != "none")
+     console.log("Logo gets shown because " + width + "-" + infowidth + "-" + headwidth + "-" + logowidth + "=" + total);
+}
+//const resizeObserver = new ResizeObserver(entries => changeVisibility() );
+addEventListener('load', changeVisibility, false);
+addEventListener('resize', changeVisibility, false);
 
 /**
  * replaces the body attribs onload approach. The major difference is that all parameters like activate
