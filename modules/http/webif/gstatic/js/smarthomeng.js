@@ -182,10 +182,45 @@ function shngGetUpdatedData(dataSet=null, update_params=null) {
     }
 }
 
+function calculateHeadTable() {
+  let headminwidth = parseInt($( "#webif-headtable > table:first" ).css('min-width'), 10);
+  if (headminwidth > 0)
+  {
+    console.log("Min-width " + headminwidth + "px of headtable (responsive)");
+    return;
+  }
+  let arrOfTable1=[], arrRowWidth=[], i=0, x=0, y=0;
+
+  $('#webif-headtable tr').each(function() {
+    rowWidth = 0;
+    $(this).children('td').each(function() {
+      let calcVal = '<span id="webif-head-span-' + (x + 1) + '-' + (y + 1) + '">'+ $(this).html()+'</span>';
+      $(this).html(calcVal);
+      mWid = $(this).children('span:first').width() + 15;
+      rowWidth += mWid;
+      arrOfTable1.push(mWid);
+      y++;
+    });
+    arrRowWidth.push(rowWidth);
+    x++;
+    y = 0;
+  });
+
+  $('#webif-headtable td').each(function() {
+   $(this).css("min-width",arrOfTable1[i]+"px");
+   i++;
+  });
+  let tableMinWidth = Math.max.apply(Math, arrRowWidth)
+  console.log("Setting min-width " + tableMinWidth + "px for headtable (responsive)");
+  $( "#webif-headtable > table:first" ).css("min-width",tableMinWidth+"px");
+}
+addEventListener('load', calculateHeadTable, false);
+
 function changeVisibility() {
+
   let width = $( "#webif-toprow" ).outerWidth(true) - 15;
-  let headminwidth = parseInt($( "#webif-headtable > table" ).css('min-width'), 10);
-  let headwidth = $( "#webif-headtable" ).width();
+  let headminwidth = parseInt($( "#webif-headtable > table:first" ).css('min-width'), 10);
+  let headwidth = parseInt($( "#webif-headtable" ).width());
   let buttonswidth = $( "#webif-custombuttons" ).width() + $( "#webif-autorefresh" ).width() + $( "#webif-reload_orig" ).width() + $( "#webif-close_orig" ).width() + $( "#webif-seconds_orig" ).width() + 60;
   let logowidth = $( "#webif-pluginlogo" ).outerWidth(true);
   let infowidth = $( "#webif-plugininfo" ).outerWidth(true);
@@ -201,7 +236,7 @@ function changeVisibility() {
     $( "#webif-headtable" ).attr('class', 'col-sm-12');
     console.log("info + head widthes < 0");
   }
-  else if (width - headminwidth - infowidth - logowidth <= 0) {
+  else if (width - headminwidth - infowidth - logowidth - 35  <= 0) {
     $( "#webif-pluginlogo" ).css("display", "none");
     $( "#webif-plugininfo" ).css("display", "");
     $( "#webif-headtable" ).attr('class', 'col-sm-9');
