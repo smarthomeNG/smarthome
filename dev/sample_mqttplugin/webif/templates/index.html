@@ -13,16 +13,15 @@
   $(document).ready( function () {
     $(window).trigger('datatables_defaults');
     try {
-      /* get pagelength from plugin. Also see hidden span element in bodytab1 block! */
-      webif_pagelength = parseInt(document.getElementById('webif_pagelength').innerHTML);
+      var webif_pagelength = {{ webif_pagelength|int }};
       if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
         resize = true;
         webif_pagelength = -1;
-				console.log('Activating automatic table resize');
       }
       else {
         resize = false;
       }
+      console.log("Using page length from http module/plugin " + webif_pagelength + ", pageResize: " + resize);
     }
     catch (e) {
       webif_pagelength = 100;
@@ -58,7 +57,6 @@
 
 
 {% block headtable %}
-<span id='webif_pagelength' style="display:none">{{ webif_pagelength }}</span>
 <table class="table table-striped table-hover">
 	<tbody>
 		<tr>
@@ -125,12 +123,19 @@
 	<table id="maintable">
 		<thead>
 		<tr>
+      <th></th>
 			<th>Item</th>
+      <th>Item Path</th>
+      <th>Item Value</th>
+      <th>Topic In/Out</th>
+      <th>Last Update</th>
+      <th>Last Change</th>
 		</tr>
 		</thead>
 		{% for item in items %}
 			{% if p.has_iattr(item.conf, 'mqtt_topic_in') or p.has_iattr(item.conf, 'mqtt_topic_out') %}
 				<tr>
+          <td></td>
 					<td class="py-1">{{ item._path }}</td>
 					<td class="py-1">{{ item._type }}</td>
 					<td id="{{ item.id() }}_value" class="py-1">{{ item() }}</td>

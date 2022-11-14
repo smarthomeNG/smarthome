@@ -27,7 +27,6 @@ parameters:
     # This parameter should be included if plugin provides a web interface. It lets users configure the standard number of entries per page
     webif_pagelength:
         type: int
-        default: 100
         valid_list:
           - -1
           - 0
