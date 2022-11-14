@@ -4,6 +4,27 @@
 
 <!-- set update_interval to a value > 0 (in milliseconds) to enable periodic data updates -->
 {% set update_interval = 0 %}
+<!-- for data-heavy plugins it might be useful to set the update interval based on the amount of data
+{% set update_interval = (200 * (log_array | length)) %}
+ -->
+<!-- set dataSet if you need specific data to be updated automatically. Also see init.py in plugin webif!
+{% set dataSet = 'devices_info' %}
+-->
+<!-- set update_params if you need to provide additional parameters for the auto-update function
+{% set update_params = item_id %}
+-->
+<!-- if you don't need any buttons in the header, disable them completely
+{% set buttons = false %}
+-->
+<!-- if you don't need any auto-refresh elements in the header, disable them
+{% set autorefresh_buttons = false %}
+-->
+<!-- if you don't need the reload_button in the header, disable it
+{% set reload_button = false %}
+-->
+<!-- if you don't need the close in the header, disable it
+{% set close_button = false %}
+-->
 
 <!--
 	Additional styles go into this block. Examples are for datatables

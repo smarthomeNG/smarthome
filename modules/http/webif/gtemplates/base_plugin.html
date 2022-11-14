@@ -75,7 +75,7 @@
 {% block content -%}
 
 {% if scroll_heading is not defined %}
-<div id="webif-navbar" style="position: fixed; top: 0; width: 100%; height: 180px; background: RGB(255, 255, 255); z-index: 10;">
+<div id="webif-navbar" style="position: fixed; top: 0; width: 100%; background: RGB(255, 255, 255); z-index: 10; display: none;">
 {% endif %}
 
 <div class="container-fluid m-3" id="webif-top">
@@ -115,27 +115,34 @@
 
 			{% block headtable %}
 			{% endblock %}
+			{%- if buttons is not defined or buttons == true %}
+				<div id="webif-allbuttons" style="margin-left: 10px; margin-right: 10px; float:right; white-space: nowrap;">
+					{%- if autorefresh_buttons is not defined or autorefresh_buttons == true %}
+						<span id="webif-autorefresh" style="white-space: nowrap;">
+							{{ _('Autom. Aktualisierung') }}
+							<input title="{{ _('(De)Aktiviere automatische Seitenaktualisierung') }}" type="checkbox" id="update_active" name="update_active" value="active" oninput="set_update_interval()">
+							<input title="{{ _('Aktualisierungsintervall in Sekunden') }}" style="width:60px" type="number" id="update_interval" name="update_interval" min="0" oninput="set_update_interval()">
+						</span>
+						<span id="webif-seconds"> {{ _('Sekunden') }}</span>
+						<span id="webif-seconds_orig" style="display:none"> {{ _('Sekunden') }}</span>
+					{%- endif %}
 
-			<div id="webif-allbuttons" style="margin-left: 10px; margin-right: 10px; float:right; white-space: nowrap;">
-				<span id="webif-autorefresh" style="white-space: nowrap;">
-					{{ _('Autom. Aktualisierung') }}
-					<input title="{{ _('(De)Aktiviere automatische Seitenaktualisierung') }}" type="checkbox" id="update_active" name="update_active" value="active" oninput="set_update_interval()">
-					<input title="{{ _('Aktualisierungsintervall in Sekunden') }}" style="width:60px" type="number" id="update_interval" name="update_interval" min="0" oninput="set_update_interval()">
-				</span>
-				<span id="webif-seconds"> {{ _('Sekunden') }}</span>
-				<span id="webif-refreshbuttons" style="white-space: nowrap;">
-					<button id="reload" class="btn btn-shng btn-sm" onclick="window.location.reload();"><i class="fas fa-redo"></i><span id="webif-reload"> &nbsp;&nbsp;&nbsp;{{ _('Aktualisieren') }}</span></button>
-					<button id="close" class="btn btn-shng btn-sm" title="{{ _('Schließen') }}" onclick="window.close();" ><i class="fas fa-times"></i><span id="webif-close">&nbsp;&nbsp;&nbsp;{{ _('Schließen') }}&nbsp;</span></button>
-				</span>
-			</div>
-			<div style="float:right; white-space: nowrap;" id="webif-custombuttons">
-				{% block buttons %}
-				{% endblock buttons %}
-			</div>
-			<span id="webif-seconds_orig" style="display:none"> {{ _('Sekunden') }}</span>
-			<span id="webif-reload_orig" style="display:none"> {{ _('Aktualisieren') }}</span>
-			<span id="webif-close_orig" style="display:none"> {{ _('Schließen') }}</span>
-
+					<span id="webif-refreshbuttons" style="white-space: nowrap;">
+						{%- if reload_button is not defined or reload_button-button == true %}
+							<button id="reload" class="btn btn-shng btn-sm" onclick="window.location.reload();"><i class="fas fa-redo"></i><span id="webif-reload"> &nbsp;&nbsp;&nbsp;{{ _('Aktualisieren') }}</span></button>
+							<span id="webif-reload_orig" style="display:none"> {{ _('Aktualisieren') }}</span>
+						{%- endif %}
+						{%- if close_button is not defined or close_button == true %}
+							<button id="close" class="btn btn-shng btn-sm" title="{{ _('Schließen') }}" onclick="window.close();" ><i class="fas fa-times"></i><span id="webif-close">&nbsp;&nbsp;&nbsp;{{ _('Schließen') }}&nbsp;</span></button>
+							<span id="webif-close_orig" style="display:none"> {{ _('Schließen') }}</span>
+						{%- endif %}
+					</span>
+				</div>
+				<div style="float:right; white-space: nowrap;" id="webif-custombuttons">
+					{% block buttons %}
+					{% endblock buttons %}
+				</div>
+			{%- endif %}
 
 		</div>
 	</div>
@@ -144,7 +151,7 @@
 {% if scroll_heading is not defined %}
 </div>
 
-<div style="margin: 180px auto 0; z-index: 9;">
+<div style="margin: 180px auto 0; z-index: 9;" id="webif-lowercontent">
 {% endif %}
 
 {% if tabcount is not defined %}
@@ -215,7 +222,6 @@
 </div>
 
 <div style="margin-left: 10px; margin-right: 10px;" class="tab-content" id="resize_wrapper">
-
 	<div id="bodytab_1" class="table-resize tab-pane {% if start_tab==1 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab1 %}
 		{% endblock bodytab1 %}
