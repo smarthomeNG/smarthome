@@ -98,12 +98,13 @@ kann in der Javascript-Methode dann unmittelbar angesprochen werden, wenn das Di
 IDs an DOM-Elemente zuweisen
 ----------------------------
 
-Normalerweise sieht das ``headtable`` wie folgt aus:
+Normalerweise sieht das ``headtable`` wie folgt aus. Die Angabe einer min-width
+ist optional, aber empfohlen, um das responsive Design zu optimieren.
 
 .. code-block:: html+jinja
 
     {% block headtable %}
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover" style="min-width:600px;">
             <tbody>
                 <tr>
                     <td class="py-1"><strong>Scanne von IP</strong></td>
@@ -166,7 +167,7 @@ Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable au
 .. code-block:: html+jinja
 
     {% block headtable %}
-        <table id="maintable">
+        <table id="headtable" class="table table-striped table-hover" style="min-width:600px;">
             <tbody>
                 <tr>
                     <td></td>

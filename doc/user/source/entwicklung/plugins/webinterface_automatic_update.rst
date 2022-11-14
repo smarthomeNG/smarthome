@@ -88,7 +88,7 @@ Normalerweise sieht das ``headtable`` wie folgt aus:
 .. code-block:: html+jinja
 
     {% block headtable %}
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover" style="min-width:600px;">
             <tbody>
                 <tr>
                     <td class="py-1"><strong>Scanne von IP</strong></td>
@@ -142,7 +142,7 @@ pro Zeile eine leere Zelle einzufügen! Bei headtables sollten leere Spalten ver
 .. code-block:: html+jinja
 
     {% block headtable %}
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover" style="min-width:600px;">
             <tbody>
                 <tr>
                     <td class="py-1"><strong>Scanne von IP</strong></td>
@@ -186,7 +186,8 @@ Jetzt können die DOM-Elemente über die IDs ``fromip`` und ``<item>_value`` ang
     Damit die Anzeige und Adaption der Datatables einwandfrei funktioniert, ist es elementar, den
     Aufbau sauber und exakt aus dem Sampleplugin zu übernehmen. So muss beispielsweise die Tabelle
     selbst in ein div gepackt werden, dem die Klasse ``table-resize`` zugewiesen ist. Außerdem
-    müssen leere Zellen am Anfang jeder Zeile eingefügt werden.
+    müssen leere Zellen am Anfang jeder Zeile eingefügt werden. Ein Angabe von Klassen ist nicht nötig,
+    da dies automatisch passiert.
 
 
 Erweitern der JavaScript-Funktion handleUpdatedData()
