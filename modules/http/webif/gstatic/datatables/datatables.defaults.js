@@ -38,7 +38,10 @@ $(window).bind('datatables_defaults', function() {
 				fixedHeader: {header: true, // header will always be visible on top of page when scrolling
 				 						 headerOffset: top_offset},
 				autoWidth: false,
-				initComplete: function () {$(this).show();
+				initComplete: function () {
+					if ($(this).find('tbody').find('td:first-child').html() != '')
+						console.warn("First column has to be empty! The plugin author has to add an empty first column in thead and tbody.");
+					$(this).show();
 					this.api().columns.adjust();
 					this.api().responsive.recalc();
 					setTimeout(function() { $(window).resize();  }, 2000);// show table (only) after init, adjust height of wrapper after 2s
