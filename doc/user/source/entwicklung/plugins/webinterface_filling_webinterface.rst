@@ -169,7 +169,7 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
           $(document).ready( function () {
             $(window).trigger('datatables_defaults'); // loading default behaviour
             try {
-              var webif_pagelength = {{ webif_pagelength|int }};
+              {% if webif_pagelength is defined %}webif_pagelength = {{ webif_pagelength|int }};{% endif %}
               if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
                 resize = true;
                 webif_pagelength = -1;
