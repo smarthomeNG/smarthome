@@ -121,6 +121,11 @@ Normalerweise sieht das ``headtable`` wie folgt aus:
 Tabellen in einem ``bodytab?`` können mit einer Schleife befüllt werden, das ist auf der Seite
 :doc:`Webinterface mit Inhalt füllen <webinterface_filling_webinterface>` näher beschrieben:
 
+.. hint::
+
+   Sowohl im thead als auch tbody ist jeweils eine leere Tabellenzelle einzufügen, um das
+   Responsive Feature der Datentabellen korrekt anzuzeigen.
+
 
 .. code-block:: html+jinja
 
@@ -130,6 +135,7 @@ Tabellen in einem ``bodytab?`` können mit einer Schleife befüllt werden, das i
             <table id="maintable">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>{{ _('Attribut 1') }}</th>
                         <th>{{ _('Attribut 2') }}</th>
                         <th>{{ _('aktualisieren') }}</th>
@@ -139,6 +145,7 @@ Tabellen in einem ``bodytab?`` können mit einer Schleife befüllt werden, das i
                 <tbody>
                     {% for elem in data %}
                         <tr>
+                            <td></td>
                             <td>{{ data[elem]['attr1'] }}</td>
                             <td>{{ data[elem]['attr2'] }}</td>
                             <td> <!-- leer --> </td>
@@ -162,6 +169,7 @@ Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable au
         <table id="maintable">
             <tbody>
                 <tr>
+                    <td></td>
                     <td class="py-1"><strong>Scanne von IP</strong></td>
                     <td id="fromip" class="py-1">{{ p.fromip }}</td>
                     ...
@@ -178,6 +186,7 @@ Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable au
             <table id="maintable">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>{{ _('Attribut 1') }}</th>
                         <th>{{ _('Attribut 2') }}</th>
                         <th>{{ _('aktualisieren') }}</th>
@@ -187,6 +196,7 @@ Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable au
                 <tbody>
                     {% for elem in data %}
                         <tr>
+                            <td></td>
                             <td>{{ data[elem]['attr1'] }}</td>
                             <td>{{ data[elem]['attr2'] }}</td>
                             <td> <!-- leer --> </td>
@@ -235,6 +245,7 @@ in jeder Zeile stehen soll, dann bietet es sich an, statt einzelnen Button-Eleme
               <table id="maintable">
                   <thead>
                       <tr>
+                          <th></th>
                           <th>{{ _('Attribut 1') }}</th>
                           <th>{{ _('Attribut 2') }}</th>
                           <th>{{ _('aktualisieren') }}</th>
@@ -244,6 +255,7 @@ in jeder Zeile stehen soll, dann bietet es sich an, statt einzelnen Button-Eleme
                   <tbody>
                       {% for elem in data %}
                           <tr>
+                              <td></td>
                               <td>{{ data[elem]['attr1'] }}</td>
                               <td>{{ data[elem]['attr2'] }}</td>
                               <td>

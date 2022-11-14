@@ -105,8 +105,8 @@
         */
         table = $('#maintable').DataTable( {
           /* If you want to define your own columnDefs options (e.g. for hiding a column by default), use the concat function shown here.
-          columnDefs: [{ "targets": [8], "className": "none"}].concat($.fn.dataTable.defaults.columnDefs),
           */
+          columnDefs: [{ "targets": [2], "className": "value"}].concat($.fn.dataTable.defaults.columnDefs),
           pageLength: webif_pagelength,
           pageResize: resize});
       }

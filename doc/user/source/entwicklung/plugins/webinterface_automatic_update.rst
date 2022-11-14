@@ -48,6 +48,14 @@ Die Klasse ``WebInterface`` im Plugin Code muss so erweitert werden, dass sie di
             :param dataSet: Dataset for which the data should be returned (standard: None)
             :return: dict with the data needed to update the web page.
             """
+            if dataSet == 'overview':
+                # get the new data from a variable _webdata
+                data = self.plugin._webdata
+                try:
+                    data = json.dumps(data)
+                    return data
+                except Exception as e:
+                    self.logger.error(f"get_data_html exception: {e}")
             if dataSet is None:
                 # get the new data
                 data = {}
@@ -61,14 +69,15 @@ Die Klasse ``WebInterface`` im Plugin Code muss so erweitert werden, dass sie di
                 try:
                     return json.dumps(data)
                 except Exception as e:
-                    self.logger.error("get_data_html exception: {}".format(e))
+                    self.logger.error(f"get_data_html exception: {e}")
 
             return {}
 
 
-Die optionale Möglichkeit einen ``dataSet`` anzugeben, ist für zukünftige Erweiterungen vorgesehen.
-Darüber soll es möglich werden, Daten in unterschiedlichen Zyklen zu aktualisieren
-(z.B. für Daten, deren Ermittlung eine längere Zeit in Anspruch nimmt).
+Die optionale Möglichkeit ein ``dataSet`` kann genutzt werden, z.B. Daten in unterschiedlichen
+Zyklen zu aktualisieren (z.B. für Daten, deren Ermittlung eine längere Zeit in Anspruch nimmt)
+oder nur bestimmte Daten anzufordern. Dieses Feature ist im database Plugin implementiert und
+kann dort im Detail angesehen werden.
 
 
 IDs an DOM-Elemente zuweisen
@@ -93,7 +102,7 @@ Normalerweise sieht das ``headtable`` wie folgt aus:
         </table>
     {% endblock headtable %}
 
-Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleife befüllt:
+Bei Tabellen im bodytab werden die einzelnen Datenzeilen beim Rendern durch die for-Schleife befüllt:
 
 .. code-block:: html+jinja
 
@@ -102,6 +111,7 @@ Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleif
             <table id="maintable">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>{{ _('Item') }}</th>
                         <th>{{ _('Typ') }}</th>
                         <th>{{ _('knx_dpt') }}</th>
@@ -111,6 +121,7 @@ Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleif
                 <tbody>
                     {% for item in items %}
                         <tr>
+                            <td></td>
                             <td class="py-1">{{ item._path }}</td>
                             <td class="py-1">{{ item._type }}</td>
                             <td class="py-1">{{ item.conf['knx_dpt'] }}</td>
@@ -125,7 +136,8 @@ Bei Tabellen werden die einzelnen Datenzeilen beim Rendern durch die for-Schleif
 
 Um die Werte in die <td>-Elemente schreiben zu können, nachdem die Webseite erstellt wurde,
 müssen die <td>-Elemente jeweils mit einer ID ergänzt werden. Um sicherzustellen,
-dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hier: der Item Name) verwendet:
+dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hier: der Item Name) verwendet. Es ist wichtig, bei Datentabellen (nicht bei normalen Tabellen!)
+pro Zeile eine leere Zelle einzufügen! Bei headtables sollten leere Spalten vermieden werden.
 
 .. code-block:: html+jinja
 
@@ -149,6 +161,7 @@ dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hie
             <table id="maintable">
                 <thead>
                     <tr>
+                        <th></th>
                         ...
                         <th class="value">{{ _('Wert') }}</th>
                     </tr>
@@ -156,6 +169,7 @@ dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hie
                 <tbody>
                     {% for item in items %}
                         <tr>
+                            <td></td>
                             ...
                             <td id="{{ item }}_value" class="py-1">{{ item._value }}</td>
                         </tr>
@@ -166,6 +180,13 @@ dass die ID in Wertetabellen eindeutig sind, wird die for-Schleifenvariable (hie
     {% endblock **bodytab1** %}
 
 Jetzt können die DOM-Elemente über die IDs ``fromip`` und ``<item>_value`` angesprochen werden.
+
+.. warning::
+
+    Damit die Anzeige und Adaption der Datatables einwandfrei funktioniert, ist es elementar, den
+    Aufbau sauber und exakt aus dem Sampleplugin zu übernehmen. So muss beispielsweise die Tabelle
+    selbst in ein div gepackt werden, dem die Klasse ``table-resize`` zugewiesen ist. Außerdem
+    müssen leere Zellen am Anfang jeder Zeile eingefügt werden.
 
 
 Erweitern der JavaScript-Funktion handleUpdatedData()
@@ -236,12 +257,10 @@ Damit die neuen Daten auch von datatables.js erkannt und korrekt sortiert werden
 dem Aufruf ``shngInsertText`` die Tabellen-ID als dritten Parameter mitzugeben (im Beispiel 'maintable').
 
 Standardmäßig werden die Spalten automatisch so skaliert, dass sie sich den Inhalten anpassen. Dies kann
-va. in Kombination mit dem standardmäßig aktivierten ``responsive`` Modul der Datatables zu
+va. in Kombination mit dem ``responsive`` Modul der Datatables zu
 unerwünschten Ergebnissen führen. Insofern ist es empfehlenswert,
 bestimmten Spalten eine konkrete Breite vorzugeben. Dazu sollte im Block ``pluginstyles`` entsprechender
-Code eingefügt werden. Außerdem sind die ``<th>`` Tags natürlich mit den entsprechenden Klassen zu bestücken.
-Außerdem macht es Sinn, der Tabelle selbst die Klasse ``dataTableAdditional`` hinzuzufügen. Dadurch wird
-das table-layout auf fixed gestellt und die Tabelle erst angezeigt, wenn sie fertig initialisiert ist.
+Code eingefügt werden.
 
 
 .. code-block:: css+jinja
@@ -258,19 +277,21 @@ das table-layout auf fixed gestellt und die Tabelle erst angezeigt, wenn sie fer
     {% endblock pluginstyles %}
 
 
+Außerdem ist den Spalten die entsprechende Klasse zuzuweisen. Dies ist
+durch Angabe mittels class-Attribut in den ``<th>`` Tags möglich. Alternativ - und der bessere Ansatz -
+ist es, die Klassen bei der Initialisierung der Tabelle zuzuweisen.
 Sollte der Inhalt einer Spalte erwartungsgemäß sehr breit sein, kann die Spalte stattdessen auch
-als ausklappbare Informationszeile konfiguriert werden. Die datatables.js defaults sorgen dafür,
-dass die Tabelle erst nach der kompletten Inititalisierung angezeigt wird. Dadurch wird ein
-mögliches Flackern der Seite beim Aufbau verhindert. Die Deklaration der Tabelle im pluginscripts
+durch Zuweisen der Klasse "none" als ausklappbare Informationszeile konfiguriert werden.
+Die Deklaration der Tabelle im pluginscripts
 Block hat dabei wie folgt auszusehen, wobei bei ``targets`` die interne Nummerierung der Spalten
-anzugeben ist (0 wäre die erste Tabellenspalte, 2 die zweite, etc.).
+anzugeben ist (0 wäre die erste Tabellenspalte, 1 die zweite, etc.).
 
 .. code-block:: html+jinja
 
     table = $('#maintable').DataTable( {
       "pageLength": webif_pagelength,
       "pageResize": resize,
-      "columnDefs": [{ "targets": 0, "className": "none"}].concat($.fn.dataTable.defaults.columnDefs)
+      "columnDefs": [{ "targets": 1, "className": "none"}].concat($.fn.dataTable.defaults.columnDefs)
     } );
 
 
@@ -283,7 +304,7 @@ Hierzu ist es nötig, die Funktion ``handleUpdatedData`` entsprechend anzupassen
 
 In der ersten if-Abfrage wird evaluiert, ob bereits ein Element mit entsprechender ID existiert.
 Falls nicht, wird die Zeile neu angelegt und sanft eingeblendet. Im untenstehenden Code wird zuerst gecheckt,
-ob es eine Datentablle mit der ID "maintable" gibt.
+ob es eine Datentabelle mit der ID "maintable" gibt.
 In der Zeile ``if ( $.fn.dataTable.isDataTable('#maintable') )`` sowie in der darauf folgenden
 Zeile muss '#maintable' durch die tatsächliche ID der zu aktualisierenden Tabelle ersetzt werden.
 Falls nun eine entsprechende Tabelle auf der Seite gefunden wurde, wird diese
@@ -296,7 +317,7 @@ Anschließend wird der zweiten Spalte die relevante ID hinzugefügt, um zukünft
 aktualisieren zu können. Möchte man weiteren Spalten ebenfalls
 eine ID zuweisen, ist die Codezeile zu kopieren und die Zahl beim Eintrag ``td:eq(1)`` entsprechend
 zu ändern (0 = erste Spalte, 1 = zweite Spalte, etc.). Abschließend wird der leere Wert schließlich
-mittels ``shngInsertText`` aktualisert und dank Angabe einer Zahl als 4. Parameter x Sekunden lang farblich markiert.
+mittels ``shngInsertText`` aktualisiert und dank Angabe einer Zahl als 4. Parameter x Sekunden lang farblich markiert.
 
 .. code-block:: html+jinja
 
@@ -309,7 +330,8 @@ mittels ``shngInsertText`` aktualisert und dank Angabe einer Zahl als 4. Paramet
                     if (!document.getElementById(item+'_value')) {
                         if ( $.fn.dataTable.isDataTable('#maintable') ) {
                             table_to_update = $('#maintable').DataTable();
-                            newRow = table_to_update.row.add( [ item, '' ] ).draw().node();
+                            let newRow = table_to_update.row.add( [ item, '' ] ).draw(false).node();
+                            newRow.id = objResponse['item'][item]+"_row";
                             $('td:eq(1)', newRow).attr('id', objResponse['item'][item]+'_value');
                             shngInsertText(item+'_value', objResponse['item'][item]['value'], 'maintable', 5);
                         }
@@ -363,12 +385,17 @@ Zu Beginn der Templatedatei ``webif/templates/index.html`` finden sich die folge
    {% set update_active = false %}
    {% set dataSet = 'item_details' %}
    {% set update_params = item_id %}
+   {% set buttons = True %}
+   {% set autorefresh_buttons = true %}
+   {% set reload_button = true %}
+   {% set close_button = true %}
 
 Das Intervall wird via ``update_interval`` auf den gewünschten Wert in Millisekunden gesetzt. Dabei muss sichergestellt sein, dass das gewählte Intervall lang genug ist, dass die Python-Methode ``get_data_html()`` des Plugins die Daten liefern kann, bevor das Intervall abläuft. Wenn nur Daten zurückgegeben werden, die von anderen Routinen und Threads des Plugins bereits bereitgestellt wurden, kann ein Update-Intervall von ca. 1000 ms gewählt werden. Wenn die Python-Methode ``get_data_html()`` selbst noch weitere Routinen ausführen muss, sollte das Update-Intervall wahrscheinlich nicht kleiner als 5000 ms sein.
 
 .. warning::
 
-    Das Intervall darf nicht zu klein sein. Die Dauer **MUSS** länger sein als die notwendige Zeit zur Ausführung der Python-Methode ``get_data_html()``.
+    Das Intervall darf nicht zu klein sein. Die Dauer **MUSS** länger sein als die notwendige Zeit zur Ausführung der Python-Methode ``get_data_html()``. Bei datenintensiven Plugins macht es u.U. Sinn,
+    das Intervall abhängig von der Anzahl an Datensätzen festzulegen.
 
 Durch ``update_active`` wird festgelegt, ob die automatische Aktualisierung zum Start aktiviert oder deaktiviert sein soll. Dies
 kann hilfreich sein, um z.B. ein optimales Updateintervall anzugeben, aber dem User zu überlassen, die automatische Aktualisierung
@@ -380,6 +407,9 @@ Außerdem ist es möglich, zusätzliche Parameter zu definieren, die der Methode
 Dazu sollte die Methode get_data_html in der webif __init__.py entsprechend angepasst werden. Das vereinfachte Beispiel ist dem
 Database Plugin entnommen, das zwei Tabs mit verschiedenen Daten anzeigt, die eben auch unterschiedliche Rückmeldungen aus dem
 Plugin erhalten.
+Die Angaben zu den Buttons sind optional und können
+genutzt werden, um die Schalter und Auto-Refresh Funktionen im Header zu verstecken, wenn sie nicht
+gebraucht werden.
 
 .. code-block:: python
 
@@ -445,5 +475,5 @@ wenn wir den 12.12.2022 haben (was vermutlich wenig Sinn macht und daher angepas
       var today_date = String(today.getDate()) + String(today.getMonth() + 1) + today.getFullYear();
       let test_date = "12122022";
       if (today_date === test_date)
-          window.refresh.update({dataSet:'test', update_params:'specialitem', update_interval: 2000, update_active:false});
+          window.refresh.update({dataSet:'test', update_params:'specialitem', update_interval:2000, update_active:false});
     </script>
