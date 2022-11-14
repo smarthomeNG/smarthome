@@ -39,8 +39,9 @@ $(window).bind('datatables_defaults', function() {
 				 						 headerOffset: top_offset},
 				autoWidth: false,
 				initComplete: function () {
-					if ($(this).find('tbody').find('td:first-child').html() != '')
-						console.warn("First column has to be empty! The plugin author has to add an empty first column in thead and tbody.");
+					td_content = $(this).find('tbody').find('td:first-child').html();
+					if (td_content != '' && td_content != 'No data available in table')
+						console.warn("First column has to be empty! The plugin author has to add an empty first column in thead and tbody of " + $(this).attr('id'));
 					$(this).show();
 					this.api().columns.adjust();
 					this.api().responsive.recalc();
