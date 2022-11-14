@@ -61,7 +61,7 @@ class CherryPyFilter(logging.Filter):
 
 class Http(Module):
 
-    version = '1.6.0'
+    version = '1.7.0'
     _shortname = ''
     _longname = 'CherryPy http module for SmartHomeNG'
 
