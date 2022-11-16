@@ -91,9 +91,21 @@ $(window).bind('datatables_defaults', function() {
 			// Set date format for correct sorting of columns containing date strings
 			$.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss');
 			$.fn.dataTable.moment('YYYY-MM-DD HH:mm:ss');
+			$.fn.dataTable.moment('MM/DD/YYYY HH:mm:ss');
+			$.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss.SSSS');
+			$.fn.dataTable.moment('YYYY-MM-DD HH:mm:ss.SSSS');
+			$.fn.dataTable.moment('MM/DD/YYYY HH:mm:ss.SSSS');
 			$.fn.dataTable.moment('DD.MM.');
 			$.fn.dataTable.moment('DD.MM.YY');
+			$.fn.dataTable.moment('DD.MM.YYYY');
+			$.fn.dataTable.moment('MM/DD/YYYY');
+			$.fn.dataTable.moment('MM/DD/YY');
 			$.fn.dataTable.moment('HH:mm');
+			$.fn.dataTable.moment('HH:mm:ss');
+			$.fn.dataTable.moment('HH:mm:ss.SSSS');
+			$.fn.dataTable.moment('HH:mm DD.MM.YYYY');
+			$.fn.dataTable.moment('HH:mm:ss DD.MM.YYYY');
+			$.fn.dataTable.moment('HH:mm:ss.SSSS DD.MM.YYYY');
 
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
 
