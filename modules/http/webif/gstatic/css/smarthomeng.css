@@ -44,9 +44,12 @@ table td.truncate:active {
 }
 
 .notruncate {
-  overflow: visible;
+  overflow: visible!important;
 }
 
+table th.datatable-responsive {
+  width: 10px;
+}
 table.dataTableAdditional {
   display: none;
   table-layout: fixed;
@@ -311,4 +314,21 @@ These are necessary for highligt effect in web interface when a value changes. C
 }
 .shng_effect_standard {
   background-color: none;
+}
+
+#webif-toprow  {
+  flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+}
+
+#webif-headtable > table {
+  table-layout: auto;
+}
+
+#webif-headtable > table>tbody>tr>td {
+  white-space: nowrap;
+}
+
+#webif-plugininfo {
+  min-width: 185px;
 }

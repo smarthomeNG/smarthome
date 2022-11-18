@@ -33,16 +33,21 @@ $(window).bind('datatables_defaults', function() {
 				pageLength: 100, // default to "100"
 				pagingType: "full_numbers", // include first and last in pagination menu
 				colReorder: true, // enable colomn reorder by drag and drop
-				columnDefs: [{ targets: '_all', className: 'truncate' }],
+				columnDefs: [{className: 'dtr-control datatable-responsive', orderable: false, targets: 0}, { targets: '_all', className: 'truncate' }],
+				order: [[1, 'asc']],
 				fixedHeader: {header: true, // header will always be visible on top of page when scrolling
 				 						 headerOffset: top_offset},
 				autoWidth: false,
-				initComplete: function () {$(this).show();
+				initComplete: function () {
+					td_content = $(this).find('tbody').find('td:first-child').html();
+					if (td_content != '' && td_content != 'No data available in table')
+						console.warn("First column has to be empty! The plugin author has to add an empty first column in thead and tbody of " + $(this).attr('id'));
+					$(this).show();
 					this.api().columns.adjust();
 					this.api().responsive.recalc();
 					setTimeout(function() { $(window).resize();  }, 2000);// show table (only) after init, adjust height of wrapper after 2s
 				},
-        responsive: {details: {renderer: $.fn.dataTable.Responsive.renderer.listHidden()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
+        responsive: {details: {type: 'column', renderer: $.fn.dataTable.Responsive.renderer.listHidden()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
 				preDrawCallback: function (oSettings) {
 
         	pageScrollPos = $(oSettings.nTableWrapper).find('.dataTables_scrollBody').scrollTop();
@@ -86,9 +91,21 @@ $(window).bind('datatables_defaults', function() {
 			// Set date format for correct sorting of columns containing date strings
 			$.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss');
 			$.fn.dataTable.moment('YYYY-MM-DD HH:mm:ss');
+			$.fn.dataTable.moment('MM/DD/YYYY HH:mm:ss');
+			$.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss.SSSS');
+			$.fn.dataTable.moment('YYYY-MM-DD HH:mm:ss.SSSS');
+			$.fn.dataTable.moment('MM/DD/YYYY HH:mm:ss.SSSS');
 			$.fn.dataTable.moment('DD.MM.');
 			$.fn.dataTable.moment('DD.MM.YY');
+			$.fn.dataTable.moment('DD.MM.YYYY');
+			$.fn.dataTable.moment('MM/DD/YYYY');
+			$.fn.dataTable.moment('MM/DD/YY');
 			$.fn.dataTable.moment('HH:mm');
+			$.fn.dataTable.moment('HH:mm:ss');
+			$.fn.dataTable.moment('HH:mm:ss.SSSS');
+			$.fn.dataTable.moment('HH:mm DD.MM.YYYY');
+			$.fn.dataTable.moment('HH:mm:ss DD.MM.YYYY');
+			$.fn.dataTable.moment('HH:mm:ss.SSSS DD.MM.YYYY');
 
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
 
