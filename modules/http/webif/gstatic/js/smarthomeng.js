@@ -222,26 +222,27 @@ function calculateHeadtable() {
   $( "#webif-headtable > table:first" ).css("min-width",tableMinWidth+"px");
 }
 
+
 /**
  * make the top navigation bar as responsive as possible
  */
 function responsiveHeader() {
-
   // remove the display:none attribute to show the element on the page after everything else is rendered
-  $( "#webif-navbar" ).show();
-  calculateHeadtable();
+
   // calculate different relevant element width values
-  let width = $( "#webif-toprow" ).outerWidth(true);
+  let width = $( "#webif-toprow" ).outerWidth(true) - parseFloat($( "#webif-top" ).css('padding-left'))  - parseFloat($( "#webif-top" ).css('padding-right'));
   let headminwidth = parseFloat($( "#webif-headtable > table:first" ).css('min-width'), 10);
   let headwidth = parseFloat($( "#webif-headtable" ).width());
   let buttonsrow = $( "#webif-allbuttons" ).outerWidth(true) + $( "#webif-custombuttons" ).outerWidth(true);
+  if (isNaN(buttonsrow)) buttonsrow = 0;
   let buttonswidth = $( "#webif-custombuttons" ).width() + $( "#webif-autorefresh" ).width() + $( "#webif-reload_orig" ).width() + $( "#webif-close_orig" ).width() + $( "#webif-seconds_orig" ).width() + 82;
+  if (isNaN(buttonswidth)) buttonswidth = 0;
   let logowidth = $( "#webif-pluginlogo" ).outerWidth(true);
   let infowidth = $( "#webif-plugininfo" ).outerWidth(true);
   //let total = width - headwidth - infowidth - logowidth;
   // calculate table width based on button width or table min-width
   let tablewidth = Math.max.apply(Math, [headminwidth, buttonsrow])
-  console.log("Widthes " + width + "-" + headminwidth + "-" + infowidth + "-" + logowidth + " table " + tablewidth);
+  //console.log("Widthes " + width + "-" + headminwidth + "-" + infowidth + "-" + logowidth + " table " + tablewidth + " buttonrow " + buttonsrow);
   // disable logo and info and fully expand the table
   if (width - infowidth - tablewidth <= 0) {
     $( "#webif-plugininfo" ).css("display", "none");
@@ -281,8 +282,14 @@ function responsiveHeader() {
   $('#resize_wrapper').css('top', topheight+'px');
   $.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.headerOffset( topheight );
 }
+
+function initHeader() {
+  $( "#webif-navbar" ).show();
+  calculateHeadtable();
+  responsiveHeader();
+}
 //const resizeObserver = new ResizeObserver(entries => responsiveHeader() );
-addEventListener('DOMContentLoaded', responsiveHeader, false);
+addEventListener('DOMContentLoaded', initHeader, false);
 
 addEventListener('resize', responsiveHeader, false);
 
