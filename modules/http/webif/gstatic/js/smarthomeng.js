@@ -193,7 +193,7 @@ function calculateHeadtable() {
     console.log("Min-width " + headminwidth + "px of headtable (responsive)");
     return;
   }
-  let arrOfTable1=[], arrRowWidth=[], i=0, x=0, y=0;
+  let arrOfTable1=[], i=0, x=0, y=0, columnWidth={};
   let table_margins = parseFloat($('#webif-headtable').css('padding-right')) + parseFloat($('#webif-headtable').css('padding-left')) + parseFloat($('#webif-headtable').css('margin-right')) + parseFloat($('#webif-headtable').css('margin-left'));
   // iterate through all tr and td and wrap content into a span to calculate it's width
   $('#webif-headtable tr').each(function() {
@@ -204,10 +204,13 @@ function calculateHeadtable() {
       let margins = parseFloat($(this).css('padding-right')) + parseFloat($(this).css('padding-left')) + parseFloat($(this).css('margin-right')) + parseFloat($(this).css('margin-left'));
       mWid = $(this).children('span:first').outerWidth() + margins;
       rowWidth += mWid;
+      let current_mWid = columnWidth[y];
+      if (isNaN(current_mWid)) current_mWid = 0;
+      columnWidth[y] = Math.max.apply(Math, [mWid, current_mWid]);
       arrOfTable1.push(mWid);
+      //console.log(columnWidth);
       y++;
     });
-    arrRowWidth.push(rowWidth);
     x++;
     y = 0;
   });
@@ -216,7 +219,17 @@ function calculateHeadtable() {
    $(this).css("min-width",arrOfTable1[i]+"px");
    i++;
   });
-  let tableMinWidth = Math.max.apply(Math, arrRowWidth) + table_margins;
+  function sum( obj ) {
+    var sum = 0;
+    for( var el in obj ) {
+      if( obj.hasOwnProperty( el ) ) {
+        sum += parseFloat( obj[el] );
+      }
+    }
+    return sum;
+  }
+  let tableMinWidth = sum(columnWidth) + table_margins;
+
   console.log("Setting min-width " + tableMinWidth + "px for headtable (responsive)");
   // set the table min-width based on row with the highest width value
   $( "#webif-headtable > table:first" ).css("min-width",tableMinWidth+"px");
