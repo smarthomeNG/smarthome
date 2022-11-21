@@ -323,6 +323,7 @@ These are necessary for highligt effect in web interface when a value changes. C
 
 #webif-headtable > table {
   table-layout: auto;
+  padding-left: 15px;
 }
 
 #webif-headtable > table>tbody>tr>td {
