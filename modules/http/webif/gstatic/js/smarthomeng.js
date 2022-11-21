@@ -187,20 +187,22 @@ function shngGetUpdatedData(dataSet=null, update_params=null) {
  */
 function calculateHeadtable() {
   // try to get min-width from style attribute. If not available, calculate it
-  let headminwidth = parseInt($( "#webif-headtable > table:first" ).css('min-width'), 10);
+  let headminwidth = parseFloat($( "#webif-headtable > table:first" ).css('min-width'));
   if (headminwidth > 0)
   {
     console.log("Min-width " + headminwidth + "px of headtable (responsive)");
     return;
   }
   let arrOfTable1=[], arrRowWidth=[], i=0, x=0, y=0;
+  let table_margins = parseFloat($('#webif-headtable').css('padding-right')) + parseFloat($('#webif-headtable').css('padding-left')) + parseFloat($('#webif-headtable').css('margin-right')) + parseFloat($('#webif-headtable').css('margin-left'));
   // iterate through all tr and td and wrap content into a span to calculate it's width
   $('#webif-headtable tr').each(function() {
     rowWidth = 0;
     $(this).children('td').each(function() {
       let calcVal = '<span id="webif-head-span-' + (x + 1) + '-' + (y + 1) + '">'+ $(this).html()+'</span>';
       $(this).html(calcVal);
-      mWid = $(this).children('span:first').width() + 15;
+      let margins = parseFloat($(this).css('padding-right')) + parseFloat($(this).css('padding-left')) + parseFloat($(this).css('margin-right')) + parseFloat($(this).css('margin-left'));
+      mWid = $(this).children('span:first').outerWidth() + margins;
       rowWidth += mWid;
       arrOfTable1.push(mWid);
       y++;
@@ -214,23 +216,24 @@ function calculateHeadtable() {
    $(this).css("min-width",arrOfTable1[i]+"px");
    i++;
   });
-  let tableMinWidth = Math.max.apply(Math, arrRowWidth)
+  let tableMinWidth = Math.max.apply(Math, arrRowWidth) + table_margins;
   console.log("Setting min-width " + tableMinWidth + "px for headtable (responsive)");
   // set the table min-width based on row with the highest width value
   $( "#webif-headtable > table:first" ).css("min-width",tableMinWidth+"px");
 }
-addEventListener('load', calculateHeadtable, false);
 
 /**
  * make the top navigation bar as responsive as possible
  */
 function responsiveHeader() {
+
   // remove the display:none attribute to show the element on the page after everything else is rendered
   $( "#webif-navbar" ).show();
+  calculateHeadtable();
   // calculate different relevant element width values
-  let width = $( "#webif-toprow" ).outerWidth(true) - 15;
-  let headminwidth = parseInt($( "#webif-headtable > table:first" ).css('min-width'), 10);
-  let headwidth = parseInt($( "#webif-headtable" ).width());
+  let width = $( "#webif-toprow" ).outerWidth(true);
+  let headminwidth = parseFloat($( "#webif-headtable > table:first" ).css('min-width'), 10);
+  let headwidth = parseFloat($( "#webif-headtable" ).width());
   let buttonsrow = $( "#webif-allbuttons" ).outerWidth(true) + $( "#webif-custombuttons" ).outerWidth(true);
   let buttonswidth = $( "#webif-custombuttons" ).width() + $( "#webif-autorefresh" ).width() + $( "#webif-reload_orig" ).width() + $( "#webif-close_orig" ).width() + $( "#webif-seconds_orig" ).width() + 82;
   let logowidth = $( "#webif-pluginlogo" ).outerWidth(true);
@@ -238,7 +241,7 @@ function responsiveHeader() {
   //let total = width - headwidth - infowidth - logowidth;
   // calculate table width based on button width or table min-width
   let tablewidth = Math.max.apply(Math, [headminwidth, buttonsrow])
-  //console.log("Widthes " + width + "-" + headminwidth + "-" + infowidth + "-" + logowidth + "=" + total);
+  console.log("Widthes " + width + "-" + headminwidth + "-" + infowidth + "-" + logowidth + " table " + tablewidth);
   // disable logo and info and fully expand the table
   if (width - infowidth - tablewidth <= 0) {
     $( "#webif-plugininfo" ).css("display", "none");
