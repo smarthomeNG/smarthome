@@ -14,10 +14,10 @@ sowie einige neue Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 18. Nov 2022
-       (Merge pull request #504)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 20. Nov 2022
-       (knx plugin: fix values being None for plugin with instance defined)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 22. Nov 2022
+       (...)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 27. Nov 2022
+       (database: Added parameter to set ...)
 
 
 Überblick
@@ -60,7 +60,7 @@ Bugfixes in the CORE
 Updates in the CORE
 -------------------
 
-* ...
+* Added Python 3.11 to unit tests
 
 * Items:
 
@@ -104,6 +104,9 @@ Updates in the CORE
     * Show auto refresh options only if update_interval is defined
     * Avoid errors and warnings if auto refresh options are not shown as well as when table has no data
     * Add some more date/time formats for correct sorting
+    * Fix header min-width calculation
+    * Fix and improve responsive header
+
 
 
 
@@ -118,7 +121,13 @@ Updates in the CORE
     * Include webif_pagelength from module.yaml, move column classes to dt init function
     * Minor webif fixes and improvements
     * Bump to v1.6.4
-    * Simplify and improbe web interface
+    * Simplify and improve web interface
+    * Added parameter to set a default maxage for items w/o individual one
+    * Optimized remove of log entries older as maxage (extreme speed increase)
+    * Reimplemented cleanup (removal of orphans) to be able to run parallel to normal operation
+    * Corrected download filename for csv dump
+    * Implemented sql dump for sqlite3 databases
+    * Bumped version to 1.6.5
 
   * executor:
 
@@ -128,6 +137,10 @@ Updates in the CORE
 
     * Fixed decoding of calendar events that have the same identifiers, e.g. happens if single
       events of a calendar series are rescheduled once.
+
+  * jsonread:
+
+    * Adjusted requirements.txt
 
   * knx:
 
@@ -155,6 +168,8 @@ Updates in the CORE
 
     * Get webif_pagelength from module.yaml if possible, adjust webif accordingly
     * Bump to v1.6.4
+    * Adjusted requirements.txt for scipy to run unit tests under Python 3.11
+
 
 
 * tests:
@@ -254,6 +269,8 @@ Tools
 
 Dokumentation
 -------------
+
+* Changed builddevdoc to use Python 3.9
 
 * Sample Plugins:
 
