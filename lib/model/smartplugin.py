@@ -873,7 +873,7 @@ class SmartPlugin(SmartObject, Utils):
 
     def translate(self, txt, vars=None, block=None):
         """
-        Returns translated text
+        Returns translated text for class SmartPlugin
         """
         txt = str(txt)
         if block:
@@ -885,7 +885,7 @@ class SmartPlugin(SmartObject, Utils):
             self._add_translation = os.path.isfile(translation_fn)
 
         if self._add_translation:
-            return lib_translate(txt, vars, additional_translations='plugin/'+self.get_shortname())
+            return lib_translate(txt, vars, plugin_translations='plugin/'+self.get_shortname())
         else:
             return lib_translate(txt, vars)
 
@@ -967,7 +967,8 @@ class SmartPluginWebIf():
         tplenv = Environment(loader=FileSystemLoader([mytemplates,globaltemplates]))
 
         tplenv.globals['isfile'] = self.is_staticfile
-        tplenv.globals['_'] = self.plugin.translate
+        #tplenv.globals['_'] = self.plugin.translate
+        tplenv.globals['_'] = self.translate        # use translate method of webinterface class
         tplenv.globals['len'] = len
         return tplenv
 
@@ -996,10 +997,27 @@ class SmartPluginWebIf():
         return result
 
 
-    def translate(self, txt):
+    def translate(self, txt, vars=None):
+        """
+        Returns translated text for class SmartPluginWebIf
+
+        This method extends the jinja2 template engine _( ... ) -> translate( ... )
+        """
+        #return self.plugin.translate(txt)
+
         """
         Returns translated text
-
-        This method extends the jinja2 template engine
         """
-        return self.plugin.translate(txt)
+        txt = str(txt)
+
+        if self.plugin._add_translation is None:
+            # test initially, if plugin has additional translations
+            translation_fn = os.path.join(self.plugin._plugin_dir, 'locale.yaml')
+            self.plugin._add_translation = os.path.isfile(translation_fn)
+
+        if self.plugin._add_translation:
+            return lib_translate(txt, vars, plugin_translations='plugin/'+self.plugin.get_shortname(), module_translations='module/http')
+        else:
+            return lib_translate(txt, vars, module_translations='module/http')
+
+

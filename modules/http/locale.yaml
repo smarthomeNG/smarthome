@@ -1,14 +1,14 @@
 # translations for the web interface
+#module_translations:
 module_translations:
     # Translations for the plugin specially for the web interface
     'Test':                                               {'de': '=', 'en': 'English test'}
     'Aktualisieren':                                      {'de': '=', 'en': 'Refresh'}
     'Autom. Aktualisierung':                              {'de': '=', 'en': 'Auto-Refresh'}
-    'Sekunden':                                           {'de': '=', 'en': 'seconds'}
     'Schließen':                                          {'de': '=', 'en': 'Close'}
     'Plugin':                                             {'de': '=', 'en': '='}
     'Gestoppt':                                           {'de': '=', 'en': 'Stopped'}
     'Aktiv':                                              {'de': '=', 'en': 'Active'}
     'Instanz':                                            {'de': '=', 'en': 'Instance'}
-    '(De)Aktiviere automatische Seitenaktualisierung':    {'de': '=', 'en': '(De)activate Automatic Page Refresh'}              
+    '(De)Aktiviere automatische Seitenaktualisierung':    {'de': '=', 'en': '(De)activate Automatic Page Refresh'}
     'Aktualisierungsintervall in Sekunden':               {'de': '=', 'en': 'Refresh Interval in Seconds'}
