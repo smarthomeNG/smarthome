@@ -10,6 +10,7 @@ import bin.shngversion
 import lib.config
 
 import lib.item
+import lib.log
 import lib.plugin
 from lib.shtime import Shtime
 from lib.module import Modules
@@ -100,6 +101,8 @@ class MockSmartHome():
         self._moduledict = {}
         if self.shtime is None:
             self.shtime = Shtime.get_instance()
+
+        self.logs = lib.log.Logs(self)   # initialize object for memory logs and extended log levels for plugins
 
         self.scheduler = MockScheduler()
 
