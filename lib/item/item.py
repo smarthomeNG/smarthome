@@ -41,7 +41,7 @@ from lib.plugin import Plugins
 
 from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE, KEY_CACHE, KEY_CYCLE, KEY_CRONTAB, KEY_EVAL,
                            KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_REMARK, KEY_INSTANCE,
-                           KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM, KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE,
+                           KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM, KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE, KEY_RATE_LIMIT,
                            KEY_LOG_CHANGE, KEY_LOG_LEVEL, KEY_LOG_TEXT, KEY_LOG_MAPPING, KEY_LOG_RULES,
                            KEY_THRESHOLD, KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST)
 from lib.utils import Utils
@@ -165,6 +165,8 @@ class Item():
         self._value = None
         self.__last_value = None
         self.__prev_value = None
+        self.__timer = None
+        self._rate_limit = None
 
         self.property = Property(self)
         # history
@@ -214,6 +216,12 @@ class Item():
                     setattr(self, '_' + attr, value)
                 elif attr in [KEY_EVAL]:
                     self._process_eval(value)
+                elif attr in [KEY_RATE_LIMIT]:  # cast to num
+                    try:
+                        setattr(self, '_' + attr, cast_num(value))
+                    except:
+                        logger.warning("Item '{0}': problem parsing '{1}'.".format(self._path, attr))
+                        continue
                 elif attr in [KEY_CACHE, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE]:  # cast to bool
                     try:
                         setattr(self, '_' + attr, cast_bool(value))
@@ -1492,7 +1500,7 @@ class Item():
 
     def _set_value(self, value, caller, source=None, dest=None, prev_change=None, last_change=None):
         """
-        Set item value, update last aund prev information and perform log_change for item
+        Set item value, update last and prev information and perform log_change for item
 
         :param value:
         :param caller:
@@ -1544,22 +1552,33 @@ class Item():
                 pass
             return
 
-        self._lock.acquire()
-        _changed = False
-        trigger_source_details = self.__updated_by
-        if value != self._value or self._enforce_change:
-            _changed = True
-            self._set_value(value, caller, source, dest, prev_change=None, last_change=None)
-            trigger_source_details = self.__changed_by
-            if caller != "fader":
-                self._fading = False
-                self._lock.notify_all()
-        else:
-            self.__prev_update = self.__last_update
-            self.__last_update = self.shtime.now()
-            self.__prev_update_by = self.__updated_by
-            self.__updated_by = "{0}:{1}".format(caller, source)
-        self._lock.release()
+        with self._lock:
+
+            # check if rate limit is enabled
+            if self._rate_limit is not None:
+                time_delta = (self.shtime.now() - self.__last_update).total_seconds()
+                # when sending to fast
+                if time_delta < self._rate_limit:
+                    # run later again and cancel already running timer since we only use the latest value
+                    if self.__timer is not None:
+                        self.__timer.cancel()
+                    self.__timer = threading.Timer(time_delta - self._rate_limit, self.__update, args=(value, caller, source, dest))
+                    self.__timer.start()
+                    return
+            _changed = False
+            trigger_source_details = self.__updated_by
+            if value != self._value or self._enforce_change:
+                _changed = True
+                self._set_value(value, caller, source, dest, prev_change=None, last_change=None)
+                trigger_source_details = self.__changed_by
+                if caller != "fader":
+                    self._fading = False
+                    self._lock.notify_all()
+            else:
+                self.__prev_update = self.__last_update
+                self.__last_update = self.shtime.now()
+                self.__prev_update_by = self.__updated_by
+                self.__updated_by = "{0}:{1}".format(caller, source)
 
         # ms: call run_on_update() from here
         self.__run_on_update(value)

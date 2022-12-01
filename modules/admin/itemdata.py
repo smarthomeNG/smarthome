@@ -247,6 +247,7 @@ class ItemData:
                          'cycle': str(cycle),
                          'crontab': str(crontab),
                          'autotimer': self.disp_str(item._autotimer),
+                         'rate_limit': str(item._rate_limit),
                          'threshold': self.disp_str(item._threshold),
                          'threshold_crossed': '',
 #                         'config': json.dumps(item_conf_sorted),

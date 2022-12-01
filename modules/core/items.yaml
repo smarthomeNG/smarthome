@@ -16,6 +16,12 @@ item_attributes:
             de: "Setzt den Wert des Items nach einer Zeitspanne auf einen bestimmten Wert."
             en: "Sets the item to a certain value after a period of time."
 
+    rate_limit:
+        type: num
+        description:
+            de: "Limitiert die Anzahl an Änderungen eines Items innerhalb einer gegebnen Zeitspanne in Sekunden. Dabei wird immer der letzte wert übernommen"
+            en: "Limits the number of changes of an item within a given time span in seconds. The latest value is always applied.."
+
     cache:
         type: bool
         description:
