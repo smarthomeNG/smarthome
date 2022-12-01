@@ -168,7 +168,7 @@ loggers:
     plugins:
         # Default logger for SmartHomeNG plugins
         handlers: [shng_details_file]
-        level: WARNING
+        level: NOTICE
 
     # ------------------------------------------
 

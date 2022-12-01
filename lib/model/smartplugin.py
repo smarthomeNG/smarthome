@@ -32,13 +32,12 @@ from lib.translation import translate as lib_translate
 import logging
 import os
 
-
 class SmartPlugin(SmartObject, Utils):
     """
-    The class SmartPlugin implements the base class of call smart-plugins.
+    The class SmartPlugin implements the base class of all smart-plugins.
     The implemented methods are described below.
 
-    In adition the methods implemented in lib.utils.Utils are inhereted.
+    In addition the methods implemented in lib.utils.Utils are inherited.
     """
 
     ALLOW_MULTIINSTANCE = None
@@ -51,9 +50,13 @@ class SmartPlugin(SmartObject, Utils):
     _classname = ''       #: Classname of the plugin; is initialized during loading of the plugin; :Warning: Don't change it
     shtime = None         #: Variable containing a pointer to the SmartHomeNG time handling object; is initialized during loading of the plugin; :Warning: Don't change it
 
+    _stop_on_item_change = True     # Plugin needs to be stopped on/before item changes
+                                    # needed by self.remove_item(), don't change unless you know how and why
+
     _pluginname_prefix = 'plugins.'
 
-    _itemlist = []		# List of items, that trigger update methods of this plugin (filled by lib.item); :Warning: Don't change!
+    _plg_item_dict = {}     # dict to hold the items assigned to the plugin and their plugin specific information
+    _item_lookup_dict = {}  # dict for the reverse lookup from a device_command to an item, contains a list of items for each device_command
     _add_translation = None
 
     _parameters = {}    # Dict for storing the configuration parameters read from /etc/plugin.yaml
@@ -62,26 +65,180 @@ class SmartPlugin(SmartObject, Utils):
 
     alive = False
 
-
     # Initialization of SmartPlugin class called by super().__init__() from the plugin's __init__() method
     def __init__(self, **kwargs):
         pass
 
-    def _append_to_itemlist(self, item):
-        self._itemlist.append(item)
-
-
-    def _get_itemlist(self):
-        return self._itemlist
-
-
-    def deinit(self):
+    def deinit(self, items=[]):
         """
         If the Plugin needs special code to be executed before it is unloaded, this method
-        has to be overwirtten with the code needed for de-initialization
-        """
-        pass
+        has to be overwritten with the code needed for de-initialization
 
+        If called without parameters, all registered items are unregistered.
+        items is a list of items (or a single Item() object).
+        """
+        if self.alive:
+            self.stop()
+
+        if not items:
+            items = self.get_items()
+        elif not isinstance(items, list):
+            items = [items]
+
+        for item in items:
+            self.remove_item(item)
+
+    def add_item(self, item, config_data_dict={}, device_command=None, updating=True):
+        """
+        For items that are used/handled by a plugin, this method stores the configuration information
+        that is individual for the plugin. The configuration information is/has to be stored in a dictionary
+
+        The configuration information can be retrieved later by a call to the method get_item_configdata(<item_path>)
+
+        If data is beeing received by the plugin, a 'device_command' has to be specified as an optional 3rd parameter.
+        This allows a reverse lookup. The method get_itemlist_for_device_command(<device_command>) returns a list
+        of items for the items that have defined the <device_command>. In most cases, the list will have only one
+        entry, but if multiple items should receive data from the same device (or command), the list can have more than
+        one entry.
+
+        This method is called by the item instance itself.
+
+        :param item: item
+        :param config_data_dict: Dictionary with the plugin-specific configuration information for the item
+        :param device_command: String identifing the origin (source/kind) of received data
+        :type item: Item
+        :type config_data_dict: dict
+        :type device_command: str
+
+        :return: True, if the information has been added
+        :rtype: bool
+        """
+        if item.path() in self._plg_item_dict:
+            self.logging.warning(f"Trying to add an existing item: {item.path()}")
+            return False
+
+        self._plg_item_dict[item.path()] = {
+            'item': item,
+            'is_updating': updating,
+            'device_command': device_command,
+            'config_data': config_data_dict
+        }
+
+        if device_command:
+            if device_command not in self._item_lookup_dict:
+                self._item_lookup_dict[device_command] = []
+            self._item_lookup_dict[device_command].append(item)
+
+        return True
+
+    def remove_item(self, item):
+        """
+        Remove configuration data for an item (and remove the item from the device_command's list
+
+        :param item: item to remove
+        :type item: Item
+
+        :return: True, if the information has been removed
+        :rtype: bool
+        """
+        if item.path() not in self._plg_item_dict:
+            # There is no information stored for that item
+            self.logger.debug(f'item {item.path()} not associated to this plugin, doing nothing')
+            return False
+
+        # check if plugin is running
+        if self.alive:
+            if self._stop_on_item_change:
+                self.logger.debug(f'stopping plugin for removal of item {item.path()}')
+                self.stop()
+            else:
+                self.logger.debug(f'not stopping plugin for removal of item {item.path()}')
+
+        # remove data from item_dict early in case of concurrent actions
+        data = self._plg_item_dict[item.path()]
+        del self._plg_item_dict[item.path()]
+
+        # remove item from self._item_lookup_dict if present
+        command = data.get('device_command')
+        if command:
+            # if a device_command was given for the item, the item is being removed from the list of the device_command
+            if item in self._item_lookup_dict[command]:
+                self._item_lookup_dict[command].remove(item)
+
+        # unregister item update method
+        self.unparse_item(item)
+
+        return True
+
+    def register_updating(self, item):
+        """
+        Mark item in self._plg_item_dict as registered in shng for updating
+        (usually done by returning self.update_item from self.parse_item)
+
+        # NOTE: Items are added to _plg_item_dict by the item class as updating
+        #       by default. This could only be used if items were added manually
+        #       as non-updating first. Registering them as updating usually only
+        #       occurs via parse_item(), which in turn makes the item class
+        #       add the item as updating.
+        #       Is this function needed anyway?
+        """
+        if item.path() not in self._plg_item_dict:
+            self.add_item(item)
+        self._plg_item_dict[item.path()]['is_updating'] = True
+
+    def get_item_config(self, item):
+        """
+        Returns the plugin-specific configuration information for the given item
+
+        :param item: item to get config info for
+        :type item: class Item
+
+        :return: dict with the configuration information for the given item
+        :rtype: dict
+        """
+        return self._plg_item_dict[item.path()].get('config_data')
+
+# TODO: maybe call this get_item_names to be more intuitive?
+#       get_item_paths would be syntactically correct, but weird
+    def get_item_path_list(self):
+        """
+        Return list of stored item paths
+        """
+        return self._plg_item_dict.keys()
+
+    def get_items(self):
+        """
+        Return list of stored items
+        """
+        return [self._plg_item_dict[item_path]['item'] for item_path in self._plg_item_dict]
+
+    def get_trigger_items(self):
+        """
+        Return list of stored items which were marked as updating
+        """
+        return [self._plg_item_dict[item_path]['item'] for item_path in self._plg_item_dict if self._plg_item_dict[item_path]['is_updating']]
+
+    def get_items_for_command(self, device_command):
+        """
+        Returns a list of items that should receive data for the given device_command
+
+        :param device_command: device_command, for which the receiving items should be returned
+        :type device_command: str
+
+        :return: List of items
+        :rtype: list
+        """
+        return self._item_lookup_dict.get(device_command, [])
+
+    def unparse_item(self, item):
+        """
+        Ensure that changes to <item> are no longer propagated to this plugin
+        """
+        try:
+            item.remove_method_trigger(self.update_item)
+            return True
+        except Exception:
+            return False
 
     def get_configname(self):
         """
@@ -339,7 +496,7 @@ class SmartPlugin(SmartObject, Utils):
         """
         Update the config section of ../etc/plugin.yaml
 
-        :param param_dict: dict with the pareters that should be updated
+        :param param_dict: dict with the parameters that should be updated
 
         :return:
         """
@@ -716,7 +873,7 @@ class SmartPlugin(SmartObject, Utils):
 
     def translate(self, txt, vars=None, block=None):
         """
-        Returns translated text
+        Returns translated text for class SmartPlugin
         """
         txt = str(txt)
         if block:
@@ -728,7 +885,7 @@ class SmartPlugin(SmartObject, Utils):
             self._add_translation = os.path.isfile(translation_fn)
 
         if self._add_translation:
-            return lib_translate(txt, vars, additional_translations='plugin/'+self.get_shortname())
+            return lib_translate(txt, vars, plugin_translations='plugin/'+self.get_shortname())
         else:
             return lib_translate(txt, vars)
 
@@ -772,6 +929,19 @@ class SmartPlugin(SmartObject, Utils):
 
         return True
 
+#
+# deprecated methods, kept in place in case anybody still uses them
+#
+
+    def _get_itemlist(self):
+        self._sh._deprecated_warning('SmartPlugin.get_items()')
+        return self.get_items()
+
+    def _append_to_itemlist(self, item):
+        self._sh._deprecated_warning('SmartPlugin.add_item()')
+        self.add_item(item)
+
+
 
 try:
     from jinja2 import Environment, FileSystemLoader
@@ -797,7 +967,8 @@ class SmartPluginWebIf():
         tplenv = Environment(loader=FileSystemLoader([mytemplates,globaltemplates]))
 
         tplenv.globals['isfile'] = self.is_staticfile
-        tplenv.globals['_'] = self.plugin.translate
+        #tplenv.globals['_'] = self.plugin.translate
+        tplenv.globals['_'] = self.translate        # use translate method of webinterface class
         tplenv.globals['len'] = len
         return tplenv
 
@@ -826,10 +997,27 @@ class SmartPluginWebIf():
         return result
 
 
-    def translate(self, txt):
+    def translate(self, txt, vars=None):
+        """
+        Returns translated text for class SmartPluginWebIf
+
+        This method extends the jinja2 template engine _( ... ) -> translate( ... )
+        """
+        #return self.plugin.translate(txt)
+
         """
         Returns translated text
-
-        This method extends the jinja2 template engine
         """
-        return self.plugin.translate(txt)
+        txt = str(txt)
+
+        if self.plugin._add_translation is None:
+            # test initially, if plugin has additional translations
+            translation_fn = os.path.join(self.plugin._plugin_dir, 'locale.yaml')
+            self.plugin._add_translation = os.path.isfile(translation_fn)
+
+        if self.plugin._add_translation:
+            return lib_translate(txt, vars, plugin_translations='plugin/'+self.plugin.get_shortname(), module_translations='module/http')
+        else:
+            return lib_translate(txt, vars, module_translations='module/http')
+
+

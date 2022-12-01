@@ -328,6 +328,9 @@ class SmartHome():
         #############################################################
         # Initialize multi-language support
         lib.translation.initialize_translations(self._base_dir, self._default_language, self._fallback_language_order)
+        self._logger.info("Translation initialized")
+        # make reload_translations() method publicly available for call by eval-syntax-checker
+        self.reload_translations = lib.translation.reload_translations
 
         #############################################################
         # Test if plugins are installed
