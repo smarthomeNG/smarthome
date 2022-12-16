@@ -85,7 +85,7 @@ class Mqtt(Module):
             self.username = self._parameters['user']
             self.password = self._parameters['password']
 
-            # self.tls = self._parameters['tls']
+            self.tls = self._parameters['tls']
             # self.ca_certs = self._parameters['ca_certs']
             # self.acl = self._parameters['acl'].lower()
         except KeyError as e:
@@ -215,6 +215,10 @@ class Mqtt(Module):
         self.logger.info("Connecting to broker '{}:{}'. Starting mqtt client '{}'".format(self.broker_ip, self.broker_port, clientname))
         self._client = mqtt.Client(client_id=clientname)
 
+        if self.tls:
+            self._client.tls_set()
+            self._client.tls_insecure_set(True)
+
         # set testament, if configured
         if (self.last_will_topic != '') and (self.last_will_payload != ''):
             retain = False
@@ -269,8 +273,8 @@ class Mqtt(Module):
         self._unsubscribe_broker_infos()
 
         for topic in self._subscribed_topics:
-            item = self._subscribed_topics[topic]
-            self.logger.debug("Unsubscribing topic '{}' for item '{}'".format(str(topic), str(item.id())))
+            #item = self._subscribed_topics[topic] #self._subscribed_topics[topic] liefert topic_dict nicht item
+            #self.logger.debug("Unsubscribing topic '{}' for item '{}'".format(str(topic), str(item.id())))
             self._client.unsubscribe(topic)
 
         self.logger.info("Stopping mqtt client '{}'. Disconnecting from broker.".format(self._client._client_id.decode('utf-8')))
