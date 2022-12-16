@@ -255,17 +255,28 @@ parameters:
             en: '
                 '
 
-#    ca_certs:    # Not yet implemented
-#        type: str
-#        default: '/etc/'
-#        description:
-#            de: ''
-#            en: ''
-#        description_long:
-#            de: '
-#                '
-#            en: '
-#                '
+    tls_insecure:
+        type: bool
+        default: False
+        description:
+            de: 'Zertifikate nicht prüfen'
+            en: 'Do not verify certificates'
+        description_long:
+            de: '
+                '
+            en: '
+                '
+    ca_certs:   
+        type: str
+        default: '/etc/ssl/certs'
+        description:
+            de: 'certs for the Certificate Authority chain that signed the certificate used by the broker'
+            en: 'Zertifikate für die Certificate Authority chain, die das vom Broker verwendete Zertifikat signiert hat'
+        description_long:
+            de: '
+                '
+            en: '
+                '
 
 #    acl:
 #        type: str
