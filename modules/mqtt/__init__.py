@@ -86,7 +86,8 @@ class Mqtt(Module):
             self.password = self._parameters['password']
 
             self.tls = self._parameters['tls']
-            # self.ca_certs = self._parameters['ca_certs']
+            self.tls_insecure = self._parameters['tls_insecure']
+            self.ca_certs = self._parameters['ca_certs']
             # self.acl = self._parameters['acl'].lower()
         except KeyError as e:
             self.logger.critical(
@@ -216,8 +217,8 @@ class Mqtt(Module):
         self._client = mqtt.Client(client_id=clientname)
 
         if self.tls:
-            self._client.tls_set()
-            self._client.tls_insecure_set(True)
+            self._client.tls_set(ca_certs=self.ca_certs)
+            self._client.tls_insecure_set(self.tls_insecure)
 
         # set testament, if configured
         if (self.last_will_topic != '') and (self.last_will_payload != ''):
