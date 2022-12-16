@@ -243,17 +243,17 @@ parameters:
 #                 items_topic_prefix defines the prefix when building the MQTT topic from item-path.
 #                 '
 
-#    tls:    # Not yet implemented
-#        type: bool
-#        default: False
-#        description:
-#            de: 'tls zur Verschlüsselung nutzen'
-#            en: 'Use tls for encyption'
-#        description_long:
-#            de: '
-#                '
-#            en: '
-#                '
+    tls:
+        type: bool
+        default: False
+        description:
+            de: 'tls zur Verschlüsselung nutzen'
+            en: 'Use tls for encyption'
+        description_long:
+            de: '
+                '
+            en: '
+                '
 
 #    ca_certs:    # Not yet implemented
 #        type: str
