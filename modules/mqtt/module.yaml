@@ -259,8 +259,8 @@ parameters:
         type: bool
         default: False
         description:
-            de: 'Zertifikate nicht prüfen'
-            en: 'Do not verify certificates'
+            de: 'Hostname nicht überprüfen'
+            en: 'Do not verify hostname'
         description_long:
             de: '
                 '
@@ -268,10 +268,10 @@ parameters:
                 '
     ca_certs:   
         type: str
-        default: '/etc/ssl/certs'
+        default:
         description:
-            de: 'certs for the Certificate Authority chain that signed the certificate used by the broker'
-            en: 'Zertifikate für die Certificate Authority chain, die das vom Broker verwendete Zertifikat signiert hat'
+            de: 'path to certs for the Certificate Authority chain that signed the certificate used by the broker'
+            en: 'Pfad zur Zertifikatdatei für die Certificate Authority chain, die das vom Broker verwendete Zertifikat signiert hat'
         description_long:
             de: '
                 '
@@ -314,4 +314,3 @@ parameters:
 #                 \n
 #                 This parameter defines the default access control for items, which have no individual access control configured.
 #                 '
-
