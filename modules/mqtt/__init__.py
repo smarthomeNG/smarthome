@@ -88,6 +88,8 @@ class Mqtt(Module):
             self.tls = self._parameters['tls']
             self.tls_insecure = self._parameters['tls_insecure']
             self.ca_certs = self._parameters['ca_certs']
+            if not self.ca_certs :
+                self.ca_certs = None
             # self.acl = self._parameters['acl'].lower()
         except KeyError as e:
             self.logger.critical(
