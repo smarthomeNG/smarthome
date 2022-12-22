@@ -43,7 +43,7 @@ from lib.scheduler import Scheduler
 
 
 class Mqtt(Module):
-    version = '1.7.3'
+    version = '1.7.4'
     longname = 'MQTT module for SmartHomeNG'
 
     __plugif_CallbackTopics = {}         # for plugin interface
@@ -556,7 +556,7 @@ class Mqtt(Module):
             if (topic == message.topic) or topics_equal:
                 topic_dict = self._subscribed_topics[topic]
 
-                for subscription in topic_dict:
+                for subscription in list(topic_dict):
                     self.logger.debug("_on_mqtt_message: subscription '{}': {}".format(subscription, topic_dict[subscription]))
                     subscriber_type = topic_dict[subscription].get('subscriber_type', None)
                     if subscriber_type == 'plugin':

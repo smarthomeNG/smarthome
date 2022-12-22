@@ -55,7 +55,7 @@ class SmartPlugin(SmartObject, Utils):
 
     _pluginname_prefix = 'plugins.'
 
-    _item_dict = {}         # dict to hold the items assigned to the plugin and their plugin specific information
+    _plg_item_dict = {}     # dict to hold the items assigned to the plugin and their plugin specific information
     _item_lookup_dict = {}  # dict for the reverse lookup from a device_command to an item, contains a list of items for each device_command
     _add_translation = None
 
@@ -86,10 +86,9 @@ class SmartPlugin(SmartObject, Utils):
             items = [items]
 
         for item in items:
-            if item.path() in self._item_dict:
-                self.remove_item(item)
+            self.remove_item(item)
 
-    def add_item(self, item, config_data_dict={}, device_command=None):
+    def add_item(self, item, config_data_dict={}, device_command=None, updating=True):
         """
         For items that are used/handled by a plugin, this method stores the configuration information
         that is individual for the plugin. The configuration information is/has to be stored in a dictionary
@@ -102,6 +101,8 @@ class SmartPlugin(SmartObject, Utils):
         entry, but if multiple items should receive data from the same device (or command), the list can have more than
         one entry.
 
+        This method is called by the item instance itself.
+
         :param item: item
         :param config_data_dict: Dictionary with the plugin-specific configuration information for the item
         :param device_command: String identifing the origin (source/kind) of received data
@@ -112,14 +113,13 @@ class SmartPlugin(SmartObject, Utils):
         :return: True, if the information has been added
         :rtype: bool
         """
-        if item.path() in self._item_dict:
+        if item.path() in self._plg_item_dict:
             self.logging.warning(f"Trying to add an existing item: {item.path()}")
             return False
 
-        self._item_dict[item.path()] = {
+        self._plg_item_dict[item.path()] = {
             'item': item,
-# TODO: besseren Namen für 'has_trigger_method'? zB 'is_updating' oder so...
-            'has_trigger_method': False,
+            'is_updating': updating,
             'device_command': device_command,
             'config_data': config_data_dict
         }
@@ -141,6 +141,11 @@ class SmartPlugin(SmartObject, Utils):
         :return: True, if the information has been removed
         :rtype: bool
         """
+        if item.path() not in self._plg_item_dict:
+            # There is no information stored for that item
+            self.logger.debug(f'item {item.path()} not associated to this plugin, doing nothing')
+            return False
+
         # check if plugin is running
         if self.alive:
             if self._stop_on_item_change:
@@ -149,14 +154,9 @@ class SmartPlugin(SmartObject, Utils):
             else:
                 self.logger.debug(f'not stopping plugin for removal of item {item.path()}')
 
-        if item.path() not in self._item_dict:
-            # There is no information stored for that item
-            self.logger.debug(f'item {item.path()} not associated to this plugin, doing nothing')
-            return False
-
         # remove data from item_dict early in case of concurrent actions
-        data = self._item_dict[item.path()]
-        del self._item_dict[item.path()]
+        data = self._plg_item_dict[item.path()]
+        del self._plg_item_dict[item.path()]
 
         # remove item from self._item_lookup_dict if present
         command = data.get('device_command')
@@ -170,17 +170,21 @@ class SmartPlugin(SmartObject, Utils):
 
         return True
 
-# TODO: harmonize name with key name self._item_dict['has_trigger_method']
     def register_updating(self, item):
         """
-        Mark item in self._item_dict as registered in shng for updating
+        Mark item in self._plg_item_dict as registered in shng for updating
         (usually done by returning self.update_item from self.parse_item)
 
-        This method is called by the item object itself
+        # NOTE: Items are added to _plg_item_dict by the item class as updating
+        #       by default. This could only be used if items were added manually
+        #       as non-updating first. Registering them as updating usually only
+        #       occurs via parse_item(), which in turn makes the item class
+        #       add the item as updating.
+        #       Is this function needed anyway?
         """
-        if item.path() not in self._item_dict:
+        if item.path() not in self._plg_item_dict:
             self.add_item(item)
-        self._item_dict[item.path()]['has_trigger_method'] = True
+        self._plg_item_dict[item.path()]['is_updating'] = True
 
     def get_item_config(self, item):
         """
@@ -192,7 +196,7 @@ class SmartPlugin(SmartObject, Utils):
         :return: dict with the configuration information for the given item
         :rtype: dict
         """
-        return self._item_dict[item.path()].get('config_data')
+        return self._plg_item_dict[item.path()].get('config_data')
 
 # TODO: maybe call this get_item_names to be more intuitive?
 #       get_item_paths would be syntactically correct, but weird
@@ -200,19 +204,19 @@ class SmartPlugin(SmartObject, Utils):
         """
         Return list of stored item paths
         """
-        return self._item_dict.keys()
+        return self._plg_item_dict.keys()
 
     def get_items(self):
         """
         Return list of stored items
         """
-        return [self._item_dict[item_path]['item'] for item_path in self._item_dict]
+        return [self._plg_item_dict[item_path]['item'] for item_path in self._plg_item_dict]
 
     def get_trigger_items(self):
         """
-        Return list of stored items which were marked by register_updating()
+        Return list of stored items which were marked as updating
         """
-        return [self._item_dict[item_path]['item'] for item_path in self._item_dict if self._item_dict[item_path]['has_trigger_method']]
+        return [self._plg_item_dict[item_path]['item'] for item_path in self._plg_item_dict if self._plg_item_dict[item_path]['is_updating']]
 
     def get_items_for_command(self, device_command):
         """
@@ -231,7 +235,7 @@ class SmartPlugin(SmartObject, Utils):
         Ensure that changes to <item> are no longer propagated to this plugin
         """
         try:
-            item._remove_method_trigger(self.update_item)
+            item.remove_method_trigger(self.update_item)
             return True
         except Exception:
             return False
@@ -869,7 +873,7 @@ class SmartPlugin(SmartObject, Utils):
 
     def translate(self, txt, vars=None, block=None):
         """
-        Returns translated text
+        Returns translated text for class SmartPlugin
         """
         txt = str(txt)
         if block:
@@ -881,7 +885,7 @@ class SmartPlugin(SmartObject, Utils):
             self._add_translation = os.path.isfile(translation_fn)
 
         if self._add_translation:
-            return lib_translate(txt, vars, additional_translations='plugin/'+self.get_shortname())
+            return lib_translate(txt, vars, plugin_translations='plugin/'+self.get_shortname())
         else:
             return lib_translate(txt, vars)
 
@@ -963,7 +967,8 @@ class SmartPluginWebIf():
         tplenv = Environment(loader=FileSystemLoader([mytemplates,globaltemplates]))
 
         tplenv.globals['isfile'] = self.is_staticfile
-        tplenv.globals['_'] = self.plugin.translate
+        #tplenv.globals['_'] = self.plugin.translate
+        tplenv.globals['_'] = self.translate        # use translate method of webinterface class
         tplenv.globals['len'] = len
         return tplenv
 
@@ -992,10 +997,27 @@ class SmartPluginWebIf():
         return result
 
 
-    def translate(self, txt):
+    def translate(self, txt, vars=None):
+        """
+        Returns translated text for class SmartPluginWebIf
+
+        This method extends the jinja2 template engine _( ... ) -> translate( ... )
+        """
+        #return self.plugin.translate(txt)
+
         """
         Returns translated text
-
-        This method extends the jinja2 template engine
         """
-        return self.plugin.translate(txt)
+        txt = str(txt)
+
+        if self.plugin._add_translation is None:
+            # test initially, if plugin has additional translations
+            translation_fn = os.path.join(self.plugin._plugin_dir, 'locale.yaml')
+            self.plugin._add_translation = os.path.isfile(translation_fn)
+
+        if self.plugin._add_translation:
+            return lib_translate(txt, vars, plugin_translations='plugin/'+self.plugin.get_shortname(), module_translations='module/http')
+        else:
+            return lib_translate(txt, vars, module_translations='module/http')
+
+

@@ -2,7 +2,7 @@
 module:
     # Global module attributes
     classname: Http
-    version: 1.6.0
+    version: 1.7.0
     sh_minversion: 1.5b
 #   sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)
     description:
@@ -154,3 +154,25 @@ parameters:
             de: Traceback bei Python Exceptions in der Fehlermeldung im Browser anzeigen. (Sollte in Produktionsinstallationen False sein)
             en: Show traceback of Python exceptions on the error page displayed in the browser. (Should be False in production environment)
             fr: Montrer les traces des exepctions Python sur la page d'erreurs affiché dans le navigateur. (Normallement 'False' dans en environnement de production)
+
+    webif_pagelength:
+        type: int
+        default: 0
+        valid_list:
+          - -1
+          - 0
+          - 25
+          - 50
+          - 100
+        description:
+            de: 'Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
+                 0 = automatisch, -1 = alle'
+            en: 'Amount of items being listed in a web interface table per page by default.
+                 0 = automatic, -1 = all'
+        description_long:
+            de: 'Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.\n
+                 Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.\n
+                 Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.'
+            en: 'Amount of items being listed in a web interface table per page by default.\n
+                 0 adjusts the table height automatically based on the height of the browser windows.\n
+                 -1 shows all table entries on one page.'

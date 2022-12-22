@@ -246,6 +246,7 @@ class Modules():
 
         # load module-specific translations
         translation.load_translations('module', classpath.replace('.', '/'), 'module/'+classpath.split('.')[1])
+#        translation.load_translations('global', classpath.replace('.', '/'), 'module/'+classpath.split('.')[1])
 
         # get arguments defined in __init__ of module's class to self.args
         try:

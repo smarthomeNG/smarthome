@@ -61,7 +61,7 @@ class CherryPyFilter(logging.Filter):
 
 class Http(Module):
 
-    version = '1.6.0'
+    version = '1.7.0'
     _shortname = ''
     _longname = 'CherryPy http module for SmartHomeNG'
 
@@ -126,6 +126,7 @@ class Http(Module):
             self._showtraceback = self._parameters['showtraceback']
 
             self._starturl = self._parameters['starturl']
+            self._webif_pagelength = self._parameters['webif_pagelength']
         except:
             self.logger.critical("Inconsistent module (invalid metadata definition)")
             self._init_complete = False
@@ -251,7 +252,8 @@ class Http(Module):
             {
                 'log.screen': False,
                 'log.access_file': '',
-                'log.error_file': ''
+                'log.error_file': '',
+                'webif_pagelength': self._webif_pagelength
             }
         )
         if self._use_tls:

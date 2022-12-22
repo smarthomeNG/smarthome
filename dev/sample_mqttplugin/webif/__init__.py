@@ -28,6 +28,7 @@
 import datetime
 import time
 import os
+import json
 
 from lib.item import Items
 from lib.model.mqttplugin import SmartPluginWebIf
@@ -71,11 +72,17 @@ class WebInterface(SmartPluginWebIf):
         :return: contents of the template after beeing rendered
         """
         self.plugin.get_broker_info()
-        # Setting pagelength (max. number of table entries per page) for web interface
+        # try to get the webif pagelength from the module.yaml configuration
+        global_pagelength = cherrypy.config.get("webif_pagelength")
+        if global_pagelength:
+            pagelength = global_pagelength
+            self.logger.debug("Global pagelength {}".format(pagelength))
+        # try to get the webif pagelength from the plugin specific plugin.yaml configuration
         try:
             pagelength = self.plugin.webif_pagelength
+            self.logger.debug("Plugin pagelength {}".format(pagelength))
         except Exception:
-            pagelength = 100
+            pass
         tmpl = self.tplenv.get_template('index.html')
         # add values to be passed to the Jinja2 template eg: tmpl.render(p=self.plugin, interface=interface, ...)
         return tmpl.render(p=self.plugin,
@@ -109,4 +116,4 @@ class WebInterface(SmartPluginWebIf):
                 self.logger.error("get_data_html exception: {}".format(e))
                 return {}
 
-        return
+        return {}
