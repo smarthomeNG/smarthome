@@ -77,9 +77,14 @@ class SmartDevicePlugin(SmartPlugin):
     The implemented methods are described below, inherited methods are only
     described if changed/overwritten.
     """
+
+    # this is the placeholder version of the derived plugin, not of SDP
     PLUGIN_VERSION = '0.0.1'
 
-    ADDITIONAL_DEVICE_ATTRS = ('viess_proto',)
+# TODO: not used anywhere? -> delete
+    ADDITIONAL_DEVICE_ATTRS = (,)
+    # in any case, don't define plugin-specific attrs here, do this in the plugin itselt
+    # ADDITIONAL_DEVICE_ATTRS = ('viess_proto',)
 
     def __init__(self, sh, logger=None, **kwargs):
         """
@@ -91,6 +96,19 @@ class SmartDevicePlugin(SmartPlugin):
 
         # set item properties
 
+# TODO: include self._item_dict from new SmartPlugin
+#       as far as I can see at the moment, we do not
+#       use a dict/list of "associated items", only
+#       compiled lists of "special" items which need
+#       to exist in addition for quicker lookup and
+#       not needing to iterate over item_dict every
+#       time, e.g. self._items_write:
+# self._items_write = {i.key(): i['device_command'] for i in self._item_dict where i['config_data']['write']}
+#       
+#       so for now, I don't see much reduction potential here
+#       nevertheless, check all (!) the code for ways to reduce overhead
+#       and revert to directly using self._item_dict...
+
         # contains all items with write command
         # <item_id>: <command>
         self._items_write = {}
@@ -100,6 +118,7 @@ class SmartDevicePlugin(SmartPlugin):
         # contains items which trigger 'read group foo'
         # <item_id>: <foo>
         self._items_read_grp = {}
+# replace with self._item_lookup_dict?
         # contains all commands with read command
         # <command>: [<item_object>, <item_object>...]
         self._commands_read = {}
@@ -150,9 +169,10 @@ class SmartDevicePlugin(SmartPlugin):
         self._discard_unknown_command = True
         # if not discarding data, set this command instead
         self._unknown_command = '.notify.'
-        self._initial_values_read = False
+        self._initial_value_read_done = False
         self._cyclic_update_active = False
 
+        # set (overwritable) callback
         self._dispatch_callback = self.dispatch_data
 
         self._webif = None
@@ -200,16 +220,51 @@ class SmartDevicePlugin(SmartPlugin):
         if self.alive:
             self.stop()
 
-        if self._sh:
-            if not items:
-                items = self._itemlist
+        # if standalone, only stop (we have no items)
+        if not self._sh:     
+            return
+
+        # remove items from internal lists
+        if not items:
+            items = self.get_items()
+        elif not isinstance(items, list):
+            items = [items]
+
+        for item in items:
             try:
-                for item in items:
-                    if item in self._itemlist:
-                        self._sh.items.return_item(item).remove_trigger_method(self.update_item)
-                        self._remove_from_itemlist(item)
+                del self._items_write[item]
             except Exception:
                 pass
+            try:
+                del self._items_read_grp[item.path()]
+                del self._items_custom[item.path()]
+            except Exception:
+                pass
+            try:
+                self._items_read_all.remove(item.path())
+            except Exception:
+                pass
+            cmd = self._item_dict[item]['device_command']
+            if cmd:
+                try:
+                    self._commands_read[cmd].remove(item)
+                    self._commands_pseudo[cmd].remove(item)
+                except Exception:
+                    pass
+                try:
+                    self._commands_initial.remove(cmd)
+                except Exception:
+                    pass
+                try:
+                    del self._commands_cyclic[cmd]
+                except Exception:
+                    pass
+
+                for grp in self._commands_read_grp:
+                    try:
+                        self._commands_read_grp[grp].remove(cmd)
+                    except Exception:
+                        pass
 
     def update_plugin_config(self, **kwargs):
         """
@@ -354,6 +409,8 @@ class SmartDevicePlugin(SmartPlugin):
 
             # from here on command is combined if device.custom_commands is set
             # and a valid custom token is found
+
+            self.add_item(item, device_command=command)
 
             # command marked for reading
             if self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READ', 'foo')):
@@ -771,16 +828,6 @@ class SmartDevicePlugin(SmartPlugin):
     #
     #
 
-    def _append_to_itemlist(self, item):
-        if item not in self._itemlist:
-            self._itemlist.append(item)
-
-    def _remove_from_itemlist(self, item):
-        try:
-            self._itemlist.remove(item)
-        except Exception:
-            pass
-
     def _get_custom_value(self, command, data):
         """
         extract custom value from data
@@ -882,7 +929,7 @@ class SmartDevicePlugin(SmartPlugin):
         """
         Read all values configured to be read/triggered at startup
         """
-        if self._initial_values_read:
+        if self._initial_value_read_done:
             self.logger.debug('_read_initial_values() called, but inital values were already read. Ignoring')
         else:
             if self._commands_initial:
@@ -890,7 +937,7 @@ class SmartDevicePlugin(SmartPlugin):
                 for cmd in self._commands_initial:
                     self.logger.debug(f'Sending initial command {cmd}')
                     self.send_command(cmd)
-                self._initial_values_read = True
+                self._initial_value_read_done = True
                 self.logger.info('Initial read commands sent')
             if self._triggers_initial:
                 self.logger.info('Starting initial read group triggers')
