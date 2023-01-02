@@ -121,6 +121,8 @@ Die Funktionen für das Datums-Handling sind folgende:
 +-----------------------------------------------+----------------------------------------------------------------------------------+
 | shtime.current_month(offset=0)                | Liefert den aktuellen Monat                                                      |
 +-----------------------------------------------+----------------------------------------------------------------------------------+
+| shtime.current_monthname(offset=0)            | Liefert den Namens des aktuellen Monats                                          |
++-----------------------------------------------+----------------------------------------------------------------------------------+
 | shtime.current_day(offset=0)                  | Liefert den aktuellen Tag                                                        |
 +-----------------------------------------------+----------------------------------------------------------------------------------+
 | shtime.day_of_year(date=None, offset=0)       | Liefert als Ergebnis, der wievielte Tag im Jahr das angegebene Datum ist         |
