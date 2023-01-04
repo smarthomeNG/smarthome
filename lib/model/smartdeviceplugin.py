@@ -624,7 +624,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         if result:
             self.logger.debug(f'command {command} received result {result}')
-            self.on_data_received(None, value, command)
+            self.on_data_received(kwargs.get('by'), value, command)
 
         return True
 
