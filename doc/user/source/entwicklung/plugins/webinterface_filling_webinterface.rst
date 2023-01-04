@@ -41,10 +41,17 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
 
             :return: contents of the template after beeing rendered
             """
+            # try to get the webif pagelength from the module.yaml configuration
+            global_pagelength = cherrypy.config.get("webif_pagelength")
+            if global_pagelength:
+                pagelength = global_pagelength
+                self.logger.debug("Global pagelength {}".format(pagelength))
+            # try to get the webif pagelength from the plugin specific plugin.yaml configuration
             try:
                 pagelength = self.plugin.webif_pagelength
+                self.logger.debug("Plugin pagelength {}".format(pagelength))
             except Exception:
-                pagelength = 100
+                pass
             tmpl = self.tplenv.get_template('index.html')
             # add values to be passed to the Jinja2 template eg: tmpl.render(p=self.plugin, interface=interface, ...)
             return tmpl.render(webif_pagelength=pagelength, p=self.plugin)
@@ -71,13 +78,12 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
 
         self.webif_pagelength = self.get_parameter_value('webif_pagelength')
 
-      Die plugin.yaml sollte hiermit ergänzt werden:
+      Die plugin.yaml sollte hiermit ergänzt werden. Es sollte kein default Wert angegeben werden!
 
       .. code-block:: yaml
 
         webif_pagelength:
           type: int
-          default: 100
           description:
             de: 'Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
                  0 = automatisch, -1 = alle'
@@ -127,6 +133,7 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
            <table id="maintable">
                <thead>
                    <tr>
+                       <th></th>
                        <th class="item">{{ _('Item') }}</th>
                        <th class="typ">{{ _('Typ') }}</th>
                        <th class="knx_dpt">{{ _('knx_dpt') }}</th>
@@ -135,6 +142,7 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
                <tbody>
                    {% for item in items %}
                        <tr>
+                           <td></td>
                            <td class="py-1" id="{{ item._path }}_path">{{ item._path }}</td>
                            <td class="py-1" id="{{ item._path }}_type">{{ item._type }}</td>
                            <td class="py-1" id="{{ item._path }}_knx_dpt">{{ item.conf['knx_dpt'] }}</td>
@@ -161,16 +169,15 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
           $(document).ready( function () {
             $(window).trigger('datatables_defaults'); // loading default behaviour
             try {
-              /* get pagelength from plugin. Also see hidden span element in bodytab1 block! */
-              webif_pagelength = parseInt(document.getElementById('webif_pagelength').innerHTML);
+              {% if webif_pagelength is defined %}webif_pagelength = {{ webif_pagelength|int }};{% endif %}
               if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
                 resize = true;
                 webif_pagelength = -1;
-        				console.log('Activating automatic table resize');
               }
               else {
                 resize = false;
               }
+              console.log("Using page length from http module/plugin " + webif_pagelength + ", pageResize: " + resize);
             }
             catch (e) {
               webif_pagelength = 100;
@@ -186,13 +193,6 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
             }
           });
         </script>
-
-
-    .. code-block:: html+jinja
-
-      <!-- This code has to be implemented in the index.html file either in the headtable or bodytab -->
-      {% block headtable %}
-      <span id='webif_pagelength' style="display:none">{{ webif_pagelength }}</span>
 
 
    6. Das Logo oben links auf der Seite wird automatisch durch das Logo des konfigurierten Plugin-Typs ersetzt. Wenn das Webinterface ein eigenes Logo mitbringen soll, muss das entsprechende Bild im Verzeichnis ``webif/static/img`` mit dem Namen ``plugin_logo`` abgelegt sein. Die zulässigen Dateiformate sind **.png**, **.jpg** oder **.svg**. Dabei sollte die Größe der Bilddatei die Größe des angezeigten Logos (derzeit ca. 180x150 Pixel) nicht überschreiten, um unnötige Datenübertragungen zu vermeiden.

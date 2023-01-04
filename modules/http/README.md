@@ -2,7 +2,7 @@
 
 This module allows plugins to implement a web interface. The API is described below. The first plugin to utilize this API is the backend plugin.
 
-> Note: To write a plugin that utilizes this module, you have to be familiar with CherryPy. 
+> Note: To write a plugin that utilizes this module, you have to be familiar with CherryPy.
 
 
 ## Requirements
@@ -14,7 +14,7 @@ This module is running under SmartHomeNG versions beyond v1.3. It requires Pytho
 sudo pip3 install cherrypy
 ```
 
-And please pay attention that the lib(s) are installed for Python3 and not an older Python 2.7 that is probably installed on your system. Be carefull to use `pip3` and nor `pip`.
+And please pay attention that the lib(s) are installed for Python3 and not an older Python 2.7 that is probably installed on your system. Be careful to use `pip3` and not `pip`.
 
 > Note: This module needs the module handling in SmartHomeNG to be activated. Make sure, that `use_modules`in `etc/smarthome.yaml` is **not** set to False!
 
@@ -35,7 +35,7 @@ http:
 #    starturl: backend
 #    threads: 8
 #    showtraceback: True
-
+#    webif_pagelength: 0
 ```
 
 #### user (optional)
@@ -75,7 +75,7 @@ If set to `False` no list of pluins with web interface is shown under `smarthome
 If set to `True` a list of webservices is shown under `smarthomeNG.local:8384/services`. By default, ** showservicelist** is **False**.
 
 #### starturl (optional)
-The name of the plugin that is started when calling url `smarthomeNG.local:8383` without further detailing that url. If you want to startup the **backend** plugin for example: You set `starturl: backend`. That results in a redirect which redirects `smarthomeNG.local:8383` to `smarthomeNG.local:8383/backend`. 
+The name of the plugin that is started when calling url `smarthomeNG.local:8383` without further detailing that url. If you want to startup the **backend** plugin for example: You set `starturl: backend`. That results in a redirect which redirects `smarthomeNG.local:8383` to `smarthomeNG.local:8383/backend`.
 
 if `starturl` is not specified or point to an url that does not exist, a redirect to `smarthomeNG.local:8383/plugins` will take place (if ** showpluginlist** is **True**). It points to a page that lists all plugins that have registered a html interface and allows you to start those interfaces.
 
@@ -87,6 +87,10 @@ Number of worker threads to start by cherrypy (default 8, which may be too much 
 #### showtraceback
 If set to **True, error-pages (except for error 404) will show the Python traceback for that error.
 
+#### webif_pagelength
+Amount of items being listed in a web interface table per page by default.
+0 adjusts the table height automatically based on the height of the browser windows.
+-1 shows all table entries on one page.
 
 ## API of module http
 
@@ -101,7 +105,7 @@ try:
     self.mod_http = self._sh.get_module('http')
 except:
     self.mod_http = None
-    
+
 if self.mod_http == None:
     # Do what is necessary if you can't start a web interface
     # for your plugin. For example:
@@ -137,9 +141,9 @@ app_config = {
 For registering a web application/interface you have to call the `register_app` of module `http`:
 
 ```
-register_app(app_object, 
-             appname, 
-             app_config, 
+register_app(app_object,
+             appname,
+             app_config,
              pluginclass, instance,
              description)
 ```
@@ -151,9 +155,9 @@ appname = 'backend'    # Name of the plugin
 pluginclass = self.__class__.__name__
 instance = self.get_instance_name()
 
-self.mod_http.register_app(Backend(self, self.updates_allowed, language, self.developer_mode, self.pypi_timeout), 
-                          appname, 
-                          app_config, 
+self.mod_http.register_app(Backend(self, self.updates_allowed, language, self.developer_mode, self.pypi_timeout),
+                          appname,
+                          app_config,
                           pluginclass, instance,
                           description='Administration interface for SmartHomeNG')
 ```
@@ -197,4 +201,3 @@ Returns the port under which the implemented webservices can be reached.
 - **pluginclass**  - Class of the plugin
 - **instance**   - Optional: Instance of the plugin (if multi-instance)
 - **description**  - Optional: Description to be shown on page with services-list
-

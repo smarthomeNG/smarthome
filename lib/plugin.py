@@ -68,6 +68,7 @@ logger = logging.getLogger(__name__)
 
 
 _plugins_instance = None    # Pointer to the initialized instance of the Plugins class (for use by static methods)
+_SH = None
 
 def namestr(obj, namespace):
     return [name for name in namespace if namespace[name] is obj]
@@ -541,6 +542,7 @@ class PluginWrapper(threading.Thread):
         logger.debug('PluginWrapper __init__: Section {}, classname {}, classpath {}'.format( name, classname, classpath ))
         threading.Thread.__init__(self, name=name)
 
+        self._sh = smarthome
         self._init_complete = False
         self.meta = meta
         # Load an instance of the plugin
@@ -583,6 +585,10 @@ class PluginWrapper(threading.Thread):
                 self.get_implementation()._set_instance_name(instance)
 #           addition by smai
             # Customized logger instance for plugin to append name of plugin instance to log text
+            # addition by msinn
+            global _SH
+            _SH = self._sh
+            # end addition by msinn
             self.get_implementation().logger = PluginLoggingAdapter(logging.getLogger(classpath), {'plugininstance': self.get_implementation().get_loginstance()})
 #           end addition by smai
             self.get_implementation()._set_sh(smarthome)
@@ -724,7 +730,35 @@ class PluginLoggingAdapter(logging.LoggerAdapter):
 
     This class is used by PluginWrapper to set up a logger for the SmartPlugin class
     """
+    from lib.log import Logs
+
+    def __init__(self, logger, extra):
+        logging.LoggerAdapter.__init__(self, logger, extra)
+        self.logger = logger
+
+        logging.addLevelName(_SH.logs.NOTICE_level, "NOTICE")
+        logging.addLevelName(_SH.logs.DBGHIGH_level, "DBGHIGH")
+        logging.addLevelName(_SH.logs.DBGMED_level, "DBGMED")
+        logging.addLevelName(_SH.logs.DBGLOW_level, "DBGLOW")
+        return
+
+    def notice(self, msg, *args, **kwargs):
+        self.logger.log(_SH.logs.NOTICE_level, f"{self.extra['plugininstance']}{msg}", *args, **kwargs)
+        return
+
+    def dbghigh(self, msg, *args, **kwargs):
+        self.logger.log(_SH.logs.DBGHIGH_level, f"{self.extra['plugininstance']}{msg}", *args, **kwargs)
+        return
+
+    def dbgmed(self, msg, *args, **kwargs):
+        self.logger.log(_SH.logs.DBGMED_level, f"{self.extra['plugininstance']}{msg}", *args, **kwargs)
+        return
+
+    def dbglow(self, msg, *args, **kwargs):
+        self.logger.log(_SH.logs.DBGLOW_level, f"{self.extra['plugininstance']}{msg}", *args, **kwargs)
+        return
+
     def process(self, msg, kwargs):
         kwargs['extra'] = self.extra
-        return '{}{}'.format(self.extra['plugininstance'], msg), kwargs
+        return f"{self.extra['plugininstance']}{msg}", kwargs
 # end addition von smai

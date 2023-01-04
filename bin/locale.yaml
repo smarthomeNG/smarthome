@@ -15,6 +15,7 @@ global_translations:
     'Firmware':        {'de': '=', 'en': '=', 'fr': 'Micrologiciel'}
     'Name':            {'de': '=', 'en': '=', 'fr': 'Nom'}
     'Version':         {'de': '=', 'en': '=', 'fr': '='}
+    'unbekannt':       {'de': '=', 'en': 'unknown', 'fr': 'inconnue'}
 
     'Tag':             {'de': '=', 'en': 'day', 'fr': 'jour'}
     'Stunde':          {'de': '=', 'en': 'hour', 'fr': 'heure'}
@@ -24,6 +25,7 @@ global_translations:
     'Stunden':         {'de': '=', 'en': 'hours', 'fr': 'heures'}
     'Minuten':         {'de': '=', 'en': 'minutes', 'fr': 'minutes'}
     'Sekunden':        {'de': '=', 'en': 'seconds', 'fr': 'secondes'}
+    'Sek.':            {'de': '=', 'en': 'sec.', 'fr': 'secondes'}
 
     'Montag':          {'de': '=', 'en': 'Monday', 'fr': 'Lundi'}
     'Dienstag':        {'de': '=', 'en': 'Tuesday', 'fr': 'Mardi'}

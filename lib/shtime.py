@@ -123,7 +123,7 @@ class Shtime:
         """
         txt = str(txt)
 
-        return lib_translate(txt, vars, additional_translations='lib/shtime')
+        return lib_translate(txt, vars, plugin_translations='lib/shtime')
 
 
     def set_tz(self, tzone):

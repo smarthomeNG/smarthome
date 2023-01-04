@@ -37,6 +37,10 @@ class Logs():
     _logs = {}
     root_handler_name = ''
 
+    NOTICE_level = 29
+    DBGHIGH_level = 13
+    DBGMED_level = 12
+    DBGLOW_level = 11
 
     def __init__(self, sh):
 
@@ -91,15 +95,18 @@ class Logs():
             root_handler_level = '?'
 
         if root_handler_level.upper() in ['NOTICE', 'INFO', 'DEBUG']:
-            notice_level = 29
+            self.NOTICE_level = 29
         else:
-            notice_level = 31
+            self.NOTICE_level = 31
+        self.DBGHIGH_level = 13
+        self.DBGMED_level = 12
+        self.DBGLOW_level = 11
 
         # add SmartHomeNG specific loglevels
-        self.add_logging_level('NOTICE', notice_level)
-        self.add_logging_level('DBGHIGH', 13)
-        self.add_logging_level('DBGMED', 12)
-        self.add_logging_level('DBGLOW', 11)
+        self.add_logging_level('NOTICE', self.NOTICE_level)
+        self.add_logging_level('DBGHIGH', self.DBGHIGH_level)
+        self.add_logging_level('DBGMED', self.DBGMED_level)
+        self.add_logging_level('DBGLOW', self.DBGLOW_level)
 
         try:
             logging.config.dictConfig(config_dict)

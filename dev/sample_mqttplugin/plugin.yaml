@@ -26,7 +26,6 @@ parameters:
     # This parameter should be included if plugin provides a web interface. It lets users configure the standard number of entries per page
     webif_pagelength:
         type: int
-        default: 100
         valid_list:
           - -1
           - 0
@@ -45,7 +44,7 @@ parameters:
             en: 'Amount of items being listed in a web interface table per page by default.\n
                  0 adjusts the table height automatically based on the height of the browser windows.\n
                  -1 shows all table entries on one page.'
-                 
+
 item_attributes:
     # Definition of item attributes defined by this plugin (enter 'item_attributes: NONE', if section should be empty)
 
