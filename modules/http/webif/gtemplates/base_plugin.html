@@ -122,7 +122,7 @@
 							{{ _('Autom. Aktualisierung') }}
 							<input title="{{ _('(De)Aktiviere automatische Seitenaktualisierung') }}" type="checkbox" id="update_active" name="update_active" value="active" oninput="set_update_interval()">
 							&nbsp;&nbsp;
-							<input title="{{ _('Aktualisierungsintervall in Sekunden') }}" style="width:60px" type="number" id="update_interval" name="update_interval" min="0" oninput="set_update_interval()">
+							<input title="{{ _('Aktualisierungsintervall in Sekunden') }}" style="width:60px; text-align:right;" type="number" id="update_interval" name="update_interval" min="0" oninput="set_update_interval()">
 						</span>
 						<span id="webif-seconds"> {{ _('Sek.') }}</span>
 						<span id="webif-seconds_orig" style="display:none"> {{ _('Sek.') }}</span>
