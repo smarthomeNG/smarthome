@@ -274,7 +274,7 @@ wie Trenner konfiguriert werden:
             verbraucher:
                 name: Verbraucher
                 sv_blocksize: 1
-                sv_widget: "{{ basic.stateswitch('wohnung.buero.tv', 'wohnung.buero.tv', '', '', ['control_on_off.svg', 'control_standby.svg'], '', ['icon0','icon1']) }} <br> {{ basic.stateswitch('wohnung.buero.computer', 'wohnung.buero.computer', '', '', ['control_on_off.svg', 'control_standby.svg'], '', ['icon0','icon1']) }} <br> {{ basic.statewitch('wohnung.buero.schrank', 'wohnung.buero.schrank', '', '', ['control_on_off.svg', 'control_standby.svg'], '', ['icon0','icon1']) }} <br> {{ basic.stateswitch('wohnung.buero.steckdose_tuer', 'wohnung.buero.steckdose_tuer', '', '', ['control_on_off.svg', 'control_standby.svg'], '', ['icon0','icon1']) }}"
+                sv_widget: "{{ basic.stateswitch('wohnung.buero.tv', 'wohnung.buero.tv', '', '', ['control_on_off.svg', 'control_standby.svg'], '', ['icon0','icon1']) }} <br> {{ basic.stateswitch('wohnung.buero.computer', 'wohnung.buero.computer', '', '', ['control_on_off.svg', 'control_standby.svg'], '', ['icon0','icon1']) }} <br> {{ basic.stateswitch('wohnung.buero.schrank', 'wohnung.buero.schrank', '', '', ['control_on_off.svg', 'control_standby.svg'], '', ['icon0','icon1']) }} <br> {{ basic.stateswitch('wohnung.buero.steckdose_tuer', 'wohnung.buero.steckdose_tuer', '', '', ['control_on_off.svg', 'control_standby.svg'], '', ['icon0','icon1']) }}"
 
 ``sv_blocksize`` dient zur Einstellung der (minimalen) Blockhöhe und
 darf die Werte 1, 2 oder 3 annehmen. Wird ``sv_blocksize``\ nicht
