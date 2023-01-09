@@ -107,11 +107,14 @@ class SDPCommands(object):
         raise Exception(f'command {command} not found in commands')
 
     def get_command_from_reply(self, data):
+        """ return command (or new: list of commands) for received data """
         if data is None:
             return None
 
         if type(data) in (bytes, bytearray):
             data = str(data.decode('utf-8'))
+
+        commands = []
 
         for command in self._commands:
             patterns = getattr(self._commands[command], CMD_ATTR_REPLY_PATTERN, None)
@@ -122,9 +125,12 @@ class SDPCommands(object):
                             regex = re.compile(pattern)
                             if regex.match(data) is not None:
                                 self.logger.debug(f'matched reply_pattern {pattern} as regex against data {data}, found command {command}')
-                                return command
+                                commands.append(command)
                         except Exception as e:
                             self.logger.warning(f'parsing or matching reply_pattern {getattr(self._commands[command], CMD_ATTR_REPLY_PATTERN)} from command {command} as regex failed. Error was: {e}. Ignoring')
+
+        if commands:
+            return commands
 
         return None
 

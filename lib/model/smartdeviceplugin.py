@@ -646,8 +646,12 @@ class SmartDevicePlugin(SmartPlugin):
             # command == None means that we got raw data from a callback and
             # don't know yet to which command this belongs to. So find out...
             self.logger.debug(f'received data "{data}" from {by} without command specification')
-            command = self._commands.get_command_from_reply(data)
-            if not command:
+
+            # command can be a string (classic single command) or 
+            # - new - a list of strings if multiple commands are identified
+            # in that case, work on all strings
+            commands = self._commands.get_command_from_reply(data)
+            if not commands:
                 if self._discard_unknown_command:
                     self.logger.debug(f'data "{data}" did not identify a known command, ignoring it')
                     return
@@ -655,23 +659,29 @@ class SmartDevicePlugin(SmartPlugin):
                     self.logger.debug(f'data "{data}" did not identify a known command, forwarding it anyway for {self._unknown_command}')
                     self._dispatch_callback(self._unknown_command, data, by)
 
-        custom = None
-        if self.custom_commands:
-            custom = self._get_custom_value(command, data)
+        # TODO: remove later?
+        assert(isinstance(commands, list))
 
-        base_command = command
-        value = None
-        try:
-            value = self._commands.get_shng_data(command, data)
-            if custom:
-                command = command + CUSTOM_SEP + custom
-        except OSError as e:  # Exception as e:
-            self.logger.info(f'received data "{data}" for command {command}, error {e} occurred while converting. Discarding data.')
-        else:
-            self.logger.debug(f'received data "{data}" for command {command} converted to value {value}')
-            self._dispatch_callback(command, value, by)
+        # process all commands
+        for command in commands:
 
-        self._process_additional_data(base_command, data, value, custom, by)
+            custom = None
+            if self.custom_commands:
+                custom = self._get_custom_value(command, data)
+
+            base_command = command
+            value = None
+            try:
+                value = self._commands.get_shng_data(command, data)
+                if custom:
+                    command = command + CUSTOM_SEP + custom
+            except OSError as e:  # Exception as e:
+                self.logger.info(f'received data "{data}" for command {command}, error {e} occurred while converting. Discarding data.')
+            else:
+                self.logger.debug(f'received data "{data}" for command {command} converted to value {value}')
+                self._dispatch_callback(command, value, by)
+
+            self._process_additional_data(base_command, data, value, custom, by)
 
     def dispatch_data(self, command, value, by=None):
         """
