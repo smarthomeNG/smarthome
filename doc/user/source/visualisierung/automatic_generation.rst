@@ -73,9 +73,9 @@ Am Beispiel der Küche zeigt die folgende Konfiguration, wie die zusätzlichen I
         kochen:
             name: Kochen
             sv_page: room
-            sv_img: scene_cooking.png
+            sv_img: scene_cooking.svg
             sv_nav_aside: "{{ basic.print('m_kochen.ist', 'wohnung.kochen.heizung.ist', '°') }}"
-            sv_nav_aside2: "{{ basic.symbol('m_kochen_kaffee2', 'wohnung.kochen.kaffeeautomat.status', '', 'icons/ws/scene_coffee_maker_automatic.png', '2') }} {{ basic.symbol('m_kochen_kaffee3', 'wohnung.kochen.kaffeeautomat.status', '', 'icons/or/scene_coffee_maker_automatic.png', '3') }} {{ basic.symbol('m_kochen_heizen', 'wohnung.kochen.heizung.heizen', '', icon1~'sani_heating.png') }}"
+            sv_nav_aside2: "{{ basic.symbol('m_kochen_kaffee2', 'wohnung.kochen.kaffeeautomat.status', '', 'scene_coffee_maker_automatic.svg',  [2,3],'',['icon0','icon1']) }} {{ basic.symbol('m_kochen_heizen', 'wohnung.kochen.heizung.heizen', '', 'sani_heating.svg', 1, '', 'icon1') }}"
 
 Wie in den bisherigen Releases:
 
@@ -130,17 +130,17 @@ Konfigurationsdatei, wie die Navigation konfiguriert wird:
         konfiguration:
             name: Konfiguration
             sv_page: category
-            sv_img: control_all_on_off.png
+            sv_img: control_all_on_off.svg
 
         beschattung:
             name: Beschattung
             sv_page: category
-            sv_img: fts_shutter_40.png
+            sv_img: fts_shutter_40.svg
 
         beleuchtung:
             name: Beleuchtungsautomatik
             sv_page: category
-            sv_img: light_light_dim_00.png
+            sv_img: light_light_dim_00.svg
 
 
 ``sv_page`` ist zum Generieren eines Eintrages für die
@@ -180,7 +180,7 @@ wie Trenner konfiguriert werden:
         verteilung:
             name: Verteilung
             sv_page: category
-            sv_img: measure_current.png
+            sv_img: measure_current.svg
 
         separator_test:
             name: Tests
@@ -189,7 +189,7 @@ wie Trenner konfiguriert werden:
         fritzboxen:
             name: Fritzboxen
             sv_page: category
-            sv_img: it_router.png
+            sv_img: it_router.svg
 
 ``sv_page`` ist zum generieren eines Trenners auf einen speziellen
 Seitentyp einzustellen. - Wenn ein Trenner in die normale Raumnavigation
@@ -274,7 +274,7 @@ wie Trenner konfiguriert werden:
             verbraucher:
                 name: Verbraucher
                 sv_blocksize: 1
-                sv_widget: "{{ basic.switch('wohnung.buero.tv', 'wohnung.buero.tv', icon0~'control_on_off.png', icon0~'control_standby.png') }} <br> {{ basic.switch('wohnung.buero.computer', 'wohnung.buero.computer', icon0~'control_on_off.png', icon0~'control_standby.png') }} <br> {{ basic.switch('wohnung.buero.schrank', 'wohnung.buero.schrank', icon0~'control_on_off.png', icon0~'control_standby.png') }} <br> {{ basic.switch('wohnung.buero.steckdose_tuer', 'wohnung.buero.steckdose_tuer', icon0~'control_on_off.png', icon0~'control_standby.png') }}"
+                sv_widget: "{{ basic.stateswitch('wohnung.buero.tv', 'wohnung.buero.tv', '', '', ['control_on_off.svg', 'control_standby.svg'], '', ['icon0','icon1']) }} <br> {{ basic.stateswitch('wohnung.buero.computer', 'wohnung.buero.computer', '', '', ['control_on_off.svg', 'control_standby.svg'], '', ['icon0','icon1']) }} <br> {{ basic.stateswitch('wohnung.buero.schrank', 'wohnung.buero.schrank', '', '', ['control_on_off.svg', 'control_standby.svg'], '', ['icon0','icon1']) }} <br> {{ basic.stateswitch('wohnung.buero.steckdose_tuer', 'wohnung.buero.steckdose_tuer', '', '', ['control_on_off.svg', 'control_standby.svg'], '', ['icon0','icon1']) }}"
 
 ``sv_blocksize`` dient zur Einstellung der (minimalen) Blockhöhe und
 darf die Werte 1, 2 oder 3 annehmen. Wird ``sv_blocksize``\ nicht
