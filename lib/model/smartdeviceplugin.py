@@ -81,11 +81,6 @@ class SmartDevicePlugin(SmartPlugin):
     # this is the placeholder version of the derived plugin, not of SDP
     PLUGIN_VERSION = '0.0.1'
 
-# TODO: not used anywhere? -> delete
-    ADDITIONAL_DEVICE_ATTRS = (,)
-    # in any case, don't define plugin-specific attrs here, do this in the plugin itselt
-    # ADDITIONAL_DEVICE_ATTRS = ('viess_proto',)
-
     def __init__(self, sh, logger=None, **kwargs):
         """
         Initalizes the plugin.
