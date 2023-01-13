@@ -217,8 +217,9 @@ Logmessage ausgegeben:
        datefmt: '%Y-%m-%d  %H:%M:%S'
 
 Folgende Einstellung (wie oben im Beispiel bereits angegeben) schreibt
-statt des Thread Names (der nicht besonders hilfeich ist), den Python
-Modul Namen in das log (also z.B.: lib.plugin, plugins.knx, …):
+statt des Thread Names (der nicht besonders hilfreich ist), den Python
+Modulnamen in das Log (also z.B.: item, metadata, plugin - jeweils OHNE `lib.` -,
+plugins.knx, etc):
 
 .. code-block:: yaml
 
@@ -241,7 +242,13 @@ Logging Filter
 ~~~~~~~~~~~~~~
 
 Filter können dazu genutzt werden, nur bestimmte Logeinträge anzuzeigen bzw.
-diese eben auch zu verstecken. Hierzu wird zuerst ein Filter angelegt:
+diese eben auch zu verstecken. Hierzu wird zuerst ein Filter angelegt.
+Zu beachten ist, dass alle Einträge außer invert als Regular Expression angegeben
+werden müssen. Im einfachsten Fall sind die Einträge module und name 1:1 identisch
+mit den gewünschten Modulen oder Namen, wodurch keine besonderen Ausdrücke notwendig
+werden. Modulnamen wie item oder metadata müssen ohne voranstehendem `lib.` angegeben
+werden. Bei `msg` muss jedenfalls `(.*)` am Beginn und/oder Ende angegeben sein,
+wenn die abzufangende Nachricht nicht komplett 1:1 identisch ist. Hier ein Beispiel:
 
 .. code-block:: yaml
 
@@ -281,7 +288,7 @@ Stateengine Plugin in die Datei stateengine.log geschrieben werden. Auf Grund
 des Filters werden sämtliche Einträge ignoriert, die:
 
 - vom Modul StateEngine (s und e können sowohl groß, als auch klein geschrieben
-  werden) stammen
+  werden) stammen. Andere mögliche Module wären z.B. item, metadata, etc. (ohne lib.)
 - vom Logger mit dem Namen 'plugins.stateengine.licht.test' stammen
 - am Ende der Zeile "Item <beliebiger Eintrag> not found!" beinhalten
 

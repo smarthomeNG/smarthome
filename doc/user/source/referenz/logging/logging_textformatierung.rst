@@ -61,7 +61,7 @@ die Lesbarkeit des Python Codes deutlich, besonders bei Verwendung vieler Variab
     SmartHomeNG genutzt werden.
 
     Diese Art der Formatierung wird ausdrücklich empfohlen. Es ist jedoch nicht notwendig, in älterem Code alle
-    älteren Formatierungs-Optionen zu ersetzen.
+    älteren Formatierungsoptionen zu ersetzen.
 
 .. code-block:: python
 
@@ -77,4 +77,3 @@ Auch hier ist die Formatierung der Variableninhalte möglich:
     menge = 24
     preis = 19.98
     logger.info(f"Artikelmenge: {menge:3d}, Preis: {preis:6.2f}, Gesamt: {menge * preis:8.2f}")
-
