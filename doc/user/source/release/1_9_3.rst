@@ -195,7 +195,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fix bug with timestamp being None
   * Translate rest of user_doc into german
   * Added parameter default_maxage
-  *Increased default value for max_delete_logentries to 1500
+  * Increased default value for max_delete_logentries to 1500
 
 * enocean:
 
@@ -455,6 +455,3 @@ Dokumentation
 * Added include /etc/nginx/proxy_params; to reverse proxy docu
 * Multiple updates
 * Allow shpinx versions 5.x (<6)
-
-
-
