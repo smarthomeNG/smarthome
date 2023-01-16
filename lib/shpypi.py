@@ -748,7 +748,10 @@ class Shpypi:
                     package['pypi_version_not_available_msg'] = 'PyPI nicht erreichbar'
 
             # check if installed version is ok and recent
-            self.check_package_version_data(package)
+            try:
+                self.check_package_version_data(package)
+            except Exception as e:
+                self.logger.exception(f"lookup_pypi_releasedata: Package {package} - Exception: {e}")
         return
 
 

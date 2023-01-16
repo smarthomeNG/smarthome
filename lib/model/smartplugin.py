@@ -67,7 +67,8 @@ class SmartPlugin(SmartObject, Utils):
 
     # Initialization of SmartPlugin class called by super().__init__() from the plugin's __init__() method
     def __init__(self, **kwargs):
-        pass
+        self._plg_item_dict = {}      # make sure, that the dict is local to the plugin
+        self._item_lookup_dict = {}   # make sure, that the dict is local to the plugin
 
     def deinit(self, items=[]):
         """
@@ -96,18 +97,16 @@ class SmartPlugin(SmartObject, Utils):
         The configuration information can be retrieved later by a call to the method get_item_configdata(<item_path>)
 
         If data is beeing received by the plugin, a 'device_command' has to be specified as an optional 3rd parameter.
-        This allows a reverse lookup. The method get_items_for_command(<device_command>) returns a list
+        This allows a reverse lookup. The method get_itemlist_for_device_command(<device_command>) returns a list
         of items for the items that have defined the <device_command>. In most cases, the list will have only one
         entry, but if multiple items should receive data from the same device (or command), the list can have more than
         one entry.
 
-        This method is routinely called by the item instance itself after returning
-        update_item from parse_item().
+        This method is called by the item instance itself.
 
         :param item: item
         :param config_data_dict: Dictionary with the plugin-specific configuration information for the item
-        :param device_command: String identifing the origin (source/kind) of received data
-        :param updating: Plugin is receiving updates for this item
+        :param device_command: String identifing the origin (source/kind) of received data (e.g. the address on a bus)
         :type item: Item
         :type config_data_dict: dict
         :type device_command: str

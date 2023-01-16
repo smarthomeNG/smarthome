@@ -433,7 +433,7 @@ class Item():
                 update = plugin.parse_item(self)
                 if update:
                     try:
-                        plugin._append_to_itemlist(self)
+                        plugin.add_item(self)
                     except:
                         pass
                     self.add_method_trigger(update)

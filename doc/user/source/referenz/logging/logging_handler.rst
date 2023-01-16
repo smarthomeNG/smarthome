@@ -107,7 +107,7 @@ In der Datei ``../etc/logging.yaml`` wird der **ShngMemLogHandler** im Abschnitt
       angesprochen werden kann.
     - ``maxlen:`` - Legt fest, wie viele Einträge ein Memory Log aufnehmen kann, bevor der älteste Eintrag
       gelöscht wird.
-    - ``level:`` - Legt den minmalen Log Level fest, der in das Memory Log geschrieben wird
+    - ``level:`` - Legt den minimalen Log Level fest, der in das Memory Log geschrieben wird
 
 |
 
@@ -119,4 +119,3 @@ gefügt.
     loggers:
         heizung:
             handlers: [shng_heizung_file, memory_heizung]
-
