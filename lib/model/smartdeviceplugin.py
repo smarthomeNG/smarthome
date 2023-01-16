@@ -98,6 +98,7 @@ class SmartDevicePlugin(SmartPlugin):
 #       to exist in addition for quicker lookup and
 #       not needing to iterate over item_dict every
 #       time, e.g. self._items_write:
+#
 # self._items_write = {i.key(): i['device_command'] for i in self._item_dict where i['config_data']['write']}
 #       
 #       so for now, I don't see much reduction potential here
