@@ -14,10 +14,10 @@ sowie einige neue Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 22. Nov 2022
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 4. Dez 2022
        (...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 27. Nov 2022
-       (database: Added parameter to set ...)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 9. Dez 2022
+       (...)
 
 
 Überblick
@@ -62,6 +62,10 @@ Updates in the CORE
 
 * Added Python 3.11 to unit tests
 
+* Configuration:
+
+  * logging.yaml.default: Modified LEVEL for plugins: to NOTICE to reflect the ability of plugins to log NOTICEs
+
 * Items:
 
   * ...
@@ -76,9 +80,22 @@ Updates in the CORE
 
     * Preparing SmartPlugin for editable items
 
+  * lib.plugin:
+
+    * Implemented extended logging levels (NOTICE, DBGHIGH, DBGMED, DBGLOW) for plugins too
+
   * lib.scheduler:
 
     * Catch more exceptions outside scheduler to prevent thread end
+
+  * lib.smarthome:
+
+    * Added reload_translations() to smarthome object to enable reload of translations during runtime through
+      eval syntax-checker (evaluate: sh.reload_translations())
+
+  * lib.translation:
+
+    * Enhanced translations to accept module specific translations (for module/http)
 
 
 * Modules:
@@ -107,6 +124,9 @@ Updates in the CORE
     * Fix header min-width calculation
     * Fix and improve responsive header
 
+  * mqtt:
+
+    * Fixed a runtime error "dictionary changed size during iteration"
 
 
 
@@ -128,10 +148,24 @@ Updates in the CORE
     * Corrected download filename for csv dump
     * Implemented sql dump for sqlite3 databases
     * Bumped version to 1.6.5
+    * Added orphan-tab to web interface; enhanced/fixed ude of http-module translations;
+    * Bumped version to 1.6.7
+    * Code cleanup
+    * Updated user dorumentation
+    * Bumped version to 1.6.8
 
   * executor:
 
     Remove eval capability, add script listbox, load, save and delete
+
+  * hue2:
+
+    * Implemented for lights: read from bridge für items with function 'dict'
+    * Added Modell ID to web interface
+    * bumped version to 2.2.2
+    * Added more verbose log messages for deCONZ software bridge
+    * Added function 'modify_scene'
+    * Bumped version to 2.2.3
 
   * ical:
 
@@ -153,6 +187,18 @@ Updates in the CORE
 
     * Update webif_pagelength implementation, small webif adjustments
 
+  * neato:
+
+    * Log only one error if robot is not reachable via backend
+
+  * smlx:
+
+    * Add files via upload
+
+  * solarforecast:
+
+    * Catch error, if solarforecast webservice is temporarily not reachable
+
   * sonos:
 
     * Fix for mute does not work for coupled speakers. -> Fixed by making mute a group command.
@@ -164,6 +210,16 @@ Updates in the CORE
     * Implement webif_pagelength from module, slight webif adjustments
     * Bump to v 1.9.3
 
+  * tankerkoenig:
+
+    * Bumped to Version 2
+    * Added support of items (No need for logic anymore) but keep recent public functions identical
+    * Add WebIF
+    * Reducing available functions
+    * Named _full function back to old name
+    * Added cast to float to rad value
+    * Added check for Nonetype results
+
   * uzsu:
 
     * Get webif_pagelength from module.yaml if possible, adjust webif accordingly
@@ -174,7 +230,7 @@ Updates in the CORE
 
 * tests:
 
-  * ...
+  * Updated core mockup for extended log levels for plugins
 
 |
 
