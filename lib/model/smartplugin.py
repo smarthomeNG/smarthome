@@ -102,11 +102,16 @@ class SmartPlugin(SmartObject, Utils):
         entry, but if multiple items should receive data from the same device (or command), the list can have more than
         one entry.
 
-        This method is called by the item instance itself.
+        Calling this method for an item already stored in `self._plg_item_dict` can be used to change the "is_updating"
+        key to True, if it was False before and the `updating` parameter is True. Otherwise, nothing happens.
+
+        This method should be called from parse_item to register the item. If parse_item returns a reference to `update_item`,
+        this method is called again by the Item instance itself to change the `is_updating` key.
 
         :param item: item
         :param config_data_dict: Dictionary with the plugin-specific configuration information for the item
         :param device_command: String identifing the origin (source/kind) of received data (e.g. the address on a bus)
+        :param updating: Show if item updates from shng should be sent to the plugin
         :type item: Item
         :type config_data_dict: dict
         :type device_command: str
@@ -116,6 +121,15 @@ class SmartPlugin(SmartObject, Utils):
         :rtype: bool
         """
         if item.path() in self._plg_item_dict:
+
+            # if called again (e.g. from lib/item/item.py) with updating == True,
+            # update "is_updating" key...
+            if updating and not self._plg_item_dict[item.path()]['is_updating']:
+                self.logging.debug(f"add_item called with existing item {item.path()}, updating stored data: is_updating enabled")
+                self.register_updating(item)
+                return True
+
+            # otherwise return error
             self.logging.warning(f"Trying to add an existing item: {item.path()}")
             return False
 
@@ -182,7 +196,6 @@ class SmartPlugin(SmartObject, Utils):
         #       as non-updating first. Registering them as updating usually only
         #       occurs via parse_item(), which in turn makes the item class
         #       add the item as updating.
-        #       Is this function needed anyway?
         """
         if item.path() not in self._plg_item_dict:
             self.add_item(item)
