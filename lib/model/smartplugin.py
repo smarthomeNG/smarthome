@@ -67,7 +67,8 @@ class SmartPlugin(SmartObject, Utils):
 
     # Initialization of SmartPlugin class called by super().__init__() from the plugin's __init__() method
     def __init__(self, **kwargs):
-        pass
+        self._plg_item_dict = {}      # make sure, that the dict is local to the plugin
+        self._item_lookup_dict = {}   # make sure, that the dict is local to the plugin
 
     def deinit(self, items=[]):
         """
@@ -105,7 +106,7 @@ class SmartPlugin(SmartObject, Utils):
 
         :param item: item
         :param config_data_dict: Dictionary with the plugin-specific configuration information for the item
-        :param device_command: String identifing the origin (source/kind) of received data
+        :param device_command: String identifing the origin (source/kind) of received data (e.g. the address on a bus)
         :type item: Item
         :type config_data_dict: dict
         :type device_command: str
