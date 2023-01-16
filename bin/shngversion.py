@@ -89,8 +89,9 @@ from lib.utils import Version
 # Update auf 1.9.3    wg. Release
 # Update auf 1.9.3.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.9.3 Release"
 # Update auf 1.9.3.2  wg. weitere Loglevel für Plugins; Nutzung Überstzungen für module/http"
+# Update auf 1.9.3.3  wg. Änderungen an SmartPlugin
 
-shNG_version = '1.9.3.2'
+shNG_version = '1.9.3.3'
 shNG_branch = 'develop'
 shNG_releasedate = '31. Oktober 2022'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
 
