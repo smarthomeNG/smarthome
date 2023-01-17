@@ -89,7 +89,7 @@ class SmartPlugin(SmartObject, Utils):
         for item in items:
             self.remove_item(item)
 
-    def add_item(self, item, config_data_dict=None, device_command=None, updating=False):
+    def add_item(self, item, config_data_dict={}, device_command=None, updating=False):
         """
         For items that are used/handled by a plugin, this method stores the configuration information
         that is individual for the plugin. The configuration information is/has to be stored in a dictionary
@@ -133,16 +133,16 @@ class SmartPlugin(SmartObject, Utils):
             self.logging.warning(f"Trying to add an existing item: {item.path()}")
             return False
 
-        if config_data_dict is None:
-            conf_data_dict = {}
-        else:
-            conf_data_dict = config_data_dict.copy
+        #if config_data_dict is None:
+        #    conf_data_dict = {}
+        #else:
+        #    conf_data_dict = config_data_dict.copy
 
         self._plg_item_dict[item.path()] = {
             'item': item,
             'is_updating': updating,
             'device_command': device_command,
-            'config_data': conf_data_dict
+            'config_data': dict(config_data_dict)
         }
 
         if device_command:
@@ -211,22 +211,24 @@ class SmartPlugin(SmartObject, Utils):
         Returns the plugin-specific configuration information for the given item
 
         :param item: item to get config info for
-        :type item: class Item
+        :type item: class Item or str with path of an item
 
         :return: dict with the configuration information for the given item
         :rtype: dict
         """
-        return self._plg_item_dict[item.path()].get('config_data')
+        if isinstance(item, str):
+            item_path = item
+        else:
+            item_path = item.path()
+        return self._plg_item_dict[item_path].get('config_data')
 
-# TODO: maybe call this get_item_names to be more intuitive?
-#       get_item_paths would be syntactically correct, but weird
     def get_item_path_list(self):
         """
         Return list of stored item paths
         """
         return self._plg_item_dict.keys()
 
-    def get_items(self):
+    def get_item_list(self):
         """
         Return list of stored items
         """
@@ -250,9 +252,21 @@ class SmartPlugin(SmartObject, Utils):
         """
         return self._item_lookup_dict.get(device_command, [])
 
+    def get_device_commands(self):
+        """
+        Returns a list containing all device_commands, which have items associated with it
+
+        :return: List of device_commands
+        :rtype: list
+        """
+        return list(self._item_lookup_dict.keys())
+
     def unparse_item(self, item):
         """
         Ensure that changes to <item> are no longer propagated to this plugin
+
+        :param item: item to unparse
+        :type item: class Item
         """
         try:
             item.remove_method_trigger(self.update_item)
