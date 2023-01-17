@@ -70,7 +70,7 @@ class SamplePlugin(SmartPlugin):
             self.webif_pagelength = self.get_parameter_value('webif_pagelength')
             # self.param1 = self.get_parameter_value('param1')
         except KeyError as e:
-            self.logger.critical("Plugin '{}': Inconsistent plugin (invalid metadata definition: {} not defined)".format(self.get_shortname(), e))
+            self.logger.critical(f"Plugin '{self.get_shortname()}': Inconsistent plugin (invalid metadata definition: {e} not defined)")
             self._init_complete = False
             return
 
@@ -85,7 +85,6 @@ class SamplePlugin(SmartPlugin):
         #   self._init_complete = False
         #   return
 
-        # if plugin should start even without web interface
         self.init_webinterface(WebInterface)
         # if plugin should not start without web interface
         # if not self.init_webinterface():
