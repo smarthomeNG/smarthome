@@ -89,7 +89,7 @@ class SmartPlugin(SmartObject, Utils):
         for item in items:
             self.remove_item(item)
 
-    def add_item(self, item, config_data_dict={}, device_command=None, updating=False):
+    def add_item(self, item, config_data_dict=None, device_command=None, updating=False):
         """
         For items that are used/handled by a plugin, this method stores the configuration information
         that is individual for the plugin. The configuration information is/has to be stored in a dictionary
@@ -133,11 +133,16 @@ class SmartPlugin(SmartObject, Utils):
             self.logging.warning(f"Trying to add an existing item: {item.path()}")
             return False
 
+        if config_data_dict is None:
+            conf_data_dict = {}
+        else:
+            conf_data_dict = config_data_dict.copy
+
         self._plg_item_dict[item.path()] = {
             'item': item,
             'is_updating': updating,
             'device_command': device_command,
-            'config_data': config_data_dict
+            'config_data': conf_data_dict
         }
 
         if device_command:
