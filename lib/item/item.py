@@ -41,7 +41,7 @@ from lib.plugin import Plugins
 
 from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE, KEY_CACHE, KEY_CYCLE, KEY_CRONTAB, KEY_EVAL,
                            KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_REMARK, KEY_INSTANCE,
-                           KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM, KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE,
+                           KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM, PLUGIN_REMOVE_ITEM, KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE,
                            KEY_LOG_CHANGE, KEY_LOG_LEVEL, KEY_LOG_TEXT, KEY_LOG_MAPPING, KEY_LOG_RULES,
                            KEY_THRESHOLD, KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST)
 from lib.utils import Utils
@@ -438,7 +438,17 @@ class Item():
                         pass
                     self.add_method_trigger(update)
 
-
+    def remove(self):
+        """
+        Cleanup item usage before item deletion
+        Calls all plugins to remove the item and its references.
+        """
+        for plugin in self.plugins.return_plugins():
+            if hasattr(plugin, PLUGIN_REMOVE_ITEM):
+                try:
+                    plugin.remove_item(self)
+                except Exception as e:
+                    self.logger.warning(f"while removing item {self} from plugin {plugin}, the following error occurred: {e}")
 
     def _split_destitem_from_value(self, value):
         """

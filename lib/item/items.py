@@ -265,6 +265,32 @@ class Items():
     #        for child in self.__children:
     #            yield child
 
+    def remove_item(self, item):
+        """
+        Function to remove an item from the dictionary of items
+        and delete the item object.
+
+        :param item: The item to delete
+        :type item: object
+        """
+
+        if item.path() not in self.__items:
+            return
+        
+        # remove item from Items data
+        try:
+            del self.__item_dict[item.path()]
+            self.__items.remove(item.path())
+        except Exception as e:
+            self.logger.warning(f"Error occured while trying to remove item {item.path()}: {e}")
+
+        # remove item bindings in plugins
+        item.remove()
+
+        # delete item
+        del item
+
+
     def get_toplevel_items(self):
         """
         Returns a list with all items defined at the top level
