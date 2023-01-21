@@ -76,6 +76,7 @@ global_translations:
 
     'Letztes Update':        {'de': '=', 'en': 'Last Update', 'fr': ''}
     'Letzter Change':        {'de': '=', 'en': 'Last Change', 'fr': ''}
+    'Letzte Änderung':        {'de': '=', 'en': 'Last Change', 'fr': ''}
 
     #Translations for lib.scene:
     "A second 'scenes' object has been created. There should only be ONE instance of class 'Scenes'!!! Called from: {frame1} ({frame2})":
