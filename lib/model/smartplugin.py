@@ -125,12 +125,12 @@ class SmartPlugin(SmartObject, Utils):
             # if called again (e.g. from lib/item/item.py) with updating == True,
             # update "is_updating" key...
             if updating:
-                self.logging.debug(f"add_item called with existing item {item.path()}, updating stored data: is_updating enabled")
+                self.logger.debug(f"add_item called with existing item {item.path()}, updating stored data: is_updating enabled")
                 self.register_updating(item)
                 return True
 
             # otherwise return error
-            self.logging.warning(f"Trying to add an existing item: {item.path()}")
+            self.logger.warning(f"Trying to add an existing item: {item.path()}")
             return False
 
         #if config_data_dict is None:
