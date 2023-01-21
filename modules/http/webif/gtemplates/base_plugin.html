@@ -130,7 +130,7 @@
 					{%- endif %}
 
 					<span id="webif-refreshbuttons" style="white-space: nowrap;">
-						{%- if reload_button is not defined or reload_button-button == true %}
+						{%- if reload_button is not defined or reload_button == true %}
 							<button id="reload" class="btn btn-shng btn-sm" onclick="window.location.reload();"><i class="fas fa-redo"></i><span id="webif-reload"> &nbsp;&nbsp;&nbsp;{{ _('Aktualisieren') }}</span></button>
 							<span id="webif-reload_orig" style="display:none"> {{ _('Aktualisieren') }}</span>
 						{%- endif %}
