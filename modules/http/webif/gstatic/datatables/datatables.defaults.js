@@ -69,6 +69,7 @@ $(window).bind('datatables_defaults', function() {
 					this.api().fixedHeader.enable( false );
 					this.api().fixedHeader.enable( true );
 					this.api().fixedHeader.adjust();
+					this.api().responsive.recalc();
 
 					$('html, body').scrollTop(bodyScrollPos);
 					$(this).addClass( "display" );
