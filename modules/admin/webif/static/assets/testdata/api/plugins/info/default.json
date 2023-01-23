@@ -7,6 +7,8 @@
     "multiinstance": true,
     "instancename": "willy_tel",
     "webif_url": "http://smarthomeng.local:1234/avm_willy_tel/",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/config/avm.html",
+    "documentation_user_doc": "https://smarthomeng.github.io/dev_doc/plugins/avm/user_doc.html",
     "blog_url": "https://www.smarthomeng.de/tag/avm",
     "parameters": [
       {
@@ -100,6 +102,8 @@
     "multiinstance": true,
     "instancename": "fritz_wz",
     "webif_url": "http://smarthomeng.fritz.box:1234/avm_fritz_wz/",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/config/avm.html",
+    "documentation_user_doc": "https://smarthomeng.github.io/dev_doc/plugins/avm/user_doc.html",
     "blog_url": "",
     "parameters": [
       {
@@ -191,6 +195,8 @@
     "multiinstance": false,
     "instancename": "",
     "webif_url": "http://smarthomeng.fritz.box:1234/backend/",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/config/backend.html",
+    "documentation_user_doc": "https://smarthomeng.github.io/dev_doc/plugins/backend/user_doc.html",
     "blog_url": "https://www.smarthomeng.de/tag/backend",
     "parameters": [],
     "metadata": {
@@ -218,6 +224,8 @@
     "multiinstance": false,
     "instancename": "",
     "webif_url": "",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/config/cli.html",
+    "documentation_user_doc": "https://smarthomeng.github.io/dev_doc/plugins/cli/user_doc.html",
     "parameters": [
       {
         "name": "update",
@@ -266,6 +274,8 @@
     "multiinstance": true,
     "instancename": "",
     "webif_url": "http://smarthomeng.fritz.box:1234/database/",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/config/database.html",
+    "documentation_user_doc": "https://smarthomeng.github.io/dev_doc/plugins/database/user_doc.html",
     "parameters": [],
     "metadata": {
       "type": "system",
@@ -288,6 +298,8 @@
     "multiinstance": true,
     "instancename": "hm1",
     "webif_url": "http://smarthomeng.fritz.box:1234/homematic_hm1/",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/homematic/avm.html",
+    "documentation_user_doc": "",
     "parameters": [],
     "metadata": {
       "type": "system",
@@ -310,6 +322,8 @@
     "multiinstance": true,
     "instancename": "",
     "webif_url": "",
+    "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/config/visu_smartvisu.html",
+    "documentation_user_doc": "https://smarthomeng.github.io/dev_doc/plugins/visu_smartvisu/user_doc.html",
     "parameters": [],
     "metadata": {
       "type": "system",

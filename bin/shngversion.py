@@ -138,6 +138,9 @@ def get_shng_plugins_version():
     return Version.format( plgversion )
 
 def get_shng_version():
+    return shNG_branch
+
+def get_shng_version():
     commit, commit_short, branch, describe = _get_git_data()
     VERSION = get_shng_main_version()
     if branch == 'master':

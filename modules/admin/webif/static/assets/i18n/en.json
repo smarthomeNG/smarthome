@@ -367,6 +367,7 @@
     "OPEN_WEBIF": "Open webinterface",
     "OPEN_CONFIGINFO": "Open configuration documentation",
     "OPEN_DOC": "Open plugin documentation",
+    "OPEN_ADDITIONAL": "Open additional plugin dokumentation",
     "OPEN_SUPPORT_THREAD": "Open support thread",
     "OPEN_BLOGS": "Open blogs articles"
   },

@@ -1,0 +1,407 @@
+{
+  "darksky.weather": {
+    "name": "Weather report from darksky.net",
+    "latitude": {
+      "type": "num",
+      "ds_matchstring": "latitude"
+    },
+    "longitude": {
+      "type": "num",
+      "ds_matchstring": "longitude"
+    },
+    "timezone": {
+      "type": "str",
+      "ds_matchstring": "timezone"
+    },
+    "currently": {
+      "time": {
+        "type": "num",
+        "ds_matchstring": "currently/time"
+      },
+      "summary": {
+        "type": "str",
+        "ds_matchstring": "currently/summary"
+      },
+      "icon": {
+        "type": "str",
+        "ds_matchstring": "currently/icon"
+      },
+      "nearestStormDistance": {
+        "type": "num",
+        "ds_matchstring": "currently/nearestStormDistance"
+      },
+      "precipIntensity": {
+        "type": "num",
+        "ds_matchstring": "currently/precipIntensity",
+        "database": "init"
+      },
+      "precipIntensityError": {
+        "type": "num",
+        "ds_matchstring": "currently/precipIntensityError"
+      },
+      "precipProbability": {
+        "type": "num",
+        "ds_matchstring": "currently/precipProbability",
+        "database": "init"
+      },
+      "precipType": {
+        "type": "str",
+        "ds_matchstring": "currently/precipType"
+      },
+      "temperature": {
+        "type": "num",
+        "ds_matchstring": "currently/temperature",
+        "database": "init"
+      },
+      "apparenttemperature": {
+        "type": "num",
+        "ds_matchstring": "currently/apparentTemperature",
+        "database": "init"
+      },
+      "dewpoint": {
+        "type": "num",
+        "ds_matchstring": "currently/dewPoint",
+        "database": "init"
+      },
+      "humidity": {
+        "type": "num",
+        "ds_matchstring": "currently/humidity",
+        "database": "init"
+      },
+      "pressure": {
+        "type": "num",
+        "ds_matchstring": "currently/pressure",
+        "database": "init"
+      },
+      "windSpeed": {
+        "type": "num",
+        "ds_matchstring": "currently/windSpeed",
+        "database": "init"
+      },
+      "windGust": {
+        "type": "num",
+        "ds_matchstring": "currently/windGust",
+        "database": "init"
+      },
+      "windBearing": {
+        "type": "num",
+        "ds_matchstring": "currently/windBearing",
+        "database": "init"
+      },
+      "cloudCover": {
+        "type": "num",
+        "ds_matchstring": "currently/cloudCover",
+        "database": "init"
+      },
+      "uvIndex": {
+        "type": "num",
+        "ds_matchstring": "currently/uvIndex",
+        "database": "init"
+      },
+      "visibility": {
+        "type": "num",
+        "ds_matchstring": "currently/visibility",
+        "database": "init"
+      },
+      "ozone": {
+        "type": "num",
+        "ds_matchstring": "currently/ozone",
+        "database": "init"
+      }
+    },
+    "minutely": {
+      "summary": {
+        "type": "str",
+        "ds_matchstring": "minutely/summary"
+      },
+      "icon": {
+        "type": "str",
+        "ds_matchstring": "minutely/icon"
+      }
+    },
+    "hourly": {
+      "summary": {
+        "type": "str",
+        "ds_matchstring": "hourly/summary"
+      },
+      "icon": {
+        "type": "str",
+        "ds_matchstring": "hourly/icon"
+      }
+    },
+    "daily": {
+      "summary": {
+        "type": "str",
+        "ds_matchstring": "daily/summary"
+      },
+      "icon": {
+        "type": "str",
+        "ds_matchstring": "daily/icon"
+      }
+    },
+    "alerts": {
+      "list": {
+        "type": "list",
+        "ds_matchstring": "alerts"
+      },
+      "string_detail": {
+        "type": "str",
+        "ds_matchstring@home": "alerts_string"
+      }
+    },
+    "flags": {
+      "sources": {
+        "type": "str",
+        "ds_matchstring": "flags/sources"
+      },
+      "units": {
+        "type": "str",
+        "ds_matchstring": "flags/units"
+      },
+      "nearest_station": {
+        "type": "num",
+        "ds_matchstring": "flags/nearest-station"
+      }
+    }
+  },
+  "stateengine.general": {
+    "name": "Vorlage-Struktur für einen Zustandsautomaten",
+    "state_id": {
+      "remark": "The id/path of the actual state is assigned to this item by the stateengine",
+      "type": "str",
+      "visu_acl": "r",
+      "cache": true
+    },
+    "state_name": {
+      "remark": "The name of the actual state is assigned to this item by the stateengine",
+      "type": "str",
+      "visu_acl": "r",
+      "cache": true
+    },
+    "rules": {
+      "name": "Regeln und Item Verweise für den Zustandsautomaten",
+      "remark": "configure your se_item_* and eval_triggers here",
+      "type": "bool",
+      "se_plugin": "active",
+      "eval": true,
+      "se_laststate_item_id": "..state_id",
+      "se_laststate_item_name": "..state_name"
+    }
+  },
+  "stateengine.state_lock": {
+    "name": "Zustandsvorlage zum Sperren der Evaluierung",
+    "lock": {
+      "type": "bool",
+      "knx_dpt": 1,
+      "visu_acl": "rw",
+      "cache": "on"
+    },
+    "rules": {
+      "se_item_lock": "..lock",
+      "eval_trigger": "..lock",
+      "lock": {
+        "name": "gesperrt",
+        "on_leave": {
+          "se_action_lock": [
+            "function: set",
+            "to: False"
+          ]
+        },
+        "enter": {
+          "se_value_lock": true
+        }
+      }
+    }
+  },
+  "stateengine.state_suspend": {
+    "name": "Zustandsvorlage für manuelles Aussetzen",
+    "suspend": {
+      "type": "bool",
+      "knx_dpt": 1,
+      "visu_acl": "rw",
+      "cache": true
+    },
+    "suspend_end": {
+      "type": "str",
+      "visu_acl": "ro",
+      "cache": true
+    },
+    "manuell": {
+      "type": "bool",
+      "name": "manuell",
+      "se_manual_invert": true,
+      "remark": "Adapt the se_manual_exclude the way you need it",
+      "se_manual_exclude": [
+        "database:*"
+      ]
+    },
+    "settings": {
+      "remark": "Use these settings for your condition values",
+      "suspendduration": {
+        "remark": "duration of suspend mode",
+        "type": "num",
+        "visu_acl": "rw",
+        "cache": true,
+        "initial_value": 60
+      },
+      "suspend_active": {
+        "remark": "Use this to (de)activate suspend mode in general",
+        "type": "bool",
+        "visu_acl": "rw",
+        "cache": true,
+        "initial_value": true
+      }
+    },
+    "rules": {
+      "se_item_suspend": "..suspend",
+      "se_item_retrigger": "..rules",
+      "se_item_suspend_end": "..suspend_end",
+      "se_item_suspend_active": "..settings.suspend_active",
+      "se_suspend_time": "eval:stateengine_eval.get_relative_itemvalue('..settings.suspendduration') * 60",
+      "eval_trigger": "..manuell",
+      "suspend": {
+        "name": "ausgesetzt",
+        "on_enter_or_stay": {
+          "se_action_suspend": [
+            "function: special",
+            "value: suspend:..suspend, ..manuell",
+            "repeat: True",
+            "order: 1"
+          ],
+          "se_action_suspend_end": [
+            "function: set",
+            "to: eval:stateengine_eval.insert_suspend_time('..suspend', suspend_text='%X')",
+            "repeat: True",
+            "order: 2"
+          ],
+          "se_action_retrigger": [
+            "function: set",
+            "to: True",
+            "delay: var:item.suspend_remaining",
+            "repeat: True",
+            "order: 3"
+          ]
+        },
+        "on_leave": {
+          "se_action_suspend": [
+            "function: set",
+            "to: False"
+          ],
+          "se_action_suspend_end": [
+            "function: set",
+            "to: "
+          ]
+        },
+        "enter_manuell": {
+          "se_value_trigger_source": "eval:stateengine_eval.get_relative_itemid('..manuell')",
+          "se_value_suspend_active": true
+        },
+        "enter_stay": {
+          "se_value_laststate": "var:current.state_id",
+          "se_agemax_suspend": "var:item.suspend_time",
+          "se_value_suspend": true,
+          "se_value_suspend_active": true
+        }
+      }
+    }
+  },
+  "stateengine.state_release": {
+    "name": "Zustandsvorlage für Deaktivieren von Suspend und Lock und erneutes Evaluieren der Regeln",
+    "release": {
+      "type": "bool",
+      "knx_dpt": 1,
+      "visu_acl": "rw",
+      "enforce_updates": true
+    },
+    "rules": {
+      "se_item_lock": "..lock",
+      "se_item_suspend": "..suspend",
+      "se_item_retrigger": "..rules",
+      "se_item_release": "..release",
+      "se_item_suspend_end": "..suspend_end",
+      "eval_trigger": "..release",
+      "release": {
+        "name": "release",
+        "on_enter_or_stay": {
+          "se_action_suspend": [
+            "function: set",
+            "to: False",
+            "order: 1"
+          ],
+          "se_action_lock": [
+            "function: set",
+            "to: False",
+            "order: 2"
+          ],
+          "se_action_release": [
+            "function: set",
+            "to: False",
+            "order: 3"
+          ],
+          "se_action_suspend_end": [
+            "function: set",
+            "to: ",
+            "order: 4"
+          ],
+          "se_action_retrigger": [
+            "function: set",
+            "to: True",
+            "order: 5",
+            "repeat: True",
+            "delay: 1"
+          ]
+        },
+        "enter": {
+          "se_value_release": true
+        }
+      }
+    }
+  },
+  "my.se.stateengine": {
+    "name": "Vorlage-Struktur für einen Zustandsautomaten",
+    "rules": {
+      "name": "Regeln für den Zustandsautomaten",
+      "type": "bool",
+      "se_plugin": "active",
+      "se_laststate_item_id": "..state_id",
+      "se_laststate_item_name": "..state_name"
+    },
+    "state_id": {
+      "type": "str",
+      "visu_acl": "r",
+      "cache": true
+    },
+    "state_name": {
+      "type": "str",
+      "visu_acl": "r",
+      "cache": true
+    }
+  },
+  "my.se.stateengine2": {
+    "name": "Vorlage-Struktur 2 für einen Zustandsautomaten",
+    "rules": {
+      "name": "Regeln für den Zustandsautomaten",
+      "type": "bool",
+      "se_plugin": "active",
+      "se_laststate_item_id": "..state_id",
+      "se_laststate_item_name": "..state_name"
+    },
+    "state_id": {
+      "type": "str",
+      "visu_acl": "r",
+      "cache": true
+    },
+    "state_name": {
+      "type": "str",
+      "visu_acl": "r",
+      "cache": true
+    }
+  },
+  "struct_without_name": {
+    "rules": {
+      "name": "Regeln für den Zustandsautomaten",
+      "type": "bool",
+      "se_plugin": "active"
+    }
+  }
+}

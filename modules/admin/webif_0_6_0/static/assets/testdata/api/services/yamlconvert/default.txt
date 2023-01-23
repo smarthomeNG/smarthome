@@ -1,0 +1,14 @@
+%YAML 1.1
+---
+# Dummy convert from .CONF (mockup data)
+test:
+    abc: str
+    def: 9
+    ghi: true
+    jk:
+      - 12
+      - 3
+    lm:
+        a: 2
+        b: 4
+

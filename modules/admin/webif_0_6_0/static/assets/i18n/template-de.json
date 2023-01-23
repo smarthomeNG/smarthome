@@ -1,0 +1,42 @@
+{
+	"MENU": {
+		"SYSTEM": "System",
+		"SERVICES": "Dienste",
+		"ITEMS": "Items",
+		"LOGICS": "Logiken",
+		"SCHEDULERS": "Scheduler",
+		"PLUGINS": "Plugins",
+		"SCENES": "Szenen",
+		"THREADS": "Threads",
+		"LOGS": "Logs",
+		"DISCLOSURES": "Urheberrechtshinweise"
+	},
+	"SCHEDULER": {
+		"ITEM SCHEDULERS": "Item Scheduler",
+		"LOGIC SCHEDULERS": "Logik Scheduler",
+		"PLUGIN SCHEDULERS": "Plugin Scheduler",
+		"OTHER SCHEDULERS": "sonstige Scheduler",
+		"SCHEDULER": "Scheduler",
+		"NEXT EXECUTION": "nächste Ausführung",
+		"CYCLE": "Cycle",
+		"CRONTAB": "Crontab"
+	},
+	"SYSTEM": {
+		"PYPI CHECK": "PyPI Check",
+		"SHNG_VERSION": "SmartHomeNG Version",
+		"IN": "in",
+		"SHNG_PLG_VERSION": "SmartHomeNG Plugins Version",
+		"HOST": "Host",
+		"OS": "Betriebssystem",
+		"ARCHITECTURE": "Architektur",
+		"USER": "Benutzer",
+		"PYTHON VERSION": "Python Version",
+		"FREE DISC SPACE": "Freier Speicher",
+		"DATE": "Datum",
+		"TIME": "Zeit",
+		"UPTIME": "Betriebszeit",
+		"SYSTEMINFO": "Systemeigenschaften",
+		"PROPERTY": "Eigenschaft",
+		"STATE": "Status"
+	}
+}

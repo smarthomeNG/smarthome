@@ -225,6 +225,7 @@ class SmartHome():
 
         import bin.shngversion
         VERSION = bin.shngversion.get_shng_version()
+        self.branch = bin.shngversion.get_shng_branch()
         self.version = VERSION
         self.connections = []
 
