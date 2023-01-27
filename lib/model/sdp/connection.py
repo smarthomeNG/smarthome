@@ -28,7 +28,6 @@ import logging
 import sys
 from time import sleep, time
 import requests
-import serial
 import socket
 from threading import Lock, Thread
 from contextlib import contextmanager
@@ -36,7 +35,14 @@ import json
 
 from lib.network import Tcp_client
 
-from lib.model.sdp.globals import (sanitize_param, CONN_NET_TCP_REQ, CONN_NULL, CONN_SER_DIR, CONNECTION_TYPES, PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_BINARY, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_TERMINATOR, PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT, PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE, PLUGIN_ATTR_SERIAL_PARITY, PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_STOP, PLUGIN_ATTRS, PROTO_NULL, PROTOCOL_TYPES, REQUEST_DICT_ARGS)
+from lib.model.sdp.globals import (sanitize_param, CONN_NET_TCP_REQ, CONN_NULL, CONN_SER_DIR, CONNECTION_TYPES,
+                                   PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONNECTION,
+                                   PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_AUTO_RECONN, PLUGIN_ATTR_CONN_BINARY,
+                                   PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_TERMINATOR,
+                                   PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT,
+                                   PLUGIN_ATTR_PROTOCOL, PLUGIN_ATTR_SERIAL_BAUD, PLUGIN_ATTR_SERIAL_BSIZE,
+                                   PLUGIN_ATTR_SERIAL_PARITY, PLUGIN_ATTR_SERIAL_PORT, PLUGIN_ATTR_SERIAL_STOP,
+                                   PLUGIN_ATTRS, PROTO_NULL, PROTOCOL_TYPES, REQUEST_DICT_ARGS)
 
 
 #############################################################################################################################################################################################################################################
@@ -567,6 +573,9 @@ class SDPConnectionSerial(SDPConnection):
 
             def release(self):
                 self._lock.release()
+
+        # only import serial now we know we need it -> reduce requirements for non-serial setups
+        import serial
 
         super().__init__(data_received_callback, done=False, name=name, **kwargs)
 
