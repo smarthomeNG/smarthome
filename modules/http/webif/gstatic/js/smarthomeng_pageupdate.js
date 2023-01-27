@@ -26,7 +26,7 @@ function set_update_interval() {
     window.update_interval = document.getElementById("update_interval").value * 1000;
   if (window.update_active)
   {
-    refresh.set_interval(update_interval, false);
+    refresh.set_interval(update_interval, true);
     console.log("Set Refresh Interval to " + update_interval + ", active " + update_active);
   }
   else {
