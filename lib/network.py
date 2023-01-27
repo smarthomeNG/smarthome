@@ -922,7 +922,10 @@ class Tcp_client(object):
         self.__running = False
         self.logger.info(f'{self._id} closing connection')
         if self._is_connected:
-            self._socket.shutdown(socket.SHUT_RD)
+            try:
+                self._socket.shutdown(socket.SHUT_RD)
+            except Exception as e:
+                self.logger.info(f"socket no longer connected on disconnect, exception is {e}")
         if self.__connect_thread is not None and self.__connect_thread.is_alive():
             self.__connect_thread.join()
         if self.__receive_thread is not None and self.__receive_thread.is_alive():
