@@ -36,7 +36,7 @@ sys.path.insert(0, BASE)
 sys.path.insert(0, '..')
 sys.path.insert(0, '../lib')
 
-VERSION = '0.5.0'
+VERSION = '0.5.1'
 
 
 def check_metadata(plg):
@@ -185,12 +185,24 @@ def check_documentation(plg):
             find_documentation_sections(lines)
             check_documentation_logo(lines)
 
-            # TODO:
             # - Prüfen ob die grundsätzlichen Stichworte am Dateianfang definiert sind (.. index:: Plugins; <plg> , .. index:: <plg>
+            index1_line = None
+            index2_line = None
+            for lineno, line in enumerate(lines):
+                if lineno >= title_line:
+                    break
+                if line.find('.. index:: Plugins; '+plg) == 0:
+                    index1_line = lineno
+                if line == '.. index:: '+plg or line.find('.. index:: '+plg+' ') == 0:
 
-        if webif_found:
-            if not 'Web Interface' in section_titles.keys():
-                mc.disp_warning(f"No section 'Web Interface' with the documentation for the web interface of the plugin found.", "You should document, what the web interface of the plugin does and include pictures as an example.")
+                    index2_line = lineno
+            if index1_line is None or index2_line is None:
+                mc.disp_warning(f"No global index entries found for the documentation", "You should at least include two lines with index statements before the title of the documentation.", f"The index statements should be '.. index:: Plugins; {plg}' and '.. index:: {plg}'")
+
+            # - Prüfen ob ein Abschnitt für das Webinterface existiert
+            if webif_found:
+                if not 'Web Interface' in section_titles.keys():
+                    mc.disp_warning(f"No section 'Web Interface' with the documentation for the web interface of the plugin found.", "You should document, what the web interface of the plugin does and include pictures as an example.")
 
     mc.print_errorcount('Documentation', mc.errors, mc.warnings, mc.hints)
     sum_errors += mc.errors
@@ -206,30 +218,21 @@ def check_documentation(plg):
 webif_found = False
 
 
-def check_code(plg):
-    global sum_errors, sum_warnings, sum_hints
-    mc.errors = 0
-    mc.warnings = 0
-    mc.hints = 0
+def check_code_webinterface(lines):
 
-    code_filename = '__init__.py'
-    print()
-    print(f"*** Checking python code of plugin '{plg} ({code_filename})':")
-    print()
-
-    if not os.path.isfile(code_filename):
-        mc.disp_warning(f"No code ('{code_filename}') found for the plugin '{plg}'", "Aborting code check")
-        return
-    else:
-        # read documentation file
-        with open(code_filename) as f:
-            lines = f.readlines()
-        # remove newlines from the end of each line
-        for lineno, line in enumerate(lines):
-            lines[lineno] = lines[lineno].rstrip()
-
-    # TODO:
     # - ist ein Webinterface definiert?
+    webif_seperated = False
+    for line in lines:
+        if line.find('from .webif import WebInterface') > -1:
+            webif_seperated = True
+            break
+    for line in lines:
+        if line.find('def init_webinterface(self') > -1:
+            break
+    else:
+        if not webif_seperated:
+            mc.disp_hint("No webinterface is implemented", "You should consider to to implement a webinterface.")
+            return
 
     # - Wird ein Webinterface initialisiert?
     for line in lines:
@@ -243,13 +246,34 @@ def check_code(plg):
     global webif_found
     webif_found = True
 
-    # TODO:
     # - ist der Code des Webinterfaces ausgegliedert in eigenen Ordner?
-    for line in lines:
-        if line.find('from .webif import WebInterface') > -1:
-            break
-    else:
+    if not webif_seperated:
         mc.disp_hint("The code of the webinterface is not seperated into a different file", "You should consider to seperate the code the webinterface into the subfolder 'webif'. Take a look at the sample plugin in the ../dev folder.")
+
+
+def check_code(plg):
+    global sum_errors, sum_warnings, sum_hints
+    mc.errors = 0
+    mc.warnings = 0
+    mc.hints = 0
+
+    code_filename = '__init__.py'
+    print()
+    print(f"*** Checking python code of plugin '{plg}' ({code_filename}):")
+    print()
+
+    if not os.path.isfile(code_filename):
+        mc.disp_warning(f"No code ('{code_filename}') found for the plugin '{plg}'", "Aborting code check")
+        return
+    else:
+        # read documentation file
+        with open(code_filename) as f:
+            lines = f.readlines()
+        # remove newlines from the end of each line
+        for lineno, line in enumerate(lines):
+            lines[lineno] = lines[lineno].rstrip()
+
+    check_code_webinterface(lines)
 
     mc.print_errorcount('Code', mc.errors, mc.warnings, mc.hints)
     print()
