@@ -164,7 +164,6 @@ def check_documentation(plg, quiet=False):
     :param plg: plugin name
     :type plg: str
     """
-    global sum_errors, sum_warnings, sum_hints
     mc.errors = 0
     mc.warnings = 0
     mc.hints = 0
@@ -213,6 +212,7 @@ def check_documentation(plg, quiet=False):
     if not quiet:
         mc.print_errorcount('Documentation', mc.errors, mc.warnings, mc.hints)
 
+    global sum_errors, sum_warnings, sum_hints
     sum_errors += mc.errors
     sum_warnings += mc.warnings
     sum_hints += mc.hints
@@ -333,14 +333,16 @@ def check_all_plugins(chk_meta, chk_code, chk_docu):
         mc.quiet = True
         if chk_meta:
             check_metadata(plg, quiet=True)
+
         os.chdir(os.path.join(pluginsdir, plg))
         if chk_code:
             check_code(plg, quiet=True)
+
         os.chdir(os.path.join(pluginsdir, plg))
         if chk_docu:
             check_documentation(plg, quiet=True)
 
-        print(f"{plg:<16.16}    {mc.errors:10}  {mc.warnings:10}  {mc.hints:10}")
+        print(f"{plg:<16.16}    {sum_errors:10}  {sum_warnings:10}  {sum_hints:10}")
 
     print(f"{'-'*16:<16.16}      {'-'*8:<10}  {'-'*8:<10}  {'-'*8:<10}")
     print(f"{'':<16.16}    {total_errors:10}  {total_warnings:10}  {total_hints:10}")
