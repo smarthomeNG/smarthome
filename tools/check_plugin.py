@@ -22,21 +22,13 @@
 #########################################################################
 
 import os
-import sys
 import argparse
 
 import plugin_metadata_checker as mc
 
-TOOLBASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
-os.chdir(TOOLBASE)
-os.chdir('..')
-BASE = os.getcwd()
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(os.path.basename(__file__))))
 
-sys.path.insert(0, BASE)
-sys.path.insert(0, '..')
-sys.path.insert(0, '../lib')
-
-VERSION = '0.5.1'
+VERSION = '0.5.2'
 
 
 def check_metadata(plg):
