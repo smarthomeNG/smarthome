@@ -20,6 +20,7 @@
 		// Make refresh variable, dataSet and update_params available for plugins html files.
 		window.refresh = new timer();
 		window.dataSet = null;
+		window.activeTab = 1;
 		window.update_params = null;
 		window.update_interval = 0;
 		window.update_active = false;
@@ -166,7 +167,9 @@
 {% if start_tab > tabcount %}
 	{% set start_tab = tabcount %}
 {% endif %}
-
+<script>
+window.activeTab = "bodytab_" + {{ start_tab }};
+</script>
 {% if tabcount > 6 %}
 	{% set tabcount = 6 %}
 {% endif %}

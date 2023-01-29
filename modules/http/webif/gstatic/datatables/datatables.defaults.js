@@ -109,7 +109,7 @@ $(window).bind('datatables_defaults', function() {
 			$.fn.dataTable.moment('HH:mm:ss.SSSS DD.MM.YYYY');
 
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
-
+				window.activeTab = $(this).attr("href").replace("#", "") ;
 				$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 				$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
 				$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();

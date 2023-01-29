@@ -32,11 +32,8 @@ The result is printed to stdout
 import os
 import argparse
 
-VERSION = '1.7.8'
+VERSION = '1.8.0'
 
-print('')
-print(os.path.basename(__file__) + ' v' + VERSION + ' - Checks the care status of plugin metadata')
-print('')
 start_dir = os.getcwd()
 
 import sys
@@ -63,8 +60,11 @@ MISSING_TEXT = 'Missing'
 #   Functions of the tool
 #
 
-def get_local_pluginlist():
-    plglist = os.listdir('.')
+def get_local_pluginlist(pluginsdirectory=None):
+    if pluginsdirectory is None:
+        plglist = os.listdir('.')
+    else:
+        plglist = os.listdir(pluginsdirectory)
 
     for entry in plglist:
         if os.path.isfile(entry):
@@ -405,6 +405,7 @@ def display_metadata(plg, with_description):
     if plg_type == 'Classic':
         return
 
+    # Display section 'parameters'
     if metadata.get('parameters', None) == None:
         print("ERROR: Section 'parameters' not defined in metadata")
         print()
@@ -426,6 +427,7 @@ def display_metadata(plg, with_description):
                 display_def_description(par, par_dict)
             print()
 
+    # Display section 'item_attributes'
     if metadata.get('item_attributes', None) == None:
         print("ERROR: Section 'item_attributes' not defined in metadata")
         print()
@@ -447,6 +449,7 @@ def display_metadata(plg, with_description):
                 display_def_description(attr, attr_dict)
             print()
 
+    # Display section 'item_structs'
     if metadata.get('item_structs', None) == None:
         print("ERROR: Section 'item_structs' not defined in metadata")
         print()
@@ -463,6 +466,7 @@ def display_metadata(plg, with_description):
             display_struct_definition(attr, attr_dict)
         print()
 
+    # Display section 'plugin_functions'
     if metadata.get('plugin_functions', None) == None:
         print("ERROR: Section 'plugin_functions' not defined in metadata")
         print()
@@ -503,13 +507,33 @@ warnings = 0
 hints = 0
 quiet = False
 
-def disp_error_formatted(level, msg):
+def disp_error_formatted_alt(level, msg):
     if level != '':
         level += ':'
     print('{level:<8.8} {msg:<65.65}'.format(level=level, msg=msg))
     while len(msg) > 65:
         msg = msg[65:]
         print('{level:<8.8} {msg:<65.65}'.format(level='', msg=msg))
+    return
+
+
+def disp_error_formatted(level, msg):
+    if level != '':
+        level += ':'
+
+    words = msg.split()
+    while len(words) > 0:
+        line = ''
+
+        while (len(words) > 0) and (len(line) + 1 + len(words[0]) <= 65):
+            if len(line) > 0:
+                line += ' '
+            line += words[0]
+            words.pop(0)
+
+        print(f"{level:<8.8} {line:<65.65}")
+        level = ''
+
     return
 
 
@@ -520,7 +544,7 @@ def disp_hints_formatted(hint, hint2):
         if hint2 != '':
             print()
             disp_error_formatted('', hint2)
-        print()
+    print()
 
 
 def disp_error(msg, hint='', hint2=''):
@@ -583,7 +607,26 @@ def test_description(section, par, par_dict):
     return
 
 
-def check_metadata(plg, with_description, check_quiet=False, only_inc=False, list_classic=False):
+def print_errorcount(checkname, errors, warnings, hints):
+
+    disp_str = checkname + ': '
+    if errors == 1:
+        disp_str += f"{errors} error, "
+    else:
+        disp_str += f"{errors} errors, "
+    if warnings == 1:
+        disp_str += f"{warnings} warning, "
+    else:
+        disp_str += f"{warnings} warnings, "
+    if hints == 1:
+        disp_str += f"{hints} hint"
+    else:
+        disp_str += f"{hints} hints"
+
+    print(disp_str)
+
+
+def check_metadata(plg, with_description, check_quiet=False, only_inc=False, list_classic=False, pluginsdirectory=None):
 
     global errors, warnings, hints, quiet
     quiet = check_quiet
@@ -592,12 +635,12 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
     hints = 0
 
     plg_type = get_plugintype(plg).lower()
-    plugins_local = get_local_pluginlist()
+    plugins_local = get_local_pluginlist(pluginsdirectory)
     metadata = readMetadata(plg, plugins_local)
     if metadata == None:
         return
     if not check_quiet:
-        print("Check metadata of {} plugin '{}'".format(plg_type, plg))
+        print("*** Check metadata of {}-plugin '{}':".format(plg_type, plg))
         print()
 
     # Checking plugin name
@@ -630,6 +673,18 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
                 disp_error('No development state given for the plugin', "Add 'state:' to the plugin section and set it to one of the following values ['develop', 'ready', 'qa-passed']", "The state'qa-passed' should only be set by the shNG core team")
             elif not metadata['plugin'].get('state', None) in ['qa-passed', 'ready', 'develop', 'deprecated', '-']:
                 disp_error('An invalid development state is given for the plugin', "Set'state:' to one of the followind valid values ['develop', 'ready', 'qa-passed', 'deprecated']", "The state'qa-passed' should only be set by the shNG core team")
+
+            doc_url = metadata['plugin'].get('documentation', '')
+            if (doc_url is not None) and (doc_url != ''):
+                if doc_url.endswith(f"plugins/{plg}/user_doc.html"):
+                    disp_hint("The 'documentation' parameter in section 'plugin' should not contain an url to the SmartHomeNG documentation (user_doc)",
+                                 "The 'documentation' parameter is optional and only to be used to link to additional documentation outside of SmartHomeNG", "If there is no additional documentation, leave this parameter empty")
+                elif doc_url.endswith(f"plugins_doc/config/{plg}.html"):
+                    disp_warning("The 'documentation' parameter in section 'plugin' should not contain an url to the SmartHomeNG documentation (configuration)",
+                                 "The 'documentation' parameter is optional and only to be used to link to additional documentation outside of SmartHomeNG", "If there is no additional documentation, leave this parameter empty")
+
+            if metadata['plugin'].get('support', '') == '':
+                disp_hint("The 'support' parameter is empty.", "Is there no support thread for this plugin in the knx-user-forum?", "Enter the url to the support thread in the 'support' parameter.")
 
             if metadata['plugin'].get('multi_instance', None) == None:
                 disp_warning('It is not documented if wether the plugin is multi-instance capable or not', "Add 'multi_instance:' to the plugin section")
@@ -736,9 +791,9 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
                 print('{plugin:<14.14} {summary:<60.60}'.format(plugin=plg, summary=summary))
         else:
             if errors == 0 and warnings == 0 and hints == 0:
-                print("Metadata is complete ({} errors, {} warnings and {} hints)".format(errors, warnings, hints))
+                print_errorcount('Metadata is complete', errors, warnings, hints)
             else:
-                print("{} errors, {} warnings and {} hints".format(errors, warnings, hints))
+                print_errorcount('Metadata', errors, warnings, hints)
             print()
     return
 
@@ -844,11 +899,31 @@ def check_plglist(option, list_classic=False):
     print()
 
 
+def check_metadata_of_plugin(plg, quiet=False):
+
+    BASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
+
+    # change the working diractory to the directory from which the converter is loaded (../tools)
+    os.chdir(os.path.dirname(os.path.abspath(os.path.basename(__file__))))
+
+    plugindirectory = '../plugins'
+    #pluginabsdirectory = os.path.abspath(plugindirectory)
+    pluginabsdirectory = os.path.join(BASE, 'plugins')
+
+    os.chdir(pluginabsdirectory)
+
+    check_metadata(plg, quiet)
+    return
+
+
 # ==================================================================================
 #   Main Routine of the tool
 #
 
 if __name__ == '__main__':
+    print('')
+    print(os.path.basename(__file__) + ' v' + VERSION + ' - Checks the care status of plugin metadata')
+    print('')
 
     # change the working diractory to the directory from which the converter is loaded (../tools)
     os.chdir(os.path.dirname(os.path.abspath(os.path.basename(__file__))))

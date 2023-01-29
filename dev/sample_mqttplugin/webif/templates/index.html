@@ -119,7 +119,11 @@
 {% set tab1title = "<strong>" ~ p.get_shortname() ~ " Items</strong> (" ~ item_count ~ ")" %}
 {% block bodytab1 %}
 <div class="container-fluid m-2 table-resize">
-	{{ _('Hier kommt der Inhalt des Webinterfaces hin.') }}
+  <!-- remove this div if not needed -->
+  <div class="mb-2">
+    {{ _('Hier kommt der Inhalt des Webinterfaces hin.') }} (optional)
+  </div>
+
 	<table id="maintable">
 		<thead>
 		<tr>
@@ -147,6 +151,10 @@
 			{% endif %}
 		{% endfor %}
 	</table>
+  <!-- remove this div if not needed -->
+  <div class="mb-2">
+    Etwaige Informationen unterhalb der Tabelle (optional)
+  </div>
 </div>
 {% endblock bodytab1 %}
 
