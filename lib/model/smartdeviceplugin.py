@@ -91,20 +91,6 @@ class SmartDevicePlugin(SmartPlugin):
 
         # set item properties
 
-# TODO: include self._item_dict from new SmartPlugin
-#       as far as I can see at the moment, we do not
-#       use a dict/list of "associated items", only
-#       compiled lists of "special" items which need
-#       to exist in addition for quicker lookup and
-#       not needing to iterate over item_dict every
-#       time, e.g. self._items_write:
-#
-# self._items_write = {i.key(): i['device_command'] for i in self._item_dict where i['config_data']['write']}
-#       
-#       so for now, I don't see much reduction potential here
-#       nevertheless, check all (!) the code for ways to reduce overhead
-#       and revert to directly using self._item_dict...
-
         # contains all items with write command
         # <item_id>: <command>
         self._items_write = {}
@@ -114,7 +100,7 @@ class SmartDevicePlugin(SmartPlugin):
         # contains items which trigger 'read group foo'
         # <item_id>: <foo>
         self._items_read_grp = {}
-# replace with self._item_lookup_dict?
+
         # contains all commands with read command
         # <command>: [<item_object>, <item_object>...]
         self._commands_read = {}
@@ -854,7 +840,7 @@ class SmartDevicePlugin(SmartPlugin):
             self.logger.debug(f'received custom token {res[0]}, not in list of known tokens {self._custom_values[self.custom_commands]}')
             return None
 
-    def _get_connection(self, conn_type=None, conn_classname=None, conn_cls=None, proto_type=None, proto_classname=None, proto_cls=None, name=None, **params):
+    def _get_connection(self, conn__type=None, conn__classname=None, conn__cls=None, proto_type=None, proto_classname=None, proto_cls=None, name=None, **params):
         """
         return connection object.
 
@@ -878,28 +864,35 @@ class SmartDevicePlugin(SmartPlugin):
             self._parameters[PLUGIN_ATTR_CB_ON_CONNECT] = self.on_connect
             self._parameters[PLUGIN_ATTR_CB_ON_DISCONNECT] = self.on_disconnect
 
-        self._params = self._parameters
+        if not conn__cls:
+            conn__cls = self._parameters.get(PLUGIN_ATTR_CONNECTION)
 
-        conn_cls = SDPConnection._get_connection_class(self)
-        if not conn_cls:
+        if not conn__cls or not issubclass(conn__cls, SDPConnection):
+            conn__cls = SDPConnection._get_connection_class(conn__type, conn__classname, conn__cls, **self._parameters)
+
+        if not conn__cls:
             return None
 
         # if protocol is specified, find second class
         if PLUGIN_ATTR_PROTOCOL in self._parameters:
+            if not proto_cls:
+                proto_cls = self._parameters.get(PLUGIN_ATTR_PROTOCOL)
 
-            proto_cls = SDPConnection._get_protocol_class(self)
+            if not proto_cls or not issubclass(proto_cls, SDPConnection):
+                proto_cls = SDPConnection._get_protocol_class(proto_cls, proto_classname, proto_type, **self._parameters)
+
             if not proto_cls:
                 return None
 
             # set connection class in _params dict for protocol class to use
-            self._parameters[PLUGIN_ATTR_CONNECTION] = conn_cls
+            self._parameters[PLUGIN_ATTR_CONNECTION] = conn__cls
 
             # return protocol instance as connection instance
             self.logger.debug(f'using protocol class {proto_cls}')
             return proto_cls(self.on_data_received, name=name, **self._parameters)
 
-        self.logger.debug(f'using connection class {conn_cls}')
-        return conn_cls(self.on_data_received, name=name, **self._parameters)
+        self.logger.debug(f'using connection class {conn__cls}')
+        return conn__cls(self.on_data_received, name=name, **self._parameters)
 
     def _create_cyclic_scheduler(self):
         """
@@ -1093,9 +1086,6 @@ class SmartDevicePlugin(SmartPlugin):
                     if key.endswith(attr_val):
                         self._item_attrs[attr] = key
                         break
-
-#
-        print(f'W 0000 000000 {self.get_fullname()}: {keys}\nW 0000 000000 {self._item_attrs}')
 
     def init_webinterface(self, WebInterface=None):
         """"

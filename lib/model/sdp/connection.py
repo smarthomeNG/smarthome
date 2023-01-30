@@ -237,7 +237,7 @@ class SDPConnection(object):
     def __str__(self):
         return self.__class__.__name__
 
-    def _get_connection_class(self, conn_type=None, conn_classname=None, conn_cls=None, **params):
+    def _get_connection_class(self, c_type=None, c_classname=None, c_cls=None, **params):
 
         if not params:
             params = self._params
@@ -250,49 +250,49 @@ class SDPConnection(object):
         try:
 
             # class not set
-            if not conn_cls:
+            if not c_cls:
 
-                if PLUGIN_ATTR_CONNECTION in params and isinstance(params[PLUGIN_ATTR_CONNECTION], SDPConnection):
-                    conn_cls = params[PLUGIN_ATTR_CONNECTION]
-                    conn_classname = conn_cls.__name__
+                if PLUGIN_ATTR_CONNECTION in params and issubclass(params[PLUGIN_ATTR_CONNECTION], SDPConnection):
+                    c_cls = params[PLUGIN_ATTR_CONNECTION]
+                    c_classname = c_cls.__name__
 
                 # classname not known
-                if not conn_classname:
+                if not c_classname:
 
                     if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] not in CONNECTION_TYPES:
-                        conn_classname = params[PLUGIN_ATTR_CONNECTION]
-                        conn_type = 'manual'
+                        c_classname = params[PLUGIN_ATTR_CONNECTION]
+                        c_type = 'manual'
 
                     # wanted connection type not known
-                    if not conn_type:
+                    if not c_type:
 
                         if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] in CONNECTION_TYPES:
-                            conn_type = params[PLUGIN_ATTR_CONNECTION]
+                            c_type = params[PLUGIN_ATTR_CONNECTION]
 
                         elif PLUGIN_ATTR_NET_HOST in params and params[PLUGIN_ATTR_NET_HOST]:
 
                             # no further information on network specifics, use basic HTTP TCP client
-                            conn_type = CONN_NET_TCP_REQ
+                            c_type = CONN_NET_TCP_REQ
 
                         elif PLUGIN_ATTR_SERIAL_PORT in params and params[PLUGIN_ATTR_SERIAL_PORT]:
 
                             # this seems to be a serial killer application
-                            conn_type = CONN_SER_DIR
+                            c_type = CONN_SER_DIR
 
-                        if not conn_type:
+                        if not c_type:
                             # if not preset and not identified, use "empty" connection, e.g. for testing
                             # when physical device is not present
-                            conn_type = CONN_NULL
+                            c_type = CONN_NULL
 
-                    conn_classname = 'SDPConnection' + ''.join([tok.capitalize() for tok in conn_type.split('_')])
+                    c_classname = 'SDPConnection' + ''.join([tok.capitalize() for tok in c_type.split('_')])
 
-                conn_cls = getattr(conn_module, conn_classname, getattr(conn_module, 'SDPConnection'))
+                c_cls = getattr(conn_module, c_classname, getattr(conn_module, 'SDPConnection'))
 
         except (TypeError, AttributeError):
             self.logger.warning(f'could not identify wanted connection class from {conn_cls}, {conn_classname}, {conn_type}. Using default connection.')
             conn_cls = SDPConnection
 
-        return conn_cls
+        return c_cls
 
     def _get_protocol_class(self, proto_cls=None, proto_classname=None, proto_type=None, **params):
 
@@ -307,7 +307,7 @@ class SDPConnection(object):
         # class not set
         if not proto_cls:
 
-            if PLUGIN_ATTR_PROTOCOL in params and isinstance(params[PLUGIN_ATTR_PROTOCOL], SDPConnection):
+            if PLUGIN_ATTR_PROTOCOL in params and issubclass(params[PLUGIN_ATTR_PROTOCOL], SDPConnection):
                 proto_cls = params[PLUGIN_ATTR_CONNECTION]
                 proto_classname = proto_cls.__name__
 
