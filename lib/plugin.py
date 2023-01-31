@@ -59,7 +59,7 @@ import lib.config
 import lib.translation as translation
 import lib.shyaml as shyaml
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE,YAML_FILE,CONF_FILE)
+from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE, KEY_WEBIF_PAGELENGTH, YAML_FILE,CONF_FILE)
 #from lib.utils import Utils
 from lib.metadata import Metadata
 #import lib.item
@@ -247,7 +247,8 @@ class Plugins():
         """
         args = {}
         for arg in plg_conf:
-            if arg != KEY_CLASS_NAME and arg != KEY_CLASS_PATH and arg != KEY_INSTANCE:
+#            if arg != KEY_CLASS_NAME and arg != KEY_CLASS_PATH and arg != KEY_INSTANCE:
+            if arg != KEY_CLASS_NAME and arg != KEY_CLASS_PATH and arg != KEY_INSTANCE and arg != KEY_WEBIF_PAGELENGTH:
                 value = plg_conf[arg]
                 if isinstance(value, str):
                     value = "'{0}'".format(value)

@@ -333,7 +333,6 @@
     "PARAMETERS": "Paramètres",
     "PARAMETER": "Paramètre",
     "VALUE": "Valeur",
-    "DESCRIPTION_INSTANCE_ATTRIBUTE": "Si plusieurs instances d'un plug-in multi-instance sont configurées, un nom d'instance unique doit être spécifié ici (une instance peut rester sans nom). Si une seule instance est configurée, aucun nom ne doit être attribué ici.",
     "ITEM ATTRIBUTES": "Attributs de l'objet",
     "UPDATES TRIGGERED BY": "Mises à jour de l'extension déclenchées par {{count}} objets",
     "PLUGIN METADATA": "Métadonnées de l'extension",
