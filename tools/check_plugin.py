@@ -28,7 +28,7 @@ import plugin_metadata_checker as mc
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(os.path.basename(__file__))))
 
-VERSION = '0.6.0'
+VERSION = '0.6.1'
 
 sum_errors = 0
 sum_warnings = 0
@@ -198,8 +198,7 @@ def check_documentation(plg, quiet=False):
                     break
                 if line.find('.. index:: Plugins; '+plg) == 0:
                     index1_line = lineno
-                if line == '.. index:: '+plg or line.find('.. index:: '+plg+' ') == 0:
-
+                if line == '.. index:: '+plg or line.find('.. index:: '+plg+' ') == 0 or line.find('.. index:: '+plg+';') == 0:
                     index2_line = lineno
             if index1_line is None or index2_line is None:
                 mc.disp_warning(f"No global index entries found for the documentation", "You should at least include two lines with index statements before the title of the documentation.", f"The index statements should be '.. index:: Plugins; {plg}' and '.. index:: {plg}'")
@@ -286,6 +285,14 @@ def check_code(plg, quiet=False):
             lines[lineno] = lines[lineno].rstrip()
 
         check_code_webinterface(lines)
+
+        # - was "Sample plugin" from the templaate file changed?
+        for line in lines:
+            if line.lower().find('sample plugin') > -1 and line.startswith('#'):
+                mc.disp_hint("The description of the sample plugin in the comments was not replaced", "Replace the description with a meaningful text")
+                break
+        else:
+            mc.disp_warning("Webinterface is not beeing initialized")
 
         if not quiet:
             mc.print_errorcount('Code', mc.errors, mc.warnings, mc.hints)

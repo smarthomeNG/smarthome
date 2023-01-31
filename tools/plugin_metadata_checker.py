@@ -32,7 +32,7 @@ The result is printed to stdout
 import os
 import argparse
 
-VERSION = '1.8.1'
+VERSION = '1.8.2'
 
 start_dir = os.getcwd()
 
@@ -710,7 +710,6 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
         if metadata.get('parameters', None) == None:
             disp_error("No parameters defined in metadata", "When defining parameters, make sure that you define ALL parameters of the plugin, but dont define global parameters like 'instance'. If only a part of the parameters are defined in the metadata, the missing parameters won't be handed over to the plugin at runtime.", "If the plugin has no parameters, document this by writing 'parameters: NONE' to the metadata file.")
 
-
         # Checking item attribute metadata
         if metadata.get('item_attributes', None) == None:
             disp_error("No item attributes defined in metadata", "If the plugin defines no item attributes, document this by creating an empty section. Write 'item_attributes: NONE' to the metadata file.")
@@ -735,13 +734,16 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
         if metadata.get('parameters', None) != None:
             if metadata.get('parameters', None) != 'NONE':
                 for par in metadata.get('parameters', None):
-                    par_dict = metadata['parameters'][par]
-                    if not is_dict(par_dict):
-                        disp_error("Definition of parameter '{}' is not a dict".format(par), '')
+                    if par.lower() in ['instance', 'webif_pagelength']:
+                        disp_warning(f"parameter '{par}' should not be defined in the plugin", f"Parameter '{par}' is a globaly defined plugin parameter. You should not explicitly define it in your plugin '{plg}'")
                     else:
-                        if par_dict.get('mandatory', False) != False and par_dict.get('default', None) != None:
-                            disp_error("parameter '{}': mandatory and default cannot be used together".format(par), "If mandatory and a default value are specified togeather, mandatory has no effect, since a value for the parameter is already specified (the default value).")
-                        test_description('parameter', par, par_dict.get('description', None))
+                        par_dict = metadata['parameters'][par]
+                        if not is_dict(par_dict):
+                            disp_error("Definition of parameter '{}' is not a dict".format(par), '')
+                        else:
+                            if par_dict.get('mandatory', False) != False and par_dict.get('default', None) != None:
+                                disp_error("parameter '{}': mandatory and default cannot be used together".format(par), "If mandatory and a default value are specified togeather, mandatory has no effect, since a value for the parameter is already specified (the default value).")
+                            test_description('parameter', par, par_dict.get('description', None))
 
         if metadata.get('item_attributes', None) != None:
             if metadata.get('item_attributes', None) != 'NONE':
