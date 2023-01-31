@@ -3,13 +3,13 @@ plugin:
     # Global plugin attributes
     type: unknown                   # plugin type (gateway, interface, protocol, system, web)
     description:
-        de: 'Beispiel Plugin für SmartHomeNG v1.5 und höher'
-        en: 'Sample plugin for SmartHomeNG v1.5 and up'
+        de: 'Beispiel Plugin für SmartHomeNG v1.8 und höher'
+        en: 'Sample plugin for SmartHomeNG v1.8 and up'
     maintainer: <autor>
 #    tester:                         # Who tests this plugin?
     state: develop                  # change to ready when done with development
 #    keywords: iot xyz
-#    documentation: https://github.com/smarthomeNG/smarthome/wiki/CLI-Plugin        # url of documentation (wiki) page
+#    documentation: ''              # An url to optional plugin doc - NOT the url to user_doc!!!
 #    support: https://knx-user-forum.de/forum/supportforen/smarthome-py
 
     version: 1.0.0                  # Plugin version (must match the version specified in __init__.py)
