@@ -32,6 +32,7 @@ import socket
 from threading import Lock, Thread
 from contextlib import contextmanager
 import json
+from inspect import isclass
 
 from lib.network import Tcp_client
 
@@ -252,7 +253,7 @@ class SDPConnection(object):
             # class not set
             if not c_cls:
 
-                if PLUGIN_ATTR_CONNECTION in params and issubclass(params[PLUGIN_ATTR_CONNECTION], SDPConnection):
+                if PLUGIN_ATTR_CONNECTION in params and isclass(params[PLUGIN_ATTR_CONNECTION]) and issubclass(params[PLUGIN_ATTR_CONNECTION], SDPConnection):
                     c_cls = params[PLUGIN_ATTR_CONNECTION]
                     c_classname = c_cls.__name__
 
@@ -307,7 +308,7 @@ class SDPConnection(object):
         # class not set
         if not proto_cls:
 
-            if PLUGIN_ATTR_PROTOCOL in params and issubclass(params[PLUGIN_ATTR_PROTOCOL], SDPConnection):
+            if PLUGIN_ATTR_PROTOCOL in params and isclass(params[PLUGIN_ATTR_PROTOCOL]) and issubclass(params[PLUGIN_ATTR_PROTOCOL], SDPConnection):
                 proto_cls = params[PLUGIN_ATTR_CONNECTION]
                 proto_classname = proto_cls.__name__
 

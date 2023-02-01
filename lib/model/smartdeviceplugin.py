@@ -33,6 +33,7 @@ import json
 from copy import deepcopy
 from ast import literal_eval
 from collections import OrderedDict
+from inspect import isclass
 
 from lib.model.smartplugin import SmartPlugin
 
@@ -867,7 +868,7 @@ class SmartDevicePlugin(SmartPlugin):
         if not conn__cls:
             conn__cls = self._parameters.get(PLUGIN_ATTR_CONNECTION)
 
-        if not conn__cls or not issubclass(conn__cls, SDPConnection):
+        if not conn__cls or (isclass(conn__cls) and not issubclass(conn__cls, SDPConnection)):
             conn__cls = SDPConnection._get_connection_class(conn__type, conn__classname, conn__cls, **self._parameters)
 
         if not conn__cls:
@@ -878,7 +879,7 @@ class SmartDevicePlugin(SmartPlugin):
             if not proto_cls:
                 proto_cls = self._parameters.get(PLUGIN_ATTR_PROTOCOL)
 
-            if not proto_cls or not issubclass(proto_cls, SDPConnection):
+            if not proto_cls or (isclass(proto_cls) and not issubclass(proto_cls, SDPConnection)):
                 proto_cls = SDPConnection._get_protocol_class(proto_cls, proto_classname, proto_type, **self._parameters)
 
             if not proto_cls:
