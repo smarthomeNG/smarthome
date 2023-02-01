@@ -115,6 +115,7 @@
       "port": "2323",
       "update": "True",
       "hashed_password": "none",
+      "webif_pagelength": "25",
       "_meta": {
         "plugin": {
           "type": "system",
