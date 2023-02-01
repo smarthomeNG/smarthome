@@ -257,20 +257,13 @@ class Metadata():
 
         result = {}
 
-        # global plugin parameter 'webif_pagelength'
-        result['webif_pagelength'] = {}
-        result['webif_pagelength']['type'] = 'int'
-        result['webif_pagelength']['valid_list'] = [-1, 0, 25, 50, 100]
-        result['webif_pagelength']['description'] = {}
-        #result['webif_pagelength']['description']['de'] = 'Anzahl an Tabellen-Zeilen, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.\n0 = automatisch (so viele in das Browser-Fenster passen) , -1 = alle\n(Wirkt sich nur auf Web Interfaces mit sortierbaren Tabellen aus)'
-        #result['webif_pagelength']['description']['en'] = 'Amount of table lines being listed in a web interface table per page by default.\n0 = automatic (as many as can be fitted into the browser window), -1 = all\n(Only affects web interfaces with sortable tables)'
-
-        #result['webif_pagelength']['description']['de'] = self._sh.modules.get_module('http')._metadata.meta['parameters']['webif_pagelength']['description'].get('de', '')
-        #result['webif_pagelength']['description']['en'] = self._sh.modules.get_module('http')._metadata.meta['parameters']['webif_pagelength']['description'].get('en', '')
-        #result['webif_pagelength']['description']['fr'] = self._sh.modules.get_module('http')._metadata.meta['parameters']['webif_pagelength']['description'].get('fr', '')
-
         if self._sh.modules.get_module('http') is not None:
             # only if http module is loaded:
+            # global plugin parameter 'webif_pagelength'
+            result['webif_pagelength'] = {}
+            result['webif_pagelength']['type'] = 'int'
+            result['webif_pagelength']['valid_list'] = [-1, 0, 25, 50, 100]
+            result['webif_pagelength']['description'] = {}
             # get description of webif_pagelength-parameter in all available laguages
             result['webif_pagelength']['description'] = self._sh.modules.get_module('http')._metadata.meta['parameters']['webif_pagelength'].get('description', {'en': 'No description found!'})
             try:

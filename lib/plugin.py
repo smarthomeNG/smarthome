@@ -247,11 +247,11 @@ class Plugins():
         """
         args = {}
         for arg in plg_conf:
-#            if arg != KEY_CLASS_NAME and arg != KEY_CLASS_PATH and arg != KEY_INSTANCE:
-            if arg != KEY_CLASS_NAME and arg != KEY_CLASS_PATH and arg != KEY_INSTANCE and arg != KEY_WEBIF_PAGELENGTH:
+            # ignore class_name, class_path and instance - those parameters ar not handed to the PluginWrapper
+            if arg != KEY_CLASS_NAME and arg != KEY_CLASS_PATH and arg != KEY_INSTANCE:
                 value = plg_conf[arg]
                 if isinstance(value, str):
-                    value = "'{0}'".format(value)
+                    value = f"'{value}'"
                 args[arg] = value
         return args
 
@@ -540,7 +540,7 @@ class PluginWrapper(threading.Thread):
         """
         Initialization of wrapper class
         """
-        logger.debug('PluginWrapper __init__: Section {}, classname {}, classpath {}'.format( name, classname, classpath ))
+        logger.debug("PluginWrapper __init__: Section {name}, classname {classname}, classpath {classpath}")
         threading.Thread.__init__(self, name=name)
 
         self._sh = smarthome
