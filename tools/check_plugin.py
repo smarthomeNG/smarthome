@@ -28,7 +28,7 @@ import plugin_metadata_checker as mc
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(os.path.basename(__file__))))
 
-VERSION = '0.6.1'
+VERSION = '0.6.2'
 
 sum_errors = 0
 sum_warnings = 0
@@ -291,8 +291,6 @@ def check_code(plg, quiet=False):
             if line.lower().find('sample plugin') > -1 and line.startswith('#'):
                 mc.disp_hint("The description of the sample plugin in the comments was not replaced", "Replace the description with a meaningful text")
                 break
-        else:
-            mc.disp_warning("Webinterface is not beeing initialized")
 
         if not quiet:
             mc.print_errorcount('Code', mc.errors, mc.warnings, mc.hints)
