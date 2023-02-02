@@ -195,7 +195,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         self.logger.debug(f'device initialized from {self.__class__.__name__}')
 
-    def deinit(self, items=[]):
+    def deinit(self, items=None):
         """
         If the plugin needs special code to be executed before it is unloaded,
         this method has to be overwritten for de-initialization
@@ -209,7 +209,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         # remove items from internal lists
         if not items:
-            items = self.get_items()
+            items = self.get_item_list()
         elif not isinstance(items, list):
             items = [items]
 
@@ -227,7 +227,7 @@ class SmartDevicePlugin(SmartPlugin):
                 self._items_read_all.remove(item.path())
             except Exception:
                 pass
-            cmd = self._item_dict[item]['device_command']
+            cmd = self._plg_item_dict[item]['device_command']
             if cmd:
                 try:
                     self._commands_read[cmd].remove(item)
@@ -623,6 +623,7 @@ class SmartDevicePlugin(SmartPlugin):
         :type command: str
         """
         data = self._transform_received_data(data)
+        commands = None
         if command is not None:
             self.logger.debug(f'received data "{data}" from {by} for command {command}')
         else:
@@ -868,7 +869,7 @@ class SmartDevicePlugin(SmartPlugin):
         if not conn__cls:
             conn__cls = self._parameters.get(PLUGIN_ATTR_CONNECTION)
 
-        if not conn__cls or (isclass(conn__cls) and not issubclass(conn__cls, SDPConnection)):
+        if not conn__cls or not (isclass(conn__cls) and issubclass(conn__cls, SDPConnection)):
             conn__cls = SDPConnection._get_connection_class(conn__type, conn__classname, conn__cls, **self._parameters)
 
         if not conn__cls:
@@ -878,9 +879,14 @@ class SmartDevicePlugin(SmartPlugin):
         if PLUGIN_ATTR_PROTOCOL in self._parameters:
             if not proto_cls:
                 proto_cls = self._parameters.get(PLUGIN_ATTR_PROTOCOL)
+#
+            print(f"sdp_get_connection - proto_cls: {proto_cls} is {type(proto_cls)}")
 
-            if not proto_cls or (isclass(proto_cls) and not issubclass(proto_cls, SDPConnection)):
-                proto_cls = SDPConnection._get_protocol_class(proto_cls, proto_classname, proto_type, **self._parameters)
+            if not proto_cls or not(isclass(proto_cls) and issubclass(proto_cls, SDPConnection)):
+                connection = SDPConnection(None, None, done=True)
+                proto_cls = connection._get_protocol_class(proto_cls, proto_classname, proto_type, **self._parameters)
+#
+            print(f"sdp_get_connection - proto_cls: {proto_cls} is {type(proto_cls)}")
 
             if not proto_cls:
                 return None
@@ -1136,7 +1142,7 @@ class SmartDevicePlugin(SmartPlugin):
 #
 ################################################################################
 
-class Standalone():
+class Standalone:
 
     def __init__(self, plugin_class, plugin_file):
 
@@ -1475,11 +1481,11 @@ class Standalone():
             if CMD_ATTR_ITEM_ATTRS in node:
                 self.find_read_group_triggers(node, node_name, parent, path, indent, gpath, gpathlist, cut_levels)
 
-    def removeItemsUndefCmd(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels=0):
+    def remove_items_undef_cmd(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels=0):
         if CMD_ATTR_ITEM_TYPE in node and path not in self.cmdlist:
             del parent[node_name]
 
-    def removeEmptyItems(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels=0):
+    def remove_empty_items(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels=0):
         if len(node) == 0:
             del parent[node_name]
 
@@ -1588,10 +1594,10 @@ class Standalone():
                     obj = {model: deepcopy(commands)}
 
                     # remove all items with model-invalid 'xx_command'
-                    self.walk(obj[model], model, obj, self.removeItemsUndefCmd, '', 0, model, [model], True, False)
+                    self.walk(obj[model], model, obj, self.remove_items_undef_cmd, '', 0, model, [model], True, False)
 
                     # remove all empty items from obj
-                    self.walk(obj[model], model, obj, self.removeEmptyItems, '', 0, model, [model], True, False)
+                    self.walk(obj[model], model, obj, self.remove_empty_items, '', 0, model, [model], True, False)
 
                     # create item tree
                     self.walk(obj[model], model, obj, self.create_item, model, 0, '', [], False, cut_levels=1)

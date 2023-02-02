@@ -295,7 +295,7 @@ class SDPConnection(object):
 
         return c_cls
 
-    def _get_protocol_class(self, proto_cls=None, proto_classname=None, proto_type=None, **params):
+    def _get_protocol_class(self, protocol_cls=None, protocol_classname=None, protocol_type=None, **params):
 
         if not params:
             params = self._params
@@ -305,41 +305,50 @@ class SDPConnection(object):
             self.logger.error('unable to get object handle of SDPProtocol module')
             return None
 
+        print(f"proto_cls is {protocol_cls}, type {type(protocol_cls)}")
         # class not set
-        if not proto_cls:
-
+        if not protocol_cls or not (isclass(protocol_cls) and issubclass(protocol_cls, SDPConnection)):
+#
+            print("1")
             if PLUGIN_ATTR_PROTOCOL in params and isclass(params[PLUGIN_ATTR_PROTOCOL]) and issubclass(params[PLUGIN_ATTR_PROTOCOL], SDPConnection):
-                proto_cls = params[PLUGIN_ATTR_CONNECTION]
-                proto_classname = proto_cls.__name__
+                print("1a")
+                protocol_cls = params[PLUGIN_ATTR_CONNECTION]
+                protocol_classname = protocol_cls.__name__
 
+            print("2")
             # classname not known
-            if not proto_classname:
+            if not protocol_classname:
 
+                print("2a")
                 if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] not in PROTOCOL_TYPES:
-                    proto_classname = params[PLUGIN_ATTR_CONNECTION]
-                    proto_type = ''
+                    protocol_classname = params[PLUGIN_ATTR_CONNECTION]
+                    protocol_type = ''
 
                 # wanted connection type not known
-                if not proto_type:
+                if not protocol_type:
 
+                    print("3")
                     if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] in PROTOCOL_TYPES:
-                        proto_type = params[PLUGIN_ATTR_CONNECTION]
+                        protocol_type = params[PLUGIN_ATTR_CONNECTION]
                     else:
-                        proto_type = PROTO_NULL
+                        protocol_type = PROTO_NULL
 
-                if proto_type not in PROTOCOL_TYPES:
-                    self.logger.error(f'protocol "{proto_type}" specified, but unknown and not class type or class name. Using default protocol')
-                    proto_type = PROTO_NULL
+                if protocol_type not in PROTOCOL_TYPES:
+                    print("4")
+                    self.logger.error(f'protocol "{protocol_type}" specified, but unknown and not class type or class name. Using default protocol')
+                    protocol_type = PROTO_NULL
 
-                proto_classname = 'SDPProtocol' + ''.join([tok.capitalize() for tok in proto_type.split('_')])
+                print("5")
+                protocol_classname = 'SDPProtocol' + ''.join([tok.capitalize() for tok in protocol_type.split('_')])
 
-            proto_cls = getattr(proto_module, proto_classname, None)
+            print("6")
+            protocol_cls = getattr(proto_module, protocol_classname, None)
 
-        if not proto_cls:
-            self.logger.error(f'protocol {self._parameters[PLUGIN_ATTR_PROTOCOL]} specified, but not loadable.')
+        if not protocol_cls:
+            self.logger.error(f'protocol {self._params[PLUGIN_ATTR_PROTOCOL]} specified, but not loadable.')
             return None
 
-        return proto_cls
+        return protocol_cls
 
 
 class SDPConnectionNetTcpRequest(SDPConnection):
