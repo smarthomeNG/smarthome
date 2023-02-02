@@ -32,7 +32,6 @@ import socket
 from threading import Lock, Thread
 from contextlib import contextmanager
 import json
-from inspect import isclass
 
 from lib.network import Tcp_client
 
@@ -238,114 +237,128 @@ class SDPConnection(object):
     def __str__(self):
         return self.__class__.__name__
 
-    def _get_connection_class(self, c_type=None, c_classname=None, c_cls=None, **params):
+    def _get_connection_class(self, connection_type=None, connection_classname=None, connection_cls=None, **params):
 
         if not params:
             params = self._params
 
-        conn_module = sys.modules.get('lib.model.sdp.connection', '')
-        if not conn_module:
+        connection_module = sys.modules.get('lib.model.sdp.connection', '')
+        if not connection_module:
             self.logger.error('unable to get object handle of SDPConnection module')
             return None
 
         try:
 
             # class not set
-            if not c_cls:
+            if not connection_cls:
 
-                if PLUGIN_ATTR_CONNECTION in params and isclass(params[PLUGIN_ATTR_CONNECTION]) and issubclass(params[PLUGIN_ATTR_CONNECTION], SDPConnection):
-                    c_cls = params[PLUGIN_ATTR_CONNECTION]
-                    c_classname = c_cls.__name__
+                # do we have a class type from parameters?
+                if PLUGIN_ATTR_CONNECTION in params and type(params[PLUGIN_ATTR_CONNECTION]) is type and issubclass(params[PLUGIN_ATTR_CONNECTION], SDPConnection):
 
-                # classname not known
-                if not c_classname:
+                    # directly assign class
+                    connection_cls = params[PLUGIN_ATTR_CONNECTION]
+                    connection_classname = connection_cls.__name__
 
-                    if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] not in CONNECTION_TYPES:
-                        c_classname = params[PLUGIN_ATTR_CONNECTION]
-                        c_type = 'manual'
+                else:
+                    # classname not known
+                    if not connection_classname:
 
-                    # wanted connection type not known
-                    if not c_type:
+                        # do we have an unknown connection type from parameters?
+                        if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] not in CONNECTION_TYPES:
 
-                        if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] in CONNECTION_TYPES:
-                            c_type = params[PLUGIN_ATTR_CONNECTION]
+                            # assume name of unknown class
+                            connection_classname = params[PLUGIN_ATTR_CONNECTION]
+                            connection_type = 'manual'
 
-                        elif PLUGIN_ATTR_NET_HOST in params and params[PLUGIN_ATTR_NET_HOST]:
+                        # wanted connection type not known yet
+                        if not connection_type:
 
-                            # no further information on network specifics, use basic HTTP TCP client
-                            c_type = CONN_NET_TCP_REQ
+                            # known connection type given in parameters?
+                            if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] in CONNECTION_TYPES:
 
-                        elif PLUGIN_ATTR_SERIAL_PORT in params and params[PLUGIN_ATTR_SERIAL_PORT]:
+                                # user given connection type
+                                connection_type = params[PLUGIN_ATTR_CONNECTION]
 
-                            # this seems to be a serial killer application
-                            c_type = CONN_SER_DIR
+                            # host given in parameters?
+                            elif PLUGIN_ATTR_NET_HOST in params and params[PLUGIN_ATTR_NET_HOST]:
 
-                        if not c_type:
-                            # if not preset and not identified, use "empty" connection, e.g. for testing
-                            # when physical device is not present
-                            c_type = CONN_NULL
+                                # no further information on network specifics, use basic HTTP TCP client
+                                connection_type = CONN_NET_TCP_REQ
 
-                    c_classname = 'SDPConnection' + ''.join([tok.capitalize() for tok in c_type.split('_')])
+                            # serial port given in parameters?
+                            elif PLUGIN_ATTR_SERIAL_PORT in params and params[PLUGIN_ATTR_SERIAL_PORT]:
 
-                c_cls = getattr(conn_module, c_classname, getattr(conn_module, 'SDPConnection'))
+                                # this seems to be a serial killer application
+                                connection_type = CONN_SER_DIR
+
+                            if not connection_type:
+                                # if not preset and not identified, use "empty" connection, e.g. for testing
+                                # when physical device is not present
+                                connection_type = CONN_NULL
+
+                        # build classname from type
+                        connection_classname = 'SDPConnection' + ''.join([tok.capitalize() for tok in connection_type.split('_')])
+
+                    # get class from classname -> only for predefined classes, not for custom plugin classes!
+                    connection_cls = getattr(connection_module, connection_classname, getattr(connection_module, 'SDPConnection'))
 
         except (TypeError, AttributeError):
-            self.logger.warning(f'could not identify wanted connection class from {conn_cls}, {conn_classname}, {conn_type}. Using default connection.')
-            conn_cls = SDPConnection
+            self.logger.warning(f'could not identify wanted connection class from {connection_cls}, {connection_classname}, {connection_type}. Using default connection.')
+            connection_cls = SDPConnection
 
-        return c_cls
+        return connection_cls
 
     def _get_protocol_class(self, protocol_cls=None, protocol_classname=None, protocol_type=None, **params):
 
         if not params:
             params = self._params
 
-        proto_module = sys.modules.get('lib.model.sdp.protocol', '')
-        if not proto_module:
+        protocol_module = sys.modules.get('lib.model.sdp.protocol', '')
+        if not protocol_module:
             self.logger.error('unable to get object handle of SDPProtocol module')
             return None
 
-        print(f"proto_cls is {protocol_cls}, type {type(protocol_cls)}")
         # class not set
-        if not protocol_cls or not (isclass(protocol_cls) and issubclass(protocol_cls, SDPConnection)):
-#
-            print("1")
-            if PLUGIN_ATTR_PROTOCOL in params and isclass(params[PLUGIN_ATTR_PROTOCOL]) and issubclass(params[PLUGIN_ATTR_PROTOCOL], SDPConnection):
-                print("1a")
-                protocol_cls = params[PLUGIN_ATTR_CONNECTION]
+        if not protocol_cls:
+
+            # do we have a class type from params?
+            if PLUGIN_ATTR_PROTOCOL in params and type(params[PLUGIN_ATTR_PROTOCOL]) is type and issubclass(params[PLUGIN_ATTR_PROTOCOL], SDPConnection):
+
+                # directly use given class
+                protocol_cls = params[PLUGIN_ATTR_PROTOCOL]
                 protocol_classname = protocol_cls.__name__
 
-            print("2")
-            # classname not known
-            if not protocol_classname:
+            else:
+                # classname not known
+                if not protocol_classname:
 
-                print("2a")
-                if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] not in PROTOCOL_TYPES:
-                    protocol_classname = params[PLUGIN_ATTR_CONNECTION]
-                    protocol_type = ''
+                    # do we have a protocol name
+                    if PLUGIN_ATTR_PROTOCOL in params and isinstance(params[PLUGIN_ATTR_PROTOCOL], str):
+                        if params[PLUGIN_ATTR_PROTOCOL] not in PROTOCOL_TYPES:
+                            protocol_classname = params[PLUGIN_ATTR_PROTOCOL]
+                            protocol_type = 'manual'
 
-                # wanted connection type not known
-                if not protocol_type:
+                    # wanted connection type not known
+                    if not protocol_type:
 
-                    print("3")
-                    if PLUGIN_ATTR_CONNECTION in params and params[PLUGIN_ATTR_CONNECTION] in PROTOCOL_TYPES:
-                        protocol_type = params[PLUGIN_ATTR_CONNECTION]
-                    else:
+                        if PLUGIN_ATTR_PROTOCOL in params and params[PLUGIN_ATTR_PROTOCOL] in PROTOCOL_TYPES:
+                            protocol_type = params[PLUGIN_ATTR_PROTOCOL]
+                        else:
+                            protocol_type = PROTO_NULL
+
+                    # got unknown protocol type
+                    if protocol_type not in PROTOCOL_TYPES:
+                        self.logger.error(f'protocol "{protocol_type}" specified, but unknown and not class type or class name. Using default protocol')
                         protocol_type = PROTO_NULL
 
-                if protocol_type not in PROTOCOL_TYPES:
-                    print("4")
-                    self.logger.error(f'protocol "{protocol_type}" specified, but unknown and not class type or class name. Using default protocol')
-                    protocol_type = PROTO_NULL
+                    # get classname from type
+                    protocol_classname = 'SDPProtocol' + ''.join([tok.capitalize() for tok in protocol_type.split('_')])
 
-                print("5")
-                protocol_classname = 'SDPProtocol' + ''.join([tok.capitalize() for tok in protocol_type.split('_')])
-
-            print("6")
-            protocol_cls = getattr(proto_module, protocol_classname, None)
+                # get class from classname
+                protocol_cls = getattr(protocol_module, protocol_classname, None)
 
         if not protocol_cls:
-            self.logger.error(f'protocol {self._params[PLUGIN_ATTR_PROTOCOL]} specified, but not loadable.')
+            self.logger.error(f'protocol {self._parameters[PLUGIN_ATTR_PROTOCOL]} specified, but not loadable.')
             return None
 
         return protocol_cls
