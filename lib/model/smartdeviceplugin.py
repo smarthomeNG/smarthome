@@ -37,7 +37,6 @@ from collections import OrderedDict
 from lib.model.smartplugin import SmartPlugin
 
 import lib.shyaml as shyaml
-from lib.module import Modules
 from lib.plugin import Plugins
 
 from lib.model.sdp.globals import (
@@ -61,6 +60,7 @@ from lib.model.sdp.connection import SDPConnection
 from lib.model.sdp.protocol import SDPProtocol  # noqa
 
 
+# noinspection PyUnresolvedReferences
 class SmartDevicePlugin(SmartPlugin):
     """
     The class SmartDevicePlugin implements the base class of smart-plugins
@@ -91,20 +91,6 @@ class SmartDevicePlugin(SmartPlugin):
 
         # set item properties
 
-# TODO: include self._item_dict from new SmartPlugin
-#       as far as I can see at the moment, we do not
-#       use a dict/list of "associated items", only
-#       compiled lists of "special" items which need
-#       to exist in addition for quicker lookup and
-#       not needing to iterate over item_dict every
-#       time, e.g. self._items_write:
-#
-# self._items_write = {i.key(): i['device_command'] for i in self._item_dict where i['config_data']['write']}
-#       
-#       so for now, I don't see much reduction potential here
-#       nevertheless, check all (!) the code for ways to reduce overhead
-#       and revert to directly using self._item_dict...
-
         # contains all items with write command
         # <item_id>: <command>
         self._items_write = {}
@@ -114,7 +100,7 @@ class SmartDevicePlugin(SmartPlugin):
         # contains items which trigger 'read group foo'
         # <item_id>: <foo>
         self._items_read_grp = {}
-# replace with self._item_lookup_dict?
+
         # contains all commands with read command
         # <command>: [<item_object>, <item_object>...]
         self._commands_read = {}
@@ -161,6 +147,8 @@ class SmartDevicePlugin(SmartPlugin):
         # keep custom123 values
         self._custom_values = {1: [], 2: [], 3: []}
 
+        self._command_class = None
+        
         # by default, discard data not assignable to known command
         self._discard_unknown_command = True
         # if not discarding data, set this command instead
@@ -208,7 +196,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         self.logger.debug(f'device initialized from {self.__class__.__name__}')
 
-    def deinit(self, items=[]):
+    def deinit(self, items=None):
         """
         If the plugin needs special code to be executed before it is unloaded,
         this method has to be overwritten for de-initialization
@@ -222,7 +210,7 @@ class SmartDevicePlugin(SmartPlugin):
 
         # remove items from internal lists
         if not items:
-            items = self.get_items()
+            items = self.get_item_list()
         elif not isinstance(items, list):
             items = [items]
 
@@ -240,7 +228,7 @@ class SmartDevicePlugin(SmartPlugin):
                 self._items_read_all.remove(item.path())
             except Exception:
                 pass
-            cmd = self._item_dict[item]['device_command']
+            cmd = self._plg_item_dict[item]['device_command']
             if cmd:
                 try:
                     self._commands_read[cmd].remove(item)
@@ -636,6 +624,7 @@ class SmartDevicePlugin(SmartPlugin):
         :type command: str
         """
         data = self._transform_received_data(data)
+        commands = None
         if command is not None:
             self.logger.debug(f'received data "{data}" from {by} for command {command}')
         else:
@@ -699,11 +688,11 @@ class SmartDevicePlugin(SmartPlugin):
             items += self._commands_pseudo.get(command, [])
 
             if not items:
-                self.logger.warning(f'Command {command} yielded value {value}, not assigned to any item, discarding data')
+                self.logger.warning(f'Command {command} yielded value {value} by {by}, not assigned to any item, discarding data')
                 return
 
             for item in items:
-                self.logger.debug(f'Command {command} wants to update item {item.id()} with value {value}')
+                self.logger.debug(f'Command {command} wants to update item {item.id()} with value {value} received from {by}')
                 item(value, self.get_shortname())
 
     def read_all_commands(self, group=''):
@@ -1094,48 +1083,6 @@ class SmartDevicePlugin(SmartPlugin):
                         self._item_attrs[attr] = key
                         break
 
-#
-        print(f'W 0000 000000 {self.get_fullname()}: {keys}\nW 0000 000000 {self._item_attrs}')
-
-    def init_webinterface(self, WebInterface=None):
-        """"
-        Initialize the web interface for this plugin
-
-        This method is only needed if the plugin is implementing a web interface
-        """
-        if WebInterface is None:
-            return False
-
-        try:
-            # handle running in a core version that does not support modules
-            self.mod_http = Modules.get_instance().get_module('http')
-        except Exception:
-            self.mod_http = None
-        if self.mod_http is None:
-            self.logger.warning("Module 'http' not loaded. Not initializing the web interface for the plugin")
-            return False
-
-        # set application configuration for cherrypy
-        webif_dir = self.path_join(self.get_plugin_dir(), 'webif')
-        config = {
-            '/': {
-                'tools.staticdir.root': webif_dir,
-            },
-            '/static': {
-                'tools.staticdir.on': True,
-                'tools.staticdir.dir': 'static'
-            }
-        }
-
-        # Register the web interface as a cherrypy app
-        self.mod_http.register_webif(WebInterface(webif_dir, self),
-                                     self.get_shortname(),
-                                     config,
-                                     self.get_classname(), self.get_instance_name(),
-                                     description='')
-
-        return True
-
 
 ################################################################################
 #
@@ -1145,11 +1092,14 @@ class SmartDevicePlugin(SmartPlugin):
 #
 ################################################################################
 
-class Standalone():
+class Standalone:
 
     def __init__(self, plugin_class, plugin_file):
 
         self.item_tree = {}
+        self.item_templates = {}
+        self.yaml = None
+        self.cmdlist = []
 
         pfitems = plugin_file.split('/')
 
@@ -1484,11 +1434,11 @@ class Standalone():
             if CMD_ATTR_ITEM_ATTRS in node:
                 self.find_read_group_triggers(node, node_name, parent, path, indent, gpath, gpathlist, cut_levels)
 
-    def removeItemsUndefCmd(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels=0):
+    def remove_items_undef_cmd(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels=0):
         if CMD_ATTR_ITEM_TYPE in node and path not in self.cmdlist:
             del parent[node_name]
 
-    def removeEmptyItems(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels=0):
+    def remove_empty_items(self, node, node_name, parent, path, indent, gpath, gpathlist, cut_levels=0):
         if len(node) == 0:
             del parent[node_name]
 
@@ -1597,10 +1547,10 @@ class Standalone():
                     obj = {model: deepcopy(commands)}
 
                     # remove all items with model-invalid 'xx_command'
-                    self.walk(obj[model], model, obj, self.removeItemsUndefCmd, '', 0, model, [model], True, False)
+                    self.walk(obj[model], model, obj, self.remove_items_undef_cmd, '', 0, model, [model], True, False)
 
                     # remove all empty items from obj
-                    self.walk(obj[model], model, obj, self.removeEmptyItems, '', 0, model, [model], True, False)
+                    self.walk(obj[model], model, obj, self.remove_empty_items, '', 0, model, [model], True, False)
 
                     # create item tree
                     self.walk(obj[model], model, obj, self.create_item, model, 0, '', [], False, cut_levels=1)

@@ -240,7 +240,7 @@ class SDPCommandStr(SDPCommand):
         data_dict = {}
         data_dict['payload'] = cmd_str
         for k in self._plugin_params.keys():
-            data_dict[k] = self._parse_tree(self.params[k], data, **kwargs)
+            data_dict[k] = self._parse_tree(self._plugin_params[k], data, **kwargs)
 
         return data_dict
 
@@ -390,6 +390,8 @@ class SDPCommandParseStr(SDPCommandStr):
         if isinstance(data, (bytes, bytearray)):
             data = data.decode('utf-8')
 
+        value = None
+
         self.logger.debug(f'parse_str command got data {data} of type {type(data)}')
 
         if self.reply_pattern and isinstance(data, str):
@@ -494,7 +496,7 @@ class SDPCommandJSON(SDPCommand):
         if not hasattr(self, CMD_ATTR_PARAMS):
             return None
 
-        params = deepcopy(self.params)
+        params = deepcopy(self._plugin_params)
 
         if isinstance(params, list):
 
@@ -538,8 +540,8 @@ class SDPCommandViessmann(SDPCommand):
         self._mult = 0
         self._signed = False
         for attr in ('len', 'mult', 'signed'):
-            if attr in self.params:
-                setattr(self, '_' + attr, self.params[attr])
+            if attr in self._plugin_params:
+                setattr(self, '_' + attr, self._plugin_params[attr])
 
     def get_send_data(self, data, **kwargs):
 
@@ -572,8 +574,8 @@ class SDPCommandViessmann(SDPCommand):
         if not hasattr(self, CMD_ATTR_PARAMS):
             return None
 
-        for key in self.params:
-            val = self.params[key]
+        for key in self._plugin_params:
+            val = self._plugin_params[key]
             if val == 'VAL':
                 val = data
             elif isinstance(val, tuple):

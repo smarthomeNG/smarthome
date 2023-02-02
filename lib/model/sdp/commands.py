@@ -70,7 +70,7 @@ class SDPCommands(object):
         self._read_dt_classes()
 
         if not self._read_commands():
-            return None
+            return
 
         if self._commands is not None:
             self.logger.debug(f'{len(self._commands)} commands initialized')
@@ -223,7 +223,7 @@ class SDPCommands(object):
             if func:
                 func(node, node_name, parent=parent)
 
-        def moveItems(node, node_name, parent):
+        def move_items(node, node_name, parent):
             # make sure we can move "upwards"
             if parent:
                 # if node[CMD_ATTR_OPCODE] is not present, node is not a command
@@ -233,14 +233,14 @@ class SDPCommands(object):
                         parent[node_name + COMMAND_SEP + child] = node[child]
                         del node[child]
 
-        def removeEmptyItems(node, node_name, parent):
+        def remove_empty_items(node, node_name, parent):
             if len(node) == 0:
                 del parent[node_name]
 
         # flatten cmds
-        walk(cmds, '', None, moveItems)
+        walk(cmds, '', None, move_items)
         # remove empty dicts (old 'level names')
-        walk(cmds, '', None, removeEmptyItems)
+        walk(cmds, '', None, remove_empty_items)
 
     def _get_cmdlist(self, cmds, cmdlist):
         # now get command list, if not already provided
@@ -274,7 +274,6 @@ class SDPCommands(object):
             raise CommandsError('importing external module commands.py failed')
         except Exception as e:
             raise CommandsError(f'importing commands from external module commands.py failed. Error was: "{e}"')
-            return False
 
         # param is read by yaml parser which converts None to "None"...
         if self._model == 'None':
@@ -292,7 +291,7 @@ class SDPCommands(object):
                     else:
                         raise CommandsError(f'configured model {self._model} not found in commands.py models {cmd_module.models.keys()}')
                 else:
-                    raise CommandsError(f'model configuration for device type {self._device_type} invalid, "models" is not a dict')
+                    raise CommandsError('model configuration invalid, "models" is not a dict')
         if hasattr(cmd_module, 'commands') and isinstance(cmd_module.commands, dict) and not SDP_standalone:
             cmds = cmd_module.commands
             cmdlist = None
@@ -333,7 +332,7 @@ class SDPCommands(object):
 
         return True
 
-    def _parse_commands(self, commands, cmds=[]):
+    def _parse_commands(self, commands, cmds=None):
         """
         This is a reference implementation for parsing the commands dict imported
         from the commands.py file in the device subdirectory.
@@ -341,6 +340,8 @@ class SDPCommands(object):
         own file format.
         """
         custom_patterns = self._params.get('custom_patterns')
+        if not cmds:
+            cmds = []
 
         for cmd in cmds:
             # we found a "section" entry for which initial or cyclic read is specified. Just skip it...

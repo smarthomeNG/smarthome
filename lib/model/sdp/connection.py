@@ -121,7 +121,7 @@ class SDPConnection(object):
         """
         Send data, possibly return response
 
-        :param data: dict with raw data and possible additional parameters to send
+        :param data_dict: dict with raw data and possible additional parameters to send
         :type data_dict: dict
         :return: raw response data if applicable, None otherwise. Errors need to raise exceptions
         """
@@ -358,7 +358,7 @@ class SDPConnection(object):
                 protocol_cls = getattr(protocol_module, protocol_classname, None)
 
         if not protocol_cls:
-            self.logger.error(f'protocol {self._parameters[PLUGIN_ATTR_PROTOCOL]} specified, but not loadable.')
+            self.logger.error(f'protocol {params[PLUGIN_ATTR_PROTOCOL]} specified, but not loadable.')
             return None
 
         return protocol_cls
@@ -714,7 +714,7 @@ class SDPConnectionSerial(SDPConnection):
             return None
         else:
             res = self._read_bytes(rlen)
-            if not self.params[PLUGIN_ATTR_CONN_BINARY]:
+            if not self._params[PLUGIN_ATTR_CONN_BINARY]:
                 res = str(res, 'utf-8').strip()
 
             if self._data_received_callback:
@@ -872,6 +872,7 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
         """ thread worker to handle receiving """
         __buffer = b''
 
+        msg = None
         self._is_receiving = True
         # try to find possible "hidden" errors
         try:
