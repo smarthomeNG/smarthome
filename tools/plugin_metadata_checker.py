@@ -32,7 +32,7 @@ The result is printed to stdout
 import os
 import argparse
 
-VERSION = '1.8.1'
+VERSION = '1.8.0'
 
 start_dir = os.getcwd()
 
@@ -76,12 +76,9 @@ def get_local_pluginlist(pluginsdirectory=None):
         if entry[0] in ['.' ,'_']:
             plglist.remove(entry)
     for entry in plglist:
-        if entry.lower().endswith('.md') or entry.lower().endswith('.rst'):
+        if entry[0] in ['.' ,'_']:
             plglist.remove(entry)
-    #for entry in plglist:
-    #    if entry[0] in ['.' ,'_']:
-    #        plglist.remove(entry)
-    return sorted(plglist)
+    return plglist
 
 
 def get_plugintype(plgName):
@@ -629,7 +626,7 @@ def print_errorcount(checkname, errors, warnings, hints):
     print(disp_str)
 
 
-def check_metadata(plg, with_description, check_quiet=False, only_inc=False, list_classic=False, pluginsdirectory=None, suppress_summery=False):
+def check_metadata(plg, with_description, check_quiet=False, only_inc=False, list_classic=False, pluginsdirectory=None):
 
     global errors, warnings, hints, quiet
     quiet = check_quiet
@@ -655,8 +652,7 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
 
     # Checking global metadata
     if metadata.get('plugin', None) == None:
-        disp_error("No global metadata defined", "Make sure to create a section 'plugin' and fill it with the necessary entries", "Take a look at the plugin development documentation of SmartHomeNG")
-        return
+        disp_error("No global metadata defined", "Make sure to create a section 'plugin' and fill it with the necessary entries", "Take a look at https://www.smarthomeng.de/developer/development_plugin/plugin_metadata.html")
     else:
         if metadata['plugin'].get('version', None) == None:
             disp_error('No version number given', "Add 'version:' to the plugin section")
@@ -788,12 +784,11 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
         else:
             res = 'TO DOs'
         if check_quiet:
-            if not suppress_summery:
-                if not(only_inc) or (only_inc and (errors!=0 or warnings!=0 or hints!=0 or state == '-')):
-                    if state == 'qa-passed':
-                        state = 'qa-pass'
-                    summary = "{:<8.8} {:<7.7} {:<5.5} {:<8.8} {:<7.7} {}".format(res, state, plg_type, str(errors), str(warnings), str(hints))
-                    print('{plugin:<14.14} {summary:<60.60}'.format(plugin=plg, summary=summary))
+            if not(only_inc) or (only_inc and (errors!=0 or warnings!=0 or hints!=0 or state == '-')):
+                if state == 'qa-passed':
+                    state = 'qa-pass'
+                summary = "{:<8.8} {:<7.7} {:<5.5} {:<8.8} {:<7.7} {}".format(res, state, plg_type, str(errors), str(warnings), str(hints))
+                print('{plugin:<14.14} {summary:<60.60}'.format(plugin=plg, summary=summary))
         else:
             if errors == 0 and warnings == 0 and hints == 0:
                 print_errorcount('Metadata is complete', errors, warnings, hints)
@@ -917,7 +912,7 @@ def check_metadata_of_plugin(plg, quiet=False):
 
     os.chdir(pluginabsdirectory)
 
-    check_metadata(plg, False, check_quiet=quiet, suppress_summery=quiet)
+    check_metadata(plg, quiet)
     return
 
 
