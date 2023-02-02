@@ -854,7 +854,7 @@ class SmartDevicePlugin(SmartPlugin):
             self.logger.debug(f'received custom token {res[0]}, not in list of known tokens {self._custom_values[self.custom_commands]}')
             return None
 
-    def _get_connection(self, conn_type=None, conn_classname=None, conn_cls=None, proto_type=None, proto_classname=None, proto_cls=None, name=None, **params):
+    def _get_connection(self, conn_type=None, conn_classname=None, conn_cls=None, proto_type=None, proto_classname=None, proto_cls=None, name=None):
         """
         return connection object.
 
@@ -878,16 +878,16 @@ class SmartDevicePlugin(SmartPlugin):
             self._parameters[PLUGIN_ATTR_CB_ON_CONNECT] = self.on_connect
             self._parameters[PLUGIN_ATTR_CB_ON_DISCONNECT] = self.on_disconnect
 
-        self._params = self._parameters
+        params = self._parameters.copy()
 
-        conn_cls = SDPConnection._get_connection_class(self)
+        conn_cls = SDPConnection._get_connection_class(self, conn_cls, conn_classname, conn_type, **params)
         if not conn_cls:
             return None
 
         # if protocol is specified, find second class
         if PLUGIN_ATTR_PROTOCOL in self._parameters:
 
-            proto_cls = SDPConnection._get_protocol_class(self)
+            proto_cls = SDPConnection._get_protocol_class(self, proto_cls, proto_classname, proto_type, **params)
             if not proto_cls:
                 return None
 
