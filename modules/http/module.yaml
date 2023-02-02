@@ -165,14 +165,17 @@ parameters:
           - 50
           - 100
         description:
-            de: 'Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
-                 0 = automatisch, -1 = alle'
-            en: 'Amount of items being listed in a web interface table per page by default.
-                 0 = automatic, -1 = all'
+            de: 'Anzahl an Tabellen-Zeilen, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
+                 0 = automatisch (so viele in das Browser-Fenster passen) , -1 = alle
+                 (Wirkt sich nur auf Web Interfaces mit sortierbaren Tabellen aus)'
+            en: 'Amount of table lines being listed in a web interface table per page by default.
+                 0 = automatic (as many as can be fitted into the browser window), -1 = all
+                 (Only affects web interfaces with sortable tables)'
         description_long:
-            de: 'Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.\n
+            de: 'Anzahl an Tabellen-Zeilen, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.\n
                  Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.\n
                  Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.'
-            en: 'Amount of items being listed in a web interface table per page by default.\n
+            en: 'Amount of table lines being listed in a web interface table per page by default.\n
                  0 adjusts the table height automatically based on the height of the browser windows.\n
+   
                  -1 shows all table entries on one page.'

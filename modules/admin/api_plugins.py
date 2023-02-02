@@ -231,7 +231,6 @@ class PluginsConfigController(RESTResource):
         # get path to plugin configuration file, withou extension
         _conf = lib.config.parse_basename(os.path.splitext(config_filename)[0], configtype='plugin')
 
-
         for confplg in _conf:
             plg = _conf[confplg].get('plugin_name', '?')
             if plg == '?':

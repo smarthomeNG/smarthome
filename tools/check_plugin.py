@@ -22,35 +22,40 @@
 #########################################################################
 
 import os
-import sys
 import argparse
 
 import plugin_metadata_checker as mc
 
-TOOLBASE = os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2])
-os.chdir(TOOLBASE)
-os.chdir('..')
-BASE = os.getcwd()
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(os.path.basename(__file__))))
 
-sys.path.insert(0, BASE)
-sys.path.insert(0, '..')
-sys.path.insert(0, '../lib')
+VERSION = '0.6.2'
 
-VERSION = '0.5.1'
+sum_errors = 0
+sum_warnings = 0
+sum_hints = 0
+total_errors = 0
+total_warnings = 0
+total_hints = 0
 
 
-def check_metadata(plg):
+def check_metadata(plg, quiet=False):
     """
     Check metadata for the selected plugin
 
     :param plg: plugin name
     :type plg: str
     """
+    mc.check_metadata_of_plugin(plg, quiet=quiet)
+    #mc.print_errorcount('-> Metadata', mc.errors, mc.warnings, mc.hints)
+
     global sum_errors, sum_warnings, sum_hints
-    mc.check_metadata_of_plugin(plg)
     sum_errors = mc.errors
     sum_warnings = mc.warnings
     sum_hints = mc.hints
+    global total_errors, total_warnings, total_hints
+    total_errors += mc.errors
+    total_warnings += mc.warnings
+    total_hints += mc.hints
     return
 
 
@@ -152,22 +157,22 @@ def check_documentation_logo(lines):
         mc.disp_warning(f"No plugin logo has been found in the directory 'webif/static/img'")
 
 
-def check_documentation(plg):
+def check_documentation(plg, quiet=False):
     """
     Check documentation for the selected plugin
 
     :param plg: plugin name
     :type plg: str
     """
-    global sum_errors, sum_warnings, sum_hints
     mc.errors = 0
     mc.warnings = 0
     mc.hints = 0
 
     doc_filename = 'user_doc.rst'
-    print()
-    print(f"*** Checking documentation '{doc_filename}' of plugin '{plg}':")
-    print()
+    if not quiet:
+        print()
+        print(f"*** Checking documentation '{doc_filename}' of plugin '{plg}':")
+        print()
 
     if not os.path.isfile(doc_filename):
         mc.disp_warning(f"No documentation file '{doc_filename}'",
@@ -193,8 +198,7 @@ def check_documentation(plg):
                     break
                 if line.find('.. index:: Plugins; '+plg) == 0:
                     index1_line = lineno
-                if line == '.. index:: '+plg or line.find('.. index:: '+plg+' ') == 0:
-
+                if line == '.. index:: '+plg or line.find('.. index:: '+plg+' ') == 0 or line.find('.. index:: '+plg+';') == 0:
                     index2_line = lineno
             if index1_line is None or index2_line is None:
                 mc.disp_warning(f"No global index entries found for the documentation", "You should at least include two lines with index statements before the title of the documentation.", f"The index statements should be '.. index:: Plugins; {plg}' and '.. index:: {plg}'")
@@ -204,10 +208,18 @@ def check_documentation(plg):
                 if not 'Web Interface' in section_titles.keys():
                     mc.disp_warning(f"No section 'Web Interface' with the documentation for the web interface of the plugin found.", "You should document, what the web interface of the plugin does and include pictures as an example.")
 
-    mc.print_errorcount('Documentation', mc.errors, mc.warnings, mc.hints)
+    if not quiet:
+        mc.print_errorcount('Documentation', mc.errors, mc.warnings, mc.hints)
+
+    global sum_errors, sum_warnings, sum_hints
     sum_errors += mc.errors
     sum_warnings += mc.warnings
     sum_hints += mc.hints
+    global total_errors, total_warnings, total_hints
+    total_errors += mc.errors
+    total_warnings += mc.warnings
+    total_hints += mc.hints
+
     return
 
 
@@ -251,20 +263,19 @@ def check_code_webinterface(lines):
         mc.disp_hint("The code of the webinterface is not seperated into a different file", "You should consider to seperate the code the webinterface into the subfolder 'webif'. Take a look at the sample plugin in the ../dev folder.")
 
 
-def check_code(plg):
-    global sum_errors, sum_warnings, sum_hints
+def check_code(plg, quiet=False):
     mc.errors = 0
     mc.warnings = 0
     mc.hints = 0
 
     code_filename = '__init__.py'
-    print()
-    print(f"*** Checking python code of plugin '{plg}' ({code_filename}):")
-    print()
+    if not quiet:
+        print()
+        print(f"*** Checking python code of plugin '{plg}' ({code_filename}):")
+        print()
 
     if not os.path.isfile(code_filename):
-        mc.disp_warning(f"No code ('{code_filename}') found for the plugin '{plg}'", "Aborting code check")
-        return
+        mc.disp_error(f"No code ('{code_filename}') found for the plugin '{plg}'", "Aborting code check")
     else:
         # read documentation file
         with open(code_filename) as f:
@@ -273,14 +284,74 @@ def check_code(plg):
         for lineno, line in enumerate(lines):
             lines[lineno] = lines[lineno].rstrip()
 
-    check_code_webinterface(lines)
+        check_code_webinterface(lines)
 
-    mc.print_errorcount('Code', mc.errors, mc.warnings, mc.hints)
-    print()
+        # - was "Sample plugin" from the templaate file changed?
+        for line in lines:
+            if line.lower().find('sample plugin') > -1 and line.startswith('#'):
+                mc.disp_hint("The description of the sample plugin in the comments was not replaced", "Replace the description with a meaningful text")
+                break
+
+        if not quiet:
+            mc.print_errorcount('Code', mc.errors, mc.warnings, mc.hints)
+            print()
+
+    global sum_errors, sum_warnings, sum_hints
     sum_errors += mc.errors
     sum_warnings += mc.warnings
     sum_hints += mc.hints
+    global total_errors, total_warnings, total_hints
+    total_errors += mc.errors
+    total_warnings += mc.warnings
+    total_hints += mc.hints
     return
+
+
+def check_one_plugin(plg, chk_meta, chk_code, chk_docu):
+    try:
+        os.chdir(plugindir)
+    except:
+        print(f"ERROR: No plugin with name '{plg}' found.")
+        print()
+        exit(1)
+    if chk_meta:
+        check_metadata(plg)
+    os.chdir(plugindir)
+    if chk_code:
+        check_code(plg)
+    if chk_docu:
+        check_documentation(plg)
+
+    print()
+    mc.print_errorcount('TOTAL', sum_errors, sum_warnings, sum_hints)
+    print()
+
+
+def check_all_plugins(chk_meta, chk_code, chk_docu):
+    pluginsdir = os.path.join(BASE, 'plugins')
+
+    plugins = mc.get_local_pluginlist(pluginsdir)
+    print(f"{'Plugin':<16.16}      {'Errors':>10}  {'Warnings':>10}  {'Hints':>10}")
+    print(f"{'-'*16:<16.16}      {'-'*8:>10}  {'-'*8:>10}  {'-'*8:>10}")
+
+    for plg in plugins:
+        mc.quiet = True
+        if chk_meta:
+            check_metadata(plg, quiet=True)
+
+        os.chdir(os.path.join(pluginsdir, plg))
+        if chk_code:
+            check_code(plg, quiet=True)
+
+        os.chdir(os.path.join(pluginsdir, plg))
+        if chk_docu:
+            check_documentation(plg, quiet=True)
+
+        print(f"{plg:<16.16}    {sum_errors:10}  {sum_warnings:10}  {sum_hints:10}")
+
+    print(f"{'-'*16:<16.16}      {'-'*8:<10}  {'-'*8:<10}  {'-'*8:<10}")
+    print(f"{'':<16.16}    {total_errors:10}  {total_warnings:10}  {total_hints:10}")
+    print()
 
 
 # ==================================================================================
@@ -293,28 +364,39 @@ if __name__ == '__main__':
     print('')
 
     parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument('pluginname')  # positional argument#
+    parser.add_argument('pluginname', nargs='?', default='', help='name of the plugin to check')  # positional argument#
+    parser.add_argument('-all', dest='check_all', help='check all plugins', action='store_true')
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('-m', dest='check_metadata', help='check the metadata of a plugin')
-    group.add_argument('-d', dest='check_documentation', help='check the documentation of a plugin')
-    group.add_argument('-c', dest='check_code', help='check the code of a plugin')
+    group.add_argument('-m', dest='check_metadata_only', help='check only the metadata of a plugin', action='store_true')
+    group.add_argument('-d', dest='check_documentation_only', help='check only the documentation of a plugin', action='store_true')
+    group.add_argument('-c', dest='check_code_only', help='check only the code of a plugin', action='store_true')
+    group.add_argument('-cd', dest='check_code_doc_only', help='check only the code and documentation of a plugin', action='store_true')
     args = parser.parse_args()
 
     plg = args.pluginname
 
     plugindir = os.path.join(BASE, 'plugins', plg)
-    try:
-        os.chdir(plugindir)
-    except:
-        print(f"ERROR: No plugin with name '{plg}' found.")
-        print()
-        exit(1)
 
-    check_metadata(plg)
-    os.chdir(plugindir)
-    check_code(plg)
-    check_documentation(plg)
+    chk_meta = True
+    chk_code = True
+    chk_docu = True
 
-    print()
-    mc.print_errorcount('TOTAL', sum_errors, sum_warnings, sum_hints)
-    print()
+    if args.check_metadata_only:
+        chk_code = False
+        chk_docu = False
+    if args.check_code_only:
+        chk_meta = False
+        chk_docu = False
+    if args.check_documentation_only:
+        chk_meta = False
+        chk_code = False
+    if args.check_code_doc_only:
+        chk_meta = False
+
+    if args.check_all:
+        check_all_plugins(chk_meta, chk_code, chk_docu)
+    elif plg == '':
+        parser.print_help()
+    else:
+        check_one_plugin(plg, chk_meta, chk_code, chk_docu)
+

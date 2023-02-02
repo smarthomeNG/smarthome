@@ -221,7 +221,7 @@
     "configname": "cli",
     "version": "1.4.2",
     "smartplugin": true,
-    "multiinstance": false,
+    "multiinstance": true,
     "instancename": "",
     "webif_url": "",
     "documentation_config_doc": "https://smarthomeng.github.io/dev_doc/plugins_doc/config/cli.html",
@@ -232,7 +232,8 @@
         "type": "bool",
         "value": "True",
         "default": "False"
-      },      {
+      },
+      {
         "name": "ip",
         "type": "ip",
         "value": "0.0.0.0",
@@ -249,6 +250,12 @@
         "type": "str",
         "value": "None",
         "default": "None"
+      },
+      {
+        "name": "webif_pagelength",
+        "type": "int",
+        "value": 25,
+        "default": 0
       }
     ],
     "metadata": {

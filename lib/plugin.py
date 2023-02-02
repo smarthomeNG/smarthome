@@ -59,7 +59,7 @@ import lib.config
 import lib.translation as translation
 import lib.shyaml as shyaml
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE,YAML_FILE,CONF_FILE)
+from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE, KEY_WEBIF_PAGELENGTH, YAML_FILE,CONF_FILE)
 #from lib.utils import Utils
 from lib.metadata import Metadata
 #import lib.item
@@ -247,10 +247,11 @@ class Plugins():
         """
         args = {}
         for arg in plg_conf:
+            # ignore class_name, class_path and instance - those parameters ar not handed to the PluginWrapper
             if arg != KEY_CLASS_NAME and arg != KEY_CLASS_PATH and arg != KEY_INSTANCE:
                 value = plg_conf[arg]
                 if isinstance(value, str):
-                    value = "'{0}'".format(value)
+                    value = f"'{value}'"
                 args[arg] = value
         return args
 
@@ -539,7 +540,7 @@ class PluginWrapper(threading.Thread):
         """
         Initialization of wrapper class
         """
-        logger.debug('PluginWrapper __init__: Section {}, classname {}, classpath {}'.format( name, classname, classpath ))
+        logger.debug("PluginWrapper __init__: Section {name}, classname {classname}, classpath {classpath}")
         threading.Thread.__init__(self, name=name)
 
         self._sh = smarthome
