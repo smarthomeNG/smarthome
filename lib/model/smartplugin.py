@@ -56,7 +56,8 @@ class SmartPlugin(SmartObject, Utils):
     _pluginname_prefix = 'plugins.'
 
     _plg_item_dict = {}     # dict to hold the items assigned to the plugin and their plugin specific information
-    _item_lookup_dict = {}  # dict for the reverse lookup from a device_command to an item, contains a list of items for each device_command
+    _item_lookup_dict = {}  # dict for the reverse lookup from a mapping (device-command or matchstring) to an item,
+                            # contains a list of items for each mapping
     _add_translation = None
 
     _parameters = {}    # Dict for storing the configuration parameters read from /etc/plugin.yaml
@@ -89,18 +90,18 @@ class SmartPlugin(SmartObject, Utils):
         for item in items:
             self.remove_item(item)
 
-    def add_item(self, item, config_data_dict={}, device_command=None, updating=False):
+    def add_item(self, item, config_data_dict={}, mapping=None, updating=False):
         """
         For items that are used/handled by a plugin, this method stores the configuration information
         that is individual for the plugin. The configuration information is/has to be stored in a dictionary
 
         The configuration information can be retrieved later by a call to the method get_item_configdata(<item_path>)
 
-        If data is beeing received by the plugin, a 'device_command' has to be specified as an optional 3rd parameter.
-        This allows a reverse lookup. The method get_itemlist_for_device_command(<device_command>) returns a list
-        of items for the items that have defined the <device_command>. In most cases, the list will have only one
-        entry, but if multiple items should receive data from the same device (or command), the list can have more than
-        one entry.
+        If data is beeing received by the plugin, a mapping ( a 'device-command' or matchstring) has to be specified
+        as an optional 3rd parameter. This allows a reverse lookup. The method get_itemlist_for_mapping(<mapping>)
+        returns a list of items for the items that have defined the <mapping>. In most cases, the list will have
+        only one entry, but if multiple items should receive data from the same device (or command), the list can
+        have more than one entry.
 
         Calling this method for an item already stored in `self._plg_item_dict` can be used to change the "is_updating"
         key to True, if it was False before and the `updating` parameter is True. Otherwise, nothing happens.
@@ -110,11 +111,11 @@ class SmartPlugin(SmartObject, Utils):
 
         :param item: item
         :param config_data_dict: Dictionary with the plugin-specific configuration information for the item
-        :param device_command: String identifing the origin (source/kind) of received data (e.g. the address on a bus)
+        :param mapping: String identifing the origin (source/kind) of received data (e.g. the address on a bus)
         :param updating: Show if item updates from shng should be sent to the plugin
         :type item: Item
         :type config_data_dict: dict
-        :type device_command: str
+        :type mapping: str
         :type updating: bool
 
         :return: True, if the information has been added
@@ -141,20 +142,20 @@ class SmartPlugin(SmartObject, Utils):
         self._plg_item_dict[item.path()] = {
             'item': item,
             'is_updating': updating,
-            'device_command': device_command,
+            'mapping': mapping,
             'config_data': dict(config_data_dict)
         }
 
-        if device_command:
-            if device_command not in self._item_lookup_dict:
-                self._item_lookup_dict[device_command] = []
-            self._item_lookup_dict[device_command].append(item)
+        if mapping:
+            if mapping not in self._item_lookup_dict:
+                self._item_lookup_dict[mapping] = []
+            self._item_lookup_dict[mapping].append(item)
 
         return True
 
     def remove_item(self, item):
         """
-        Remove configuration data for an item (and remove the item from the device_command's list
+        Remove configuration data for an item (and remove the item from the mapping's list
 
         :param item: item to remove
         :type item: Item
@@ -180,11 +181,11 @@ class SmartPlugin(SmartObject, Utils):
         del self._plg_item_dict[item.path()]
 
         # remove item from self._item_lookup_dict if present
-        command = data.get('device_command')
-        if command:
-            # if a device_command was given for the item, the item is being removed from the list of the device_command
-            if item in self._item_lookup_dict[command]:
-                self._item_lookup_dict[command].remove(item)
+        mapping = data.get('mapping')
+        if mapping:
+            # if a mapping was given for the item, the item is being removed from the list of the mapping
+            if item in self._item_lookup_dict[mapping]:
+                self._item_lookup_dict[mapping].remove(item)
 
         # unregister item update method
         self.unparse_item(item)
@@ -222,6 +223,22 @@ class SmartPlugin(SmartObject, Utils):
             item_path = item.path()
         return self._plg_item_dict[item_path].get('config_data')
 
+    def get_item_mapping(self, item):
+        """
+        Returns the plugin-specific mapping that was defined by add_item()
+
+        :param item: item to get config info for
+        :type item: class Item or str with path of an item
+
+        :return: mapping string for that item
+        :rtype: str
+        """
+        if isinstance(item, str):
+            item_path = item
+        else:
+            item_path = item.path()
+        return self._plg_item_dict[item_path].get('mapping')
+
     def get_item_path_list(self):
         """
         Return list of stored item paths
@@ -240,23 +257,23 @@ class SmartPlugin(SmartObject, Utils):
         """
         return [self._plg_item_dict[item_path]['item'] for item_path in self._plg_item_dict if self._plg_item_dict[item_path]['is_updating']]
 
-    def get_items_for_command(self, device_command):
+    def get_items_for_command(self, mapping):
         """
-        Returns a list of items that should receive data for the given device_command
+        Returns a list of items that should receive data for the given mapping
 
-        :param device_command: device_command, for which the receiving items should be returned
-        :type device_command: str
+        :param mapping: mapping, for which the receiving items should be returned
+        :type mapping: str
 
         :return: List of items
         :rtype: list
         """
-        return self._item_lookup_dict.get(device_command, [])
+        return self._item_lookup_dict.get(mapping, [])
 
-    def get_device_commands(self):
+    def get_mappings(self):
         """
-        Returns a list containing all device_commands, which have items associated with it
+        Returns a list containing all mappings, which have items associated with it
 
-        :return: List of device_commands
+        :return: List of mappings
         :rtype: list
         """
         return list(self._item_lookup_dict.keys())
