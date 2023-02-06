@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../referenz.html">Referenz <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="logiken.html">Logiken</a> &raquo;</li>
-      <li>Nutzung von Plugin Funktionen</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../referenz.html">Referenz <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="logiken.html">Logiken</a></li>
+      <li class="breadcrumb-item active">Nutzung von Plugin Funktionen</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3877,9 +3877,9 @@ Instanz, also den Namen der Abschnitts in der Konfigurationsdatei <code class="d
 </pre></div>
 </div>
 <p>Wenn das knx Plugin in der Datei <code class="docutils literal notranslate"><span class="pre">etc/plugin.yaml</span></code> folgendermaßen konfiguriert ist:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">local_knxd</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx</span><span class="w"></span>
-<span class="w">    </span><span class="nt">use_project_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">local_knxd</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx</span>
+<span class="w">    </span><span class="nt">use_project_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 <p>und auf die Gruppenadresse <strong>1/2/1</strong> der 8-Bit Wert (DPT <strong>5</strong>) <strong>123</strong> geschrieben werden soll, lautet der Aufruf

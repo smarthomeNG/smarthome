@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a> &raquo;</li>
-      <li>modbus_tcp</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a></li>
+      <li class="breadcrumb-item active">modbus_tcp</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3876,21 +3876,21 @@
 <h2>Konfiguration<a class="headerlink" href="#konfiguration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">solaredge</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modbus_tcp</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">solaredge</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.50</span><span class="w"></span>
-<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">502</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">solaredge</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modbus_tcp</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">solaredge</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.50</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">502</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">    </span><span class="nt">plugin_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="nt">logoMB</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modbus_tcp</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logomb</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.80</span><span class="w"></span>
-<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">502</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="nt">logoMB</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modbus_tcp</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logomb</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.80</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">502</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="w">    </span><span class="nt">plugin_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -3916,76 +3916,76 @@
 <h2>Beispiele<a class="headerlink" href="#beispiele" title="Permalink to this heading"></a></h2>
 <p>Beispiel für SH-Item’s</p>
 <p>siehe auch example.yaml</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">mydevice</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">AI1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusObjectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InputRegister</span><span class="w">     </span><span class="c1">#(optional) default: HoldingRegister</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusDataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w">               </span><span class="c1">#(optional) default: uint16</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#modBusByteOrder: &#39;Endian.Little&#39;    #(optional) default: &#39;Endian.Big&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#modBusWordOrder: &#39;Endian.Little&#39;    #(optional) default: &#39;Endian.Big&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusDirection</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;read_write&#39;</span><span class="w">       </span><span class="c1">#(optional) default: &#39;read&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusUnit</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;71&#39;</span><span class="w">                    </span><span class="c1">#(optional) default: slaveUnit aus der Plugin-Konfig</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#modBusFactor: 0.1                  #(optional) default: 1</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#modBusDirection: read_write        #(optional) default: &#39;read&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">AM1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AM1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusObjectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HoldingRegister</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">528</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusDirection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read_write</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#modBusFactor: 1</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#modBusDataType: int16</span><span class="w"></span>
-<span class="w">    </span><span class="nt">M1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">M1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusObjectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Coil</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8256</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusDataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bit</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusDirection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read_write</span><span class="w"></span>
-<span class="w">    </span><span class="nt">I1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">I1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusObjectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DiscreteInput</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusDataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bit</span><span class="w"></span>
-<span class="w">    </span><span class="nt">VM0</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VM0</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusObjectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HoldingRegister</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusDirection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read_write</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusFactor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.01</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">mydevice</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">AI1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI1</span>
+<span class="w">        </span><span class="nt">modBusObjectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InputRegister</span><span class="w">     </span><span class="c1">#(optional) default: HoldingRegister</span>
+<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">        </span><span class="nt">modBusDataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w">               </span><span class="c1">#(optional) default: uint16</span>
+<span class="w">        </span><span class="c1">#modBusByteOrder: &#39;Endian.Little&#39;    #(optional) default: &#39;Endian.Big&#39;</span>
+<span class="w">        </span><span class="c1">#modBusWordOrder: &#39;Endian.Little&#39;    #(optional) default: &#39;Endian.Big&#39;</span>
+<span class="w">        </span><span class="nt">modBusDirection</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;read_write&#39;</span><span class="w">       </span><span class="c1">#(optional) default: &#39;read&#39;</span>
+<span class="w">        </span><span class="nt">modBusUnit</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;71&#39;</span><span class="w">                    </span><span class="c1">#(optional) default: slaveUnit aus der Plugin-Konfig</span>
+<span class="w">        </span><span class="c1">#modBusFactor: 0.1                  #(optional) default: 1</span>
+<span class="w">        </span><span class="c1">#modBusDirection: read_write        #(optional) default: &#39;read&#39;</span>
+<span class="w">    </span><span class="nt">AM1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AM1</span>
+<span class="w">        </span><span class="nt">modBusObjectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HoldingRegister</span>
+<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">528</span>
+<span class="w">        </span><span class="nt">modBusDirection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read_write</span>
+<span class="w">        </span><span class="c1">#modBusFactor: 1</span>
+<span class="w">        </span><span class="c1">#modBusDataType: int16</span>
+<span class="w">    </span><span class="nt">M1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">M1</span>
+<span class="w">        </span><span class="nt">modBusObjectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Coil</span>
+<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8256</span>
+<span class="w">        </span><span class="nt">modBusDataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bit</span>
+<span class="w">        </span><span class="nt">modBusDirection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read_write</span>
+<span class="w">    </span><span class="nt">I1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">I1</span>
+<span class="w">        </span><span class="nt">modBusObjectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DiscreteInput</span>
+<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">        </span><span class="nt">modBusDataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bit</span>
+<span class="w">    </span><span class="nt">VM0</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VM0</span>
+<span class="w">        </span><span class="nt">modBusObjectType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HoldingRegister</span>
+<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">        </span><span class="nt">modBusDirection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read_write</span>
+<span class="w">        </span><span class="nt">modBusFactor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.01</span>
 
-<span class="w">    </span><span class="nt">geraetename</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#modBusObjectType: HoldingRegister  #(optional) default: HoldingRegister</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40030</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusDataType</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;string16&#39;</span><span class="w">          </span><span class="c1">#(optional) default: uint16</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#modBusFactor: &#39;1000&#39;               #(optional) default: 1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusByteOrder</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Endian.Little&#39;</span><span class="w">    </span><span class="c1">#(optional) default: &#39;Endian.Big&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusWordOrder</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Endian.Little&#39;</span><span class="w">    </span><span class="c1">#(optional) default: &#39;Endian.Big&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusDirection</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;read_write&#39;</span><span class="w">       </span><span class="c1">#(optional) default: &#39;read&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusUnit</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;71&#39;</span><span class="w">                    </span><span class="c1">#(optional) default: slaveUnit aus der Plugin-Konfig</span><span class="w"></span>
-<span class="w">    </span><span class="nt">temperatur</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40052</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusDataType</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;float32</span><span class="nv">            </span><span class="s">#(optional)</span><span class="nv"> </span><span class="s">default:</span><span class="nv"> </span><span class="s">uint16</span><span class="w"></span>
-<span class="w">        </span><span class="s">#modBusFactor:</span><span class="nv"> </span><span class="s">&#39;</span><span class="l l-Scalar l-Scalar-Plain">1&#39;</span><span class="w">                  </span><span class="c1">#(optional) default: 1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusByteOrder</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Endian.Little&#39;</span><span class="w">    </span><span class="c1">#(optional) default: &#39;Endian.Big&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusWordOrder</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Endian.Little&#39;</span><span class="w">    </span><span class="c1">#(optional) default: &#39;Endian.Big&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusUnit</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;71&#39;</span><span class="w">                    </span><span class="c1">#(optional) default: slaveUnit aus der Plugin-Konfig</span><span class="w"></span>
+<span class="w">    </span><span class="nt">geraetename</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="c1">#modBusObjectType: HoldingRegister  #(optional) default: HoldingRegister</span>
+<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40030</span>
+<span class="w">        </span><span class="nt">modBusDataType</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;string16&#39;</span><span class="w">          </span><span class="c1">#(optional) default: uint16</span>
+<span class="w">        </span><span class="c1">#modBusFactor: &#39;1000&#39;               #(optional) default: 1</span>
+<span class="w">        </span><span class="nt">modBusByteOrder</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Endian.Little&#39;</span><span class="w">    </span><span class="c1">#(optional) default: &#39;Endian.Big&#39;</span>
+<span class="w">        </span><span class="nt">modBusWordOrder</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Endian.Little&#39;</span><span class="w">    </span><span class="c1">#(optional) default: &#39;Endian.Big&#39;</span>
+<span class="w">        </span><span class="nt">modBusDirection</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;read_write&#39;</span><span class="w">       </span><span class="c1">#(optional) default: &#39;read&#39;</span>
+<span class="w">        </span><span class="nt">modBusUnit</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;71&#39;</span><span class="w">                    </span><span class="c1">#(optional) default: slaveUnit aus der Plugin-Konfig</span>
+<span class="w">    </span><span class="nt">temperatur</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">modBusAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40052</span>
+<span class="w">        </span><span class="nt">modBusDataType</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;float32</span><span class="nv">            </span><span class="s">#(optional)</span><span class="nv"> </span><span class="s">default:</span><span class="nv"> </span><span class="s">uint16</span>
+<span class="w">        </span><span class="s">#modBusFactor:</span><span class="nv"> </span><span class="s">&#39;</span><span class="l l-Scalar l-Scalar-Plain">1&#39;</span><span class="w">                  </span><span class="c1">#(optional) default: 1</span>
+<span class="w">        </span><span class="nt">modBusByteOrder</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Endian.Little&#39;</span><span class="w">    </span><span class="c1">#(optional) default: &#39;Endian.Big&#39;</span>
+<span class="w">        </span><span class="nt">modBusWordOrder</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Endian.Little&#39;</span><span class="w">    </span><span class="c1">#(optional) default: &#39;Endian.Big&#39;</span>
+<span class="w">        </span><span class="nt">modBusUnit</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;71&#39;</span><span class="w">                    </span><span class="c1">#(optional) default: slaveUnit aus der Plugin-Konfig</span>
 
-<span class="w">    </span><span class="c1"># Multiinstanz:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Jedes Attribut mit der @&lt;instance&gt; ergänzen. Der Name der Instance muss in der Plugin Konfiguration festgelegt werden.</span><span class="w"></span>
-<span class="w">    </span><span class="nt">M1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">M1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusObjectType@logomb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Coil</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusAddress@logomb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8256</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusDataType@logomb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bit</span><span class="w"></span>
-<span class="w">        </span><span class="nt">modBusDirection@logomb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read_write</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># Multiinstanz:</span>
+<span class="w">    </span><span class="c1"># Jedes Attribut mit der @&lt;instance&gt; ergänzen. Der Name der Instance muss in der Plugin Konfiguration festgelegt werden.</span>
+<span class="w">    </span><span class="nt">M1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">M1</span>
+<span class="w">        </span><span class="nt">modBusObjectType@logomb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Coil</span>
+<span class="w">        </span><span class="nt">modBusAddress@logomb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8256</span>
+<span class="w">        </span><span class="nt">modBusDataType@logomb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bit</span>
+<span class="w">        </span><span class="nt">modBusDirection@logomb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read_write</span>
 </pre></div>
 </div>
 </section>

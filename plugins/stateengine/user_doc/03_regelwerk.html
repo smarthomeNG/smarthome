@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-          <li><a href="../user_doc.html">stateengine</a> &raquo;</li>
-      <li>Regelwerk-Item</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_doc/plugins_system.html">System Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../user_doc.html">stateengine</a></li>
+      <li class="breadcrumb-item active">Regelwerk-Item</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3858,13 +3858,13 @@
 Es wird empfohlen, dieses mit dem Namen <code class="docutils literal notranslate"><span class="pre">rules</span></code> als Child-Item unter das Item, das automatisiert werden soll, zu legen.
 Dieses Item benötigt einige vorgegebene Definitionen, die am einfachsten über das <code class="docutils literal notranslate"><span class="pre">struct</span></code> Attribut
 eingebunden werden. Das Item sieht dann folgendermaßen aus:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span>
 
-<span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">           </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
+<span class="w">        </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">           </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
 </pre></div>
 </div>
 <p>Bei jedem Aufruf des Regelwerk-Items - im Beispiel auf Grund der cycle Angabe also
@@ -3874,13 +3874,13 @@ folgt der darunter angegebene, etc. Details hierzu finden sich im nächsten Teil
 der Dokumentation.</p>
 <p>Möchte man die Evaluierung eines Items deaktivieren, ist unter rules
 das Attribute <code class="docutils literal notranslate"><span class="pre">se_plugin</span></code> auf inactive zu setzen:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span>
 
-<span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">           </span><span class="nt">se_plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inactive</span><span class="w"></span>
+<span class="w">        </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">           </span><span class="nt">se_plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inactive</span>
 </pre></div>
 </div>
 <section id="item-definitionen">
@@ -3907,23 +3907,23 @@ wird durch <code class="docutils literal notranslate"><span class="pre">se_item_
 wird im Zustand Nacht das Item <code class="docutils literal notranslate"><span class="pre">beispiel.raffstore1.hoehe</span></code> auf den Wert 100 gesetzt, sobald
 <code class="docutils literal notranslate"><span class="pre">beispiel.wetterstation.helligkeit</span></code> den Wert 25 übersteigt. Erklärungen zu Bedingungen
 und Aktionen folgen auf den nächsten Seiten.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_item_height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.hoehe</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_item_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span>
+<span class="w">        </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">se_log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">            </span><span class="nt">se_item_height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.hoehe</span>
+<span class="w">            </span><span class="nt">se_item_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span>
 
-<span class="w">            </span><span class="nt">Nacht</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Nacht</span><span class="w"></span>
-<span class="w">                </span><span class="nt">on_enter_or_stay</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_action_height</span><span class="p">:</span><span class="w"></span>
-<span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">100&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">enter_toodark</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_max_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span><span class="w"></span>
+<span class="w">            </span><span class="nt">Nacht</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Nacht</span>
+<span class="w">                </span><span class="nt">on_enter_or_stay</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">se_action_height</span><span class="p">:</span>
+<span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">100&#39;</span>
+<span class="w">                </span><span class="nt">enter_toodark</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">se_max_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span>
 </pre></div>
 </div>
 </section>
@@ -3937,28 +3937,28 @@ Bedingungen bekannt gemacht. Aufgrund der angegebenen Funktion wird das Item
 abhängig vom aktuellen Zustandsnamen eruiert. Da Zustand_Eins den Namen „sueden“
 hat, wird somit auch der Wert von wetterstation.helligkeit_sueden abgefragt.
 Würde der Zustand „osten“ heißen, würde der Helligkeitswert vom Osten getestet werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">wetterstation</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">helligkeit_sueden</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">wetterstation</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">helligkeit_sueden</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/1</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
 
-<span class="w">    </span><span class="nt">helligkeit_osten</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/2</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
+<span class="w">    </span><span class="nt">helligkeit_osten</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/2</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
 
-<span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_eval_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemvalue(&#39;wetterstation.helligkeit_{}&#39;.format(se_eval.get_variable(&#39;current.state_name&#39;)))</span><span class="w"></span>
+<span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span>
+<span class="w">        </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">se_eval_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemvalue(&#39;wetterstation.helligkeit_{}&#39;.format(se_eval.get_variable(&#39;current.state_name&#39;)))</span>
 
-<span class="w">            </span><span class="nt">Zustand_Eins</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sueden</span><span class="w"></span>
-<span class="w">                </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_max_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span><span class="w"></span>
+<span class="w">            </span><span class="nt">Zustand_Eins</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sueden</span>
+<span class="w">                </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">se_max_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
 </pre></div>
 </div>
 </section>

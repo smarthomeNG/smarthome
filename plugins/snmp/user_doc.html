@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_protocol.html">Protokoll Plugins</a> &raquo;</li>
-      <li>snmp</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_protocol.html">Protokoll Plugins</a></li>
+      <li class="breadcrumb-item active">snmp</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3906,12 +3906,12 @@
 </section>
 <section id="plugin-konfiguration">
 <h4>Plugin-Konfiguration:<a class="headerlink" href="#plugin-konfiguration" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">nas</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snmp</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w"></span>
-<span class="w">    </span><span class="nt">snmp_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.2.9</span><span class="w"></span>
-<span class="w">    </span><span class="nt">snmp_community</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">public</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nas1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">nas</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snmp</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">    </span><span class="nt">snmp_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.2.9</span>
+<span class="w">    </span><span class="nt">snmp_community</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">public</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nas1</span>
 </pre></div>
 </div>
 </section>
@@ -3923,16 +3923,16 @@
 <section id="snmp-oid">
 <h4>snmp_oid<a class="headerlink" href="#snmp-oid" title="Permalink to this heading"></a></h4>
 <p>Der Wert der angegebenen OID wird gelesen und dem Item zugewiesen.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">snmp_oid@instance</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1.3.6.1.2.1.1.1.0&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">snmp_oid@instance</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1.3.6.1.2.1.1.1.0&#39;</span>
 </pre></div>
 </div>
 </section>
 <section id="snmp-prop">
 <h4>snmp_prop<a class="headerlink" href="#snmp-prop" title="Permalink to this heading"></a></h4>
 <p>Der gelesene Rohwert wird gemäß dem angegebenen Parameterwert interpretiert.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">snmp_prop@instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">snmp_prop@instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
 </pre></div>
 </div>
 <p>Zulässige Parameterwerte sind:</p>
@@ -3948,18 +3948,18 @@
 <section id="beispiel">
 <h4>Beispiel<a class="headerlink" href="#beispiel" title="Permalink to this heading"></a></h4>
 <p>Konfigurationsbeispiel:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">nas</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cpu_temp</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CPU-Temperatur in °C</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">snmp_oid@nas1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1.3.6.1.4.1.24681.1.2.5.0&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">snmp_prop@nas1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">nas</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu_temp</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CPU-Temperatur in °C</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">snmp_oid@nas1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1.3.6.1.4.1.24681.1.2.5.0&#39;</span>
+<span class="w">        </span><span class="nt">snmp_prop@nas1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
 
-<span class="w">    </span><span class="nt">cpu_usage</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CPU-Auslastung [0-1]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">snmp_oid@nas1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1.3.6.1.4.1.24681.1.2.1.0&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">snmp_prop@nas1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span><span class="w"></span>
+<span class="w">    </span><span class="nt">cpu_usage</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CPU-Auslastung [0-1]</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">snmp_oid@nas1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1.3.6.1.4.1.24681.1.2.1.0&#39;</span>
+<span class="w">        </span><span class="nt">snmp_prop@nas1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
 </pre></div>
 </div>
 </section>

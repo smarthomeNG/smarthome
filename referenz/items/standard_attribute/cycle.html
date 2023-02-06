@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="../../../konfiguration/items/items.html">Items</a> &raquo;</li>
-          <li><a href="standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a> &raquo;</li>
-      <li>cycle</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="../../../konfiguration/items/items.html">Items</a></li>
+          <li class="breadcrumb-item"><a href="standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a></li>
+      <li class="breadcrumb-item active">cycle</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3856,10 +3856,10 @@
 <span id="index-1"></span><h1>cycle<a class="headerlink" href="#cycle" title="Permalink to this heading"></a></h1>
 <p>Das Attribut definiert ein regelmäßiges Aufrufen des Items (und damit
 der verknüpften Logik oder Eval-Funktion).</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10 = 0</span><span class="w"></span>
-<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10 = 0</span>
+<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
 </pre></div>
 </div>
 <p>ruft das Item alle 10 Sekunden auf und sorgt dadurch für das triggern
@@ -3905,7 +3905,7 @@ angegeben ist.</p></li>
 v1.3 <code class="docutils literal notranslate"><span class="pre">compat_1.2</span></code>.</p>
 <p>Das Verhalten kann global für die SmartHomeNG Installation vorgegeben
 werden, indem der Konfigurationsdatei <strong>etc/smarthome.yaml</strong> der Eintrag</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">assign_compatibility</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latest</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">assign_compatibility</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latest</span>
 </pre></div>
 </div>
 <p>hinzugefügt wird.</p>
@@ -3914,18 +3914,18 @@ Modus bei jedem <code class="docutils literal notranslate"><span class="pre">aut
 dritter Parameter angegeben werden. Wenn keine Angabe des
 Kompatibilitätsmodus erfolgt, wird die globale Voreinstellung genutzt.</p>
 <p>Die Angabe des Kompatibilitätsmodus erfolgt folgendermaßen:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;dauer&gt; = &lt;wert&gt; = &lt;kompatibilität&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;dauer&gt; = &lt;wert&gt; = &lt;kompatibilität&gt;</span>
 </pre></div>
 </div>
 <p>Beispiel:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m = 0 = compat_1.2</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m = 0 = compat_1.2</span>
 
-<span class="nt">item2</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m = true = latest</span><span class="w"></span>
+<span class="nt">item2</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m = true = latest</span>
 </pre></div>
 </div>
 <p>Nach auslösen des cycle wird <code class="docutils literal notranslate"><span class="pre">item</span></code> der String <code class="docutils literal notranslate"><span class="pre">'0'</span></code>zugewiesen

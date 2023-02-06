@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="../../../konfiguration/items/items.html">Items</a> &raquo;</li>
-          <li><a href="standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a> &raquo;</li>
-      <li><em>log_change</em> und <em>log_text</em> <span class="redsup">Neu</span></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="../../../konfiguration/items/items.html">Items</a></li>
+          <li class="breadcrumb-item"><a href="standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a></li>
+      <li class="breadcrumb-item active"><em>log_change</em> und <em>log_text</em> <span class="redsup">Neu</span></li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3959,11 +3959,11 @@ Logging gemappt werden soll. Das Attribut <strong>log_mapping</strong> enthält 
 dicts. Wobei der Key den zu übersetzenden/mappenden Wert angibt und der dazu gehörige Value des dicts den String
 angeibt, der über die Variable <code class="docutils literal notranslate"><span class="pre">{mvalue}</span></code> ausgegeben wird.</p>
 <p><strong>Beispiel:</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">log_mapping</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{</span><span class="w"></span>
-<span class="w">    </span><span class="s">&#39;1&#39;:</span><span class="nv"> </span><span class="s">&#39;Eins&#39;,</span><span class="w"></span>
-<span class="w">    </span><span class="s">&#39;2&#39;:</span><span class="nv"> </span><span class="s">&#39;Zwei&#39;,</span><span class="w"></span>
-<span class="w">    </span><span class="s">&#39;3&#39;:</span><span class="nv"> </span><span class="s">&#39;Drei&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="s">}&quot;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">log_mapping</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{</span>
+<span class="w">    </span><span class="s">&#39;1&#39;:</span><span class="nv"> </span><span class="s">&#39;Eins&#39;,</span>
+<span class="w">    </span><span class="s">&#39;2&#39;:</span><span class="nv"> </span><span class="s">&#39;Zwei&#39;,</span>
+<span class="w">    </span><span class="s">&#39;3&#39;:</span><span class="nv"> </span><span class="s">&#39;Drei&#39;</span>
+<span class="w">    </span><span class="s">}&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -3972,11 +3972,11 @@ angeibt, der über die Variable <code class="docutils literal notranslate"><span
 <p>Über das <strong>log_rules</strong> Attribut kann festgelegt werden, welche zusätzliche Regeln für das Erzeugen des Log-Eintrages
 anzuwenden sind. Das Attribut <strong>log_rules</strong> enthält dazu in einem String die Beschreibung eines dicts.</p>
 <p><strong>Beispiel:</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">log_rules</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{</span><span class="w"></span>
-<span class="w">    </span><span class="s">&#39;lowlimit&#39;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">-1.0,</span><span class="w"></span>
-<span class="w">    </span><span class="s">&#39;highlimit&#39;:</span><span class="nv"> </span><span class="s">10.0,</span><span class="w"></span>
-<span class="w">    </span><span class="s">&#39;filter&#39;:</span><span class="nv"> </span><span class="s">[1,</span><span class="nv"> </span><span class="s">2,</span><span class="nv"> </span><span class="s">5]</span><span class="w"></span>
-<span class="w">    </span><span class="s">}&quot;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">log_rules</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{</span>
+<span class="w">    </span><span class="s">&#39;lowlimit&#39;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">-1.0,</span>
+<span class="w">    </span><span class="s">&#39;highlimit&#39;:</span><span class="nv"> </span><span class="s">10.0,</span>
+<span class="w">    </span><span class="s">&#39;filter&#39;:</span><span class="nv"> </span><span class="s">[1,</span><span class="nv"> </span><span class="s">2,</span><span class="nv"> </span><span class="s">5]</span>
+<span class="w">    </span><span class="s">}&quot;</span>
 </pre></div>
 </div>
 <p>Die Filter Liste hat dabei vorrang. Es wird also nur bei den Werten 1, 2 und 5 geloggt, obwohl lowlimit und

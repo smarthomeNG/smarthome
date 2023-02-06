@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../entwicklung/entwicklung.html">Entwicklung</a> &raquo;</li>
-          <li><a href="../../entwicklung/plugins/plugins.html">Plugins <span class="bluesup">under construction</span></a> &raquo;</li>
-      <li>visu_websocket</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../entwicklung/entwicklung.html">Entwicklung</a></li>
+          <li class="breadcrumb-item"><a href="../../entwicklung/plugins/plugins.html">Plugins <span class="bluesup">under construction</span></a></li>
+      <li class="breadcrumb-item active">visu_websocket</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3886,11 +3886,11 @@ handles.</p>
 <p>With the <strong>item</strong> command a client requests to change the value of
 an item. The example requests the item with the id
 „wohnung.buero.schreibtischleuchte.onoff“ to be turned off:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;item&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;wohnung.buero.schreibtischleuchte.onoff&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="nt">&quot;val&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;item&quot;</span><span class="p">,</span>
+<span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;wohnung.buero.schreibtischleuchte.onoff&quot;</span><span class="p">,</span>
+<span class="nt">&quot;val&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>The plugin does not send an answer to the <strong>item</strong> command.</p>
@@ -3900,47 +3900,47 @@ an item. The example requests the item with the id
 <p>With the <strong>monitor</strong> command a client requests the actual value of a
 list of items. The list of the requested item names has to be comma
 seperated. Take a look at the following example:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;monitor&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:[</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.deckenlicht&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine.status&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine.ma&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.trockner&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.trockner.status&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.trockner.ma&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="p">]</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;monitor&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:[</span>
+<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.deckenlicht&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine.status&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine.ma&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.trockner&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.trockner.status&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;wohnung.hauswirtschaft.trockner.ma&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>The plugin answers with a list of of pairs. Each pair consists of an
 item name and the corresponding value. This list is followed by the
 command-type which initiated this response. The answer to the request
 above could look like this:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.deckenlicht&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine.status&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine.ma&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">37</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.trockner&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.trockner.status&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.trockner.ma&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="w"></span>
-<span class="w">  </span><span class="p">],</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;item&quot;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.deckenlicht&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine.status&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine.ma&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">37</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.trockner&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.trockner.status&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.trockner.ma&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;item&quot;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Additionally, the plugin initiates an update routine, which sends
 updates for item values, if the item in smarthome.py has changed. For
 example:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine.ma&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">36</span><span class="p">]</span><span class="w"></span>
-<span class="w">  </span><span class="p">],</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;item&quot;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">[</span><span class="s2">&quot;wohnung.hauswirtschaft.waschmaschine.ma&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">36</span><span class="p">]</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;item&quot;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -3948,11 +3948,11 @@ example:</p>
 <h3>ping<a class="headerlink" href="#ping" title="Permalink to this heading"></a></h3>
 <p>With the <strong>ping</strong> command a client checks if the connection to the
 plugin is alive.</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;ping&quot;</span><span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;ping&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>The plugin answers with:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;pong&quot;</span><span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;pong&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -3962,12 +3962,12 @@ plugin is alive.</p>
 or enabled/disabled. <strong>name</strong> is the name of the logic, as defined in
 <code class="docutils literal notranslate"><span class="pre">etc/logic.yaml</span></code>. Furthermore, in <code class="docutils literal notranslate"><span class="pre">etc/logic.yaml</span></code> the
 attribute <code class="docutils literal notranslate"><span class="pre">visu_acl</span></code> for that logic has to be set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;logic&quot;</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;az_licht&quot;</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;val&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;logic&quot;</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;az_licht&quot;</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;val&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;logic&quot;</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;az_licht&quot;</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span><span class="w"></span>
-<span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;logic&quot;</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;az_licht&quot;</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;logic&quot;</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;az_licht&quot;</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;logic&quot;</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;az_licht&quot;</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>Following information is passed to the logic via the trigger variable:</p>
@@ -3987,14 +3987,14 @@ items which are configured to store data via the <strong>sqlite</strong> plugin.
 <p>The series command is for instance used by SmartVISU to get data for the
 plot widget. The following example requests a series of the average
 values of the last 48 hours:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;series&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;item&quot;</span><span class="p">:</span><span class="s2">&quot;wohnung.verteilung.zaehler.wirkleistung&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;series&quot;</span><span class="p">:</span><span class="s2">&quot;avg&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="s2">&quot;48h&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;end&quot;</span><span class="p">:</span><span class="s2">&quot;now&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="mi">100</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;series&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;item&quot;</span><span class="p">:</span><span class="s2">&quot;wohnung.verteilung.zaehler.wirkleistung&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;series&quot;</span><span class="p">:</span><span class="s2">&quot;avg&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="s2">&quot;48h&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;end&quot;</span><span class="p">:</span><span class="s2">&quot;now&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="mi">100</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>The attribute <code class="docutils literal notranslate"><span class="pre">series</span></code> defines which function is used to return
@@ -4011,33 +4011,33 @@ is assumed by the plugin.</p>
 <blockquote>
 <div><p>&lt;code&gt;</p>
 </div></blockquote>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;series&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="mi">1460636598495</span><span class="p">,</span><span class="w"> </span><span class="mf">1831.97</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="mi">1460637648422</span><span class="p">,</span><span class="w"> </span><span class="mf">1458.14</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="mi">1460639298307</span><span class="p">,</span><span class="w"> </span><span class="mf">757.22</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="mi">1460641098243</span><span class="p">,</span><span class="w"> </span><span class="mf">577.38</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="s2">&quot;... 102 values in total&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="mi">1460802051217</span><span class="p">,</span><span class="w"> </span><span class="mf">740.61</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="mi">1460803884973</span><span class="p">,</span><span class="w"> </span><span class="mf">637.61</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="mi">1460805521319</span><span class="p">,</span><span class="w"> </span><span class="mf">744.41</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="mi">1460807229532</span><span class="p">,</span><span class="w"> </span><span class="mf">718.03</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="mi">1460808823757</span><span class="p">,</span><span class="w"> </span><span class="mf">681.25</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="mi">1460809294663</span><span class="p">,</span><span class="w"> </span><span class="mf">681.25</span><span class="p">]</span><span class="w"></span>
-<span class="w">  </span><span class="p">],</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;series&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;end&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;now&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1460809294663</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;update&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;item&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wohnung.verteilung.zaehler.wirkleistung&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;step&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1728000.01</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;func&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;avg&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wohnung.verteilung.zaehler.wirkleistung|avg|48h|now&quot;</span><span class="w"></span>
-<span class="w">  </span><span class="p">},</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;update&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2016-04-16T21:14:50.20.8227+02:00&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wohnung.verteilung.zaehler.wirkleistung|avg|48h|now&quot;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;series&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">[</span><span class="mi">1460636598495</span><span class="p">,</span><span class="w"> </span><span class="mf">1831.97</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="mi">1460637648422</span><span class="p">,</span><span class="w"> </span><span class="mf">1458.14</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="mi">1460639298307</span><span class="p">,</span><span class="w"> </span><span class="mf">757.22</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="mi">1460641098243</span><span class="p">,</span><span class="w"> </span><span class="mf">577.38</span><span class="p">],</span>
+<span class="w">      </span><span class="s2">&quot;... 102 values in total&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="p">[</span><span class="mi">1460802051217</span><span class="p">,</span><span class="w"> </span><span class="mf">740.61</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="mi">1460803884973</span><span class="p">,</span><span class="w"> </span><span class="mf">637.61</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="mi">1460805521319</span><span class="p">,</span><span class="w"> </span><span class="mf">744.41</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="mi">1460807229532</span><span class="p">,</span><span class="w"> </span><span class="mf">718.03</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="mi">1460808823757</span><span class="p">,</span><span class="w"> </span><span class="mf">681.25</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="mi">1460809294663</span><span class="p">,</span><span class="w"> </span><span class="mf">681.25</span><span class="p">]</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;series&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;end&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;now&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1460809294663</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;update&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;item&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wohnung.verteilung.zaehler.wirkleistung&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;step&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1728000.01</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;func&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;avg&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wohnung.verteilung.zaehler.wirkleistung|avg|48h|now&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;update&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2016-04-16T21:14:50.20.8227+02:00&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wohnung.verteilung.zaehler.wirkleistung|avg|48h|now&quot;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>The plugin answers with a list of of pairs. Each pair consists of a
@@ -4048,14 +4048,14 @@ produce the series of data.</p>
 at which an update is sent by the plugin.</p>
 <p>Additionally, the plugin initiates an update routine, which sends
 updates for series values after a defined period of time. For example:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;series&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="mi">1460810141323</span><span class="p">,</span><span class="w"> </span><span class="mf">711.25</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="mi">1460811024119</span><span class="p">,</span><span class="w"> </span><span class="mf">711.25</span><span class="p">]</span><span class="w"></span>
-<span class="w">    </span><span class="p">],</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;series&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wohnung.verteilung.zaehler.wirkleistung|avg|48h|now&quot;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;series&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">[</span><span class="mi">1460810141323</span><span class="p">,</span><span class="w"> </span><span class="mf">711.25</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="mi">1460811024119</span><span class="p">,</span><span class="w"> </span><span class="mf">711.25</span><span class="p">]</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;series&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wohnung.verteilung.zaehler.wirkleistung|avg|48h|now&quot;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -4063,28 +4063,28 @@ updates for series values after a defined period of time. For example:</p>
 <h3>series_cancel<a class="headerlink" href="#series-cancel" title="Permalink to this heading"></a></h3>
 <p>With the <strong>series_cancel</strong> command a client requests the updates for a series that it has
 subscribed to earlier.</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;series_cancel&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;item&quot;</span><span class="p">:</span><span class="s2">&quot;wohnung.verteilung.zaehler.wirkleistung&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;series&quot;</span><span class="p">:</span><span class="s2">&quot;avg&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="s2">&quot;48h&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;end&quot;</span><span class="p">:</span><span class="s2">&quot;now&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="mi">100</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;series_cancel&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;item&quot;</span><span class="p">:</span><span class="s2">&quot;wohnung.verteilung.zaehler.wirkleistung&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;series&quot;</span><span class="p">:</span><span class="s2">&quot;avg&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="s2">&quot;48h&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;end&quot;</span><span class="p">:</span><span class="s2">&quot;now&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="mi">100</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>The plugin answers with:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;series_cancel&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;series_cancel&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;series_cancel&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;series_cancel&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -4093,22 +4093,22 @@ subscribed to earlier.</p>
 <p>With the <strong>log</strong> command a client requests the last entries of a
 specified log. The example command requests the last 5 log entries of
 the core log:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;log&quot;</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;env.core.log&quot;</span><span class="p">,</span><span class="nt">&quot;max&quot;</span><span class="p">:</span><span class="s2">&quot;5&quot;</span><span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;log&quot;</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;env.core.log&quot;</span><span class="p">,</span><span class="nt">&quot;max&quot;</span><span class="p">:</span><span class="s2">&quot;5&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>The plugin answers with a message like this:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;init&quot;</span><span class="p">:</span><span class="s2">&quot;y&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;log&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;env.core.log&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;log&quot;</span><span class="p">:[</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;VISU: WebSocketHandler uses protocol version 4&quot;</span><span class="p">,</span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="s2">&quot;WARNING&quot;</span><span class="p">,</span><span class="nt">&quot;thread&quot;</span><span class="p">:</span><span class="s2">&quot;Main&quot;</span><span class="p">,</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;2016-04-16T15:53:21.354815+02:00&quot;</span><span class="p">},</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;Using sonos section [sonos_bo], sonos_uid = RINCON_B8E93792D35401400&quot;</span><span class="p">,</span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="s2">&quot;WARNING&quot;</span><span class="p">,</span><span class="nt">&quot;thread&quot;</span><span class="p">:</span><span class="s2">&quot;myradio&quot;</span><span class="p">,</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;2016-04-16T15:52:28.980100+02:00&quot;</span><span class="p">},</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;Mondaufgang um 15:26:50 bei Azimuth 76.9 und Monduntergang um 04:39:55 bei Azimuth 285.5&quot;</span><span class="p">,</span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="s2">&quot;WARNING&quot;</span><span class="p">,</span><span class="nt">&quot;thread&quot;</span><span class="p">:</span><span class="s2">&quot;mysunmoon&quot;</span><span class="p">,</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;2016-04-16T15:52:27.678330+02:00&quot;</span><span class="p">},</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;No broker url given, assuming current ip and default broker port: http://10.0.0.182:12900&quot;</span><span class="p">,</span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="s2">&quot;WARNING&quot;</span><span class="p">,</span><span class="nt">&quot;thread&quot;</span><span class="p">:</span><span class="s2">&quot;Main&quot;</span><span class="p">,</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;2016-04-16T15:52:14.006478+02:00&quot;</span><span class="p">},</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;mlgw: Serial number of ML Gateway is 22804066&quot;</span><span class="p">,</span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="s2">&quot;WARNING&quot;</span><span class="p">,</span><span class="nt">&quot;thread&quot;</span><span class="p">:</span><span class="s2">&quot;Main&quot;</span><span class="p">,</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;2016-04-16T15:52:13.869275+02:00&quot;</span><span class="p">}</span><span class="w"></span>
-<span class="w"> </span><span class="p">]</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w"> </span><span class="nt">&quot;init&quot;</span><span class="p">:</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;log&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;env.core.log&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;log&quot;</span><span class="p">:[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;VISU: WebSocketHandler uses protocol version 4&quot;</span><span class="p">,</span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="s2">&quot;WARNING&quot;</span><span class="p">,</span><span class="nt">&quot;thread&quot;</span><span class="p">:</span><span class="s2">&quot;Main&quot;</span><span class="p">,</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;2016-04-16T15:53:21.354815+02:00&quot;</span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;Using sonos section [sonos_bo], sonos_uid = RINCON_B8E93792D35401400&quot;</span><span class="p">,</span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="s2">&quot;WARNING&quot;</span><span class="p">,</span><span class="nt">&quot;thread&quot;</span><span class="p">:</span><span class="s2">&quot;myradio&quot;</span><span class="p">,</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;2016-04-16T15:52:28.980100+02:00&quot;</span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;Mondaufgang um 15:26:50 bei Azimuth 76.9 und Monduntergang um 04:39:55 bei Azimuth 285.5&quot;</span><span class="p">,</span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="s2">&quot;WARNING&quot;</span><span class="p">,</span><span class="nt">&quot;thread&quot;</span><span class="p">:</span><span class="s2">&quot;mysunmoon&quot;</span><span class="p">,</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;2016-04-16T15:52:27.678330+02:00&quot;</span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;No broker url given, assuming current ip and default broker port: http://10.0.0.182:12900&quot;</span><span class="p">,</span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="s2">&quot;WARNING&quot;</span><span class="p">,</span><span class="nt">&quot;thread&quot;</span><span class="p">:</span><span class="s2">&quot;Main&quot;</span><span class="p">,</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;2016-04-16T15:52:14.006478+02:00&quot;</span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;mlgw: Serial number of ML Gateway is 22804066&quot;</span><span class="p">,</span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="s2">&quot;WARNING&quot;</span><span class="p">,</span><span class="nt">&quot;thread&quot;</span><span class="p">:</span><span class="s2">&quot;Main&quot;</span><span class="p">,</span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;2016-04-16T15:52:13.869275+02:00&quot;</span><span class="p">}</span>
+<span class="w"> </span><span class="p">]</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -4116,16 +4116,16 @@ the core log:</p>
 <h3>proto<a class="headerlink" href="#proto" title="Permalink to this heading"></a></h3>
 <p>With the <strong>proto</strong> command a client requests the WebSocket protocol
 version, it wants to use for communication:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;proto&quot;</span><span class="p">,</span><span class="nt">&quot;ver&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;proto&quot;</span><span class="p">,</span><span class="nt">&quot;ver&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>The plugin answers with the protocol version it supports. Additionally
 it sends the actual date time and timezone:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;proto&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;ver&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;2016-04-14T21:23:20.248227+02:00&quot;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;proto&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;ver&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="s2">&quot;2016-04-14T21:23:20.248227+02:00&quot;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -4137,13 +4137,13 @@ itself to SmartHomeNG. The command should be issued right after opening
 a connection.</p>
 <p>The following example shows, what a smartVISU v2.7 running in a Safari
 Browser would send:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;identity&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;sw&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;smartVISU&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;ver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;v2.7&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;browser&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Safari&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;bver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9&quot;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;identity&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;sw&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;smartVISU&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;ver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;v2.7&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;browser&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Safari&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;bver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9&quot;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -4152,7 +4152,7 @@ Browser would send:</p>
 <p>–&gt; This command is new with <strong>SmartHomeNG 1.4</strong></p>
 <p>With the <strong>list_items</strong> command a client requests the list of items
 that are defined in SmartHomeNG:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;list_items&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;list_items&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>The plugin does not answer unless it has been configured with
@@ -4161,13 +4161,13 @@ that are defined in SmartHomeNG:</p>
 <strong>path</strong> is empty, the top level items are returned.</p>
 <p>The plugin answers with a dict containing the information about
 accessible items.</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;list_items&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">   </span><span class="p">{</span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;root.child&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;child&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;num&quot;</span><span class="p">},</span><span class="w"></span>
-<span class="w">   </span><span class="p">{</span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;root.another&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;another child&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;bool&quot;</span><span class="p">}</span><span class="w"></span>
-<span class="w"> </span><span class="p">]</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;list_items&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">   </span><span class="p">{</span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;root.child&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;child&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;num&quot;</span><span class="p">},</span>
+<span class="w">   </span><span class="p">{</span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;root.another&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;another child&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;bool&quot;</span><span class="p">}</span>
+<span class="w"> </span><span class="p">]</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -4176,7 +4176,7 @@ accessible items.</p>
 <p>–&gt; This command is new with <strong>SmartHomeNG 1.4</strong></p>
 <p>With the <strong>list_logics</strong> command a client requests the list of
 logics that can be triggered by the client:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;list_logics&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;list_logics&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>The plugin does not answer unless it has been configured with
@@ -4186,13 +4186,13 @@ all loaded user logics. When <strong>„enabled“:1</strong> is specified, only
 user logics are being returned.</p>
 <p>The plugin answers with a dict containing the information about
 accessible logics.</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;list_logics&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w"> </span><span class="nt">&quot;logics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">   </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;az_licht&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;desc&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span><span class="w"></span>
-<span class="w">   </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;gz_licht&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;desc&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="w"></span>
-<span class="w"> </span><span class="p">]</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w"> </span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;list_logics&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;logics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">   </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;az_licht&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;desc&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span>
+<span class="w">   </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;gz_licht&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;desc&quot;</span><span class="p">:</span><span class="s2">&quot;...&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
+<span class="w"> </span><span class="p">]</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -4205,7 +4205,7 @@ accessible logics.</p>
 With the <strong>dialog</strong> command the smartVISU client can be instructed to
 display a dialog.</p>
 <p>The following command instructs smartVISU to display a dialog:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dialog&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;header&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;This is the dialog header&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;This is the dialog message&quot;</span><span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dialog&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;header&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;This is the dialog header&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;This is the dialog message&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>The smartVISU client does not send an answer to the <strong>dialog</strong> command.</p>
@@ -4219,7 +4219,7 @@ display a dialog.</p>
 With the <strong>url`</strong> command the smartVISU client can be instructed to
 change to another page.</p>
 <p>The following command instructs smartVISU to change to the main page:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;url&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;index.php&quot;</span><span class="p">}</span><span class="w"></span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;cmd&quot;</span><span class="p">:</span><span class="s2">&quot;url&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;index.php&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>The smartVISU client does not send an answer to the <strong>url</strong> command.</p>

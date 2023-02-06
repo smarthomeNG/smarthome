@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Wunderground</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Wunderground</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3897,16 +3897,16 @@
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
 <p>Use the plugin configuration to configure the wunderground plugin.</p>
 <p>You can configure multiple instances of the wunderground plugin to collect data for multiple locations.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># for etc/plugin.yaml configuration file:</span><span class="w"></span>
-<span class="nt">weather_somewhere</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wunderground</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.wunderground</span><span class="w"></span>
-<span class="w">    </span><span class="nt">apikey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxyyyyxxxxyyyy</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># language: de</span><span class="w"></span>
-<span class="w">    </span><span class="nt">location</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Germany/Hamburg</span><span class="w"></span>
-<span class="w">    </span><span class="nt">item_subtree</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mein_wetter</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetter_ham</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># cycle: 600</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># for etc/plugin.yaml configuration file:</span>
+<span class="nt">weather_somewhere</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wunderground</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.wunderground</span>
+<span class="w">    </span><span class="nt">apikey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxyyyyxxxxyyyy</span>
+<span class="w">    </span><span class="c1"># language: de</span>
+<span class="w">    </span><span class="nt">location</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Germany/Hamburg</span>
+<span class="w">    </span><span class="nt">item_subtree</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mein_wetter</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetter_ham</span>
+<span class="w">    </span><span class="c1"># cycle: 600</span>
 </pre></div>
 </div>
 <section id="apikey">
@@ -3975,413 +3975,413 @@ autoip.json?geo_ip=38.102.136.138     specific IP address location
 <section id="example-items-yaml">
 <h3>Example: items.yaml<a class="headerlink" href="#example-items-yaml" title="Permalink to this heading"></a></h3>
 <p>Example configuration of an item-subtree for the wunderground plugin in yaml-format:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="nt">...</span><span class="p">:</span><span class="w"></span>
-
-<span class="w">    </span><span class="nt">mein_wetter</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># item definitions may contain a &#39;value: -9999&#39; to signal that this item never</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># received an update from wunderground</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">ort</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/display_location/city</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">ort_wetterstation</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/observation_location/city</span><span class="w"></span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unbekannt</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">lokale_zeit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/local_time_rfc822</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">beobachtungszeitpunkt</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/observation_time_rfc822</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">beobachtungszeitpunkt_datetime</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/observation_epoch</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">wetter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/weather</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">wetter_icon</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/icon</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">temperatur</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/temp_c</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">temperatur_gefuehlt</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/feelslike_c</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">rel_luftfeuchtigkeit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/relative_humidity</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">percent</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">taupunkt</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/dewpoint_c</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">luftdruck</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/pressure_mb</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">luftdruck_trend</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/pressure_trend</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">sichtweite</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/visibility_km</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">uv</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/UV</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">niederschlag_1std</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/precip_1hr_metric</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">niederschlag_heute</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/precip_today_metric</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">windrichtung</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/wind_dir</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">windrichtung_grad</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/wind_degrees</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">windgeschwindigkeit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/wind_kph</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">windboeen</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/wind_gust_kph</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">vorhersage</span><span class="p">:</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">wochentag</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/date/weekday</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">temperatur_min</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/low/celsius</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">temperatur_max</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/high/celsius</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/pop</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">percent</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag_ganzertag_mm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/qpf_allday/mm</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag_tag_mm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/qpf_day/mm</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag_nacht_mm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/qpf_night/mm</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">verhaeltnisse</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/conditions</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">maxwindspeed</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/maxwind/kph</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">maxwinddir</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/maxwind/dir</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">maxwinddegrees</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/maxwind/degrees</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">avgwindspeed</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/avewind/kph</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">avgwinddir</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/avewind/dir</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">avgwinddegrees</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/avewind/degrees</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">vorhersage1</span><span class="p">:</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">wochentag</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/date/weekday</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">temperatur_min</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/low/celsius</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">temperatur_max</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/high/celsius</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/pop</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">percent</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag_ganzertag_mm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/qpf_allday/mm</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag_tag_mm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/qpf_day/mm</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag_nacht_mm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/qpf_night/mm</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">verhaeltnisse</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/conditions</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">maxwindspeed</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/maxwind/kph</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">maxwinddir</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/maxwind/dir</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">maxwinddegrees</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/maxwind/degrees</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">avgwindspeed</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/avewind/kph</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">avgwinddir</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/avewind/dir</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">avgwinddegrees</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/avewind/degrees</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">vorhersage2</span><span class="p">:</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">wochentag</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/date/weekday</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">temperatur_min</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/low/celsius</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">temperatur_max</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/high/celsius</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/pop</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">percent</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag_ganzertag_mm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/qpf_allday/mm</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag_tag_mm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/qpf_day/mm</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag_nacht_mm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/qpf_night/mm</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">verhaeltnisse</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/conditions</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">maxwindspeed</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/maxwind/kph</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">maxwinddir</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/maxwind/dir</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">maxwinddegrees</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/maxwind/degrees</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">avgwindspeed</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/avewind/kph</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">avgwinddir</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/avewind/dir</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">avgwinddegrees</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/avewind/degrees</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">vorhersage3</span><span class="p">:</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">wochentag</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/date/weekday</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">temperatur_min</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/low/celsius</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">temperatur_max</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/high/celsius</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/pop</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">percent</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag_ganzertag_mm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/qpf_allday/mm</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag_tag_mm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/qpf_day/mm</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">niederschlag_nacht_mm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/qpf_night/mm</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">verhaeltnisse</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/conditions</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">maxwindspeed</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/maxwind/kph</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">maxwinddir</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/maxwind/dir</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">maxwinddegrees</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/maxwind/degrees</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">avgwindspeed</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/avewind/kph</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">avgwinddir</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/avewind/dir</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">avgwinddegrees</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span><span class="w"></span>
-<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/avewind/degrees</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="nt">...</span><span class="p">:</span>
+
+<span class="w">    </span><span class="nt">mein_wetter</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># item definitions may contain a &#39;value: -9999&#39; to signal that this item never</span>
+<span class="w">        </span><span class="c1"># received an update from wunderground</span>
+
+<span class="w">        </span><span class="nt">ort</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/display_location/city</span>
+
+<span class="w">        </span><span class="nt">ort_wetterstation</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/observation_location/city</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unbekannt</span>
+
+<span class="w">        </span><span class="nt">lokale_zeit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/local_time_rfc822</span>
+
+<span class="w">        </span><span class="nt">beobachtungszeitpunkt</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/observation_time_rfc822</span>
+
+<span class="w">        </span><span class="nt">beobachtungszeitpunkt_datetime</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/observation_epoch</span>
+
+<span class="w">        </span><span class="nt">wetter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/weather</span>
+
+<span class="w">        </span><span class="nt">wetter_icon</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/icon</span>
+
+<span class="w">        </span><span class="nt">temperatur</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/temp_c</span>
+
+<span class="w">        </span><span class="nt">temperatur_gefuehlt</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/feelslike_c</span>
+
+<span class="w">        </span><span class="nt">rel_luftfeuchtigkeit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/relative_humidity</span>
+<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">percent</span>
+
+<span class="w">        </span><span class="nt">taupunkt</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/dewpoint_c</span>
+
+<span class="w">        </span><span class="nt">luftdruck</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/pressure_mb</span>
+<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">        </span><span class="nt">luftdruck_trend</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/pressure_trend</span>
+
+<span class="w">        </span><span class="nt">sichtweite</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/visibility_km</span>
+<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">        </span><span class="nt">uv</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/UV</span>
+<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">        </span><span class="nt">niederschlag_1std</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/precip_1hr_metric</span>
+<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">        </span><span class="nt">niederschlag_heute</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/precip_today_metric</span>
+<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">        </span><span class="nt">windrichtung</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/wind_dir</span>
+
+<span class="w">        </span><span class="nt">windrichtung_grad</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/wind_degrees</span>
+
+<span class="w">        </span><span class="nt">windgeschwindigkeit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/wind_kph</span>
+<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">        </span><span class="nt">windboeen</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">            </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_observation/wind_gust_kph</span>
+<span class="w">            </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">        </span><span class="nt">vorhersage</span><span class="p">:</span>
+
+<span class="w">            </span><span class="nt">wochentag</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/date/weekday</span>
+
+<span class="w">            </span><span class="nt">temperatur_min</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/low/celsius</span>
+
+<span class="w">            </span><span class="nt">temperatur_max</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/high/celsius</span>
+
+<span class="w">            </span><span class="nt">niederschlag</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/pop</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">percent</span>
+
+<span class="w">            </span><span class="nt">niederschlag_ganzertag_mm</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/qpf_allday/mm</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">niederschlag_tag_mm</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/qpf_day/mm</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">niederschlag_nacht_mm</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/qpf_night/mm</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">verhaeltnisse</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/conditions</span>
+
+<span class="w">            </span><span class="nt">maxwindspeed</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/maxwind/kph</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">maxwinddir</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/maxwind/dir</span>
+
+<span class="w">            </span><span class="nt">maxwinddegrees</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/maxwind/degrees</span>
+
+<span class="w">            </span><span class="nt">avgwindspeed</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/avewind/kph</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">avgwinddir</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/avewind/dir</span>
+
+<span class="w">            </span><span class="nt">avgwinddegrees</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/0/avewind/degrees</span>
+
+<span class="w">        </span><span class="nt">vorhersage1</span><span class="p">:</span>
+
+<span class="w">            </span><span class="nt">wochentag</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/date/weekday</span>
+
+<span class="w">            </span><span class="nt">temperatur_min</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/low/celsius</span>
+
+<span class="w">            </span><span class="nt">temperatur_max</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/high/celsius</span>
+
+<span class="w">            </span><span class="nt">niederschlag</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/pop</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">percent</span>
+
+<span class="w">            </span><span class="nt">niederschlag_ganzertag_mm</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/qpf_allday/mm</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">niederschlag_tag_mm</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/qpf_day/mm</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">niederschlag_nacht_mm</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/qpf_night/mm</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">verhaeltnisse</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/conditions</span>
+
+<span class="w">            </span><span class="nt">maxwindspeed</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/maxwind/kph</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">maxwinddir</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/maxwind/dir</span>
+
+<span class="w">            </span><span class="nt">maxwinddegrees</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/maxwind/degrees</span>
+
+<span class="w">            </span><span class="nt">avgwindspeed</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/avewind/kph</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">avgwinddir</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/avewind/dir</span>
+
+<span class="w">            </span><span class="nt">avgwinddegrees</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/1/avewind/degrees</span>
+
+<span class="w">        </span><span class="nt">vorhersage2</span><span class="p">:</span>
+
+<span class="w">            </span><span class="nt">wochentag</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/date/weekday</span>
+
+<span class="w">            </span><span class="nt">temperatur_min</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/low/celsius</span>
+
+<span class="w">            </span><span class="nt">temperatur_max</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/high/celsius</span>
+
+<span class="w">            </span><span class="nt">niederschlag</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/pop</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">percent</span>
+
+<span class="w">            </span><span class="nt">niederschlag_ganzertag_mm</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/qpf_allday/mm</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">niederschlag_tag_mm</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/qpf_day/mm</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">niederschlag_nacht_mm</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/qpf_night/mm</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">verhaeltnisse</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/conditions</span>
+
+<span class="w">            </span><span class="nt">maxwindspeed</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/maxwind/kph</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">maxwinddir</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/maxwind/dir</span>
+
+<span class="w">            </span><span class="nt">maxwinddegrees</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/maxwind/degrees</span>
+
+<span class="w">            </span><span class="nt">avgwindspeed</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/avewind/kph</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">avgwinddir</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/avewind/dir</span>
+
+<span class="w">            </span><span class="nt">avgwinddegrees</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/2/avewind/degrees</span>
+
+<span class="w">        </span><span class="nt">vorhersage3</span><span class="p">:</span>
+
+<span class="w">            </span><span class="nt">wochentag</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/date/weekday</span>
+
+<span class="w">            </span><span class="nt">temperatur_min</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/low/celsius</span>
+
+<span class="w">            </span><span class="nt">temperatur_max</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/high/celsius</span>
+
+<span class="w">            </span><span class="nt">niederschlag</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/pop</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">percent</span>
+
+<span class="w">            </span><span class="nt">niederschlag_ganzertag_mm</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/qpf_allday/mm</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">niederschlag_tag_mm</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/qpf_day/mm</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">niederschlag_nacht_mm</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/qpf_night/mm</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">verhaeltnisse</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/conditions</span>
+
+<span class="w">            </span><span class="nt">maxwindspeed</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/maxwind/kph</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">maxwinddir</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/maxwind/dir</span>
+
+<span class="w">            </span><span class="nt">maxwinddegrees</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/maxwind/degrees</span>
+
+<span class="w">            </span><span class="nt">avgwindspeed</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/avewind/kph</span>
+<span class="w">                </span><span class="nt">wug_datatype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">positive</span>
+
+<span class="w">            </span><span class="nt">avgwinddir</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/avewind/dir</span>
+
+<span class="w">            </span><span class="nt">avgwinddegrees</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-9999</span>
+<span class="w">                </span><span class="nt">wug_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forecast/simpleforecast/forecastday/3/avewind/degrees</span>
 </pre></div>
 </div>
 </section>

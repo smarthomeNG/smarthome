@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../referenz.html">Referenz <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="metadata.html">Metadaten</a> &raquo;</li>
-      <li>item_attributes</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../referenz.html">Referenz <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="metadata.html">Metadaten</a></li>
+      <li class="breadcrumb-item active">item_attributes</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3859,20 +3859,20 @@ Großbuchstaben und Sonderzeichen enthalten. Sie dürfen nicht mit einer Ziffer 
 <p>Die Definitionen im Abschnitt <code class="docutils literal notranslate"><span class="pre">item_attributes:</span></code>  werden für die Gültigkeitsprüfung der konfigurierten Werte in den
 Konfigurationsdateien im Verzeichnis <code class="docutils literal notranslate"><span class="pre">../items</span></code>, sowie zur Dokumentation und in der Zukunft zur Konfiguration
 in der Admin GUI benutzt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_attributes</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">attribute1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span><span class="w"></span>
-<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span><span class="w"></span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung</span><span class="nv"> </span><span class="s">des</span><span class="nv"> </span><span class="s">Attributes&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">attribute&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">valid_list</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2222</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4321</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_attributes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">attribute1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung</span><span class="nv"> </span><span class="s">des</span><span class="nv"> </span><span class="s">Attributes&#39;</span>
+<span class="w">            </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">attribute&#39;</span>
+<span class="w">        </span><span class="nt">valid_list</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2222</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4321</span>
 
-<span class="w">    </span><span class="nt">attribute2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">    </span><span class="nt">attribute2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </pre></div>
 </div>
 <p>Beschreibung der Schlüssel im Abschnitt für einen Parameter bzw. ein Attribut:</p>
@@ -3958,7 +3958,7 @@ Attribut genutzt wird. Außerdem müssen die Definitionen der Item Attribute in 
 <h2>Plugins ohne Item Attribute<a class="headerlink" href="#plugins-ohne-item-attribute" title="Permalink to this heading"></a></h2>
 <p>Falls ein Plugin keine Item Attribute hat, wird das durch den folgenden Eintrag in der
 Datei <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> angezeigt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_attributes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_attributes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span>
 </pre></div>
 </div>
 <div class="admonition hint">

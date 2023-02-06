@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../installation.html">Installation</a> &raquo;</li>
-          <li><a href="komplettanleitung.html">Komplettanleitung</a> &raquo;</li>
-      <li>smartVISU installieren</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../installation.html">Installation</a></li>
+          <li class="breadcrumb-item"><a href="komplettanleitung.html">Komplettanleitung</a></li>
+      <li class="breadcrumb-item active">smartVISU installieren</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3875,8 +3875,8 @@ des SmartHomeNG braucht die SmartVisu noch eine Websocket-Verbindung zum SmartHo
 <h2><a class="toc-backref" href="#id1">zusätzliche Pakete installieren</a><a class="headerlink" href="#zusatzliche-pakete-installieren" title="Permalink to this heading"></a></h2>
 <p>Der Apache2 braucht noch ein paar Pakete wie PHP um die Webseiten der
 SmartVISU liefern zu können:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install libawl-php php-curl php php-json php-xml php-mbstring
-sudo service apache2 restart
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libawl-php<span class="w"> </span>php-curl<span class="w"> </span>php<span class="w"> </span>php-json<span class="w"> </span>php-xml<span class="w"> </span>php-mbstring
+sudo<span class="w"> </span>service<span class="w"> </span>apache2<span class="w"> </span>restart
 </pre></div>
 </div>
 </section>
@@ -3884,16 +3884,16 @@ sudo service apache2 restart
 <h2><a class="toc-backref" href="#id2">SmartVISU Quellcode laden</a><a class="headerlink" href="#smartvisu-quellcode-laden" title="Permalink to this heading"></a></h2>
 <p>Die Dateien der SmartVISU werden in einem Unterverzeichnis abgelegt,
 das für den <strong>Apache2</strong> Webserver zugänglich ist:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /var/www/html
-sudo rm index.html
-sudo mkdir smartvisu
-sudo chown smarthome:www-data smartvisu
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/var/www/html
+sudo<span class="w"> </span>rm<span class="w"> </span>index.html
+sudo<span class="w"> </span>mkdir<span class="w"> </span>smartvisu
+sudo<span class="w"> </span>chown<span class="w"> </span>smarthome:www-data<span class="w"> </span>smartvisu
 <span class="c1"># guid setzen</span>
-chmod g+rws smartvisu/
-<span class="nb">cd</span> smartvisu
-git clone https://github.com/Martin-Gleiss/smartvisu.git .
+chmod<span class="w"> </span>g+rws<span class="w"> </span>smartvisu/
+<span class="nb">cd</span><span class="w"> </span>smartvisu
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Martin-Gleiss/smartvisu.git<span class="w"> </span>.
 <span class="c1"># Schreibrechte für Cache und Konfigurationsdateien setzen</span>
-bash setpermissions
+bash<span class="w"> </span>setpermissions
 </pre></div>
 </div>
 <p>Bitte auf den <strong>Punkt</strong> am Ende des <strong>git clone</strong> Kommandos achten!</p>
@@ -3943,10 +3943,10 @@ aufgrund der via Websocket übermittelten Daten von Items in SmartHomeNG dynamis
 <section id="nachinstallation-der-kurzanleitung">
 <h2><a class="toc-backref" href="#id5">Nachinstallation der Kurzanleitung</a><a class="headerlink" href="#nachinstallation-der-kurzanleitung" title="Permalink to this heading"></a></h2>
 <p>Um die aktuelle Version 2.0 der Kurzanleitung nachzuinstallieren, sind folgende Kommandos auszuführen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /var/www/html/smartvisu/pages
-mkdir kurzanleitung
-<span class="nb">cd</span> kurzanleitung
-git clone https://github.com/smartVISU-newstuff/kurzanleitung .
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/var/www/html/smartvisu/pages
+mkdir<span class="w"> </span>kurzanleitung
+<span class="nb">cd</span><span class="w"> </span>kurzanleitung
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/smartVISU-newstuff/kurzanleitung<span class="w"> </span>.
 </pre></div>
 </div>
 <p>(Bitte wie immer auf den Punkt am Ende des letzten Befehls achten)</p>

@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../referenz.html">Referenz <span class="greensup">Update</span></a> &raquo;</li>
-      <li>Userfunctions <span class="redsup">Neu</span></li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../referenz.html">Referenz <span class="greensup">Update</span></a></li>
+      <li class="breadcrumb-item active">Userfunctions <span class="redsup">Neu</span></li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3935,10 +3935,10 @@ Dazu muss das Logging Modul importiert und ein Logger definiert werden:</p>
 </div>
 <p>Damit aus Funktionen ein Logging mit Leveln kleiner als WARNING erfolgt, muss in der Logging Konfiguration
 ../etc/logging.yaml ein entsprechender Logger für <strong>functions</strong> ergänzt werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">functions</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">loggers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">functions</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
 </pre></div>
 </div>
 </section>
@@ -3951,10 +3951,10 @@ den Userfunctions zu erhalten, gibt es zwei Möglichkeiten.</p>
 <p>Damit die Funktionen unabhängig von der Item Struktur der aktuellen SmartHomeNG sind, sollten Item Werte als
 Parameter übergeben werden. Dadurch können Dateien mit Userfunctions einfach an andere Anwender weiter gegeben
 werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.sun_position.elevation.degrees</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uf.lamellen_oeffnung_ost( sh.env.location.sun_position.elevation.degrees() )</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.sun_position.elevation.degrees</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uf.lamellen_oeffnung_ost( sh.env.location.sun_position.elevation.degrees() )</span>
 </pre></div>
 </div>
 <p>Die Userfunction dazu kann z.B. folgendermaßen aussehen:</p>
@@ -3964,7 +3964,7 @@ werden:</p>
 <span class="n">_DESCRIPTION</span> <span class="o">=</span> <span class="s1">&#39;Hilfsfunktionen zur Beschattungssteuerung per Stateengine&#39;</span>
 
 <span class="k">def</span> <span class="nf">lamellen_oeffnung_ost</span><span class="p">(</span><span class="n">elevation</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Bestimmung der Stellung der Ost Lamellen im Wohnbereich</span>
 
 <span class="sd">    :param elevation: Sonnen Position (Höhe in Grad)</span>
@@ -3982,13 +3982,13 @@ werden:</p>
 kann die Userfunction so geschrieben werden, dass sie die Item Struktur kennt und voraussetzt.</p>
 <p>Statt mehrere Items als einzelne Parameter zu übergeben, braucht dann nur das Smarthome-Objekt übergeben zu werden.
 Das folgende Beispiel zeigt beide Varianten (übergabe der Item Werte und Referenzierung über das Smarthome-Objekt).</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Übergabe der Item Werte</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.sun_position.azimut.degrees</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.sun_position.elevation.degrees</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uf.lamellen_oeffnung_sued( sh.env.location.sun_position.azimut.degrees(), sh.env.location.sun_position.elevation.degrees() )</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_item</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Übergabe der Item Werte</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.sun_position.azimut.degrees</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.sun_position.elevation.degrees</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uf.lamellen_oeffnung_sued( sh.env.location.sun_position.azimut.degrees(), sh.env.location.sun_position.elevation.degrees() )</span>
 </pre></div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id4">
@@ -3997,7 +3997,7 @@ Das folgende Beispiel zeigt beide Varianten (übergabe der Item Werte und Refere
 <span class="n">_DESCRIPTION</span> <span class="o">=</span> <span class="s1">&#39;Hilfsfunktionen zur Beschattungssteuerung per Stateengine&#39;</span>
 
 <span class="k">def</span> <span class="nf">lamellen_oeffnung_sued</span><span class="p">(</span><span class="n">azimut</span><span class="p">,</span> <span class="n">elevation</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Bestimmung der Stellung der Ost Lamellen im Wohnbereich</span>
 
 <span class="sd">    :param azimut: Sonnen Position (Himmelsrichtung in Grad)</span>
@@ -4010,13 +4010,13 @@ Das folgende Beispiel zeigt beide Varianten (übergabe der Item Werte und Refere
 </div>
 </div>
 <p>kann das Smarthome-Objekt übergeben werden. Das würde dann folgendermaßen aussehen:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Übergabe des Smarthome-Objektes sh</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.sun_position.azimut.degrees</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.sun_position.elevation.degrees</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uf.lamellen_oeffnung_sued(sh)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_item</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Übergabe des Smarthome-Objektes sh</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.sun_position.azimut.degrees</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.sun_position.elevation.degrees</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uf.lamellen_oeffnung_sued(sh)</span>
 </pre></div>
 </div>
 <p>Die Userfunction dazu kann z.B. folgendermaßen aussehen:</p>
@@ -4026,7 +4026,7 @@ Das folgende Beispiel zeigt beide Varianten (übergabe der Item Werte und Refere
 <span class="n">_DESCRIPTION</span> <span class="o">=</span> <span class="s1">&#39;Hilfsfunktionen zur Beschattungssteuerung per Stateengine&#39;</span>
 
 <span class="k">def</span> <span class="nf">lamellen_oeffnung_sued</span><span class="p">(</span><span class="n">sh</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Bestimmung der Stellung der Ost Lamellen im Wohnbereich</span>
 
 <span class="sd">    :param sh: smarthome objekt</span>

@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-          <li><a href="../user_doc.html">stateengine</a> &raquo;</li>
-      <li>Zustand-Templates</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_doc/plugins_system.html">System Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../user_doc.html">stateengine</a></li>
+      <li class="breadcrumb-item active">Zustand-Templates</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3860,40 +3860,40 @@
 bietet sich ab <strong>smarthomeNG 1.6</strong> das <code class="docutils literal notranslate"><span class="pre">struct</span></code> Attribut an. Zum einen können in der Datei <code class="docutils literal notranslate"><span class="pre">etc/struct.yaml</span></code>
 eigene Vorlagen definiert werden, zum anderen stellt das Plugin einige Vorlagen fix fertig bereit. Sie
 können wie folgt eingebunden werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">beispiel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">beispiel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">trigger</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="w">    </span><span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_lock</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_suspend</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore</span><span class="w"> </span><span class="c1">#beispielsweise eine in etc/struct.yaml angelegte Vorlage</span><span class="w"></span>
+<span class="w">    </span><span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_lock</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_suspend</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore</span><span class="w"> </span><span class="c1">#beispielsweise eine in etc/struct.yaml angelegte Vorlage</span>
 
-<span class="w">            </span><span class="nt">manuell</span><span class="p">:</span><span class="w"></span>
-<span class="w">               </span><span class="c1"># Weitere Attribute werden bereits über das Template stateengine.state_suspend geladen</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.aufab</span><span class="w"></span>
-<span class="w">                   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.step</span><span class="w"></span>
-<span class="w">                   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.hoehe</span><span class="w"></span>
-<span class="w">                   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.lamelle</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_manual_exclude</span><span class="p">:</span><span class="w"></span>
-<span class="w">                   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KNX:y.y.y:1/2/3</span><span class="w"> </span><span class="c1"># konkrete Gruppenadresse eines konkreten KNX Geräts</span><span class="w"></span>
-<span class="w">                   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Init:*</span><span class="w"></span>
+<span class="w">            </span><span class="nt">manuell</span><span class="p">:</span>
+<span class="w">               </span><span class="c1"># Weitere Attribute werden bereits über das Template stateengine.state_suspend geladen</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.aufab</span>
+<span class="w">                   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.step</span>
+<span class="w">                   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.hoehe</span>
+<span class="w">                   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.lamelle</span>
+<span class="w">                </span><span class="nt">se_manual_exclude</span><span class="p">:</span>
+<span class="w">                   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KNX:y.y.y:1/2/3</span><span class="w"> </span><span class="c1"># konkrete Gruppenadresse eines konkreten KNX Geräts</span>
+<span class="w">                   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Init:*</span>
 
-<span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..lock</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..supsend</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.. release</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.trigger</span><span class="w"></span>
+<span class="w">            </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..lock</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..supsend</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.. release</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.trigger</span>
 
-<span class="w">              </span><span class="nt">additional_state1</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
+<span class="w">              </span><span class="nt">additional_state1</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
 </pre></div>
 </div>
 <p>Unter SmarthomeNG Version 1.7.0 werden die eval_trigger Angaben aus den einzelnen Struct-Vorgaben nicht
@@ -3906,45 +3906,45 @@ da diese bereits im struct des Plugins gelistet sind.</p>
 <p>Die <code class="docutils literal notranslate"><span class="pre">general</span></code> Vorlage enthält die Items, die generell für einen Zustandsautomaten
 angelegt werden sollten. Das „rules“ Item ist das Regelwerk-Item mit aktiviertem
 se_plugin. Dieser Codeblock wird zwingend von jedem Zustandsautomaten benötigt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#stateengine.general</span><span class="w"></span>
-<span class="nt">state_id</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># The id/path of the actual state is assigned to this item by the stateengine</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#stateengine.general</span>
+<span class="nt">state_id</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># The id/path of the actual state is assigned to this item by the stateengine</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="nt">state_name</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># The name of the actual state is assigned to this item by the stateengine</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="nt">state_name</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># The name of the actual state is assigned to this item by the stateengine</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="nt">conditionset_id</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The id/path of the actual condition set is assigned to this item by the stateengine</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="nt">conditionset_id</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The id/path of the actual condition set is assigned to this item by the stateengine</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="nt">conditionset_name</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The name of the actual condition set is assigned to this item by the stateengine</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="nt">conditionset_name</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The name of the actual condition set is assigned to this item by the stateengine</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Regeln und Item Verweise für den Zustandsautomaten</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">se_plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">active</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Regeln und Item Verweise für den Zustandsautomaten</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">se_plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">active</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="w">    </span><span class="c1"># se_startup_delay: 30</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># se_repeat_actions: true</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># se_suspend_time: 7200</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># se_startup_delay: 30</span>
+<span class="w">    </span><span class="c1"># se_repeat_actions: true</span>
+<span class="w">    </span><span class="c1"># se_suspend_time: 7200</span>
 
-<span class="w">    </span><span class="nt">se_laststate_item_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..state_id</span><span class="w"></span>
-<span class="w">    </span><span class="nt">se_laststate_item_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..state_name</span><span class="w"></span>
-<span class="w">    </span><span class="nt">se_lastconditionset_item_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..conditionset_id</span><span class="w"></span>
-<span class="w">    </span><span class="nt">se_lastconditionset_item_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..conditionset_name</span><span class="w"></span>
+<span class="w">    </span><span class="nt">se_laststate_item_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..state_id</span>
+<span class="w">    </span><span class="nt">se_laststate_item_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..state_name</span>
+<span class="w">    </span><span class="nt">se_lastconditionset_item_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..conditionset_id</span>
+<span class="w">    </span><span class="nt">se_lastconditionset_item_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..conditionset_name</span>
 </pre></div>
 </div>
 </section>
@@ -3953,28 +3953,28 @@ se_plugin. Dieser Codeblock wird zwingend von jedem Zustandsautomaten benötigt.
 <p>Die <code class="docutils literal notranslate"><span class="pre">state_lock</span></code> Vorlage beinhaltet zum einen den Lock Zustand mit dem Namen „gesperrt“,
 zum anderen ein Item mit dem Namen <code class="docutils literal notranslate"><span class="pre">lock</span></code>. Wird dieses auf „1/True“ gesetzt, wird der
 Zustand eingenommen. Der Zustand sollte immer als erster Zustand eingebunden werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#stateengine.state_lock</span><span class="w"></span>
-<span class="nt">lock</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#stateengine.state_lock</span>
+<span class="nt">lock</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span>
 
-<span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">se_item_lock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..lock</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..lock</span><span class="w"></span>
+<span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">se_item_lock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..lock</span>
+<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..lock</span>
 
-<span class="w">    </span><span class="nt">lock</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gesperrt</span><span class="w"></span>
+<span class="w">    </span><span class="nt">lock</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gesperrt</span>
 
-<span class="w">        </span><span class="nt">on_leave</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_action_lock</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">False&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">on_leave</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">se_action_lock</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">False&#39;</span>
 
-<span class="w">        </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_value_lock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">        </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">se_value_lock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 </pre></div>
 </div>
 </section>
@@ -3996,196 +3996,196 @@ Tage-, Stunden- und Minutenangabe, für 5 Minuten also z.B. 0d 0h 5i. Dies ist g
 <p>Setzt man das Item <code class="docutils literal notranslate"><span class="pre">settings.suspend_active</span></code> auf False, wird der Pause-Zustand
 deaktiviert und manuelle Betätigungen werden
 beim nächsten Durchlauf eventuell durch andere Zustände überschrieben.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#stateengine.state_suspend</span><span class="w"></span>
-<span class="nt">state_suspend</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Zustandsvorlage für manuelles Aussetzen</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#stateengine.state_suspend</span>
+<span class="nt">state_suspend</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Zustandsvorlage für manuelles Aussetzen</span>
 
-<span class="w">    </span><span class="nt">suspend</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">    </span><span class="nt">suspend</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="w">        </span><span class="nt">visu</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">        </span><span class="nt">visu</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="w">    </span><span class="nt">suspend_end</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;&#39;</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">any(char.isdigit()</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">char</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">sh..self.date_time())</span><span class="nv"> </span><span class="s">else</span><span class="nv"> </span><span class="s">sh..self.date_time().split(&#39;</span><span class="nv"> </span><span class="s">&#39;)[1].split(&#39;.&#39;)[0]&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.date_time</span><span class="w"></span>
-<span class="w">        </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<span class="w">    </span><span class="nt">suspend_end</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;&#39;</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">any(char.isdigit()</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">char</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">sh..self.date_time())</span><span class="nv"> </span><span class="s">else</span><span class="nv"> </span><span class="s">sh..self.date_time().split(&#39;</span><span class="nv"> </span><span class="s">&#39;)[1].split(&#39;.&#39;)[0]&quot;</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.date_time</span>
+<span class="w">        </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 
-<span class="w">        </span><span class="nt">date_time</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">        </span><span class="nt">date_time</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="w">        </span><span class="nt">unix_timestamp</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">any(char.isdigit()</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">char</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">sh...date_time())</span><span class="nv"> </span><span class="s">else</span><span class="nv">  </span><span class="s">sh.tools.dt2ts(shtime.datetime_transform(sh...date_time()))</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1000&quot;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..date_time</span><span class="w"></span>
-<span class="w">            </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<span class="w">        </span><span class="nt">unix_timestamp</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">any(char.isdigit()</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">char</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">sh...date_time())</span><span class="nv"> </span><span class="s">else</span><span class="nv">  </span><span class="s">sh.tools.dt2ts(shtime.datetime_transform(sh...date_time()))</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1000&quot;</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..date_time</span>
+<span class="w">            </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 
-<span class="w">    </span><span class="nt">suspend_start</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;&#39;</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">any(char.isdigit()</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">char</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">sh..self.date_time())</span><span class="nv"> </span><span class="s">else</span><span class="nv"> </span><span class="s">sh..self.date_time().split(&#39;</span><span class="nv"> </span><span class="s">&#39;)[1].split(&#39;.&#39;)[0]&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.date_time</span><span class="w"></span>
-<span class="w">        </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<span class="w">    </span><span class="nt">suspend_start</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;&#39;</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">any(char.isdigit()</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">char</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">sh..self.date_time())</span><span class="nv"> </span><span class="s">else</span><span class="nv"> </span><span class="s">sh..self.date_time().split(&#39;</span><span class="nv"> </span><span class="s">&#39;)[1].split(&#39;.&#39;)[0]&quot;</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.date_time</span>
+<span class="w">        </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 
-<span class="w">        </span><span class="nt">date_time</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">        </span><span class="nt">date_time</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="w">        </span><span class="nt">unix_timestamp</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Can be used for the clock.countdown widget</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">any(char.isdigit()</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">char</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">sh...date_time())</span><span class="nv"> </span><span class="s">else</span><span class="nv">  </span><span class="s">sh.tools.dt2ts(shtime.datetime_transform(sh...date_time()))</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1000&quot;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..date_time</span><span class="w"></span>
-<span class="w">            </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<span class="w">        </span><span class="nt">unix_timestamp</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Can be used for the clock.countdown widget</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">any(char.isdigit()</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">char</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">sh...date_time())</span><span class="nv"> </span><span class="s">else</span><span class="nv">  </span><span class="s">sh.tools.dt2ts(shtime.datetime_transform(sh...date_time()))</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1000&quot;</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..date_time</span>
+<span class="w">            </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 
-<span class="w">    </span><span class="nt">manuell</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manuell</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_manual_invert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">        </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Adapt the se_manual_exclude the way you need it</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#se_manual_include: KNX:* Force manual mode based on source</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_manual_exclude</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database:*</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init:*</span><span class="w"></span>
+<span class="w">    </span><span class="nt">manuell</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manuell</span>
+<span class="w">        </span><span class="nt">se_manual_invert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">        </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Adapt the se_manual_exclude the way you need it</span>
+<span class="w">        </span><span class="c1">#se_manual_include: KNX:* Force manual mode based on source</span>
+<span class="w">        </span><span class="nt">se_manual_exclude</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database:*</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init:*</span>
 
-<span class="w">    </span><span class="nt">retrigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Item to retrigger the rule set evaluation</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">        </span><span class="nt">on_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..rules = True</span><span class="w"></span>
+<span class="w">    </span><span class="nt">retrigger</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Item to retrigger the rule set evaluation</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">        </span><span class="nt">on_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..rules = True</span>
 
-<span class="w">    </span><span class="nt">settings</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Use these settings for your condition values</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(sh..suspendduration(sh..suspendduration(), &quot;Init&quot;, &quot;Start&quot;), sh..suspendvariant.suspendduration0(sh..suspendduration(), &quot;Init&quot;, &quot;Start&quot;), sh..suspendvariant.suspendduration1(sh..suspendvariant.suspendduration1(), &quot;Init&quot;, &quot;Start&quot;), sh..suspendvariant.suspendduration2(sh..suspendvariant.suspendduration2(), &quot;Init&quot;, &quot;Start&quot;))</span><span class="w"></span>
-<span class="w">        </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init = True</span><span class="w"></span>
+<span class="w">    </span><span class="nt">settings</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Use these settings for your condition values</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(sh..suspendduration(sh..suspendduration(), &quot;Init&quot;, &quot;Start&quot;), sh..suspendvariant.suspendduration0(sh..suspendduration(), &quot;Init&quot;, &quot;Start&quot;), sh..suspendvariant.suspendduration1(sh..suspendvariant.suspendduration1(), &quot;Init&quot;, &quot;Start&quot;), sh..suspendvariant.suspendduration2(sh..suspendvariant.suspendduration2(), &quot;Init&quot;, &quot;Start&quot;))</span>
+<span class="w">        </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init = True</span>
 
-<span class="w">        </span><span class="nt">suspendduration</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">duration of suspend mode in minutes (gets converted automatically)</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">            </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
-<span class="w">            </span><span class="nt">on_change</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.seconds = value * 60 if not sh..self.property.last_change_by == &quot;On_Change:{}&quot;.format(sh..seconds.property.path) else None</span><span class="w"></span>
-<span class="w">            </span><span class="nt">on_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.seconds = value * 60 if &quot;Init&quot; in sh..self.property.last_update_by else None</span><span class="w"></span>
+<span class="w">        </span><span class="nt">suspendduration</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">duration of suspend mode in minutes (gets converted automatically)</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">            </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">            </span><span class="nt">on_change</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.seconds = value * 60 if not sh..self.property.last_change_by == &quot;On_Change:{}&quot;.format(sh..seconds.property.path) else None</span>
+<span class="w">            </span><span class="nt">on_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.seconds = value * 60 if &quot;Init&quot; in sh..self.property.last_update_by else None</span>
 
-<span class="w">            </span><span class="nt">duration_format</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Can be used for the clock.countdown widget</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;{}d</span><span class="nv"> </span><span class="s">{}h</span><span class="nv"> </span><span class="s">{}i</span><span class="nv"> </span><span class="s">{}s&#39;.format(int(sh...seconds()//86400),</span><span class="nv"> </span><span class="s">int((sh...seconds()%86400)//3600),</span><span class="nv"> </span><span class="s">int((sh...seconds()%3600)//60),</span><span class="nv"> </span><span class="s">round((sh...seconds()%3600)%60))&quot;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..seconds</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<span class="w">            </span><span class="nt">duration_format</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Can be used for the clock.countdown widget</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;{}d</span><span class="nv"> </span><span class="s">{}h</span><span class="nv"> </span><span class="s">{}i</span><span class="nv"> </span><span class="s">{}s&#39;.format(int(sh...seconds()//86400),</span><span class="nv"> </span><span class="s">int((sh...seconds()%86400)//3600),</span><span class="nv"> </span><span class="s">int((sh...seconds()%3600)//60),</span><span class="nv"> </span><span class="s">round((sh...seconds()%3600)%60))&quot;</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..seconds</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 
-<span class="w">            </span><span class="nt">seconds</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">duration of suspend mode in seconds (gets converted automatically)</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">                </span><span class="nt">on_change</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.. = value / 60 if not sh..self.property.last_change_by in [ &quot;On_Change:{}&quot;.format(sh....property.path), &quot;On_Update:{}&quot;.format(sh....property.path)] else None</span><span class="w"></span>
+<span class="w">            </span><span class="nt">seconds</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">duration of suspend mode in seconds (gets converted automatically)</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">                </span><span class="nt">on_change</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.. = value / 60 if not sh..self.property.last_change_by in [ &quot;On_Change:{}&quot;.format(sh....property.path), &quot;On_Update:{}&quot;.format(sh....property.path)] else None</span>
 
-<span class="w">        </span><span class="nt">suspend_active</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Use this to (de)activate suspend mode in general</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">            </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">        </span><span class="nt">suspend_active</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Use this to (de)activate suspend mode in general</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">            </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="w">        </span><span class="nt">settings_edited</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">settings editiert</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...settings.*</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not sh..self()</span><span class="w"></span>
-<span class="w">            </span><span class="nt">on_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...retrigger = True if sh..self.property.prev_update_age &gt; 0.1 else None</span><span class="w"></span>
+<span class="w">        </span><span class="nt">settings_edited</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">settings editiert</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...settings.*</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not sh..self()</span>
+<span class="w">            </span><span class="nt">on_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...retrigger = True if sh..self.property.prev_update_age &gt; 0.1 else None</span>
 
-<span class="w">    </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_item_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..suspend</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_item_suspend_visu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..suspend.visu</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_item_suspend_end</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..suspend_end.date_time</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_item_suspend_start</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..suspend_start.date_time</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_item_suspend_active</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..settings.suspend_active</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_suspend_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..settings.suspendduration</span><span class="w"></span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">se_item_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..suspend</span>
+<span class="w">        </span><span class="nt">se_item_suspend_visu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..suspend.visu</span>
+<span class="w">        </span><span class="nt">se_item_suspend_end</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..suspend_end.date_time</span>
+<span class="w">        </span><span class="nt">se_item_suspend_start</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..suspend_start.date_time</span>
+<span class="w">        </span><span class="nt">se_item_suspend_active</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..settings.suspend_active</span>
+<span class="w">        </span><span class="nt">se_suspend_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..settings.suspendduration</span>
 
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..manuell</span><span class="w"></span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..manuell</span>
 
-<span class="w">        </span><span class="nt">suspend</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ausgesetzt</span><span class="w"></span>
+<span class="w">        </span><span class="nt">suspend</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ausgesetzt</span>
 
-<span class="w">            </span><span class="nt">on_enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_action_suspend_visu</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">True&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">2&#39;</span><span class="w"></span>
+<span class="w">            </span><span class="nt">on_enter</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">se_action_suspend_visu</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">True&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">2&#39;</span>
 
-<span class="w">            </span><span class="nt">on_enter_or_stay</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_action_suspend</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">special&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;value:</span><span class="nv"> </span><span class="s">suspend:..suspend,</span><span class="nv"> </span><span class="s">..manuell&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">True&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">1&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_action_suspend_end</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">eval:se_eval.insert_suspend_time(&#39;..suspend&#39;,</span><span class="nv"> </span><span class="s">suspend_text=&#39;%Y-%m-%d</span><span class="nv"> </span><span class="s">%H:%M:%S.%f%z&#39;)&quot;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">True&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">3&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_action_suspend_start</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">eval:str(shtime.now())&quot;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">True&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;conditionset:</span><span class="nv"> </span><span class="s">enter_manuell&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">4&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_action_retrigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">special&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;value:</span><span class="nv"> </span><span class="s">retrigger:..retrigger&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">var:item.suspend_remaining&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">True&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">5&#39;</span><span class="w"></span>
+<span class="w">            </span><span class="nt">on_enter_or_stay</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">se_action_suspend</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">special&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;value:</span><span class="nv"> </span><span class="s">suspend:..suspend,</span><span class="nv"> </span><span class="s">..manuell&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">True&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">1&#39;</span>
+<span class="w">                </span><span class="nt">se_action_suspend_end</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">eval:se_eval.insert_suspend_time(&#39;..suspend&#39;,</span><span class="nv"> </span><span class="s">suspend_text=&#39;%Y-%m-%d</span><span class="nv"> </span><span class="s">%H:%M:%S.%f%z&#39;)&quot;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">True&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">3&#39;</span>
+<span class="w">                </span><span class="nt">se_action_suspend_start</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">eval:str(shtime.now())&quot;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">True&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;conditionset:</span><span class="nv"> </span><span class="s">enter_manuell&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">4&#39;</span>
+<span class="w">                </span><span class="nt">se_action_retrigger</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">special&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;value:</span><span class="nv"> </span><span class="s">retrigger:..retrigger&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">var:item.suspend_remaining&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">True&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">5&#39;</span>
 
-<span class="w">            </span><span class="nt">on_leave</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_action_suspend</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">False&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">2&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_action_suspend_visu</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">False&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">3&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_action_suspend_end</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv">  </span><span class="s">&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">4&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_action_suspend_start</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv">  </span><span class="s">&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">5&#39;</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">1&#39;</span><span class="w"></span>
+<span class="w">            </span><span class="nt">on_leave</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">se_action_suspend</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">False&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">2&#39;</span>
+<span class="w">                </span><span class="nt">se_action_suspend_visu</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">False&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">3&#39;</span>
+<span class="w">                </span><span class="nt">se_action_suspend_end</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv">  </span><span class="s">&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">4&#39;</span>
+<span class="w">                </span><span class="nt">se_action_suspend_start</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv">  </span><span class="s">&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">5&#39;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">1&#39;</span>
 
-<span class="w">            </span><span class="nt">enter_manuell</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_trigger_source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:se_eval.get_relative_itemproperty(&#39;..manuell&#39;, &#39;path&#39;)</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_suspend_active</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">            </span><span class="nt">enter_manuell</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">se_value_trigger_source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:se_eval.get_relative_itemproperty(&#39;..manuell&#39;, &#39;path&#39;)</span>
+<span class="w">                </span><span class="nt">se_value_suspend_active</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="w">            </span><span class="nt">enter_stay</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_agemax_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:item.suspend_time</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_suspend_active</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">            </span><span class="nt">enter_stay</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span>
+<span class="w">                </span><span class="nt">se_agemax_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:item.suspend_time</span>
+<span class="w">                </span><span class="nt">se_value_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">                </span><span class="nt">se_value_suspend_active</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 </pre></div>
 </div>
 </section>
@@ -4194,51 +4194,51 @@ beim nächsten Durchlauf eventuell durch andere Zustände überschrieben.</p>
 <p>Die <code class="docutils literal notranslate"><span class="pre">state_release</span></code> Vorlage ist nicht unbedingt nötig, kann aber dazu genutzt werden,
 schnell den Sperr- oder Pause-Zustand zu verlassen und die erneute Evaluierung
 der Zustände anzuleiern.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#stateengine.state_release</span><span class="w"></span>
-<span class="nt">release</span><span class="p">:</span><span class="w"> </span><span class="c1">#triggers the release</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#stateengine.state_release</span>
+<span class="nt">release</span><span class="p">:</span><span class="w"> </span><span class="c1">#triggers the release</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">se_item_lock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..lock</span><span class="w"></span>
-<span class="w">    </span><span class="nt">se_item_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..suspend</span><span class="w"></span>
-<span class="w">    </span><span class="nt">se_item_retrigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..rules</span><span class="w"></span>
-<span class="w">    </span><span class="nt">se_item_release</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..release</span><span class="w"></span>
-<span class="w">    </span><span class="nt">se_item_suspend_end</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..suspend_end</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..release</span><span class="w"></span>
+<span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">se_item_lock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..lock</span>
+<span class="w">    </span><span class="nt">se_item_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..suspend</span>
+<span class="w">    </span><span class="nt">se_item_retrigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..rules</span>
+<span class="w">    </span><span class="nt">se_item_release</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..release</span>
+<span class="w">    </span><span class="nt">se_item_suspend_end</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..suspend_end</span>
+<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..release</span>
 
-<span class="w">    </span><span class="nt">release</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">release</span><span class="w"></span>
+<span class="w">    </span><span class="nt">release</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">release</span>
 
-<span class="w">        </span><span class="nt">on_enter_or_stay</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_action_suspend</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">False&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">1&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_action_lock</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">False&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">2&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_action_release</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">False&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">3&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_action_suspend_end</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">4&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_action_retrigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">True&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">5&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">True&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">1&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">on_enter_or_stay</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">se_action_suspend</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">False&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">1&#39;</span>
+<span class="w">            </span><span class="nt">se_action_lock</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">False&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">2&#39;</span>
+<span class="w">            </span><span class="nt">se_action_release</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">False&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">3&#39;</span>
+<span class="w">            </span><span class="nt">se_action_suspend_end</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">4&#39;</span>
+<span class="w">            </span><span class="nt">se_action_retrigger</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">True&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">5&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">True&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">1&#39;</span>
 
-<span class="w">        </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_value_release</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">        </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">se_value_release</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 </pre></div>
 </div>
 </section>
@@ -4266,11 +4266,11 @@ abgeleiteten Zuständen zur Verfügung und müssen so nicht jedes Mal
 neu definiert werden.</p>
 <p>Im konkreten Zustands-Item kann das Vorgabezustand-Item über das
 Attribut</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_use</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">struct:stateengine.state_suspend.rules.suspend</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">item:&lt;string item mit Verweis auf Vorgabezustand&gt;</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:&lt;Ausdruck zum dynamischen Einbinden von Vorgabezuständen&gt;</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;(relative) Itemangabe zum Vorgabezustand&gt;</span><span class="w"> </span><span class="c1">#z.B. .suspend</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_use</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">struct:stateengine.state_suspend.rules.suspend</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">item:&lt;string item mit Verweis auf Vorgabezustand&gt;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:&lt;Ausdruck zum dynamischen Einbinden von Vorgabezuständen&gt;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;(relative) Itemangabe zum Vorgabezustand&gt;</span><span class="w"> </span><span class="c1">#z.B. .suspend</span>
 </pre></div>
 </div>
 <p>eingebunden werden. Die Vorgabezustand-Items können als Liste angegben
@@ -4283,71 +4283,71 @@ werden.</p>
 <section id="beispiel">
 <h3>Beispiel<a class="headerlink" href="#beispiel" title="Permalink to this heading"></a></h3>
 <p>Die Konfiguration…</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">wetter</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">helligkeit</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">400</span><span class="w"></span>
-<span class="w">  </span><span class="nt">temperatur</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">wetter</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">helligkeit</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">400</span>
+<span class="w">  </span><span class="nt">temperatur</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
 
-<span class="nt">beispiel</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">define_use</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">       </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;beispiel.default.Mittags&#39;</span><span class="w"></span>
+<span class="nt">beispiel</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">define_use</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">       </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;beispiel.default.Mittags&#39;</span>
 
-<span class="w">   </span><span class="nt">default</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="nt">se_eval_height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_item(&#39;...hoehe&#39;)</span><span class="w"></span>
-<span class="w">       </span><span class="nt">se_item_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetter.helligkeit</span><span class="w"></span>
-<span class="w">       </span><span class="nt">se_item_temperatur</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetter.temperatur</span><span class="w"></span>
-<span class="w">       </span><span class="nt">Nacht</span><span class="p">:</span><span class="w"></span>
-<span class="w">           </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">               </span><span class="nt">se_min_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w"></span>
-<span class="w">               </span><span class="nt">se_min_temperatur</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
-<span class="w">               </span><span class="nt">se_max_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4000</span><span class="w"></span>
-<span class="w">           </span><span class="nt">se_set_height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:100</span><span class="w"></span>
-<span class="w">           </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
-<span class="w">       </span><span class="nt">Morgens</span><span class="p">:</span><span class="w"></span>
-<span class="w">           </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">               </span><span class="nt">se_min_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">900</span><span class="w"></span>
-<span class="w">               </span><span class="nt">se_max_temperatur</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span><span class="w"></span>
-<span class="w">           </span><span class="nt">se_set_height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:90</span><span class="w"></span>
-<span class="w">           </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span><span class="w"></span>
-<span class="w">       </span><span class="nt">Mittags</span><span class="p">:</span><span class="w"></span>
-<span class="w">           </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">55</span><span class="w"></span>
-<span class="w">           </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">               </span><span class="nt">se_min_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5900</span><span class="w"></span>
-<span class="w">               </span><span class="nt">se_min_temperatur</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">18</span><span class="w"></span>
+<span class="w">   </span><span class="nt">default</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">se_eval_height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_item(&#39;...hoehe&#39;)</span>
+<span class="w">       </span><span class="nt">se_item_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetter.helligkeit</span>
+<span class="w">       </span><span class="nt">se_item_temperatur</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetter.temperatur</span>
+<span class="w">       </span><span class="nt">Nacht</span><span class="p">:</span>
+<span class="w">           </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">               </span><span class="nt">se_min_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">               </span><span class="nt">se_min_temperatur</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">               </span><span class="nt">se_max_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4000</span>
+<span class="w">           </span><span class="nt">se_set_height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:100</span>
+<span class="w">           </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">       </span><span class="nt">Morgens</span><span class="p">:</span>
+<span class="w">           </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">               </span><span class="nt">se_min_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">900</span>
+<span class="w">               </span><span class="nt">se_max_temperatur</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span>
+<span class="w">           </span><span class="nt">se_set_height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:90</span>
+<span class="w">           </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span>
+<span class="w">       </span><span class="nt">Mittags</span><span class="p">:</span>
+<span class="w">           </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">55</span>
+<span class="w">           </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">               </span><span class="nt">se_min_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5900</span>
+<span class="w">               </span><span class="nt">se_min_temperatur</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">18</span>
 
-<span class="w">   </span><span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="nt">lamelle</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">       </span><span class="nt">hoehe</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
+<span class="w">   </span><span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">lamelle</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">       </span><span class="nt">hoehe</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
 
-<span class="w">       </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">           </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span><span class="w"></span>
-<span class="w">           </span><span class="nt">lock</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
+<span class="w">       </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">           </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span>
+<span class="w">           </span><span class="nt">lock</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
 
-<span class="w">           </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">               </span><span class="nt">se_item_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...lamelle</span><span class="w"></span>
-<span class="w">               </span><span class="nt">se_item_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetter.helligkeit</span><span class="w"></span>
-<span class="w">               </span><span class="nt">Nacht</span><span class="p">:</span><span class="w"></span>
-<span class="w">                   </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.default.Nacht</span><span class="w"></span>
-<span class="w">                   </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
-<span class="w">                   </span><span class="nt">enter_additional</span><span class="p">:</span><span class="w"></span>
-<span class="w">                       </span><span class="nt">se_min_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w"></span>
-<span class="w">                   </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">                       </span><span class="nt">se_min_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span><span class="w"></span>
-<span class="w">                       </span><span class="nt">se_min_temperatur</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
-<span class="w">               </span><span class="nt">Morgens</span><span class="p">:</span><span class="w"></span>
-<span class="w">                   </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">morgens</span><span class="w"></span>
-<span class="w">                   </span><span class="nt">se_use</span><span class="p">:</span><span class="w"></span>
-<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.default.Morgens</span><span class="w"></span>
-<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.Nacht</span><span class="w"></span>
-<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">struct:stateengine.state_lock.rules.lock</span><span class="w"></span>
-<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">item:beispiel.define_use</span><span class="w"></span>
+<span class="w">           </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">               </span><span class="nt">se_item_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...lamelle</span>
+<span class="w">               </span><span class="nt">se_item_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetter.helligkeit</span>
+<span class="w">               </span><span class="nt">Nacht</span><span class="p">:</span>
+<span class="w">                   </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.default.Nacht</span>
+<span class="w">                   </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">                   </span><span class="nt">enter_additional</span><span class="p">:</span>
+<span class="w">                       </span><span class="nt">se_min_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="w">                   </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">                       </span><span class="nt">se_min_helligkeit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
+<span class="w">                       </span><span class="nt">se_min_temperatur</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">               </span><span class="nt">Morgens</span><span class="p">:</span>
+<span class="w">                   </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">morgens</span>
+<span class="w">                   </span><span class="nt">se_use</span><span class="p">:</span>
+<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.default.Morgens</span>
+<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.Nacht</span>
+<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">struct:stateengine.state_lock.rules.lock</span>
+<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">item:beispiel.define_use</span>
 </pre></div>
 </div>
 <p>führt zu folgendem Ergebnis:</p>

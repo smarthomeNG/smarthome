@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Alternativ knxd compilieren</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Alternativ knxd compilieren</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3866,7 +3866,7 @@ um aktuelles nicht zu verpassen.</p>
 <h2>zusätzliche Pakete zum Bau installieren<a class="headerlink" href="#zusatzliche-pakete-zum-bau-installieren" title="Permalink to this heading"></a></h2>
 <p>Zunächst müssen für den Bau einige grundlegende Tools installiert
 werden:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git-core build-essential dh-systemd autoconf libtool libusb-1.0-0-dev pkg-config libsystemd-dev libev-dev cmake
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>git-core<span class="w"> </span>build-essential<span class="w"> </span>dh-systemd<span class="w"> </span>autoconf<span class="w"> </span>libtool<span class="w"> </span>libusb-1.0-0-dev<span class="w"> </span>pkg-config<span class="w"> </span>libsystemd-dev<span class="w"> </span>libev-dev<span class="w"> </span>cmake
 </pre></div>
 </div>
 </section>
@@ -3874,9 +3874,9 @@ werden:</p>
 <h2>Quellcode laden, compilieren und ein Paket schnüren<a class="headerlink" href="#quellcode-laden-compilieren-und-ein-paket-schnuren" title="Permalink to this heading"></a></h2>
 <p>Zunächst den Quellcode für den knxd vom github laden und sicherstellen,
 das der 0.14 branch gewählt wird:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/knxd/knxd.git
-<span class="nb">cd</span> knxd
-git checkout v0.14
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/knxd/knxd.git
+<span class="nb">cd</span><span class="w"> </span>knxd
+git<span class="w"> </span>checkout<span class="w"> </span>v0.14
 </pre></div>
 </div>
 <p>Im Unterverzeichnis <code class="docutils literal notranslate"><span class="pre">tools</span></code>findet sich ein Skript was benötigt wird
@@ -3885,15 +3885,15 @@ um libfmt herunterzuladen und zu bauen</p>
 </pre></div>
 </div>
 <p>Dann übersetzen und das Paket schnüren:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dpkg-buildpackage -b -uc
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dpkg-buildpackage<span class="w"> </span>-b<span class="w"> </span>-uc
 </pre></div>
 </div>
 <p>Wichtig ist, das am Ende der Paketerstellung keine Fehler gemeldet
 wurden.</p>
 <p>Sollte die Paketerstellung fehlerfrei ablaufen, dann kann das Paket nun
 noch installiert werden mit:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ..
-sudo dpkg -i knxd_*.deb knxd-tools_*.deb
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>..
+sudo<span class="w"> </span>dpkg<span class="w"> </span>-i<span class="w"> </span>knxd_*.deb<span class="w"> </span>knxd-tools_*.deb
 </pre></div>
 </div>
 </section>

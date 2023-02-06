@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="beispiele.html">Beispiele, Tipps &amp; Tricks</a> &raquo;</li>
-      <li>Items: Tipps und Tricks</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="beispiele.html">Beispiele, Tipps &amp; Tricks</a></li>
+      <li class="breadcrumb-item active">Items: Tipps und Tricks</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3865,17 +3865,17 @@ geschlossenes Fenster wird geöffnet angezeigt und umgekehrt.</p>
 ist der Wert, der vom KNX Bus gelesen wird, der eval Ausdruck verändert
 diesen Wert, bevor er in das Item geschrieben wird. Damit wird dann der
 invertierte Wert auf den KNX Bus geschrieben.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">OW</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Fenster</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">EsszimmerLinks</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3A.CBF713000000</span><span class="w"></span>
-<span class="w">            </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IB</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2/1/82</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2/1/82</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not value</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">OW</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Fenster</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">EsszimmerLinks</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3A.CBF713000000</span>
+<span class="w">            </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IB</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2/1/82</span>
+<span class="w">            </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2/1/82</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not value</span>
 </pre></div>
 </div>
 </section>
@@ -3887,16 +3887,16 @@ wird und dessen Item Wert nicht verfälscht werden soll.</p>
 <p>Leider sind auch hier die Werte vertauscht, 0 soll 1 sein und umgekehrt.</p>
 <p>Ein Hilfsitem hinzufügen und diesem mit relativer Adressierung auf das Elternelement
 ein <code class="docutils literal notranslate"><span class="pre">eval_trigger</span></code> und ein <code class="docutils literal notranslate"><span class="pre">eval</span></code> zufügen.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Gaestezimmer_Lautsprecher</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5/0/5</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">    </span><span class="nt">GPIO_Ausgabe</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">gpio_out</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">38</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not sh...()</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Gaestezimmer_Lautsprecher</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5/0/5</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">    </span><span class="nt">GPIO_Ausgabe</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">gpio_out</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">38</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not sh...()</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 </pre></div>
 </div>
 </section>
@@ -3910,43 +3910,43 @@ Informationen der zwei Kontakte auf eigene Items für die drei Stati um.</p>
 <p>Diese Lösung soll mit möglichst wenig Aufwand für alle Fenster des
 Objekts kopiert werden. Mit normaler (absoluter) Item Adressierung kann
 das folgendermaßen gelöst werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Test</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Buero</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">Reed1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4/1/5</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Buero</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">Reed1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4/1/5</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 
-<span class="w">        </span><span class="nt">Reed2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4/1/6</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Reed2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4/1/6</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 
-<span class="w">        </span><span class="nt">zu</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh.Test.Buero.Reed1() == 1 and sh.Test.Buero.Reed2() == 1 else False</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test.Buero.Reed1</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test.Buero.Reed2</span><span class="w"></span>
+<span class="w">        </span><span class="nt">zu</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh.Test.Buero.Reed1() == 1 and sh.Test.Buero.Reed2() == 1 else False</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test.Buero.Reed1</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test.Buero.Reed2</span>
 
-<span class="w">        </span><span class="nt">gekippt</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh.Test.Buero.Reed1() == 0 and sh.Test.Buero.Reed2() == 1 else False</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test.Buero.Reed1</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test.Buero.Reed2</span><span class="w"></span>
+<span class="w">        </span><span class="nt">gekippt</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh.Test.Buero.Reed1() == 0 and sh.Test.Buero.Reed2() == 1 else False</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test.Buero.Reed1</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test.Buero.Reed2</span>
 
-<span class="w">        </span><span class="nt">offen</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh.Test.Buero.Reed1() == 0 and sh.Test.Buero.Reed2() == 0 else False</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test.Buero.Reed1</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test.Buero.Reed2</span><span class="w"></span>
+<span class="w">        </span><span class="nt">offen</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh.Test.Buero.Reed1() == 0 and sh.Test.Buero.Reed2() == 0 else False</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test.Buero.Reed1</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test.Buero.Reed2</span>
 </pre></div>
 </div>
 <p>Wenn dieser Block für weitere Fenster kopiert wird, muss jedoch außer
@@ -3956,43 +3956,43 @@ erfordert und auch noch fehlerträchtig ist.</p>
 <p>Mit relativer Item Adressierung kann das einfacher gelöst werden. Dann
 müssen nach dem Kopieren des Blocks nur noch die Adressen für <code class="docutils literal notranslate"><span class="pre">Reed1</span></code>
 und <code class="docutils literal notranslate"><span class="pre">Reed2</span></code> angepasst werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Test</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Buero</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">Reed1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4/1/5</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Buero</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">Reed1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4/1/5</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 
-<span class="w">        </span><span class="nt">Reed2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4/1/6</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Reed2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4/1/6</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 
-<span class="w">        </span><span class="nt">zu</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh...Reed1() == 1 and sh...Reed2() == 1 else False</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Reed1</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Reed2</span><span class="w"></span>
+<span class="w">        </span><span class="nt">zu</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh...Reed1() == 1 and sh...Reed2() == 1 else False</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Reed1</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Reed2</span>
 
-<span class="w">        </span><span class="nt">gekippt</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh...Reed1() == 0 and sh...Reed2() == 1 else False</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Reed1</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Reed2</span><span class="w"></span>
+<span class="w">        </span><span class="nt">gekippt</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh...Reed1() == 0 and sh...Reed2() == 1 else False</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Reed1</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Reed2</span>
 
-<span class="w">        </span><span class="nt">offen</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh...Reed1() == 0 and sh...Reed2() == 0 else False</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Reed1</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Reed2</span><span class="w"></span>
+<span class="w">        </span><span class="nt">offen</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh...Reed1() == 0 and sh...Reed2() == 0 else False</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Reed1</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Reed2</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">..&lt;item&gt;</span></code> referenziert hierbei ein Geschwister-Item. Es ist darauf zu
@@ -4026,21 +4026,21 @@ und <code class="docutils literal notranslate"><span class="pre">env.location.ni
 <h3>Beispiele<a class="headerlink" href="#beispiele" title="Permalink to this heading"></a></h3>
 <section id="nutzung-mit-neuen-zusatzlichen-items">
 <h4>Nutzung mit neuen (zusätzlichen) Items<a class="headerlink" href="#nutzung-mit-neuen-zusatzlichen-items" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tag</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/103</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/103</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.env.location.day()</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.day</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tag</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/103</span>
+<span class="w">    </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/103</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.env.location.day()</span>
+<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.day</span>
 
-<span class="nt">nacht</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/104</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/104</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.env.location.night()</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.night</span><span class="w"></span>
+<span class="nt">nacht</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/104</span>
+<span class="w">    </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/104</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.env.location.night()</span>
+<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env.location.night</span>
 </pre></div>
 </div>
 </section>
@@ -4048,18 +4048,18 @@ und <code class="docutils literal notranslate"><span class="pre">env.location.ni
 <h4>Nutzung der SmarthomeNG internen Items<a class="headerlink" href="#nutzung-der-smarthomeng-internen-items" title="Permalink to this heading"></a></h4>
 <p>Dazu müssen die entsprechenden Items um die KNX Attribute erweitert
 werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">env</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">location</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">day</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tag</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/103</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/103</span><span class="w"></span>
-<span class="w">        </span><span class="nt">night</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Nacht</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/104</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/104</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">env</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">location</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">day</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tag</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/103</span>
+<span class="w">            </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/103</span>
+<span class="w">        </span><span class="nt">night</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Nacht</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/104</span>
+<span class="w">            </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/104</span>
 </pre></div>
 </div>
 <p>Da sich die internen Items von Release zu Release ändern könnten, ist
@@ -4076,19 +4076,19 @@ Flurlichtsteuerung o.ä. vielleicht schon 1h vor Sonnenuntergang die
 “Nacht” beginnen soll. Das kann durch die Definition neuer Items
 erreicht werden. Im folgenden Beispiel wird die Tag/Nacht Grenze bei
 einem Sonnenstand von 4° unter dem Horizont festgelegt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">berechnung</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init = 1</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunrise-4 = 1</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunset-4 = 1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">berechnung</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init = 1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunrise-4 = 1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunset-4 = 1</span>
+<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="nt">day</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.sun.rise(-4).day != sh.sun.set(-4).day</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..berechnung</span><span class="w"></span>
-<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="nt">day</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.sun.rise(-4).day != sh.sun.set(-4).day</span>
+<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..berechnung</span>
+<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 <p>Die Triggerung dieser Berechnung wird im <em>berechnung</em> - Item durch das

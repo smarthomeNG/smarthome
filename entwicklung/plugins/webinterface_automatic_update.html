@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../entwicklung.html">Entwicklung</a> &raquo;</li>
-          <li><a href="plugins.html">Plugins <span class="bluesup">under construction</span></a> &raquo;</li>
-          <li><a href="webinterface.html">Webinterface <span class="bluesup">update</span></a> &raquo;</li>
-      <li>Automatische Updates der Daten im Webinterface <span class="redsup">new</span></li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../entwicklung.html">Entwicklung</a></li>
+          <li class="breadcrumb-item"><a href="plugins.html">Plugins <span class="bluesup">under construction</span></a></li>
+          <li class="breadcrumb-item"><a href="webinterface.html">Webinterface <span class="bluesup">update</span></a></li>
+      <li class="breadcrumb-item active">Automatische Updates der Daten im Webinterface <span class="redsup">new</span></li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3882,7 +3882,7 @@ indem die neuen Daten in die DOM-Elemente der Webseite eingetragen werden.</p>
 
     <span class="nd">@cherrypy</span><span class="o">.</span><span class="n">expose</span>
     <span class="k">def</span> <span class="nf">get_data_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataSet</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return data to update the webpage</span>
 
 <span class="sd">        For the standard update mechanism of the web interface, the dataSet to return the data for is None</span>
@@ -4008,14 +4008,14 @@ der Webseite übergeben. Diese Funktion weist dann die neuen Daten den jeweilige
 <p>Die Funktion <code class="docutils literal notranslate"><span class="pre">handleUpdatedData()</span></code> ist im Block <code class="docutils literal notranslate"><span class="pre">pluginscripts</span></code> des HTML-Templates definiert.
 Das folgende Beispiel weist die neuen Daten dem oben vorgestellten &lt;td&gt;-Element des <code class="docutils literal notranslate"><span class="pre">headtable</span></code> zu:</p>
 <div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">block</span> <span class="nv">pluginscripts</span> <span class="cp">%}</span>
-<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">handleUpdatedData</span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">dataSet</span><span class="o">=</span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">dataSet</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;devices_info&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">dataSet</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="kd">var</span><span class="w"> </span><span class="nx">objResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span><span class="w"></span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">handleUpdatedData</span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">dataSet</span><span class="o">=</span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">dataSet</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;devices_info&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">dataSet</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">var</span><span class="w"> </span><span class="nx">objResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
 
-<span class="w">            </span><span class="nx">shngInsertText</span><span class="p">(</span><span class="s1">&#39;fromip&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">[</span><span class="s1">&#39;fromip&#39;</span><span class="p">]);</span><span class="w"></span>
-<span class="w">        </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">            </span><span class="nx">shngInsertText</span><span class="p">(</span><span class="s1">&#39;fromip&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">[</span><span class="s1">&#39;fromip&#39;</span><span class="p">]);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 <span class="cp">{%</span> <span class="k">endblock</span> <span class="nv">pluginscripts</span> <span class="cp">%}</span>
 </pre></div>
@@ -4029,18 +4029,18 @@ Die Parameter der shngInsertText-Funktion sind dabei wie folgt:</p>
 <li><p>(optional) Möchte man beim Ändern eines Werts einen Highlight-Effekt, kann die Dauer in Sekunden angegeben werden</p></li>
 </ol>
 <div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">block</span> <span class="nv">pluginscripts</span> <span class="cp">%}</span>
-<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">handleUpdatedData</span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">dataSet</span><span class="o">=</span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">dataSet</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;devices_info&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">dataSet</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="kd">var</span><span class="w"> </span><span class="nx">objResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span><span class="w"></span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">handleUpdatedData</span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">dataSet</span><span class="o">=</span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">dataSet</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;devices_info&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">dataSet</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">var</span><span class="w"> </span><span class="nx">objResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
 
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">var</span><span class="w"> </span><span class="nx">item</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">                </span><span class="nx">shngInsertText</span><span class="p">(</span><span class="nx">item</span><span class="o">+</span><span class="s1">&#39;_value&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">][</span><span class="nx">item</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">],</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">);</span><span class="w"></span>
-<span class="w">                </span><span class="c1">// bei Tabellen mit datatables Funktion sollte die Zeile lauten:</span><span class="w"></span>
-<span class="w">                </span><span class="c1">// shngInsertText(item+&#39;_value&#39;, objResponse[&#39;item&#39;][item][&#39;value&#39;], &#39;maintable&#39;, 2);</span><span class="w"></span>
-<span class="w">            </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">var</span><span class="w"> </span><span class="nx">item</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nx">shngInsertText</span><span class="p">(</span><span class="nx">item</span><span class="o">+</span><span class="s1">&#39;_value&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">][</span><span class="nx">item</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">],</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">);</span>
+<span class="w">                </span><span class="c1">// bei Tabellen mit datatables Funktion sollte die Zeile lauten:</span>
+<span class="w">                </span><span class="c1">// shngInsertText(item+&#39;_value&#39;, objResponse[&#39;item&#39;][item][&#39;value&#39;], &#39;maintable&#39;, 2);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 <span class="cp">{%</span> <span class="k">endblock</span> <span class="nv">pluginscripts</span> <span class="cp">%}</span>
 </pre></div>
@@ -4061,16 +4061,16 @@ bestimmten Spalten eine konkrete Breite vorzugeben. Dazu sollte im Block <code c
 Code eingefügt werden. Außerdem sind die <code class="docutils literal notranslate"><span class="pre">&lt;th&gt;</span></code> Tags natürlich mit den entsprechenden Klassen zu bestücken.
 Außerdem macht es Sinn, der Tabelle selbst die Klasse <code class="docutils literal notranslate"><span class="pre">dataTableAdditional</span></code> hinzuzufügen. Dadurch wird
 das table-layout auf fixed gestellt und die Tabelle erst angezeigt, wenn sie fertig initialisiert ist.</p>
-<div class="highlight-css+jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">block</span> <span class="nv">pluginstyles</span> <span class="cp">%}</span><span class="w"></span>
-<span class="o">&lt;</span><span class="nt">style</span><span class="o">&gt;</span><span class="w"></span>
-<span class="w">  </span><span class="nt">table</span><span class="w"> </span><span class="nt">th</span><span class="p">.</span><span class="nc">dpt</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="kt">px</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="w">  </span><span class="nt">table</span><span class="w"> </span><span class="nt">th</span><span class="p">.</span><span class="nc">value</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">px</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="o">&lt;/</span><span class="nt">style</span><span class="o">&gt;</span><span class="w"></span>
-<span class="cp">{%</span> <span class="k">endblock</span> <span class="nv">pluginstyles</span> <span class="cp">%}</span><span class="w"></span>
+<div class="highlight-css+jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">block</span> <span class="nv">pluginstyles</span> <span class="cp">%}</span>
+<span class="o">&lt;</span><span class="nt">style</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="nt">table</span><span class="w"> </span><span class="nt">th</span><span class="p">.</span><span class="nc">dpt</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">table</span><span class="w"> </span><span class="nt">th</span><span class="p">.</span><span class="nc">value</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="o">&lt;/</span><span class="nt">style</span><span class="o">&gt;</span>
+<span class="cp">{%</span> <span class="k">endblock</span> <span class="nv">pluginstyles</span> <span class="cp">%}</span>
 </pre></div>
 </div>
 <p>Sollte der Inhalt einer Spalte erwartungsgemäß sehr breit sein, kann die Spalte stattdessen auch
@@ -4108,27 +4108,27 @@ eine ID zuweisen, ist die Codezeile zu kopieren und die Zahl beim Eintrag <code 
 zu ändern (0 = erste Spalte, 1 = zweite Spalte, etc.). Abschließend wird der leere Wert schließlich
 mittels <code class="docutils literal notranslate"><span class="pre">shngInsertText</span></code> aktualisert und dank Angabe einer Zahl als 4. Parameter x Sekunden lang farblich markiert.</p>
 <div class="highlight-html+jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">block</span> <span class="nv">pluginscripts</span> <span class="cp">%}</span>
-<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">handleUpdatedData</span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">dataSet</span><span class="o">=</span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">dataSet</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;devices_info&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">dataSet</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="kd">var</span><span class="w"> </span><span class="nx">objResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span><span class="w"></span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">var</span><span class="w"> </span><span class="nx">item</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="nx">item</span><span class="o">+</span><span class="s1">&#39;_value&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">dataTable</span><span class="p">.</span><span class="nx">isDataTable</span><span class="p">(</span><span class="s1">&#39;#maintable&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">                        </span><span class="nx">table_to_update</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#maintable&#39;</span><span class="p">).</span><span class="nx">DataTable</span><span class="p">();</span><span class="w"></span>
-<span class="w">                        </span><span class="nx">newRow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">table_to_update</span><span class="p">.</span><span class="nx">row</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="nx">item</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">).</span><span class="nx">draw</span><span class="p">().</span><span class="nx">node</span><span class="p">();</span><span class="w"></span>
-<span class="w">                        </span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;td:eq(1)&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">newRow</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">][</span><span class="nx">item</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_value&#39;</span><span class="p">);</span><span class="w"></span>
-<span class="w">                        </span><span class="nx">shngInsertText</span><span class="p">(</span><span class="nx">item</span><span class="o">+</span><span class="s1">&#39;_value&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">][</span><span class="nx">item</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;maintable&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">5</span><span class="p">);</span><span class="w"></span>
-<span class="w">                    </span><span class="p">}</span><span class="w"></span>
-<span class="w">                </span><span class="p">}</span><span class="w"></span>
-<span class="w">                </span><span class="k">else</span><span class="w"></span>
-<span class="w">                </span><span class="p">{</span><span class="w"></span>
-<span class="w">                  </span><span class="nx">shngInsertText</span><span class="p">(</span><span class="nx">item</span><span class="o">+</span><span class="s1">&#39;_value&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">][</span><span class="nx">item</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;maintable&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">);</span><span class="w"></span>
-<span class="w">                </span><span class="p">}</span><span class="w"></span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">handleUpdatedData</span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">dataSet</span><span class="o">=</span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">dataSet</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;devices_info&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">dataSet</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">var</span><span class="w"> </span><span class="nx">objResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">var</span><span class="w"> </span><span class="nx">item</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="nx">item</span><span class="o">+</span><span class="s1">&#39;_value&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">dataTable</span><span class="p">.</span><span class="nx">isDataTable</span><span class="p">(</span><span class="s1">&#39;#maintable&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="nx">table_to_update</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#maintable&#39;</span><span class="p">).</span><span class="nx">DataTable</span><span class="p">();</span>
+<span class="w">                        </span><span class="nx">newRow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">table_to_update</span><span class="p">.</span><span class="nx">row</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="nx">item</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">).</span><span class="nx">draw</span><span class="p">().</span><span class="nx">node</span><span class="p">();</span>
+<span class="w">                        </span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;td:eq(1)&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">newRow</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">][</span><span class="nx">item</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_value&#39;</span><span class="p">);</span>
+<span class="w">                        </span><span class="nx">shngInsertText</span><span class="p">(</span><span class="nx">item</span><span class="o">+</span><span class="s1">&#39;_value&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">][</span><span class="nx">item</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;maintable&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">5</span><span class="p">);</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">else</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                  </span><span class="nx">shngInsertText</span><span class="p">(</span><span class="nx">item</span><span class="o">+</span><span class="s1">&#39;_value&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">objResponse</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">][</span><span class="nx">item</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;maintable&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
 
-<span class="w">            </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 <span class="cp">{%</span> <span class="k">endblock</span> <span class="nv">pluginscripts</span> <span class="cp">%}</span>
 </pre></div>
@@ -4144,26 +4144,26 @@ dass kein Highlight Effekt ausgeführt wird. Außerdem wird der Effekt auch nich
 Wert <code class="docutils literal notranslate"><span class="pre">...</span></code> war (z.B. beim Initialisieren der Tabelle, bevor aktualisierte Werte vom Plugin kommen).
 Die beiden Klassen sind bereits hinterlegt, können aber in der index.html des Plugin webif
 im Block <code class="docutils literal notranslate"><span class="pre">pluginStyles</span></code> bei Bedarf überschrieben werden.</p>
-<div class="highlight-css+jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">block</span> <span class="nv">pluginstyles</span> <span class="cp">%}</span><span class="w"></span>
-<span class="o">&lt;</span><span class="nt">style</span><span class="o">&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="p">.</span><span class="nc">shng_effect_highlight</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#FFFFE0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">.</span><span class="nc">shng_effect_standard</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="kc">none</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="o">&lt;/</span><span class="nt">style</span><span class="o">&gt;</span><span class="w"></span>
-<span class="cp">{%</span> <span class="k">endblock</span> <span class="nv">pluginstyles</span> <span class="cp">%}</span><span class="w"></span>
+<div class="highlight-css+jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">block</span> <span class="nv">pluginstyles</span> <span class="cp">%}</span>
+<span class="o">&lt;</span><span class="nt">style</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="p">.</span><span class="nc">shng_effect_highlight</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#FFFFE0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="p">.</span><span class="nc">shng_effect_standard</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="kc">none</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="o">&lt;/</span><span class="nt">style</span><span class="o">&gt;</span>
+<span class="cp">{%</span> <span class="k">endblock</span> <span class="nv">pluginstyles</span> <span class="cp">%}</span>
 </pre></div>
 </div>
 </section>
 <section id="festlegen-des-aktualisierungsintervalls-datasets-und-weiteren-parametern">
 <h2>Festlegen des Aktualisierungsintervalls, dataSets und weiteren Parametern<a class="headerlink" href="#festlegen-des-aktualisierungsintervalls-datasets-und-weiteren-parametern" title="Permalink to this heading"></a></h2>
 <p>Zu Beginn der Templatedatei <code class="docutils literal notranslate"><span class="pre">webif/templates/index.html</span></code> finden sich die folgenden Zeilen:</p>
-<div class="highlight-css+jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">update_interval</span> <span class="o">=</span> <span class="m">0</span> <span class="cp">%}</span><span class="w"></span>
-<span class="cp">{%</span> <span class="k">set</span> <span class="nv">update_active</span> <span class="o">=</span> <span class="kp">false</span> <span class="cp">%}</span><span class="w"></span>
-<span class="cp">{%</span> <span class="k">set</span> <span class="nv">dataSet</span> <span class="o">=</span> <span class="s1">&#39;item_details&#39;</span> <span class="cp">%}</span><span class="w"></span>
-<span class="cp">{%</span> <span class="k">set</span> <span class="nv">update_params</span> <span class="o">=</span> <span class="nv">item_id</span> <span class="cp">%}</span><span class="w"></span>
+<div class="highlight-css+jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">update_interval</span> <span class="o">=</span> <span class="m">0</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">set</span> <span class="nv">update_active</span> <span class="o">=</span> <span class="kp">false</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">set</span> <span class="nv">dataSet</span> <span class="o">=</span> <span class="s1">&#39;item_details&#39;</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">set</span> <span class="nv">update_params</span> <span class="o">=</span> <span class="nv">item_id</span> <span class="cp">%}</span>
 </pre></div>
 </div>
 <p>Das Intervall wird via <code class="docutils literal notranslate"><span class="pre">update_interval</span></code> auf den gewünschten Wert in Millisekunden gesetzt. Dabei muss sichergestellt sein, dass das gewählte Intervall lang genug ist, dass die Python-Methode <code class="docutils literal notranslate"><span class="pre">get_data_html()</span></code> des Plugins die Daten liefern kann, bevor das Intervall abläuft. Wenn nur Daten zurückgegeben werden, die von anderen Routinen und Threads des Plugins bereits bereitgestellt wurden, kann ein Update-Intervall von ca. 1000 ms gewählt werden. Wenn die Python-Methode <code class="docutils literal notranslate"><span class="pre">get_data_html()</span></code> selbst noch weitere Routinen ausführen muss, sollte das Update-Intervall wahrscheinlich nicht kleiner als 5000 ms sein.</p>
@@ -4182,7 +4182,7 @@ Database Plugin entnommen, das zwei Tabs mit verschiedenen Daten anzeigt, die eb
 Plugin erhalten.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@cherrypy</span><span class="o">.</span><span class="n">expose</span>
 <span class="k">def</span> <span class="nf">get_data_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataSet</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return data to update the webpage</span>
 
 <span class="sd">    For the standard update mechanism of the web interface, the dataSet to return the data for is None</span>
@@ -4235,12 +4235,12 @@ wenn wir den 12.12.2022 haben (was vermutlich wenig Sinn macht und daher angepas
 <span class="cm">This is an example on how to update the page refresh method. You can set the dataSet, update interval, special parameters or (de)activate the auto refresh</span>
 <span class="cm">In the example the update is deactivated on the 12th of December 2022 (what might make no sense at all)</span>
 <span class="cm">--&gt;</span>
-<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="w"></span>
-<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">today</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">();</span><span class="w"></span>
-<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">today_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">today</span><span class="p">.</span><span class="nx">getDate</span><span class="p">())</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">today</span><span class="p">.</span><span class="nx">getMonth</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">today</span><span class="p">.</span><span class="nx">getFullYear</span><span class="p">();</span><span class="w"></span>
-<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">test_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;12122022&quot;</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">today_date</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">test_date</span><span class="p">)</span><span class="w"></span>
-<span class="w">      </span><span class="nb">window</span><span class="p">.</span><span class="nx">refresh</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span><span class="nx">dataSet</span><span class="o">:</span><span class="s1">&#39;test&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">update_params</span><span class="o">:</span><span class="s1">&#39;specialitem&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">update_interval</span><span class="o">:</span><span class="w"> </span><span class="mf">2000</span><span class="p">,</span><span class="w"> </span><span class="nx">update_active</span><span class="o">:</span><span class="kc">false</span><span class="p">});</span><span class="w"></span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">today</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">();</span>
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">today_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">today</span><span class="p">.</span><span class="nx">getDate</span><span class="p">())</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">today</span><span class="p">.</span><span class="nx">getMonth</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">today</span><span class="p">.</span><span class="nx">getFullYear</span><span class="p">();</span>
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">test_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;12122022&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">today_date</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">test_date</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">window</span><span class="p">.</span><span class="nx">refresh</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span><span class="nx">dataSet</span><span class="o">:</span><span class="s1">&#39;test&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">update_params</span><span class="o">:</span><span class="s1">&#39;specialitem&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">update_interval</span><span class="o">:</span><span class="w"> </span><span class="mf">2000</span><span class="p">,</span><span class="w"> </span><span class="nx">update_active</span><span class="o">:</span><span class="kc">false</span><span class="p">});</span>
 <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 </pre></div>
 </div>

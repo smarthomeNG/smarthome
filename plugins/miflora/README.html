@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Miflora</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Miflora</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3873,13 +3873,13 @@
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">miflora</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Miflora</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">miflora</span><span class="w"></span>
-<span class="w">    </span><span class="nt">bt_library</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bluepy</span><span class="w"></span>
-<span class="w">    </span><span class="nt">bt_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">C4:7C:7E:21:F3:2B</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">miflora</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">miflora</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Miflora</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">miflora</span>
+<span class="w">    </span><span class="nt">bt_library</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bluepy</span>
+<span class="w">    </span><span class="nt">bt_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">C4:7C:7E:21:F3:2B</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">miflora</span>
 </pre></div>
 </div>
 <section id="attributes">
@@ -3901,37 +3901,37 @@ Possible miflora_data_type’s are temperature, light, moisture, conductivity, n
 </section>
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">plants</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">plants</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">sensor_office</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">sensor_office</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">temperature</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature</span><span class="w"></span>
+<span class="w">        </span><span class="nt">temperature</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature</span>
 
-<span class="w">        </span><span class="nt">light</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light</span><span class="w"></span>
+<span class="w">        </span><span class="nt">light</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light</span>
 
-<span class="w">        </span><span class="nt">moisture</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">moisture</span><span class="w"></span>
+<span class="w">        </span><span class="nt">moisture</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">moisture</span>
 
-<span class="w">        </span><span class="nt">conductivity</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conductivity</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conductivity</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conductivity</span>
 
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span><span class="w"></span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
 
-<span class="w">        </span><span class="nt">firmware</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">firmware</span><span class="w"></span>
+<span class="w">        </span><span class="nt">firmware</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">firmware</span>
 
-<span class="w">        </span><span class="nt">battery</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">battery</span><span class="w"></span>
+<span class="w">        </span><span class="nt">battery</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">miflora_data_type@miflora</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">battery</span>
 </pre></div>
 </div>
 </section>

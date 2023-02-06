@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_web.html">Web/Cloud Plugins</a> &raquo;</li>
-      <li>ical</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_web.html">Web/Cloud Plugins</a></li>
+      <li class="breadcrumb-item active">ical</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3864,19 +3864,19 @@
 <p>Detaillierte Informationen zur Konfiguration des Plugins sind unter <a class="reference internal" href="../../plugins_doc/config/ical.html"><span class="doc">Plugin ‚ical‘ Konfiguration</span></a> zu finden.</p>
 </div>
 <p>Kalenderdateien können in der etc/plugin.yaml als „Alias“ hinterlegt werden. Auf diese Kurznamen kann in weiterer Folge, z.B. in einer Logik referenziert werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span><span class="w"></span>
-<span class="nt">ical</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ical</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#calendars:</span><span class="w"></span>
-<span class="w">                </span><span class="c1">#   - example:http://server.com/test.ics</span><span class="w"></span>
-<span class="w">                </span><span class="c1">#cycle: 3600</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span>
+<span class="nt">ical</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ical</span>
+<span class="w">    </span><span class="c1">#calendars:</span>
+<span class="w">                </span><span class="c1">#   - example:http://server.com/test.ics</span>
+<span class="w">                </span><span class="c1">#cycle: 3600</span>
 </pre></div>
 </div>
 <p>Außerdem können Kalender Items zugewiesen werden, indem das entsprechende Attribut im gewünschten Item angegeben wird. Das Item wird auf wahr gesetzt, sobald aktuell ein Event stattfindet.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/item.yaml</span><span class="w"></span>
-<span class="nt">calendaritem</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">ical_calendar</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_downloaded.ics</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/item.yaml</span>
+<span class="nt">calendaritem</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">ical_calendar</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_downloaded.ics</span>
 </pre></div>
 </div>
 </section>

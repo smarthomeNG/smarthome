@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="visualisierung.html">Visualisierung mit smartVISU <span class="greensup">Update</span></a> &raquo;</li>
-      <li>Automatische Generierung</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="visualisierung.html">Visualisierung mit smartVISU <span class="greensup">Update</span></a></li>
+      <li class="breadcrumb-item active">Automatische Generierung</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3897,17 +3897,17 @@ und in der zweiten Zeile werden Icons angezeigt, die den Zustand von Geräten in
 <li><p>Die Waschmaschine läuft</p></li>
 </ul>
 <p>Am Beispiel der Küche zeigt die folgende Konfiguration, wie die zusätzlichen Informationen konfiguriert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span>
+<span class="nn">---</span>
 
-<span class="nt">wohnung</span><span class="p">:</span><span class="w"></span>
+<span class="nt">wohnung</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kochen</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_cooking.png</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_nav_aside</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.print(&#39;m_kochen.ist&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.kochen.heizung.ist&#39;,</span><span class="nv"> </span><span class="s">&#39;°&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_nav_aside2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.symbol(&#39;m_kochen_kaffee2&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.kochen.kaffeeautomat.status&#39;,</span><span class="nv"> </span><span class="s">&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;icons/ws/scene_coffee_maker_automatic.png&#39;,</span><span class="nv"> </span><span class="s">&#39;2&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">basic.symbol(&#39;m_kochen_kaffee3&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.kochen.kaffeeautomat.status&#39;,</span><span class="nv"> </span><span class="s">&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;icons/or/scene_coffee_maker_automatic.png&#39;,</span><span class="nv"> </span><span class="s">&#39;3&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">basic.symbol(&#39;m_kochen_heizen&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.kochen.heizung.heizen&#39;,</span><span class="nv"> </span><span class="s">&#39;&#39;,</span><span class="nv"> </span><span class="s">icon1~&#39;sani_heating.png&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kochen</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span>
+<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_cooking.png</span>
+<span class="w">        </span><span class="nt">sv_nav_aside</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.print(&#39;m_kochen.ist&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.kochen.heizung.ist&#39;,</span><span class="nv"> </span><span class="s">&#39;°&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">        </span><span class="nt">sv_nav_aside2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.symbol(&#39;m_kochen_kaffee2&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.kochen.kaffeeautomat.status&#39;,</span><span class="nv"> </span><span class="s">&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;icons/ws/scene_coffee_maker_automatic.png&#39;,</span><span class="nv"> </span><span class="s">&#39;2&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">basic.symbol(&#39;m_kochen_kaffee3&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.kochen.kaffeeautomat.status&#39;,</span><span class="nv"> </span><span class="s">&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;icons/or/scene_coffee_maker_automatic.png&#39;,</span><span class="nv"> </span><span class="s">&#39;3&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">basic.symbol(&#39;m_kochen_heizen&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.kochen.heizung.heizen&#39;,</span><span class="nv"> </span><span class="s">&#39;&#39;,</span><span class="nv"> </span><span class="s">icon1~&#39;sani_heating.png&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
 </pre></div>
 </div>
 <p>Wie in den bisherigen Releases:</p>
@@ -3945,25 +3945,25 @@ Hand-Symbols in der Titelzeile der smartVISU aktiviert.</p>
 </figure>
 <p>Am Beispiel der obigen Konfigurations-Navigation zeigt die nachfolgende
 Konfigurationsdatei, wie die Navigation konfiguriert wird:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span>
+<span class="nn">---</span>
 
-<span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="nt">config</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">konfiguration</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Konfiguration</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">category</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">control_all_on_off.png</span><span class="w"></span>
+<span class="w">    </span><span class="nt">konfiguration</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Konfiguration</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">category</span>
+<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">control_all_on_off.png</span>
 
-<span class="w">    </span><span class="nt">beschattung</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Beschattung</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">category</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fts_shutter_40.png</span><span class="w"></span>
+<span class="w">    </span><span class="nt">beschattung</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Beschattung</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">category</span>
+<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fts_shutter_40.png</span>
 
-<span class="w">    </span><span class="nt">beleuchtung</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Beleuchtungsautomatik</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">category</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light_light_dim_00.png</span><span class="w"></span>
+<span class="w">    </span><span class="nt">beleuchtung</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Beleuchtungsautomatik</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">category</span>
+<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light_light_dim_00.png</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">sv_page</span></code> ist zum Generieren eines Eintrages für die
@@ -3986,24 +3986,24 @@ sondern die Navigation auf der Konfigurationsseite.</p>
 <p>Das Beispiel zeigt folgende Trenner: - Tests - Kategorien</p>
 <p>Am Beispiel des Trenners <code class="docutils literal notranslate"><span class="pre">Tests</span></code> zeigt die folgende Konfiguration,
 wie Trenner konfiguriert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span>
+<span class="nn">---</span>
 
-<span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<span class="nt">config</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">verteilung</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verteilung</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">category</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">measure_current.png</span><span class="w"></span>
+<span class="w">    </span><span class="nt">verteilung</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verteilung</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">category</span>
+<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">measure_current.png</span>
 
-<span class="w">    </span><span class="nt">separator_test</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tests</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat_separator</span><span class="w"></span>
+<span class="w">    </span><span class="nt">separator_test</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tests</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat_separator</span>
 
-<span class="w">    </span><span class="nt">fritzboxen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Fritzboxen</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">category</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">it_router.png</span><span class="w"></span>
+<span class="w">    </span><span class="nt">fritzboxen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Fritzboxen</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">category</span>
+<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">it_router.png</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">sv_page</span></code> ist zum generieren eines Trenners auf einen speziellen
@@ -4061,17 +4061,17 @@ automatischen generieren von smartVISU Seiten immer Blöcke der Größe
 <p>Dieses kann als Item-Attribut <code class="docutils literal notranslate"><span class="pre">sv_blocksize</span></code> festgelegt werden.</p>
 <p>Am Beispiel des Trenners <code class="docutils literal notranslate"><span class="pre">Tests</span></code> zeigt die folgende Konfiguration,
 wie Trenner konfiguriert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span>
+<span class="nn">---</span>
 
-<span class="nt">wohnung</span><span class="p">:</span><span class="w"></span>
+<span class="nt">wohnung</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">buero</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">buero</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">verbraucher</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verbraucher</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sv_blocksize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.switch(&#39;wohnung.buero.tv&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.buero.tv&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_on_off.png&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_standby.png&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">&lt;br&gt;</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">basic.switch(&#39;wohnung.buero.computer&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.buero.computer&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_on_off.png&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_standby.png&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">&lt;br&gt;</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">basic.switch(&#39;wohnung.buero.schrank&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.buero.schrank&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_on_off.png&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_standby.png&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">&lt;br&gt;</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">basic.switch(&#39;wohnung.buero.steckdose_tuer&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.buero.steckdose_tuer&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_on_off.png&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_standby.png&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">verbraucher</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verbraucher</span>
+<span class="w">            </span><span class="nt">sv_blocksize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.switch(&#39;wohnung.buero.tv&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.buero.tv&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_on_off.png&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_standby.png&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">&lt;br&gt;</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">basic.switch(&#39;wohnung.buero.computer&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.buero.computer&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_on_off.png&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_standby.png&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">&lt;br&gt;</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">basic.switch(&#39;wohnung.buero.schrank&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.buero.schrank&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_on_off.png&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_standby.png&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">&lt;br&gt;</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">basic.switch(&#39;wohnung.buero.steckdose_tuer&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.buero.steckdose_tuer&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_on_off.png&#39;,</span><span class="nv"> </span><span class="s">icon0~&#39;control_standby.png&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">sv_blocksize</span></code> dient zur Einstellung der (minimalen) Blockhöhe und
@@ -4184,41 +4184,41 @@ den Item-Definitionen zu übersteuern.</p>
 <p>In der Datei <code class="docutils literal notranslate"><span class="pre">../etc/visu.yaml</span></code> können auch die Einstellungen für die Attribute <strong>sv_img</strong>, <strong>sv_nav_aside</strong>
 und <strong>sv_nav_aside2</strong> übersteuert und die Position von Trennern in der Navigation festgelegt werden.</p>
 <p>Die Struktur der Datei ist folgende:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
-<span class="nt">navigation</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Die gesamte Strukturierung der Navigation wird unterhalb  des Schlüssels &#39;navigagion:&#39; definiert</span><span class="w"></span>
-<span class="w">    </span><span class="nt">room</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="c1"># Unter dem Schlüssel &#39;room:&#39; wird die Struktur für die Seiten der Räume festgelegt.</span><span class="w"></span>
-<span class="w">      </span><span class="c1"># Die Reihenfolge der Navigationseinträge wird als eine Liste von Unterstrukturen definiert.</span><span class="w"></span>
-<span class="w">      </span><span class="c1"># Die Unterstrukturen müssen den Schlüssel &#39;name:&#39; und einen Wert für den Namen enthalten.</span><span class="w"></span>
-<span class="w">      </span><span class="c1"># Die weiteren Schlüssel &#39;img:&#39;, &#39;nav_aside:&#39; und &#39;nav_aside2:&#39; sind optional.</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kochen</span><span class="w"></span>
-<span class="w">        </span><span class="nt">img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_cooking.svg</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span>
+<span class="nn">---</span>
+<span class="nt">navigation</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Die gesamte Strukturierung der Navigation wird unterhalb  des Schlüssels &#39;navigagion:&#39; definiert</span>
+<span class="w">    </span><span class="nt">room</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Unter dem Schlüssel &#39;room:&#39; wird die Struktur für die Seiten der Räume festgelegt.</span>
+<span class="w">      </span><span class="c1"># Die Reihenfolge der Navigationseinträge wird als eine Liste von Unterstrukturen definiert.</span>
+<span class="w">      </span><span class="c1"># Die Unterstrukturen müssen den Schlüssel &#39;name:&#39; und einen Wert für den Namen enthalten.</span>
+<span class="w">      </span><span class="c1"># Die weiteren Schlüssel &#39;img:&#39;, &#39;nav_aside:&#39; und &#39;nav_aside2:&#39; sind optional.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kochen</span>
+<span class="w">        </span><span class="nt">img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_cooking.svg</span>
 
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wohnen</span><span class="w"></span>
-<span class="w">        </span><span class="nt">img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_livingroom.svg</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wohnen</span>
+<span class="w">        </span><span class="nt">img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_livingroom.svg</span>
 
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Essen</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Essen</span>
 
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terrasse</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terrasse</span>
 
-<span class="w">      </span><span class="c1"># Wenn ein Trenner definiert werden soll, muss außer dem Namen der Schlüssel &#39;separator:&#39;</span><span class="w"></span>
-<span class="w">      </span><span class="c1"># angegeben werden und es muss der Wert &#39;True&#39; zugewiesen werden</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Obergeschoss</span><span class="w"></span>
-<span class="w">        </span><span class="nt">separator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">      </span><span class="c1"># Wenn ein Trenner definiert werden soll, muss außer dem Namen der Schlüssel &#39;separator:&#39;</span>
+<span class="w">      </span><span class="c1"># angegeben werden und es muss der Wert &#39;True&#39; zugewiesen werden</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Obergeschoss</span>
+<span class="w">        </span><span class="nt">separator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Flur</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Flur</span>
 
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gast</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gast</span>
 
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schlafen</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schlafen</span>
 
-<span class="w">    </span><span class="nt">category</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="c1"># Unter dem Schlüssel &#39;room:&#39; wird die Struktur für die Seiten der Räume festgelegt</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Konfiguration</span><span class="w"></span>
+<span class="w">    </span><span class="nt">category</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Unter dem Schlüssel &#39;room:&#39; wird die Struktur für die Seiten der Räume festgelegt</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Konfiguration</span>
 
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </pre></div>
 </div>
 </section>
@@ -4235,18 +4235,18 @@ sondern an die erste Seite angefügt.</p>
 <p>Falls es erwünscht ist zwei Navigationseinträge mit dem selben Namen zu haben (z.B. <strong>Bad</strong>)  wenn die Navigation
 durch Trenner „Erdgeschoss“ und „Obergeschoss“ strukturiert ist, so muss an den Namen der Definition für den
 zweiten Teilbaum nur ein Leerzeichen angefügt werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">myitems</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eg</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">bad</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bad</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">myitems</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">eg</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">bad</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bad</span>
 
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 
-<span class="w">    </span><span class="nt">og</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">bad</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Bad</span><span class="nv"> </span><span class="s">&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">og</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">bad</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Bad</span><span class="nv"> </span><span class="s">&quot;</span>
 </pre></div>
 </div>
 </section>

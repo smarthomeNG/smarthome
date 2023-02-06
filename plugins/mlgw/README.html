@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Bang &amp; Olufsen Masterlink Gateway</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Bang &amp; Olufsen Masterlink Gateway</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3894,18 +3894,18 @@
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">mlgw</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mlgw</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.mlgw</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlgw.local</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># port: 9000</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># username: mlgw</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># password: mlgw</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># rooms:</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#   - &#39;living&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#   - &#39;kitchen&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Mlns: &#39;&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># log_mlgwtelegrams: 0</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">mlgw</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mlgw</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.mlgw</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlgw.local</span>
+<span class="w">    </span><span class="c1"># port: 9000</span>
+<span class="w">    </span><span class="c1"># username: mlgw</span>
+<span class="w">    </span><span class="c1"># password: mlgw</span>
+<span class="w">    </span><span class="c1"># rooms:</span>
+<span class="w">    </span><span class="c1">#   - &#39;living&#39;</span>
+<span class="w">    </span><span class="c1">#   - &#39;kitchen&#39;</span>
+<span class="w">    </span><span class="c1"># Mlns: &#39;&#39;</span>
+<span class="w">    </span><span class="c1"># log_mlgwtelegrams: 0</span>
 </pre></div>
 </div>
 <p>This plugins is looking for a masterlink gateway. By default it tries to connect to the host ‚mlgw.local‘ on port 9000. You could change this in your plugin.yaml.</p>
@@ -3997,50 +3997,50 @@ Cursor functions:
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h4>
 <p>The following example item configuration illustrates every attribute and some useful settings.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Someroom</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Someroom</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">bv10</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BeoVision 10</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mlgw_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cmd</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mlgw_mln</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">bv10</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BeoVision 10</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">        </span><span class="nt">mlgw_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cmd</span>
+<span class="w">        </span><span class="nt">mlgw_mln</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 
-<span class="w">        </span><span class="nt">channel</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;BeoVision</span><span class="nv"> </span><span class="s">10:</span><span class="nv"> </span><span class="s">Channel&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mlgw_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ch</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mlgw_mln</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="w">        </span><span class="nt">channel</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;BeoVision</span><span class="nv"> </span><span class="s">10:</span><span class="nv"> </span><span class="s">Channel&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">mlgw_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ch</span>
+<span class="w">            </span><span class="nt">mlgw_mln</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 
-<span class="w">        </span><span class="nt">digit_1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;BeoVision</span><span class="nv"> </span><span class="s">10:</span><span class="nv"> </span><span class="s">Digit</span><span class="nv"> </span><span class="s">&quot;1&quot;&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mlgw_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cmd</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mlgw_mln</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mlgw_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Digit-1</span><span class="w"></span>
+<span class="w">        </span><span class="nt">digit_1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;BeoVision</span><span class="nv"> </span><span class="s">10:</span><span class="nv"> </span><span class="s">Digit</span><span class="nv"> </span><span class="s">&quot;1&quot;&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">mlgw_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cmd</span>
+<span class="w">            </span><span class="nt">mlgw_mln</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">            </span><span class="nt">mlgw_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Digit-1</span>
 
-<span class="w">    </span><span class="nt">living_light0</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;living</span><span class="nv"> </span><span class="s">room:</span><span class="nv"> </span><span class="s">Light</span><span class="nv"> </span><span class="s">&quot;0&quot;&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mlgw_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mlgw_room</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">living</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mlgw_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Digit-0</span><span class="w"></span>
+<span class="w">    </span><span class="nt">living_light0</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;living</span><span class="nv"> </span><span class="s">room:</span><span class="nv"> </span><span class="s">Light</span><span class="nv"> </span><span class="s">&quot;0&quot;&#39;</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">mlgw_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light</span>
+<span class="w">        </span><span class="nt">mlgw_room</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">living</span>
+<span class="w">        </span><span class="nt">mlgw_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Digit-0</span>
 
-<span class="w">    </span><span class="nt">living_lightup</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;living</span><span class="nv"> </span><span class="s">room:</span><span class="nv"> </span><span class="s">Light</span><span class="nv"> </span><span class="s">Step_Up&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mlgw_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mlgw_room</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">living</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mlgw_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Step_Up</span><span class="w"></span>
+<span class="w">    </span><span class="nt">living_lightup</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;living</span><span class="nv"> </span><span class="s">room:</span><span class="nv"> </span><span class="s">Light</span><span class="nv"> </span><span class="s">Step_Up&#39;</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">mlgw_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light</span>
+<span class="w">        </span><span class="nt">mlgw_room</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">living</span>
+<span class="w">        </span><span class="nt">mlgw_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Step_Up</span>
 
-<span class="w">    </span><span class="nt">living_control0</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;living</span><span class="nv"> </span><span class="s">room:</span><span class="nv"> </span><span class="s">Control</span><span class="nv"> </span><span class="s">&quot;0&quot;&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mlgw_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">control</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mlgw_room</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mlgw_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Digit-0</span><span class="w"></span>
+<span class="w">    </span><span class="nt">living_control0</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;living</span><span class="nv"> </span><span class="s">room:</span><span class="nv"> </span><span class="s">Control</span><span class="nv"> </span><span class="s">&quot;0&quot;&#39;</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">mlgw_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">control</span>
+<span class="w">        </span><span class="nt">mlgw_room</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span>
+<span class="w">        </span><span class="nt">mlgw_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Digit-0</span>
 </pre></div>
 </div>
 <p>The attribute <strong>name</strong> does not need to be specified. It serves in this example as a remark only.</p>

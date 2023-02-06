@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../release.html">Release Notes</a> &raquo;</li>
-          <li><a href="../1_0_release_sh_py.html">Release 1.0 und davor</a> &raquo;</li>
-      <li>Release 1.0 - November 14th, 2013</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../release.html">Release Notes</a></li>
+          <li class="breadcrumb-item"><a href="../1_0_release_sh_py.html">Release 1.0 und davor</a></li>
+      <li class="breadcrumb-item active">Release 1.0 - November 14th, 2013</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3958,23 +3958,23 @@ attribute my.</p></li>
 <h2>Migrate:<a class="headerlink" href="#migrate" title="Permalink to this heading"></a></h2>
 <p>If you want to migrate to the new (Python) version, you have to do the following steps:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># install the base</span>
-$ sudo apt-get install python3 python3-dev python3-setuptools
-$ sudo easy_install3 pip
-$ sudo pip-3.2 install ephem
+$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>python3<span class="w"> </span>python3-dev<span class="w"> </span>python3-setuptools
+$<span class="w"> </span>sudo<span class="w"> </span>easy_install3<span class="w"> </span>pip
+$<span class="w"> </span>sudo<span class="w"> </span>pip-3.2<span class="w"> </span>install<span class="w"> </span>ephem
 
 <span class="c1"># to convert your old configuration !very important!</span>
-$ ./tools/conf2-1.0.sh
+$<span class="w"> </span>./tools/conf2-1.0.sh
 
 <span class="c1"># change your logic files to python3 syntax</span>
-$ 2to3-3.2 -f idioms -f all -w yourlogicfile.py
+$<span class="w"> </span>2to3-3.2<span class="w"> </span>-f<span class="w"> </span>idioms<span class="w"> </span>-f<span class="w"> </span>all<span class="w"> </span>-w<span class="w"> </span>yourlogicfile.py
 
 <span class="c1"># remove the old python pyc files</span>
-$ find . -name *.pyc -type f -print0 <span class="p">|</span> xargs -0 /bin/rm -f
+$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span>*.pyc<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-print0<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-0<span class="w"> </span>/bin/rm<span class="w"> </span>-f
 
 <span class="c1"># if you want to use the RRDTool plugin</span>
-$ sudo apt-get install librrd-dev
-$ <span class="nb">cd</span> lib/3rd/rrdtool
-$ sudo python3 setup.py install
+$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>librrd-dev
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>lib/3rd/rrdtool
+$<span class="w"> </span>sudo<span class="w"> </span>python3<span class="w"> </span>setup.py<span class="w"> </span>install
 </pre></div>
 </div>
 </section>

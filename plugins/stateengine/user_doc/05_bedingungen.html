@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-          <li><a href="../user_doc.html">stateengine</a> &raquo;</li>
-      <li>Bedingungen</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_doc/plugins_system.html">System Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../user_doc.html">stateengine</a></li>
+      <li class="breadcrumb-item active">Bedingungen</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3858,17 +3858,17 @@
 <h2>Beispiel<a class="headerlink" href="#beispiel" title="Permalink to this heading"></a></h2>
 <p>Im folgenden Beispiel wird der Zustand „Daemmerung“ eingenommen, sobald
 die Helligkeit (über se_item_brightness definiert) über 500 Lux liegt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span><span class="w"></span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_item_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span><span class="w"></span>
-<span class="w">                </span><span class="nt">Daemmerung</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dämmerung</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Aktionen&gt;</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">                       </span><span class="nt">se_min_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
+<span class="w">                </span><span class="nt">se_item_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span>
+<span class="w">                </span><span class="nt">Daemmerung</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dämmerung</span>
+<span class="w">                    </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Aktionen&gt;</span>
+<span class="w">                    </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">                       </span><span class="nt">se_min_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
 </pre></div>
 </div>
 </section>
@@ -3925,15 +3925,15 @@ gleichen Ausdrücke ein (z.B. eine eval-Funktion), so kann Letzteres als Templat
 definiert und referenziert werden. Dadurch wird die  Handhabung
 komplexerer Abfragen deutlich vereinfacht. Diese Templates müssen wie se_item/se_eval
 auf höchster Ebene des StateEngine Items (also z.B. rules) deklariert werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">se_template_test</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:sh...settings.max_bright&#39; - 20</span><span class="w"></span>
-<span class="w">  </span><span class="nt">se_item_specialitem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">meinitem.specialitem</span><span class="w"> </span><span class="c1"># declare an existing item here</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">se_template_test</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:sh...settings.max_bright&#39; - 20</span>
+<span class="w">  </span><span class="nt">se_item_specialitem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">meinitem.specialitem</span><span class="w"> </span><span class="c1"># declare an existing item here</span>
 
-<span class="w">  </span><span class="nt">state_one</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">enter_testlast</span><span class="p">:</span><span class="w"> </span><span class="c1">#has to start with enter, can be called whatever</span><span class="w"></span>
-<span class="w">          </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;template:test&#39;</span><span class="w"> </span><span class="c1">#laststate is a special conditionname</span><span class="w"></span>
-<span class="w">      </span><span class="nt">enter_testother</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">se_value_specialitem</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;template:test&#39;</span><span class="w"> </span><span class="c1">#specialitem must be declared with se_item/se_eval</span><span class="w"></span>
+<span class="w">  </span><span class="nt">state_one</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enter_testlast</span><span class="p">:</span><span class="w"> </span><span class="c1">#has to start with enter, can be called whatever</span>
+<span class="w">          </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;template:test&#39;</span><span class="w"> </span><span class="c1">#laststate is a special conditionname</span>
+<span class="w">      </span><span class="nt">enter_testother</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">se_value_specialitem</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;template:test&#39;</span><span class="w"> </span><span class="c1">#specialitem must be declared with se_item/se_eval</span>
 </pre></div>
 </div>
 <p>Bei sämtlichen Bedingungen ist es möglich, Werte als Liste anzugeben. Es ist allerdings
@@ -3946,11 +3946,11 @@ oder aus einer Liste mit mehreren Bedingungen bestehen.
 In letzterem Fall fungiert die Liste als ODER Abfrage. Sobald eine der gelisteten
 Werte eingetroffen ist, wird die Bedingung als wahr angenommen
 und der Zustand aktiviert.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;kochen&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;eval:1+2&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;regex:Nachfuehren(.*)&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;item:..laststate_id&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_value_laststate</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;kochen&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;eval:1+2&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;regex:Nachfuehren(.*)&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;item:..laststate_id&#39;</span>
 </pre></div>
 </div>
 <p>Im oben gezeigten Beispiel kann der letzte Status einen von drei Werten beinhalten,
@@ -3959,15 +3959,15 @@ angegeben werden, ist offen - es müssen also nicht nur reine Strings in die
 Liste eingefügt werden.</p>
 <p>Werden sowohl min(age) als auch max(age) als Liste definiert, spielt die
 Reihenfolge der Liste eine Rolle, da die beiden Werte als Paar herangezogen werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_minage_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;5&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;eval:1+2&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;novalue&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_minage_&lt;Bedingungsname&gt;</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;5&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;eval:1+2&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;novalue&#39;</span>
 
-<span class="nt">se_maxage_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;10&#39;</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;eval:5*sh.meinwert()&#39;</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;item:EinzweitesItem&#39;</span><span class="w"></span>
+<span class="nt">se_maxage_&lt;Bedingungsname&gt;</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;10&#39;</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;eval:5*sh.meinwert()&#39;</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;item:EinzweitesItem&#39;</span>
 </pre></div>
 </div>
 <p>Obige Bedingung wird beispielsweise wahr bei:
@@ -3978,70 +3978,70 @@ Reihenfolge der Liste eine Rolle, da die beiden Werte als Paar herangezogen werd
 <section id="vergleichsfunktion">
 <h2>Vergleichsfunktion<a class="headerlink" href="#vergleichsfunktion" title="Permalink to this heading"></a></h2>
 <p><strong>Minimum</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_min_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_min_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>Die Bedingung ist erfüllt, wenn der aktuelle Wert größer als das
 angegebene Minimum ist.</p>
 <p><strong>Maximum</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_max_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_max_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>Die Bedingung ist erfüllt, wenn der aktuelle Wert kleiner als das
 angegebene Maximum ist.</p>
 <p><strong>Bestimmter Wert</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_value_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_value_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>Die Bedingung ist erfüllt, wenn der aktuelle Wert gleich dem
 angegebenen Wert oder gleich einem der in einer Liste angegebenen Wert ist.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_value_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert1</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert2</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">WertN</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_value_&lt;Bedingungsname&gt;</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert1</span><span class="p p-Indicator">]</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert2</span><span class="p p-Indicator">]</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">WertN</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p><strong>Negieren</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_negate_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True|False</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_negate_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True|False</span>
 </pre></div>
 </div>
 <p>Die gesamte Bedingung (Minimum, Maximum und Wert) wird negiert
 (umgekehrt). Für das Attribut wird der Datentyp Boolean verwendet,
 zulässige Werte sind „true“, „yes“, „on“ bzw. „false“, „no“, „off“</p>
 <p><strong>Aktualisierung des Items durch</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_updatedby_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_updatedby_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>Die Bedingung ist erfüllt, wenn das Item durch den angegebenen Wert bzw.
 einen der angegebenen Werte geändert wurde. Hier bietet es sich an,
 den Wert als Regular Expression mittels <code class="docutils literal notranslate"><span class="pre">se_updatedby_&lt;Bedingungsname&gt;:</span> <span class="pre">regex:StateEngine</span> <span class="pre">Plugin</span></code> zu definieren.
 Die Werte(liste) kann auch durch <code class="docutils literal notranslate"><span class="pre">se_updatedbynegate_&lt;Bedingungsname&gt;</span></code> negiert werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_updatedby_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert1</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert2</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">regex:[WertN]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_updatedby_&lt;Bedingungsname&gt;</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert1</span><span class="p p-Indicator">]</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert2</span><span class="p p-Indicator">]</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">regex:[WertN]</span>
 
-<span class="nt">se_updatedbynegate_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True|False</span><span class="w"></span>
+<span class="nt">se_updatedbynegate_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True|False</span>
 </pre></div>
 </div>
 <p><strong>Änderung des Items durch</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_changedby_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_changedby_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>Die Bedingung ist erfüllt, wenn das Item durch den angegebenen Wert bzw.
 einen der angegebenen Werte geändert wurde. Hier bietet es sich an,
 den Wert als Regular Expression mittels <code class="docutils literal notranslate"><span class="pre">se_changedby_&lt;Bedingungsname&gt;:</span> <span class="pre">regex:StateEngine</span> <span class="pre">Plugin</span></code> zu definieren.
 Die Werte(liste) kann auch durch <code class="docutils literal notranslate"><span class="pre">se_changedbynegate_&lt;Bedingungsname&gt;</span></code> negiert werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_changedby_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert1</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert2</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">regex:[WertN]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_changedby_&lt;Bedingungsname&gt;</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert1</span><span class="p p-Indicator">]</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert2</span><span class="p p-Indicator">]</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">regex:[WertN]</span>
 
-<span class="nt">se_changedbynegate_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True|False</span><span class="w"></span>
+<span class="nt">se_changedbynegate_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True|False</span>
 </pre></div>
 </div>
 <p><strong>Mindestalter</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_agemin_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_agemin_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>Die Bedingung ist erfüllt, wenn das Alter des Items, das zur
@@ -4049,7 +4049,7 @@ Ermittlung des Werts angegeben ist, größer als das angegebene
 Mindestalter ist. Die age Bedingungen sollten immer mit einer value Bedingung verknüpft werden
 (z.B. <code class="docutils literal notranslate"><span class="pre">se_value_&lt;Bedingungsname&gt;:</span> <span class="pre">True</span></code>)</p>
 <p><strong>Höchstalter</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_agemax_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_agemax_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Wert</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>Die Bedingung ist erfüllt, wenn das Alter des Items, das zur
@@ -4057,7 +4057,7 @@ Ermittlung des Werts angegeben ist, kleiner als das angegebene
 Höchstalter ist. Die age Bedingungen sollten immer mit einer value Bedingung verknüpft werden
 (z.B. <code class="docutils literal notranslate"><span class="pre">se_value_&lt;Bedingungsname&gt;:</span> <span class="pre">True</span></code>)</p>
 <p><strong>Altersbedingung negieren</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_agenegate_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True|False</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_agenegate_&lt;Bedingungsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True|False</span>
 </pre></div>
 </div>
 <p>Die Altersbedingung (Mindestalter, Höchstalter) wird negiert
@@ -4156,10 +4156,10 @@ Beispiel: Im Normalfall wäre folgende Zustandsabfolge möglich, sofern die
 entsprechenden Bedingungen erfüllt sind: Abend - Nacht - Abend.
 Durch die folgende Angabe würde der Zustand Abend kein zweites Mal (nach Nacht)
 eingenommen werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">abend</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">enter_abend</span><span class="p">:</span><span class="w"></span>
-<span class="w">     </span><span class="nt">se_value_previousstate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span><span class="w"></span>
-<span class="w">     </span><span class="nt">se_negate_previousstate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">abend</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enter_abend</span><span class="p">:</span>
+<span class="w">     </span><span class="nt">se_value_previousstate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span>
+<span class="w">     </span><span class="nt">se_negate_previousstate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 </pre></div>
 </div>
 <p><strong>previousstate_conditionset_id/name</strong>

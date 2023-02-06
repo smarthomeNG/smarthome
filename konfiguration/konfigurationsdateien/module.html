@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="konfigdateien.html">Konfiguration über Dateien</a> &raquo;</li>
-      <li>module.yaml</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="konfigdateien.html">Konfiguration über Dateien</a></li>
+      <li class="breadcrumb-item active">module.yaml</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3863,29 +3863,29 @@ Einsatz der ladbaren Module verzichten.</p>
 <p>Die Datei sollte folgendermaßen aussehen:</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">module.yaml</span><a class="headerlink" href="#id1" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
-<span class="c1"># etc/module.yaml</span><span class="w"></span>
-<span class="c1"># support for web server</span><span class="w"></span>
-<span class="nt">http</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">module_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span><span class="w"></span>
-<span class="w">    </span><span class="nt">starturl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span>
+<span class="nn">---</span>
+<span class="c1"># etc/module.yaml</span>
+<span class="c1"># support for web server</span>
+<span class="nt">http</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">module_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">    </span><span class="nt">starturl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
 
-<span class="c1"># support for graphical admin interface</span><span class="w"></span>
-<span class="nt">admin</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">module_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span><span class="w"></span>
+<span class="c1"># support for graphical admin interface</span>
+<span class="nt">admin</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">module_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
 
-<span class="nt">websocket</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">module_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">websocket</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#port: 2424</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#tls_port: 2425</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#tls_key: myprivate.key</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#tls_cert: myprivate.pem</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#use_tls: true</span><span class="w"></span>
+<span class="nt">websocket</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">module_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">websocket</span>
+<span class="w">    </span><span class="c1">#port: 2424</span>
+<span class="w">    </span><span class="c1">#tls_port: 2425</span>
+<span class="w">    </span><span class="c1">#tls_key: myprivate.key</span>
+<span class="w">    </span><span class="c1">#tls_cert: myprivate.pem</span>
+<span class="w">    </span><span class="c1">#use_tls: true</span>
 
-<span class="c1">#enable, if mqtt protocol is going to be used</span><span class="w"></span>
-<span class="c1">#mqtt:</span><span class="w"></span>
-<span class="c1">#    module_name: mqtt</span><span class="w"></span>
+<span class="c1">#enable, if mqtt protocol is going to be used</span>
+<span class="c1">#mqtt:</span>
+<span class="c1">#    module_name: mqtt</span>
 </pre></div>
 </div>
 </div>

@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-      <li>uzsu</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_system.html">System Plugins</a></li>
+      <li class="breadcrumb-item active">uzsu</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3869,37 +3869,37 @@ beschrieben. Dort finden sich auch einige praktische Beispiele.</p>
 <p class="admonition-title">Wichtig</p>
 <p>Detaillierte Informationen zur Konfiguration des Plugins sind unter <a class="reference internal" href="../../plugins_doc/config/uzsu.html"><span class="doc">Plugin ‚uzsu‘ Konfiguration</span></a> zu finden.</p>
 </div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span><span class="w"></span>
-<span class="nt">uzsu</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uzsu</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#remove_duplicates: True</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span>
+<span class="nt">uzsu</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uzsu</span>
+<span class="w">    </span><span class="c1">#remove_duplicates: True</span>
 </pre></div>
 </div>
 <p>In der Item Hierarchie muss ein Kind-Item zum Item erstellt werden, das zeitlich gesteuert werden soll.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.yaml</span><span class="w"></span>
-<span class="nt">someroom</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.yaml</span>
+<span class="nt">someroom</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">someitem</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
+<span class="w">    </span><span class="nt">someitem</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
 
-<span class="w">        </span><span class="nt">uzsu</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dict</span><span class="w"></span>
-<span class="w">            </span><span class="nt">uzsu_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">someroom.someitem</span><span class="w"> </span><span class="c1">#Ab smarthomeNG 1.6 ist es möglich, einfach nur &#39;..&#39; zu nutzen, um auf das Parent-Item zu verweisen.</span><span class="w"></span>
-<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">uzsu</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dict</span>
+<span class="w">            </span><span class="nt">uzsu_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">someroom.someitem</span><span class="w"> </span><span class="c1">#Ab smarthomeNG 1.6 ist es möglich, einfach nur &#39;..&#39; zu nutzen, um auf das Parent-Item zu verweisen.</span>
+<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 
-<span class="w">            </span><span class="nt">active</span><span class="p">:</span><span class="w"> </span><span class="c1"># Dieser Eintrag kann genutzt werden, um die UZSU durch einen einfachen Item Call zu (de)aktivieren.</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh...activate(value)</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<span class="w">            </span><span class="nt">active</span><span class="p">:</span><span class="w"> </span><span class="c1"># Dieser Eintrag kann genutzt werden, um die UZSU durch einen einfachen Item Call zu (de)aktivieren.</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh...activate(value)</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 </pre></div>
 </div>
 <p>Ab <em>smarthomeNG 1.6</em> ist das Anlegen der nötigen Items via <code class="docutils literal notranslate"><span class="pre">struct</span></code> besonders einfach:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.yaml</span><span class="w"></span>
-<span class="nt">someroom</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.yaml</span>
+<span class="nt">someroom</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">someitem</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uzsu.child</span><span class="w"></span>
+<span class="w">    </span><span class="nt">someitem</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uzsu.child</span>
 </pre></div>
 </div>
 </section>

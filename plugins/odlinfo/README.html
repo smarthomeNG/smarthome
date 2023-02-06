@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>ODLInfo</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">ODLInfo</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3910,10 +3910,10 @@ Dies führt dazu, dass einzelne Zeitreihen abrupt enden.</p>
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">odlinfo</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ODLInfo</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.odlinfo</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">odlinfo</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ODLInfo</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.odlinfo</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
 </pre></div>
 </div>
 </section>
@@ -3921,27 +3921,27 @@ Dies führt dazu, dass einzelne Zeitreihen abrupt enden.</p>
 <h3>items.yaml<a class="headerlink" href="#items-yaml" title="Permalink to this heading"></a></h3>
 <section id="example">
 <h4>Example:<a class="headerlink" href="#example" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">outside</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">outside</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">radiation</span><span class="p">:</span><span class="w"> </span><span class="c1">#this item will be updated via logic</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">radiation</span><span class="p">:</span><span class="w"> </span><span class="c1">#this item will be updated via logic</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
 
-<span class="w">        </span><span class="nt">wessling</span><span class="p">:</span><span class="w"> </span><span class="c1">#these items will be auto updated by the plugin, using the international and odlinfo id</span><span class="w"></span>
+<span class="w">        </span><span class="nt">wessling</span><span class="p">:</span><span class="w"> </span><span class="c1">#these items will be auto updated by the plugin, using the international and odlinfo id</span>
 <span class="w">            </span><span class="nt">radiation</span><span class="p">:</span><span class="w"> </span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">odl_station</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;091881441&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">odl_data_type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;value&#39;</span><span class="w"></span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">odl_station</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;091881441&#39;</span>
+<span class="w">                </span><span class="nt">odl_data_type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;value&#39;</span>
 
-<span class="w">            </span><span class="nt">radiation_terrestrial</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">odl_station</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;091881441&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">odl_data_type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;value_terrestrial&#39;</span><span class="w"></span>
+<span class="w">            </span><span class="nt">radiation_terrestrial</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">odl_station</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;091881441&#39;</span>
+<span class="w">                </span><span class="nt">odl_data_type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;value_terrestrial&#39;</span>
 
-<span class="w">            </span><span class="nt">radiation_cosmic</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">odl_station</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;DEZ1453&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">odl_data_type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;value_cosmic&#39;</span><span class="w"></span>
+<span class="w">            </span><span class="nt">radiation_cosmic</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">odl_station</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;DEZ1453&#39;</span>
+<span class="w">                </span><span class="nt">odl_data_type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;value_cosmic&#39;</span>
 </pre></div>
 </div>
 </section>

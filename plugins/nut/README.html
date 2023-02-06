@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>NUT - Network UPS Tools plugin</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">NUT - Network UPS Tools plugin</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3862,23 +3862,23 @@ More about NUT: http://networkupstools.org/</p>
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">nut</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NUT</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.nut</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ups</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your_ups_name</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read cycle, optional, default 60</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">upsd host, optional, default &#39;localhost&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">upsd port, optional, default 3493</span><span class="w"></span>
-<span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">telnet read timeout, optional, default 5</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">nut</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NUT</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.nut</span>
+<span class="w">    </span><span class="nt">ups</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your_ups_name</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read cycle, optional, default 60</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">upsd host, optional, default &#39;localhost&#39;</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">upsd port, optional, default 3493</span>
+<span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">telnet read timeout, optional, default 5</span>
 </pre></div>
 </div>
 </section>
 </section>
 <section id="items-yaml">
 <h2>items.yaml<a class="headerlink" href="#items-yaml" title="Permalink to this heading"></a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ups_item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">nut_var</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">variable_name_from_upsc</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ups_item</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">nut_var</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">variable_name_from_upsc</span>
 </pre></div>
 </div>
 </section>
@@ -3886,31 +3886,31 @@ More about NUT: http://networkupstools.org/</p>
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
 <p>The most important variable: <code class="docutils literal notranslate"><span class="pre">ups.status</span></code> is returned from ups as string containing <code class="docutils literal notranslate"><span class="pre">OL</span></code> - OnLine, <code class="docutils literal notranslate"><span class="pre">OB</span></code> - On Battery or <code class="docutils literal notranslate"><span class="pre">LB</span></code> - LowBattery. Easy way to parse to boolean:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ups</span><span class="p">:</span><span class="w">  </span>
-<span class="w">    </span><span class="nt">status</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Status</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">nut_var</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ups.status</span><span class="w"></span>
-<span class="w">        </span><span class="nt">online</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ups.status</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 if &#39;OL&#39; in sh.ups.status() else 0</span><span class="w"></span>
-<span class="w">        </span><span class="nt">on_battery</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ups.status</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 if &#39;OB&#39; in sh.ups.status() else 0</span><span class="w"></span>
-<span class="w">        </span><span class="nt">low_battery</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ups.status</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 if &#39;LB&#39; in sh.ups.status() else 0</span><span class="w"></span>
-<span class="w">    </span><span class="nt">battery</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">percent</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">nut_var</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">battery.charge</span><span class="w"></span>
-<span class="w">        </span><span class="nt">voltage</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">nut_var</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">battery.voltage</span><span class="w"></span>
+<span class="w">    </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Status</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">nut_var</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ups.status</span>
+<span class="w">        </span><span class="nt">online</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ups.status</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 if &#39;OL&#39; in sh.ups.status() else 0</span>
+<span class="w">        </span><span class="nt">on_battery</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ups.status</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 if &#39;OB&#39; in sh.ups.status() else 0</span>
+<span class="w">        </span><span class="nt">low_battery</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ups.status</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 if &#39;LB&#39; in sh.ups.status() else 0</span>
+<span class="w">    </span><span class="nt">battery</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">percent</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">            </span><span class="nt">nut_var</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">battery.charge</span>
+<span class="w">        </span><span class="nt">voltage</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">            </span><span class="nt">nut_var</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">battery.voltage</span>
 </pre></div>
 </div>
 <p>Other ups variables, like <code class="docutils literal notranslate"><span class="pre">battery.charge</span></code>, can be directly parsed to num by sh.</p>
@@ -3926,12 +3926,12 @@ the UPS status as a NUT server. For this configuration</p>
 </ol>
 <section id="id1">
 <h3>plugin.yaml<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">nut</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NUT</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.nut</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ups</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ups</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;IP of smarthomeNG system&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3493</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">nut</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NUT</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.nut</span>
+<span class="w">    </span><span class="nt">ups</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ups</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;IP of smarthomeNG system&gt;</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3493</span>
 </pre></div>
 </div>
 </section>

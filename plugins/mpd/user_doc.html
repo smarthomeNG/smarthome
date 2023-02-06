@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a> &raquo;</li>
-      <li>mpd</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a></li>
+      <li class="breadcrumb-item active">mpd</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3888,364 +3888,364 @@ und die <a class="reference external" href="https://mpd.readthedocs.io/en/latest
 <h2>Beispiele<a class="headerlink" href="#beispiele" title="Permalink to this heading"></a></h2>
 <p>Für eine Nutzung von zwei Instanzen dient das folgende Konfigurationsbeispiel.
 Es soll je eine Instanz für ein Badezimmer und eine Küche angesteuert werden</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">mpd_bad</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mpd</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bad</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.45</span><span class="w"></span>
-<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6601</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">mpd_bad</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mpd</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bad</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.45</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6601</span>
 
-<span class="nt">mpd_kueche</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mpd</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kueche</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.55</span><span class="w"></span>
-<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6602</span><span class="w"></span>
+<span class="nt">mpd_kueche</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mpd</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kueche</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.55</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6602</span>
 </pre></div>
 </div>
 <p>Ein Beispiel das für alle Kommandos jeweils ein Item anlegt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Bad</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Musik</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">volume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">setvol</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Bad</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Musik</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">volume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">setvol</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">repeat</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">repeat</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">playpause</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playpause</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playpause</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">playpause</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playpause</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playpause</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">mute</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">mute</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">random</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">random</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">random</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">random</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">random</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">random</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">single</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">single</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">single</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">single</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">single</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">single</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">consume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">consume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">consume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">consume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">consume</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">consume</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">playlist</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playlist</span><span class="w"></span>
+<span class="w">        </span><span class="nt">playlist</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playlist</span>
 
-<span class="w">        </span><span class="nt">playlistlength</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playlistlength</span><span class="w"></span>
+<span class="w">        </span><span class="nt">playlistlength</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playlistlength</span>
 
-<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">state</span><span class="w"></span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">state</span>
 
-<span class="w">        </span><span class="nt">song</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">song</span><span class="w"></span>
+<span class="w">        </span><span class="nt">song</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">song</span>
 
-<span class="w">        </span><span class="nt">songid</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">songid</span><span class="w"></span>
+<span class="w">        </span><span class="nt">songid</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">songid</span>
 
-<span class="w">        </span><span class="nt">nextsongid</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nextsongid</span><span class="w"></span>
+<span class="w">        </span><span class="nt">nextsongid</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nextsongid</span>
 
-<span class="w">        </span><span class="nt">time</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">time</span><span class="w"></span>
+<span class="w">        </span><span class="nt">time</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">time</span>
 
-<span class="w">        </span><span class="nt">elapsed</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">elapsed</span><span class="w"></span>
+<span class="w">        </span><span class="nt">elapsed</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">elapsed</span>
 
-<span class="w">        </span><span class="nt">duration</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">duration</span><span class="w"></span>
+<span class="w">        </span><span class="nt">duration</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">duration</span>
 
-<span class="w">        </span><span class="nt">bitrate</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bitrate</span><span class="w"></span>
+<span class="w">        </span><span class="nt">bitrate</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bitrate</span>
 
-<span class="w">        </span><span class="nt">xfade</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xfade</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">crossfade</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">xfade</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xfade</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">crossfade</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">mixrampdb</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mixrampdb</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mixrampdb</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">mixrampdb</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mixrampdb</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mixrampdb</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">mixrampdelay</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mixrampdelay</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mixrampdelay</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">mixrampdelay</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mixrampdelay</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mixrampdelay</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">audio</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audio</span><span class="w"></span>
+<span class="w">        </span><span class="nt">audio</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audio</span>
 
-<span class="w">        </span><span class="nt">updating_db</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">updating_db</span><span class="w"></span>
+<span class="w">        </span><span class="nt">updating_db</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">updating_db</span>
 
-<span class="w">        </span><span class="nt">error</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error</span><span class="w"></span>
+<span class="w">        </span><span class="nt">error</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_status@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error</span>
 
-<span class="w">        </span><span class="nt">file</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file</span><span class="w"></span>
+<span class="w">        </span><span class="nt">file</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file</span>
 
-<span class="w">        </span><span class="nt">Last-Modified</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Last-Modified</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Last-Modified</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Last-Modified</span>
 
-<span class="w">        </span><span class="nt">Artist</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Artist</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Artist</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Artist</span>
 
-<span class="w">        </span><span class="nt">Album</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Album</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Album</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Album</span>
 
-<span class="w">        </span><span class="nt">Title</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Title</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Title</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Title</span>
 
-<span class="w">        </span><span class="nt">Name</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Name</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name</span>
 
-<span class="w">        </span><span class="nt">Track</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Track</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Track</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Track</span>
 
-<span class="w">        </span><span class="nt">Time</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Time</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Time</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Time</span>
 
-<span class="w">        </span><span class="nt">Pos</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pos</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Pos</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pos</span>
 
-<span class="w">        </span><span class="nt">Id</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Id</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Id</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Id</span>
 
-<span class="w">        </span><span class="nt">artists</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artists</span><span class="w"></span>
+<span class="w">        </span><span class="nt">artists</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artists</span>
 
-<span class="w">        </span><span class="nt">albums</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">albums</span><span class="w"></span>
+<span class="w">        </span><span class="nt">albums</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">albums</span>
 
-<span class="w">        </span><span class="nt">songs</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">songs</span><span class="w"></span>
+<span class="w">        </span><span class="nt">songs</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">songs</span>
 
-<span class="w">        </span><span class="nt">uptime</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uptime</span><span class="w"></span>
+<span class="w">        </span><span class="nt">uptime</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uptime</span>
 
-<span class="w">        </span><span class="nt">db_playtime</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db_playtime</span><span class="w"></span>
+<span class="w">        </span><span class="nt">db_playtime</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db_playtime</span>
 
-<span class="w">        </span><span class="nt">db_update</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db_update</span><span class="w"></span>
+<span class="w">        </span><span class="nt">db_update</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db_update</span>
 
-<span class="w">        </span><span class="nt">playtime</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playtime</span><span class="w"></span>
+<span class="w">        </span><span class="nt">playtime</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_statistic@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playtime</span>
 
-<span class="w">        </span><span class="nt">next</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">next</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">next</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">next</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">pause</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pause</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">pause</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pause</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">play</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">play</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">playid</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playid</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">playid</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playid</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">previous</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">previous</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">previous</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">previous</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">seek</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seek</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">seek</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seek</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">seekid</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seekid</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">seekid</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seekid</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">seekcur</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seekcur</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">seekcur</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seekcur</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">stop</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stop</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">stop</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_command@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stop</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">rawcommand</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_rawcommand@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rawcommand</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">rawcommand</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_rawcommand@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rawcommand</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">radio1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_url@bad</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://streamurlofradio1.de/&quot;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">radio1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_url@bad</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://streamurlofradio1.de/&quot;</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">radio2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_url@bad</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://streamurlofradio2.de/&quot;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">radio2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_url@bad</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://streamurlofradio2.de/&quot;</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">plradio1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_localplaylist@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plradio1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">plradio1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_localplaylist@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plradio1</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">plradio2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_localplaylist@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plradio2</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">plradio2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_localplaylist@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plradio2</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">playlist1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_localplaylist@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playlist1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">playlist1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_localplaylist@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playlist1</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">playlist2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_localplaylist@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playlist2</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">playlist2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_localplaylist@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playlist2</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">updatedatabase</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_database@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">updatedatabase</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_database@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">rescandatabase</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_database@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rescan</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">rescandatabase</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_database@bad</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rescan</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 <p>Das zweite Beispiel für die Küche zeigt nur Items die in einer SmartVISU dargestellt werden sollen:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Kueche</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Musik</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">volume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">setvol</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Kueche</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Musik</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">volume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">mpd_status@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span>
+<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">setvol</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">repeat</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">repeat</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_status@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat</span>
+<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">playpause</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playpause</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playpause</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">playpause</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_status@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playpause</span>
+<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playpause</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">mute</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">mute</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_status@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span>
+<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">random</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">random</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">random</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">random</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_status@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">random</span>
+<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">random</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_status@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">state</span><span class="w"></span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_status@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">state</span>
 
-<span class="w">        </span><span class="nt">Artist</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Artist</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Artist</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Artist</span>
 
-<span class="w">        </span><span class="nt">Album</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Album</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Album</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Album</span>
 
-<span class="w">        </span><span class="nt">Title</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Title</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Title</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Title</span>
 
-<span class="w">        </span><span class="nt">Name</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Name</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name</span>
 
-<span class="w">        </span><span class="nt">Track</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_songinfo@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Track</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Track</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">mpd_songinfo@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Track</span>
 
-<span class="w">        </span><span class="nt">next</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">next</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">next</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">next</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">previous</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">previous</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">previous</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">previous</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">stop</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stop</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">stop</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">mpd_command@kueche</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stop</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 </section>

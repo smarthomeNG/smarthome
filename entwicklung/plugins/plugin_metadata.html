@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../entwicklung.html">Entwicklung</a> &raquo;</li>
-          <li><a href="plugins.html">Plugins <span class="bluesup">under construction</span></a> &raquo;</li>
-      <li>Plugin-Metadata <span class="bluesup">update</span></li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../entwicklung.html">Entwicklung</a></li>
+          <li class="breadcrumb-item"><a href="plugins.html">Plugins <span class="bluesup">under construction</span></a></li>
+      <li class="breadcrumb-item active">Plugin-Metadata <span class="bluesup">update</span></li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3919,30 +3919,30 @@ prüft die Metadaten auf Vollständigkeit und Fehlerfreiheit.</p>
 <section id="plugin">
 <span id="index-4"></span><h2>plugin<a class="headerlink" href="#plugin" title="Permalink to this heading"></a></h2>
 <p>Der globale Metadaten Abschnitt <code class="docutils literal notranslate"><span class="pre">plugin:</span></code> kennt die folgenden Schlüsselbegriffe:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Metadata for the Smart-plugin</span><span class="w"></span>
-<span class="nt">plugin</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Global plugin attributes</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span><span class="w">                   </span><span class="c1"># plugin type (gateway, interface, protocol, system, cloud, un-classified)</span><span class="w"></span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Plugin</span><span class="nv"> </span><span class="s">für</span><span class="nv"> </span><span class="s">...&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Plugin</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">...&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">maintainer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msinn</span><span class="w">           </span><span class="c1"># Optional: Who maintains this plugin?</span><span class="w"></span>
-<span class="c1">#   tester:                     # Optional: Who tests this plugin?</span><span class="w"></span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qa-passed</span><span class="w"></span>
-<span class="w">    </span><span class="nt">keywords</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">weather</span><span class="w">           </span><span class="c1"># keywords, where applicable</span><span class="w"></span>
-<span class="w">    </span><span class="nt">documentation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/smarthomeNG/...</span><span class="w">        </span><span class="c1"># url of additional wiki page (in addition to user_doc.rst of plugin</span><span class="w"></span>
-<span class="c1">#    support: https://knx-user-forum.de/forum/supportforen/smarthome-py      # url of the support thread or forum</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Metadata for the Smart-plugin</span>
+<span class="nt">plugin</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Global plugin attributes</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span><span class="w">                   </span><span class="c1"># plugin type (gateway, interface, protocol, system, cloud, un-classified)</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Plugin</span><span class="nv"> </span><span class="s">für</span><span class="nv"> </span><span class="s">...&#39;</span>
+<span class="w">        </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Plugin</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">...&#39;</span>
+<span class="w">    </span><span class="nt">maintainer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msinn</span><span class="w">           </span><span class="c1"># Optional: Who maintains this plugin?</span>
+<span class="c1">#   tester:                     # Optional: Who tests this plugin?</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qa-passed</span>
+<span class="w">    </span><span class="nt">keywords</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">weather</span><span class="w">           </span><span class="c1"># keywords, where applicable</span>
+<span class="w">    </span><span class="nt">documentation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/smarthomeNG/...</span><span class="w">        </span><span class="c1"># url of additional wiki page (in addition to user_doc.rst of plugin</span>
+<span class="c1">#    support: https://knx-user-forum.de/forum/supportforen/smarthome-py      # url of the support thread or forum</span>
 
-<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.4.3</span><span class="w"></span>
-<span class="w">    </span><span class="nt">sh_minversion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.7</span><span class="w">           </span><span class="c1"># minimum shNG version to use this plugin (leave empty if no special requirement)</span><span class="w"></span>
-<span class="c1">#    sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)</span><span class="w"></span>
-<span class="c1">#    py_minversion: 3.6          # minimum Python version needed for this plugin (leave empty if no special requirement)</span><span class="w"></span>
-<span class="c1">#    py_maxversion:              # maximum Python version to use this plugin (leave empty if no special requirement)</span><span class="w"></span>
-<span class="w">    </span><span class="nt">multi_instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># plugin supports multi instance (if not specified, False is assumed)</span><span class="w"></span>
+<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.4.3</span>
+<span class="w">    </span><span class="nt">sh_minversion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.7</span><span class="w">           </span><span class="c1"># minimum shNG version to use this plugin (leave empty if no special requirement)</span>
+<span class="c1">#    sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)</span>
+<span class="c1">#    py_minversion: 3.6          # minimum Python version needed for this plugin (leave empty if no special requirement)</span>
+<span class="c1">#    py_maxversion:              # maximum Python version to use this plugin (leave empty if no special requirement)</span>
+<span class="w">    </span><span class="nt">multi_instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># plugin supports multi instance (if not specified, False is assumed)</span>
 
-<span class="w">    </span><span class="nt">configuration_needed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">  </span><span class="c1"># False: The plugin will be enabled by the Admin GUI without configuration</span><span class="w"></span>
+<span class="w">    </span><span class="nt">configuration_needed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">  </span><span class="c1"># False: The plugin will be enabled by the Admin GUI without configuration</span>
 
-<span class="w">    </span><span class="nt">classname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;plugin_class&gt;</span><span class="w">   </span><span class="c1"># Name of the class that implements the plugin</span><span class="w"></span>
+<span class="w">    </span><span class="nt">classname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;plugin_class&gt;</span><span class="w">   </span><span class="c1"># Name of the class that implements the plugin</span>
 </pre></div>
 </div>
 <p>Beschreibung der Schlüsselbegriffe im Abschnitt <code class="docutils literal notranslate"><span class="pre">plugin:</span></code></p>
@@ -3999,20 +3999,20 @@ beschreibt. Der Schlüssel des Unter-Abschnitts ist der Name des Parameters. Par
 Großbuchstaben und Sonderzeichen enthalten. Sie dürfen nicht mit einer Ziffer beginnen.</p>
 <p>Die Definitionen im Abschnitt <code class="docutils literal notranslate"><span class="pre">parameters:</span></code>  werden für die Gültigkeitsprüfung der konfigurierten Werte, sowie
 zur Dokumentation und zur Konfiguration in der Admin GUI benutzt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">param1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span><span class="w"></span>
-<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span><span class="w"></span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">valid_list</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2222</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4321</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">param1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung&#39;</span>
+<span class="w">            </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description&#39;</span>
+<span class="w">        </span><span class="nt">valid_list</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2222</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4321</span>
 
-<span class="w">    </span><span class="nt">param2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">    </span><span class="nt">param2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </pre></div>
 </div>
 <p>Beschreibung der Schlüssel im Abschnitt für einen Parameter bzw. ein Attribut:</p>
@@ -4094,7 +4094,7 @@ geladen/initialisiert wird. Diese Einschränkung ist wirkungslos, falls ein Wert
 <h3>Plugins/Module ohne Parameter<a class="headerlink" href="#plugins-module-ohne-parameter" title="Permalink to this heading"></a></h3>
 <p>Falls ein Plugin oder Modul keine Parameter hat, wird das durch den folgenden Eintrag in der
 Datei <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> angezeigt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">parameters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">parameters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span>
 </pre></div>
 </div>
 <div class="admonition hint">
@@ -4111,20 +4111,20 @@ Großbuchstaben und Sonderzeichen enthalten. Sie dürfen nicht mit einer Ziffer 
 <p>Die Definitionen im Abschnitt <code class="docutils literal notranslate"><span class="pre">item_attributes:</span></code>  werden für die Gültigkeitsprüfung der konfigurierten Werte in den
 Konfigurationsdateien im Verzeichnis <code class="docutils literal notranslate"><span class="pre">../items</span></code>, sowie zur Dokumentation und in der Zukunft zur Konfiguration
 in der Admin GUI benutzt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_attributes</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">attribute1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span><span class="w"></span>
-<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span><span class="w"></span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung</span><span class="nv"> </span><span class="s">des</span><span class="nv"> </span><span class="s">Attributes&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">attribute&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">valid_list</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2222</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4321</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_attributes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">attribute1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung</span><span class="nv"> </span><span class="s">des</span><span class="nv"> </span><span class="s">Attributes&#39;</span>
+<span class="w">            </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">attribute&#39;</span>
+<span class="w">        </span><span class="nt">valid_list</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2222</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4321</span>
 
-<span class="w">    </span><span class="nt">attribute2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">    </span><span class="nt">attribute2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </pre></div>
 </div>
 <p>Beschreibung der Schlüssel im Abschnitt für einen Parameter bzw. ein Attribut:</p>
@@ -4210,7 +4210,7 @@ Attribut genutzt wird. Außerdem müssen die Definitionen der Item Attribute in 
 <h3>Plugins ohne Item Attribute<a class="headerlink" href="#plugins-ohne-item-attribute" title="Permalink to this heading"></a></h3>
 <p>Falls ein Plugin keine Item Attribute hat, wird das durch den folgenden Eintrag in der
 Datei <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> angezeigt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_attributes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_attributes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span>
 </pre></div>
 </div>
 <div class="admonition hint">
@@ -4224,35 +4224,35 @@ Datei <code class="docutils literal notranslate"><span class="pre">plugin.yaml</
 <p>Der Abschnitt <code class="docutils literal notranslate"><span class="pre">item_structs:</span></code> erlaubt die Definition von Struktur Templates, also von Sub-Trees von Items,
 die an verschiedenen Stellen in den Item Tree eingefügt werden können.</p>
 <p>Definitionen von <code class="docutils literal notranslate"><span class="pre">item_structs:</span></code> haben das folgende Format:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_structs</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct1</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_structs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct1</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">item1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span><span class="w"></span>
-<span class="w">        </span><span class="nt">item2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">item3</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;my</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">3&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">plg_attr1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;plugin</span><span class="nv"> </span><span class="s">specific&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">item4</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">        </span><span class="nt">item1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">item2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">item3</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;my</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">3&#39;</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">plg_attr1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;plugin</span><span class="nv"> </span><span class="s">specific&#39;</span>
+<span class="w">            </span><span class="nt">item4</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="w">    </span><span class="nt">struct2</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">struct2</span><span class="p">:</span>
 
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">... (sub-tree with item definitions)</span><span class="w"></span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">... (sub-tree with item definitions)</span>
 </pre></div>
 </div>
 <p>Zur Konfiguration von SmartHomeNG werden diese structs durch die Angabe einer Referenz in den Item Tree eingefügt.
 Das erfolgt in den Konfigurationsdateien für Items im Verzeichnis <code class="docutils literal notranslate"><span class="pre">../items</span></code>:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_name_of_struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;plugin name&gt;.&lt;struct name&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_name_of_struct</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;plugin name&gt;.&lt;struct name&gt;</span>
 </pre></div>
 </div>
 <p>Falls <code class="docutils literal notranslate"><span class="pre">struct1</span></code> des oben angegebenen Beispiels in einem Plugin mit dem Namen <code class="docutils literal notranslate"><span class="pre">example_plugin</span></code> definiert wurde,
 sieht die Konfiguration um die Struktur einzufügen folgendermaßen aus:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_name_of_struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_plugin.struct1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_name_of_struct</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_plugin.struct1</span>
 </pre></div>
 </div>
 <section id="geschachtelte-strukturen">
@@ -4291,26 +4291,26 @@ enthalten. In Item Definitionen wird bei solchen Attributen <cite>‚&#64;&lt;in
 <p>Um in Strukturen zu kennzeichnen, welche Attribute einen Instanz Namen hinzugefügt bekommen sollen, wird bei diesen
 Attributen der konstante String <code class="docutils literal notranslate"><span class="pre">&#64;instance</span></code> hinzugefügt. Dieser String wird beim Aufbau des Item Trees durch den
 realen Instanz Namen ersetzt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_structs</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct1</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_structs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct1</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">item1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span><span class="w"></span>
-<span class="w">        </span><span class="nt">item2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">item3</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;my</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">3&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">plg_attr1@instance</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;plugin</span><span class="nv"> </span><span class="s">specific&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">item4</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">        </span><span class="nt">item1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">item2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">item3</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;my</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">3&#39;</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">plg_attr1@instance</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;plugin</span><span class="nv"> </span><span class="s">specific&#39;</span>
+<span class="w">            </span><span class="nt">item4</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 </pre></div>
 </div>
 <p>In der Item Konfiguration in den Dateien im Verzeichnis <code class="docutils literal notranslate"><span class="pre">../items</span></code> wird der Instanz Name der Struktur mitgegeben.
 Das sieht z.B. folgendermaßen aus:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_name_of_struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_plugin.struct1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plg_instance</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_name_of_struct</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_plugin.struct1</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plg_instance</span>
 </pre></div>
 </div>
 <p>Im geladenen Item (bei Verwendung der Admin GUI), wird <code class="docutils literal notranslate"><span class="pre">item3</span></code> dann ein Attribut haben, das
@@ -4320,7 +4320,7 @@ Das sieht z.B. folgendermaßen aus:</p>
 <h3>Plugins ohne item-structs<a class="headerlink" href="#plugins-ohne-item-structs" title="Permalink to this heading"></a></h3>
 <p>Falls ein Plugin keine Item Attribute hat, wird das durch den folgenden Eintrag in der
 Datei <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> angezeigt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_structs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_structs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span>
 </pre></div>
 </div>
 <div class="admonition hint">
@@ -4336,20 +4336,20 @@ Parameter für die Konfiguration von Logiken in der Admin GUI verwendet. Falls d
 sind, werden Warnungen in das Logfile von SmartHomeNG geschrieben.</p>
 <p>Der Abschnitt <code class="docutils literal notranslate"><span class="pre">logic_parameters:</span></code> enthält einen Abschnitt für jeden Parameter der für eine Logik verwendet
 werden kann. Der Name dieses Unter-Abschnitts ist der Name des Parameters der Logik.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logic_parameters</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">param1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span><span class="w"></span>
-<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span><span class="w"></span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">valid_list</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2222</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4321</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logic_parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">param1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung&#39;</span>
+<span class="w">            </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description&#39;</span>
+<span class="w">        </span><span class="nt">valid_list</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2222</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4321</span>
 
-<span class="w">    </span><span class="nt">param2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">    </span><span class="nt">param2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </pre></div>
 </div>
 <p>Beschreibung der Schlüssel im Abschnitt für einen Parameter bzw. ein Attribut:</p>
@@ -4431,7 +4431,7 @@ geladen/initialisiert wird. Diese Einschränkung ist wirkungslos, falls ein Wert
 <h3>Plugins ohne Logic Parameter<a class="headerlink" href="#plugins-ohne-logic-parameter" title="Permalink to this heading"></a></h3>
 <p>Falls ein Plugin keine Logik Parameter hat, wird das durch den folgenden Eintrag in der Datei <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code>
 angezeigt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logic_parameters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logic_parameters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span>
 </pre></div>
 </div>
 <div class="admonition hint">
@@ -4449,26 +4449,26 @@ des Plugins aufrufbar) sein soll. Der Name des Abschnitts ist der Name der Funkt
 beschreibt.</p>
 <p>Die Definitionen im Abschnitt <code class="docutils literal notranslate"><span class="pre">plugin_functions:</span></code> werden für die Erstellung der Dokumentation genutzt. In der
 Zukunft sollen die Definitionen für die Konfiguration in der Admin GUI genutzt werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">plugin_functions</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">example_function</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung</span><span class="nv"> </span><span class="s">der</span><span class="nv"> </span><span class="s">Funktion&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">function&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">param1</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span><span class="w"></span>
-<span class="w">                </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span><span class="w"></span>
-<span class="w">                </span><span class="nt">description</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung</span><span class="nv"> </span><span class="s">des</span><span class="nv"> </span><span class="s">Funktionsparameters&#39;</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">function&#39;</span><span class="l l-Scalar l-Scalar-Plain">s parameter&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">valid_list</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2222</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4321</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">plugin_functions</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">example_function</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung</span><span class="nv"> </span><span class="s">der</span><span class="nv"> </span><span class="s">Funktion&#39;</span>
+<span class="w">            </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">function&#39;</span>
+<span class="w">        </span><span class="nt">parameters</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">param1</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">                </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
+<span class="w">                </span><span class="nt">description</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung</span><span class="nv"> </span><span class="s">des</span><span class="nv"> </span><span class="s">Funktionsparameters&#39;</span>
+<span class="w">                    </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">function&#39;</span><span class="l l-Scalar l-Scalar-Plain">s parameter&#39;</span>
+<span class="w">                </span><span class="nt">valid_list</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2222</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4321</span>
 
-<span class="w">            </span><span class="nt">param2</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">            </span><span class="nt">param2</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </pre></div>
 </div>
 <p>Beschreibung der Schlüssel im Abschnitt für einen Parameter bzw. ein Attribut:</p>
@@ -4550,7 +4550,7 @@ geladen/initialisiert wird. Diese Einschränkung ist wirkungslos, falls ein Wert
 <h3>Plugins ohne Plugin Funktionen<a class="headerlink" href="#plugins-ohne-plugin-funktionen" title="Permalink to this heading"></a></h3>
 <p>Falls ein Plugin keine öffentlichen Plugin Funktionen definiert, wird das durch den folgenden Eintrag in
 der Datei <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> angezeigt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">plugin_functions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">plugin_functions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span>
 </pre></div>
 </div>
 <div class="admonition hint">

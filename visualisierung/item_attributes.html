@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="visualisierung.html">Visualisierung mit smartVISU <span class="greensup">Update</span></a> &raquo;</li>
-      <li>Item Attribute zur Generierung</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="visualisierung.html">Visualisierung mit smartVISU <span class="greensup">Update</span></a></li>
+      <li class="breadcrumb-item active">Item Attribute zur Generierung</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3954,69 +3954,69 @@ angezeigt wird. Dieses Widget ist in einen Block eingebettet und rechtsbündig a
 </section>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">first</span><span class="p">:</span><span class="w"></span>
-<span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
-<span class="nt">menu_divider</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seperator</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Private area of the house</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">first</span><span class="p">:</span>
+<span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="nt">menu_divider</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seperator</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Private area of the house</span>
 
-<span class="nt">second</span><span class="p">:</span><span class="w"></span>
+<span class="nt">second</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">sleeping</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sleeping Room</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_sleeping.png</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_nav_aside</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.float(&#39;sleep_temp_id&#39;,</span><span class="nv"> </span><span class="s">&#39;second.sleeping.temp&#39;,</span><span class="nv"> </span><span class="s">&#39;°&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">sleeping</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sleeping Room</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span>
+<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_sleeping.png</span>
+<span class="w">        </span><span class="nt">sv_nav_aside</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.float(&#39;sleep_temp_id&#39;,</span><span class="nv"> </span><span class="s">&#39;second.sleeping.temp&#39;,</span><span class="nv"> </span><span class="s">&#39;°&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
 
-<span class="w">        </span><span class="nt">light</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Light</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&amp;</span><span class="nv">    </span><span class="s">##</span><span class="nv"> </span><span class="s">123;{</span><span class="nv"> </span><span class="s">device.dimmer(&#39;second.sleeping.light&#39;,</span><span class="nv"> </span><span class="s">&#39;Light&#39;,</span><span class="nv"> </span><span class="s">&#39;second.sleeping.light&#39;,</span><span class="nv"> </span><span class="s">&#39;second.sleeping.light.level&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/12</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/12</span><span class="w"></span>
+<span class="w">        </span><span class="nt">light</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Light</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&amp;</span><span class="nv">    </span><span class="s">##</span><span class="nv"> </span><span class="s">123;{</span><span class="nv"> </span><span class="s">device.dimmer(&#39;second.sleeping.light&#39;,</span><span class="nv"> </span><span class="s">&#39;Light&#39;,</span><span class="nv"> </span><span class="s">&#39;second.sleeping.light&#39;,</span><span class="nv"> </span><span class="s">&#39;second.sleeping.light.level&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/12</span>
+<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/12</span>
 
-<span class="w">            </span><span class="nt">level</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">                </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">                </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/14</span><span class="w"></span>
-<span class="w">                </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/14</span><span class="w"></span>
+<span class="w">            </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">                </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">                </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/14</span>
+<span class="w">                </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/14</span>
 </pre></div>
 </div>
 <p>But instead of giving the widget distinct options you could use <strong>item</strong> as a keyword.</p>
 <p>The page generator will replace it with the current path. This way you could easily copy widget calls and don’t type the item path every time.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">second</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">second</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">sleeping</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sleeping Room</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_sleeping.png</span><span class="w"></span>
+<span class="w">    </span><span class="nt">sleeping</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sleeping Room</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span>
+<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_sleeping.png</span>
 
-<span class="w">        </span><span class="nt">light</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Light</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">device.dimmer(&#39;item&#39;,</span><span class="nv"> </span><span class="s">&#39;item.name&#39;,</span><span class="nv"> </span><span class="s">&#39;item&#39;,</span><span class="nv"> </span><span class="s">&#39;item.level&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/12</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/12</span><span class="w"></span>
+<span class="w">        </span><span class="nt">light</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Light</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">device.dimmer(&#39;item&#39;,</span><span class="nv"> </span><span class="s">&#39;item.name&#39;,</span><span class="nv"> </span><span class="s">&#39;item&#39;,</span><span class="nv"> </span><span class="s">&#39;item.level&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/12</span>
+<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/12</span>
 
-<span class="w">            </span><span class="nt">level</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">                </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">                </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/14</span><span class="w"></span>
-<span class="w">                </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/14</span><span class="w"></span>
+<span class="w">            </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">                </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">                </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/14</span>
+<span class="w">                </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/14</span>
 </pre></div>
 </div>
 <section id="logic-yaml">
 <h3>logic.yaml<a class="headerlink" href="#logic-yaml" title="Permalink to this heading"></a></h3>
 <p>You could specify the <strong>visu_acl</strong> attribute to every logic in your logic.yaml. This way you could trigger the logic via the interface.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dialog</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dialog.py</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dialog</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dialog.py</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
 </pre></div>
 </div>
 </section>

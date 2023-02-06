@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Raumfeld</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Raumfeld</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3866,39 +3866,39 @@ supports start and stop playing stream in a specific zone.</p>
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">raumfeld</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumfeld</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.raumfeld</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">raumfeld</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumfeld</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.raumfeld</span>
 </pre></div>
 </div>
 </section>
 <section id="items-yaml">
 <h3>items.yaml<a class="headerlink" href="#items-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">raumfeld</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">raumfeld</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">bad</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Badezimmer Musik</span><span class="w"></span>
-<span class="w">        </span><span class="nt">device_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bad</span><span class="w"></span>
-<span class="w">        </span><span class="nt">stream_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://rb-mp3-m-bremenvier.akacast.akamaistream.net/7/23/234437/v1/gnl.akacast.akamaistream.net/rb-mp3-m-bremenvier</span><span class="w"></span>
-<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/0/18</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/0/18</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/0/20</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/0/20</span><span class="w"></span>
+<span class="w">    </span><span class="nt">bad</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Badezimmer Musik</span>
+<span class="w">        </span><span class="nt">device_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bad</span>
+<span class="w">        </span><span class="nt">stream_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://rb-mp3-m-bremenvier.akacast.akamaistream.net/7/23/234437/v1/gnl.akacast.akamaistream.net/rb-mp3-m-bremenvier</span>
+<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/0/18</span>
+<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/0/18</span>
+<span class="w">        </span><span class="nt">knx_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/0/20</span>
+<span class="w">        </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/0/20</span>
 
-<span class="w">    </span><span class="nt">kueche</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Küche Musik</span><span class="w"></span>
-<span class="w">        </span><span class="nt">device_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kueche</span><span class="w"></span>
-<span class="w">        </span><span class="nt">stream_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://rb-mp3-m-bremenvier.akacast.akamaistream.net/7/23/234437/v1/gnl.akacast.akamaistream.net/rb-mp3-m-bremenvier</span><span class="w"></span>
-<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/36</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/36</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/37</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/37</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kueche</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Küche Musik</span>
+<span class="w">        </span><span class="nt">device_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kueche</span>
+<span class="w">        </span><span class="nt">stream_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://rb-mp3-m-bremenvier.akacast.akamaistream.net/7/23/234437/v1/gnl.akacast.akamaistream.net/rb-mp3-m-bremenvier</span>
+<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/36</span>
+<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/36</span>
+<span class="w">        </span><span class="nt">knx_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/37</span>
+<span class="w">        </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/0/37</span>
 </pre></div>
 </div>
 <section id="device-name">

@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a> &raquo;</li>
-      <li>hue2</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a></li>
+      <li class="breadcrumb-item active">hue2</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3925,50 +3925,50 @@ Leuchten Templates vom Plugin mitgeliefert.</p>
 </ul>
 <p>Ein Item für eine Hue Leuchte kann einfach folgendermaßen konfiguriert werden, indem nur die Id der zu
 steuernden Leuchts als <code class="docutils literal notranslate"><span class="pre">hue2_id</span></code> angegeben wird:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_leuchte</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hue2.light</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_leuchte</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hue2.light</span>
 </pre></div>
 </div>
 <p>Damit werden zum Item <code class="docutils literal notranslate"><span class="pre">test_leuchte</span></code> die Sub-Items <code class="docutils literal notranslate"><span class="pre">onoff</span></code>, <code class="docutils literal notranslate"><span class="pre">level</span></code>, <code class="docutils literal notranslate"><span class="pre">hue</span></code>, <code class="docutils literal notranslate"><span class="pre">sat</span></code> und <code class="docutils literal notranslate"><span class="pre">ct</span></code> definiert
 und passend konfiguriert.</p>
 <p>Das hat die selbe Wirkung, als hätte man ohne Struktur Template folgende Item-Konfiguration vorgenommen:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_leuchte</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_leuchte</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Vorlage-Struktur für eine Hue Leuchte</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">    </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Vorlage-Struktur für eine Hue Leuchte</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">    </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light</span>
 
-<span class="w">    </span><span class="nt">onoff</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span><span class="w"></span>
+<span class="w">    </span><span class="nt">onoff</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span>
+<span class="w">        </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span>
+<span class="w">        </span><span class="nt">hue2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span>
 
-<span class="w">    </span><span class="nt">level</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bri</span><span class="w"></span>
+<span class="w">    </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span>
+<span class="w">        </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span>
+<span class="w">        </span><span class="nt">hue2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bri</span>
 
-<span class="w">    </span><span class="nt">hue</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hue</span><span class="w"></span>
+<span class="w">    </span><span class="nt">hue</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span>
+<span class="w">        </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span>
+<span class="w">        </span><span class="nt">hue2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hue</span>
 
-<span class="w">    </span><span class="nt">sat</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sat</span><span class="w"></span>
+<span class="w">    </span><span class="nt">sat</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span>
+<span class="w">        </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span>
+<span class="w">        </span><span class="nt">hue2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sat</span>
 
-<span class="w">    </span><span class="nt">ct</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hue2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ct</span><span class="w"></span>
+<span class="w">    </span><span class="nt">ct</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span>
+<span class="w">        </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span>
+<span class="w">        </span><span class="nt">hue2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ct</span>
 </pre></div>
 </div>
 <p>Das Struktur Template <strong>hue2.light_extended</strong> definiert zusätzlich noch die Sub-Items <code class="docutils literal notranslate"><span class="pre">light_name</span></code>, <code class="docutils literal notranslate"><span class="pre">reachable</span></code>,
@@ -4015,11 +4015,11 @@ werden.</p>
 zusätzlichen Optionen <code class="docutils literal notranslate"><span class="pre">bri_inc</span></code> und <code class="docutils literal notranslate"><span class="pre">dict</span></code>, welche noch nicht vollständig dokumentiert sind.</p>
 </div>
 <p>Um den Namen der Leuchte mit der Id 3 abzufragen, muss ein Item folgendermaßen konfiguriert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">leuchten_name</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">    </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light</span><span class="w"></span>
-<span class="w">    </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
-<span class="w">    </span><span class="nt">hue2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">leuchten_name</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">hue2_resource</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light</span>
+<span class="w">    </span><span class="nt">hue2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">    </span><span class="nt">hue2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
 </pre></div>
 </div>
 <div class="line-block">

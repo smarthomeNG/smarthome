@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-          <li><a href="../user_doc.html">stateengine</a> &raquo;</li>
-      <li>Besondere Zustände</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_doc/plugins_system.html">System Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../user_doc.html">stateengine</a></li>
+      <li class="breadcrumb-item active">Besondere Zustände</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3867,14 +3867,14 @@ auf Höhe des Regelwerk-Items automatisch implementiert werden.</p>
 <h3>„Sperr“-Item<a class="headerlink" href="#sperr-item" title="Permalink to this heading"></a></h3>
 <p>Die Sperre soll aktiv sein, wenn das Sperr-Item den Wert <code class="docutils literal notranslate"><span class="pre">True</span></code> hat.
 Das Sperritem definiert man wie folgt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">beispiel</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">lock</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sperr-Item</span><span class="w"></span>
-<span class="w">          </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">          </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">beispiel</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">lock</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">item</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sperr-Item</span>
+<span class="w">          </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">          </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span>
 </pre></div>
 </div>
 </section>
@@ -3882,24 +3882,24 @@ Das Sperritem definiert man wie folgt:</p>
 <h3>Der Sperr-Zustand<a class="headerlink" href="#der-sperr-zustand" title="Permalink to this heading"></a></h3>
 <p>Der zugehörige Zustand könnte so aussehen und sollte als erster Zustand definiert
 werden, da er anderen Zuständen gegenüber priorisiert werden soll.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">beispiel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">jalousie1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># Sperr-Item zu eval_trigger:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;andere Einträge&gt;</span><span class="w"></span>
-<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.lock.item</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">beispiel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">jalousie1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># Sperr-Item zu eval_trigger:</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;andere Einträge&gt;</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.lock.item</span>
 
-<span class="w">            </span><span class="c1"># Items für Bedingungen und Aktionen</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_item_lock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.lock.item</span><span class="w"> </span><span class="c1">#Siehe Beispiel oben</span><span class="w"></span>
+<span class="w">            </span><span class="c1"># Items für Bedingungen und Aktionen</span>
+<span class="w">            </span><span class="nt">se_item_lock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.lock.item</span><span class="w"> </span><span class="c1">#Siehe Beispiel oben</span>
 
-<span class="w">            </span><span class="nt">locked</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Manuell gesperrt</span><span class="w"></span>
+<span class="w">            </span><span class="nt">locked</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Manuell gesperrt</span>
 
-<span class="w">                </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_value_lock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">                </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">se_value_lock</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 </section>
@@ -3920,16 +3920,16 @@ des Suspendzustands im Item <code class="docutils literal notranslate"><span cla
 <p>Zunächst wird ein „Suspend“-Item benötigt. Dieses Item zeigt zum
 einen die zeitweise Deaktivierung an, zum anderen kann die
 Deaktivierung über dieses Item vorzeitig beendet werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">beispiel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">beispiel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">automatik</span><span class="p">:</span>
 
-<span class="w">            </span><span class="nt">suspend</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="w">            </span><span class="nt">suspend</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 </pre></div>
 </div>
 </section>
@@ -3945,21 +3945,21 @@ kann ein spezielles Logging aktiviert werden:</p>
 <em>Der absolute oder relative Pfad des manuell Items</em></p>
 <p>Im unteren Beispiel kann der Pfad sowohl <strong>beispiel.raffstore1.automatik.manuell</strong>
 als auch schlicht und einfach <strong>.self</strong> lauten.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">beispiel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">beispiel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">automatik</span><span class="p">:</span>
 
-<span class="w">            </span><span class="nt">manuell</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_manual_invert</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_manual_logitem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.self</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_manual_exclude</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database:*</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KNX:1.1.4:*</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">taster1</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">taster2</span><span class="w"></span>
+<span class="w">            </span><span class="nt">manuell</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">se_manual_invert</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
+<span class="w">                </span><span class="nt">se_manual_logitem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.self</span>
+<span class="w">                </span><span class="nt">se_manual_exclude</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database:*</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KNX:1.1.4:*</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">taster1</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">taster2</span>
 </pre></div>
 </div>
 <p>In das Attribut <code class="docutils literal notranslate"><span class="pre">eval_trigger</span></code> werden alle Items eingetragen,
@@ -3998,10 +3998,10 @@ Häufig verwendete <code class="docutils literal notranslate"><span class="pre">
 <p>Wenn <code class="docutils literal notranslate"><span class="pre">se_manual_include</span></code> oder <code class="docutils literal notranslate"><span class="pre">se_manual_exclude</span></code> angegeben
 sind, muss <code class="docutils literal notranslate"><span class="pre">se_manual_invert</span></code> nicht angegeben werden.</p>
 <p>Ein weiteres Beispiel mit Wildcards. Groß- und Kleinschreibung spielen generell keine Rolle.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">se_manual_exclude</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli:127.0.*.1</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx:1.0.0:3/5/*</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">se_manual_exclude</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli:127.0.*.1</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx:1.0.0:3/5/*</span>
 </pre></div>
 </div>
 </section>
@@ -4010,52 +4010,52 @@ sind, muss <code class="docutils literal notranslate"><span class="pre">se_manua
 <p>Mit diesen beiden Items kann nun ein einfacher Suspend-Zustand
 definiert werden. Als Aktion im Suspend-Zustand wird dabei die
 Sonderaktion „suspend“ verwendet. Diese hat zwei Parameter:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_special_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">suspend:&lt;Suspend-Item&gt;,&lt;Manuell-Item&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_special_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">suspend:&lt;Suspend-Item&gt;,&lt;Manuell-Item&gt;</span>
 </pre></div>
 </div>
 <p>Der Suspend-Zustand sieht damit wie folgt aus:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">beispiel</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="nt">suspend</span><span class="p">:</span><span class="w"></span>
-<span class="w">                 </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">                 </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ausgesetzt</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">beispiel</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">suspend</span><span class="p">:</span>
+<span class="w">                 </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">                 </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ausgesetzt</span>
 
-<span class="w">                 </span><span class="nt">on_enter_or_stay</span><span class="p">:</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ausführen immer wenn ein Zustand aktiv ist</span><span class="w"></span>
+<span class="w">                 </span><span class="nt">on_enter_or_stay</span><span class="p">:</span>
+<span class="w">                     </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">                     </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ausführen immer wenn ein Zustand aktiv ist</span>
 
-<span class="w">                     </span><span class="c1"># Suspend-Item setzen</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">se_special_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">suspend:beispiel.raffstore1.automatik.suspend,beispiel.raffstore1.automatik.manuell</span><span class="w"></span>
+<span class="w">                     </span><span class="c1"># Suspend-Item setzen</span>
+<span class="w">                     </span><span class="nt">se_special_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">suspend:beispiel.raffstore1.automatik.suspend,beispiel.raffstore1.automatik.manuell</span>
 
-<span class="w">                 </span><span class="nt">on_leave</span><span class="p">:</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ausführen beim Verlassen des Zustands</span><span class="w"></span>
+<span class="w">                 </span><span class="nt">on_leave</span><span class="p">:</span>
+<span class="w">                     </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">                     </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ausführen beim Verlassen des Zustands</span>
 
-<span class="w">                     </span><span class="c1"># Suspend-Item zurücksetzen</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">se_set_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
+<span class="w">                     </span><span class="c1"># Suspend-Item zurücksetzen</span>
+<span class="w">                     </span><span class="nt">se_set_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
 
-<span class="w">                 </span><span class="nt">enter_manuell</span><span class="p">:</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nt">Bedingung</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Suspend beginnen</span><span class="w"></span>
+<span class="w">                 </span><span class="nt">enter_manuell</span><span class="p">:</span>
+<span class="w">                     </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">                     </span><span class="nt">name: Bedingung</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Suspend beginnen</span>
 
-<span class="w">                     </span><span class="c1">#Bedingung: Manuelle Aktion wurde durchgeführt</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">se_value_trigger_source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.automatik.manuell</span><span class="w"></span>
+<span class="w">                     </span><span class="c1">#Bedingung: Manuelle Aktion wurde durchgeführt</span>
+<span class="w">                     </span><span class="nt">se_value_trigger_source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.automatik.manuell</span>
 
-<span class="w">                 </span><span class="nt">enter_stay</span><span class="p">:</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nt">Bedingung</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Im Suspend verbleiben</span><span class="w"></span>
+<span class="w">                 </span><span class="nt">enter_stay</span><span class="p">:</span>
+<span class="w">                     </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">                     </span><span class="nt">name: Bedingung</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Im Suspend verbleiben</span>
 
-<span class="w">                     </span><span class="c1">#Bedingung: Suspend ist aktiv</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span><span class="w"></span>
+<span class="w">                     </span><span class="c1">#Bedingung: Suspend ist aktiv</span>
+<span class="w">                     </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span>
 
-<span class="w">                     </span><span class="c1">#Bedingung: Suspendzeit ist noch nicht abgelaufen</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">se_agemax_manuell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:item.suspend_time</span><span class="w"></span>
+<span class="w">                     </span><span class="c1">#Bedingung: Suspendzeit ist noch nicht abgelaufen</span>
+<span class="w">                     </span><span class="nt">se_agemax_manuell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:item.suspend_time</span>
 
-<span class="w">                     </span><span class="c1">#Bedingung: Suspend-Item wurde nicht extern geändert</span><span class="w"></span>
-<span class="w">                     </span><span class="nt">se_value_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">                     </span><span class="c1">#Bedingung: Suspend-Item wurde nicht extern geändert</span>
+<span class="w">                     </span><span class="nt">se_value_suspend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 </pre></div>
 </div>
 <p>Da der Suspend-Zustand anderen Zuständen
@@ -4089,7 +4089,7 @@ Plugin-Konfiguration über die Einstellung <code class="docutils literal notrans
 angegeben. Vorgabewert sind 3600 Sekunden (1 Stunde). Wenn die
 Dauer der zeitweisen Deaktivierung für ein einzelnes Regelwerk-Item
 abweichend sein soll, kann dort das Attribut</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_suspend_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Sekunden&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_suspend_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Sekunden&gt;</span>
 </pre></div>
 </div>
 <p>angegeben werden. Der Parameter kann auch durch ein Item oder eval festgelegt werden.

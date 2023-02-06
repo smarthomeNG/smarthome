@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-      <li>Konfiguration über Dateien</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+      <li class="breadcrumb-item active">Konfiguration über Dateien</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3959,25 +3959,25 @@ weitergehenden Interesse an YAML, bitte auf Wikipedia oder
 SmartHomeNG eingesetzte Parser unterstützt die YAML Version 1.1.</p>
 <p>Im YAML Format sehen die Beschreibungen für <strong>Plugins</strong> und <strong>Logiken</strong>
 dann folgendermaßen aus:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">section1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">key1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">key2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value2</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">section1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">key1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value1</span>
+<span class="w">    </span><span class="nt">key2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value2</span>
 
-<span class="nt">section2</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">key3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value3</span><span class="w"></span>
-<span class="w">    </span><span class="nt">key4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value4</span><span class="w"></span>
+<span class="nt">section2</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">key3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value3</span>
+<span class="w">    </span><span class="nt">key4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value4</span>
 </pre></div>
 </div>
 <p>Und die Beschreibungen für <strong>Items</strong> sehen so aus:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">section</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">key1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">key2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value2</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">section</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">key1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value1</span>
+<span class="w">    </span><span class="nt">key2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value2</span>
 
-<span class="w">    </span><span class="nt">subsection</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">key3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">subsection</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">key3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value3</span>
 
-<span class="w">        </span><span class="nt">sub_subsection</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">key4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value4</span><span class="w"></span>
+<span class="w">        </span><span class="nt">sub_subsection</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">key4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value4</span>
 </pre></div>
 </div>
 <p>Wichtig ist dabei folgendes: - In YAML Dateien sind keine TABs erlaubt.
@@ -4023,42 +4023,42 @@ mehrzeilig.</p>
 </pre></div>
 </div>
 <p>gibt man jetzt folgendes an:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">section</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">key1</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value1</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value2</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">section</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">key1</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value2</span>
 </pre></div>
 </div>
 </section>
 <section id="beispiel-von-item-definitionen-in-yaml">
 <h5>Beispiel von Item Definitionen in YAML<a class="headerlink" href="#beispiel-von-item-definitionen-in-yaml" title="Permalink to this heading"></a></h5>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items.yaml</span><span class="w"></span>
-<span class="nt">wohnung</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">strahler</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strahler Küchenwand</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/6</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/2/6</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items.yaml</span>
+<span class="nt">wohnung</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">strahler</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strahler Küchenwand</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/6</span>
+<span class="w">            </span><span class="nt">knx_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/2/6</span>
 
-<span class="w">            </span><span class="nt">level</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">                </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/4/6</span><span class="w"></span>
-<span class="w">                </span><span class="nt">knx_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/5/6</span><span class="w"></span>
+<span class="w">            </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">                </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/4/6</span>
+<span class="w">                </span><span class="nt">knx_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/5/6</span>
 
-<span class="c1"># ...</span><span class="w"></span>
+<span class="c1"># ...</span>
 
-<span class="w">        </span><span class="nt">kochfeldgesamt</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kochfeld Gesamt</span><span class="w"></span>
-<span class="w">            </span><span class="nt">watt</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.wohnung.kochen.kochfeld1.watt() + sh.wohnung.kochen.kochfeld2.watt()</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wohnung.kochen.kochfeld1.watt</span><span class="w"></span>
-<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wohnung.kochen.kochfeld2.watt</span><span class="w"></span>
+<span class="w">        </span><span class="nt">kochfeldgesamt</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kochfeld Gesamt</span>
+<span class="w">            </span><span class="nt">watt</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.wohnung.kochen.kochfeld1.watt() + sh.wohnung.kochen.kochfeld2.watt()</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wohnung.kochen.kochfeld1.watt</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wohnung.kochen.kochfeld2.watt</span>
 </pre></div>
 </div>
 <p>In YAML Dateien können String-Values mehrzeilig sein. Der lesbarste Weg
@@ -4069,16 +4069,16 @@ eingeschlossen werden. Wenn innerhalb dieses Strings Double-Quotes
 verwendet werden sollen, so müssen diese <em>escaped</em> werden („).</p>
 <p>Im folgenden Beispiel wird das anhand einer Widget Definition für
 smartVISU gezeigt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">wohnung</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kochen</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_downlights</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Downlights Tresen</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
-<span class="w">                </span><span class="no">{{ device.dimmer(&#39;wohnung.kochen.dl_aussen&#39;, &#39;Äußere Downlights&#39;, &#39;wohnung.kochen.dl_aussen&#39;, &#39;&#39;wohnung.kochen.dl_aussen.level&#39;&#39;) }}</span><span class="w"></span>
-<span class="w">                </span><span class="no">{{ device.dimmer(&#39;wohnung.kochen.dl_innen&#39;, &#39;Innere Downlights&#39;, &#39;wohnung.kochen.dl_innen&#39;, &#39;&#39;wohnung.kochen.dl_innen.level&#39;&#39;) }}</span><span class="w"></span>
-<span class="w">                </span><span class="no">{{ device.dimmer(&#39;wohnung.kochen.dl_mitte&#39;, &#39;Mittleres Downlight&#39;, &#39;wohnung.kochen.dl_mitte&#39;, &#39;wohnung.kochen.dl_mitte.level&#39;) }}</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">wohnung</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kochen</span>
+<span class="w">        </span><span class="nt">visu_downlights</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Downlights Tresen</span>
+<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">                </span><span class="no">{{ device.dimmer(&#39;wohnung.kochen.dl_aussen&#39;, &#39;Äußere Downlights&#39;, &#39;wohnung.kochen.dl_aussen&#39;, &#39;&#39;wohnung.kochen.dl_aussen.level&#39;&#39;) }}</span>
+<span class="w">                </span><span class="no">{{ device.dimmer(&#39;wohnung.kochen.dl_innen&#39;, &#39;Innere Downlights&#39;, &#39;wohnung.kochen.dl_innen&#39;, &#39;&#39;wohnung.kochen.dl_innen.level&#39;&#39;) }}</span>
+<span class="w">                </span><span class="no">{{ device.dimmer(&#39;wohnung.kochen.dl_mitte&#39;, &#39;Mittleres Downlight&#39;, &#39;wohnung.kochen.dl_mitte&#39;, &#39;wohnung.kochen.dl_mitte.level&#39;) }}</span>
 </pre></div>
 </div>
 <p>Bei einzeiligen String-Values muss der String in Single-Quotes oder
@@ -4088,13 +4088,13 @@ Single-Quotes (’) eingeschlossen werden. Dann braucht man Single-Quotes
 nicht zu <em>escapen</em>. Allerdings müssen dann evtl. vorkommende
 Doppel-Quotes escaped werden.</p>
 <p>Beispiel:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">wohnung</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kochen</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_downlights</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Downlights Tresen</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">device.dimmer(&#39;wohnung.kochen.dl_aussen&#39;,</span><span class="nv"> </span><span class="s">&#39;Äußere</span><span class="nv"> </span><span class="s">Downlights&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.kochen.dl_aussen&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.kochen.dl_aussen.level&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">wohnung</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kochen</span>
+<span class="w">        </span><span class="nt">visu_downlights</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Downlights Tresen</span>
+<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">device.dimmer(&#39;wohnung.kochen.dl_aussen&#39;,</span><span class="nv"> </span><span class="s">&#39;Äußere</span><span class="nv"> </span><span class="s">Downlights&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.kochen.dl_aussen&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.kochen.dl_aussen.level&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -4231,10 +4231,10 @@ eingeben, die Interpunktionszeichen und andere Elemente verwendet, die mit der Y
 werden können (Bindestriche, Doppelpunkte usw.), können Sie diese Daten in einfache oder doppelte
 Anführungszeichen setzen. Doppelte Anführungszeichen ermöglichen die Verwendung von Escapes zur
 Darstellung von ASCII- und Unicode-Zeichen.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">integer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span><span class="w"></span>
-<span class="nt">string</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;42&quot;</span><span class="w"></span>
-<span class="nt">float</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42.0</span><span class="w"></span>
-<span class="nt">boolean</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yes</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">integer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
+<span class="nt">string</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;42&quot;</span>
+<span class="nt">float</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42.0</span>
+<span class="nt">boolean</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Yes</span>
 </pre></div>
 </div>
 </section>
@@ -4243,9 +4243,9 @@ Darstellung von ASCII- und Unicode-Zeichen.</p>
 <p>Hier ist eine einfache Sequenz, die Sie in SmartHomeNG finden können. Es ist eine einfache Liste,
 bei der jeder Eintrag in der Liste in einer eigenen Zeile steht und mit einem öffnenden Bindestrich
 beginnt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aus</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gedimmt</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hell</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aus</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gedimmt</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hell</span>
 </pre></div>
 </div>
 <p>Diese Sequenz platziert jedes Element in der Liste auf derselben Ebene.</p>
@@ -4253,14 +4253,14 @@ beginnt.</p>
 (wird in SmartHomeNG standerdmäßig nicht verwendet), können Sie dies tun, indem Sie vor jedem
 Bindestrich in den Unterelementen ein einzelnes Leerzeichen einfügen. YAML verwendet Leerzeichen
 (keine Tabs) zum Einrücken. Sie können ein Beispiel dafür unten sehen.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hund</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Katze</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Maus</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rind</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schwein</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ziege</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hund</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Katze</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Maus</span>
+<span class="p p-Indicator">-</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rind</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schwein</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ziege</span>
 </pre></div>
 </div>
 </section>
@@ -4268,15 +4268,15 @@ Bindestrich in den Unterelementen ein einzelnes Leerzeichen einfügen. YAML verw
 <h4>Zuordnungen<a class="headerlink" href="#zuordnungen" title="Permalink to this heading"></a></h4>
 <p>Mit der Zuordnung können Sie Schlüssel mit Werten auflisten. Dies ist nützlich, wenn Sie einem
 bestimmten Element einen Namen oder eine Eigenschaft zuweisen.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dimmwert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dimmwert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span>
 </pre></div>
 </div>
 <p>In diesem Beispiel wird der Wert 25 dem <em>dimmwert</em> zugeordnet. In Verbindung mit einer Sequenz
 kann eine Zuordnung folgendermaßen aussehen:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">helligkeiten</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aus</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gedimmt</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hell</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">helligkeiten</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aus</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gedimmt</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hell</span>
 </pre></div>
 </div>
 </section>

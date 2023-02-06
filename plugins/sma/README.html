@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>SMA</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">SMA</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3853,17 +3853,17 @@
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
 <p>bluez</p>
 <p>install by</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ apt-get install bluez python-gobject python-dbus
-$ hcitool scan
-Scanning ...
-        &lt;bt-addr&gt;       &lt;name of your inverter, e.g. <span class="s1">&#39;SMA001d SN: 213000xxxx SN213000xxxx&#39;</span>&gt;
-$ bluez-simple-agent hci0 &lt;bt-addr&gt;
-RequestPinCode <span class="o">(</span>/org/bluez/3070/hci0/dev_bt_addr_underscores<span class="o">)</span>
-Enter PIN Code: &lt;pin-code&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>bluez<span class="w"> </span>python-gobject<span class="w"> </span>python-dbus
+$<span class="w"> </span>hcitool<span class="w"> </span>scan
+Scanning<span class="w"> </span>...
+<span class="w">        </span>&lt;bt-addr&gt;<span class="w">       </span>&lt;name<span class="w"> </span>of<span class="w"> </span>your<span class="w"> </span>inverter,<span class="w"> </span>e.g.<span class="w"> </span><span class="s1">&#39;SMA001d SN: 213000xxxx SN213000xxxx&#39;</span>&gt;
+$<span class="w"> </span>bluez-simple-agent<span class="w"> </span>hci0<span class="w"> </span>&lt;bt-addr&gt;
+RequestPinCode<span class="w"> </span><span class="o">(</span>/org/bluez/3070/hci0/dev_bt_addr_underscores<span class="o">)</span>
+Enter<span class="w"> </span>PIN<span class="w"> </span>Code:<span class="w"> </span>&lt;pin-code&gt;
 Release
-New device <span class="o">(</span>/org/bluez/3070/hci0/dev_bt_addr_underscores<span class="o">)</span>
-$ bluez-test-device trusted &lt;bt-addr&gt; yes
-$ bluez-test-device list
+New<span class="w"> </span>device<span class="w"> </span><span class="o">(</span>/org/bluez/3070/hci0/dev_bt_addr_underscores<span class="o">)</span>
+$<span class="w"> </span>bluez-test-device<span class="w"> </span>trusted<span class="w"> </span>&lt;bt-addr&gt;<span class="w"> </span>yes
+$<span class="w"> </span>bluez-test-device<span class="w"> </span>list
 </pre></div>
 </div>
 <section id="supported-hardware">
@@ -3881,13 +3881,13 @@ $ bluez-test-device list
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sma</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SMA</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.sma</span><span class="w"></span>
-<span class="w">    </span><span class="nt">bt_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:80:25:21:7F:58</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># password = 0000</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># update_cycle = 60</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># allowed_timedelta = 10</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sma</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SMA</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.sma</span>
+<span class="w">    </span><span class="nt">bt_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:80:25:21:7F:58</span>
+<span class="w">    </span><span class="c1"># password = 0000</span>
+<span class="w">    </span><span class="c1"># update_cycle = 60</span>
+<span class="w">    </span><span class="c1"># allowed_timedelta = 10</span>
 </pre></div>
 </div>
 <p>Description of the attributes:</p>
@@ -3901,83 +3901,83 @@ $ bluez-test-device list
 <section id="items-yaml">
 <h3>items.yaml<a class="headerlink" href="#items-yaml" title="Permalink to this heading"></a></h3>
 <p>The item having <code class="docutils literal notranslate"><span class="pre">sma</span> <span class="pre">=</span> <span class="pre">PLUGIN_ACTIVE</span></code> can be set to True/False in order to connect/disconnect to the inverter during night.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Inverter</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Inverter</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">Plugin_active</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLUGIN_ACTIVE</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Plugin_active</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLUGIN_ACTIVE</span>
 
-<span class="w">    </span><span class="nt">Feeding_Power_in_W</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AC_P_TOTAL</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Feeding_Power_in_W</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AC_P_TOTAL</span>
 
-<span class="w">    </span><span class="nt">Daily_Yield_in_Wh</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">E_DAY</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Daily_Yield_in_Wh</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">E_DAY</span>
 
-<span class="w">    </span><span class="nt">Total_Yield_in_Wh</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">E_TOTAL</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Total_Yield_in_Wh</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">E_TOTAL</span>
 
-<span class="w">    </span><span class="nt">Serial_Number</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INV_SERIAL</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Serial_Number</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INV_SERIAL</span>
 
-<span class="w">    </span><span class="nt">MAC_Address</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INV_ADDRESS</span><span class="w"></span>
+<span class="w">    </span><span class="nt">MAC_Address</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INV_ADDRESS</span>
 
-<span class="w">    </span><span class="nt">Last_Update_Of_Data</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LAST_UPDATE</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Last_Update_Of_Data</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LAST_UPDATE</span>
 
-<span class="w">    </span><span class="nt">DC_Power_String1_in_W</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DC_STRING1_P</span><span class="w"></span>
+<span class="w">    </span><span class="nt">DC_Power_String1_in_W</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DC_STRING1_P</span>
 
-<span class="w">    </span><span class="nt">DC_Power_String2_in_W</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DC_STRING2_P</span><span class="w"></span>
+<span class="w">    </span><span class="nt">DC_Power_String2_in_W</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DC_STRING2_P</span>
 
-<span class="w">    </span><span class="nt">DC_Voltage_String1_in_V</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DC_STRING1_U</span><span class="w"></span>
+<span class="w">    </span><span class="nt">DC_Voltage_String1_in_V</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DC_STRING1_U</span>
 
-<span class="w">    </span><span class="nt">DC_Voltage_String2_in_V</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DC_STRING2_U</span><span class="w"></span>
+<span class="w">    </span><span class="nt">DC_Voltage_String2_in_V</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DC_STRING2_U</span>
 
-<span class="w">    </span><span class="nt">DC_Current_String1_in_A</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DC_STRING1_I</span><span class="w"></span>
+<span class="w">    </span><span class="nt">DC_Current_String1_in_A</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DC_STRING1_I</span>
 
-<span class="w">    </span><span class="nt">DC_Current_String2_in_A</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DC_STRING2_I</span><span class="w"></span>
+<span class="w">    </span><span class="nt">DC_Current_String2_in_A</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DC_STRING2_I</span>
 
-<span class="w">    </span><span class="nt">Operating_Time_in_s</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OPERATING_TIME</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Operating_Time_in_s</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OPERATING_TIME</span>
 
-<span class="w">    </span><span class="nt">Feeding_Time_in_s</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FEEDING_TIME</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Feeding_Time_in_s</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FEEDING_TIME</span>
 
-<span class="w">    </span><span class="nt">Grid_Frequency_in_Hz</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GRID_FREQUENCY</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Grid_Frequency_in_Hz</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GRID_FREQUENCY</span>
 
-<span class="w">    </span><span class="nt">Inverter_Status</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STATUS</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Inverter_Status</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STATUS</span>
 
-<span class="w">    </span><span class="nt">Relais_Status</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GRID_RELAY</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Relais_Status</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GRID_RELAY</span>
 
-<span class="w">    </span><span class="nt">Software_Version</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SW_VERSION</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Software_Version</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">sma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SW_VERSION</span>
 </pre></div>
 </div>
 </section>

@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a> &raquo;</li>
-      <li>squeezebox</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a></li>
+      <li class="breadcrumb-item active">squeezebox</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3859,15 +3859,15 @@
 <p class="admonition-title">Wichtig</p>
 <p>Detaillierte Informationen zur Konfiguration des Plugins sind unter <a class="reference internal" href="../../plugins_doc/config/squeezebox.html"><span class="doc">Plugin ‚squeezebox‘ Konfiguration</span></a> zu finden.</p>
 </div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span><span class="w"></span>
-<span class="nt">squeezebox</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#host: 127.0.0.1</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#port: 9090</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#web_port: 9000</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#autoreconnect: False</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#connect_retries: 0</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#connect_cycle: 10</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span>
+<span class="nt">squeezebox</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox</span>
+<span class="w">    </span><span class="c1">#host: 127.0.0.1</span>
+<span class="w">    </span><span class="c1">#port: 9090</span>
+<span class="w">    </span><span class="c1">#web_port: 9000</span>
+<span class="w">    </span><span class="c1">#autoreconnect: False</span>
+<span class="w">    </span><span class="c1">#connect_retries: 0</span>
+<span class="w">    </span><span class="c1">#connect_cycle: 10</span>
 </pre></div>
 </div>
 </section>
@@ -3875,20 +3875,20 @@
 <h2>Items<a class="headerlink" href="#items" title="Permalink to this heading"></a></h2>
 <p>Mit Hilfe der Struct Vorlagen (siehe unten) lassen sich mehrere Player sehr einfach
 und komfortabel einbinden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/item.yaml</span><span class="w"></span>
-<span class="nt">squeezebox</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox.database</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox.server</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/item.yaml</span>
+<span class="nt">squeezebox</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox.database</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox.server</span>
 
-<span class="w">    </span><span class="nt">squeezebox_wohnen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">squeezebox_playerid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xx:yy:xx:yy:xx:yy</span><span class="w"></span>
+<span class="w">    </span><span class="nt">squeezebox_wohnen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">squeezebox_playerid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xx:yy:xx:yy:xx:yy</span>
 
-<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox.player</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox.info</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox.controls</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox.playlist</span><span class="w"></span>
+<span class="w">        </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox.player</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox.info</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox.controls</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squeezebox.playlist</span>
 </pre></div>
 </div>
 </section>

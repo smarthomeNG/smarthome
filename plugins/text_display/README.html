@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>text_display</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">text_display</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3876,8 +3876,8 @@
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
 <p>Das Plugin muss nur einmal instantiiert werden. Es ist nicht nötig/möglich mehrere Instanzen zu verwalten.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">text_display</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text_display</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">text_display</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text_display</span>
 </pre></div>
 </div>
 </section>
@@ -3900,142 +3900,142 @@
 <section id="nachrichtensenke">
 <h3>Nachrichtensenke<a class="headerlink" href="#nachrichtensenke" title="Permalink to this heading"></a></h3>
 <p>In diesem Beispiel werden die Nachrichten auf die KNX-GA a/b/c geschickt. Liegt keine Nachricht vor, wird ein Leerzeichen als Text geschickt, damit z.B. auf den MDT Glastastern keine alten Nachrichten stehen bleiben. Lässt man die Default-Konfiguration einfach weg, wird kein Wert gesendet. Auf den MDT-RTR ist das der einfachste Weg, die Nachricht verschwinden zu lassen.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">meldung</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;16.001&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a/b/c</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a/b/c</span><span class="w"></span>
-<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">text_display_default_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;</span><span class="nv"> </span><span class="s">&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">text_display_sink_for_rings</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;wichtiger_als_fenster&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;fenster&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">text_display_sink_rings_with_prio</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;anruf&quot;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">meldung</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;16.001&quot;</span>
+<span class="w">    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a/b/c</span>
+<span class="w">    </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a/b/c</span>
+<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span>
+<span class="w">    </span><span class="nt">text_display_default_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;</span><span class="nv"> </span><span class="s">&#39;</span>
+<span class="w">    </span><span class="nt">text_display_sink_for_rings</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;wichtiger_als_fenster&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;fenster&quot;</span>
+<span class="w">    </span><span class="nt">text_display_sink_rings_with_prio</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;anruf&quot;</span>
 </pre></div>
 </div>
 </section>
 <section id="fenster-auf-nachrichtenquelle">
 <h3>„Fenster auf“ Nachrichtenquelle<a class="headerlink" href="#fenster-auf-nachrichtenquelle" title="Permalink to this heading"></a></h3>
 <p>Dies ist die Struktur für einen Raum, das muss dann für jeden Raum wiederholt werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">schlafzimmer</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">temperatur_im_schlafzimmer</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x/y/z</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">schlafzimmer</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">temperatur_im_schlafzimmer</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x/y/z</span>
 <span class="w">        </span>
-<span class="w">        </span><span class="nt">anzeige_string</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span><span class="w"></span>
-<span class="w">                </span><span class="no">f&quot;SchlaZi: {sh...():.1f}°C&quot;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<span class="w">        </span><span class="nt">anzeige_string</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">                </span><span class="no">f&quot;SchlaZi: {sh...():.1f}°C&quot;</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 
-<span class="w">            </span><span class="nt">display_is_relevant</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or</span><span class="w"></span>
+<span class="w">            </span><span class="nt">display_is_relevant</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or</span>
 <span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">....irgendein_fenster_im_schlafzimmer_offen</span><span class="w"></span>
-<span class="w">                </span><span class="nt">text_display_target_ring</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;fenster&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">text_display_content_source_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">....irgendein_fenster_im_schlafzimmer_offen</span>
+<span class="w">                </span><span class="nt">text_display_target_ring</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;fenster&#39;</span>
+<span class="w">                </span><span class="nt">text_display_content_source_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 
-<span class="w">    </span><span class="nt">irgendein_fenster_im_schlafzimmer_offen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.fenster_zur_strasse</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.fenster_zum_garten</span><span class="w"></span>
+<span class="w">    </span><span class="nt">irgendein_fenster_im_schlafzimmer_offen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.fenster_zur_strasse</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.fenster_zum_garten</span>
 <span class="w">        </span>
-<span class="w">        </span><span class="nt">fenster_zur_strasse</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x/y/z</span><span class="w"></span>
-<span class="w">        </span><span class="nt">fenster_zur_strasse</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x/y/z</span><span class="w"></span>
+<span class="w">        </span><span class="nt">fenster_zur_strasse</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x/y/z</span>
+<span class="w">        </span><span class="nt">fenster_zur_strasse</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x/y/z</span>
 </pre></div>
 </div>
 </section>
 <section id="auszentemperatur-abhangig-von-fensterstatus">
 <h3>Außentemperatur abhängig von Fensterstatus:<a class="headerlink" href="#auszentemperatur-abhangig-von-fensterstatus" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">wetter</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">luft_temperatur</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wo auch immer der Wert herkommt (OpenWeatherMap ;-) / Wetterstation)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">wetter</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">luft_temperatur</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wo auch immer der Wert herkommt (OpenWeatherMap ;-) / Wetterstation)</span>
 <span class="w">        </span>
-<span class="w">        </span><span class="nt">message_string</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span><span class="w"></span>
-<span class="w">                </span><span class="no">f&quot;Außen: {sh...():.1f}°C&quot;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
-<span class="w">            </span><span class="nt">display_is_relevant</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">schlafzimmer.fenster</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kinderzimmer.fenster</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buero.fenster</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">og_bad.fenster</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eg_bad.fenster</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wohnzimmer.fenster</span><span class="w"></span>
-<span class="w">                </span><span class="nt">text_display_target_ring</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;fenster&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">text_display_content_source_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<span class="w">        </span><span class="nt">message_string</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">                </span><span class="no">f&quot;Außen: {sh...():.1f}°C&quot;</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
+<span class="w">            </span><span class="nt">display_is_relevant</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">schlafzimmer.fenster</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kinderzimmer.fenster</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buero.fenster</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">og_bad.fenster</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eg_bad.fenster</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wohnzimmer.fenster</span>
+<span class="w">                </span><span class="nt">text_display_target_ring</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;fenster&#39;</span>
+<span class="w">                </span><span class="nt">text_display_content_source_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 </pre></div>
 </div>
 </section>
 <section id="ab-prufen-nachrichtenquelle">
 <h3>AB Prüfen Nachrichtenquelle:<a class="headerlink" href="#ab-prufen-nachrichtenquelle" title="Permalink to this heading"></a></h3>
 <p>Die Anzahl der neuen Nachrichten auf dem Anrufbeantworter muss über 0 sein, damit immer der gleiche „AB prüfen“ Text angezeigt wird.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fritzbox</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tam</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">avm_data_type@fritzbox</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tam</span><span class="w"></span>
-<span class="w">        </span><span class="nt">new_message_present</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.fritzbox.tam.message_number_new() &gt; 0</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fritzbox.tam.message_number_new</span><span class="w"></span>
-<span class="w">            </span><span class="nt">text_display_target_ring</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;wichtiger_als_fenster&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">text_display_content_source_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.ab_pruefen_text</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fritzbox</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">tam</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">avm_data_type@fritzbox</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tam</span>
+<span class="w">        </span><span class="nt">new_message_present</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.fritzbox.tam.message_number_new() &gt; 0</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fritzbox.tam.message_number_new</span>
+<span class="w">            </span><span class="nt">text_display_target_ring</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;wichtiger_als_fenster&#39;</span>
+<span class="w">            </span><span class="nt">text_display_content_source_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.ab_pruefen_text</span>
 
-<span class="w">            </span><span class="nt">ab_pruefen_text</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Klar kann man hier auch die Nachricht dynamisch bauen, z.B. &quot;&#39;AB</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Nachr.&#39;.format(sh.fritzbox.tam.message_number_new())&quot;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;AB</span><span class="nv"> </span><span class="s">prüfen&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="nt">ab_pruefen_text</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Klar kann man hier auch die Nachricht dynamisch bauen, z.B. &quot;&#39;AB</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Nachr.&#39;.format(sh.fritzbox.tam.message_number_new())&quot;</span>
+<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;AB</span><span class="nv"> </span><span class="s">prüfen&quot;</span>
 
-<span class="w">        </span><span class="nt">message_number_new</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">            </span><span class="nt">avm_data_type@fritzbox</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tam_new_message_number</span><span class="w"></span>
+<span class="w">        </span><span class="nt">message_number_new</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">            </span><span class="nt">avm_data_type@fritzbox</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tam_new_message_number</span>
 </pre></div>
 </div>
 </section>
 <section id="anrufer-meldungen">
 <h3>Anrufer-Meldungen<a class="headerlink" href="#anrufer-meldungen" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fritzbox</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">monitor</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">message</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.fritzbox.monitor.incoming.event() == &#39;ring&#39; and sh.fritzbox.monitor.incoming.is_call_incoming() == True</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..incoming.is_call_incoming</span><span class="w"></span>
-<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..incoming.event</span><span class="w"></span>
-<span class="w">            </span><span class="nt">text_display_target_ring</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;anruf&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">text_display_content_source_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.message_text</span><span class="w"></span>
-<span class="w">            </span><span class="nt">message_text</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;T:{}&#39;.format(sh.fritzbox.monitor.incoming.last_caller())&quot;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fritzbox.monitor.incoming.last_caller</span><span class="w"></span>
-<span class="w">        </span><span class="nt">incoming</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">is_call_incoming</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">avm_data_type@fritzbox</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">is_call_incoming</span><span class="w"></span>
-<span class="w">            </span><span class="nt">last_caller</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">avm_data_type@fritzbox</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">last_caller_incoming</span><span class="w"></span>
-<span class="w">            </span><span class="nt">event</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">avm_data_type@fritzbox</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">call_event_incoming</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fritzbox</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">monitor</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">message</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.fritzbox.monitor.incoming.event() == &#39;ring&#39; and sh.fritzbox.monitor.incoming.is_call_incoming() == True</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..incoming.is_call_incoming</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..incoming.event</span>
+<span class="w">            </span><span class="nt">text_display_target_ring</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;anruf&#39;</span>
+<span class="w">            </span><span class="nt">text_display_content_source_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.message_text</span>
+<span class="w">            </span><span class="nt">message_text</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;T:{}&#39;.format(sh.fritzbox.monitor.incoming.last_caller())&quot;</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fritzbox.monitor.incoming.last_caller</span>
+<span class="w">        </span><span class="nt">incoming</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">is_call_incoming</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">avm_data_type@fritzbox</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">is_call_incoming</span>
+<span class="w">            </span><span class="nt">last_caller</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">avm_data_type@fritzbox</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">last_caller_incoming</span>
+<span class="w">            </span><span class="nt">event</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">avm_data_type@fritzbox</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">call_event_incoming</span>
 </pre></div>
 </div>
 </section>

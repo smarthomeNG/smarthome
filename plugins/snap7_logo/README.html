@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>snap7_logo</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">snap7_logo</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3867,22 +3867,22 @@ Siemens LOGO version 0BA8 8.1 8.2 (8.3 nicht getestet?)
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
 <p>Sample configuration file for two instances of the logo plugin.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logo1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snap7_logo</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logo1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.10.10.99</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tsap_server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x200</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tsap_client</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x100</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># port: 102</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># version: 0BA7</span><span class="w"></span>
-<span class="nt">logo2</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snap7_logo</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logo2</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.10.10.100</span><span class="w"></span>
-<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0BA8</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># port: 102</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># cycle: 5</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logo1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snap7_logo</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logo1</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.10.10.99</span>
+<span class="w">    </span><span class="nt">tsap_server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x200</span>
+<span class="w">    </span><span class="nt">tsap_client</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x100</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">    </span><span class="c1"># port: 102</span>
+<span class="w">    </span><span class="c1"># version: 0BA7</span>
+<span class="nt">logo2</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snap7_logo</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logo2</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.10.10.100</span>
+<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0BA8</span>
+<span class="w">    </span><span class="c1"># port: 102</span>
+<span class="w">    </span><span class="c1"># cycle: 5</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -3922,38 +3922,38 @@ Siemens LOGO version 0BA8 8.1 8.2 (8.3 nicht getestet?)
 <li><p>‚VMW‘ VM-Word to read/write VMW0, VM2, VMW4,.. VM849</p></li>
 </ul>
 <p>Example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Heizraum</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Warmwasser</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">Ist_temperatur</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value/10</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">logo_read@logoheizraum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AM1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">Soll_temperatur</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">            </span><span class="nt">logo_write@logoheizraum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VMW0</span><span class="w"></span>
-<span class="w">        </span><span class="nt">Durchflusswaechter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">logo_read@logoheizraum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">I1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">Zirkulation_pumpe</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">logo_read@logoheizraum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Q3</span><span class="w"></span>
-<span class="nt">TestLOGO</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">I1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">logo_read@logotest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;I1&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Q1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">logo_read@logotest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Q1&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">M1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">logo_write@logotest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;M1&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">M2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">logo_read@logotest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;M2&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">logo_write@logotest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;M2&quot;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Heizraum</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Warmwasser</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">Ist_temperatur</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value/10</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">logo_read@logoheizraum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AM1</span>
+<span class="w">        </span><span class="nt">Soll_temperatur</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">            </span><span class="nt">logo_write@logoheizraum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VMW0</span>
+<span class="w">        </span><span class="nt">Durchflusswaechter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">logo_read@logoheizraum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">I1</span>
+<span class="w">        </span><span class="nt">Zirkulation_pumpe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">logo_read@logoheizraum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Q3</span>
+<span class="nt">TestLOGO</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">I1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">logo_read@logotest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;I1&quot;</span>
+<span class="w">    </span><span class="nt">Q1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">logo_read@logotest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Q1&quot;</span>
+<span class="w">    </span><span class="nt">M1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">logo_write@logotest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;M1&quot;</span>
+<span class="w">    </span><span class="nt">M2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">logo_read@logotest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;M2&quot;</span>
+<span class="w">        </span><span class="nt">logo_write@logotest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;M2&quot;</span>
 </pre></div>
 </div>
 </section>

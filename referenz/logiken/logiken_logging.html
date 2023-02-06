@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../referenz.html">Referenz <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="logiken.html">Logiken</a> &raquo;</li>
-      <li>Logging in Logiken</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../referenz.html">Referenz <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="logiken.html">Logiken</a></li>
+      <li class="breadcrumb-item active">Logging in Logiken</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3862,13 +3862,13 @@ werden können. Dazu ist in der Standardkonfiguration von SmartHomeNG der notwen
 konfiguriert:</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">etc/logging.yaml</span><a class="headerlink" href="#id1" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logger</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logger</span><span class="p">:</span>
 
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">logics</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">logics</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span>
 </pre></div>
 </div>
 </div>
@@ -3882,16 +3882,16 @@ Konfigurationsdatei <code class="docutils literal notranslate"><span class="pre"
 <p>Für eine Logik mit dem Namen <code class="docutils literal notranslate"><span class="pre">example</span></code>, sieht das beispielsweise folgendermaßen aus:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">etc/logging.yaml</span><a class="headerlink" href="#id2" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logger</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logger</span><span class="p">:</span>
 
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">logics</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">logics</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span>
 
-<span class="w">    </span><span class="nt">logics.example</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
+<span class="w">    </span><span class="nt">logics.example</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
 </pre></div>
 </div>
 </div>

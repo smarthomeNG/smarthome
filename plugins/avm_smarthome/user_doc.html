@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_interface.html">Interface Plugins</a> &raquo;</li>
-      <li>avm_smarthome</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_interface.html">Interface Plugins</a></li>
+      <li class="breadcrumb-item active">avm_smarthome</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3870,21 +3870,21 @@ Eine händliche Installtion des aktuellen Mastern funktioniert mit:</p>
 <h2>Konfiguration<a class="headerlink" href="#konfiguration" title="Permalink to this heading"></a></h2>
 <p>Für die Nutzung eines avm_smarthome Devices müssen in dem entsprechenden Item die zwei Attribute <code class="docutils literal notranslate"><span class="pre">avm_ain</span></code> und
 <code class="docutils literal notranslate"><span class="pre">avm_smarthome_data</span></code> konfiguriert werden, wie im folgenden Beispiel gezeigt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">avm</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">smarthome</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hkr_bathroom_og</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">avm_ain</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;00000</span><span class="nv"> </span><span class="s">0000000&#39;</span><span class="w">  </span><span class="c1"># AIN muss mit Leerstelle angegeben werden</span><span class="w"></span>
-<span class="w">                </span><span class="nt">avm_smarthome_data</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">avm</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">smarthome</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">hkr_bathroom_og</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">avm_ain</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;00000</span><span class="nv"> </span><span class="s">0000000&#39;</span><span class="w">  </span><span class="c1"># AIN muss mit Leerstelle angegeben werden</span>
+<span class="w">                </span><span class="nt">avm_smarthome_data</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
 
-<span class="w">        </span><span class="nt">hkr_bathroom_ug</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">            </span><span class="nt">avm_ain</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;00000</span><span class="nv"> </span><span class="s">0000000&#39;</span><span class="w">  </span><span class="c1"># AIN muss mit Leerstelle angegeben werden</span><span class="w"></span>
-<span class="w">            </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm_smarthome.general</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm_smarthome.hkr</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm_smarthome.temperatur_sensor</span><span class="w"></span>
+<span class="w">        </span><span class="nt">hkr_bathroom_ug</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">            </span><span class="nt">avm_ain</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;00000</span><span class="nv"> </span><span class="s">0000000&#39;</span><span class="w">  </span><span class="c1"># AIN muss mit Leerstelle angegeben werden</span>
+<span class="w">            </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm_smarthome.general</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm_smarthome.hkr</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm_smarthome.temperatur_sensor</span>
 </pre></div>
 </div>
 <p>Dabei kann das Attribut <code class="docutils literal notranslate"><span class="pre">avm_ain</span></code> entweder beim Item selbst gesetzt werden oder aber einmalig beim Parent-Item, wobei das Attribut auf alle Kinder-Item vererbt wird.

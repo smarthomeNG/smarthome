@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>iAQ Stick</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">iAQ Stick</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3856,8 +3856,8 @@
 <li><p>udev rule</p></li>
 </ul>
 <p>install by</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt-get install python3-setuptools
-pip3 install <span class="s2">&quot;pyusb&gt;=1.0.2&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt-get<span class="w"> </span>install<span class="w"> </span>python3-setuptools
+pip3<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pyusb&gt;=1.0.2&quot;</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="s1">&#39;SUBSYSTEM==&quot;usb&quot;, ATTR</span><span class="si">{idVendor}</span><span class="s1">==&quot;03eb&quot;, ATTR</span><span class="si">{idProduct}</span><span class="s1">==&quot;2013&quot;, MODE=&quot;666&quot;&#39;</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">udev</span><span class="o">/</span><span class="n">rules</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="mi">99</span><span class="o">-</span><span class="n">iaqstick</span><span class="o">.</span><span class="n">rules</span>
@@ -3877,10 +3877,10 @@ pip3 install <span class="s2">&quot;pyusb&gt;=1.0.2&quot;</span>
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">iaqstick</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iAQ_Stick</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.iaqstick</span><span class="w"></span>
-<span class="c1">#    update_cycle: 10</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">iaqstick</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iAQ_Stick</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.iaqstick</span>
+<span class="c1">#    update_cycle: 10</span>
 </pre></div>
 </div>
 <p>Description of the attributes:</p>
@@ -3901,11 +3901,11 @@ Don’t bother if you are going to use a single stick anyway.</p>
 <ul class="simple">
 <li><p><strong>ppm</strong>: get the air quality measured in part-per-million (ppm)</p></li>
 </ul>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">iAQ_Stick</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">PPM</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">iaqstick_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">H02004-266272</span><span class="w"></span>
-<span class="w">    </span><span class="nt">iaqstick_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ppm</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">iAQ_Stick</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">PPM</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">iaqstick_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">H02004-266272</span>
+<span class="w">    </span><span class="nt">iaqstick_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ppm</span>
 </pre></div>
 </div>
 </section>

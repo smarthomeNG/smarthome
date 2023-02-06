@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Drexel &amp; Weiss</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Drexel &amp; Weiss</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3905,15 +3905,15 @@
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">DuW</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DuW</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.drexelundweiss</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB0</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Busmonitor: 1</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># LU_ID: 130</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># WP_ID: 140</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># device: 14 # x2 plus as standard device</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># retrylimit: 100 # number of retries to get answer right</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">DuW</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DuW</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.drexelundweiss</span>
+<span class="w">    </span><span class="nt">tty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB0</span>
+<span class="w">    </span><span class="c1"># Busmonitor: 1</span>
+<span class="w">    </span><span class="c1"># LU_ID: 130</span>
+<span class="w">    </span><span class="c1"># WP_ID: 140</span>
+<span class="w">    </span><span class="c1"># device: 14 # x2 plus as standard device</span>
+<span class="w">    </span><span class="c1"># retrylimit: 100 # number of retries to get answer right</span>
 </pre></div>
 </div>
 <p>You have to adapt the tty to your local environment and change LU_ID and WP_ID if not D&amp;W default is used.
@@ -3930,14 +3930,14 @@ Values are calculated automatically regarding the register depending divisor and
 </section>
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">KWL</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">KWL</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">MODE</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Betriebsart</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">DuW_LU_register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5002</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.slider(&#39;item&#39;,</span><span class="nv"> </span><span class="s">&#39;item&#39;,</span><span class="nv"> </span><span class="s">0,</span><span class="nv"> </span><span class="s">5,</span><span class="nv"> </span><span class="s">1)</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">MODE</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Betriebsart</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">DuW_LU_register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5002</span>
+<span class="w">        </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.slider(&#39;item&#39;,</span><span class="nv"> </span><span class="s">&#39;item&#39;,</span><span class="nv"> </span><span class="s">0,</span><span class="nv"> </span><span class="s">5,</span><span class="nv"> </span><span class="s">1)</span><span class="nv"> </span><span class="s">}}&quot;</span>
 </pre></div>
 </div>
 <p>A full .yaml file example can be found in plugin folder.</p>

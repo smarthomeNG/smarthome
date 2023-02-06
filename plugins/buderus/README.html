@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Buderus Plugin</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Buderus Plugin</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3922,11 +3922,11 @@ when the alarm system is activated.</p>
 </tbody>
 </table>
 <p>The following example can be used to setup a device:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">buderus</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Buderus</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.buderus</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.2.28</span><span class="w"></span>
-<span class="w">    </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90ad52660ce1234551234579d89e25b70b5331ce0e82c5fd1254a317574ec807</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">buderus</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Buderus</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.buderus</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.2.28</span>
+<span class="w">    </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90ad52660ce1234551234579d89e25b70b5331ce0e82c5fd1254a317574ec807</span>
 </pre></div>
 </div>
 </section>
@@ -3955,15 +3955,15 @@ when the alarm system is activated.</p>
 </tbody>
 </table>
 <p>Please see the following example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Buderus</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">gateway</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buderus.gateway</span><span class="w"></span>
-<span class="w">  </span><span class="nt">heating_system</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buderus.heating_system</span><span class="w"></span>
-<span class="w">  </span><span class="nt">heating_circuit_01</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buderus.heating_circuit_01</span><span class="w"></span>
-<span class="w">  </span><span class="nt">hot_water_circuit_01</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buderus.hot_water_circuit_01</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Buderus</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gateway</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buderus.gateway</span>
+<span class="w">  </span><span class="nt">heating_system</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buderus.heating_system</span>
+<span class="w">  </span><span class="nt">heating_circuit_01</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buderus.heating_circuit_01</span>
+<span class="w">  </span><span class="nt">hot_water_circuit_01</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buderus.hot_water_circuit_01</span>
 </pre></div>
 </div>
 <p>See <a class="reference internal" href="URLs.html"><span class="doc std std-doc">URLs</span></a> for additional km_id’s.</p>

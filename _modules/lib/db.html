@@ -3837,9 +3837,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Modul-Quellcode</a> &raquo;</li>
-      <li>lib.db</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Modul-Quellcode</a></li>
+      <li class="breadcrumb-item active">lib.db</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3881,7 +3881,7 @@
 
 
 <div class="viewcode-block" id="Database"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database">[Doku]</a><span class="k">class</span> <span class="nc">Database</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;A database abstraction layer based on DB-API2 specification.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A database abstraction layer based on DB-API2 specification.</span>
 
 <span class="sd">    It provides basic functionality to access databases using Python driver</span>
 <span class="sd">    implementations based on the DB-API2 specification (PEP 249).</span>
@@ -3977,7 +3977,7 @@
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">dbapi</span><span class="p">,</span> <span class="n">connect</span><span class="p">,</span> <span class="n">formatting</span><span class="o">=</span><span class="s1">&#39;named&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a new database instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new database instance</span>
 
 <span class="sd">        The &#39;name&#39; parameter identifies the name for the database access .</span>
 <span class="sd">        It is also used internally to create versions table (to keep track</span>
@@ -4052,7 +4052,7 @@
         <span class="k">return</span>
 
 <div class="viewcode-block" id="Database.connect"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database.connect">[Doku]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Connects to the database&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Connects to the database&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbapi</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="p">)</span>
@@ -4065,7 +4065,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Database [</span><span class="si">{}</span><span class="s2">]: Connected with </span><span class="si">{}</span><span class="s2"> using </span><span class="se">\&quot;</span><span class="si">{}</span><span class="se">\&quot;</span><span class="s2"> style&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format_output</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Database.close"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database.close">[Doku]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Closes the database connection&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Closes the database connection&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -4077,11 +4077,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_connected</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="Database.connected"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database.connected">[Doku]</a>    <span class="k">def</span> <span class="nf">connected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the connected status&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the connected status&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connected</span></div>
 
 <div class="viewcode-block" id="Database.setup"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database.setup">[Doku]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Setup or update the database structure.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setup or update the database structure.</span>
 
 <span class="sd">        This method can be used to setup the database structure by providing</span>
 <span class="sd">        the SQL statements to this method. Additionally it will check if the</span>
@@ -4125,28 +4125,28 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">release</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Database.lock"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database.lock">[Doku]</a>    <span class="k">def</span> <span class="nf">lock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Acquire a database lock&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Acquire a database lock&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fdb_lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Database.release"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database.release">[Doku]</a>    <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Release the database lock&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Release the database lock&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fdb_lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Database.commit"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database.commit">[Doku]</a>    <span class="k">def</span> <span class="nf">commit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Commit the current transaction&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Commit the current transaction&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Database.rollback"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database.rollback">[Doku]</a>    <span class="k">def</span> <span class="nf">rollback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Rollback the current transaction&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rollback the current transaction&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Database.cursor"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database.cursor">[Doku]</a>    <span class="k">def</span> <span class="nf">cursor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a new cursor for executing statements&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new cursor for executing statements&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Database.execute"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database.execute">[Doku]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stmt</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">(),</span> <span class="n">formatting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cur</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Execute the given statement</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the given statement</span>
 
 <span class="sd">        This will execute the statement specified in the &#39;stmt&#39; parameter</span>
 <span class="sd">        which may contain parameter placeholders (depending on selected</span>
@@ -4190,7 +4190,7 @@
                 <span class="n">c</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Database.verify"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database.verify">[Doku]</a>    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">retry</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Verifies the connection status and reconnets if required</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verifies the connection status and reconnets if required</span>
 
 <span class="sd">        The connected status of the connection will be checked by executing</span>
 <span class="sd">        a simple SQL statement. If this fails or the connection is not</span>
@@ -4230,7 +4230,7 @@
         <span class="k">return</span> <span class="n">retry</span></div>
 
 <div class="viewcode-block" id="Database.fetchone"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database.fetchone">[Doku]</a>    <span class="k">def</span> <span class="nf">fetchone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stmt</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">(),</span> <span class="n">formatting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cur</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Execute given statement and fetch one row from result</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute given statement and fetch one row from result</span>
 
 <span class="sd">        This method can be used in case you only want to fetch one row from</span>
 <span class="sd">        the result. It accepts the same arguments as mentioned in the</span>
@@ -4251,7 +4251,7 @@
         <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="Database.fetchall"><a class="viewcode-back" href="../../lib/db.html#lib.db.Database.fetchall">[Doku]</a>    <span class="k">def</span> <span class="nf">fetchall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stmt</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">(),</span> <span class="n">formatting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cur</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Execute given statement and fetch all rows from result</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute given statement and fetch all rows from result</span>
 
 <span class="sd">        This method can be used to fetch all rows from the result. It accepts</span>
 <span class="sd">        the same arguments as mentioned in the &#39;execute()&#39; method.</span>
@@ -4270,7 +4270,7 @@
         <span class="k">return</span> <span class="n">result</span></div>
 
     <span class="k">def</span> <span class="nf">_prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stmt</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">formatting</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Internal helper method to convert the statement and parameter list&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Internal helper method to convert the statement and parameter list&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">param_dict</span> <span class="o">=</span> <span class="n">params</span>
@@ -4292,7 +4292,7 @@
             <span class="k">return</span> <span class="p">(</span><span class="n">stmt_result</span><span class="p">,</span> <span class="n">param_result</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_translate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stmt</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">input_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Internal helper method to convert the statement from input format to output format&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Internal helper method to convert the statement from input format to output format&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">input_token</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">output_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">stmt</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>

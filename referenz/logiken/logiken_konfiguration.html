@@ -3840,10 +3840,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../referenz.html">Referenz <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="logiken.html">Logiken</a> &raquo;</li>
-      <li>Logik Konfiguration</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../referenz.html">Referenz <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="logiken.html">Logiken</a></li>
+      <li class="breadcrumb-item active">Logik Konfiguration</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3923,16 +3923,16 @@ eine Visualisierung ausgelöst werden.</p>
 <p>Die Liste der angegebenen Items wird auf Änderungen überwacht</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">etc/logic.yaml</span><a class="headerlink" href="#id1" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logicnamehere</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">watch_item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">house.alarm</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">garage.alarm</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logicnamehere</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">watch_item</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">house.alarm</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">garage.alarm</span>
 </pre></div>
 </div>
 </div>
 <p>Jede Änderung bei den Items <strong>house.alarm</strong> oder <strong>garage.alarm</strong> löst die Ausführung der angegebenen Logik aus.
 Es ist möglich einen Stern * für einen Pfadbestandteil zu setzen, ähnlich eines regulären Ausdrucks:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">watch_item</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;*.door&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">watch_item</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;*.door&#39;</span>
 </pre></div>
 </div>
 <p>Eine Änderung von <strong>garage.door</strong> oder auch <strong>house.door</strong> wird die Ausführung der Logik auslösen aber <strong>nicht</strong>
@@ -3941,11 +3941,11 @@ eine Änderung von <strong>house.hallway.door</strong></p>
 <section id="cycle">
 <span id="logik-parameter-cycle"></span><h3>cycle<a class="headerlink" href="#cycle" title="Permalink to this heading"></a></h3>
 <p>Sorgt für eine zyklische Ausführung der Logik</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
 </pre></div>
 </div>
 <p>Optional kann ein Argument übergeben werden</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60 = 100</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60 = 100</span>
 </pre></div>
 </div>
 <p>Dadurch wird die Logik alle 60 Sekunden ausgeführt und der Wert 100 an die Logik übergeben.
@@ -3957,12 +3957,12 @@ Innerhalb der Logik kann auf den Wert über <code class="docutils literal notran
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">init</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Zeitpunkte</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">Zeitpunkte bezogen auf Aufgang von Sonne oder Mond</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>Das Item wird zum Start von SmarthomeNG aktualisiert und triggert
 dadurch unter Umständen eine zugewiesene Logik:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 </pre></div>
 </div>
 <p>Hier kann auch zusätzlich ein Offset angegeben werden um den
 tatsächlichen Zeitpunkt zu verschieben:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init+10</span><span class="w">    </span><span class="c1"># 10 Sekunden nach Start</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init+10</span><span class="w">    </span><span class="c1"># 10 Sekunden nach Start</span>
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>Das Item soll zu bestimmten Zeitpunkten aktualisiert werden.
@@ -3985,7 +3985,7 @@ Es gibt je nach Parameteranzahl 3 Varianten:</p>
 <p>Alle Parameter müssen durch ein Leerzeichen getrennt sein und innerhalb eines Parameters
 darf kein zusätzliches Leerzeichen vorhanden sein, sonst kann der Parametersatz nicht ausgewertet werden.</p>
 <p>Im folgenden Beispiel wird jeden Tag um 23:59 ein Trigger erzeugt und der Wert 70 gesetzt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">59 23 * * = 70</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">59 23 * * = 70</span>
 </pre></div>
 </div>
 <p>Für jede dieser Zeiteinheiten (Minuten, Stunde, Tag, Wochentag) werden
@@ -4013,30 +4013,30 @@ auf Sonne oder Mond berechnet werden:</p>
 Die Zusatzangaben müssen dann durch einen Leerschritt getrennt werden.
 Sofern Zusatzangaben vorhanden sind, werden sie UND verknüpft. Das folgende Beispiel würde einen Triggerzeitpunkt festlegen für den nächsten
 Sonnenuntergang der an einem 24. Dezember stattfindet und ein Sonntag ist. (das wäre am 24.Dezember 2023)</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunset 24 12 sun</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunset 24 12 sun</span>
 </pre></div>
 </div>
 <p>Das Item soll zu einem bestimmten Sonnenstand aktualisiert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunrise-10m</span><span class="w"></span>
-<span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunset+6</span><span class="w"></span>
-<span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunset</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunrise-10m</span>
+<span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunset+6</span>
+<span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunset</span>
 </pre></div>
 </div>
 </div></div>
 <p>Sämtliche Optionen können in einer *.yaml durch Listenbildung erstellt werden. Im Admin Interface können die einzelnen Parametersätze durch <code class="docutils literal notranslate"><span class="pre">|</span></code> getrennt werden.</p>
 <p>Durch Anhängen eines <code class="docutils literal notranslate"><span class="pre">=</span> <span class="pre">value</span></code> wird der entsprechende Wert <code class="docutils literal notranslate"><span class="pre">value</span></code> mitgesendet.
 Das Beispiel setzt den Wert des Items täglich um Mitternacht auf <code class="docutils literal notranslate"><span class="pre">20</span></code>:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0 0 * * = 20</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunrise</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0 0 * * = 20</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunrise</span>
 </pre></div>
 </div>
 <p>Möchte man einen Wert im Minutentakt aktualisieren, ist es notwendig den Ausdruck <code class="docutils literal notranslate"><span class="pre">*</span> <span class="pre">*</span> <span class="pre">*</span> <span class="pre">*</span></code> unter Anführungszeichen zu setzen.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">1&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">1&#39;</span>
 </pre></div>
 </div>
 <p>Folgendes Beispiel zeigt wie alle 15 Sekunden der Wert <code class="docutils literal notranslate"><span class="pre">42</span></code> gesendet wird:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;*/15</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">42&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;*/15</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">42&#39;</span>
 </pre></div>
 </div>
 </section>

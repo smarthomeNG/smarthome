@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>influxdata</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">influxdata</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3857,9 +3857,9 @@ InfluxData server in the cloud over VPN. This setup has some latency and the
 original plugin blocked my whole smarthome.py including logics not executed.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> smarthome.py directory
-<span class="nb">cd</span> plugins
-git clone https://github.com/rthill/influxdata.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>smarthome.py<span class="w"> </span>directory
+<span class="nb">cd</span><span class="w"> </span>plugins
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/rthill/influxdata.git
 </pre></div>
 </div>
 </section>
@@ -3893,12 +3893,12 @@ git clone https://github.com/rthill/influxdata.git
 </section>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">influxdata</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InfluxData</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.influxdata</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># influx_host = localhost</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># influx_port = 8089</span><span class="w"></span>
-<span class="w">    </span><span class="nt">influx_keyword</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">influx</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">influxdata</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InfluxData</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.influxdata</span>
+<span class="w">    </span><span class="c1"># influx_host = localhost</span>
+<span class="w">    </span><span class="c1"># influx_port = 8089</span>
+<span class="w">    </span><span class="nt">influx_keyword</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">influx</span>
 </pre></div>
 </div>
 </section>
@@ -3906,28 +3906,28 @@ git clone https://github.com/rthill/influxdata.git
 <h3>items.yaml<a class="headerlink" href="#items-yaml" title="Permalink to this heading"></a></h3>
 <p>The configuration flag influx_keyword has a special relevance. Here you can choose which keyword the plugin should look for.
 If you do not specify anything, the default keyword „influx“ will be used like in the following example of an EnOcean temperature and humidity sensor:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sensor</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sensor</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">gf</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">gf</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">kitchen</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enocean_rx_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234567</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enocean_rx_eep</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A5_04_01</span><span class="w"></span>
+<span class="w">        </span><span class="nt">kitchen</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enocean_rx_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234567</span>
+<span class="w">            </span><span class="nt">enocean_rx_eep</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A5_04_01</span>
 
-<span class="w">            </span><span class="nt">hum</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">influx</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">enocean_rx_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HUM</span><span class="w"></span>
+<span class="w">            </span><span class="nt">hum</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">influx</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">                </span><span class="nt">enocean_rx_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HUM</span>
 
-<span class="w">            </span><span class="nt">temp</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">influx</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">enocean_rx_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TMP</span><span class="w"></span>
+<span class="w">            </span><span class="nt">temp</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">influx</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">                </span><span class="nt">enocean_rx_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TMP</span>
 </pre></div>
 </div>
 <p>However, you can change this. Many people use the sqlite keyword to store data in a sqlite database.</p>
 <p>If you set in plugin.yaml</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">influx_keyword</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">influx_keyword</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite</span>
 </pre></div>
 </div>
 <p>you do not have to update anything in your item configuration files.

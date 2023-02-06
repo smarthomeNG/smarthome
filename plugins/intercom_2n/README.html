@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Intercom-2N Plugin</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Intercom-2N Plugin</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -4034,13 +4034,13 @@ The event listening feature should be working without any extra license.</p>
 <section id="plugin-setup">
 <h2>Plugin setup<a class="headerlink" href="#plugin-setup" title="Permalink to this heading"></a></h2>
 <p>Edit your <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> and add following lines:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">intercom_2n</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">intercom_2n</span><span class="w"></span>
-<span class="w">    </span><span class="nt">intercom_ip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.10</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ssl</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">auth_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
-<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_user</span><span class="w"></span>
-<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_pass</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">intercom_2n</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">intercom_2n</span>
+<span class="w">    </span><span class="nt">intercom_ip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.10</span>
+<span class="w">    </span><span class="nt">ssl</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
+<span class="w">    </span><span class="nt">auth_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_user</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_pass</span>
 </pre></div>
 </div>
 <p>Change <b>intercom_ip</b>, <b>ssl</b>, <b>auth_type</b>, <b>username</b> and <b>password</b> to your needs.</p>
@@ -4068,19 +4068,19 @@ call is always an 401 unauthorized error).</p>
 <p>The integrated event handling is working out of the box. You don’t have to care about event subscription and renewing of
 this subscription. If an 2N Intercom event occurs, the child items of an event will be set with the incoming value.</p>
 <p>Example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Intercom_2n</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Intercom_2n</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">Events</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Events</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">DeviceState</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># Signals the device state changes.</span><span class="w"></span>
-<span class="w">            </span><span class="nt">event_2n</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DeviceState</span><span class="w"></span>
+<span class="w">        </span><span class="nt">DeviceState</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># Signals the device state changes.</span>
+<span class="w">            </span><span class="nt">event_2n</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DeviceState</span>
 
-<span class="w">            </span><span class="nt">device_state</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Signalled device state:</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># startup – generated one-time after device start (always the first event ever)</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">event_data_2n</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">state</span><span class="w"></span>
+<span class="w">            </span><span class="nt">device_state</span><span class="p">:</span>
+<span class="w">                </span><span class="c1"># Signalled device state:</span>
+<span class="w">                </span><span class="c1"># startup – generated one-time after device start (always the first event ever)</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">event_data_2n</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">state</span>
 </pre></div>
 </div>
 <p>If the 2N device state was changed (for example an reboot), the item <code class="docutils literal notranslate"><span class="pre">Intercom_2n.Events.DeviceState.device_state</span></code> will be
@@ -4176,19 +4176,19 @@ An event can have more than one sub-item, all of them will be set to the appropr
 the command defined in the parent item (attribute <code class="docutils literal notranslate"><span class="pre">command_2n</span></code>) will be executed. The result value will be stored as
 the value of the parent item.</p>
 <p>Example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Intercom_2n</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Intercom_2n</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">Commands</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Commands</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">switch_caps</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">command_2n</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switch_caps</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">switch_caps</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">command_2n</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switch_caps</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
 
-<span class="w">            </span><span class="nt">execute</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">command_2n</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">execute</span><span class="w"></span>
-<span class="w">                </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
+<span class="w">            </span><span class="nt">execute</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">command_2n</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">execute</span>
+<span class="w">                </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
 </pre></div>
 </div>
 <p>If you set the item <code class="docutils literal notranslate"><span class="pre">Intercom_2n.Commands.system_info.execute</span> <span class="pre">=</span> <span class="pre">1</span></code>, the item value of <code class="docutils literal notranslate"><span class="pre">Intercom_2n.Commands.system_info</span></code>

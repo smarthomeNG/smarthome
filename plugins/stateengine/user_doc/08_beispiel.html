@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-          <li><a href="../user_doc.html">stateengine</a> &raquo;</li>
-      <li>Beispiel</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_doc/plugins_system.html">System Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../user_doc.html">stateengine</a></li>
+      <li class="breadcrumb-item active">Beispiel</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3875,48 +3875,48 @@ als dass anschließend das Alter der entsprechenden Mindesthelligkeit
 abgefragt werden kann. Eine Jalousie soll also beispielsweise erst
 dann schließen, wenn die Sonne min. X Minuten heraußen ist. Und erst
 wieder öffnen, wenn die Sonne länger als Y Minuten verdeckt ist.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">beispiel</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">steckdosen</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">beispiel</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">steckdosen</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
 
-<span class="w">        </span><span class="nt">licht</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
+<span class="w">        </span><span class="nt">licht</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
 
-<span class="w">        </span><span class="nt">wetterstation</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">helligkeit</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Helligkeit</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50000</span><span class="w"> </span><span class="c1">#nur für Demozwecke</span><span class="w"></span>
+<span class="w">        </span><span class="nt">wetterstation</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">helligkeit</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Helligkeit</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50000</span><span class="w"> </span><span class="c1">#nur für Demozwecke</span>
 
-<span class="w">                </span><span class="nt">gt43k</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Helligkeit größer als 43 kLux</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.beispiel.wetterstation.helligkeit() &gt; 43000</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span><span class="w"></span>
+<span class="w">                </span><span class="nt">gt43k</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Helligkeit größer als 43 kLux</span>
+<span class="w">                    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.beispiel.wetterstation.helligkeit() &gt; 43000</span>
+<span class="w">                    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span>
 
-<span class="w">                </span><span class="nt">gt35k</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Helligkeit größer als 35 kLux</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.beispiel.wetterstation.helligkeit() &gt; 35000</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span><span class="w"></span>
+<span class="w">                </span><span class="nt">gt35k</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Helligkeit größer als 35 kLux</span>
+<span class="w">                    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.beispiel.wetterstation.helligkeit() &gt; 35000</span>
+<span class="w">                    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span>
 
-<span class="w">                </span><span class="nt">gt25k</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Helligkeit größer als 25 kLux</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.beispiel.wetterstation.helligkeit() &gt; 25000</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span><span class="w"></span>
+<span class="w">                </span><span class="nt">gt25k</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Helligkeit größer als 25 kLux</span>
+<span class="w">                    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.beispiel.wetterstation.helligkeit() &gt; 25000</span>
+<span class="w">                    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span>
 
-<span class="w">                </span><span class="nt">gt20k</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Helligkeit größer als 20 kLux</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.beispiel.wetterstation.helligkeit() &gt; 20000</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span><span class="w"></span>
+<span class="w">                </span><span class="nt">gt20k</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Helligkeit größer als 20 kLux</span>
+<span class="w">                    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.beispiel.wetterstation.helligkeit() &gt; 20000</span>
+<span class="w">                    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span>
 
-<span class="w">            </span><span class="nt">temperatur</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Temperatur</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24</span><span class="w"> </span><span class="c1">#nur für Demozwecke</span><span class="w"></span>
+<span class="w">            </span><span class="nt">temperatur</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Temperatur</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24</span><span class="w"> </span><span class="c1">#nur für Demozwecke</span>
 </pre></div>
 </div>
 </section>
@@ -3925,14 +3925,14 @@ wieder öffnen, wenn die Sonne länger als Y Minuten verdeckt ist.</p>
 <p>Da wir mehrere Raffstores automatisieren wollen und alle
 Raffstores gleichzeitig fahren sollen, brauchen wir einen externen
 Trigger, auf den dann alle Automatiken hören:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">beispiel</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">raffstore</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gemeinsamer Trigger für alle Raffstores</span><span class="w"></span>
-<span class="w">                </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"> </span><span class="c1">#Wichtig!</span><span class="w"></span>
-<span class="w">                </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60 = 1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">beispiel</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">trigger</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">raffstore</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gemeinsamer Trigger für alle Raffstores</span>
+<span class="w">                </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"> </span><span class="c1">#Wichtig!</span>
+<span class="w">                </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60 = 1</span>
 </pre></div>
 </div>
 <p>In diesem Fall wird die Zustandsermittlung jede Minute ausgelöst.</p>
@@ -3949,164 +3949,164 @@ verwenden, oft sehr simpel aufgebaut werden können.</p>
 können auch einfach pro Automat Einstellungen wie z.B. die Dauer, welche die
 Helligkeit den Schwellwert überschritten haben muss, über ein Item (settings.mindestdauer_helligkeit)
 definiert und jederzeit abgeändert werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#etc/struct.yaml</span><span class="w"></span>
-<span class="nt">stateengine_default_raffstore</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">settings</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mindestdauer_helligkeit</span><span class="p">:</span><span class="w"></span>
-<span class="w">           </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">           </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">           </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w"> </span><span class="c1">#nur für Demozwecke</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#etc/struct.yaml</span>
+<span class="nt">stateengine_default_raffstore</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">settings</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">mindestdauer_helligkeit</span><span class="p">:</span>
+<span class="w">           </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">           </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">           </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w"> </span><span class="c1">#nur für Demozwecke</span>
 
-<span class="w">        </span><span class="nt">himmelsrichtung</span><span class="p">:</span><span class="w"></span>
-<span class="w">           </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">           </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">           </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">           </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span><span class="w"></span>
-<span class="w">             </span><span class="no">&quot;osten&quot; if (&quot;osten&quot; in sh..self.property.path) else</span><span class="w"></span>
-<span class="w">             </span><span class="no">&quot;sueden&quot; if (&quot;sueden&quot; in sh..self.property.path) else</span><span class="w"></span>
-<span class="w">             </span><span class="no">&quot;westen&quot; if (&quot;westen&quot; in sh..self.property.path) else &quot;unknown&quot;</span><span class="w"></span>
-<span class="w">           </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">           </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init = &quot;unklar&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">himmelsrichtung</span><span class="p">:</span>
+<span class="w">           </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">           </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">           </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">           </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">             </span><span class="no">&quot;osten&quot; if (&quot;osten&quot; in sh..self.property.path) else</span>
+<span class="w">             </span><span class="no">&quot;sueden&quot; if (&quot;sueden&quot; in sh..self.property.path) else</span>
+<span class="w">             </span><span class="no">&quot;westen&quot; if (&quot;westen&quot; in sh..self.property.path) else &quot;unknown&quot;</span>
+<span class="w">           </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">           </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init = &quot;unklar&quot;</span>
 
-<span class="w">    </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Item für Helligkeit außen</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_item_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Item für Temperatur außen</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_item_temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.temperatur</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Item das anzeigt, ob die Helligkeit außen mehr als 25kLux beträgt</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_item_brightnessGt25k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit.gt25k</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Item das anzeigt, ob die Helligkeit außen mehr als 43kLux beträgt</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_item_brightnessGt43k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit.gt43k</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Item für Behanghöhe</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_item_hoehe</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...hoehe</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Keine Änderung der Behanghöhe wenn Abweichung kleiner 10</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_mindelta_hoehe</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Item für Lamellenwinkel</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_item_lamelle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...lamelle</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Keine Änderung des Lamellenwinkels wenn Abweichung kleiner 5</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_mindelta_lamelle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Keine Änderung des Lamellenwinkels wenn Abweichung kleiner 5</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_item_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..settings.himmelsrichtung</span><span class="w"></span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># Item für Helligkeit außen</span>
+<span class="w">        </span><span class="nt">se_item_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit</span>
+<span class="w">        </span><span class="c1"># Item für Temperatur außen</span>
+<span class="w">        </span><span class="nt">se_item_temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.temperatur</span>
+<span class="w">        </span><span class="c1"># Item das anzeigt, ob die Helligkeit außen mehr als 25kLux beträgt</span>
+<span class="w">        </span><span class="nt">se_item_brightnessGt25k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit.gt25k</span>
+<span class="w">        </span><span class="c1"># Item das anzeigt, ob die Helligkeit außen mehr als 43kLux beträgt</span>
+<span class="w">        </span><span class="nt">se_item_brightnessGt43k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit.gt43k</span>
+<span class="w">        </span><span class="c1"># Item für Behanghöhe</span>
+<span class="w">        </span><span class="nt">se_item_hoehe</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...hoehe</span>
+<span class="w">        </span><span class="c1"># Keine Änderung der Behanghöhe wenn Abweichung kleiner 10</span>
+<span class="w">        </span><span class="nt">se_mindelta_hoehe</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">        </span><span class="c1"># Item für Lamellenwinkel</span>
+<span class="w">        </span><span class="nt">se_item_lamelle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...lamelle</span>
+<span class="w">        </span><span class="c1"># Keine Änderung des Lamellenwinkels wenn Abweichung kleiner 5</span>
+<span class="w">        </span><span class="nt">se_mindelta_lamelle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">        </span><span class="c1"># Keine Änderung des Lamellenwinkels wenn Abweichung kleiner 5</span>
+<span class="w">        </span><span class="nt">se_item_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..settings.himmelsrichtung</span>
 
-<span class="w">        </span><span class="c1"># Zustand &quot;Nachführen der Lamellen zum Sonnenstand bei großer Helligkeit&quot;, Gebäudeseite 1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">Nachfuehren_Osten</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sonnenschutz</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># Aktionen:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># - Behang ganz herunterfahren</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_action_hoehe</span><span class="p">:</span><span class="w"></span>
-<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">100&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># - Lamellen zur Sonne ausrichten</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_action_lamelle</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">eval:se_eval.sun_tracking()&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># Zustand &quot;Nachführen der Lamellen zum Sonnenstand bei großer Helligkeit&quot;, Gebäudeseite 1</span>
+<span class="w">        </span><span class="nt">Nachfuehren_Osten</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sonnenschutz</span>
+<span class="w">            </span><span class="c1"># Aktionen:</span>
+<span class="w">            </span><span class="c1"># - Behang ganz herunterfahren</span>
+<span class="w">            </span><span class="nt">se_action_hoehe</span><span class="p">:</span>
+<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">100&#39;</span>
+<span class="w">            </span><span class="c1"># - Lamellen zur Sonne ausrichten</span>
+<span class="w">            </span><span class="nt">se_action_lamelle</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">eval:se_eval.sun_tracking()&#39;</span>
 
-<span class="w">            </span><span class="c1"># Einstieg in &quot;Sonnenschutz&quot;: Wenn</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># - das Flag &quot;Helligkeit &gt; 43kLux&quot; seit mindestens 30 Sekunden gesetzt ist</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_brightnessGt43k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_agemin_brightnessGt43k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">item:..settings.mindestdauer_helligkeit</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># - die Sonnenhöhe mindestens 1° ist</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_min_sun_altitude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># - die Sonne aus Richtung 90° bis 270° kommt</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">270</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># - es draußen mindestens 22° hat</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_min_temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># - das Fenster gen Osten gerichtet ist.</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;osten&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="c1"># Einstieg in &quot;Sonnenschutz&quot;: Wenn</span>
+<span class="w">            </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">                </span><span class="c1"># - das Flag &quot;Helligkeit &gt; 43kLux&quot; seit mindestens 30 Sekunden gesetzt ist</span>
+<span class="w">                </span><span class="nt">se_value_brightnessGt43k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">se_agemin_brightnessGt43k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">item:..settings.mindestdauer_helligkeit</span>
+<span class="w">                </span><span class="c1"># - die Sonnenhöhe mindestens 1° ist</span>
+<span class="w">                </span><span class="nt">se_min_sun_altitude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">                </span><span class="c1"># - die Sonne aus Richtung 90° bis 270° kommt</span>
+<span class="w">                </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+<span class="w">                </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">270</span>
+<span class="w">                </span><span class="c1"># - es draußen mindestens 22° hat</span>
+<span class="w">                </span><span class="nt">se_min_temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span>
+<span class="w">                </span><span class="c1"># - das Fenster gen Osten gerichtet ist.</span>
+<span class="w">                </span><span class="nt">se_value_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;osten&quot;</span>
 
-<span class="w">            </span><span class="c1"># Hysterese für Helligkeit: Wenn</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enter_hysterese</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># ... wir bereits in &quot;Sonnenschutz&quot; sind</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># .... das Flag &quot;Helligkeit &gt; 25kLux&quot; gesetzt ist</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_brightnessGt25k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_min_sun_altitude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">270</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;osten&quot;</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Anmerkung: Hier keine erneute Prüfung der Temperatur, damit Temperaturschwankungen nicht</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># zum Auf-/Abfahren der Raffstores führen</span><span class="w"></span>
+<span class="w">            </span><span class="c1"># Hysterese für Helligkeit: Wenn</span>
+<span class="w">            </span><span class="nt">enter_hysterese</span><span class="p">:</span>
+<span class="w">                </span><span class="c1"># ... wir bereits in &quot;Sonnenschutz&quot; sind</span>
+<span class="w">                </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span>
+<span class="w">                </span><span class="c1"># .... das Flag &quot;Helligkeit &gt; 25kLux&quot; gesetzt ist</span>
+<span class="w">                </span><span class="nt">se_value_brightnessGt25k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">se_min_sun_altitude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">                </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+<span class="w">                </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">270</span>
+<span class="w">                </span><span class="nt">se_value_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;osten&quot;</span>
+<span class="w">                </span><span class="c1"># Anmerkung: Hier keine erneute Prüfung der Temperatur, damit Temperaturschwankungen nicht</span>
+<span class="w">                </span><span class="c1"># zum Auf-/Abfahren der Raffstores führen</span>
 
-<span class="w">            </span><span class="c1"># Verzögerter Ausstieg nach Unterschreitung der Mindesthelligkeit: Wenn</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enter_delay</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># ... wir bereits in &quot;Sonnenschutz&quot; sind</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># .... das Flag &quot;Helligkeit &gt; 25kLux&quot; nicht (!) gesetzt ist, aber diese Änderung nicht mehr als 1 Minute her ist</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_brightnessGt25k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_agemax_brightnessGt25k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_min_sun_altitude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">270</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;osten&quot;</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Anmerkung: Auch hier keine erneute Prüfung der Temperatur, damit Temperaturschwankungen nicht</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># zum Auf-/Abfahren der Raffstores führen</span><span class="w"></span>
+<span class="w">            </span><span class="c1"># Verzögerter Ausstieg nach Unterschreitung der Mindesthelligkeit: Wenn</span>
+<span class="w">            </span><span class="nt">enter_delay</span><span class="p">:</span>
+<span class="w">                </span><span class="c1"># ... wir bereits in &quot;Sonnenschutz&quot; sind</span>
+<span class="w">                </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span>
+<span class="w">                </span><span class="c1"># .... das Flag &quot;Helligkeit &gt; 25kLux&quot; nicht (!) gesetzt ist, aber diese Änderung nicht mehr als 1 Minute her ist</span>
+<span class="w">                </span><span class="nt">se_value_brightnessGt25k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">                </span><span class="nt">se_agemax_brightnessGt25k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">                </span><span class="nt">se_min_sun_altitude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">                </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+<span class="w">                </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">270</span>
+<span class="w">                </span><span class="nt">se_value_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;osten&quot;</span>
+<span class="w">                </span><span class="c1"># Anmerkung: Auch hier keine erneute Prüfung der Temperatur, damit Temperaturschwankungen nicht</span>
+<span class="w">                </span><span class="c1"># zum Auf-/Abfahren der Raffstores führen</span>
 
-<span class="w">        </span><span class="c1"># Zustand &quot;Nachführen der Lamellen zum Sonnenstand bei großer Helligkeit&quot;, Gebäudeseite 2</span><span class="w"></span>
-<span class="w">        </span><span class="nt">Nachfuehren_Sueden</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># Einstellungen des Vorgabezustands &quot;Nachfuehren_Osten&quot; übernehmen</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># Hier sollte eine relative Addressierung vorgenommen werden.</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># Achtung: das Item wird relativ zum SE Item = rules gesucht!</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.Nachfuehren_Osten</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># Zustand &quot;Nachführen der Lamellen zum Sonnenstand bei großer Helligkeit&quot;, Gebäudeseite 2</span>
+<span class="w">        </span><span class="nt">Nachfuehren_Sueden</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># Einstellungen des Vorgabezustands &quot;Nachfuehren_Osten&quot; übernehmen</span>
+<span class="w">            </span><span class="c1"># Hier sollte eine relative Addressierung vorgenommen werden.</span>
+<span class="w">            </span><span class="c1"># Achtung: das Item wird relativ zum SE Item = rules gesucht!</span>
+<span class="w">            </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.Nachfuehren_Osten</span>
 
-<span class="w">            </span><span class="c1"># Sonnenwinkel in den Bedingungsgruppen anpassen</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># ... die Sonne aus Richtung 220° bis 340° kommt</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sueden&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="c1"># Sonnenwinkel in den Bedingungsgruppen anpassen</span>
+<span class="w">            </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">                </span><span class="c1"># ... die Sonne aus Richtung 220° bis 340° kommt</span>
+<span class="w">                </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span>
+<span class="w">                </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250</span>
+<span class="w">                </span><span class="nt">se_value_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sueden&quot;</span>
 
-<span class="w">            </span><span class="nt">enter_hysterese</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># ... die Sonne aus Richtung 220° bis 340° kommt</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sueden&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="nt">enter_hysterese</span><span class="p">:</span>
+<span class="w">                </span><span class="c1"># ... die Sonne aus Richtung 220° bis 340° kommt</span>
+<span class="w">                </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span>
+<span class="w">                </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250</span>
+<span class="w">                </span><span class="nt">se_value_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sueden&quot;</span>
 
-<span class="w">            </span><span class="nt">enter_delay</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># ... die Sonne aus Richtung 220° bis 340° kommt</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_value_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sueden&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="nt">enter_delay</span><span class="p">:</span>
+<span class="w">                </span><span class="c1"># ... die Sonne aus Richtung 220° bis 340° kommt</span>
+<span class="w">                </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span>
+<span class="w">                </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250</span>
+<span class="w">                </span><span class="nt">se_value_himmelsrichtung</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sueden&quot;</span>
 
-<span class="w">        </span><span class="c1"># Zustand &quot;Nacht&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">Nacht</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Nacht</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># Aktionen:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># - Behang ganz herunterfahren</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_action_hoehe</span><span class="p">:</span><span class="w"></span>
-<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">100&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># - Lamellen ganz schließen</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_action_lamelle</span><span class="p">:</span><span class="w"></span>
-<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">0&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># Zustand &quot;Nacht&quot;</span>
+<span class="w">        </span><span class="nt">Nacht</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Nacht</span>
+<span class="w">            </span><span class="c1"># Aktionen:</span>
+<span class="w">            </span><span class="c1"># - Behang ganz herunterfahren</span>
+<span class="w">            </span><span class="nt">se_action_hoehe</span><span class="p">:</span>
+<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">100&#39;</span>
+<span class="w">            </span><span class="c1"># - Lamellen ganz schließen</span>
+<span class="w">            </span><span class="nt">se_action_lamelle</span><span class="p">:</span>
+<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">0&#39;</span>
 
-<span class="w">            </span><span class="c1"># Einstieg in &quot;Nacht&quot;: Wenn</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># - es zwischen 16:00 und 08:00 Uhr ist</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_min_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;08:00&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_max_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;16:00&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_negate_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># - die Helligkeit höchstens 90 Lux beträgt</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_max_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span><span class="w"></span>
+<span class="w">            </span><span class="c1"># Einstieg in &quot;Nacht&quot;: Wenn</span>
+<span class="w">            </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">                </span><span class="c1"># - es zwischen 16:00 und 08:00 Uhr ist</span>
+<span class="w">                </span><span class="nt">se_min_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;08:00&#39;</span>
+<span class="w">                </span><span class="nt">se_max_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;16:00&#39;</span>
+<span class="w">                </span><span class="nt">se_negate_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">                </span><span class="c1"># - die Helligkeit höchstens 90 Lux beträgt</span>
+<span class="w">                </span><span class="nt">se_max_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
 
-<span class="w">        </span><span class="c1"># Zustand &quot;Tag&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">Tag</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tag (statisch)</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># Aktionen:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># - Behang ganz hochfahren</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_action_hoehe</span><span class="p">:</span><span class="w"></span>
-<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">0&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># Zustand &quot;Tag&quot;</span>
+<span class="w">        </span><span class="nt">Tag</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tag (statisch)</span>
+<span class="w">            </span><span class="c1"># Aktionen:</span>
+<span class="w">            </span><span class="c1"># - Behang ganz hochfahren</span>
+<span class="w">            </span><span class="nt">se_action_hoehe</span><span class="p">:</span>
+<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">0&#39;</span>
 
-<span class="w">            </span><span class="c1"># Einstieg in &quot;Tag&quot;: Wenn</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># - es zwischen 06:30 und 21:30 Uhr ist</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_min_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;03:30&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_max_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;23:30&#39;</span><span class="w"></span>
+<span class="w">            </span><span class="c1"># Einstieg in &quot;Tag&quot;: Wenn</span>
+<span class="w">            </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">                </span><span class="c1"># - es zwischen 06:30 und 21:30 Uhr ist</span>
+<span class="w">                </span><span class="nt">se_min_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;03:30&#39;</span>
+<span class="w">                </span><span class="nt">se_max_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;23:30&#39;</span>
 </pre></div>
 </div>
 </section>
@@ -4115,28 +4115,28 @@ definiert und jederzeit abgeändert werden.</p>
 <p>Jetzt wollen wir den ersten Raffstore automatisieren. Einige Items
 dazu haben wir sowieso schon, da der Raffstore über diese Items
 gesteuert wird.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">beispiel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raffstore Beispiel 1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">beispiel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raffstore Beispiel 1</span>
 
-<span class="w">        </span><span class="nt">aufab</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raffstore auf/ab fahren</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span><span class="w"></span>
+<span class="w">        </span><span class="nt">aufab</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raffstore auf/ab fahren</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span>
 
-<span class="w">        </span><span class="nt">step</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raffstore Schritt fahren/stoppen</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span><span class="w"></span>
+<span class="w">        </span><span class="nt">step</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raffstore Schritt fahren/stoppen</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span>
 
-<span class="w">        </span><span class="nt">hoehe</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Behanghöhe des Raffstores</span><span class="w"></span>
+<span class="w">        </span><span class="nt">hoehe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Behanghöhe des Raffstores</span>
 
-<span class="w">        </span><span class="nt">lamelle</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lamellenwinkel des Raffstores</span><span class="w"></span>
+<span class="w">        </span><span class="nt">lamelle</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lamellenwinkel des Raffstores</span>
 </pre></div>
 </div>
 <p>Jetzt kommen noch die Items zur Automatisierung und schließlich
@@ -4145,55 +4145,55 @@ der <a class="reference internal" href="09_vorlagen.html#zustand-templates"><spa
 Vorlage. Beim <code class="docutils literal notranslate"><span class="pre">manuell</span></code> Item müssen Eval-Trigger und manual_exclude den
 eigenen Umständen entsprechen angepasst werden. Die <code class="docutils literal notranslate"><span class="pre">eval_trigger</span></code> des
 Regelwerk-Items „rules“ sollen ebenfalls je nach Bedarf ergänzt werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">beispiel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_lock</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_suspend</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">beispiel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_lock</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_suspend</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore</span>
 
-<span class="w">            </span><span class="nt">manuell</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Weitere Attribute werden bereits über das Template stateengine.state_suspend geladen</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.aufab</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.step</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.hoehe</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.lamelle</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Seit SmarthomeNG werden die Listen se_manual_exclude vom plugin struct und diesem struct</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># automatisch miteinander kombiniert. Davor wären hier noch init:* und database:* erneut anzugeben.</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_manual_exclude</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;KNX:0.0.0&#39;</span><span class="w"> </span><span class="c1"># Hier die physikalische Adresse des Schalt/Jalousieaktors angeben!</span><span class="w"></span>
+<span class="w">            </span><span class="nt">manuell</span><span class="p">:</span>
+<span class="w">                </span><span class="c1"># Weitere Attribute werden bereits über das Template stateengine.state_suspend geladen</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.aufab</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.step</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.hoehe</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.lamelle</span>
+<span class="w">                </span><span class="c1"># Seit SmarthomeNG werden die Listen se_manual_exclude vom plugin struct und diesem struct</span>
+<span class="w">                </span><span class="c1"># automatisch miteinander kombiniert. Davor wären hier noch init:* und database:* erneut anzugeben.</span>
+<span class="w">                </span><span class="nt">se_manual_exclude</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;KNX:0.0.0&#39;</span><span class="w"> </span><span class="c1"># Hier die physikalische Adresse des Schalt/Jalousieaktors angeben!</span>
 
-<span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Relevante Standard-Attribute werden durch den Import der Templates automatisch eingebunden.</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Item-Referenzen mittels se_item werden durch das oben eigens angelegte Template eingebunden.</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Erste Zustandsermittlung nach 30 Sekunden</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_startup_delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Über diese Items soll die Statusermittlung ausgelöst werden</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.trigger.raffstore</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.automatik.anwesenheit</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.automatik.manuell</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.automatik.lock</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.automatik.suspend</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.*</span><span class="w"></span>
+<span class="w">            </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">                </span><span class="c1"># Relevante Standard-Attribute werden durch den Import der Templates automatisch eingebunden.</span>
+<span class="w">                </span><span class="c1"># Item-Referenzen mittels se_item werden durch das oben eigens angelegte Template eingebunden.</span>
+<span class="w">                </span><span class="c1"># Erste Zustandsermittlung nach 30 Sekunden</span>
+<span class="w">                </span><span class="nt">se_startup_delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">                </span><span class="c1"># Über diese Items soll die Statusermittlung ausgelöst werden</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.trigger.raffstore</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.automatik.anwesenheit</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.automatik.manuell</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.automatik.lock</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.automatik.suspend</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.*</span>
 
-<span class="w">                </span><span class="c1"># Als letzter Zustandseintrag sollte ein bedingungsloser Standardzustand deklariert werden.</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Dieser könnte natürlich auch im Template definiert sein, hier soll aber veranschaulicht werden,</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Dass Vorlagen auch durch eigene Zustände ergänzt werden können.</span><span class="w"></span>
-<span class="w">                </span><span class="nt">Default</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tag</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">on_enter_or_stay</span><span class="p">:</span><span class="w"></span>
-<span class="w">                      </span><span class="c1"># Setzen der Höhe auf 0.</span><span class="w"></span>
-<span class="w">                      </span><span class="nt">se_action_hoehe</span><span class="p">:</span><span class="w"></span>
-<span class="w">                       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">0&#39;</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">                       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">                       </span><span class="c1"># Dieser Eintrag bleibt leer, damit der Zustand ohne Bedingung aktiviert werden kann.</span><span class="w"></span>
+<span class="w">                </span><span class="c1"># Als letzter Zustandseintrag sollte ein bedingungsloser Standardzustand deklariert werden.</span>
+<span class="w">                </span><span class="c1"># Dieser könnte natürlich auch im Template definiert sein, hier soll aber veranschaulicht werden,</span>
+<span class="w">                </span><span class="c1"># Dass Vorlagen auch durch eigene Zustände ergänzt werden können.</span>
+<span class="w">                </span><span class="nt">Default</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tag</span>
+<span class="w">                    </span><span class="nt">on_enter_or_stay</span><span class="p">:</span>
+<span class="w">                      </span><span class="c1"># Setzen der Höhe auf 0.</span>
+<span class="w">                      </span><span class="nt">se_action_hoehe</span><span class="p">:</span>
+<span class="w">                       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">0&#39;</span>
+<span class="w">                    </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">                       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">                       </span><span class="c1"># Dieser Eintrag bleibt leer, damit der Zustand ohne Bedingung aktiviert werden kann.</span>
 </pre></div>
 </div>
 </section>
@@ -4267,204 +4267,204 @@ Es wird empfohlen, das Logfile unter <code class="docutils literal notranslate">
 nicht nur die Vorgabewerte übernommen, hier werden komplett neue
 Bedingungsgruppen definiert, sowie vorhandene Bedingungsgruppen
 abgeändert. Natürlich könnte man hier auch alternativ auf Template-Imports via struct zurück greifen.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">beispiel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">raffstore2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raffstore Beispiel 2</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">beispiel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">raffstore2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raffstore Beispiel 2</span>
 
-<span class="w">        </span><span class="nt">aufab</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raffstore auf/ab fahren</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span><span class="w"></span>
+<span class="w">        </span><span class="nt">aufab</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raffstore auf/ab fahren</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span>
 
-<span class="w">        </span><span class="nt">step</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raffstore Schritt fahren/stoppen</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span><span class="w"></span>
+<span class="w">        </span><span class="nt">step</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raffstore Schritt fahren/stoppen</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span>
 
-<span class="w">        </span><span class="nt">hoehe</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Behanghöhe des Raffstores</span><span class="w"></span>
+<span class="w">        </span><span class="nt">hoehe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Behanghöhe des Raffstores</span>
 
-<span class="w">        </span><span class="nt">lamelle</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lamellenwinkel des Raffstores</span><span class="w"></span>
+<span class="w">        </span><span class="nt">lamelle</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lamellenwinkel des Raffstores</span>
 
-<span class="w">        </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">lock</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sperr-Item</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span><span class="w"></span>
+<span class="w">        </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">lock</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sperr-Item</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span>
 
-<span class="w">            </span><span class="nt">suspend</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Suspend-Item</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Achtung: Beim &quot;Suspend&quot;-Item niemals &quot;enforce_updates = yes&quot; setzen! Das führt dazu dass das Setzen des</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Suspend-Items bei der Initialisierung zu einem endlosen sofortigen Wiederaufruf der Statusermittlung führt!</span><span class="w"></span>
+<span class="w">            </span><span class="nt">suspend</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Suspend-Item</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">                </span><span class="c1"># Achtung: Beim &quot;Suspend&quot;-Item niemals &quot;enforce_updates = yes&quot; setzen! Das führt dazu dass das Setzen des</span>
+<span class="w">                </span><span class="c1"># Suspend-Items bei der Initialisierung zu einem endlosen sofortigen Wiederaufruf der Statusermittlung führt!</span>
 
-<span class="w">            </span><span class="nt">state_id</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Id des aktuellen Zustands</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span><span class="w"></span>
-<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span><span class="w"></span>
+<span class="w">            </span><span class="nt">state_id</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Id des aktuellen Zustands</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span>
+<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span>
 
-<span class="w">            </span><span class="nt">state_name</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name des aktuellen Zustands</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span><span class="w"></span>
-<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span><span class="w"></span>
+<span class="w">            </span><span class="nt">state_name</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name des aktuellen Zustands</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span>
+<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span>
 
-<span class="w">            </span><span class="nt">manuell</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Manuelle Bedienung</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Änderungen dieser Items sollen als manuelle Bedienung gewertet werden</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.aufab</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.step</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.hoehe</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.lamelle</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Änderungen, die ursprünglich von diesen Triggern (&lt;caller&gt;:&lt;source&gt;) ausgelöst wurden, sollen nicht als manuelle Bedienung gewertet werden</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_manual_exclude</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KNX:*:ga=1/2/3</span><span class="w"> </span><span class="c1"># Hier die Gruppenadresse angeben</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Init:*</span><span class="w"></span>
+<span class="w">            </span><span class="nt">manuell</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Manuelle Bedienung</span>
+<span class="w">                </span><span class="c1"># Änderungen dieser Items sollen als manuelle Bedienung gewertet werden</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.aufab</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.step</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.hoehe</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.lamelle</span>
+<span class="w">                </span><span class="c1"># Änderungen, die ursprünglich von diesen Triggern (&lt;caller&gt;:&lt;source&gt;) ausgelöst wurden, sollen nicht als manuelle Bedienung gewertet werden</span>
+<span class="w">                </span><span class="nt">se_manual_exclude</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KNX:*:ga=1/2/3</span><span class="w"> </span><span class="c1"># Hier die Gruppenadresse angeben</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Init:*</span>
 
-<span class="w">            </span><span class="nt">anwesenheit</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Anwesenheit im Raum</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.steckdosen</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.licht</span><span class="w"></span>
+<span class="w">            </span><span class="nt">anwesenheit</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Anwesenheit im Raum</span>
+<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.steckdosen</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.licht</span>
 
-<span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Automatik Raffstore 2</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">active</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Erste Zustandsermittlung nach 30 Sekunden</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_startup_delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Über diese Items soll die Statusermittlung ausgelöst werden</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.trigger.raffstore</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.automatik.anwesenheit</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.automatik.manuell</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.automatik.lock</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.automatik.suspend</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># In dieses Item soll die Id des aktuellen Zustands geschrieben werden</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_laststate_item_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..state_id</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># In dieses Item soll der Name des aktuellen Zustands geschrieben werden</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_laststate_item_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..state_name</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Dieses Item zeigt die Anwesenheit im Raum</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_item_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..anwesenheit</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Item das anzeigt, ob die Helligkeit außen mehr als 35kLux beträgt</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_item_brightnessGt35k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit.gt35k</span><span class="w"></span>
-<span class="w">                </span><span class="c1"># Item das anzeigt, ob die Helligkeit außen mehr als 20Lux beträgt</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_item_brightnessGt20k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit.gt20k</span><span class="w"></span>
+<span class="w">            </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Automatik Raffstore 2</span>
+<span class="w">                </span><span class="nt">se_plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">active</span>
+<span class="w">                </span><span class="c1"># Erste Zustandsermittlung nach 30 Sekunden</span>
+<span class="w">                </span><span class="nt">se_startup_delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">                </span><span class="c1"># Über diese Items soll die Statusermittlung ausgelöst werden</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.trigger.raffstore</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.automatik.anwesenheit</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.automatik.manuell</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.automatik.lock</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore2.automatik.suspend</span>
+<span class="w">                </span><span class="c1"># In dieses Item soll die Id des aktuellen Zustands geschrieben werden</span>
+<span class="w">                </span><span class="nt">se_laststate_item_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..state_id</span>
+<span class="w">                </span><span class="c1"># In dieses Item soll der Name des aktuellen Zustands geschrieben werden</span>
+<span class="w">                </span><span class="nt">se_laststate_item_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..state_name</span>
+<span class="w">                </span><span class="c1"># Dieses Item zeigt die Anwesenheit im Raum</span>
+<span class="w">                </span><span class="nt">se_item_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..anwesenheit</span>
+<span class="w">                </span><span class="c1"># Item das anzeigt, ob die Helligkeit außen mehr als 35kLux beträgt</span>
+<span class="w">                </span><span class="nt">se_item_brightnessGt35k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit.gt35k</span>
+<span class="w">                </span><span class="c1"># Item das anzeigt, ob die Helligkeit außen mehr als 20Lux beträgt</span>
+<span class="w">                </span><span class="nt">se_item_brightnessGt20k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.wetterstation.helligkeit.gt20k</span>
 
-<span class="w">                </span><span class="nt">Lock</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="c1"># Zustand &quot;Lock&quot;: Nur die Vorgabeeinstellungen übernehmen. Diese müssten laut Vorlage unter Advanced angelegt werden!</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore.rules.Lock</span><span class="w"></span>
+<span class="w">                </span><span class="nt">Lock</span><span class="p">:</span>
+<span class="w">                    </span><span class="c1"># Zustand &quot;Lock&quot;: Nur die Vorgabeeinstellungen übernehmen. Diese müssten laut Vorlage unter Advanced angelegt werden!</span>
+<span class="w">                    </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore.rules.Lock</span>
 
-<span class="w">                </span><span class="nt">Suspend</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="c1"># Zustand &quot;Suspend&quot;: Nur die Vorgabeeinstellungen übernehmen. Diese müssten laut Vorlage unter Advanced angelegt werden!</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore.rules.Suspend</span><span class="w"></span>
+<span class="w">                </span><span class="nt">Suspend</span><span class="p">:</span>
+<span class="w">                    </span><span class="c1"># Zustand &quot;Suspend&quot;: Nur die Vorgabeeinstellungen übernehmen. Diese müssten laut Vorlage unter Advanced angelegt werden!</span>
+<span class="w">                    </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore.rules.Suspend</span>
 
-<span class="w">                </span><span class="nt">Nachfuehren</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="c1"># Zustand &quot;Nachführen&quot;: Vorgabeeinstellungen übernehmen</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore.rules.Nachfuehren_Osten</span><span class="w"></span>
+<span class="w">                </span><span class="nt">Nachfuehren</span><span class="p">:</span>
+<span class="w">                    </span><span class="c1"># Zustand &quot;Nachführen&quot;: Vorgabeeinstellungen übernehmen</span>
+<span class="w">                    </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore.rules.Nachfuehren_Osten</span>
 
-<span class="w">                    </span><span class="c1"># ..und jetzt verändern wir das ganze, in dem wir abhängig vom &quot;Anwesend&quot;-Flag andere</span><span class="w"></span>
-<span class="w">                    </span><span class="c1"># Grenzwerte für die Helligkeit setzen.</span><span class="w"></span>
+<span class="w">                    </span><span class="c1"># ..und jetzt verändern wir das ganze, in dem wir abhängig vom &quot;Anwesend&quot;-Flag andere</span>
+<span class="w">                    </span><span class="c1"># Grenzwerte für die Helligkeit setzen.</span>
 
-<span class="w">                    </span><span class="c1"># Erst definieren wir mal zusätzliche Einstiegsbedingungen, die die neuen Grenzwerte beinhalten:</span><span class="w"></span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">:enter_anwesend</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># Einstieg in &quot;Nachführen&quot; bei Anwesenheit: Wenn</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># - das Flag &quot;Anwesenheit&quot; gesetzt ist</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_value_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># - das Flag &quot;Helligkeit &gt; 35kLux&quot; seit mindestens 60 Sekunden gesetzt ist (also 8k Lux früher als in &quot;enter&quot;)</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_value_brightnessGt35k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_agemin_brightnessGt35k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># - die Sonnenhöhe mindestens 15° ist (also 3° früher als in &quot;enter&quot;)</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_min_sun_altitude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># - die Sonne aus Richtung 110° bis 270° kommt (also 20° früher als in &quot;enter&quot;</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">110</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">270</span><span class="w"></span>
+<span class="w">                    </span><span class="c1"># Erst definieren wir mal zusätzliche Einstiegsbedingungen, die die neuen Grenzwerte beinhalten:</span>
+<span class="w">                    </span><span class="nt">:enter_anwesend</span><span class="p">:</span>
+<span class="w">                        </span><span class="c1"># Einstieg in &quot;Nachführen&quot; bei Anwesenheit: Wenn</span>
+<span class="w">                        </span><span class="c1"># - das Flag &quot;Anwesenheit&quot; gesetzt ist</span>
+<span class="w">                        </span><span class="nt">se_value_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                        </span><span class="c1"># - das Flag &quot;Helligkeit &gt; 35kLux&quot; seit mindestens 60 Sekunden gesetzt ist (also 8k Lux früher als in &quot;enter&quot;)</span>
+<span class="w">                        </span><span class="nt">se_value_brightnessGt35k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                        </span><span class="nt">se_agemin_brightnessGt35k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">                        </span><span class="c1"># - die Sonnenhöhe mindestens 15° ist (also 3° früher als in &quot;enter&quot;)</span>
+<span class="w">                        </span><span class="nt">se_min_sun_altitude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
+<span class="w">                        </span><span class="c1"># - die Sonne aus Richtung 110° bis 270° kommt (also 20° früher als in &quot;enter&quot;</span>
+<span class="w">                        </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">110</span>
+<span class="w">                        </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">270</span>
 
-<span class="w">                    </span><span class="nt">enter_anwesend_hysterese</span><span class="p">:</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># Hysterese für Helligkeit bei Anwesenheit: Wenn</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># - das Flag &quot;Anwesenheit&quot; gesetzt ist</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_value_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># ... wir bereits in &quot;Nachführen&quot; sind</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># .... das Flag &quot;Helligkeit &gt; 20kLux&quot; gesetzt ist (also 5 kLux früher als in &quot;enter_hysterese&quot;)</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_value_brightnessGt20k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># ... die Sonnenhöhe mindestens 15° ist (Übernahme aus &quot;enter_anwesend&quot;)</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_min_sun_altitude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># ... die Sonne aus Richtung 110° bis 270° kommt (Übernahme aus &quot;enter_anwesend&quot;)</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">110</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">270</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">enter_anwesend_hysterese</span><span class="p">:</span>
+<span class="w">                        </span><span class="c1"># Hysterese für Helligkeit bei Anwesenheit: Wenn</span>
+<span class="w">                        </span><span class="c1"># - das Flag &quot;Anwesenheit&quot; gesetzt ist</span>
+<span class="w">                        </span><span class="nt">se_value_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                        </span><span class="c1"># ... wir bereits in &quot;Nachführen&quot; sind</span>
+<span class="w">                        </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span>
+<span class="w">                        </span><span class="c1"># .... das Flag &quot;Helligkeit &gt; 20kLux&quot; gesetzt ist (also 5 kLux früher als in &quot;enter_hysterese&quot;)</span>
+<span class="w">                        </span><span class="nt">se_value_brightnessGt20k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                        </span><span class="c1"># ... die Sonnenhöhe mindestens 15° ist (Übernahme aus &quot;enter_anwesend&quot;)</span>
+<span class="w">                        </span><span class="nt">se_min_sun_altitude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
+<span class="w">                        </span><span class="c1"># ... die Sonne aus Richtung 110° bis 270° kommt (Übernahme aus &quot;enter_anwesend&quot;)</span>
+<span class="w">                        </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">110</span>
+<span class="w">                        </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">270</span>
 
-<span class="w">                    </span><span class="nt">enter_anwesend_delay</span><span class="p">:</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># Verzögerter Ausstieg nach Unterschreitung der Mindesthelligkeit bei Anwesenheit: Wenn</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># - das Flag &quot;Anwesenheit&quot; gesetzt ist</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_value_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># ... wir bereits in &quot;Nachführen&quot; sind</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># .... das Flag &quot;Helligkeit &gt; 20kLux&quot; nicht (!) gesetzt ist, aber diese Änderung nicht mehr als 20 Minuten her ist</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_value_brightnessGt20k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_agemax_brightnessGt20k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1200</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># ... die Sonnenhöhe mindestens 15° ist (Übernahme aus &quot;enter_anwesend&quot;)</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_min_sun_altitude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># ... die Sonne aus Richtung 110° bis 270° kommt (Übernahme aus &quot;enter_anwesend&quot;)</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">110</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">270</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">enter_anwesend_delay</span><span class="p">:</span>
+<span class="w">                        </span><span class="c1"># Verzögerter Ausstieg nach Unterschreitung der Mindesthelligkeit bei Anwesenheit: Wenn</span>
+<span class="w">                        </span><span class="c1"># - das Flag &quot;Anwesenheit&quot; gesetzt ist</span>
+<span class="w">                        </span><span class="nt">se_value_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                        </span><span class="c1"># ... wir bereits in &quot;Nachführen&quot; sind</span>
+<span class="w">                        </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span>
+<span class="w">                        </span><span class="c1"># .... das Flag &quot;Helligkeit &gt; 20kLux&quot; nicht (!) gesetzt ist, aber diese Änderung nicht mehr als 20 Minuten her ist</span>
+<span class="w">                        </span><span class="nt">se_value_brightnessGt20k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">                        </span><span class="nt">se_agemax_brightnessGt20k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1200</span>
+<span class="w">                        </span><span class="c1"># ... die Sonnenhöhe mindestens 15° ist (Übernahme aus &quot;enter_anwesend&quot;)</span>
+<span class="w">                        </span><span class="nt">se_min_sun_altitude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
+<span class="w">                        </span><span class="c1"># ... die Sonne aus Richtung 110° bis 270° kommt (Übernahme aus &quot;enter_anwesend&quot;)</span>
+<span class="w">                        </span><span class="nt">se_min_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">110</span>
+<span class="w">                        </span><span class="nt">se_max_sun_azimut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">270</span>
 
-<span class="w">                    </span><span class="c1"># Jetzt müssen wir die vorhandenen Bedingungen noch erweitern (sie gelten ja nur noch, wenn &quot;Anwesenheit&quot; nicht gesetzt ist)</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># Einstieg in &quot;Nachführen&quot;: Wenn zusätzlich</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># - das Flag &quot;Anwesenheit&quot; nicht gesetzt ist</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_value_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">                    </span><span class="c1"># Jetzt müssen wir die vorhandenen Bedingungen noch erweitern (sie gelten ja nur noch, wenn &quot;Anwesenheit&quot; nicht gesetzt ist)</span>
+<span class="w">                    </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">                        </span><span class="c1"># Einstieg in &quot;Nachführen&quot;: Wenn zusätzlich</span>
+<span class="w">                        </span><span class="c1"># - das Flag &quot;Anwesenheit&quot; nicht gesetzt ist</span>
+<span class="w">                        </span><span class="nt">se_value_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 
-<span class="w">                    </span><span class="nt">enter_hysterese</span><span class="p">:</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># Hysterese für Helligkeit: Wenn zusätzlich</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># - das Flag &quot;Anwesenheit&quot; nicht gesetzt ist</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_value_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">enter_hysterese</span><span class="p">:</span>
+<span class="w">                        </span><span class="c1"># Hysterese für Helligkeit: Wenn zusätzlich</span>
+<span class="w">                        </span><span class="c1"># - das Flag &quot;Anwesenheit&quot; nicht gesetzt ist</span>
+<span class="w">                        </span><span class="nt">se_value_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 
-<span class="w">                    </span><span class="nt">enter_delay</span><span class="p">:</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># Verzögerter Ausstieg nach Unterschreitung der Mindesthelligkeit:  Wenn zusätzlich</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># - das Flag &quot;Anwesenheit&quot; nicht gesetzt ist</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_value_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">enter_delay</span><span class="p">:</span>
+<span class="w">                        </span><span class="c1"># Verzögerter Ausstieg nach Unterschreitung der Mindesthelligkeit:  Wenn zusätzlich</span>
+<span class="w">                        </span><span class="c1"># - das Flag &quot;Anwesenheit&quot; nicht gesetzt ist</span>
+<span class="w">                        </span><span class="nt">se_value_anwesend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 
-<span class="w">                </span><span class="nt">Nacht</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="c1"># Zustand &quot;Nacht&quot;: Vorgabeeinstellungen übernehmen</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore.rules.Nacht</span><span class="w"></span>
-<span class="w">                    </span><span class="c1"># .. und zwei weitere Einstiegsbedingungen definieren</span><span class="w"></span>
+<span class="w">                </span><span class="nt">Nacht</span><span class="p">:</span>
+<span class="w">                    </span><span class="c1"># Zustand &quot;Nacht&quot;: Vorgabeeinstellungen übernehmen</span>
+<span class="w">                    </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore.rules.Nacht</span>
+<span class="w">                    </span><span class="c1"># .. und zwei weitere Einstiegsbedingungen definieren</span>
 
-<span class="w">                    </span><span class="nt">enter_schlafenszeit_woche</span><span class="p">:</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># Einstieg in &quot;Nacht&quot;: Wenn</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># - es zwischen 21:00 und 07:00 Uhr ist</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_min_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;07:00&#39;</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_max_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;21:00&#39;</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_negate_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># - der Wochentag zwischen Montag und Freitag liegt</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_min_weekday</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_max_weekday</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">enter_schlafenszeit_woche</span><span class="p">:</span>
+<span class="w">                        </span><span class="c1"># Einstieg in &quot;Nacht&quot;: Wenn</span>
+<span class="w">                        </span><span class="c1"># - es zwischen 21:00 und 07:00 Uhr ist</span>
+<span class="w">                        </span><span class="nt">se_min_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;07:00&#39;</span>
+<span class="w">                        </span><span class="nt">se_max_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;21:00&#39;</span>
+<span class="w">                        </span><span class="nt">se_negate_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">                        </span><span class="c1"># - der Wochentag zwischen Montag und Freitag liegt</span>
+<span class="w">                        </span><span class="nt">se_min_weekday</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">                        </span><span class="nt">se_max_weekday</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
 
-<span class="w">                    </span><span class="nt">enter_schlafenszeit_wochenende</span><span class="p">:</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># Einstieg in &quot;Nacht&quot;: Wenn</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># - es zwischen 21:00 und 08:30 Uhr ist</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_min_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;08:30&#39;</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_max_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;21:00&#39;</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_negate_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">                        </span><span class="c1"># - der Wochentag Samstag oder Sonntag ist</span><span class="w"></span>
-<span class="w">                        </span><span class="nt">se_value_weekday</span><span class="p">:</span><span class="w"></span>
-<span class="w">                         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">                         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">enter_schlafenszeit_wochenende</span><span class="p">:</span>
+<span class="w">                        </span><span class="c1"># Einstieg in &quot;Nacht&quot;: Wenn</span>
+<span class="w">                        </span><span class="c1"># - es zwischen 21:00 und 08:30 Uhr ist</span>
+<span class="w">                        </span><span class="nt">se_min_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;08:30&#39;</span>
+<span class="w">                        </span><span class="nt">se_max_time</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;21:00&#39;</span>
+<span class="w">                        </span><span class="nt">se_negate_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">                        </span><span class="c1"># - der Wochentag Samstag oder Sonntag ist</span>
+<span class="w">                        </span><span class="nt">se_value_weekday</span><span class="p">:</span>
+<span class="w">                         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">                         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span>
 
-<span class="w">                </span><span class="nt">Tag</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="c1"># Zustand &quot;Tag&quot;: Vorgabeeinstellungen übernehmen</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore.rules.Tag</span><span class="w"></span>
+<span class="w">                </span><span class="nt">Tag</span><span class="p">:</span>
+<span class="w">                    </span><span class="c1"># Zustand &quot;Tag&quot;: Vorgabeeinstellungen übernehmen</span>
+<span class="w">                    </span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine_default_raffstore.rules.Tag</span>
 </pre></div>
 </div>
 </section>
@@ -4482,114 +4482,114 @@ im aktuellen Item gelesen wird. Somit kann diese Vorlage für sämtliche Zustän
 wobei natürlich zu beachten ist, dass sowohl „Settings“ als auch Zustand richtig benannt sind.
 Das Item state_name wird bis zur Pluginversion 1.5.0 erst nach Ausführen der Aktionen aktualisiert,
 weshalb diese Vorgehensweise erst ab 1.5.1 empfohlen wird.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#etc/struct.yaml</span><span class="w"></span>
-<span class="nt">licht_rules_actions</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">on_enter_or_stay</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">se_action_sollwert</span><span class="p">:</span><span class="w"></span>
-<span class="w">         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">eval:se_eval.get_relative_itemvalue(&#39;..settings.{}.sollwert&#39;.format(se_eval.get_relative_itemvalue(&#39;..state_name&#39;).lower()))&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">se_action_prio</span><span class="p">:</span><span class="w"></span>
-<span class="w">         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">eval:se_eval.get_relative_itemvalue(&#39;..settings.{}.prio&#39;.format(se_eval.get_relative_itemvalue(&#39;..state_name&#39;).lower()))&quot;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#etc/struct.yaml</span>
+<span class="nt">licht_rules_actions</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">on_enter_or_stay</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">se_action_sollwert</span><span class="p">:</span>
+<span class="w">         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">eval:se_eval.get_relative_itemvalue(&#39;..settings.{}.sollwert&#39;.format(se_eval.get_relative_itemvalue(&#39;..state_name&#39;).lower()))&quot;</span>
+<span class="w">      </span><span class="nt">se_action_prio</span><span class="p">:</span>
+<span class="w">         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">eval:se_eval.get_relative_itemvalue(&#39;..settings.{}.prio&#39;.format(se_eval.get_relative_itemvalue(&#39;..state_name&#39;).lower()))&quot;</span>
 </pre></div>
 </div>
 <p>Außerdem werden pro Aktortyp entsprechende Setting Items angelegt. Je nach Bedarf
 kann dann auf diese zurückgegriffen werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#etc/struct.yaml</span><span class="w"></span>
-<span class="nt">licht_settings_dimmbar</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">prio</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">       </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">       </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#etc/struct.yaml</span>
+<span class="nt">licht_settings_dimmbar</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">prio</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">       </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">       </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 
-<span class="w">   </span><span class="nt">sollwert</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">       </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">       </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">   </span><span class="nt">sollwert</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">       </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">       </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="nt">licht_settings_schaltbar</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">sperren</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">       </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">       </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="nt">licht_settings_schaltbar</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">sperren</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">       </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">       </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="nt">licht_settings_active</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">active</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">       </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">       </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="nt">licht_settings_active</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">active</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">       </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">       </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 </pre></div>
 </div>
 <p>Folgende Vorlage dient der Angabe, unter welchen Bedingungen der entsprechende Zustand
 eingenommen werden soll. In diesem Fall werden die zwei Zustände Lichtkurve und Heimkino definiert.
 Ähnliche Beispiele sind bereits weiter oben zu finden, weshalb sie hier sehr einfach gehalten werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#etc/struct.yaml</span><span class="w"></span>
-<span class="nt">licht_condition_lichtkurve</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">se_item_lichtkurve_active</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..settings.lichtkurve.active</span><span class="w"></span>
-<span class="w">   </span><span class="nt">lichtkurve</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lichtkurve</span><span class="w"> </span><span class="c1"># muss mit den entsprechenden Settings übereinstimmen</span><span class="w"></span>
-<span class="w">       </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">           </span><span class="nt">se_value_lichtmodus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span><span class="w"></span>
-<span class="w">           </span><span class="nt">se_value_lichtkurve_active</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#etc/struct.yaml</span>
+<span class="nt">licht_condition_lichtkurve</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">se_item_lichtkurve_active</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..settings.lichtkurve.active</span>
+<span class="w">   </span><span class="nt">lichtkurve</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lichtkurve</span><span class="w"> </span><span class="c1"># muss mit den entsprechenden Settings übereinstimmen</span>
+<span class="w">       </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">           </span><span class="nt">se_value_lichtmodus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span>
+<span class="w">           </span><span class="nt">se_value_lichtkurve_active</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 
-<span class="nt">licht_condition_heimkino</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">se_item_heimkino_active</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..settings.heimkino.active</span><span class="w"></span>
-<span class="w">   </span><span class="nt">heimkino</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Heimkino</span><span class="w"> </span><span class="c1"># muss mit den entsprechenden Settings übereinstimmen</span><span class="w"></span>
-<span class="w">       </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">           </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">           </span><span class="nt">se_value_lichtmodus</span><span class="p">:</span><span class="w"></span>
-<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:3</span><span class="w"></span>
-<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;3.0&#39;</span><span class="w"></span>
-<span class="w">           </span><span class="nt">se_value_heimkino_active</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="nt">licht_condition_heimkino</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">se_item_heimkino_active</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..settings.heimkino.active</span>
+<span class="w">   </span><span class="nt">heimkino</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Heimkino</span><span class="w"> </span><span class="c1"># muss mit den entsprechenden Settings übereinstimmen</span>
+<span class="w">       </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">           </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">           </span><span class="nt">se_value_lichtmodus</span><span class="p">:</span>
+<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:3</span>
+<span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;3.0&#39;</span>
+<span class="w">           </span><span class="nt">se_value_heimkino_active</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 </pre></div>
 </div>
 <p>Letzten Endes wird alles in einem item.yaml auf folgende Art und Weise implementiert:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">licht</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_release</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_lock</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_suspend</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">licht</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_release</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_lock</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_suspend</span>
 
-<span class="w">        </span><span class="nt">manuell</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...sa</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...dimmen.taster</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_manual_exclude</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KNX:1.1.2:*</span><span class="w"></span>
+<span class="w">        </span><span class="nt">manuell</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...sa</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...dimmen.taster</span>
+<span class="w">            </span><span class="nt">se_manual_exclude</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KNX:1.1.2:*</span>
 
-<span class="w">        </span><span class="nt">settings</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">heimkino</span><span class="p">:</span><span class="w"> </span><span class="c1"># muss mit dem entsprechenden Statusnamen übereinstimmen</span><span class="w"></span>
-<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_settings_bwm</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_settings_dimmbar_dual</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_settings_active</span><span class="w"></span>
+<span class="w">        </span><span class="nt">settings</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">heimkino</span><span class="p">:</span><span class="w"> </span><span class="c1"># muss mit dem entsprechenden Statusnamen übereinstimmen</span>
+<span class="w">                </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_settings_bwm</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_settings_dimmbar_dual</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_settings_active</span>
 
-<span class="w">            </span><span class="nt">lichtkurve</span><span class="p">:</span><span class="w"> </span><span class="c1"># muss mit dem entsprechenden Statusnamen übereinstimmen</span><span class="w"></span>
-<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_settings_bwm</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_settings_dimmbar_dual</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_settings_active</span><span class="w"></span>
+<span class="w">            </span><span class="nt">lichtkurve</span><span class="p">:</span><span class="w"> </span><span class="c1"># muss mit dem entsprechenden Statusnamen übereinstimmen</span>
+<span class="w">                </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_settings_bwm</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_settings_dimmbar_dual</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_settings_active</span>
 
-<span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_rules_heimkino</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_rules_lichtkurve</span><span class="w"></span>
+<span class="w">        </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_rules_heimkino</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_rules_lichtkurve</span>
 
-<span class="w">            </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Das eval_trigger muss vor SmarthomeNG 1.7 noch manuell mit der kompletten Liste überschrieben werden, auch wenn die Structs bereits Einträge enthalten. Ab 1.7 würde licht.modus* ausreichen!</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..settings_edited</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..lock</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..manuell</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht.modus*</span><span class="w"></span>
+<span class="w">            </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Das eval_trigger muss vor SmarthomeNG 1.7 noch manuell mit der kompletten Liste überschrieben werden, auch wenn die Structs bereits Einträge enthalten. Ab 1.7 würde licht.modus* ausreichen!</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..settings_edited</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..lock</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..manuell</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht.modus*</span>
 
-<span class="w">            </span><span class="nt">heimkino</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_rules_actions</span><span class="w"></span>
-<span class="w">            </span><span class="nt">lichtkurve</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_rules_actions</span><span class="w"></span>
+<span class="w">            </span><span class="nt">heimkino</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_rules_actions</span>
+<span class="w">            </span><span class="nt">lichtkurve</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht_rules_actions</span>
 </pre></div>
 </div>
 </section>

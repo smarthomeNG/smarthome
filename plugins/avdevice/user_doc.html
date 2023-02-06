@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_interface.html">Interface Plugins</a> &raquo;</li>
-      <li>avdevice</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_interface.html">Interface Plugins</a></li>
+      <li class="breadcrumb-item active">avdevice</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3859,34 +3859,34 @@
 <p class="admonition-title">Wichtig</p>
 <p>Die Informationen zur Konfiguration des Plugins sind unter <a class="reference internal" href="../../plugins_doc/config/avdevice.html"><span class="doc">Plugin ‚avdevice‘ Konfiguration</span></a> beschrieben.</p>
 </div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span><span class="w"></span>
-<span class="nt">avdevice</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avdevice</span><span class="w"></span>
-<span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sc-lx86</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#instance: pioneer_one</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tcp_ip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0.0.130</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#tcp_port: 23</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#tcp_timeout: 1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rs232_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB1</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#rs232_baudrate: 9600</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#rs232_timeout: 0.1</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#ignoreresponse: &#39;RGB,RGC,RGD,GBH,GHH,VTA,AUA,AUB&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#forcebuffer: &#39;GEH01020, GEH04022, GEH05024&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#inputignoredisplay: &#39;&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#dependson_item: &#39;&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#dependson_value: True</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#errorresponse: E02, E04, E06</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#resetonerror: False</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#depend0_power0: False</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#depend0_volume0: False</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#sendretries: 10</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#resendwait: 1.0</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#reconnectretries: 13</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#reconnectcycle: 10</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#secondstokeep: 50</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#responsebuffer: 5</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#autoreconnect: false</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#update_exclude: &#39;&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span>
+<span class="nt">avdevice</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avdevice</span>
+<span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sc-lx86</span>
+<span class="w">    </span><span class="c1">#instance: pioneer_one</span>
+<span class="w">    </span><span class="nt">tcp_ip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0.0.130</span>
+<span class="w">    </span><span class="c1">#tcp_port: 23</span>
+<span class="w">    </span><span class="c1">#tcp_timeout: 1</span>
+<span class="w">    </span><span class="nt">rs232_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB1</span>
+<span class="w">    </span><span class="c1">#rs232_baudrate: 9600</span>
+<span class="w">    </span><span class="c1">#rs232_timeout: 0.1</span>
+<span class="w">    </span><span class="c1">#ignoreresponse: &#39;RGB,RGC,RGD,GBH,GHH,VTA,AUA,AUB&#39;</span>
+<span class="w">    </span><span class="c1">#forcebuffer: &#39;GEH01020, GEH04022, GEH05024&#39;</span>
+<span class="w">    </span><span class="c1">#inputignoredisplay: &#39;&#39;</span>
+<span class="w">    </span><span class="c1">#dependson_item: &#39;&#39;</span>
+<span class="w">    </span><span class="c1">#dependson_value: True</span>
+<span class="w">    </span><span class="c1">#errorresponse: E02, E04, E06</span>
+<span class="w">    </span><span class="c1">#resetonerror: False</span>
+<span class="w">    </span><span class="c1">#depend0_power0: False</span>
+<span class="w">    </span><span class="c1">#depend0_volume0: False</span>
+<span class="w">    </span><span class="c1">#sendretries: 10</span>
+<span class="w">    </span><span class="c1">#resendwait: 1.0</span>
+<span class="w">    </span><span class="c1">#reconnectretries: 13</span>
+<span class="w">    </span><span class="c1">#reconnectcycle: 10</span>
+<span class="w">    </span><span class="c1">#secondstokeep: 50</span>
+<span class="w">    </span><span class="c1">#responsebuffer: 5</span>
+<span class="w">    </span><span class="c1">#autoreconnect: false</span>
+<span class="w">    </span><span class="c1">#update_exclude: &#39;&#39;</span>
 </pre></div>
 </div>
 </section>
@@ -3912,24 +3912,24 @@ der gleichen Hersteller.</p>
 <p>Angabe der Zonennummer und Instanz. Dieses Attribut wird genutzt, um zwischen Speakers A, B und AB hin und herzuschalten.
 Lautsprecher-Items sollten wie im folgenden Beispiel konfiguriert werden. Die Zahlen 1 und 2 entsprechen dabei den
 Werten von Pioneer Receivern &lt; 2016 für die Speaker Commands (SPK1, SPK2).</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.yaml</span><span class="w"></span>
-<span class="nt">Pioneer</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.yaml</span>
+<span class="nt">Pioneer</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
 
-<span class="w">    </span><span class="nt">Speakers</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">        </span><span class="nt">avdevice_zone1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">speakers</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Speakers</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">        </span><span class="nt">avdevice_zone1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">speakers</span>
 
-<span class="w">    </span><span class="nt">SpeakerA</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">        </span><span class="nt">avdevice_zone1_speakers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">    </span><span class="nt">SpeakerA</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">        </span><span class="nt">avdevice_zone1_speakers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 
-<span class="w">    </span><span class="nt">SpeakerB</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">        </span><span class="nt">avdevice_zone1_speakers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<span class="w">    </span><span class="nt">SpeakerB</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">        </span><span class="nt">avdevice_zone1_speakers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 </pre></div>
 </div>
 </section>
@@ -3957,96 +3957,96 @@ die Abhängigkeiten als <code class="docutils literal notranslate"><span class="
 <li><p>Die Tracknummer wird unter folgenden Bedingungen abgefragt oder aktualisiert: play ODER status sind wahr UND Verbose ist auf 2 gesetzt UND der Audiotyp ist entweder PCM ODER PCM 44.1/16</p></li>
 <li><p>Der Trackname wird aktualisiert/abgefragt, wenn folgende Bedingung erfüllt ist: (play == True OR status == „play“) AND verbose == 2 AND audiotype == (PCM or PCM 44.1/16) AND disctpye == (DVD-AUDIO or CDDA or DATA-DISC)</p></li>
 </ul>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.yaml</span><span class="w"></span>
-<span class="nt">Oppo</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.yaml</span>
+<span class="nt">Oppo</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
 
-<span class="w">    </span><span class="nt">Power</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">power</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Power</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">power</span>
 
-<span class="w">    </span><span class="nt">Verbose</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">      </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;false&#39;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verbose</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Verbose</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">      </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;false&#39;</span>
+<span class="w">      </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verbose</span>
 
-<span class="w">    </span><span class="nt">Status</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">      </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False&#39;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status</span><span class="w"></span>
-<span class="w">      </span><span class="nt">on_change</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Pause = True if value == &#39;PAUSE&#39; else False</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Stop = True if not (value == &#39;PLAY&#39; or value == &#39;PAUSE&#39; or value == &#39;INVALID&#39;) else False</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Play = True if value == &#39;PLAY&#39; else False</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Status</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">      </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False&#39;</span>
+<span class="w">      </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status</span>
+<span class="w">      </span><span class="nt">on_change</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Pause = True if value == &#39;PAUSE&#39; else False</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Stop = True if not (value == &#39;PLAY&#39; or value == &#39;PAUSE&#39; or value == &#39;INVALID&#39;) else False</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..Play = True if value == &#39;PLAY&#39; else False</span>
 
-<span class="w">    </span><span class="nt">Play</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">      </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Play</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">      </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
 
-<span class="w">    </span><span class="nt">Disctype</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">      </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False&#39;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disctype</span><span class="w"></span>
-<span class="w">      </span><span class="nt">avdevice_depend@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Disctype</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">      </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False&#39;</span>
+<span class="w">      </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disctype</span>
+<span class="w">      </span><span class="nt">avdevice_depend@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 
-<span class="w">    </span><span class="nt">Audio</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Audio</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
 
-<span class="w">      </span><span class="nt">Language</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiolanguage</span><span class="w"></span>
-<span class="w">        </span><span class="nt">avdevice_depend@oppo</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Language</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False&#39;</span>
+<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">        </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiolanguage</span>
+<span class="w">        </span><span class="nt">avdevice_depend@oppo</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 
-<span class="w">      </span><span class="nt">Encoding</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiotype</span><span class="w"></span>
-<span class="w">        </span><span class="nt">avdevice_depend@oppo</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Encoding</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False&#39;</span>
+<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">        </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiotype</span>
+<span class="w">        </span><span class="nt">avdevice_depend@oppo</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 
-<span class="w">    </span><span class="nt">Track</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">      </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False&#39;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiotrack</span><span class="w"></span>
-<span class="w">      </span><span class="nt">avdevice_depend@oppo</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play = True, a</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status = PLAY, a</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verbose = 2, b</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiotype = PCM, c</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiotype = PCM 44.1/16, c</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Track</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">      </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False&#39;</span>
+<span class="w">      </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiotrack</span>
+<span class="w">      </span><span class="nt">avdevice_depend@oppo</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play = True, a</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status = PLAY, a</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verbose = 2, b</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiotype = PCM, c</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiotype = PCM 44.1/16, c</span>
 
-<span class="w">    </span><span class="nt">Trackname</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trackname</span><span class="w"></span>
-<span class="w">      </span><span class="nt">avdevice_depend@oppo</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disctype = DVD-AUDIO, a</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disctype = CDDA, a</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disctype = DATA-DISC, a</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play = True, b</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status = PLAY, b</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiotype = PCM, c</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiotype = PCM 44.1/16, c</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verbose = 2, d</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Trackname</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">      </span><span class="nt">avdevice@oppo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trackname</span>
+<span class="w">      </span><span class="nt">avdevice_depend@oppo</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disctype = DVD-AUDIO, a</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disctype = CDDA, a</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disctype = DATA-DISC, a</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play = True, b</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status = PLAY, b</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiotype = PCM, c</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audiotype = PCM 44.1/16, c</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verbose = 2, d</span>
 </pre></div>
 </div>
 </section>
@@ -4058,53 +4058,53 @@ Möchte man beispielsweise bei einem Gerät das Verbose Leven auf 2 setzen, soba
 erneuten Verbindung bei schaltbaren Steckdosen), kann „avdevice_init“ genutzt werden. Der Wert des Items (Oppo.Verbose.Init) wird automatisch
 an den Befehl „Verbose“ angehängt, der wiederum durch Oppo.Verbose aus dem Textfile zugeordnet wird.</p>
 <p>Es ist möglich, mehrere Init Items für verschiedene Zonen zu verwenden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.yaml</span><span class="w"></span>
-<span class="nt">Oppo</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Verbose</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">      </span><span class="nt">avdevice_zone1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verbose</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.yaml</span>
+<span class="nt">Oppo</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">    </span><span class="nt">Verbose</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">      </span><span class="nt">avdevice_zone1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verbose</span>
 
-<span class="w">      </span><span class="nt">Init</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">          </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
-<span class="w">          </span><span class="nt">avdevice_zone1_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verbose</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Init</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">          </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">          </span><span class="nt">avdevice_zone1_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verbose</span>
 
-<span class="nt">Pioneer</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
+<span class="nt">Pioneer</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
 
-<span class="w">    </span><span class="nt">Zone1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Zone1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
 
-<span class="w">        </span><span class="nt">Mute</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">          </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">          </span><span class="nt">avdevice_zone1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Mute</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">          </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">          </span><span class="nt">avdevice_zone1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span>
 
-<span class="w">          </span><span class="nt">Init</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">              </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">              </span><span class="nt">avdevice_zone1_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span><span class="w"></span>
+<span class="w">          </span><span class="nt">Init</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">              </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">              </span><span class="nt">avdevice_zone1_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span>
 
-<span class="w">    </span><span class="nt">Zone2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Zone2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
 
-<span class="w">        </span><span class="nt">Mute</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">          </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">          </span><span class="nt">avdevice_zone2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Mute</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">          </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">          </span><span class="nt">avdevice_zone2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span>
 
-<span class="w">          </span><span class="nt">Init</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">              </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">              </span><span class="nt">avdevice_zone2_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span><span class="w"></span>
+<span class="w">          </span><span class="nt">Init</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">              </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">              </span><span class="nt">avdevice_zone2_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span>
 </pre></div>
 </div>
 </section>

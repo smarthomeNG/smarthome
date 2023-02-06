@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Withings Health</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Withings Health</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3858,7 +3858,7 @@ only has support for „Withings WS-50 Smart Body Analyzer“, a wifi capabale s
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
 <p>This plugin requires lib withings-api. You can install this lib with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo pip3 install withings-api --upgrade
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>withings-api<span class="w"> </span>--upgrade
 </pre></div>
 </div>
 <p>You have to register at https://account.withings.com/partner/add_oauth2.
@@ -3871,12 +3871,12 @@ The callback URL to enter when registering is shown via the plugin’s web inter
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">withings_health</span><span class="p">:</span><span class="w"> </span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">withings_health</span><span class="w"></span>
-<span class="w">    </span><span class="nt">user_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;your user id&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">client_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;your client id&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">consumer_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;your consumer secret&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">withings_health</span><span class="w"></span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">withings_health</span>
+<span class="w">    </span><span class="nt">user_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;your user id&gt;</span>
+<span class="w">    </span><span class="nt">client_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;your client id&gt;</span>
+<span class="w">    </span><span class="nt">consumer_secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;your consumer secret&gt;</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">withings_health</span>
 <span class="w">    </span>
 </pre></div>
 </div>
@@ -3887,71 +3887,71 @@ The callback URL to enter when registering is shown via the plugin’s web inter
 height exists. From what i saw so far is, that the height is transmitted only one time, the first time the scale
 communicates with the Withings (former Nokia) servers. In case you miss it, set the item value manually!</p>
 <p>The first four items are mandatory, as they are needed for OAuth2 data!</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">body</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">body</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">access_token</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span><span class="w"></span>
+<span class="w">    </span><span class="nt">access_token</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
-<span class="w">    </span><span class="nt">token_expiry</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token_expiry</span><span class="w"></span>
+<span class="w">    </span><span class="nt">token_expiry</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token_expiry</span>
 
-<span class="w">    </span><span class="nt">token_type</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token_type</span><span class="w"></span>
+<span class="w">    </span><span class="nt">token_type</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token_type</span>
 
-<span class="w">    </span><span class="nt">refresh_token</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">refresh_token</span><span class="w"></span>
+<span class="w">    </span><span class="nt">refresh_token</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">refresh_token</span>
 
-<span class="w">    </span><span class="nt">weight</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">weight</span><span class="w"></span>
+<span class="w">    </span><span class="nt">weight</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">weight</span>
 
-<span class="w">    </span><span class="nt">height</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">height</span><span class="w"></span>
+<span class="w">    </span><span class="nt">height</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">height</span>
 
-<span class="w">    </span><span class="nt">bmi</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bmi</span><span class="w"></span>
+<span class="w">    </span><span class="nt">bmi</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bmi</span>
 
-<span class="w">    </span><span class="nt">bmi_text</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bmi_text</span><span class="w"></span>
+<span class="w">    </span><span class="nt">bmi_text</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bmi_text</span>
 
-<span class="w">    </span><span class="nt">fat_ratio</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fat_ratio</span><span class="w"></span>
+<span class="w">    </span><span class="nt">fat_ratio</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fat_ratio</span>
 
-<span class="w">    </span><span class="nt">fat_free_mass</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fat_free_mass</span><span class="w"></span>
+<span class="w">    </span><span class="nt">fat_free_mass</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fat_free_mass</span>
 
-<span class="w">    </span><span class="nt">fat_mass_weight</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fat_mass_weight</span><span class="w"></span>
+<span class="w">    </span><span class="nt">fat_mass_weight</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fat_mass_weight</span>
 
-<span class="w">    </span><span class="nt">heart_rate</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">heart_rate</span><span class="w"></span>
+<span class="w">    </span><span class="nt">heart_rate</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">        </span><span class="nt">withings_type@withings_health</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">heart_rate</span>
 </pre></div>
 </div>
 </section>

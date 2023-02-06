@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>ComfoAir</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">ComfoAir</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3886,14 +3886,14 @@ Everything is configured by adding new items in a SmartHomeNG item configuration
 <h4>comfoair_send<a class="headerlink" href="#comfoair-send" title="Permalink to this heading"></a></h4>
 <p>Changes to this item result in sending the configured command to the KWL system.
 The command is complemented by the item value in a pre-configured way (see commands.py).</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WriteVentilationLevel</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WriteVentilationLevel</span>
 </pre></div>
 </div>
 </section>
 <section id="comfoair-read">
 <h4>comfoair_read<a class="headerlink" href="#comfoair-read" title="Permalink to this heading"></a></h4>
 <p>The item value should be read by using the configured command.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadVentilationLevel</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadVentilationLevel</span>
 </pre></div>
 </div>
 </section>
@@ -3901,21 +3901,21 @@ The command is complemented by the item value in a pre-configured way (see comma
 <h4>comfoair_read_afterwrite<a class="headerlink" href="#comfoair-read-afterwrite" title="Permalink to this heading"></a></h4>
 <p>A timespan (seconds) can be configured. If a value for this attribute is set, the plugin will wait the configured delay after the write command and then issue the configured read command to update the items value.
 This attribute has no default value. If the attribute is not set, no read will be issued after write.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># seconds</span>
 </pre></div>
 </div>
 </section>
 <section id="comfoair-read-cycle">
 <h4>comfoair_read_cycle<a class="headerlink" href="#comfoair-read-cycle" title="Permalink to this heading"></a></h4>
 <p>With this attribute a read cycle for this item can be configured (timespan between cycles in seconds).</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># every hour</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># every hour</span>
 </pre></div>
 </div>
 </section>
 <section id="comfoair-init">
 <h4>comfoair_init<a class="headerlink" href="#comfoair-init" title="Permalink to this heading"></a></h4>
 <p>If this attribute is set to a value (e.g. ‚true‘), the plugin will use the read command at startup to get an initial value.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 </section>
@@ -3923,9 +3923,9 @@ This attribute has no default value. If the attribute is not set, no read will b
 <h4>comfoair_trigger<a class="headerlink" href="#comfoair-trigger" title="Permalink to this heading"></a></h4>
 <p>This attribute can contain a list of commands, which will be issued if the item is updated.
 Useful for instance: If the ventilation level is changed, get updated ventilator RPM values.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadSupplyAirRPM</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadExtractAirRPM</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_trigger</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadSupplyAirRPM</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadExtractAirRPM</span>
 </pre></div>
 </div>
 </section>
@@ -3933,149 +3933,149 @@ Useful for instance: If the ventilation level is changed, get updated ventilator
 <h4>comfoair_trigger_afterwrite<a class="headerlink" href="#comfoair-trigger-afterwrite" title="Permalink to this heading"></a></h4>
 <p>A timespan (seconds) can be configured. After an update to this item, the commands configured in comfoair_trigger will be issued. Before triggering the here configured delay will be waited for.
 Default value: 5 seconds.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_trigger_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">comfoair_trigger_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"> </span><span class="c1"># seconds</span>
 </pre></div>
 </div>
 </section>
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h4>
 <p>Here you can find a sample configuration using the ComfoAir 350 commands:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">kwl</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">level</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">comfoair_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WriteVentilationLevel</span><span class="w"></span>
-<span class="w">        </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadCurrentVentilationLevel</span><span class="w"></span>
-<span class="w">        </span><span class="nt">comfoair_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">        </span><span class="nt">comfoair_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadSupplyAirRPM</span><span class="w"></span>
-<span class="w">        </span><span class="nt">comfoair_trigger_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">        </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">    </span><span class="nt">extractair</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rpm</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadExtractAirRPM</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadExtractAirPercentage</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">    </span><span class="nt">supplyair</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rpm</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadSupplyAirRPM</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadSupplyAirPercentage</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filter</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">reset</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WriteFilterReset</span><span class="w"></span>
-<span class="w">    </span><span class="nt">temp</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">comfort</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WriteComfortTemperature</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadComfortTemperature</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">freshair</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadFreshAirTemperature</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">supplyair</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadSupplyAirTemperature</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">extractair</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadExtractAirTemperature</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">exhaustair</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadExhaustAirTemperature</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">preheater</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadPreHeatingTemperature</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">groundheat</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadGroundHeatTemperature</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">    </span><span class="nt">bypass</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadBypassPercentage</span><span class="w"></span>
-<span class="w">        </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">        </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">    </span><span class="nt">preheater</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadPreHeatingStatus</span><span class="w"></span>
-<span class="w">        </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">        </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">    </span><span class="nt">operatinghours</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">away</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursAway</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">low</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursLow</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">medium</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursMedium</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">high</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursHigh</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">antifreeze</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursAntiFreeze</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">preheater</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursPreHeating</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">bypass</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursBypass</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursFilter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">    </span><span class="nt">heatpreparationratio</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(sh.kwl.temp.supplyair() - sh.kwl.temp.freshair()) / (sh.kwl.temp.extractair() - sh.kwl.temp.exhaustair()) * 100</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kwl.temp.supplyair</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kwl.temp.freshair</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kwl.temp.extractair</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kwl.temp.exhaustair</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">kwl</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">comfoair_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WriteVentilationLevel</span>
+<span class="w">        </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadCurrentVentilationLevel</span>
+<span class="w">        </span><span class="nt">comfoair_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">        </span><span class="nt">comfoair_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadSupplyAirRPM</span>
+<span class="w">        </span><span class="nt">comfoair_trigger_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">        </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">    </span><span class="nt">extractair</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">rpm</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadExtractAirRPM</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadExtractAirPercentage</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">supplyair</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">rpm</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadSupplyAirRPM</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadSupplyAirPercentage</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">filter</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">reset</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">comfoair_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WriteFilterReset</span>
+<span class="w">    </span><span class="nt">temp</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">comfort</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WriteComfortTemperature</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadComfortTemperature</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">freshair</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadFreshAirTemperature</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">supplyair</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadSupplyAirTemperature</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">extractair</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadExtractAirTemperature</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">exhaustair</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadExhaustAirTemperature</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">preheater</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadPreHeatingTemperature</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">groundheat</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadGroundHeatTemperature</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">bypass</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadBypassPercentage</span>
+<span class="w">        </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">        </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">preheater</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadPreHeatingStatus</span>
+<span class="w">        </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">        </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">operatinghours</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">away</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursAway</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">low</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursLow</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">medium</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursMedium</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">high</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursHigh</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">antifreeze</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursAntiFreeze</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">preheater</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursPreHeating</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">bypass</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursBypass</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">filter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">comfoair_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadOperatingHoursFilter</span>
+<span class="w">            </span><span class="nt">comfoair_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"> </span><span class="c1"># seconds</span>
+<span class="w">            </span><span class="nt">comfoair_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">heatpreparationratio</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(sh.kwl.temp.supplyair() - sh.kwl.temp.freshair()) / (sh.kwl.temp.extractair() - sh.kwl.temp.exhaustair()) * 100</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kwl.temp.supplyair</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kwl.temp.freshair</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kwl.temp.extractair</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kwl.temp.exhaustair</span>
 </pre></div>
 </div>
 </section>

@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Visualisation (Websocket Protocol)</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Visualisation (Websocket Protocol)</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3876,13 +3876,13 @@ extending item description in any ``items/<your items>.yaml.
 As other plugin some additional attributes are to be put to the item structure.</p>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">visu</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">visu_websocket</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># ip: &#39;0.0.0.0&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># port: 2424</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># tls: no</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># wsproto: 3</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># acl: ro</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">visu</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">visu_websocket</span>
+<span class="w">    </span><span class="c1"># ip: &#39;0.0.0.0&#39;</span>
+<span class="w">    </span><span class="c1"># port: 2424</span>
+<span class="w">    </span><span class="c1"># tls: no</span>
+<span class="w">    </span><span class="c1"># wsproto: 3</span>
+<span class="w">    </span><span class="c1"># acl: ro</span>
 </pre></div>
 </div>
 <section id="ip">
@@ -3926,25 +3926,25 @@ Other valid values are <strong><code class="docutils literal notranslate"><span 
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h4>
 <p>An example item definition is given below:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">second</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">second</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">sleeping</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sleeping Room</span><span class="w"></span>
+<span class="w">    </span><span class="nt">sleeping</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sleeping Room</span>
 
-<span class="w">        </span><span class="nt">light</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Light</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/12</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/12</span><span class="w"></span>
+<span class="w">        </span><span class="nt">light</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Light</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/12</span>
+<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/12</span>
 
-<span class="w">            </span><span class="nt">level</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">                </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">                </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/14</span><span class="w"></span>
-<span class="w">                </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/14</span><span class="w"></span>
+<span class="w">            </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">                </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">                </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/14</span>
+<span class="w">                </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3/2/14</span>
 </pre></div>
 </div>
 <p>Starting with SmartHomeNG 1.6 the way attributes can be accessed changed. Instead of using the attributes directly
@@ -3964,9 +3964,9 @@ items value was changed.</p>
 <h3>logic.yaml<a class="headerlink" href="#logic-yaml" title="Permalink to this heading"></a></h3>
 <p>The <strong><code class="docutils literal notranslate"><span class="pre">visu_acl</span></code></strong> attribute can be set to every logic in <code class="docutils literal notranslate"><span class="pre">logic.yaml</span></code>.
 This way a logic can be triggered via the SmartVISU.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dialog</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dialog.py</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dialog</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dialog.py</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
 </pre></div>
 </div>
 </section>

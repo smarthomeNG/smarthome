@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../entwicklung.html">Entwicklung</a> &raquo;</li>
-          <li><a href="plugins.html">Plugins <span class="bluesup">under construction</span></a> &raquo;</li>
-      <li>Unterstützung mehrerer Sprachen <span class="bluesup">Update</span></li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../entwicklung.html">Entwicklung</a></li>
+          <li class="breadcrumb-item"><a href="plugins.html">Plugins <span class="bluesup">under construction</span></a></li>
+      <li class="breadcrumb-item active">Unterstützung mehrerer Sprachen <span class="bluesup">Update</span></li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3910,9 +3910,9 @@ von Modulen oder in mehreren Plugins verwendet werden, heißt <code class="docut
 <p>In den Sprachdateien wird für jeden zu übersetzenden Text ein dictionary im Abschnitt <code class="docutils literal notranslate"><span class="pre">plugin_translations:</span></code> aufgenommen:</p>
 <div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-text">Beispiel einer Übersetzung</span><a class="headerlink" href="#id3" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">plugin_translations</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Translations for the plugin specially for the web interface</span><span class="w"></span>
-<span class="w">    </span><span class="s">&#39;Schließen&#39;</span><span class="p p-Indicator">:</span><span class="w">         </span><span class="p p-Indicator">{</span><span class="s">&#39;de&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;=&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;en&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;Close&#39;</span><span class="p p-Indicator">}</span><span class="w"></span>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">plugin_translations</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Translations for the plugin specially for the web interface</span>
+<span class="w">    </span><span class="s">&#39;Schließen&#39;</span><span class="p p-Indicator">:</span><span class="w">         </span><span class="p p-Indicator">{</span><span class="s">&#39;de&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;=&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;en&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;Close&#39;</span><span class="p p-Indicator">}</span>
 </pre></div>
 </div>
 </div>
@@ -3921,9 +3921,9 @@ der angegebenen Sprache ist und nicht übersetzt werden muss. In dem Fall wird n
 <p>Weitere Sprachen können durch Hinzufügen des Sprachcodes und der jeweiligen Übersetzungen definiert werden:</p>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">Beispiel einer Übersetzung</span><a class="headerlink" href="#id4" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">plugin_translations</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Translations for the plugin specially for the web interface</span><span class="w"></span>
-<span class="w">    </span><span class="s">&#39;Schließen&#39;</span><span class="p p-Indicator">:</span><span class="w">         </span><span class="p p-Indicator">{</span><span class="s">&#39;de&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;=&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;en&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;Close&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;fr&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;Fermer&#39;</span><span class="p p-Indicator">}</span><span class="w"></span>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">plugin_translations</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Translations for the plugin specially for the web interface</span>
+<span class="w">    </span><span class="s">&#39;Schließen&#39;</span><span class="p p-Indicator">:</span><span class="w">         </span><span class="p p-Indicator">{</span><span class="s">&#39;de&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;=&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;en&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;Close&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;fr&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;Fermer&#39;</span><span class="p p-Indicator">}</span>
 </pre></div>
 </div>
 </div>
@@ -3940,10 +3940,10 @@ Der Name des Platzhalters muss von geschweiften Klammern eingeschlossen sein
 (<strong>ohne</strong> Leerzeichen zwischen Klammer und Namen).</p>
 <div class="literal-block-wrapper docutils container" id="id5">
 <div class="code-block-caption"><span class="caption-text">Beispiel für Übersetzungen mit Platzhaltern</span><a class="headerlink" href="#id5" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">plugin_translations</span><span class="p">:</span><span class="w"></span>
-<span class="w"> </span><span class="s">&#39;Löschauftrag</span><span class="nv"> </span><span class="s">für</span><span class="nv"> </span><span class="s">die</span><span class="nv"> </span><span class="s">Einträge</span><span class="nv"> </span><span class="s">von</span><span class="nv"> </span><span class="s">Item</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">{item_id}</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">der</span><span class="nv"> </span><span class="s">Tabelle</span><span class="nv"> </span><span class="s">&quot;log&quot;</span><span class="nv"> </span><span class="s">wurde</span><span class="nv"> </span><span class="s">erfolgreich</span><span class="nv"> </span><span class="s">initiiert!&#39;</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">     </span><span class="s">&#39;de&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;=&#39;</span><span class="w"></span>
-<span class="w">     </span><span class="s">&#39;en&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;Deletion</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">entries</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">{item_id}</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">table</span><span class="nv"> </span><span class="s">&quot;log&quot;</span><span class="nv"> </span><span class="s">successfully</span><span class="nv"> </span><span class="s">initiated.&#39;</span><span class="w"></span>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">plugin_translations</span><span class="p">:</span>
+<span class="w"> </span><span class="s">&#39;Löschauftrag</span><span class="nv"> </span><span class="s">für</span><span class="nv"> </span><span class="s">die</span><span class="nv"> </span><span class="s">Einträge</span><span class="nv"> </span><span class="s">von</span><span class="nv"> </span><span class="s">Item</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">{item_id}</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">der</span><span class="nv"> </span><span class="s">Tabelle</span><span class="nv"> </span><span class="s">&quot;log&quot;</span><span class="nv"> </span><span class="s">wurde</span><span class="nv"> </span><span class="s">erfolgreich</span><span class="nv"> </span><span class="s">initiiert!&#39;</span><span class="p p-Indicator">:</span>
+<span class="w">     </span><span class="s">&#39;de&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;=&#39;</span>
+<span class="w">     </span><span class="s">&#39;en&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;Deletion</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">entries</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">{item_id}</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">table</span><span class="nv"> </span><span class="s">&quot;log&quot;</span><span class="nv"> </span><span class="s">successfully</span><span class="nv"> </span><span class="s">initiated.&#39;</span>
 </pre></div>
 </div>
 </div>

@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_interface.html">Interface Plugins</a> &raquo;</li>
-      <li>viessmann</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_interface.html">Interface Plugins</a></li>
+      <li class="breadcrumb-item active">viessmann</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3912,11 +3912,11 @@ Derzeit sind das P300- und das KW-Protokoll unterstützt. Weitere Gerätetypen, 
 <h2>Konfiguration<a class="headerlink" href="#konfiguration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">viessmann</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">P300</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">viessmann</span><span class="w"></span>
-<span class="w">    </span><span class="nt">heating_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">V200KO1B</span><span class="w"></span>
-<span class="w">    </span><span class="nt">serialport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB_optolink</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">viessmann</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">P300</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">viessmann</span>
+<span class="w">    </span><span class="nt">heating_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">V200KO1B</span>
+<span class="w">    </span><span class="nt">serialport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB_optolink</span>
 </pre></div>
 </div>
 </section>
@@ -3927,22 +3927,22 @@ Derzeit sind das P300- und das KW-Protokoll unterstützt. Weitere Gerätetypen, 
 <section id="viess-read">
 <h4>viess_read<a class="headerlink" href="#viess-read" title="Permalink to this heading"></a></h4>
 <p>Der Wert des angegebenen Parameters wird gelesen und dem Item zugewiesen.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll_Normalbetrieb_A1M1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll_Normalbetrieb_A1M1</span>
 </pre></div>
 </div>
 </section>
 <section id="viess-send">
 <h4>viess_send<a class="headerlink" href="#viess-send" title="Permalink to this heading"></a></h4>
 <p>Der angegebene Parameter wird bei Änderungen an diesem Item an die Heizung gesendet.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll_Normalbetrieb_A1M1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll_Normalbetrieb_A1M1</span>
 </pre></div>
 </div>
 <p>Sofern das Item sowohl zum Lesen als auch zum Schreiben eines Parameters konfiguriert wird, kann die vereinfachte Konfiguration mit <code class="docutils literal notranslate"><span class="pre">true</span></code> erfolgen:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll_Normalbetrieb_A1M1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll_Normalbetrieb_A1M1</span>
+<span class="w">    </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 </section>
@@ -3950,19 +3950,19 @@ Derzeit sind das P300- und das KW-Protokoll unterstützt. Weitere Gerätetypen, 
 <h4>viess_read_afterwrite<a class="headerlink" href="#viess-read-afterwrite" title="Permalink to this heading"></a></h4>
 <p>Wenn dieses Attribut mit einer Dauer in Sekunden angegeben ist, wird nach eine Schreibvorgang die angegebene Anzahl an Sekunden gewartet und ein erneuter Lesevorgang ausgelöst.</p>
 <p>Damit dieses Attribut verwendet werden kann, muss das Item sowohl die Attribute <code class="docutils literal notranslate"><span class="pre">viess_read</span></code> als auch <code class="docutils literal notranslate"><span class="pre">viess_send</span></code> enthalten.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll_Normalbetrieb_A1M1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">  </span><span class="c1"># seconds</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll_Normalbetrieb_A1M1</span>
+<span class="w">    </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">  </span><span class="c1"># seconds</span>
 </pre></div>
 </div>
 </section>
 <section id="viess-read-cycle">
 <h4>viess_read_cycle<a class="headerlink" href="#viess-read-cycle" title="Permalink to this heading"></a></h4>
 <p>Mit einer Angabe in Sekunden wird ein periodisches Lesen angefordert. <code class="docutils literal notranslate"><span class="pre">viess_read</span></code> muss zusätzlich konfiguriert sein.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll_Normalbetrieb_A1M1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w">  </span><span class="c1"># every hour</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll_Normalbetrieb_A1M1</span>
+<span class="w">    </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w">  </span><span class="c1"># every hour</span>
 </pre></div>
 </div>
 </section>
@@ -3970,9 +3970,9 @@ Derzeit sind das P300- und das KW-Protokoll unterstützt. Weitere Gerätetypen, 
 <h4>viess_init<a class="headerlink" href="#viess-init" title="Permalink to this heading"></a></h4>
 <p>Wenn dieses Attribut vorhanden und auf <code class="docutils literal notranslate"><span class="pre">true</span></code> gesetzt ist, wird das Item nach dem Start von SmartHomeNG einmalig gelesen.
 <code class="docutils literal notranslate"><span class="pre">viess_read</span></code> muss zusätzlich konfiguriert sein.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll_Normalbetrieb_A1M1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll_Normalbetrieb_A1M1</span>
+<span class="w">    </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 </section>
@@ -3981,11 +3981,11 @@ Derzeit sind das P300- und das KW-Protokoll unterstützt. Weitere Gerätetypen, 
 <p>Enthält eine Liste von Parametern. Wenn dieses Item aktualisiert wird, wird ein Lesevorgang für jeden Eintrag in der Liste angestoßen. <code class="docutils literal notranslate"><span class="pre">viess_send</span></code> muss zusätzlich konfiguriert sein.</p>
 <p>Zwischen dem Schreibvorgang und den folgenden Lesevorgängen ist standardmäßig eine Verzögerung von 5 Sekunden eingestellt. Diese kann mit <code class="docutils literal notranslate"><span class="pre">viess_trigger_afterwrite</span></code> verändert werden.</p>
 <p>Beispiel: wenn der Betriebsmodus geändert wird, können neue Sollwerte für Raum- und Wassertemperaturen gelesen werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Betriebsart_A1M1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll</span><span class="w"></span>
-<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wassertemperatur_Soll</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Betriebsart_A1M1</span>
+<span class="w">    </span><span class="nt">viess_trigger</span><span class="p">:</span>
+<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll</span>
+<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wassertemperatur_Soll</span>
 </pre></div>
 </div>
 </section>
@@ -3993,12 +3993,12 @@ Derzeit sind das P300- und das KW-Protokoll unterstützt. Weitere Gerätetypen, 
 <h4>viess_trigger_afterwrite<a class="headerlink" href="#viess-trigger-afterwrite" title="Permalink to this heading"></a></h4>
 <p>Wenn ein <code class="docutils literal notranslate"><span class="pre">viess_trigger</span></code> konfiguriert ist, kann mit diesem Attribut die Verzögerung zwischen Schreib- und Lesevorgang verändert werden.</p>
 <p>Standardmäßig beträgt diese Verzögerung 5 Sekunden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Betriebsart_A1M1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll</span><span class="w"></span>
-<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wassertemperatur_Soll</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_trigger_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"> </span><span class="c1"># seconds</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Betriebsart_A1M1</span>
+<span class="w">    </span><span class="nt">viess_trigger</span><span class="p">:</span>
+<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur_Soll</span>
+<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wassertemperatur_Soll</span>
+<span class="w">    </span><span class="nt">viess_trigger_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"> </span><span class="c1"># seconds</span>
 </pre></div>
 </div>
 </section>
@@ -4006,8 +4006,8 @@ Derzeit sind das P300- und das KW-Protokoll unterstützt. Weitere Gerätetypen, 
 <h4>viess_update<a class="headerlink" href="#viess-update" title="Permalink to this heading"></a></h4>
 <p>Das Zuweisen von <code class="docutils literal notranslate"><span class="pre">true</span></code> an ein Item mit diesem Attribut löst den Lesevorgang aller konfigurierter Items mit <code class="docutils literal notranslate"><span class="pre">viess_read</span></code> aus.</p>
 <p>Der in der Itemkonfiguration angegebene Wert wird nicht ausgewertet.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_update</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;egal&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">viess_update</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;egal&#39;</span>
 </pre></div>
 </div>
 </section>
@@ -4015,8 +4015,8 @@ Derzeit sind das P300- und das KW-Protokoll unterstützt. Weitere Gerätetypen, 
 <h4>viess_timer<a class="headerlink" href="#viess-timer" title="Permalink to this heading"></a></h4>
 <p>Das Item mit diesem Attribut übergibt als Attributwert den Namen einer Anwendung, z.B. Heizkreis_A1M1, und das Plugin gibt ein UZSU-formatiertes dict mit allen zugehörigen Timern der Heizung zurück
 Beim Schreiben wird das UZSU-dict in die einzelnen Tagestimer aufgeteilt und an die Heizung gesendet.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_timer</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Heizkreis_A1M1&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">viess_timer</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Heizkreis_A1M1&#39;</span>
 </pre></div>
 </div>
 </section>
@@ -4024,8 +4024,8 @@ Beim Schreiben wird das UZSU-dict in die einzelnen Tagestimer aufgeteilt und an 
 <h4>viess_ba_list<a class="headerlink" href="#viess-ba-list" title="Permalink to this heading"></a></h4>
 <p>Das Item mit diesem Attribut erhält einmalig beim Start des Plugins die Liste der für den konfigurierten Heizungstyp gültigen Betriebsarten.</p>
 <p>Diese kann z.B. in SmartVISU wie folgt eingebunden werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viess_ba_list</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;egal&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">viess_ba_list</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;egal&#39;</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{{</span> <span class="n">basic</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;heizen_ba_item&#39;</span><span class="p">,</span> <span class="s1">&#39;heizung.betriebsart&#39;</span><span class="p">,</span> <span class="s1">&#39;menu&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;heizung.ba_list&#39;</span><span class="p">)</span> <span class="p">}}</span>
@@ -4037,128 +4037,128 @@ Beim Schreiben wird das UZSU-dict in die einzelnen Tagestimer aufgeteilt und an 
 <h4>Beispiel<a class="headerlink" href="#beispiel" title="Permalink to this heading"></a></h4>
 <p>Here you can find a configuration sample using the commands for
 V200KO1B:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">viessmann</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">viessmann_update</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update aller Items mit &#39;viess_read&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">        </span><span class="nt">viess_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 = false = latest</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">viessmann</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">viessmann_update</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update aller Items mit &#39;viess_read&#39;</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">        </span><span class="nt">viess_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 = false = latest</span>
 
-<span class="w">    </span><span class="nt">allgemein</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">aussentemp</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aussentemperatur</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aussentemperatur</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">    </span><span class="nt">allgemein</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">aussentemp</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aussentemperatur</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aussentemperatur</span>
+<span class="w">            </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">            </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">        </span><span class="nt">aussentemp_gedaempft</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aussentemperatur</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aussentemperatur_TP</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">        </span><span class="nt">aussentemp_gedaempft</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aussentemperatur</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aussentemperatur_TP</span>
+<span class="w">            </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">            </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">    </span><span class="nt">kessel</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">kesseltemperatur_ist</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kesseltemperatur_Ist</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kesseltemperatur</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">180</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
-<span class="w">        </span><span class="nt">kesseltemperatur_soll</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kesselsolltemperatur_Soll</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kesselsolltemperatur</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">180</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">        </span><span class="nt">abgastemperatur</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Abgastemperatur</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Abgastemperatur</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">180</span><span class="w"></span>
-<span class="w">            </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
-<span class="w">    </span><span class="nt">heizkreis_a1m1</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="nt">betriebsart</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">betriebsart_aktuell</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktuelle_Betriebsart_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktuelle_Betriebsart_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">            </span><span class="nt">betriebsart</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Betriebsart_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Betriebsart_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktuelle_Betriebsart_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">viessmann.betriebsart</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sparbetrieb</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sparbetrieb_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sparbetrieb_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Betriebsart_A1M1</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktuelle_Betriebsart_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">       </span><span class="nt">schaltzeiten</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">montag</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Timer_A1M1_Mo</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Timer_A1M1_Mo</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">viessmann.timer</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">dienstag</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Timer_A1M1_Di</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Timer_A1M1_Di</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">viessmann.timer</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">       </span><span class="nt">ferienprogramm</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">status</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ferienprogramm_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ferienprogramm_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">            </span><span class="nt">starttag</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ferien_Abreisetag_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ferien_Abreisetag_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value[:10]</span><span class="w"></span>
-<span class="w">            </span><span class="nt">endtag</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ferien_Rückreisetag_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ferien_Rückreisetag_A1M1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kessel</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">kesseltemperatur_ist</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kesseltemperatur_Ist</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kesseltemperatur</span>
+<span class="w">            </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">180</span>
+<span class="w">            </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
+<span class="w">        </span><span class="nt">kesseltemperatur_soll</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kesselsolltemperatur_Soll</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kesselsolltemperatur</span>
+<span class="w">            </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">180</span>
+<span class="w">            </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">abgastemperatur</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Abgastemperatur</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Abgastemperatur</span>
+<span class="w">            </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">180</span>
+<span class="w">            </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
+<span class="w">    </span><span class="nt">heizkreis_a1m1</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">betriebsart</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">betriebsart_aktuell</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktuelle_Betriebsart_A1M1</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktuelle_Betriebsart_A1M1</span>
+<span class="w">                </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">betriebsart</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Betriebsart_A1M1</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Betriebsart_A1M1</span>
+<span class="w">                </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">viess_trigger</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktuelle_Betriebsart_A1M1</span>
+<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">viessmann.betriebsart</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">sparbetrieb</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sparbetrieb_A1M1</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sparbetrieb_A1M1</span>
+<span class="w">                </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">                </span><span class="nt">viess_trigger</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Betriebsart_A1M1</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktuelle_Betriebsart_A1M1</span>
+<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">       </span><span class="nt">schaltzeiten</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">montag</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Timer_A1M1_Mo</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list</span>
+<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Timer_A1M1_Mo</span>
+<span class="w">                </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">viessmann.timer</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">dienstag</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Timer_A1M1_Di</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list</span>
+<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Timer_A1M1_Di</span>
+<span class="w">                </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">viessmann.timer</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">       </span><span class="nt">ferienprogramm</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ferienprogramm_A1M1</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ferienprogramm_A1M1</span>
+<span class="w">                </span><span class="nt">viess_read_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">starttag</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ferien_Abreisetag_A1M1</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ferien_Abreisetag_A1M1</span>
+<span class="w">                </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value[:10]</span>
+<span class="w">            </span><span class="nt">endtag</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ferien_Rückreisetag_A1M1</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">viess_read</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ferien_Rückreisetag_A1M1</span>
+<span class="w">                </span><span class="nt">viess_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">viess_read_afterwrite</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">                </span><span class="nt">viess_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 </pre></div>
 </div>
 </section>

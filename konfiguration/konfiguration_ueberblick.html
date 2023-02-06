@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-      <li>Allgemeines zur Konfiguration</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+      <li class="breadcrumb-item active">Allgemeines zur Konfiguration</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3986,17 +3986,17 @@ In diesen Dateien befindet sich die Konfiguration des Grundsystems</p></td>
 Zeitzone als Basis genommen werden soll:</p>
 <div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-text">../etc/smarthome.yaml</span><a class="headerlink" href="#id3" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># smarthome.yaml</span><span class="w"></span>
-<span class="nt">lat</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;50.123&#39;</span><span class="w"></span>
-<span class="nt">lon</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;14.67&#39;</span><span class="w"></span>
-<span class="nt">elev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">36</span><span class="w"></span>
-<span class="nt">tz</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Europe/Berlin</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># smarthome.yaml</span>
+<span class="nt">lat</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;50.123&#39;</span>
+<span class="nt">lon</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;14.67&#39;</span>
+<span class="nt">elev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">36</span>
+<span class="nt">tz</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Europe/Berlin</span>
 
-<span class="c1"># ab Version 1.3</span><span class="w"></span>
-<span class="c1"># module_paths = /usr/local/python/lib    # list of path-entries is possible</span><span class="w"></span>
+<span class="c1"># ab Version 1.3</span>
+<span class="c1"># module_paths = /usr/local/python/lib    # list of path-entries is possible</span>
 
-<span class="c1"># ab Version 1.3: control type casting when assiging values to items</span><span class="w"></span>
-<span class="c1"># assign_compatibility = latest            # latest or compat_1.2 (compat_1.2 is default for shNG v1.3)</span><span class="w"></span>
+<span class="c1"># ab Version 1.3: control type casting when assiging values to items</span>
+<span class="c1"># assign_compatibility = latest            # latest or compat_1.2 (compat_1.2 is default for shNG v1.3)</span>
 </pre></div>
 </div>
 </div>
@@ -4013,22 +4013,22 @@ Seite <a class="reference internal" href="../referenz/items/standard_attribute/a
 <p>Die Datei <strong>plugin.yaml</strong> enthält die Konfigurationsanweisungen für alle Plugins, die benutzt werden sollen.</p>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">../etc/plugin.yaml</span><a class="headerlink" href="#id4" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># plugin.yaml</span><span class="w"></span>
-<span class="nt">knx</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx</span><span class="w"></span>
-<span class="w">   </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span><span class="w"></span>
-<span class="w">   </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6720</span><span class="w"></span>
-<span class="c1">#   send_time: 600 # update date/time every 600 seconds, default none</span><span class="w"></span>
-<span class="c1">#   time_ga: 1/1/1 # default none</span><span class="w"></span>
-<span class="c1">#   date_ga: 1/1/2 # default none</span><span class="w"></span>
-<span class="nt">visu</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">visu_websocket</span><span class="w"></span>
-<span class="nt">cli</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0.0.0</span><span class="w"></span>
-<span class="w">    </span><span class="nt">update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="nt">sql</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite_visu2_8</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># plugin.yaml</span>
+<span class="nt">knx</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx</span>
+<span class="w">   </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span>
+<span class="w">   </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6720</span>
+<span class="c1">#   send_time: 600 # update date/time every 600 seconds, default none</span>
+<span class="c1">#   time_ga: 1/1/1 # default none</span>
+<span class="c1">#   date_ga: 1/1/2 # default none</span>
+<span class="nt">visu</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">visu_websocket</span>
+<span class="nt">cli</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli</span>
+<span class="w">    </span><span class="nt">ip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0.0.0</span>
+<span class="w">    </span><span class="nt">update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="nt">sql</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite_visu2_8</span>
 </pre></div>
 </div>
 </div>
@@ -4039,15 +4039,15 @@ es inzwischen ein erheblich leistungsfähigeres Administrationsinterface für Sm
 <p>Das Backend Plugin bindet man folgendermaßen ein:</p>
 <div class="literal-block-wrapper docutils container" id="id5">
 <div class="code-block-caption"><span class="caption-text">Auszug aus ../etc/plugin.yaml</span><a class="headerlink" href="#id5" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">BackendServer</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span><span class="w"></span>
-<span class="w">    </span><span class="nt">updates_allowed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span><span class="w"></span>
-<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxx</span><span class="w"></span>
-<span class="w">    </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">de</span><span class="w"></span>
-<span class="w">    </span><span class="nt">threads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#ip: 0.0.0.0</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#port: 8383</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">BackendServer</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+<span class="w">    </span><span class="nt">updates_allowed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxx</span>
+<span class="w">    </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">de</span>
+<span class="w">    </span><span class="nt">threads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">    </span><span class="c1">#ip: 0.0.0.0</span>
+<span class="w">    </span><span class="c1">#port: 8383</span>
 </pre></div>
 </div>
 </div>
@@ -4061,22 +4061,22 @@ wird, wenn die Logik abgearbeitet werden soll. <strong>crontab</strong> schreibt
 Zeiten ausgeführt werden soll. watch_item bestimmt, welche Items die Logik aufrufen können:</p>
 <div class="literal-block-wrapper docutils container" id="id6">
 <div class="code-block-caption"><span class="caption-text">../etc/logic.yaml</span><a class="headerlink" href="#id6" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># logic.yaml</span><span class="w"></span>
-<span class="nt">InitSmarthomeNG</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InitSmartHomeNG.py</span><span class="w"></span>
-<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># logic.yaml</span>
+<span class="nt">InitSmarthomeNG</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InitSmartHomeNG.py</span>
+<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 
-<span class="nt">Beispiellogik</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Umgebungsvariablen des Systems werden aktualisiert, z.B. Diskusage</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Beispiel.py</span><span class="w"></span>
-<span class="w">    </span><span class="nt">watch_item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*:Logikaufruf&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">item1.*</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">parent.item2</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># run on start of SmartHomeNG and every 5 minutes afterwards</span><span class="w"></span>
-<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0,5,10,15,20,25,30,35,40,45,50,55 * * *</span><span class="w"></span>
+<span class="nt">Beispiellogik</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Umgebungsvariablen des Systems werden aktualisiert, z.B. Diskusage</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Beispiel.py</span>
+<span class="w">    </span><span class="nt">watch_item</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*:Logikaufruf&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">item1.*</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">parent.item2</span>
+<span class="w">    </span><span class="c1"># run on start of SmartHomeNG and every 5 minutes afterwards</span>
+<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0,5,10,15,20,25,30,35,40,45,50,55 * * *</span>
 </pre></div>
 </div>
 </div>
@@ -4128,13 +4128,13 @@ nach thematischen Gesichtspunkten aufzusplitten und die jeweiligen Items dort zu
 <p><strong>Wichtig: Wenn eine Item-Datei oder eine Logic-Datei neu erstellt oder geändert worden ist
 oder ein neues Plugin implementiert werden soll, muss SmartHomeNG neu gestartet werden.</strong></p>
 <p>SmartHomeNG kann über die Option <strong>-r</strong> neu gestartet werden.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/local/smarthome
-python3 bin/smarthome.py -r
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/local/smarthome
+python3<span class="w"> </span>bin/smarthome.py<span class="w"> </span>-r
 </pre></div>
 </div>
 <p>Wenn SmartHomeNG als Dienst eingerichtet ist, kann der Dienst kann über den entsprechenden Befehl „systemctl“
 neu gestartet werden.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl restart smarthome.service
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>smarthome.service
 </pre></div>
 </div>
 <div class="admonition note">

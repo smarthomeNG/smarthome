@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="../../konfiguration/items/items.html">Items</a> &raquo;</li>
-      <li>Relative Item Referenzen</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="../../konfiguration/items/items.html">Items</a></li>
+      <li class="breadcrumb-item active">Relative Item Referenzen</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3885,19 +3885,19 @@ ist jedoch schon aus Gründen der Übersichtlichkeit/Lesbarkeit nicht sinnvoll.<
 <p>Die folgenden Beispiele beziehen sich auf diese Item Struktur:</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">../items/*.yaml</span><a class="headerlink" href="#id1" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_tree</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">grandparent</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_tree</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">grandparent</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">parent</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">parent</span><span class="p">:</span>
 
-<span class="w">            </span><span class="nt">my_item</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">            </span><span class="nt">my_item</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 
-<span class="w">                </span><span class="nt">child</span><span class="p">:</span><span class="w"></span>
+<span class="w">                </span><span class="nt">child</span><span class="p">:</span>
 
-<span class="w">                    </span><span class="nt">grandchild</span><span class="p">:</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">grandchild</span><span class="p">:</span>
 
-<span class="w">            </span><span class="nt">sister</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="nt">sister</span><span class="p">:</span>
 </pre></div>
 </div>
 </div>
@@ -3951,9 +3951,9 @@ und zwar soll <strong>my_item</strong> den dreifachen Wert von <strong>my_item.c
 Attribute folgendermaßen aussehen:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">../items/*.yaml</span><a class="headerlink" href="#id2" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">my_item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3 * sh..child()</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.child</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">my_item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3 * sh..child()</span>
+<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.child</span>
 </pre></div>
 </div>
 </div>
@@ -4018,8 +4018,8 @@ kann.</p>
 enthalten.</p>
 <div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-text">../items/*.yaml</span><a class="headerlink" href="#id3" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="nt">schreibtischleuchte</span><span class="p">:</span><span class="w"></span>
-<span class="w">     </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">basic.switch(&#39;id_schreibtischleuchte&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;wohnung.buero.schreibtischleuchte.onoff&#39;</span><span class="nv">)</span><span class="w"> </span><span class="p p-Indicator">}}</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="nt">schreibtischleuchte</span><span class="p">:</span>
+<span class="w">     </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">basic.switch(&#39;id_schreibtischleuchte&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;wohnung.buero.schreibtischleuchte.onoff&#39;</span><span class="nv">)</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </pre></div>
 </div>
 </div>
@@ -4032,8 +4032,8 @@ Attribut <strong>sv_widget</strong> muss der Aufruf also folgendermaßen lauten:
 jedoch relativ wäre</p>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">../items/*.yaml</span><a class="headerlink" href="#id4" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="nt">schreibtischleuchte</span><span class="p">:</span><span class="w"></span>
-<span class="w">     </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">basic.switch(&#39;id_schreibtischleuchte&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;.onoff&#39;</span><span class="nv">)</span><span class="w"> </span><span class="p p-Indicator">}}</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="nt">schreibtischleuchte</span><span class="p">:</span>
+<span class="w">     </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">basic.switch(&#39;id_schreibtischleuchte&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;.onoff&#39;</span><span class="nv">)</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </pre></div>
 </div>
 </div>

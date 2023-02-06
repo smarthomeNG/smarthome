@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="../../../konfiguration/items/items.html">Items</a> &raquo;</li>
-          <li><a href="standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a> &raquo;</li>
-      <li><em>autotimer</em></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="../../../konfiguration/items/items.html">Items</a></li>
+          <li class="breadcrumb-item"><a href="standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a></li>
+      <li class="breadcrumb-item active"><em>autotimer</em></li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3859,15 +3859,15 @@ bestimmten Wert. Der Timer beginnt zu laufen, wenn dem Item ein Wert
 zugewiesen wird. Wenn während der Autotimer läuft dem Item erneut ein
 Wert zugewiesen wird, beginnt der Timer erneut zu laufen. Damit lässt
 sich z.B. ein Treppenhauslicht realisieren.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m = 0</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m = 0</span>
 </pre></div>
 </div>
 <p>setzt nach 5 Minuten den Wert des Items auf 0.</p>
 <p>Das allgemeine Format für die Angabe des <strong>autotimer</strong> Attributs ist:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;dauer&gt; = &lt;wert&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;dauer&gt; = &lt;wert&gt;</span>
 </pre></div>
 </div>
 <p>Der Wert für <em>dauer</em> kann auf folgende Weise angegeben werden:</p>
@@ -3881,13 +3881,13 @@ Wertzuweisung</a></p>
 erweitert:</p>
 <p>Alternativ zur Angabe von absoluten Werten für <em>dauer</em> und <em>wert</em>,
 können nun auch Items als <em>dauer</em> und/oder <em>wert</em> angegeben werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.item.dauer() = 0</span><span class="w"></span>
-<span class="w">    </span><span class="nt">dauer</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wert</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.item.dauer() = 0</span>
+<span class="w">    </span><span class="nt">dauer</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45</span>
+<span class="w">    </span><span class="nt">wert</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 </pre></div>
 </div>
 <p>setzt nach der in <em>item.dauer</em> angegebenen Dauer (hier initial 45
@@ -3928,7 +3928,7 @@ v1.3 <strong>compat_1.2</strong>.</p>
 <p>Das Verhalten kann global für die SmartHomeNG Installation vorgegeben
 werden, indem der Konfigurationsdatei <strong>../etc/smarthome.yaml</strong> der
 Eintrag</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">assign_compatibility</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latest</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">assign_compatibility</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latest</span>
 </pre></div>
 </div>
 <p>hinzugefügt wird.</p>
@@ -3937,18 +3937,18 @@ Modus bei jedem <em>autotimer</em> oder <em>cycle</em> Attribut als optionaler d
 Parameter angegeben werden. Wenn keine Angabe des Kompatibilitätsmodus
 erfolgt, wird die globale Voreinstellung genutzt.</p>
 <p>Die Angabe des Kompatibilitätsmodus erfolgt folgendermaßen:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;dauer&gt; = &lt;wert&gt; = &lt;kompatibilität&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;dauer&gt; = &lt;wert&gt; = &lt;kompatibilität&gt;</span>
 </pre></div>
 </div>
 <p>Beispiel:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m = 0 = compat_1.2</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m = 0 = compat_1.2</span>
 
-<span class="nt">item2</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m = true = latest</span><span class="w"></span>
+<span class="nt">item2</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m = true = latest</span>
 </pre></div>
 </div>
 <p>Nach auslösen der Autotimer wird <em>item</em> der String <strong>‘0’</strong> zugewiesen

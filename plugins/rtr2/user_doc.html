@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-      <li>rtr2</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_system.html">System Plugins</a></li>
+      <li class="breadcrumb-item active">rtr2</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3882,9 +3882,9 @@ unter <a class="reference internal" href="../../plugins_doc/config/rtr2.html"><s
 Regler (RTR) das Template <strong>rtr2.rtr</strong> vom Plugin mitgeliefert.</p>
 <p>Ein RTR kann einfach folgendermaßen konfiguriert werden, indem nur die Id des zur erstellenden RTR als Attribut
 <code class="docutils literal notranslate"><span class="pre">rtr2_id</span></code> angegeben wird. Die ID kann ein normaler Text sein, z.B. der Name des Raumes der gesteuert werden soll.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_rtr</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtr2.rtr</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rtr2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dusche</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_rtr</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtr2.rtr</span>
+<span class="w">    </span><span class="nt">rtr2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dusche</span>
 </pre></div>
 </div>
 <p>Hierdurch wird eine Item Struktur angelegt, welche die benötigten Items deklariert. Für diese Items können noch
@@ -3901,41 +3901,41 @@ eine KNX Gruppenadresse geschrieben wird, die mit einem Heizungs-Aktor verbunden
 Beispiel <code class="docutils literal notranslate"><span class="pre">database:</span> <span class="pre">init</span></code> dafür, dass der jeweilige Stellwert in der Datenbank gespeichert wird.</p></li>
 </ul>
 </div></blockquote>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_rtr</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtr2.rtr</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rtr2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dusche</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_rtr</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtr2.rtr</span>
+<span class="w">    </span><span class="nt">rtr2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dusche</span>
 
-<span class="w">    </span><span class="nt">ist_temp</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">11/3/3</span><span class="w"></span>
-<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<span class="w">    </span><span class="nt">ist_temp</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span>
+<span class="w">        </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">11/3/3</span>
+<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 
-<span class="w">    </span><span class="nt">stellwert</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5001</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4/2/36</span><span class="w"></span>
-<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<span class="w">    </span><span class="nt">stellwert</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5001</span>
+<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4/2/36</span>
+<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 </pre></div>
 </div>
 <p>Mit diesem minimalen Set an Angaben ist der RTR grundsätzlich betriebsbereit und kann seine Aufgabe erfüllen.</p>
 <p>Die gewünschte Soll-Temperatur kann durch setzen des Wertes des Items <code class="docutils literal notranslate"><span class="pre">test_rtr.soll_temp</span></code> eingestellt werden.
 Falls die Soll-Temperatur auch in der Datenbank gespeichert werden soll, so muss das Item mit dem Attribut
 <code class="docutils literal notranslate"><span class="pre">database:</span> <span class="pre">init</span></code> angegeben werden, wie im Beispiel unten zu sehen ist.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_rtr</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtr2.rtr</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rtr2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dusche</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_rtr</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtr2.rtr</span>
+<span class="w">    </span><span class="nt">rtr2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dusche</span>
 
-<span class="w">    </span><span class="nt">ist_temp</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">11/3/3</span><span class="w"></span>
-<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<span class="w">    </span><span class="nt">ist_temp</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span>
+<span class="w">        </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">11/3/3</span>
+<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 
-<span class="w">    </span><span class="nt">stellwert</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5001</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4/2/36</span><span class="w"></span>
-<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<span class="w">    </span><span class="nt">stellwert</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5001</span>
+<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4/2/36</span>
+<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 
-<span class="w">    </span><span class="nt">soll_temp</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<span class="w">    </span><span class="nt">soll_temp</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 </pre></div>
 </div>
 <p>Darüber hinaus gibt es eine große Zahl weiterer Einstellungen, die am RTR vorgenommen werden können.</p>
@@ -3970,15 +3970,15 @@ zwischengespeicherte Modus, der vor aktivieren des Frostschutzes aktiv war.</p>
 <h4>Automatische Nachtabsenkung<a class="headerlink" href="#automatische-nachtabsenkung" title="Permalink to this heading"></a></h4>
 <p>Eine automatische Nachtabsenkung kann auf vielen Wegen implementiert werden. Eine einfache Methode ist die
 Verwendung des <code class="docutils literal notranslate"><span class="pre">crontab</span></code> Attributes für die Modus-Items <code class="docutils literal notranslate"><span class="pre">komfort</span></code> und <code class="docutils literal notranslate"><span class="pre">nacht</span></code>:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_rtr</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtr2.rtr</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rtr2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dusche</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_rtr</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtr2.rtr</span>
+<span class="w">    </span><span class="nt">rtr2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dusche</span>
 
-<span class="w">    </span><span class="nt">komfort</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30 4 * * = True</span><span class="w"></span>
+<span class="w">    </span><span class="nt">komfort</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30 4 * * = True</span>
 
-<span class="w">    </span><span class="nt">nacht</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0 21 * * = True</span><span class="w"></span>
+<span class="w">    </span><span class="nt">nacht</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0 21 * * = True</span>
 </pre></div>
 </div>
 <p>Hierdurch wird täglich um 4:30 Uhr der Komfort-Modus aktiviert und täglich um 21:00 Uhr die Nachtabsenkung.</p>
@@ -3989,13 +3989,13 @@ Verwendung des <code class="docutils literal notranslate"><span class="pre">cron
 <p>Eine automatische Aktivierung des Frostschutzes kann für viele Zwecke nützlich sein. Im folgenden Beispiel wird
 der Frostschutz aktiviert, wenn das Fenster geöffnet wird, um Heizenergie zu sparen. Dazu wird das <code class="docutils literal notranslate"><span class="pre">frost</span></code> Attribut
 mit dem Item verbunden, welches den Status des Fensterkontaktes enthält.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_rtr</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtr2.rtr</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rtr2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dusche</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test_rtr</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtr2.rtr</span>
+<span class="w">    </span><span class="nt">rtr2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dusche</span>
 
-<span class="w">    </span><span class="nt">frost</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh.wohnung.dusche.fenster.griff() &gt; 0 else False</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wohnung.dusche.fenster.griff</span><span class="w"></span>
+<span class="w">    </span><span class="nt">frost</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh.wohnung.dusche.fenster.griff() &gt; 0 else False</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wohnung.dusche.fenster.griff</span>
 </pre></div>
 </div>
 <p>Es wird hierbei auf einen Wert größer 0 verglichen, da der Fenstergriff separate Stati für gekippt und geöffnet
@@ -4040,10 +4040,10 @@ Es sind die folgenden Funktionen implementiert (einige erlauben nur die Abfrage)
 Seite <a class="reference internal" href="../../plugins_doc/config/rtr2.html"><span class="doc">Plugin ‚rtr2‘ Konfiguration</span></a> in der Beschreibung des Item Attributes <code class="docutils literal notranslate"><span class="pre">rtr2_function</span></code> nachgelesen
 werden.</p>
 <p>Um den Heiz-Status eines RTR mit der Id <strong>dusche</strong> abzufragen, muss ein Item folgendermaßen konfiguriert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">heizt</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rtr2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dusche</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rtr2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">heating_status</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">heizt</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">rtr2_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dusche</span>
+<span class="w">    </span><span class="nt">rtr2_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">heating_status</span>
 </pre></div>
 </div>
 <div class="line-block">
@@ -4071,9 +4071,9 @@ des RTR angezeigt.</p>
 </ul>
 </div></blockquote>
 <p>Das Widget wird folgendermaßen genutzt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">visu_heizung</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperaturregler Decke</span><span class="w"></span>
-<span class="w">    </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">rtr2.rtr(&#39;wohnung.dusche.heizung&#39;,</span><span class="nv"> </span><span class="s">&#39;0.2&#39;,</span><span class="nv"> </span><span class="s">&#39;&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">visu_heizung</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperaturregler Decke</span>
+<span class="w">    </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">rtr2.rtr(&#39;wohnung.dusche.heizung&#39;,</span><span class="nv"> </span><span class="s">&#39;0.2&#39;,</span><span class="nv"> </span><span class="s">&#39;&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
 </pre></div>
 </div>
 <p>Die Darstellung des RTR in der Visu sieht folgendermaßen aus:</p>
@@ -4105,9 +4105,9 @@ zu zwei weitere Temperaturen angezeigt werden, falls dieses gewünscht wird.</p>
 </ul>
 </div></blockquote>
 <p>Das Widget wird folgendermaßen genutzt (incl. Anzeige einer zusätzlichen Temperatur):</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">visu_heizung</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Temperaturen in °C / Stellwert in %</span><span class="w"></span>
-<span class="w">    </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">rtr2.plot(&#39;wohnung.dusche.heizung&#39;,</span><span class="nv"> </span><span class="s">&#39;Decke&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.dusche.heizung.ist_estrich&#39;,</span><span class="nv"> </span><span class="s">&#39;Estrich&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">visu_heizung</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Temperaturen in °C / Stellwert in %</span>
+<span class="w">    </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">rtr2.plot(&#39;wohnung.dusche.heizung&#39;,</span><span class="nv"> </span><span class="s">&#39;Decke&#39;,</span><span class="nv"> </span><span class="s">&#39;wohnung.dusche.heizung.ist_estrich&#39;,</span><span class="nv"> </span><span class="s">&#39;Estrich&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
 </pre></div>
 </div>
 <p>Die Darstellung der Daten in der Visu sieht folgendermaßen aus:</p>

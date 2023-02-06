@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="entwicklung.html">Entwicklung</a> &raquo;</li>
-      <li>Virtuelle Umgebungen</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="entwicklung.html">Entwicklung</a></li>
+      <li class="breadcrumb-item active">Virtuelle Umgebungen</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3873,27 +3873,27 @@ sind lesenswert. Eine Übersicht findet sich auf
 Python Interpreter installiert und genutzt werden soll.</p>
 <p>Zunächst in den Basisordner von SmartHomeNG wechseln. Dort wird dann eine virtuelle Umgebung mit Namen <strong>env</strong>
 erstellt und aktiviert. Pip wird aktualisiert und die Basisabhängigkeiten von SmartHomeNG installiert.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/local/smarthome                         <span class="c1"># Eventuell an anderes Basisverzeichnis anpassen</span>
-python3 -m venv env
-<span class="nb">source</span> env/bin/activate                         <span class="c1"># Aktivieren der virtuellen Umgebung für diese Shell</span>
-python3 -m pip install pip --upgrade            <span class="c1"># Pip für virtuelle Umgebung aktualisieren</span>
-python3 -m pip install -r requirements/base.txt <span class="c1"># Installieren der Bibliotheken für die Basis von SmartHomeNG</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/local/smarthome<span class="w">                         </span><span class="c1"># Eventuell an anderes Basisverzeichnis anpassen</span>
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>env
+<span class="nb">source</span><span class="w"> </span>env/bin/activate<span class="w">                         </span><span class="c1"># Aktivieren der virtuellen Umgebung für diese Shell</span>
+python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>pip<span class="w"> </span>--upgrade<span class="w">            </span><span class="c1"># Pip für virtuelle Umgebung aktualisieren</span>
+python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements/base.txt<span class="w"> </span><span class="c1"># Installieren der Bibliotheken für die Basis von SmartHomeNG</span>
 </pre></div>
 </div>
 <p>Nun sollten die Abhängigkeiten für die Basis von SmartHomeNG erfüllt sein.
 Einige Plugins brauchen eventuell weitere Bibliotheken. Jedes Plugin bringt eine eigene
 <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> Datei mit. Die benötigten Bibliotheken können installiert werden mit:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/local/smarthome                            <span class="c1"># Eventuell an anderes Basisverzeichnis anpassen</span>
-<span class="nb">source</span> env/bin/activate                            <span class="c1"># Aktivieren der virtuellen Umgebung für diese Shell</span>
-pip install -r plugins/pluginname/requirements.txt <span class="c1"># Installieren der Bibliotheken für das Plugin &lt;pluginname&gt;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/local/smarthome<span class="w">                            </span><span class="c1"># Eventuell an anderes Basisverzeichnis anpassen</span>
+<span class="nb">source</span><span class="w"> </span>env/bin/activate<span class="w">                            </span><span class="c1"># Aktivieren der virtuellen Umgebung für diese Shell</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>plugins/pluginname/requirements.txt<span class="w"> </span><span class="c1"># Installieren der Bibliotheken für das Plugin &lt;pluginname&gt;</span>
 </pre></div>
 </div>
 <p>Es gilt daran zu denken, das es Python Bibliotheken gibt, die weitere Pakete benötigen die nur mit
 apt installiert werden können. In diesem Fall sollte es einen Hinweis in der Readme des Plugins geben.</p>
 <p>Jedes mal wenn man SmartHomeNG mit einer virtuellen Umgebung nutzen will,
 muß diese in der aktuellen Shell aktiviert werden:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/local/smarthome                         <span class="c1"># Eventuell an anderes Basisverzeichnis anpassen</span>
-<span class="nb">source</span> env/bin/activate                         <span class="c1"># Aktivieren der virtuellen Umgebung für diese Shell</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/local/smarthome<span class="w">                         </span><span class="c1"># Eventuell an anderes Basisverzeichnis anpassen</span>
+<span class="nb">source</span><span class="w"> </span>env/bin/activate<span class="w">                         </span><span class="c1"># Aktivieren der virtuellen Umgebung für diese Shell</span>
 </pre></div>
 </div>
 <p>Die virtuelle Umgebung kann deaktiviert werden durch den Befehl <code class="docutils literal notranslate"><span class="pre">deactivate</span></code> in der aktuellen Shell.</p>

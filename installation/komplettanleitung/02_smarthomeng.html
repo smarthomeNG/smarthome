@@ -3840,10 +3840,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../installation.html">Installation</a> &raquo;</li>
-          <li><a href="komplettanleitung.html">Komplettanleitung</a> &raquo;</li>
-      <li>SmartHomeNG installieren</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../installation.html">Installation</a></li>
+          <li class="breadcrumb-item"><a href="komplettanleitung.html">Komplettanleitung</a></li>
+      <li class="breadcrumb-item active">SmartHomeNG installieren</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3890,7 +3890,7 @@ zu laden und zu installieren.</p>
 <section id="zusatzliche-linux-pakete-installieren">
 <h2><a class="toc-backref" href="#id2">zusätzliche Linux Pakete installieren</a><a class="headerlink" href="#zusatzliche-linux-pakete-installieren" title="Permalink to this heading"></a></h2>
 <p>Zunächst müssen einige zusätzlichen Pakete installiert werden:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get -y install dialog python3 python3-dev python3-setuptools unzip git-core build-essential python3-pip
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>-y<span class="w"> </span>install<span class="w"> </span>dialog<span class="w"> </span>python3<span class="w"> </span>python3-dev<span class="w"> </span>python3-setuptools<span class="w"> </span>unzip<span class="w"> </span>git-core<span class="w"> </span>build-essential<span class="w"> </span>python3-pip
 </pre></div>
 </div>
 </section>
@@ -3899,13 +3899,13 @@ zu laden und zu installieren.</p>
 <p>SmartHomeNG Dateien vom github holen:</p>
 <p>Die folgenden Kommandos mit dem User Account (smarthome) durchführen
 unter dem später SmartHomeNG laufen soll, <strong>nicht als root</strong>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/local
-sudo mkdir smarthome
-sudo chown -R smarthome:smarthome /usr/local/smarthome
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/local
+sudo<span class="w"> </span>mkdir<span class="w"> </span>smarthome
+sudo<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>smarthome:smarthome<span class="w"> </span>/usr/local/smarthome
 
-<span class="nb">cd</span> smarthome
-git clone https://github.com/smarthomeNG/smarthome.git .
-git clone https://github.com/smarthomeNG/plugins.git plugins
+<span class="nb">cd</span><span class="w"> </span>smarthome
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/smarthomeNG/smarthome.git<span class="w"> </span>.
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/smarthomeNG/plugins.git<span class="w"> </span>plugins
 </pre></div>
 </div>
 <p>Bitte auf den <strong>Punkt</strong> am Ende des ersten <strong>git clone</strong> Kommandos achten!</p>
@@ -3917,23 +3917,23 @@ git clone https://github.com/smarthomeNG/plugins.git plugins
 <p>Wenn SmartHomeNG in einer Python Umgebung gestartet wird in der nicht der minimale Set an Packages installiert ist,
 wird dieser installiert und die Informationen werden auf die Konsole ausgegeben (da das Logging dann noch nicht
 konfiguriert werden kann). Anschließend startet SmartHomeNG neu. Das sieht folgendermaßen aus.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 bin/smarthome.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>bin/smarthome.py
 
-test_requirements: <span class="s1">&#39;ephem&#39;</span> not installed. Minimum v3.7 needed
-test_requirements: <span class="s1">&#39;holidays&#39;</span> not installed. Minimum v0.9.11 needed
-test_requirements: <span class="s1">&#39;psutil&#39;</span> not installed, any version needed
-test_requirements: <span class="s1">&#39;python-dateutil&#39;</span> not installed. Minimum v2.5.3 needed
-test_requirements: <span class="s1">&#39;requests&#39;</span> not installed. Minimum v2.20.0 needed
-test_requirements: <span class="s1">&#39;ruamel.yaml&#39;</span> not installed. Minimum v0.13.7 needed
+test_requirements:<span class="w"> </span><span class="s1">&#39;ephem&#39;</span><span class="w"> </span>not<span class="w"> </span>installed.<span class="w"> </span>Minimum<span class="w"> </span>v3.7<span class="w"> </span>needed
+test_requirements:<span class="w"> </span><span class="s1">&#39;holidays&#39;</span><span class="w"> </span>not<span class="w"> </span>installed.<span class="w"> </span>Minimum<span class="w"> </span>v0.9.11<span class="w"> </span>needed
+test_requirements:<span class="w"> </span><span class="s1">&#39;psutil&#39;</span><span class="w"> </span>not<span class="w"> </span>installed,<span class="w"> </span>any<span class="w"> </span>version<span class="w"> </span>needed
+test_requirements:<span class="w"> </span><span class="s1">&#39;python-dateutil&#39;</span><span class="w"> </span>not<span class="w"> </span>installed.<span class="w"> </span>Minimum<span class="w"> </span>v2.5.3<span class="w"> </span>needed
+test_requirements:<span class="w"> </span><span class="s1">&#39;requests&#39;</span><span class="w"> </span>not<span class="w"> </span>installed.<span class="w"> </span>Minimum<span class="w"> </span>v2.20.0<span class="w"> </span>needed
+test_requirements:<span class="w"> </span><span class="s1">&#39;ruamel.yaml&#39;</span><span class="w"> </span>not<span class="w"> </span>installed.<span class="w"> </span>Minimum<span class="w"> </span>v0.13.7<span class="w"> </span>needed
 
-Installing core requirements <span class="k">for</span> the current user, please wait...
-Running <span class="k">in</span> a virtualenv environment,
-installing core requirements only to actual virtualenv, please wait...
+Installing<span class="w"> </span>core<span class="w"> </span>requirements<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>current<span class="w"> </span>user,<span class="w"> </span>please<span class="w"> </span>wait...
+Running<span class="w"> </span><span class="k">in</span><span class="w"> </span>a<span class="w"> </span>virtualenv<span class="w"> </span>environment,
+installing<span class="w"> </span>core<span class="w"> </span>requirements<span class="w"> </span>only<span class="w"> </span>to<span class="w"> </span>actual<span class="w"> </span>virtualenv,<span class="w"> </span>please<span class="w"> </span>wait...
 
-core requirements installed
+core<span class="w"> </span>requirements<span class="w"> </span>installed
 
-Starting SmartHomeNG again...
-Daemon PID <span class="m">4024</span>
+Starting<span class="w"> </span>SmartHomeNG<span class="w"> </span>again...
+Daemon<span class="w"> </span>PID<span class="w"> </span><span class="m">4024</span>
 
 $
 </pre></div>
@@ -3950,8 +3950,8 @@ nachinstalliert werden.</p>
 Im Unterordner <code class="docutils literal notranslate"><span class="pre">requirements</span></code> befindet sich dafür eine Datei <code class="docutils literal notranslate"><span class="pre">base.txt</span></code>.
 In dieser Datei stehen die von SmartHomeNG grundlegend benötigten Bibliotheken.
 Diese können wie folgt installiert werden:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/local/smarthome
-python3 -m pip install -r requirements/base.txt --user
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/local/smarthome
+python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements/base.txt<span class="w"> </span>--user
 </pre></div>
 </div>
 <div class="admonition attention">
@@ -3971,11 +3971,11 @@ in eine der installierten Python 3 Versionen installiert.</p>
 <p>Um sicherzustellen, dass die Bibliotheken in die Python3 Version installiert werden, muss pip aus genau dieser
 Python3 Umgebung aufgerufen werden.</p>
 <p>Um das sicherzustellen, ist statt</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install -r requirements/base.txt --user
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements/base.txt<span class="w"> </span>--user
 </pre></div>
 </div>
 <p>der folgende Befehl auszuführen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;python used to start SmartHomeNG&gt; -m pip3 install -r requirements/base.txt --user
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;python<span class="w"> </span>used<span class="w"> </span>to<span class="w"> </span>start<span class="w"> </span>SmartHomeNG&gt;<span class="w"> </span>-m<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements/base.txt<span class="w"> </span>--user
 </pre></div>
 </div>
 </div>
@@ -3987,12 +3987,12 @@ Python3 Umgebung aufgerufen werden.</p>
 <section id="smarthomeng-starten">
 <h3><a class="toc-backref" href="#id6">SmartHomeNG starten</a><a class="headerlink" href="#smarthomeng-starten" title="Permalink to this heading"></a></h3>
 <p>Nachdem SmartHomeNG nun installiert ist, kann SmartHomeNG erstmalig gestartet werden:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/local/smarthome
-python3 bin/smarthome.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/local/smarthome
+python3<span class="w"> </span>bin/smarthome.py
 </pre></div>
 </div>
 <p>Auf der Shell (Konsole, Kommandozeile) sollte jetzt nur eine Zeile erscheinen wie:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Daemon PID &lt;PID-ID&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Daemon<span class="w"> </span>PID<span class="w"> </span>&lt;PID-ID&gt;
 </pre></div>
 </div>
 <p>Das bedeutet, das SmartHomeNG nun im Hintergrund läuft und unter der Prozess ID <code class="docutils literal notranslate"><span class="pre">&lt;PID-ID&gt;</span></code> bekannt ist.</p>
@@ -4000,11 +4000,11 @@ python3 bin/smarthome.py
 <section id="uberprufen-ob-smarthomeng-lauft">
 <h3><a class="toc-backref" href="#id7">Überprüfen, ob SmartHomeNG läuft</a><a class="headerlink" href="#uberprufen-ob-smarthomeng-lauft" title="Permalink to this heading"></a></h3>
 <p>Um festzustellen ob SmartHomeNG läuft, kann der folgende Befehl genutzt werden:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ps -ef<span class="p">|</span>grep smarthome<span class="p">|</span>grep bin
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ps<span class="w"> </span>-ef<span class="p">|</span>grep<span class="w"> </span>smarthome<span class="p">|</span>grep<span class="w"> </span>bin
 </pre></div>
 </div>
 <p>Es sollte eine Zeile ausgegeben werden, die etwa so aussieht:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>smartho+ <span class="m">28373</span>     <span class="m">1</span>  <span class="m">1</span> <span class="m">12</span>:45 ?        <span class="m">00</span>:00:02 python3 bin/smarthome.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>smartho+<span class="w"> </span><span class="m">28373</span><span class="w">     </span><span class="m">1</span><span class="w">  </span><span class="m">1</span><span class="w"> </span><span class="m">12</span>:45<span class="w"> </span>?<span class="w">        </span><span class="m">00</span>:00:02<span class="w"> </span>python3<span class="w"> </span>bin/smarthome.py
 </pre></div>
 </div>
 <p>Die Zeile zeigt an, dass unter dem User <strong>smarthome</strong> (hier zu smartho+ abgekürzt) unter der PID <strong>28373</strong> seit <strong>12:45</strong>
@@ -4082,32 +4082,32 @@ zu laden.)</p>
 <p>In der <strong>smarthome.yaml</strong> stehen die allgemeinen Konfigurationseinstellungen der SmartHomeNG Installation, wie z.B. die
 Koordinaten des Standortes. Die Koordinaten werden benötigt um unter anderem Sonnenaufgang und Sonnenuntergang zu berechnen.
 Die Koordinaten für einen Standort kann man z.B. auf <a class="reference external" href="http://www.mapcoordinates.net/de">http://www.mapcoordinates.net/de</a> ermitteln.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/smarthome.yaml</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/smarthome.yaml</span>
 
-<span class="c1"># Airport Berlin Tegel</span><span class="w"></span>
-<span class="nt">lat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">52.5588327</span><span class="w"></span>
-<span class="nt">lon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">13.2884374</span><span class="w"></span>
-<span class="nt">elev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">35</span><span class="w"></span>
+<span class="c1"># Airport Berlin Tegel</span>
+<span class="nt">lat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">52.5588327</span>
+<span class="nt">lon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">13.2884374</span>
+<span class="nt">elev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">35</span>
 
-<span class="nt">tz</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Europe/Berlin&#39;</span><span class="w"></span>
+<span class="nt">tz</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Europe/Berlin&#39;</span>
 
-<span class="c1"># Version 1.5</span><span class="w"></span>
-<span class="c1">#deprecated_warnings: True</span><span class="w"></span>
+<span class="c1"># Version 1.5</span>
+<span class="c1">#deprecated_warnings: True</span>
 
-<span class="c1"># Version 1.4</span><span class="w"></span>
-<span class="c1">#</span><span class="w"></span>
-<span class="c1"># the default_language is used, where multiple languages are supported (de, if not specified)</span><span class="w"></span>
-<span class="c1">#default_language: de</span><span class="w"></span>
+<span class="c1"># Version 1.4</span>
+<span class="c1">#</span>
+<span class="c1"># the default_language is used, where multiple languages are supported (de, if not specified)</span>
+<span class="c1">#default_language: de</span>
 
-<span class="c1"># Version 1.3</span><span class="w"></span>
-<span class="c1"># db: Format: &lt;name&gt;:&lt;python-module&gt;, list of database-entries is possible</span><span class="w"></span>
-<span class="c1"># db:</span><span class="w"></span>
-<span class="c1">#   - sqlite:sqlite3</span><span class="w"></span>
-<span class="c1">#   - mysql:pymysql</span><span class="w"></span>
-<span class="c1"># module_paths = /usr/local/python/lib    # list of path-entries is possible</span><span class="w"></span>
+<span class="c1"># Version 1.3</span>
+<span class="c1"># db: Format: &lt;name&gt;:&lt;python-module&gt;, list of database-entries is possible</span>
+<span class="c1"># db:</span>
+<span class="c1">#   - sqlite:sqlite3</span>
+<span class="c1">#   - mysql:pymysql</span>
+<span class="c1"># module_paths = /usr/local/python/lib    # list of path-entries is possible</span>
 
-<span class="c1"># Version 1.3: control type casting when assiging values to items</span><span class="w"></span>
-<span class="c1"># assign_compatibility = latest            # latest or compat_1.2 (compat_1.2 is default for shNG v1.3)</span><span class="w"></span>
+<span class="c1"># Version 1.3: control type casting when assiging values to items</span>
+<span class="c1"># assign_compatibility = latest            # latest or compat_1.2 (compat_1.2 is default for shNG v1.3)</span>
 </pre></div>
 </div>
 <p>Es bietet sich an die default-Datei zu kopieren nach smarthome.yaml und die Daten oben auf den eigenen Standort
@@ -4157,31 +4157,31 @@ anzupassen.</p>
 <p>Wenn keine Datei <strong>plugin.yaml</strong> existiert, wird beim ersten Start von SmartHomeNG die mitgelieferte Datei <strong>plugin.yaml.default</strong>
 kopiert. In dieser Datei ist ein minimaler Set von Plugins konfiguriert, so dass z.B. per Browser oder mit der smartVISU auf die
 SmartHomeNG Instanz zugegriffen werden kann.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
-<span class="nt">cli</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0.0.0</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#port: 2323</span><span class="w"></span>
-<span class="w">    </span><span class="nt">update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#hashed_password: 123456789abcdef123456789abcdef123456789abcdef</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span>
+<span class="nn">---</span>
+<span class="nt">cli</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli</span>
+<span class="w">    </span><span class="nt">ip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0.0.0</span>
+<span class="w">    </span><span class="c1">#port: 2323</span>
+<span class="w">    </span><span class="nt">update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">    </span><span class="c1">#hashed_password: 123456789abcdef123456789abcdef123456789abcdef</span>
 
-<span class="c1"># Bereitstellung eines Websockets zur Kommunikation zwischen SmartVISU und SmartHomeNG</span><span class="w"></span>
-<span class="nt">websocket</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">visu_websocket</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#ip: 0.0.0.0</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#port: 2424</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#tls: no</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#wsproto: 4</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#acl: rw</span><span class="w"></span>
+<span class="c1"># Bereitstellung eines Websockets zur Kommunikation zwischen SmartVISU und SmartHomeNG</span>
+<span class="nt">websocket</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">visu_websocket</span>
+<span class="w">    </span><span class="c1">#ip: 0.0.0.0</span>
+<span class="w">    </span><span class="c1">#port: 2424</span>
+<span class="w">    </span><span class="c1">#tls: no</span>
+<span class="w">    </span><span class="c1">#wsproto: 4</span>
+<span class="w">    </span><span class="c1">#acl: rw</span>
 
-<span class="nt">database</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database</span><span class="w"></span>
-<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite3</span><span class="w"></span>
-<span class="w">    </span><span class="nt">connect</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">database:./var/db/smarthomeng.db</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">check_same_thread:0</span><span class="w"></span>
-<span class="c1"># ... etc.</span><span class="w"></span>
+<span class="nt">database</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite3</span>
+<span class="w">    </span><span class="nt">connect</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">database:./var/db/smarthomeng.db</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">check_same_thread:0</span>
+<span class="c1"># ... etc.</span>
 </pre></div>
 </div>
 <p>Die Konfiguration weiterer Plugins ist vorhanden aber mit Kommentaren <code class="docutils literal notranslate"><span class="pre">#</span></code> ausser Kraft gesetzt, um die erstmalige Nutzung
@@ -4190,8 +4190,8 @@ dieser Plugins möglichst einfach zu gestalten.</p>
 und die benötigten Plugins können aktiviert werden.
 Alternativ kann die Konfiguration auch später über das Admin Interface stattfinden.</p>
 <p>Jedes Plugin kann weitere Abhängigkeiten von Bibliotheken mit sich bringen. Diese sind einzeln zu installieren mit</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/local/smarthome
-pip3 install -r plugins/&lt;plugin-name-hier-einsetzen&gt;/requirements.txt --user
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/local/smarthome
+pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>plugins/&lt;plugin-name-hier-einsetzen&gt;/requirements.txt<span class="w"> </span>--user
 </pre></div>
 </div>
 <div class="admonition note">
@@ -4210,16 +4210,16 @@ Diese werden in eigenen Python Dateien im Verzeichnis <strong>logics</strong> ab
 In der Konfigurationsdatei ist beispielsweise beschrieben welche Skriptdateien für
 SmartHomeNG bekannt sein sollen,
 wann sie ausgeführt werden sollen und ob sie aktiv sind oder nicht.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
-<span class="c1">#</span><span class="w"></span>
-<span class="c1"># etc/logic.yaml</span><span class="w"></span>
-<span class="c1">#</span><span class="w"></span>
-<span class="nt">ex_logging</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_logging.py</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span>
+<span class="nn">---</span>
+<span class="c1">#</span>
+<span class="c1"># etc/logic.yaml</span>
+<span class="c1">#</span>
+<span class="nt">ex_logging</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_logging.py</span>
 
-<span class="nt">ex_persist</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_persistance.py</span><span class="w"></span>
+<span class="nt">ex_persist</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_persistance.py</span>
 </pre></div>
 </div>
 <p>Da derzeit noch keine Logiken benötigt werden, ist auch hier kein Handlungsbedarf zum Editieren.
@@ -4235,8 +4235,8 @@ Für die Grundkonfiguration ist dies das http Modul, das z.B. vom Admin Interfac
 <h3><a class="toc-backref" href="#id16">SmartHomeNG starten</a><a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
 <p>Nachdem die Konfiguration für den Betrieb des Kerns von SmartHomeNG nun erfolgt ist, muss SmartHomeNG (neu) gestartet
 werden:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/local/smarthome
-python3 bin/smarthome.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/local/smarthome
+python3<span class="w"> </span>bin/smarthome.py
 </pre></div>
 </div>
 </section>

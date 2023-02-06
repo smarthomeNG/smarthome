@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_web.html">Web/Cloud Plugins</a> &raquo;</li>
-      <li>jsonread</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_web.html">Web/Cloud Plugins</a></li>
+      <li class="breadcrumb-item active">jsonread</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3893,29 +3893,29 @@ relative Pfadangabe für Dateien wie in <code class="docutils literal notranslat
 <p>Die folgenden Beispiele nutzen openweathermap <a class="reference external" href="https://openweathermap.org/current">openweathermap</a>  und den Beispiel API Schlüssel.
 Der Schlüssel sollte wirklich <strong>nur</strong> für Testzwecke verwendet werden</p>
 <p><strong>http Quelle</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">jsonread</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jsonread</span><span class="w"></span>
-<span class="w">   </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://samples.openweathermap.org/data/2.5/weather?q=London,uk&amp;appid=b6907d289e10d714a6e88b30761fae22</span><span class="w"></span>
-<span class="w">   </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">jsonread</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jsonread</span>
+<span class="w">   </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://samples.openweathermap.org/data/2.5/weather?q=London,uk&amp;appid=b6907d289e10d714a6e88b30761fae22</span>
+<span class="w">   </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
 </pre></div>
 </div>
 <p><strong>Dateiquelle</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">jsonread</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jsonread</span><span class="w"></span>
-<span class="w">   </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file:///path/to/data.json</span><span class="w"></span>
-<span class="w">   </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">jsonread</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jsonread</span>
+<span class="w">   </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file:///path/to/data.json</span>
+<span class="w">   </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
 </pre></div>
 </div>
 <p><strong>Mehrere Instanzen</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">jsonreadlon</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jsonread</span><span class="w"></span>
-<span class="w">   </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://samples.openweathermap.org/data/2.5/weather?q=London,uk&amp;appid=b6907d289e10d714a6e88b30761fae22</span><span class="w"></span>
-<span class="w">   </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">london</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">jsonreadlon</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jsonread</span>
+<span class="w">   </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://samples.openweathermap.org/data/2.5/weather?q=London,uk&amp;appid=b6907d289e10d714a6e88b30761fae22</span>
+<span class="w">   </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">london</span>
 
-<span class="nt">jsonreadcair</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jsonread</span><span class="w"></span>
-<span class="w">   </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://samples.openweathermap.org/data/2.5/weather?id=2172797&amp;appid=b6907d289e10d714a6e88b30761fae22</span><span class="w"></span>
-<span class="w">   </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cairns</span><span class="w"></span>
+<span class="nt">jsonreadcair</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jsonread</span>
+<span class="w">   </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://samples.openweathermap.org/data/2.5/weather?id=2172797&amp;appid=b6907d289e10d714a6e88b30761fae22</span>
+<span class="w">   </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cairns</span>
 </pre></div>
 </div>
 </section>
@@ -3927,70 +3927,70 @@ Der Schlüssel sollte wirklich <strong>nur</strong> für Testzwecke verwendet we
 <h4>Beispiel Klimaabfrage<a class="headerlink" href="#beispiel-klimaabfrage" title="Permalink to this heading"></a></h4>
 <p>Die Abfrage <code class="docutils literal notranslate"><span class="pre">https://samples.openweathermap.org/data/2.5/weather?q=London,uk&amp;appid=b6907d289e10d714a6e88b30761fae22</span></code>
 ergibt ein Ergebnis in etwa wie folgt:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="nt">&quot;coord&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;lon&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-0.13</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;lat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">51.51</span><span class="w"></span>
-<span class="p">},</span><span class="w"></span>
-<span class="nt">&quot;weather&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Drizzle&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;light intensity drizzle&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;icon&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;09d&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">],</span><span class="w"></span>
-<span class="nt">&quot;base&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stations&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;temp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">280.32</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;pressure&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1012</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;humidity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">81</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;temp_min&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">279.15</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;temp_max&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">281.15</span><span class="w"></span>
-<span class="p">},</span><span class="w"></span>
-<span class="nt">&quot;visibility&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="w"></span>
-<span class="nt">&quot;wind&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;speed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">4.1</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;deg&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="w"></span>
-<span class="p">},</span><span class="w"></span>
-<span class="nt">&quot;clouds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;all&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">90</span><span class="w"></span>
-<span class="p">},</span><span class="w"></span>
-<span class="nt">&quot;dt&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1485789600</span><span class="p">,</span><span class="w"></span>
-<span class="nt">&quot;sys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5091</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0103</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;country&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GB&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;sunrise&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1485762037</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;sunset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1485794875</span><span class="w"></span>
-<span class="p">},</span><span class="w"></span>
-<span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2643743</span><span class="p">,</span><span class="w"></span>
-<span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="nt">&quot;cod&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;coord&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;lon&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-0.13</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;lat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">51.51</span>
+<span class="p">},</span>
+<span class="nt">&quot;weather&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Drizzle&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;light intensity drizzle&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;icon&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;09d&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">],</span>
+<span class="nt">&quot;base&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stations&quot;</span><span class="p">,</span>
+<span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;temp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">280.32</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;pressure&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1012</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;humidity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">81</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;temp_min&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">279.15</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;temp_max&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">281.15</span>
+<span class="p">},</span>
+<span class="nt">&quot;visibility&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span>
+<span class="nt">&quot;wind&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;speed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">4.1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;deg&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span>
+<span class="p">},</span>
+<span class="nt">&quot;clouds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;all&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">90</span>
+<span class="p">},</span>
+<span class="nt">&quot;dt&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1485789600</span><span class="p">,</span>
+<span class="nt">&quot;sys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5091</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0103</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;country&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GB&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;sunrise&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1485762037</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;sunset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1485794875</span>
+<span class="p">},</span>
+<span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2643743</span><span class="p">,</span>
+<span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;London&quot;</span><span class="p">,</span>
+<span class="nt">&quot;cod&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Mit der Definition</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">temperature</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">jsonread_filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.main.temp</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">temperature</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">jsonread_filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.main.temp</span>
 
-<span class="nt">windspeed</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">jsonread_filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.wind.speed</span><span class="w"></span>
+<span class="nt">windspeed</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">jsonread_filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.wind.speed</span>
 </pre></div>
 </div>
 <p>werden den entsprechenden Items die Temperatur und die Windgeschwindigkeit zugewiesen.</p>
 <p>Wenn mehrere Instanzen für das Plugin definiert werden, so muss das <code class="docutils literal notranslate"><span class="pre">jsonread_filter</span></code> Attribut
 erweitert werden mit <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> und dem Instanznamen</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">temperature</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">london</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">      </span><span class="nt">jsonread_filter@london</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.main.temp</span><span class="w"></span>
-<span class="w">   </span><span class="nt">cairns</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">      </span><span class="nt">jsonread_filter@cairns</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.main.temp</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">temperature</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">london</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">      </span><span class="nt">jsonread_filter@london</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.main.temp</span>
+<span class="w">   </span><span class="nt">cairns</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">      </span><span class="nt">jsonread_filter@cairns</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.main.temp</span>
 </pre></div>
 </div>
 <p>Der Attributwert für <code class="docutils literal notranslate"><span class="pre">jsonread_filter</span></code> wird direkt an jq weitergegeben. Auf diese Art und Weise ist es möglich
@@ -3998,7 +3998,7 @@ recht komplexe Filter zu erstellen und für die Item Befüllung zu verwenden.
 Dabei muss darauf geachtet werden, das nur ein einzelner Wert zurückgegeben werden darf.
 Für komplexe JSON Strukturen kann es recht kompliziert sein entsprechende Filter zu definieren, daher
 könnte es einfacher sein diese Filter auf der Kommandozeile zu entwickeln:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl https://json.server.org/data.json <span class="p">|</span> jq <span class="s1">&#39;.object&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>https://json.server.org/data.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.object&#39;</span>
 </pre></div>
 </div>
 <p>Es lohnt ein Blick ins <a class="reference external" href="https://stedolan.github.io/jq/tutorial/">Tutorial für jq</a> um für die Verwendung der Filter einen Eindruck zu bekommen.</p>
@@ -4006,64 +4006,64 @@ könnte es einfacher sein diese Filter auf der Kommandozeile zu entwickeln:</p>
 <section id="beispiel-batteriedaten">
 <h4>Beispiel Batteriedaten<a class="headerlink" href="#beispiel-batteriedaten" title="Permalink to this heading"></a></h4>
 <p>In der <code class="docutils literal notranslate"><span class="pre">etc/plugin.yaml</span></code> wird das Plugin definiert als:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">myreserve</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jsonread</span><span class="w"></span>
-<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file:///tmp/BMSData.shtml</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myreserve</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">myreserve</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jsonread</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file:///tmp/BMSData.shtml</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myreserve</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 </pre></div>
 </div>
 <p>die Datei <code class="docutils literal notranslate"><span class="pre">/tmp/BMSData.shtml</span></code> wird dabei vom Prozess <code class="docutils literal notranslate"><span class="pre">receiveBLE.py</span></code> auf einem Raspi erzeugt (SolarWatt):</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="nt">&quot;FData&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;IPV&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">5.17</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;VBat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">170.1</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;VPV&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">418.5</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;PGrid&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;IBat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-9.91</span><span class="w"></span>
-<span class="p">},</span><span class="w"></span>
-<span class="nt">&quot;SData&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;ACS&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;U_L2&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">239</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&quot;f&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">49.98</span><span class="w"></span>
-<span class="w">        </span><span class="p">},</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;SoC&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="nt">&quot;FData&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;IPV&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">5.17</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;VBat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">170.1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;VPV&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">418.5</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;PGrid&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;IBat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-9.91</span>
+<span class="p">},</span>
+<span class="nt">&quot;SData&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;ACS&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;U_L2&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">239</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;f&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">49.98</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;SoC&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Um die Spannung, den aktuellen Ladestrom und die Ladeleistung zu erhalten, werden folgende Items für
 die Instanz <code class="docutils literal notranslate"><span class="pre">myreserve</span></code> definiert:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">battery</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">u</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">jsonread_filter@myreserve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.FData.VBat</span><span class="w"></span>
-<span class="w">    </span><span class="nt">i</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">jsonread_filter@myreserve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.FData.IBat</span><span class="w"></span>
-<span class="w">    </span><span class="nt">power</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">remark</span><span class="p">:</span><span class="w"> </span><span class="nt">etwas einfache Mathematik kann verwendet werden</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">jsonread_filter@myreserve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(.FData.VBat * .FData.IBat * -1)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">battery</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">u</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">jsonread_filter@myreserve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.FData.VBat</span>
+<span class="w">    </span><span class="nt">i</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">jsonread_filter@myreserve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.FData.IBat</span>
+<span class="w">    </span><span class="nt">power</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">remark: etwas einfache Mathematik kann verwendet werden</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">jsonread_filter@myreserve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(.FData.VBat * .FData.IBat * -1)</span>
 </pre></div>
 </div>
 </section>
 <section id="beispiel-energiemanager">
 <h4>Beispiel Energiemanager<a class="headerlink" href="#beispiel-energiemanager" title="Permalink to this heading"></a></h4>
 <p>In der <code class="docutils literal notranslate"><span class="pre">etc/plugin.yaml</span></code> wird das Plugin definiert als:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">swem</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jsonread</span><span class="w"></span>
-<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://192.168.x.y/rest/kiwigrid/wizard/devices</span><span class="w"></span>
-<span class="w">  </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">swem</span><span class="w"></span>
-<span class="w">  </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">swem</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jsonread</span>
+<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://192.168.x.y/rest/kiwigrid/wizard/devices</span>
+<span class="w">  </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">swem</span>
+<span class="w">  </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
 </pre></div>
 </div>
 <p>Die Abfrage der URL liefert ein ziemliche grosses JSON Datenpaket mit mehr als
 4500 Zeilen. Ein Auszug ist im folgenden dargestellt:</p>
 <p>Um die aktuelle Inverter AC Ausgangsleistung zu erhalten wird folgendes Item mit einem komplexen Filter definiert:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">inverter</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">jsonread_filter@swem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(.result.items[] | select(.guid == &quot;urn:your-inverter-guid&quot;).tagValues.PowerACOut.value)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">inverter</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">jsonread_filter@swem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(.result.items[] | select(.guid == &quot;urn:your-inverter-guid&quot;).tagValues.PowerACOut.value)</span>
 </pre></div>
 </div>
 <p>Auswählen des Arrays <code class="docutils literal notranslate"><span class="pre">.result.items</span></code>, dann auswählen des Zweiges bei dem das Element <code class="docutils literal notranslate"><span class="pre">guid</span></code> mit dem eigenen
@@ -4071,13 +4071,13 @@ die Instanz <code class="docutils literal notranslate"><span class="pre">myreser
 abfragen und ins Item schreiben.</p>
 <p>Das <code class="docutils literal notranslate"><span class="pre">jsonread_filter</span></code> Attribut kann mit Hilfe des <a class="reference external" href="https://yaml-multiline.info/">Blockstils für mehrzeilige Strings</a>
 eben auf auf mehrere Zeilen aufgeteilt werden. So ist folgende komplexe Berechnung über einen Filter möglich:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">grid</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">jsonread_filter@swem</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span><span class="w"></span>
-<span class="w">        </span><span class="no">(.result.items[] |</span><span class="w"></span>
-<span class="w">        </span><span class="no">select(.deviceModel[].deviceClass == &quot;com.kiwigrid.devices.solarwatt.MyReservePowermeter&quot;).tagValues.PowerOut.value) -</span><span class="w"></span>
-<span class="w">        </span><span class="no">(.result.items[] |</span><span class="w"></span>
-<span class="w">        </span><span class="no">select(.deviceModel[].deviceClass == &quot;com.kiwigrid.devices.solarwatt.MyReservePowermeter&quot;).tagValues.PowerIn.value)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">grid</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">jsonread_filter@swem</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">        </span><span class="no">(.result.items[] |</span>
+<span class="w">        </span><span class="no">select(.deviceModel[].deviceClass == &quot;com.kiwigrid.devices.solarwatt.MyReservePowermeter&quot;).tagValues.PowerOut.value) -</span>
+<span class="w">        </span><span class="no">(.result.items[] |</span>
+<span class="w">        </span><span class="no">select(.deviceModel[].deviceClass == &quot;com.kiwigrid.devices.solarwatt.MyReservePowermeter&quot;).tagValues.PowerIn.value)</span>
 </pre></div>
 </div>
 </section>

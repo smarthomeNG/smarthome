@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>smarthome-slack</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">smarthome-slack</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3854,24 +3854,24 @@
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="etc-plugin-yaml-single-instance-example">
 <h3>etc/plugin.yaml single instance example<a class="headerlink" href="#etc-plugin-yaml-single-instance-example" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">SlackInstance</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slack</span><span class="w"></span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">abc/def/ghi</span><span class="w"> </span><span class="c1"># Token for posting to workspace &#39;&lt;your_team&gt;&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">SlackInstance</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slack</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">abc/def/ghi</span><span class="w"> </span><span class="c1"># Token for posting to workspace &#39;&lt;your_team&gt;&#39;</span>
 </pre></div>
 </div>
 </section>
 <section id="etc-plugin-yaml-multi-instance-example">
 <h3>etc/plugin.yaml multi instance example<a class="headerlink" href="#etc-plugin-yaml-multi-instance-example" title="Permalink to this heading"></a></h3>
 <p>If you want to post to more than one Slack workspace or if you want to use more than one incoming webhook / authentication token, configure this plugin with multiple instances.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">SlackInstance_1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slack</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WorkspaceYourTeam</span><span class="w"></span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">abc/def/ghi</span><span class="w"> </span><span class="c1"># Token for posting to workspace &#39;&lt;your_team&gt;&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">SlackInstance_1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slack</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WorkspaceYourTeam</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">abc/def/ghi</span><span class="w"> </span><span class="c1"># Token for posting to workspace &#39;&lt;your_team&gt;&#39;</span>
 
-<span class="nt">SlackInstance_2</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slack</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WorkspaceAnotherTeam</span><span class="w"></span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jkl/mno/pqr</span><span class="w"> </span><span class="c1"># Token for posting to another workspace &#39;&lt;another_team&gt;&#39;</span><span class="w"></span>
+<span class="nt">SlackInstance_2</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slack</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WorkspaceAnotherTeam</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jkl/mno/pqr</span><span class="w"> </span><span class="c1"># Token for posting to another workspace &#39;&lt;another_team&gt;&#39;</span>
 </pre></div>
 </div>
 </section>

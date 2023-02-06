@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../referenz.html">Referenz <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="metadata.html">Metadaten</a> &raquo;</li>
-      <li>item_structs</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../referenz.html">Referenz <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="metadata.html">Metadaten</a></li>
+      <li class="breadcrumb-item active">item_structs</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3856,35 +3856,35 @@
 <p>Der Abschnitt <code class="docutils literal notranslate"><span class="pre">item_structs:</span></code> erlaubt die Definition von Struktur Templates, also von Sub-Trees von Items,
 die an verschiedenen Stellen in den Item Tree eingefügt werden können.</p>
 <p>Definitionen von <code class="docutils literal notranslate"><span class="pre">item_structs:</span></code> haben das folgende Format:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_structs</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct1</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_structs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct1</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">item1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span><span class="w"></span>
-<span class="w">        </span><span class="nt">item2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">item3</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;my</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">3&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">plg_attr1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;plugin</span><span class="nv"> </span><span class="s">specific&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">item4</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">        </span><span class="nt">item1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">item2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">item3</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;my</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">3&#39;</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">plg_attr1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;plugin</span><span class="nv"> </span><span class="s">specific&#39;</span>
+<span class="w">            </span><span class="nt">item4</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 
-<span class="w">    </span><span class="nt">struct2</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">struct2</span><span class="p">:</span>
 
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">... (sub-tree with item definitions)</span><span class="w"></span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">... (sub-tree with item definitions)</span>
 </pre></div>
 </div>
 <p>Zur Konfiguration von SmartHomeNG werden diese structs durch die Angabe einer Referenz in den Item Tree eingefügt.
 Das erfolgt in den Konfigurationsdateien für Items im Verzeichnis <code class="docutils literal notranslate"><span class="pre">../items</span></code>:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_name_of_struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;plugin name&gt;.&lt;struct name&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_name_of_struct</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;plugin name&gt;.&lt;struct name&gt;</span>
 </pre></div>
 </div>
 <p>Falls <code class="docutils literal notranslate"><span class="pre">struct1</span></code> des oben angegebenen Beispiels in einem Plugin mit dem Namen <code class="docutils literal notranslate"><span class="pre">example_plugin</span></code> definiert wurde,
 sieht die Konfiguration um die Struktur einzufügen folgendermaßen aus:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_name_of_struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_plugin.struct1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_name_of_struct</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_plugin.struct1</span>
 </pre></div>
 </div>
 <section id="geschachtelte-strukturen">
@@ -3923,26 +3923,26 @@ enthalten. In Item Definitionen wird bei solchen Attributen <cite>‚&#64;&lt;in
 <p>Um in Strukturen zu kennzeichnen, welche Attribute einen Instanz Namen hinzugefügt bekommen sollen, wird bei diesen
 Attributen der konstante String <code class="docutils literal notranslate"><span class="pre">&#64;instance</span></code> hinzugefügt. Dieser String wird beim Aufbau des Item Trees durch den
 realen Instanz Namen ersetzt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_structs</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct1</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_structs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct1</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">item1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span><span class="w"></span>
-<span class="w">        </span><span class="nt">item2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">item3</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;my</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">3&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">                </span><span class="nt">plg_attr1@instance</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;plugin</span><span class="nv"> </span><span class="s">specific&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">item4</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">        </span><span class="nt">item1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">item2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">item3</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;my</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">3&#39;</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">                </span><span class="nt">plg_attr1@instance</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;plugin</span><span class="nv"> </span><span class="s">specific&#39;</span>
+<span class="w">            </span><span class="nt">item4</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 </pre></div>
 </div>
 <p>In der Item Konfiguration in den Dateien im Verzeichnis <code class="docutils literal notranslate"><span class="pre">../items</span></code> wird der Instanz Name der Struktur mitgegeben.
 Das sieht z.B. folgendermaßen aus:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_name_of_struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_plugin.struct1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plg_instance</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_name_of_struct</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_plugin.struct1</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plg_instance</span>
 </pre></div>
 </div>
 <p>Im geladenen Item (bei Verwendung der Admin GUI), wird <code class="docutils literal notranslate"><span class="pre">item3</span></code> dann ein Attribut haben, das
@@ -3952,7 +3952,7 @@ Das sieht z.B. folgendermaßen aus:</p>
 <h2>Plugins ohne item-structs<a class="headerlink" href="#plugins-ohne-item-structs" title="Permalink to this heading"></a></h2>
 <p>Falls ein Plugin keine Item Attribute hat, wird das durch den folgenden Eintrag in der
 Datei <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> angezeigt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_structs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item_structs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span>
 </pre></div>
 </div>
 <div class="admonition hint">

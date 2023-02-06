@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="visualisierung.html">Visualisierung mit smartVISU <span class="greensup">Update</span></a> &raquo;</li>
-      <li>NGINX als ReverseProxy</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="visualisierung.html">Visualisierung mit smartVISU <span class="greensup">Update</span></a></li>
+      <li class="breadcrumb-item active">NGINX als ReverseProxy</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3884,8 +3884,8 @@ neues Passwort setzen.</p></li>
 </section>
 <section id="nginx-installieren">
 <h2>NGINX installieren:<a class="headerlink" href="#nginx-installieren" title="Permalink to this heading"></a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get update
-sudo apt-get install nginx-full
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>nginx-full
 </pre></div>
 </div>
 </section>
@@ -3895,14 +3895,14 @@ sudo apt-get install nginx-full
 welchem Land eine Anfrage kommt. Darüber lassen sich bspw. Requests aus
 Risikoländern blockieren. Hinweis: Die GeoIP Datenbank von Maxmind wird nicht mehr
 weiter gepflegt, ist aber noch über eine alternative URL (siehe unten) abrufbar.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install geoip-database libgeoip1
-<span class="nb">cd</span> /usr/share/GeoIP/
-sudo wget https://dl.miyuru.lk/geoip/maxmind/country/maxmind4.dat.gz
-sudo gunzip maxmind4.dat.gz
-sudo wget https://dl.miyuru.lk/geoip/maxmind/country/maxmind6.dat.gz
-sudo gunzip maxmind6.dat.gz
-mv /usr/share/GeoIP/maxmind4.dat /usr/share/GeoIP/GeoIP.dat
-mv /usr/share/GeoIP/maxmind6.dat /usr/share/GeoIP/GeoIPv6.dat
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>geoip-database<span class="w"> </span>libgeoip1
+<span class="nb">cd</span><span class="w"> </span>/usr/share/GeoIP/
+sudo<span class="w"> </span>wget<span class="w"> </span>https://dl.miyuru.lk/geoip/maxmind/country/maxmind4.dat.gz
+sudo<span class="w"> </span>gunzip<span class="w"> </span>maxmind4.dat.gz
+sudo<span class="w"> </span>wget<span class="w"> </span>https://dl.miyuru.lk/geoip/maxmind/country/maxmind6.dat.gz
+sudo<span class="w"> </span>gunzip<span class="w"> </span>maxmind6.dat.gz
+mv<span class="w"> </span>/usr/share/GeoIP/maxmind4.dat<span class="w"> </span>/usr/share/GeoIP/GeoIP.dat
+mv<span class="w"> </span>/usr/share/GeoIP/maxmind6.dat<span class="w"> </span>/usr/share/GeoIP/GeoIPv6.dat
 </pre></div>
 </div>
 </section>
@@ -3913,48 +3913,48 @@ mv /usr/share/GeoIP/maxmind6.dat /usr/share/GeoIP/GeoIPv6.dat
 <p>Über Let’s Encrypt lassen sich kostenlos SSL Zertifikate, bspw. für
 dyndns-Domains, ausstellen.</p>
 <p>Certbot installieren:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install certbot
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>certbot
 </pre></div>
 </div>
 <p>Nun die Datei <code class="docutils literal notranslate"><span class="pre">/etc/nginx/snippets/letsencrypt.conf</span></code> bearbeiten:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /etc/nginx/snippets/letsencrypt.conf
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/nginx/snippets/letsencrypt.conf
 </pre></div>
 </div>
 <p>Dort folgenden Inhalt einfügen, damit certbot die Identität überprüfen
 kann.:</p>
-<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">location</span><span class="w"> </span><span class="s">^~</span><span class="w"> </span><span class="s">/.well-known/acme-challenge/</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="kn">default_type</span><span class="w"> </span><span class="s">&quot;text/plain&quot;</span><span class="p">;</span><span class="w"></span>
-<span class="w"> </span><span class="kn">root</span><span class="w"> </span><span class="s">/var/www/letsencrypt</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">location</span><span class="w"> </span><span class="s">^~</span><span class="w"> </span><span class="s">/.well-known/acme-challenge/</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="kn">default_type</span><span class="w"> </span><span class="s">&quot;text/plain&quot;</span><span class="p">;</span>
+<span class="w"> </span><span class="kn">root</span><span class="w"> </span><span class="s">/var/www/letsencrypt</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo mkdir -p /var/www/letsencrypt/.well-known/acme-challenge
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/var/www/letsencrypt/.well-known/acme-challenge
 </pre></div>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /etc/nginx/sites-available/default
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/nginx/sites-available/default
 </pre></div>
 </div>
 <p>Dort unterhalb von <code class="docutils literal notranslate"><span class="pre">listen</span> <span class="pre">[::]:80</span> <span class="pre">default_server;</span></code> die Zeile
 <code class="docutils literal notranslate"><span class="pre">include</span> <span class="pre">/etc/nginx/snippets/letsencrypt.conf;</span></code> einhängen:</p>
-<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">server</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">listen</span><span class="w"> </span><span class="s">[::]:80</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/snippets/letsencrypt.conf</span><span class="p">;</span><span class="w"></span>
-<span class="kn">[...]</span><span class="w"></span>
+<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">listen</span><span class="w"> </span><span class="s">[::]:80</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/snippets/letsencrypt.conf</span><span class="p">;</span>
+<span class="kn">[...]</span>
 </pre></div>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl restart nginx
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>nginx
 </pre></div>
 </div>
 <p>Port 80 und Port 443 im Router jeweils auf den identischen Port am
 ReverseProxy-RaspberryPi mappen!</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo certbot certonly --rsa-key-size <span class="m">4096</span> --webroot -w /var/www/letsencrypt -d &lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>certbot<span class="w"> </span>certonly<span class="w"> </span>--rsa-key-size<span class="w"> </span><span class="m">4096</span><span class="w"> </span>--webroot<span class="w"> </span>-w<span class="w"> </span>/var/www/letsencrypt<span class="w"> </span>-d<span class="w"> </span>&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;
 </pre></div>
 </div>
 <p>Nachdem man seine E-Mail eingegeben hat, sollte die Generierung
 erfolgreich durchlaufen und mit</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Generating key <span class="o">(</span><span class="m">4096</span> bits<span class="o">)</span>: /etc/letsencrypt/keys/0000_key-certbot.pem
-Creating CSR: /etc/letsencrypt/csr/0000_csr-certbot.pem
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Generating<span class="w"> </span>key<span class="w"> </span><span class="o">(</span><span class="m">4096</span><span class="w"> </span>bits<span class="o">)</span>:<span class="w"> </span>/etc/letsencrypt/keys/0000_key-certbot.pem
+Creating<span class="w"> </span>CSR:<span class="w"> </span>/etc/letsencrypt/csr/0000_csr-certbot.pem
 </pre></div>
 </div>
 <p>enden.</p>
@@ -3964,99 +3964,99 @@ Creating CSR: /etc/letsencrypt/csr/0000_csr-certbot.pem
 <p><code class="docutils literal notranslate"><span class="pre">/etc/nginx/nginx.conf</span></code> bearbeiten und direkt im <strong>http</strong> Block die GeoIP
 Einstellungen hinzufügen. Unter der Konfiguration der <strong>virtual hosts</strong>
 noch einen Block als Schutz gegen Denial of Service Angriffe ergänzen:</p>
-<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">http</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">http</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">##</span>
 <span class="w">    </span><span class="c1"># GeoIP Settings</span>
 <span class="w">    </span><span class="c1"># Nur Länder aus erlaubten IP Bereichen dürfen den ReverseProxy</span>
 <span class="w">    </span><span class="c1"># passieren!</span>
 <span class="w">    </span><span class="c1"># https://www.howtoforge.de/anleitung/nginx-besucher-mit-dem-geoip-modul-nach-landern-blocken-debianubuntu/</span>
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="kn">geoip_country</span><span class="w"> </span><span class="s">/usr/share/GeoIP/GeoIP.dat</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kn">map</span><span class="w"> </span><span class="nv">$geoip_country_code</span><span class="w"> </span><span class="nv">$allowed_country</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="kn">default</span><span class="w"> </span><span class="s">yes</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">BY</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">BR</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">KP</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">KR</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">RS</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">RO</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">RU</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">CN</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">CD</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">NE</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">GH</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">IQ</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">IR</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">SY</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">UA</span><span class="w"> </span><span class="s">no</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">geoip_country</span><span class="w"> </span><span class="s">/usr/share/GeoIP/GeoIP.dat</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">map</span><span class="w"> </span><span class="nv">$geoip_country_code</span><span class="w"> </span><span class="nv">$allowed_country</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">default</span><span class="w"> </span><span class="s">yes</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">BY</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">BR</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">KP</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">KR</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">RS</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">RO</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">RU</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">CN</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">CD</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">NE</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">GH</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">IQ</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">IR</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">SY</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">UA</span><span class="w"> </span><span class="s">no</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="c1">##</span>
 <span class="w">    </span><span class="c1"># websocket for shng</span>
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="kn">upstream</span><span class="w"> </span><span class="s">websocket</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="kn">server</span><span class="w"> </span><span class="s">&lt;SmartHomeNG</span><span class="w"> </span><span class="s">LAN</span><span class="w"> </span><span class="s">IP&gt;:2424</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">upstream</span><span class="w"> </span><span class="s">websocket</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kn">server</span><span class="w"> </span><span class="s">&lt;SmartHomeNG</span><span class="w"> </span><span class="s">LAN</span><span class="w"> </span><span class="s">IP&gt;:2424</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">##</span>
 <span class="w">    </span><span class="c1"># Basic Settings</span>
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="kn">map</span><span class="w"> </span><span class="nv">$http_upgrade</span><span class="w"> </span><span class="nv">$connection_upgrade</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="kn">default</span><span class="w"> </span><span class="s">Upgrade</span><span class="p">;</span><span class="w"></span>
-<span class="w">      </span><span class="kn">&#39;&#39;</span><span class="w"> </span><span class="s">close</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">map</span><span class="w"> </span><span class="nv">$http_upgrade</span><span class="w"> </span><span class="nv">$connection_upgrade</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kn">default</span><span class="w"> </span><span class="s">Upgrade</span><span class="p">;</span>
+<span class="w">      </span><span class="kn">&#39;&#39;</span><span class="w"> </span><span class="s">close</span><span class="p">;</span>
+<span class="w">   </span><span class="p">}</span>
 
-<span class="w">   </span><span class="kn">sendfile</span><span class="w"> </span><span class="no">on</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="kn">tcp_nopush</span><span class="w"> </span><span class="no">on</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="kn">tcp_nodelay</span><span class="w"> </span><span class="no">on</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="kn">keepalive_timeout</span><span class="w"> </span><span class="mi">65</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="kn">types_hash_max_size</span><span class="w"> </span><span class="mi">2048</span><span class="p">;</span><span class="w"></span>
-<span class="w">   </span><span class="kn">server_tokens</span><span class="w"> </span><span class="no">off</span><span class="p">;</span><span class="w"></span>
-<span class="kn">[...]</span><span class="w"></span>
+<span class="w">   </span><span class="kn">sendfile</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<span class="w">   </span><span class="kn">tcp_nopush</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<span class="w">   </span><span class="kn">tcp_nodelay</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<span class="w">   </span><span class="kn">keepalive_timeout</span><span class="w"> </span><span class="mi">65</span><span class="p">;</span>
+<span class="w">   </span><span class="kn">types_hash_max_size</span><span class="w"> </span><span class="mi">2048</span><span class="p">;</span>
+<span class="w">   </span><span class="kn">server_tokens</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
+<span class="kn">[...]</span>
 <span class="w">    </span><span class="c1">##</span>
 <span class="w">    </span><span class="c1"># Virtual Host Configs</span>
 <span class="w">    </span><span class="c1">##</span>
 
-<span class="w">    </span><span class="s">include</span><span class="w"> </span><span class="s">/etc/nginx/conf.d/*.conf</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/sites-enabled/*</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="s">include</span><span class="w"> </span><span class="s">/etc/nginx/conf.d/*.conf</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/sites-enabled/*</span><span class="p">;</span>
 
 <span class="w">    </span><span class="c1">##</span>
 <span class="w">    </span><span class="c1"># Harden nginx against DDOS</span>
 <span class="w">    </span><span class="c1">##</span>
 
-<span class="w">    </span><span class="kn">client_header_timeout</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kn">client_body_timeout</span><span class="w">   </span><span class="mi">10</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">client_header_timeout</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">client_body_timeout</span><span class="w">   </span><span class="mi">10</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>NGINX mit <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">restart</span> <span class="pre">nginx</span></code> neu starten.</p>
 <section id="etc-nginx-conf-d-mydomain-myds-me-conf-erstellen">
 <h3>/etc/nginx/conf.d/&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;.conf erstellen<a class="headerlink" href="#etc-nginx-conf-d-mydomain-myds-me-conf-erstellen" title="Permalink to this heading"></a></h3>
-<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">server</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">server</span><span class="w"> </span><span class="p">{</span>
 
 <span class="w">    </span><span class="c1">## Blocken, wenn Zugriff aus einem nicht erlaubten Land erfolgt ##</span>
-<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$allowed_country</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">no)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$allowed_country</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">no)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1"># https://www.cyberciti.biz/tips/linux-unix-bsd-nginx-webserver-security.html</span>
 <span class="w">    </span><span class="c1">## Block download agents ##</span>
-<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$http_user_agent</span><span class="w"> </span><span class="p">~</span><span class="sr">*</span><span class="w"> </span><span class="s">LWP::Simple|BBBike|wget)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$http_user_agent</span><span class="w"> </span><span class="p">~</span><span class="sr">*</span><span class="w"> </span><span class="s">LWP::Simple|BBBike|wget)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">## Block some robots ##</span>
-<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$http_user_agent</span><span class="w"> </span><span class="p">~</span><span class="sr">*</span><span class="w"> </span><span class="s">msnbot|scrapbot)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$http_user_agent</span><span class="w"> </span><span class="p">~</span><span class="sr">*</span><span class="w"> </span><span class="s">msnbot|scrapbot)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">## Deny certain Referers ##</span>
-<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="w"> </span><span class="nv">$http_referer</span><span class="w"> </span><span class="p">~</span><span class="sr">*</span><span class="w"> </span><span class="s">(babes|forsale|girl|jewelry|love|nudit|organic|poker|porn|sex|teen)</span><span class="w"> </span><span class="s">)</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="w"> </span><span class="nv">$http_referer</span><span class="w"> </span><span class="p">~</span><span class="sr">*</span><span class="w"> </span><span class="s">(babes|forsale|girl|jewelry|love|nudit|organic|poker|porn|sex|teen)</span><span class="w"> </span><span class="s">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;</span><span class="p">;</span>
 
 <span class="w">    </span><span class="c1">##</span>
 <span class="w">    </span><span class="c1"># SSL</span>
@@ -4064,115 +4064,115 @@ noch einen Block als Schutz gegen Denial of Service Angriffe ergänzen:</p>
 
 <span class="w">    </span><span class="c1">## Activate SSL, setze SERVER Zertifikat Informationen ##</span>
 <span class="w">    </span><span class="c1"># Generiert via Let&#39;s Encrypt!</span>
-<span class="w">    </span><span class="kn">ssl</span><span class="w"> </span><span class="no">on</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kn">ssl_certificate</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;/fullchain.pem</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;/privkey.pem</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kn">ssl_session_cache</span><span class="w"> </span><span class="n">builtin</span><span class="p">:</span><span class="mi">1000</span><span class="w"> </span><span class="s">shared:SSL:10m</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kn">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="no">on</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="kn">ssl</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_certificate</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;/fullchain.pem</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;/privkey.pem</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_session_cache</span><span class="w"> </span><span class="n">builtin</span><span class="p">:</span><span class="mi">1000</span><span class="w"> </span><span class="s">shared:SSL:10m</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
 <span class="w">    </span><span class="c1"># unsichere SSL Ciphers deaktivieren!</span>
-<span class="w">    </span><span class="kn">ssl_ciphers</span><span class="w">    </span><span class="s">HIGH:!aNULL:!eNULL:!LOW:!3DES:!MD5:!RC4</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="kn">ssl_ciphers</span><span class="w">    </span><span class="s">HIGH:!aNULL:!eNULL:!LOW:!3DES:!MD5:!RC4</span><span class="p">;</span>
 
 <span class="w">    </span><span class="c1">##</span>
 <span class="w">    </span><span class="c1"># HSTS</span>
 <span class="w">    </span><span class="c1">##</span>
 
-<span class="w">    </span><span class="kn">add_header</span><span class="w"> </span><span class="s">Strict-Transport-Security</span><span class="w"> </span><span class="s">&quot;max-age=31536000</span><span class="p">;</span><span class="w"> </span><span class="kn">includeSubDomains&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="kn">add_header</span><span class="w"> </span><span class="s">Strict-Transport-Security</span><span class="w"> </span><span class="s">&quot;max-age=31536000</span><span class="p">;</span><span class="w"> </span><span class="kn">includeSubDomains&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
 
 <span class="w">    </span><span class="c1">##</span>
 <span class="w">    </span><span class="c1"># global</span>
 <span class="w">    </span><span class="c1">##</span>
 
-<span class="w">    </span><span class="kn">root</span><span class="w"> </span><span class="s">/var/www/&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kn">index</span><span class="w"> </span><span class="s">index.php</span><span class="w"> </span><span class="s">index.htm</span><span class="w"> </span><span class="s">index.html</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="kn">root</span><span class="w"> </span><span class="s">/var/www/&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">index</span><span class="w"> </span><span class="s">index.php</span><span class="w"> </span><span class="s">index.htm</span><span class="w"> </span><span class="s">index.html</span><span class="p">;</span>
 
 <span class="w">    </span><span class="c1"># Weiterleitung zu SmartHomeNG (Websocket Schnittstelle) mit Basic Auth</span>
-<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$http_upgrade</span><span class="w"> </span><span class="s">!=</span><span class="w"> </span><span class="s">websocket)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">                   </span><span class="kn">return</span><span class="w"> </span><span class="mi">404</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="p">}</span><span class="w"></span>
-<span class="w">            </span><span class="kn">try_files</span><span class="w"> </span><span class="s">/wartung.html</span><span class="w"> </span><span class="s">@loc_websocket</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$http_upgrade</span><span class="w"> </span><span class="s">!=</span><span class="w"> </span><span class="s">websocket)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                   </span><span class="kn">return</span><span class="w"> </span><span class="mi">404</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="kn">try_files</span><span class="w"> </span><span class="s">/wartung.html</span><span class="w"> </span><span class="s">@loc_websocket</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1"># Zugriff auf die SmartVISU mit Basic Auth</span>
-<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/smartVISU</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">               </span><span class="kn">auth_basic</span><span class="w"> </span><span class="s">&quot;Restricted</span><span class="w"> </span><span class="s">Area:</span><span class="w"> </span><span class="s">smartVISU&quot;</span><span class="p">;</span><span class="w"></span>
-<span class="w">               </span><span class="kn">auth_basic_user_file</span><span class="w"> </span><span class="s">/etc/nginx/.smartvisu</span><span class="p">;</span><span class="w"></span>
-<span class="w">               </span><span class="kn">try_files</span><span class="w"> </span><span class="s">/wartung.html</span><span class="w"> </span><span class="s">@loc_smartvisu</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/smartVISU</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="kn">auth_basic</span><span class="w"> </span><span class="s">&quot;Restricted</span><span class="w"> </span><span class="s">Area:</span><span class="w"> </span><span class="s">smartVISU&quot;</span><span class="p">;</span>
+<span class="w">               </span><span class="kn">auth_basic_user_file</span><span class="w"> </span><span class="s">/etc/nginx/.smartvisu</span><span class="p">;</span>
+<span class="w">               </span><span class="kn">try_files</span><span class="w"> </span><span class="s">/wartung.html</span><span class="w"> </span><span class="s">@loc_smartvisu</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1"># Alexa Plugin Weiterleitung</span>
-<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/alexa</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="kn">auth_basic</span><span class="w"> </span><span class="s">&quot;Restricted</span><span class="w"> </span><span class="s">Area:</span><span class="w"> </span><span class="s">Alexa&quot;</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">auth_basic_user_file</span><span class="w"> </span><span class="s">/etc/nginx/.alexa</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">try_files</span><span class="w"> </span><span class="s">/wartung.html</span><span class="w"> </span><span class="s">@loc_alexa</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/alexa</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">auth_basic</span><span class="w"> </span><span class="s">&quot;Restricted</span><span class="w"> </span><span class="s">Area:</span><span class="w"> </span><span class="s">Alexa&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">auth_basic_user_file</span><span class="w"> </span><span class="s">/etc/nginx/.alexa</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">try_files</span><span class="w"> </span><span class="s">/wartung.html</span><span class="w"> </span><span class="s">@loc_alexa</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1"># Network Plugin Weiterleitung</span>
-<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/shng</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="kn">auth_basic</span><span class="w"> </span><span class="s">&quot;Restricted</span><span class="w"> </span><span class="s">Area:</span><span class="w"> </span><span class="s">SmartHomeNG&quot;</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">auth_basic_user_file</span><span class="w"> </span><span class="s">/etc/nginx/.shng</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">try_files</span><span class="w"> </span><span class="s">/wartung.html</span><span class="w"> </span><span class="s">@loc_shng</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/shng</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">auth_basic</span><span class="w"> </span><span class="s">&quot;Restricted</span><span class="w"> </span><span class="s">Area:</span><span class="w"> </span><span class="s">SmartHomeNG&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">auth_basic_user_file</span><span class="w"> </span><span class="s">/etc/nginx/.shng</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">try_files</span><span class="w"> </span><span class="s">/wartung.html</span><span class="w"> </span><span class="s">@loc_shng</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">@loc_websocket</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://websocket</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/headers.conf</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/proxy_params</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">@loc_websocket</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://websocket</span><span class="p">;</span>
+<span class="w">            </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/headers.conf</span><span class="p">;</span>
+<span class="w">            </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/proxy_params</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">@loc_smartvisu</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://&lt;SmartHomeNG</span><span class="w"> </span><span class="s">LAN</span><span class="w"> </span><span class="s">IP&gt;/</span><span class="nv">$request_uri</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/headers.conf</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/proxy_params</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">@loc_smartvisu</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://&lt;SmartHomeNG</span><span class="w"> </span><span class="s">LAN</span><span class="w"> </span><span class="s">IP&gt;/</span><span class="nv">$request_uri</span><span class="p">;</span>
+<span class="w">            </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/headers.conf</span><span class="p">;</span>
+<span class="w">            </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/proxy_params</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">@loc_alexa</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://&lt;SmartHomeNG</span><span class="w"> </span><span class="s">LAN</span><span class="w"> </span><span class="s">IP&gt;:&lt;Alexa</span><span class="w"> </span><span class="s">Plugin</span><span class="w"> </span><span class="s">Port&gt;/</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/headers.conf</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/proxy_params</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">@loc_alexa</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://&lt;SmartHomeNG</span><span class="w"> </span><span class="s">LAN</span><span class="w"> </span><span class="s">IP&gt;:&lt;Alexa</span><span class="w"> </span><span class="s">Plugin</span><span class="w"> </span><span class="s">Port&gt;/</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/headers.conf</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/proxy_params</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">@loc_shng</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://&lt;SmartHomeNG</span><span class="w"> </span><span class="s">LAN</span><span class="w"> </span><span class="s">IP&gt;:&lt;Network</span><span class="w"> </span><span class="s">Plugin</span><span class="w"> </span><span class="s">Port&gt;/</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/headers.conf</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/proxy_params</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">@loc_shng</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://&lt;SmartHomeNG</span><span class="w"> </span><span class="s">LAN</span><span class="w"> </span><span class="s">IP&gt;:&lt;Network</span><span class="w"> </span><span class="s">Plugin</span><span class="w"> </span><span class="s">Port&gt;/</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/headers.conf</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/proxy_params</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Die Datei <code class="docutils literal notranslate"><span class="pre">/etc/nginx/headers.conf</span></code> muss nun entsprechend angelegt werden:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">add_header Strict-Transport-Security &quot;max-age</span><span class="o">=</span><span class="s">31536000; includeSubdomains&quot; always;</span><span class="w"></span>
-<span class="na">add_header X-Cache $upstream_cache_status;</span><span class="w"></span>
-<span class="na">add_header X-Frame-Options &quot;SAMEORIGIN&quot; always;</span><span class="w"></span>
-<span class="na">add_header X-Xss-Protection &quot;1; mode</span><span class="o">=</span><span class="s">block&quot; always;</span><span class="w"></span>
-<span class="na">add_header X-Content-Type-Options &quot;nosniff&quot; always;</span><span class="w"></span>
-<span class="na">add_header X-Proxy-Cache $upstream_cache_status;</span><span class="w"></span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">add_header Strict-Transport-Security &quot;max-age</span><span class="o">=</span><span class="s">31536000</span><span class="c1">; includeSubdomains&quot; always;</span>
+<span class="na">add_header X-Cache $upstream_cache_status;</span>
+<span class="na">add_header X-Frame-Options &quot;SAMEORIGIN&quot; always;</span>
+<span class="na">add_header X-Xss-Protection &quot;1; mode</span><span class="o">=</span><span class="s">block&quot; always</span><span class="c1">;</span>
+<span class="na">add_header X-Content-Type-Options &quot;nosniff&quot; always;</span>
+<span class="na">add_header X-Proxy-Cache $upstream_cache_status;</span>
 </pre></div>
 </div>
 <p>Außerdem sollten zumindest folgende Zeilen in die Datei <code class="docutils literal notranslate"><span class="pre">/etc/nginx/proxy_params</span></code>
 eingetragen werden:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">proxy_http_version      1.1;</span><span class="w"></span>
-<span class="na">proxy_set_header        Host            $host;</span><span class="w"></span>
-<span class="na">proxy_set_header        X-Real-IP       $remote_addr;</span><span class="w"></span>
-<span class="na">proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;</span><span class="w"></span>
-<span class="na">proxy_set_header        Upgrade $http_upgrade;</span><span class="w"></span>
-<span class="na">proxy_set_header        Connection $connection_upgrade;</span><span class="w"></span>
-<span class="na">proxy_set_header        X-Forwarded-Proto $scheme;</span><span class="w"></span>
-<span class="na">proxy_set_header        X-SSL-CERT $ssl_client_escaped_cert;</span><span class="w"></span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">proxy_http_version      1.1;</span>
+<span class="na">proxy_set_header        Host            $host;</span>
+<span class="na">proxy_set_header        X-Real-IP       $remote_addr;</span>
+<span class="na">proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;</span>
+<span class="na">proxy_set_header        Upgrade $http_upgrade;</span>
+<span class="na">proxy_set_header        Connection $connection_upgrade;</span>
+<span class="na">proxy_set_header        X-Forwarded-Proto $scheme;</span>
+<span class="na">proxy_set_header        X-SSL-CERT $ssl_client_escaped_cert;</span>
 </pre></div>
 </div>
 <p>Im Anschluss muss nginx neu gestartet werden:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl restart nginx
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>nginx
 </pre></div>
 </div>
 </section>
 <section id="passwort-files-fur-unterschiedliche-user-fur-smartvisu-alexa-network-plugin-erstellen">
 <h3>Passwort-Files für unterschiedliche User für smartVISU, Alexa, Network Plugin erstellen<a class="headerlink" href="#passwort-files-fur-unterschiedliche-user-fur-smartvisu-alexa-network-plugin-erstellen" title="Permalink to this heading"></a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install apache2-utils
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>apache2-utils
 
-sudo htpasswd -c /etc/nginx/.smartvisu &lt;username&gt;
-sudo htpasswd -c /etc/nginx/.alexa &lt;username&gt;
-sudo htpasswd -c /etc/nginx/.shng &lt;username&gt;
+sudo<span class="w"> </span>htpasswd<span class="w"> </span>-c<span class="w"> </span>/etc/nginx/.smartvisu<span class="w"> </span>&lt;username&gt;
+sudo<span class="w"> </span>htpasswd<span class="w"> </span>-c<span class="w"> </span>/etc/nginx/.alexa<span class="w"> </span>&lt;username&gt;
+sudo<span class="w"> </span>htpasswd<span class="w"> </span>-c<span class="w"> </span>/etc/nginx/.shng<span class="w"> </span>&lt;username&gt;
 </pre></div>
 </div>
 <p>Dann ein Passwort vergeben.</p>
@@ -4183,27 +4183,27 @@ sudo htpasswd -c /etc/nginx/.shng &lt;username&gt;
 <p>Da NGINX im LAN aktuell noch auf Port 80 konfiguriert ist, sollte man in
 der /etc/nginx/sites-available/default noch ein <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">403</span></code> ergänzen
 und NGINX neu starten:</p>
-<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">server</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">listen</span><span class="w"> </span><span class="s">[::]:80</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">listen</span><span class="w"> </span><span class="s">[::]:80</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span>
 
-<span class="w">        </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span>
 
-<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/snippets/letsencrypt.conf</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/snippets/letsencrypt.conf</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>Alternativ kann auch eine Weiterleitung von der HTTP (Port 80) auf die
 HTTPS (Port 443) URL gesetzt werden. Das ist insbesondere beim Erneuern
 von Zertifikaten von Vorteil, da hier eine Anfrage gegen Port 80 gemacht
 wird:</p>
-<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">server</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">listen</span><span class="w"> </span><span class="s">[::]:80</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">listen</span><span class="w"> </span><span class="s">[::]:80</span><span class="w"> </span><span class="s">default_server</span><span class="p">;</span>
 
-<span class="w">        </span><span class="kn">server_name</span><span class="w"> </span><span class="s">_</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kn">return</span><span class="w"> </span><span class="mi">301</span><span class="w"> </span><span class="s">https://</span><span class="nv">$host$request_uri</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kn">server_name</span><span class="w"> </span><span class="s">_</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">return</span><span class="w"> </span><span class="mi">301</span><span class="w"> </span><span class="s">https://</span><span class="nv">$host$request_uri</span><span class="p">;</span>
 
-<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/snippets/letsencrypt.conf</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/nginx/snippets/letsencrypt.conf</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>Danach den NGINX neu starten.</p>
@@ -4216,63 +4216,63 @@ läuft das über easy-rsa von <a class="reference external" href="https://github
 Im Folgenden wird der Weg ohne dieses Tool beschrieben.</p>
 <section id="openssl-cnf-editieren">
 <h3>openssl.cnf editieren<a class="headerlink" href="#openssl-cnf-editieren" title="Permalink to this heading"></a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /etc/ssl/openssl.cnf
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/ssl/openssl.cnf
 </pre></div>
 </div>
 <p>Folgende Zeilen anpassen:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/etc/ssl/ca                       # Directory where everything is kept</span><span class="w"></span>
-<span class="k">[...]</span><span class="w"></span>
-<span class="na">ew_certs_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$dir/certs               # default place for new certs.</span><span class="w"></span>
-<span class="k">[...]</span><span class="w"></span>
-<span class="na">certificate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$dir/ca.crt               # The CA certificate</span><span class="w"></span>
-<span class="k">[...]</span><span class="w"></span>
-<span class="na">crl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$dir/crl.pem                      # The current CRL</span><span class="w"></span>
-<span class="na">private_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$dir/private/ca.key       # The private key</span><span class="w"></span>
-<span class="k">[...]</span><span class="w"></span>
-<span class="na">default_crl_days</span><span class="o">=</span><span class="w"> </span><span class="s">365</span><span class="w"></span>
-<span class="k">[...]</span><span class="w"></span>
-<span class="na">default_md</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">sha1 # use public key default MD</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/etc/ssl/ca</span><span class="w">                       </span><span class="c1"># Directory where everything is kept</span>
+<span class="k">[...]</span>
+<span class="na">ew_certs_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$dir/certs</span><span class="w">               </span><span class="c1"># default place for new certs.</span>
+<span class="k">[...]</span>
+<span class="na">certificate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$dir/ca.crt</span><span class="w">               </span><span class="c1"># The CA certificate</span>
+<span class="k">[...]</span>
+<span class="na">crl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$dir/crl.pem</span><span class="w">                      </span><span class="c1"># The current CRL</span>
+<span class="na">private_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$dir/private/ca.key</span><span class="w">       </span><span class="c1"># The private key</span>
+<span class="k">[...]</span>
+<span class="na">default_crl_days</span><span class="o">=</span><span class="w"> </span><span class="s">365</span>
+<span class="k">[...]</span>
+<span class="na">default_md</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">sha1</span><span class="w"> </span><span class="c1"># use public key default MD</span>
 </pre></div>
 </div>
 <p>Drei neue Verzeichnisse und drei Dateien anlegen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo mkdir -p /etc/ssl/ca/certs/users
-sudo mkdir -p /etc/ssl/ca/crl
-sudo mkdir -p /etc/ssl/ca/private
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/ssl/ca/certs/users
+sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/ssl/ca/crl
+sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/ssl/ca/private
 
-sudo touch /etc/ssl/ca/index.txt
-sudo touch /etc/ssl/ca/index.txt.attr
+sudo<span class="w"> </span>touch<span class="w"> </span>/etc/ssl/ca/index.txt
+sudo<span class="w"> </span>touch<span class="w"> </span>/etc/ssl/ca/index.txt.attr
 </pre></div>
 </div>
 <p>In der Datei crlnumber den Wert “01” eintragen und speichern.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /etc/ssl/ca/crlnumber
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/ssl/ca/crlnumber
 </pre></div>
 </div>
 <p>Zertifikat für Certification Authority (CA) erstellen, Passwort für die
 CA wählen und eigene Daten eingeben:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo openssl genrsa -des3 -out /etc/ssl/ca/private/ca.key <span class="m">4096</span>
-sudo openssl req -new -x509 -days <span class="m">1095</span> -key /etc/ssl/ca/private/ca.key -out /etc/ssl/ca/certs/ca.crt
-sudo openssl ca -name CA_default -gencrl -keyfile /etc/ssl/ca/private/ca.key -cert /etc/ssl/ca/certs/ca.crt -out /etc/ssl/ca/private/ca.crl -crldays <span class="m">1095</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>openssl<span class="w"> </span>genrsa<span class="w"> </span>-des3<span class="w"> </span>-out<span class="w"> </span>/etc/ssl/ca/private/ca.key<span class="w"> </span><span class="m">4096</span>
+sudo<span class="w"> </span>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-x509<span class="w"> </span>-days<span class="w"> </span><span class="m">1095</span><span class="w"> </span>-key<span class="w"> </span>/etc/ssl/ca/private/ca.key<span class="w"> </span>-out<span class="w"> </span>/etc/ssl/ca/certs/ca.crt
+sudo<span class="w"> </span>openssl<span class="w"> </span>ca<span class="w"> </span>-name<span class="w"> </span>CA_default<span class="w"> </span>-gencrl<span class="w"> </span>-keyfile<span class="w"> </span>/etc/ssl/ca/private/ca.key<span class="w"> </span>-cert<span class="w"> </span>/etc/ssl/ca/certs/ca.crt<span class="w"> </span>-out<span class="w"> </span>/etc/ssl/ca/private/ca.crl<span class="w"> </span>-crldays<span class="w"> </span><span class="m">1095</span>
 </pre></div>
 </div>
 <p>Client Zertifikat für einen User erstellen und ein Passwort für das
 Client Zertifikat vergeben:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo openssl genrsa -des3 -out /etc/ssl/ca/certs/users/&lt;USERNAME&gt;.key <span class="m">1024</span>
-sudo openssl req -new -key /etc/ssl/ca/certs/users/&lt;USERNAME&gt;.key -out /etc/ssl/ca/certs/users/&lt;USERNAME&gt;.csr
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>openssl<span class="w"> </span>genrsa<span class="w"> </span>-des3<span class="w"> </span>-out<span class="w"> </span>/etc/ssl/ca/certs/users/&lt;USERNAME&gt;.key<span class="w"> </span><span class="m">1024</span>
+sudo<span class="w"> </span>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-key<span class="w"> </span>/etc/ssl/ca/certs/users/&lt;USERNAME&gt;.key<span class="w"> </span>-out<span class="w"> </span>/etc/ssl/ca/certs/users/&lt;USERNAME&gt;.csr
 </pre></div>
 </div>
 <p>Bei folgendem Schritt das Passwort für die CA eingeben:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo openssl x509 -req -days <span class="m">1095</span> -in /etc/ssl/ca/certs/users/&lt;USERNAME&gt;.csr -CA /etc/ssl/ca/certs/ca.crt -CAkey /etc/ssl/ca/private/ca.key -CAserial /etc/ssl/ca/serial -CAcreateserial -out /etc/ssl/ca/certs/users/&lt;USERNAME&gt;.crt
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-req<span class="w"> </span>-days<span class="w"> </span><span class="m">1095</span><span class="w"> </span>-in<span class="w"> </span>/etc/ssl/ca/certs/users/&lt;USERNAME&gt;.csr<span class="w"> </span>-CA<span class="w"> </span>/etc/ssl/ca/certs/ca.crt<span class="w"> </span>-CAkey<span class="w"> </span>/etc/ssl/ca/private/ca.key<span class="w"> </span>-CAserial<span class="w"> </span>/etc/ssl/ca/serial<span class="w"> </span>-CAcreateserial<span class="w"> </span>-out<span class="w"> </span>/etc/ssl/ca/certs/users/&lt;USERNAME&gt;.crt
 </pre></div>
 </div>
 <p>Bei folgendem Schritt mit dem Passwort für das Client Zertifikat
 bestätigen und ein Export Passwort wählen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo openssl pkcs12 -export -clcerts -in /etc/ssl/ca/certs/users/&lt;USERNAME&gt;.crt -inkey /etc/ssl/ca/certs/users/&lt;USERNAME&gt;.key -out /etc/ssl/ca/certs/users/&lt;USERNAME&gt;.p12
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-export<span class="w"> </span>-clcerts<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/ca/certs/users/&lt;USERNAME&gt;.crt<span class="w"> </span>-inkey<span class="w"> </span>/etc/ssl/ca/certs/users/&lt;USERNAME&gt;.key<span class="w"> </span>-out<span class="w"> </span>/etc/ssl/ca/certs/users/&lt;USERNAME&gt;.p12
 </pre></div>
 </div>
 <p>&lt;USERNAME&gt;.p12 File herunterladen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo cp /etc/ssl/ca/certs/users/&lt;USERNAME&gt;.p12 /home/pi
-<span class="nb">cd</span> /home/pi/
-sudo chown pi &lt;USERNAME&gt;.p12
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>cp<span class="w"> </span>/etc/ssl/ca/certs/users/&lt;USERNAME&gt;.p12<span class="w"> </span>/home/pi
+<span class="nb">cd</span><span class="w"> </span>/home/pi/
+sudo<span class="w"> </span>chown<span class="w"> </span>pi<span class="w"> </span>&lt;USERNAME&gt;.p12
 </pre></div>
 </div>
 <p>Bspw. nun via SFTP ziehen und aufs Datei aufs Android Handy übertragen
@@ -4292,62 +4292,62 @@ im SSL Block ergänzen (“ab Client Zertifikat spezifisch”)</p>
 
 <span class="c1">## Activate SSL, setze SERVER Zertifikat Informationen ##</span>
 <span class="c1"># Generiert via Let&#39;s Encrypt!</span>
-<span class="k">ssl</span><span class="w"> </span><span class="no">on</span><span class="p">;</span><span class="w"></span>
-<span class="k">ssl_certificate</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;/fullchain.pem</span><span class="p">;</span><span class="w"></span>
-<span class="k">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;/privkey.pem</span><span class="p">;</span><span class="w"></span>
-<span class="k">ssl_session_cache</span><span class="w"> </span><span class="n">builtin</span><span class="p">:</span><span class="mi">1000</span><span class="w"> </span><span class="s">shared:SSL:10m</span><span class="p">;</span><span class="w"></span>
-<span class="k">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="no">on</span><span class="p">;</span><span class="w"></span>
+<span class="k">ssl</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<span class="k">ssl_certificate</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;/fullchain.pem</span><span class="p">;</span>
+<span class="k">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;/privkey.pem</span><span class="p">;</span>
+<span class="k">ssl_session_cache</span><span class="w"> </span><span class="n">builtin</span><span class="p">:</span><span class="mi">1000</span><span class="w"> </span><span class="s">shared:SSL:10m</span><span class="p">;</span>
+<span class="k">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
 <span class="c1"># unsichere SSL Ciphers deaktivieren!</span>
-<span class="k">ssl_ciphers</span><span class="w">    </span><span class="s">HIGH:!aNULL:!eNULL:!LOW:!3DES:!MD5:!RC4</span><span class="p">;</span><span class="w"></span>
+<span class="k">ssl_ciphers</span><span class="w">    </span><span class="s">HIGH:!aNULL:!eNULL:!LOW:!3DES:!MD5:!RC4</span><span class="p">;</span>
 
 <span class="c1"># Client Zertifikat spezifisch</span>
-<span class="k">ssl_client_certificate</span><span class="w"> </span><span class="s">/etc/ssl/ca/certs/ca.crt</span><span class="p">;</span><span class="w"></span>
-<span class="k">ssl_crl</span><span class="w"> </span><span class="s">/etc/ssl/ca/private/ca.crl</span><span class="p">;</span><span class="w"></span>
-<span class="k">ssl_verify_client</span><span class="w"> </span><span class="s">optional</span><span class="p">;</span><span class="w"></span>
-<span class="k">ssl_session_timeout</span><span class="w"> </span><span class="mi">5m</span><span class="p">;</span><span class="w"></span>
+<span class="k">ssl_client_certificate</span><span class="w"> </span><span class="s">/etc/ssl/ca/certs/ca.crt</span><span class="p">;</span>
+<span class="k">ssl_crl</span><span class="w"> </span><span class="s">/etc/ssl/ca/private/ca.crl</span><span class="p">;</span>
+<span class="k">ssl_verify_client</span><span class="w"> </span><span class="s">optional</span><span class="p">;</span>
+<span class="k">ssl_session_timeout</span><span class="w"> </span><span class="mi">5m</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>Die smartVISU relevanten Teile könnten jetzt folgendermaßen über
 Clientzertifikate geschützt werden:</p>
 <div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="c1"># Weiterleitung zu SmartHomeNG (Websocket Schnittstelle) mit Clientzertifikat</span>
-<span class="k">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1"># Clientzertifikat gültig?</span>
-<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$ssl_client_verify</span><span class="w"> </span><span class="s">!=</span><span class="w"> </span><span class="s">SUCCESS)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$ssl_client_verify</span><span class="w"> </span><span class="s">!=</span><span class="w"> </span><span class="s">SUCCESS)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1"># Zugreifendes Land erlaubt?</span>
-<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$allowed_country</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">no)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$allowed_country</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">no)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1"># Nur Websocket Verbindungen gegen &quot;/&quot; durchlassen!</span>
-<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$http_upgrade</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">websocket)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://&lt;SmartHomeNG</span><span class="w"> </span><span class="s">LAN</span><span class="w"> </span><span class="s">IP&gt;:&lt;Websocket</span><span class="w"> </span><span class="s">Port&gt;</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$http_upgrade</span><span class="w"> </span><span class="s">!=</span><span class="w"> </span><span class="s">websocket)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$http_upgrade</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">websocket)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://&lt;SmartHomeNG</span><span class="w"> </span><span class="s">LAN</span><span class="w"> </span><span class="s">IP&gt;:&lt;Websocket</span><span class="w"> </span><span class="s">Port&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$http_upgrade</span><span class="w"> </span><span class="s">!=</span><span class="w"> </span><span class="s">websocket)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
 <span class="c1"># Zugriff auf die SmartVISU mit Clientzertifikat</span>
-<span class="k">location</span><span class="w"> </span><span class="s">/smartVISU</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">location</span><span class="w"> </span><span class="s">/smartVISU</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1"># Clientzertifikat gültig?</span>
-<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$ssl_client_verify</span><span class="w"> </span><span class="s">!=</span><span class="w"> </span><span class="s">SUCCESS)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$ssl_client_verify</span><span class="w"> </span><span class="s">!=</span><span class="w"> </span><span class="s">SUCCESS)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1"># Zugreifendes Land erlaubt?</span>
-<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$allowed_country</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">no)</span><span class="w">  </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$allowed_country</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">no)</span><span class="w">  </span><span class="p">{</span>
+<span class="w">            </span><span class="kn">return</span><span class="w"> </span><span class="mi">403</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://&lt;SmartVISU</span><span class="w"> </span><span class="s">Server</span><span class="w"> </span><span class="s">LAN</span><span class="w"> </span><span class="s">IP&gt;/smartVISU</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://&lt;SmartVISU</span><span class="w"> </span><span class="s">Server</span><span class="w"> </span><span class="s">LAN</span><span class="w"> </span><span class="s">IP&gt;/smartVISU</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Wer es doppelt sicher haben möchte, kann die Basic Auth in den jew.
@@ -4360,11 +4360,11 @@ Fehler gibt und mit Zertifikat die smartVISU aufbaut.</p>
 <p>Apple Geräte wie MacBook oder iPhone kommen mit der oben skizzierten Konfiguration
 leider nicht klar, sobald Websockets (die für die SmartVISU zwingend nötig sind)
 im Spiel sind. Daher ist hier auf ein spezielles LUA Script zurückzugreifen.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install lua5.1 luarocks liblua5.1-dev libnginx-mod-http-lua
-git clone https://github.com/evanlabs/luacrypto.git <span class="o">&amp;&amp;</span> <span class="nb">cd</span> luacrypto
-luarocks install ./rockspecs/luacrypto-git-1.rockspec
-mkdir /usr/local/lib/lua/5.1/
-ln -s /usr/local/lib/lua/crypto.so /usr/local/lib/lua/5.1/crypto.so
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>lua5.1<span class="w"> </span>luarocks<span class="w"> </span>liblua5.1-dev<span class="w"> </span>libnginx-mod-http-lua
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/evanlabs/luacrypto.git<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>luacrypto
+luarocks<span class="w"> </span>install<span class="w"> </span>./rockspecs/luacrypto-git-1.rockspec
+mkdir<span class="w"> </span>/usr/local/lib/lua/5.1/
+ln<span class="w"> </span>-s<span class="w"> </span>/usr/local/lib/lua/crypto.so<span class="w"> </span>/usr/local/lib/lua/5.1/crypto.so
 </pre></div>
 </div>
 <p>Das LUA Script selbst wird in einer neuen Datei namens <code class="docutils literal notranslate"><span class="pre">/etc/nginx/scripts/hass_access.lua</span></code>
@@ -4408,7 +4408,7 @@ verschlüsselt wurden.</p>
 </div>
 <p>Schließlich muss noch folgende Zeile in der Datei /etc/nginx/conf.d/&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;.conf
 bei jeder Location eingetragen werden:</p>
-<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">access_by_lua_file</span><span class="w"> </span><span class="s">/etc/nginx/scripts/hass_access.lua</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">access_by_lua_file</span><span class="w"> </span><span class="s">/etc/nginx/scripts/hass_access.lua</span><span class="p">;</span>
 </pre></div>
 </div>
 </section>
@@ -4421,8 +4421,8 @@ direkt auf den Raspi sondern auf einem PC mit stärker er CPU
 durchzuführen. Ein Test auf einem Raspi3 dauerte 24 Stunden (!). Ein
 Intel 4790k brauchte hingegen nur 30 Minuten.</p>
 <p>Folgendes ist zu tun:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /etc/ssl/certs
-sudo openssl dhparam -out dhparam.pem <span class="m">4096</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/etc/ssl/certs
+sudo<span class="w"> </span>openssl<span class="w"> </span>dhparam<span class="w"> </span>-out<span class="w"> </span>dhparam.pem<span class="w"> </span><span class="m">4096</span>
 </pre></div>
 </div>
 <p>Alternativ kann das File auch einfach unter /etc/ssl/certs reinkopiert
@@ -4430,7 +4430,7 @@ werden.</p>
 <p>Danach ist in der SSL Konfiguration von NGINX folgende Zeile zu ergänzen
 und NGINX neu zu starten:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Konfiguration editieren</span>
-sudo nano /etc/nginx/conf.d/<span class="se">\&lt;</span>mydomain<span class="se">\&gt;</span>.<span class="se">\&lt;</span>myds<span class="se">\&gt;</span>.<span class="se">\&lt;</span>me<span class="se">\&gt;</span>.conf
+sudo<span class="w"> </span>nano<span class="w"> </span>/etc/nginx/conf.d/<span class="se">\&lt;</span>mydomain<span class="se">\&gt;</span>.<span class="se">\&lt;</span>myds<span class="se">\&gt;</span>.<span class="se">\&lt;</span>me<span class="se">\&gt;</span>.conf
 </pre></div>
 </div>
 <div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="c1">## Dort folgende Zeile im Block SSL einfügen:</span>
@@ -4438,13 +4438,13 @@ sudo nano /etc/nginx/conf.d/<span class="se">\&lt;</span>mydomain<span class="se
 <span class="c1">##</span>
 <span class="c1"># SSL</span>
 <span class="c1">##</span>
-<span class="k">[...]</span><span class="w"></span>
-<span class="s">ssl_dhparam</span><span class="w"> </span><span class="s">/etc/ssl/certs/dhparam.pem</span><span class="p">;</span><span class="w"></span>
-<span class="k">[...]</span><span class="w"></span>
+<span class="k">[...]</span>
+<span class="s">ssl_dhparam</span><span class="w"> </span><span class="s">/etc/ssl/certs/dhparam.pem</span><span class="p">;</span>
+<span class="k">[...]</span>
 </pre></div>
 </div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">## NGINX neu starten</span>
-sudo systemctl restart nginx
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>nginx
 </pre></div>
 </div>
 <p>Die Sicherheit der eigenen https-Domain kann nun unter
@@ -4469,20 +4469,20 @@ freigegeben, oder (wie oben dokumentiert) auf HTTPS umgeleitet sein. Außerdem
 kann/soll das ini File wie folgt adaptiert werden, um nginx nach der Aktualisierung
 automatisch neu zu starten oder vorher/nachher ein Skript (z.B. zum Weiterleiten
 von Ports auf der Fritzbox oder An/Ausschalten einer Firewall) auszuführen:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># Manage Firewall</span><span class="w"></span>
-<span class="c1">#pre-hook = ufw allow http</span><span class="w"></span>
-<span class="c1">#post-hook = ufw deny http</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># Manage Firewall</span>
+<span class="c1">#pre-hook = ufw allow http</span>
+<span class="c1">#post-hook = ufw deny http</span>
 
-<span class="c1"># Restart Postfix &amp; Dovecot</span><span class="w"></span>
-<span class="na">renew-hook</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">systemctl restart nginx.service</span><span class="w"></span>
+<span class="c1"># Restart Postfix &amp; Dovecot</span>
+<span class="na">renew-hook</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">systemctl restart nginx.service</span>
 </pre></div>
 </div>
 <p>Eine manuelle Erneuerung geht wie folgendermaßen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo certbot certonly --agree-tos --rsa-key-size <span class="m">4096</span> --webroot -w /var/www/letsencrypt -d &lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>certbot<span class="w"> </span>certonly<span class="w"> </span>--agree-tos<span class="w"> </span>--rsa-key-size<span class="w"> </span><span class="m">4096</span><span class="w"> </span>--webroot<span class="w"> </span>-w<span class="w"> </span>/var/www/letsencrypt<span class="w"> </span>-d<span class="w"> </span>&lt;mydomain&gt;.&lt;myds&gt;.&lt;me&gt;
 </pre></div>
 </div>
 <p>Danach NGINX neu starten.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl restart nginx
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>nginx
 </pre></div>
 </div>
 <p>Der Test über <a class="reference external" href="https://www.ssllabs.com/ssltest/">https://www.ssllabs.com/ssltest/</a> gibt nun Aufschluß über

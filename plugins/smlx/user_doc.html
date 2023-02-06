@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a> &raquo;</li>
-      <li>smlx</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a></li>
+      <li class="breadcrumb-item active">smlx</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3895,21 +3895,21 @@ Die Vorgehensweise ist beim DLMS Plugin beschrieben</p>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
 <p>Bitte die Dokumentation lesen, die aus den Metadaten der plugin.yaml erzeugt wurde.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">smlx</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Smlx</span><span class="w"></span>
-<span class="w">  </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.smlx</span><span class="w"></span>
-<span class="w">  </span><span class="nt">serialport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB0</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># host: 192.168.2.1</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># port: 1234</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># device: raw | hex | &lt;known-device&gt;</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># for CRC generation</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># poly: 0x1021</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># reflect_in: True</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># xor_in: 0xffff</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># reflect_out: True</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># xor_in: 0xffff</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># swap_crc_bytes: False</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># date_offset: 0</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">smlx</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Smlx</span>
+<span class="w">  </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.smlx</span>
+<span class="w">  </span><span class="nt">serialport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB0</span>
+<span class="w">  </span><span class="c1"># host: 192.168.2.1</span>
+<span class="w">  </span><span class="c1"># port: 1234</span>
+<span class="w">  </span><span class="c1"># device: raw | hex | &lt;known-device&gt;</span>
+<span class="w">  </span><span class="c1"># for CRC generation</span>
+<span class="w">  </span><span class="c1"># poly: 0x1021</span>
+<span class="w">  </span><span class="c1"># reflect_in: True</span>
+<span class="w">  </span><span class="c1"># xor_in: 0xffff</span>
+<span class="w">  </span><span class="c1"># reflect_out: True</span>
+<span class="w">  </span><span class="c1"># xor_in: 0xffff</span>
+<span class="w">  </span><span class="c1"># swap_crc_bytes: False</span>
+<span class="w">  </span><span class="c1"># date_offset: 0</span>
 </pre></div>
 </div>
 <p>Das <code class="docutils literal notranslate"><span class="pre">date_offset</span></code> Attribut definiert den Zeitpunkt des ersten Starts des
@@ -3989,22 +3989,22 @@ Alle anderen Bits haben eine spezielle Bedeutung und werden in folgende Attribut
 </ul>
 <section id="beispiel">
 <h4>Beispiel<a class="headerlink" href="#beispiel" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">power</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">power</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">home</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">home</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">total</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:1.8.0*255</span><span class="w"></span>
+<span class="w">        </span><span class="nt">total</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:1.8.0*255</span>
 
-<span class="w">        </span><span class="nt">current</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:16.7.0*255</span><span class="w"></span>
+<span class="w">        </span><span class="nt">current</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:16.7.0*255</span>
 
-<span class="w">        </span><span class="nt">unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:16.7.0*255</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sml_prop</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unitName</span><span class="w"></span>
+<span class="w">        </span><span class="nt">unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:16.7.0*255</span>
+<span class="w">            </span><span class="nt">sml_prop</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unitName</span>
 </pre></div>
 </div>
 </section>
@@ -4034,17 +4034,17 @@ Alle anderen Bits haben eine spezielle Bedeutung und werden in folgende Attribut
 <p>Normalerweise sollte es nicht notwendig sein die CRC Prüfsummenbildung zu ändern.
 Aber zumindest das Holley DTZ541 nutzt falsche Parameter. Daher sind folgende Einstellungen
 für dieses Gerät in der <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> vorzunehmen</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">HolleyDTZ541</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">smlx</span><span class="w"></span>
-<span class="w">    </span><span class="nt">serialport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB0</span><span class="w"></span>
-<span class="w">    </span><span class="nt">buffersize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1500</span><span class="w"></span>
-<span class="w">    </span><span class="nt">poly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x1021</span><span class="w"></span>
-<span class="w">    </span><span class="nt">reflect_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">    </span><span class="nt">xor_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x0000</span><span class="w"></span>
-<span class="w">    </span><span class="nt">reflect_out</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">    </span><span class="nt">xor_out</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x0000</span><span class="w"></span>
-<span class="w">    </span><span class="nt">swap_crc_bytes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">    </span><span class="nt">date_offset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1563173307</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">HolleyDTZ541</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">smlx</span>
+<span class="w">    </span><span class="nt">serialport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB0</span>
+<span class="w">    </span><span class="nt">buffersize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1500</span>
+<span class="w">    </span><span class="nt">poly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x1021</span>
+<span class="w">    </span><span class="nt">reflect_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">xor_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x0000</span>
+<span class="w">    </span><span class="nt">reflect_out</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">xor_out</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x0000</span>
+<span class="w">    </span><span class="nt">swap_crc_bytes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">    </span><span class="nt">date_offset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1563173307</span>
 </pre></div>
 </div>
 <p>Die Werte für <code class="docutils literal notranslate"><span class="pre">serialport</span></code>, <code class="docutils literal notranslate"><span class="pre">buffersize</span></code> und <code class="docutils literal notranslate"><span class="pre">date_offset</span></code> müssen dabei auf die lokalen Gegebenheiten angepasst werden</p>

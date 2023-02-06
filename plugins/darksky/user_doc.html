@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_web.html">Web/Cloud Plugins</a> &raquo;</li>
-      <li>darksky</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_web.html">Web/Cloud Plugins</a></li>
+      <li class="breadcrumb-item active">darksky</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3877,10 +3877,10 @@ für das Plugin die in den Metadaten angegebene minimale SmartHomeNG Version.</p
 Plugin mitgelieferten struct-Templates.</p>
 <p>Hierzu kann einfach ein Item (hier wetter_darksky) angelegt und als <code class="docutils literal notranslate"><span class="pre">struct</span></code> vom Typ <code class="docutils literal notranslate"><span class="pre">darksky.weather</span></code> definiert
 werden. Standardmäßig sind unter hourly die nächsten 12 Stunden implementiert.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">...</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">...</span>
 
-<span class="w"> </span><span class="nt">wetter_darksky</span><span class="p">:</span><span class="w"></span>
-<span class="w">     </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">darksky.weather</span><span class="w"></span>
+<span class="w"> </span><span class="nt">wetter_darksky</span><span class="p">:</span>
+<span class="w">     </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">darksky.weather</span>
 </pre></div>
 </div>
 </section>
@@ -3891,9 +3891,9 @@ In den <code class="docutils literal notranslate"><span class="pre">time</span><
 Wer möchte, kann dieses Muster für die anderen Zeitangaben (Sonnenauf/untergang, etc.) nutzen.
 Das unten definierte <code class="docutils literal notranslate"><span class="pre">eval</span></code> Attribut kann überschrieben bzw. bei den relevanten Items hinzugefügt werden.
 Unabhängig davon haben alle Items auch einen <code class="docutils literal notranslate"><span class="pre">weekday</span></code> und <code class="docutils literal notranslate"><span class="pre">date</span></code> Eintrag, die direkt abgefragt werden können.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">time</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datetime.datetime.fromtimestamp(value).strftime(&#39;%HH:%MM&#39;)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">time</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datetime.datetime.fromtimestamp(value).strftime(&#39;%HH:%MM&#39;)</span>
 </pre></div>
 </div>
 <p>Die Originalantwort der Darksky Webseite wird vom Plugin entsprechend aufgedröselt.
@@ -3917,15 +3917,15 @@ Auf diese Weise ist es z.B. möglich, die Regenwahrscheinlichkeit für den restl
 <p>Wenn mehrere Instanzen des Plugins konfiguriert sind, kann das struct-Template auch mehrfach eingebunden werden.
 Hierbei muss bei der eingebundenen struct-Template angegeben werden, für welche Instanz des Plugins sie verwendet
 werden soll:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">...</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">...</span>
 
-<span class="nt">wetter_ham</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">darksky.weather</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ham</span><span class="w"></span>
+<span class="nt">wetter_ham</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">darksky.weather</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ham</span>
 
-<span class="nt">wetter_bos</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">darksky.weather</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bos</span><span class="w"></span>
+<span class="nt">wetter_bos</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">darksky.weather</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bos</span>
 </pre></div>
 </div>
 </section>

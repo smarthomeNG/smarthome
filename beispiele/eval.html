@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="beispiele.html">Beispiele, Tipps &amp; Tricks</a> &raquo;</li>
-      <li>Items: eval und eval_trigger</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="beispiele.html">Beispiele, Tipps &amp; Tricks</a></li>
+      <li class="breadcrumb-item active">Items: eval und eval_trigger</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3859,9 +3859,9 @@
 Ist ein <strong>eval</strong> vorhanden, wird dies erst ausgeführt, bevor dem Item der Wert final zugewiesen wird.
 Das kann man sich für Nachbearbeitungen zu nutze machen, bspw. wenn der zugewiesene Wert zu viele
 Nachkommastellen hat. In folgenden Beispiel wird auf eine Nachkommastelle gerundet.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">round(value, 1)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">round(value, 1)</span>
 </pre></div>
 </div>
 </section>
@@ -3869,10 +3869,10 @@ Nachkommastellen hat. In folgenden Beispiel wird auf eine Nachkommastelle gerund
 <h2>Wertermittung durch Datenbankabfrage<a class="headerlink" href="#wertermittung-durch-datenbankabfrage" title="Permalink to this heading"></a></h2>
 <p>Mit Hilfe eines <strong>eval</strong> kann auch eine Datenbankabfrage (Plugin <strong>database</strong>) realisiert werden.
 Im folgenden Beispiel wird täglich um 0:01 Uhr das <strong>eval</strong> ausgeführt und der Wert ermittelt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh...db(&#39;min&#39;, &#39;24h&#39;)</span><span class="w"></span>
-<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0 1 * *</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh...db(&#39;min&#39;, &#39;24h&#39;)</span>
+<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0 1 * *</span>
 </pre></div>
 </div>
 </section>
@@ -3880,9 +3880,9 @@ Im folgenden Beispiel wird täglich um 0:01 Uhr das <strong>eval</strong> ausgef
 <h2>Wert invertieren<a class="headerlink" href="#wert-invertieren" title="Permalink to this heading"></a></h2>
 <p>Mit Hilfe eines <strong>eval</strong> kann der Wert einfach invertiert werden. Man bedient sich wieder dem <strong>value</strong>,
 also dem „Zwischenspeicher“ bevor der Wert final dem Item zugewiesen wird</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not value</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">item</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not value</span>
 </pre></div>
 </div>
 </section>
@@ -3890,119 +3890,119 @@ also dem „Zwischenspeicher“ bevor der Wert final dem Item zugewiesen wird</p
 <h2>Auslesen / Teilen eines Dictionary<a class="headerlink" href="#auslesen-teilen-eines-dictionary" title="Permalink to this heading"></a></h2>
 <p>Hier wird im dictionary des Item ‚input‘ nach den Schlüsseln ‚RfReceived‘ und ‚RfKey‘ gesucht. Ist dieser
 gleich 4 wird, das item ‚received_key4‘ auf True gesetzt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">input</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dict</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">    </span><span class="nt">received_key4</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 if int(sh...()[&#39;RfReceived&#39;][&#39;RfKey&#39;]) == 4 else None</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">input</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dict</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">    </span><span class="nt">received_key4</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 if int(sh...()[&#39;RfReceived&#39;][&#39;RfKey&#39;]) == 4 else None</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 </pre></div>
 </div>
 </section>
 <section id="erzeugen-eines-string-aus-den-werten-anderer-items">
 <h2>Erzeugen eines String aus den Werten anderer Items<a class="headerlink" href="#erzeugen-eines-string-aus-den-werten-anderer-items" title="Permalink to this heading"></a></h2>
 <p>Hier wird aus den 3 Werten der Unteritems ein formatierter String gebildet. Dies wird u.a. für Farbsteuerungen benötigt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">HSB</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;{0},{1},{2}&#39;.format(sh...Hue(),</span><span class="nv"> </span><span class="s">sh...Sat(),</span><span class="nv"> </span><span class="s">sh...Bright())&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.Hue</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.Sat</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.Bright</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">HSB</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;{0},{1},{2}&#39;.format(sh...Hue(),</span><span class="nv"> </span><span class="s">sh...Sat(),</span><span class="nv"> </span><span class="s">sh...Bright())&quot;</span>
+<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.Hue</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.Sat</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.Bright</span>
 
-<span class="w">    </span><span class="nt">Hue</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Hue</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 
-<span class="w">    </span><span class="nt">Sat</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Sat</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 
-<span class="w">    </span><span class="nt">Bright</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Bright</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 </pre></div>
 </div>
 </section>
 <section id="erzeugen-einer-liste-aus-den-werten-anderer-items">
 <h2>Erzeugen einer Liste aus den Werten anderer Items<a class="headerlink" href="#erzeugen-einer-liste-aus-den-werten-anderer-items" title="Permalink to this heading"></a></h2>
 <p>Hier wird aus den 3 Werten der Unteritems eine Liste gebildet. Dies wird u.a. für Farbsteuerungen benötigt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rgb</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RGB</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;[sh..r(),</span><span class="nv"> </span><span class="s">sh..g(),</span><span class="nv"> </span><span class="s">sh..b()]&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.r</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.g</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.b</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rgb</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RGB</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;[sh..r(),</span><span class="nv"> </span><span class="s">sh..g(),</span><span class="nv"> </span><span class="s">sh..b()]&quot;</span>
+<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.r</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.g</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.b</span>
 
-<span class="w">    </span><span class="nt">r</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wert für Rot</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<span class="w">    </span><span class="nt">r</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wert für Rot</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 
-<span class="w">    </span><span class="nt">g</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wert für Grün</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<span class="w">    </span><span class="nt">g</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wert für Grün</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 
-<span class="w">    </span><span class="nt">b</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wert für Blau</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<span class="w">    </span><span class="nt">b</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wert für Blau</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 </pre></div>
 </div>
 </section>
 <section id="enumeration-uber-liste">
 <h2>Enumeration über Liste<a class="headerlink" href="#enumeration-uber-liste" title="Permalink to this heading"></a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">heizung_status</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">numerischer Heizungsstatus (0 -&gt; &quot;Ausgeschaltet&quot;, 1 -&gt; &quot;Heizung startet&quot;, 2 -&gt; &quot;Heizung läuft&quot;)</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">heizung_status</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">numerischer Heizungsstatus (0 -&gt; &quot;Ausgeschaltet&quot;, 1 -&gt; &quot;Heizung startet&quot;, 2 -&gt; &quot;Heizung läuft&quot;)</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
 
-<span class="w">    </span><span class="nt">heizung_status_string</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;Ausgeschaltet&#39;</span><span class="p p-Indicator">,</span><span class="s">&#39;Heizung</span><span class="nv"> </span><span class="s">startet&#39;</span><span class="p p-Indicator">,</span><span class="s">&#39;Heizung</span><span class="nv"> </span><span class="s">läuft&#39;</span><span class="p p-Indicator">][</span><span class="nv">value</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<span class="w">    </span><span class="nt">heizung_status_string</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;Ausgeschaltet&#39;</span><span class="p p-Indicator">,</span><span class="s">&#39;Heizung</span><span class="nv"> </span><span class="s">startet&#39;</span><span class="p p-Indicator">,</span><span class="s">&#39;Heizung</span><span class="nv"> </span><span class="s">läuft&#39;</span><span class="p p-Indicator">][</span><span class="nv">value</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 </pre></div>
 </div>
 <p>Hier wird basierend auf dem Wert eines Items ‚windBearing‘, dass die Windrichtung als Wert in Grad erhält,
 mit einem eval die Windrichtung bestimmt. Dazu wird aus einer Liste der Himmelsrichtungen,
 mit entsprechender Umwandlung der Windrichtung, gewählt und dem Item zugewiesen.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">windBearing</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ds_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">currently/windBearing</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">windBearing</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">ds_matchstring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">currently/windBearing</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
 
-<span class="w">    </span><span class="nt">windBearing_compass_string</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;[&#39;N&#39;,&#39;NO&#39;,&#39;O&#39;,&#39;SO&#39;,&#39;S&#39;,&#39;SW&#39;,&#39;W&#39;,&#39;NW&#39;,&#39;N&#39;][(int(value)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">22.5)</span><span class="nv"> </span><span class="s">/</span><span class="nv"> </span><span class="s">45]&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<span class="w">    </span><span class="nt">windBearing_compass_string</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;[&#39;N&#39;,&#39;NO&#39;,&#39;O&#39;,&#39;SO&#39;,&#39;S&#39;,&#39;SW&#39;,&#39;W&#39;,&#39;NW&#39;,&#39;N&#39;][(int(value)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">22.5)</span><span class="nv"> </span><span class="s">/</span><span class="nv"> </span><span class="s">45]&quot;</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 </pre></div>
 </div>
 </section>
 <section id="enumeration-uber-dictionary-mit-lookup-item">
 <h2>Enumeration über Dictionary mit Lookup-Item<a class="headerlink" href="#enumeration-uber-dictionary-mit-lookup-item" title="Permalink to this heading"></a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">aktuelleregeneration</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktueller Regenerationsschritt als num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">aktuelleregeneration</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktueller Regenerationsschritt als num</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
 
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktueller Regenerationsschritt als String</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">sh..lookup()</span><span class="p p-Indicator">][</span><span class="nv">value</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<span class="w">    </span><span class="nt">text</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktueller Regenerationsschritt als String</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">sh..lookup()</span><span class="p p-Indicator">][</span><span class="nv">value</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 
-<span class="w">        </span><span class="nt">lookup</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dict</span><span class="w"></span>
-<span class="w">            </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> 0</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;keine</span><span class="nv"> </span><span class="s">Regeneration&#39;</span><span class="p p-Indicator">,</span><span class="nt"> 1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Soletank</span><span class="nv"> </span><span class="s">füllen&#39;</span><span class="p p-Indicator">,</span><span class="nt"> 2</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Besalzen&#39;</span><span class="p p-Indicator">,</span><span class="nt"> 3</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Verdrängen&#39;</span><span class="p p-Indicator">,</span><span class="nt"> 4</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Rückspülen&#39;</span><span class="p p-Indicator">,</span><span class="nt"> 5</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Auswaschen&#39;</span><span class="w"> </span><span class="p p-Indicator">}</span><span class="w"></span>
+<span class="w">        </span><span class="nt">lookup</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dict</span>
+<span class="w">            </span><span class="nt">initial_value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> 0</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;keine</span><span class="nv"> </span><span class="s">Regeneration&#39;</span><span class="p p-Indicator">,</span><span class="nt"> 1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Soletank</span><span class="nv"> </span><span class="s">füllen&#39;</span><span class="p p-Indicator">,</span><span class="nt"> 2</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Besalzen&#39;</span><span class="p p-Indicator">,</span><span class="nt"> 3</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Verdrängen&#39;</span><span class="p p-Indicator">,</span><span class="nt"> 4</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Rückspülen&#39;</span><span class="p p-Indicator">,</span><span class="nt"> 5</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Auswaschen&#39;</span><span class="w"> </span><span class="p p-Indicator">}</span>
 </pre></div>
 </div>
 </section>
@@ -4010,15 +4010,15 @@ mit entsprechender Umwandlung der Windrichtung, gewählt und dem Item zugewiesen
 <h2>Basierend auf einem numerischen Wert einen boolschen erzeugen<a class="headerlink" href="#basierend-auf-einem-numerischen-wert-einen-boolschen-erzeugen" title="Permalink to this heading"></a></h2>
 <p>Hier wird basierend auf dem Wert eines num Items, der Wert für ein korrespondierendes bool-Item erzeugt.
 Das bool Item ist True, wenn der Wert des passenden num-Items &gt; 0 ansonsten False.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">stellgr_rueckmeldung</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;5.001&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/3/68</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">stellgr_rueckmeldung</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;5.001&#39;</span>
+<span class="w">    </span><span class="nt">knx_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0/3/68</span>
 
-<span class="w">    </span><span class="nt">stellgr_rueckmeldung_bool</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<span class="w">    </span><span class="nt">stellgr_rueckmeldung_bool</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 </pre></div>
 </div>
 </section>
@@ -4032,28 +4032,28 @@ basierend auf „value“ geprüft, und das Item entsprechend gesetzt.
 Für das Item „FolgeA“ bedeutet es konkret: Ändert sich das Wert von „Sollzustand“,
 wird die Neuberechnung des Items „FolgeA“ angestoßen und der Wert von „Sollzustand“
 wird als „value“ mit übergeben. Das eval ergibt True, wenn „value“ einer 2 entspricht, ansonsten False.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Sollzustand</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Sollzustand</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
 
-<span class="w">    </span><span class="nt">FolgeA</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value == 2</span><span class="w"></span>
-<span class="nt">​​​​​​​        eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<span class="w">    </span><span class="nt">FolgeA</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value == 2</span>
+<span class="nt">​​​​​​​        eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">FolgeB</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value == 3</span><span class="w"></span>
-<span class="nt">​​​​​​​        eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">FolgeB</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value == 3</span>
+<span class="nt">​​​​​​​        eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">FolgeC</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value == 4</span><span class="w"></span>
-<span class="nt">​​​​​​​        eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">FolgeC</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value == 4</span>
+<span class="nt">​​​​​​​        eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">FolgeD</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value == 5</span><span class="w"></span>
-<span class="nt">​​​​​​​        eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">FolgeD</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value == 5</span>
+<span class="nt">​​​​​​​        eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
 </pre></div>
 </div>
 </section>
@@ -4065,20 +4065,20 @@ Die Berechnung des Item „laufzeit_autotimer“ wird durch Änderungen im Item 
 getriggert und berechnet die Zeitdauer in Sekunden zwischen dem Wert (datetime im ISO-format)
 des Items „enddatetime_autotimer“ und jetzt.
 Dieser errechnete Wert wird dann als Dauer für den <strong>autotimer</strong> verwendet.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">abwesenheit</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.heizung.abwesenheit.laufzeit_autotimer() = 1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">abwesenheit</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.heizung.abwesenheit.laufzeit_autotimer() = 1</span>
 
-<span class="w">    </span><span class="nt">laufzeit_autotimer</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dauer des Autotimer in Sekunden</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int((datetime.datetime.strptime(sh.heizung.abwesenheit.enddatetime_autotimer(), &#39;%Y-%m-%dT%H:%M:%S&#39;) - datetime.datetime.now()).total_seconds())</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">abwesenheit.enddatetime_autotimer</span><span class="w"></span>
+<span class="w">    </span><span class="nt">laufzeit_autotimer</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dauer des Autotimer in Sekunden</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int((datetime.datetime.strptime(sh.heizung.abwesenheit.enddatetime_autotimer(), &#39;%Y-%m-%dT%H:%M:%S&#39;) - datetime.datetime.now()).total_seconds())</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">abwesenheit.enddatetime_autotimer</span>
 
-<span class="w">    </span><span class="nt">enddatetime_autotimer</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Datetime für Ende des Standby</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
+<span class="w">    </span><span class="nt">enddatetime_autotimer</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Datetime für Ende des Standby</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -4092,24 +4092,24 @@ nachschauen. Dort sind auch eine Reihe weiterer hilfreicher Funktionen beschrieb
 <section id="importieren-weiterer-python-module-in-ein-eval">
 <h2>Importieren weiterer Python Module in ein eval<a class="headerlink" href="#importieren-weiterer-python-module-in-ein-eval" title="Permalink to this heading"></a></h2>
 <p>Hier ein Beispiel, wie man weitere (nicht standardmäßig verfügbare) Python Module für ein eval importiert.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">boost_remaining_a</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__import__(&#39;math&#39;).ceil(sh.ventilation.booster.logics.boost_duration()/60)</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">eval_trigger = ventilation.booster.logics.boost_duration</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">boost_remaining_a</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__import__(&#39;math&#39;).ceil(sh.ventilation.booster.logics.boost_duration()/60)</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">eval_trigger = ventilation.booster.logics.boost_duration</span>
 </pre></div>
 </div>
 </section>
 <section id="verwendung-der-item-funktion-timer">
 <h2>Verwendung der Item-Funktion timer<a class="headerlink" href="#verwendung-der-item-funktion-timer" title="Permalink to this heading"></a></h2>
 <p>siehe auch <a class="reference external" href="https://knx-user-forum.de/forum/supportforen/smarthome-py/1447847-autotimer-sperren-garage-automatisch-zu">Thread im knx-user-forum</a></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tor</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">vorne</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">aufzu</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tor vorne</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># nach 10 Minuten automatisch runter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m = 1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tor</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">vorne</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">aufzu</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tor vorne</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">            </span><span class="c1"># nach 10 Minuten automatisch runter</span>
+<span class="w">            </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m = 1</span>
 </pre></div>
 </div>
 </section>
@@ -4123,26 +4123,26 @@ nachschauen. Dort sind auch eine Reihe weiterer hilfreicher Funktionen beschrieb
 höher von dem Wert des Items eine Ebene höher abzieht. Da dies ständig geschieht,
 wird die Häufigkeit der Berechnung über <strong>cycle</strong> (hier alle 10s) gesteuert.</p></li>
 </ul>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Bewaesserung</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">OnOff</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh..Dauer() = false</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Bewaesserung</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">OnOff</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">autotimer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh..Dauer() = false</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">        </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
 
-<span class="w">        </span><span class="nt">Dauer</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Dauer</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
 
-<span class="w">            </span><span class="nt">Rest</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">                </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh...() - sh....age() if sh....() else 0</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
-<span class="w">                </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
+<span class="w">            </span><span class="nt">Rest</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">                </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh...() - sh....age() if sh....() else 0</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">                </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 </pre></div>
 </div>
 </section>
@@ -4155,13 +4155,13 @@ wird die Häufigkeit der Berechnung über <strong>cycle</strong> (hier alle 10s)
 <li><p>Wenn Item in = False wird, soll Item out in 5 Sekunden = False werden.</p></li>
 <li><p>Wird das Item vor 5 Sekunden wieder True, soll out nicht False werden.</p></li>
 </ul>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">in</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">on_change</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.out.timer(0,1) if value else sh.out.timer(5,0)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">in</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">on_change</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.out.timer(0,1) if value else sh.out.timer(5,0)</span>
 
-<span class="nt">out</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
+<span class="nt">out</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
 </pre></div>
 </div>
 </section>
@@ -4172,16 +4172,16 @@ wird die Häufigkeit der Berechnung über <strong>cycle</strong> (hier alle 10s)
 Die Präsenzmelder senden immer True, wenn Präsenz da ist (es wird kein False gesendet).</p>
 <p>Konkret wird das Item „anwesend“ 10 min nachdem der letzte Präsenzmelder ein TRUE gesendet hat.
 Bei jedem <strong>eval_trigger</strong> wird der <strong>autotimer</strong> neu gestartet.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">anwesend</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">autotimer = 10m = 0</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">pm1.meldung</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">pm2.meldung</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">pm3.meldung</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">pm4.meldung</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">pm5.meldung</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">anwesend</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">autotimer = 10m = 0</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">pm1.meldung</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">pm2.meldung</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">pm3.meldung</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">pm4.meldung</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">pm5.meldung</span>
 </pre></div>
 </div>
 </section>
@@ -4195,25 +4195,25 @@ Das Wichtigste steckt im Item „Luftfeuchte.Abweichung“:</p>
 <li><p>es wird erstmal im <strong>eval</strong> berechnet, wie die Abweichung zum letzten gemerkten Luftfeuchte-Wert ist (und falls noch kein Wert von vor 5 Minuten da ist, bleibt es bei 0)</p></li>
 <li><p>Anschließend wird der aktuelle Luftfeuchte-Wert gemerkt <strong>on_update</strong> (der wird dann ja in 5 Minuten wieder gebraucht).</p></li>
 </ul>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Luftfeuchte</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktuelle Luftfeuchte</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.001</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Vor5Minuten</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Luftfeuchte vor 5 Minuten</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Abweichung</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Abweichung in %</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m = 1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.Luftfeuchte.Vor5Minuten() - sh.Luftfeuchte() if sh.Luftfeuchte.Vor5Minuten() &gt; 0 else 0</span><span class="w"></span>
-<span class="w">        </span><span class="nt">on_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Luftfeuchte.Vor5Minuten = sh.Luftfeuchte()</span><span class="w"></span>
-<span class="w">    </span><span class="nt">MehrAls5Prozent</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Abweichung größer gleich 5 Prozent</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.Luftfeuchte.Abweichung() &gt;= 5 or sh.Luftfeuchte.Abweichung() &lt;= -5</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Luftfeuchte.Abweichung</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Luftfeuchte</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aktuelle Luftfeuchte</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.001</span>
+<span class="w">    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">    </span><span class="nt">Vor5Minuten</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Luftfeuchte vor 5 Minuten</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">Abweichung</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Abweichung in %</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m = 1</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.Luftfeuchte.Vor5Minuten() - sh.Luftfeuchte() if sh.Luftfeuchte.Vor5Minuten() &gt; 0 else 0</span>
+<span class="w">        </span><span class="nt">on_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Luftfeuchte.Vor5Minuten = sh.Luftfeuchte()</span>
+<span class="w">    </span><span class="nt">MehrAls5Prozent</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Abweichung größer gleich 5 Prozent</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh.Luftfeuchte.Abweichung() &gt;= 5 or sh.Luftfeuchte.Abweichung() &lt;= -5</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Luftfeuchte.Abweichung</span>
 </pre></div>
 </div>
 </section>

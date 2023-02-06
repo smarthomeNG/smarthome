@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Neato/Vorwerk Vacuum Robot</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Neato/Vorwerk Vacuum Robot</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3864,19 +3864,19 @@
 <h3>2) Authentication<a class="headerlink" href="#authentication" title="Permalink to this heading"></a></h3>
 <p>Two different authentication techniques are supported by the plugin:</p>
 <p>a) Authentication via „account email“ and account password (applicable for Neato and old Vorwerk API)</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Neato</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">neato</span><span class="w"></span>
-<span class="w">    </span><span class="nt">account_email</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_neato_account_email&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">account_pass</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_neato_account_password!&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">robot_vendor</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;neato</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">vorwerk&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Neato</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">neato</span>
+<span class="w">    </span><span class="nt">account_email</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_neato_account_email&#39;</span>
+<span class="w">    </span><span class="nt">account_pass</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_neato_account_password!&#39;</span>
+<span class="w">    </span><span class="nt">robot_vendor</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;neato</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">vorwerk&#39;</span>
 </pre></div>
 </div>
 <p>b) Oauth2 authentication via „account email“ and token (applicable for Vorwerk only, supports the new MyKobold APP interface)</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Neato</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">neato</span><span class="w"></span>
-<span class="w">    </span><span class="nt">account_email</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_neato_account_email&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;HEX_ASCII_TOKEN&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">robot_vendor</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;vorwerk&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Neato</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">neato</span>
+<span class="w">    </span><span class="nt">account_email</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;your_neato_account_email&#39;</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;HEX_ASCII_TOKEN&#39;</span>
+<span class="w">    </span><span class="nt">robot_vendor</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;vorwerk&#39;</span>
 </pre></div>
 </div>
 <p>In order to obtain a token, use the plugin’s webinterface on the Vorwerk OAuth2 tab.</p>
@@ -3891,52 +3891,52 @@
 <section id="smarthome-items-robot-yaml">
 <h3>2) /smarthome/items/robot.yaml<a class="headerlink" href="#smarthome-items-robot-yaml" title="Permalink to this heading"></a></h3>
 <p>Create an item based on the template below:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Neato</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">Name</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;name&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">  </span><span class="nt">State</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;offline&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;state&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">  </span><span class="nt">StateAction</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;state_action&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">  </span><span class="nt">Command</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;command&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">  </span><span class="nt">IsDocked</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;is_docked&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">  </span><span class="nt">IsScheduleEnabled</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;is_schedule_enabled&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">  </span><span class="nt">IsCharging</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;is_charging&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">  </span><span class="nt">ChargePercentage</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;charge_percentage&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">  </span><span class="nt">GoToBaseAvailable</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;command_goToBaseAvailable&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
-<span class="w">  </span><span class="nt">Alert</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;alert&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Neato</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Name</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;name&#39;</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">  </span><span class="nt">State</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;offline&#39;</span>
+<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;state&#39;</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">  </span><span class="nt">StateAction</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;state_action&#39;</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">  </span><span class="nt">Command</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;command&#39;</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">  </span><span class="nt">IsDocked</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;is_docked&#39;</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">  </span><span class="nt">IsScheduleEnabled</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;is_schedule_enabled&#39;</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">  </span><span class="nt">IsCharging</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;is_charging&#39;</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">  </span><span class="nt">ChargePercentage</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;charge_percentage&#39;</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">  </span><span class="nt">GoToBaseAvailable</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;command_goToBaseAvailable&#39;</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
+<span class="w">  </span><span class="nt">Alert</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">neato_attribute</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;alert&#39;</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ro</span>
 </pre></div>
 </div>
 </section>

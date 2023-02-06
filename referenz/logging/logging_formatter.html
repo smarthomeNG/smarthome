@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../referenz.html">Referenz <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="logging.html">Logging</a> &raquo;</li>
-      <li>Logging Formatter</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../referenz.html">Referenz <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="logging.html">Logging</a></li>
+      <li class="breadcrumb-item active">Logging Formatter</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3861,20 +3861,20 @@ Logs) verwendet werden. Er bietet einen guten Kompromiss zwischen Übersichtlich
 Die Ausgaben mit diesem Formatter helfen besonders bei Supportanfragen.</p>
 <p>Der <strong>shng_simple</strong> Formatter gibt außer der Log Message die folgenden Attribute aus: Den Zeitpunkt, den Loglevel
 und den Namen des Loggers. Er ist folgendermaßen definiert:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">formatters</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">formatters</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">shng_simple</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-19s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">shng_simple</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-19s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span>
+<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span>
 </pre></div>
 </div>
 <p>Wenn zusätzlich die Ausgabe der Zeitzone benötigt/gewünscht wird, kann das Datumsformat entsprechend angepasst
 werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">formatters</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">formatters</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">shng_simple</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-19s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S</span><span class="nv"> </span><span class="s">%Z&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">shng_simple</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-19s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span>
+<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S</span><span class="nv"> </span><span class="s">%Z&#39;</span>
 </pre></div>
 </div>
 <p>Eine vollständige Liste der Attribute eines Log-Records kann in der Python Dokumentation unter

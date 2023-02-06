@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="konfigdateien.html">Konfiguration über Dateien</a> &raquo;</li>
-      <li>holidays.yaml</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="konfigdateien.html">Konfiguration über Dateien</a></li>
+      <li class="breadcrumb-item active">holidays.yaml</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3971,44 +3971,44 @@ am 1. Mittwoch im Jahr</p></td>
 etwa so aussehen:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">holidays.yaml</span><a class="headerlink" href="#id2" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
-<span class="c1"># etc/holidays.yaml</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span>
+<span class="nn">---</span>
+<span class="c1"># etc/holidays.yaml</span>
 
-<span class="c1"># Supports holidays for 50 countries</span><span class="w"></span>
-<span class="c1"># Supports regional holidays for provinces of a country</span><span class="w"></span>
-<span class="c1">#</span><span class="w"></span>
-<span class="c1"># Popular countries for SmartHomeNG:</span><span class="w"></span>
-<span class="c1">#  - Germany or DE: province = BW, BY, BE, BB, HB, HH, HE, MV, NI, NW, RP, SL, SN, ST, SH, TH</span><span class="w"></span>
-<span class="c1">#  - Austria or AT: province = B, K, N, O, S, ST, T, V, W (default)</span><span class="w"></span>
-<span class="c1">#  - Switzerland or CH: province = AG, AR, AI, BL, BS, BE, FR, GE, GL, GR, JU, LU, NE, NW, OW, SG, SH, SZ, SO, TG, TI, UR, VD, VS, ZG, ZH</span><span class="w"></span>
-<span class="c1">#</span><span class="w"></span>
-<span class="c1">#  - Belgium or BE: province = None</span><span class="w"></span>
-<span class="c1">#  - France or FRA: province = Métropole (default), Alsace-Moselle, Guadeloupe, Guyane, Martinique, Mayotte, Nouvelle-Calédonie, La Réunion, Polynésie Française, Saint-Barthélémy, Saint-Martin, Wallis-et-Futuna</span><span class="w"></span>
-<span class="c1">#  - Luxembourg or LU: province = None</span><span class="w"></span>
-<span class="c1">#  - Poland or PL: province = None</span><span class="w"></span>
-<span class="c1">#  - UnitedKingdom or UK: province = None</span><span class="w"></span>
-<span class="c1">#  - England, Northern Ireland, Scotland, Wales: province = None</span><span class="w"></span>
+<span class="c1"># Supports holidays for 50 countries</span>
+<span class="c1"># Supports regional holidays for provinces of a country</span>
+<span class="c1">#</span>
+<span class="c1"># Popular countries for SmartHomeNG:</span>
+<span class="c1">#  - Germany or DE: province = BW, BY, BE, BB, HB, HH, HE, MV, NI, NW, RP, SL, SN, ST, SH, TH</span>
+<span class="c1">#  - Austria or AT: province = B, K, N, O, S, ST, T, V, W (default)</span>
+<span class="c1">#  - Switzerland or CH: province = AG, AR, AI, BL, BS, BE, FR, GE, GL, GR, JU, LU, NE, NW, OW, SG, SH, SZ, SO, TG, TI, UR, VD, VS, ZG, ZH</span>
+<span class="c1">#</span>
+<span class="c1">#  - Belgium or BE: province = None</span>
+<span class="c1">#  - France or FRA: province = Métropole (default), Alsace-Moselle, Guadeloupe, Guyane, Martinique, Mayotte, Nouvelle-Calédonie, La Réunion, Polynésie Française, Saint-Barthélémy, Saint-Martin, Wallis-et-Futuna</span>
+<span class="c1">#  - Luxembourg or LU: province = None</span>
+<span class="c1">#  - Poland or PL: province = None</span>
+<span class="c1">#  - UnitedKingdom or UK: province = None</span>
+<span class="c1">#  - England, Northern Ireland, Scotland, Wales: province = None</span>
 
-<span class="nt">location</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">country</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Germany</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#province: HH       # for DE</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#state: FL          # state is only used for United States and Brazil</span><span class="w"></span>
+<span class="nt">location</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">country</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Germany</span>
+<span class="w">    </span><span class="c1">#province: HH       # for DE</span>
+<span class="w">    </span><span class="c1">#state: FL          # state is only used for United States and Brazil</span>
 
-<span class="c1">#custom:</span><span class="w"></span>
-<span class="c1">#    # custom holidays without a specified year repeat every year</span><span class="w"></span>
-<span class="c1">#    - &#39;{&quot;dow&quot;: 5, &quot;dow_week&quot;: &quot;last&quot;, &quot;month&quot;: 7, &quot;name&quot;: &quot;Sysadmin day&quot;}&#39;           # last friday in July</span><span class="w"></span>
-<span class="c1">#    - {&quot;day&quot;: 2, &quot;month&quot;: 8, &quot;name&quot;: &quot;Jon Doe&#39;s birthday&quot;}</span><span class="w"></span>
-<span class="c1">#    - {&quot;day&quot;: 22, &quot;month&quot;: 11, &quot;name: &quot;Jane Doe&#39;s birthday&quot;}</span><span class="w"></span>
-<span class="c1">#    - {&quot;day&quot;: 2, &quot;month&quot;: 8, &quot;year&quot;: 2020, &quot;name&quot;: &quot;Jon Doe&#39;s 100th birthday&quot;}</span><span class="w"></span>
-<span class="c1">#    - {&quot;dow&quot;: 5, &quot;dow_week&quot;: &quot;last&quot;, &quot;month&quot;: 7, &quot;name&quot;: &quot;Sysadmin day&quot;}         # last friday in July</span><span class="w"></span>
-<span class="c1">#    - {&quot;dow&quot;: 2, &quot;dow_week&quot;: 2, &quot;month&quot;: 7, &quot;name&quot;: &quot;second tuesday in July&quot;}</span><span class="w"></span>
-<span class="c1">#    - {&quot;dow&quot;: 2, &quot;dow_week&quot;: 2, &quot;month&quot;: 7, &quot;year&quot;: 2019, &quot;name&quot;: &quot;second tuesday in July &#39;19&quot;}</span><span class="w"></span>
-<span class="c1">#    - {&quot;dow&quot;: 3, &quot;dow_week&quot;: 2, &quot;year&quot;: 2021, &quot;name&quot;: &quot;Every second wednesday in 2021&quot;}</span><span class="w"></span>
-<span class="c1">#    - {&quot;dow&quot;: 3, &quot;dow_week&quot;: 2, &quot;dow_start_week&quot;: 1, &quot;year&quot;: 2021, &quot;name&quot;: &quot;Every second wednesday in 2021, starting on 1st wednesday&quot;}</span><span class="w"></span>
+<span class="c1">#custom:</span>
+<span class="c1">#    # custom holidays without a specified year repeat every year</span>
+<span class="c1">#    - &#39;{&quot;dow&quot;: 5, &quot;dow_week&quot;: &quot;last&quot;, &quot;month&quot;: 7, &quot;name&quot;: &quot;Sysadmin day&quot;}&#39;           # last friday in July</span>
+<span class="c1">#    - {&quot;day&quot;: 2, &quot;month&quot;: 8, &quot;name&quot;: &quot;Jon Doe&#39;s birthday&quot;}</span>
+<span class="c1">#    - {&quot;day&quot;: 22, &quot;month&quot;: 11, &quot;name: &quot;Jane Doe&#39;s birthday&quot;}</span>
+<span class="c1">#    - {&quot;day&quot;: 2, &quot;month&quot;: 8, &quot;year&quot;: 2020, &quot;name&quot;: &quot;Jon Doe&#39;s 100th birthday&quot;}</span>
+<span class="c1">#    - {&quot;dow&quot;: 5, &quot;dow_week&quot;: &quot;last&quot;, &quot;month&quot;: 7, &quot;name&quot;: &quot;Sysadmin day&quot;}         # last friday in July</span>
+<span class="c1">#    - {&quot;dow&quot;: 2, &quot;dow_week&quot;: 2, &quot;month&quot;: 7, &quot;name&quot;: &quot;second tuesday in July&quot;}</span>
+<span class="c1">#    - {&quot;dow&quot;: 2, &quot;dow_week&quot;: 2, &quot;month&quot;: 7, &quot;year&quot;: 2019, &quot;name&quot;: &quot;second tuesday in July &#39;19&quot;}</span>
+<span class="c1">#    - {&quot;dow&quot;: 3, &quot;dow_week&quot;: 2, &quot;year&quot;: 2021, &quot;name&quot;: &quot;Every second wednesday in 2021&quot;}</span>
+<span class="c1">#    - {&quot;dow&quot;: 3, &quot;dow_week&quot;: 2, &quot;dow_start_week&quot;: 1, &quot;year&quot;: 2021, &quot;name&quot;: &quot;Every second wednesday in 2021, starting on 1st wednesday&quot;}</span>
 
-<span class="nt">custom</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;{&quot;dow&quot;:</span><span class="nv"> </span><span class="s">5,</span><span class="nv"> </span><span class="s">&quot;dow_week&quot;:</span><span class="nv"> </span><span class="s">&quot;last&quot;,</span><span class="nv"> </span><span class="s">&quot;month&quot;:</span><span class="nv"> </span><span class="s">7,</span><span class="nv"> </span><span class="s">&quot;name&quot;:</span><span class="nv"> </span><span class="s">&quot;Sysadmin</span><span class="nv"> </span><span class="s">day&quot;}&#39;</span><span class="w">           </span><span class="c1"># last friday in July</span><span class="w"></span>
+<span class="nt">custom</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;{&quot;dow&quot;:</span><span class="nv"> </span><span class="s">5,</span><span class="nv"> </span><span class="s">&quot;dow_week&quot;:</span><span class="nv"> </span><span class="s">&quot;last&quot;,</span><span class="nv"> </span><span class="s">&quot;month&quot;:</span><span class="nv"> </span><span class="s">7,</span><span class="nv"> </span><span class="s">&quot;name&quot;:</span><span class="nv"> </span><span class="s">&quot;Sysadmin</span><span class="nv"> </span><span class="s">day&quot;}&#39;</span><span class="w">           </span><span class="c1"># last friday in July</span>
 </pre></div>
 </div>
 </div>

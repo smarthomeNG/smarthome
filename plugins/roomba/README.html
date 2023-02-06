@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Roomba</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Roomba</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3861,7 +3861,7 @@
 <h3>Bluetooth<a class="headerlink" href="#bluetooth" title="Permalink to this heading"></a></h3>
 <p>For Bluetooth <code class="docutils literal notranslate"><span class="pre">bluez</span></code> is needed</p>
 <p>To install operating system bluetooth support run</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install bluez
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>bluez
 </pre></div>
 </div>
 <p>Choose socket_type = ‚bt‘ and add the Roomba Bluetooth-Mac in socket_addr = XX:XX:XX:XX:XX:XX</p>
@@ -3885,13 +3885,13 @@ Not tested is a connection trough a wifi-rs232 adapter.</p>
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml:<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">roomba</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Roomba</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.roomba</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">240</span><span class="w"> </span><span class="c1">#0=deactivate reading sensors</span><span class="w"></span>
-<span class="w">    </span><span class="nt">socket_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bt</span><span class="w"> </span><span class="c1">#tcp or bt</span><span class="w"></span>
-<span class="w">    </span><span class="nt">socket_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:13:04:11:14:77</span><span class="w"> </span><span class="c1"># MAC for Bluetooth, IP for TCP</span><span class="w"></span>
-<span class="w">    </span><span class="nt">socket_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">roomba</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Roomba</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.roomba</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">240</span><span class="w"> </span><span class="c1">#0=deactivate reading sensors</span>
+<span class="w">    </span><span class="nt">socket_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bt</span><span class="w"> </span><span class="c1">#tcp or bt</span>
+<span class="w">    </span><span class="nt">socket_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:13:04:11:14:77</span><span class="w"> </span><span class="c1"># MAC for Bluetooth, IP for TCP</span>
+<span class="w">    </span><span class="nt">socket_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
 </pre></div>
 </div>
 </section>
@@ -3915,228 +3915,228 @@ I think the names are self explaining.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">roomba_raw</span> <span class="pre">=</span> <span class="pre">[123]</span></code>
 To send integers to Roomba following the documentation of Roomba SCI as List!</p></li>
 </ul>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">roomba</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">roomba</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">commands</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">commands</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">clean</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clean</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clean</span><span class="w"></span>
+<span class="w">        </span><span class="nt">clean</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clean</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clean</span>
 
-<span class="w">        </span><span class="nt">dock</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dock</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dock</span><span class="w"></span>
+<span class="w">        </span><span class="nt">dock</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dock</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dock</span>
 
-<span class="w">        </span><span class="nt">power_off</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">power_off</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">power_off</span><span class="w"></span>
+<span class="w">        </span><span class="nt">power_off</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">power_off</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">power_off</span>
 
-<span class="w">        </span><span class="nt">spot</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spot</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spot</span><span class="w"></span>
+<span class="w">        </span><span class="nt">spot</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spot</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spot</span>
 
-<span class="w">        </span><span class="nt">max</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max</span><span class="w"></span>
+<span class="w">        </span><span class="nt">max</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max</span>
 
-<span class="w">        </span><span class="nt">test_scene</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># drives backward for 2 seconds, then spins left for 2 seconds, then drives forward for 3 seconds, then spins right for 3 seconds, then stops and starts to clean after 2 seconds</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test-drive</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backward</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;2&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spin_left</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;2&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forward</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;3&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spin_right</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;3&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stop</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;2&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clean</span><span class="w"></span>
+<span class="w">        </span><span class="nt">test_scene</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="c1"># drives backward for 2 seconds, then spins left for 2 seconds, then drives forward for 3 seconds, then spins right for 3 seconds, then stops and starts to clean after 2 seconds</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test-drive</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backward</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;2&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spin_left</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;2&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">forward</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;3&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spin_right</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;3&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stop</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;2&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clean</span>
 
-<span class="w">    </span><span class="nt">raw</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">raw</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">stop</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_raw</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;137&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;0&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;0&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;0&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">stop</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">roomba_raw</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;137&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;0&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;0&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;0&#39;</span>
 
-<span class="w">    </span><span class="nt">sensors</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">sensors</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">current</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># current in mA</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current</span><span class="w"></span>
+<span class="w">        </span><span class="nt">current</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># current in mA</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current</span>
 
-<span class="w">        </span><span class="nt">temperature</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># temperature in degrees celsius</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature</span><span class="w"></span>
+<span class="w">        </span><span class="nt">temperature</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># temperature in degrees celsius</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature</span>
 
-<span class="w">        </span><span class="nt">voltage</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># voltage in mV</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">voltage</span><span class="w"></span>
+<span class="w">        </span><span class="nt">voltage</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># voltage in mV</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">voltage</span>
 
-<span class="w">        </span><span class="nt">button_clean</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># clean button pressed</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buttons_clean</span><span class="w"></span>
+<span class="w">        </span><span class="nt">button_clean</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># clean button pressed</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buttons_clean</span>
 
-<span class="w">        </span><span class="nt">capacity</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># capacity in mA</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">capacity</span><span class="w"></span>
+<span class="w">        </span><span class="nt">capacity</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># capacity in mA</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">capacity</span>
 
-<span class="w">        </span><span class="nt">charge</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># charge in mA</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">charge</span><span class="w"></span>
+<span class="w">        </span><span class="nt">charge</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># charge in mA</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">charge</span>
 
-<span class="w">        </span><span class="nt">angle</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># angle since last request</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">angle</span><span class="w"></span>
+<span class="w">        </span><span class="nt">angle</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># angle since last request</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">angle</span>
 
-<span class="w">        </span><span class="nt">distance</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="c1"># distance since last request</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">distance</span><span class="w"></span>
+<span class="w">        </span><span class="nt">distance</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># distance since last request</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">distance</span>
 
-<span class="w">        </span><span class="nt">buttons_max</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buttons_max</span><span class="w"></span>
+<span class="w">        </span><span class="nt">buttons_max</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buttons_max</span>
 
-<span class="w">        </span><span class="nt">buttons_clean</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buttons_clean</span><span class="w"></span>
+<span class="w">        </span><span class="nt">buttons_clean</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buttons_clean</span>
 
-<span class="w">        </span><span class="nt">buttons_spot</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buttons_spot</span><span class="w"></span>
+<span class="w">        </span><span class="nt">buttons_spot</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buttons_spot</span>
 
-<span class="w">        </span><span class="nt">buttons_power</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buttons_power</span><span class="w"></span>
+<span class="w">        </span><span class="nt">buttons_power</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buttons_power</span>
 
-<span class="w">        </span><span class="nt">remote_opcode</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">remote_opcode</span><span class="w"></span>
+<span class="w">        </span><span class="nt">remote_opcode</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">remote_opcode</span>
 
-<span class="w">        </span><span class="nt">dirt_detect_right</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dirt_detect_right</span><span class="w"></span>
+<span class="w">        </span><span class="nt">dirt_detect_right</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dirt_detect_right</span>
 
-<span class="w">        </span><span class="nt">dirt_detect_left</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dirt_detect_left</span><span class="w"></span>
+<span class="w">        </span><span class="nt">dirt_detect_left</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dirt_detect_left</span>
 
-<span class="w">        </span><span class="nt">motor_overcurrent_side_brush</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">motor_overcurrent_side_brush</span><span class="w"></span>
+<span class="w">        </span><span class="nt">motor_overcurrent_side_brush</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">motor_overcurrent_side_brush</span>
 
-<span class="w">        </span><span class="nt">motor_overcurrent_vacuum</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">motor_overcurrent_vacuum</span><span class="w"></span>
+<span class="w">        </span><span class="nt">motor_overcurrent_vacuum</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">motor_overcurrent_vacuum</span>
 
-<span class="w">        </span><span class="nt">motor_overcurrent_main_brush</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">motor_overcurrent_main_brush</span><span class="w"></span>
+<span class="w">        </span><span class="nt">motor_overcurrent_main_brush</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">motor_overcurrent_main_brush</span>
 
-<span class="w">        </span><span class="nt">motor_overcurrent_drive_left</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">motor_overcurrent_drive_left</span><span class="w"></span>
+<span class="w">        </span><span class="nt">motor_overcurrent_drive_left</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">motor_overcurrent_drive_left</span>
 
-<span class="w">        </span><span class="nt">virtual_wall</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">virtual_wall</span><span class="w"></span>
+<span class="w">        </span><span class="nt">virtual_wall</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">virtual_wall</span>
 
-<span class="w">        </span><span class="nt">cliff_right</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cliff_right</span><span class="w"></span>
+<span class="w">        </span><span class="nt">cliff_right</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cliff_right</span>
 
-<span class="w">        </span><span class="nt">cliff_front_right</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cliff_front_right</span><span class="w"></span>
+<span class="w">        </span><span class="nt">cliff_front_right</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cliff_front_right</span>
 
-<span class="w">        </span><span class="nt">cliff_front_left</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cliff_front_left</span><span class="w"></span>
+<span class="w">        </span><span class="nt">cliff_front_left</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cliff_front_left</span>
 
-<span class="w">        </span><span class="nt">cliff_left</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cliff_left</span><span class="w"></span>
+<span class="w">        </span><span class="nt">cliff_left</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cliff_left</span>
 
-<span class="w">        </span><span class="nt">wall</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wall</span><span class="w"></span>
+<span class="w">        </span><span class="nt">wall</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wall</span>
 
-<span class="w">        </span><span class="nt">bumps_wheeldrops_bump_right</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bumps_wheeldrops_bump_right</span><span class="w"></span>
+<span class="w">        </span><span class="nt">bumps_wheeldrops_bump_right</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bumps_wheeldrops_bump_right</span>
 
-<span class="w">        </span><span class="nt">bumps_wheeldrops_bump_left</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bumps_wheeldrops_bump_left</span><span class="w"></span>
+<span class="w">        </span><span class="nt">bumps_wheeldrops_bump_left</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bumps_wheeldrops_bump_left</span>
 
-<span class="w">        </span><span class="nt">bumps_wheeldrops_wheeldrop_right</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bumps_wheeldrops_wheeldrop_right</span><span class="w"></span>
+<span class="w">        </span><span class="nt">bumps_wheeldrops_wheeldrop_right</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bumps_wheeldrops_wheeldrop_right</span>
 
-<span class="w">        </span><span class="nt">bumps_wheeldrops_wheeldrop_left</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bumps_wheeldrops_wheeldrop_left</span><span class="w"></span>
+<span class="w">        </span><span class="nt">bumps_wheeldrops_wheeldrop_left</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_get</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bumps_wheeldrops_wheeldrop_left</span>
 
-<span class="w">        </span><span class="nt">bumps_wheeldrops_wheeldrop_caster</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bumps_wheeldrops_wheeldrop_caster</span><span class="w"></span>
+<span class="w">        </span><span class="nt">bumps_wheeldrops_wheeldrop_caster</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">roomba_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bumps_wheeldrops_wheeldrop_caster</span>
 </pre></div>
 </div>
 </section>

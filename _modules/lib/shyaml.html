@@ -3837,9 +3837,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Modul-Quellcode</a> &raquo;</li>
-      <li>lib.shyaml</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Modul-Quellcode</a></li>
+      <li class="breadcrumb-item active">lib.shyaml</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3942,7 +3942,7 @@
 
 
 <div class="viewcode-block" id="yaml_load"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yaml_load">[Doku]</a><span class="k">def</span> <span class="nf">yaml_load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_notfound</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load contents of a configuration file into an dict/OrderedDict structure. The configuration file has to be a valid yaml file</span>
 
 <span class="sd">    :param filename: name of the yaml file to load</span>
@@ -3992,7 +3992,7 @@
 
 
 <div class="viewcode-block" id="yaml_load_fromstring"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yaml_load_fromstring">[Doku]</a><span class="k">def</span> <span class="nf">yaml_load_fromstring</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load contents of a string into an dict/OrderedDict structure. The string has to be valid yaml</span>
 
 <span class="sd">    :param string: name of the yaml file to load</span>
@@ -4031,7 +4031,7 @@
 
 
 <div class="viewcode-block" id="yaml_save"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yaml_save">[Doku]</a><span class="k">def</span> <span class="nf">yaml_save</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Save contents of an OrderedDict structure to a yaml file</span>
 
 <span class="sd">    :param filename: name of the yaml file to save to</span>
@@ -4059,7 +4059,7 @@
 <span class="c1"># ==================================================================================</span>
 
 <span class="k">def</span> <span class="nf">_format_yaml_load</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reinsert &#39;\n&#39;s that have been removed fom comments to make file more readable</span>
 
 <span class="sd">    :param data: string to format</span>
@@ -4075,7 +4075,7 @@
 
 
 <span class="k">def</span> <span class="nf">_ordered_load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">Loader</span><span class="p">,</span> <span class="n">object_pairs_hook</span><span class="o">=</span><span class="n">OrderedDict</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ordered yaml loader</span>
 <span class="sd">    Use this instead ot yaml.loader/yaml.saveloader to get an Ordereddict</span>
 
@@ -4099,7 +4099,7 @@
 
 
 <span class="k">def</span> <span class="nf">_format_yaml_dump</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Format yaml-dump to make file more readable</span>
 <span class="sd">    (yaml structure must be dumped to a stream before using this function)</span>
 <span class="sd">    | Currently does the following:</span>
@@ -4126,7 +4126,7 @@
 
 
 <span class="k">def</span> <span class="nf">_ordered_dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Dumper</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">Dumper</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ordered yaml dumper</span>
 <span class="sd">    Use this instead ot yaml.Dumper/yaml.SaveDumper to get an Ordereddict</span>
 
@@ -4153,7 +4153,7 @@
 <span class="c1">#</span>
 
 <div class="viewcode-block" id="yaml_load_roundtrip"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yaml_load_roundtrip">[Doku]</a><span class="k">def</span> <span class="nf">yaml_load_roundtrip</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load contents of a yaml file into an dict structure for editing (using Roundtrip Loader)</span>
 
 <span class="sd">    :param filename: name of the yaml file to load</span>
@@ -4178,21 +4178,21 @@
 
 
 <div class="viewcode-block" id="get_emptynode"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.get_emptynode">[Doku]</a><span class="k">def</span> <span class="nf">get_emptynode</span><span class="p">():</span>
-   <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">   Return an empty node</span>
 <span class="sd">   &quot;&quot;&quot;</span>
    <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">CommentedMap</span><span class="p">([])</span></div>
 
 
 <div class="viewcode-block" id="get_commentedseq"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.get_commentedseq">[Doku]</a><span class="k">def</span> <span class="nf">get_commentedseq</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
-   <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">   Convert a list to a commented sequence</span>
 <span class="sd">   &quot;&quot;&quot;</span>
    <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">CommentedSeq</span><span class="p">(</span> <span class="n">l</span> <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="yaml_dump_roundtrip"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yaml_dump_roundtrip">[Doku]</a><span class="k">def</span> <span class="nf">yaml_dump_roundtrip</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Dump yaml to a string using the RoundtripDumper and correct linespacing in output file</span>
 
 <span class="sd">    :param data: data structure to save</span>
@@ -4204,7 +4204,7 @@
 
 
 <div class="viewcode-block" id="yaml_save_roundtrip"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yaml_save_roundtrip">[Doku]</a><span class="k">def</span> <span class="nf">yaml_save_roundtrip</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">create_backup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Dump yaml using the RoundtripDumper and correct linespacing in output file</span>
 
 <span class="sd">    :param filename: name of the yaml file to save to</span>
@@ -4243,7 +4243,7 @@
 
 
 <span class="k">def</span> <span class="nf">_format_yaml_dump2</span><span class="p">(</span><span class="n">sdata</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Format yaml-dump to make file more readable, used by yaml_save_roundtrip()</span>
 <span class="sd">    (yaml structure must be dumped to a stream before using this function)</span>
 <span class="sd">    | Currently does the following:</span>
@@ -4348,7 +4348,7 @@
 <span class="c1">#</span>
 
 <div class="viewcode-block" id="writeBackToFile"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.writeBackToFile">[Doku]</a><span class="k">def</span> <span class="nf">writeBackToFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">itempath</span><span class="p">,</span> <span class="n">itemattr</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    write the value of an item&#39;s attribute back to the yaml-file</span>
 
 <span class="sd">    :param filename: name of the yaml-file (without the .yaml extension!)</span>
@@ -4376,7 +4376,7 @@
 
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">filename_write</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">create_bak</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        initialize class for handling a yaml-file (read/write)</span>
 <span class="sd">        | It initializes an empty data-structure, which can be filled by the load() method</span>
 <span class="sd">        | This class is to be used for editing of yaml-files, not for loading SmartHomeNG structures</span>
@@ -4398,14 +4398,14 @@
 
 
 <div class="viewcode-block" id="yamlfile.load"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.load">[Doku]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        load the contents of the yaml-file to the data-structure</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">yaml_load_roundtrip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="yamlfile.save"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.save">[Doku]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        save the contents of the data-structure to the yaml-file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_bak</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_write</span><span class="o">+</span><span class="n">YAML_FILE</span><span class="p">):</span>
@@ -4414,7 +4414,7 @@
 
 
 <div class="viewcode-block" id="yamlfile.getnode"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.getnode">[Doku]</a>    <span class="k">def</span> <span class="nf">getnode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get the contents of a node (branch or leaf)</span>
 
 <span class="sd">        :param path: path of the node to return</span>
@@ -4426,7 +4426,7 @@
 
 
 <div class="viewcode-block" id="yamlfile.getvalue"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.getvalue">[Doku]</a>    <span class="k">def</span> <span class="nf">getvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get the value of a leaf-node</span>
 
 <span class="sd">        :param path: path of the node to return</span>
@@ -4441,7 +4441,7 @@
 
 
 <div class="viewcode-block" id="yamlfile.getnodetype"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.getnodetype">[Doku]</a>    <span class="k">def</span> <span class="nf">getnodetype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get the type of a node</span>
 
 <span class="sd">        :param path: path of the node to return</span>
@@ -4453,7 +4453,7 @@
 
 
 <div class="viewcode-block" id="yamlfile.getvaluetype"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.getvaluetype">[Doku]</a>    <span class="k">def</span> <span class="nf">getvaluetype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get the valuetype of a node</span>
 
 <span class="sd">        :param path: path of the node to return</span>
@@ -4471,7 +4471,7 @@
 
     <span class="c1"># Add/set a leaf to an empty node, the branch node must exist</span>
 <div class="viewcode-block" id="yamlfile.setvalue"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.setvalue">[Doku]</a>    <span class="k">def</span> <span class="nf">setvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        set the value of a leaf, specified by leaf-path</span>
 
 <span class="sd">        :param path: path of the leaf-node to modify</span>
@@ -4496,7 +4496,7 @@
 
     <span class="c1"># Add/set a leaf with value, the branch is created if it does not exist</span>
 <div class="viewcode-block" id="yamlfile.setleafvalue"><a class="viewcode-back" href="../../lib/shyaml.html#lib.shyaml.yamlfile.setleafvalue">[Doku]</a>    <span class="k">def</span> <span class="nf">setleafvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">leaf</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        set the value of a leaf, specified by branch-path and attribute name</span>
 
 <span class="sd">        :param branch: path of the branch-node which contains th attribute</span>

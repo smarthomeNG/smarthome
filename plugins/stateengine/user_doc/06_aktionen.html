@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-          <li><a href="../user_doc.html">stateengine</a> &raquo;</li>
-      <li>Aktionen</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_doc/plugins_system.html">System Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../user_doc.html">stateengine</a></li>
+      <li class="breadcrumb-item active">Aktionen</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3878,40 +3878,40 @@ errechnete Wert um mindestens 10 Grad vom aktuellen Lamellenwert unterscheidet.<
 <li><p>Nachfuehren: Höhe des Raffstores: 100(%), Lamellendrehung: je nach Sonnenausrichtung, aber erst, wenn eine Mindeständerung von 10 Grad vorhanden ist.</p></li>
 <li><p>Sonder: Ausführen der Logic myLogic mit dem Wert 42 und einer Verzögerung von 10 Sekunden.</p></li>
 </ul>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_item_height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raffstore1.hoehe</span><span class="w"> </span><span class="c1"># Definition des zu ändernden Höhe-Items</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_item_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raffstore1.lamelle</span><span class="w"> </span><span class="c1"># Definition des zu ändernden Lamellen-Items</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_mindelta_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"> </span><span class="c1"># Mindeständerung von 10 Grad, sonst werden die Lamellen nicht aktualisiert.</span><span class="w"></span>
-<span class="w">            </span><span class="nt">Daemmerung</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">se_action_height</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">value:100&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_action_lamella</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">value:25&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">Nachfuehren</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">se_action_height</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">value:100&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_action_lamella</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">eval:se_eval.sun_tracking()&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">Sonder</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">se_action_logic1</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">trigger&#39;</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;logic:</span><span class="nv"> </span><span class="s">myLogic&#39;</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;value:</span><span class="nv"> </span><span class="s">42&#39;</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">10&#39;</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span>
+<span class="w">        </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">se_item_height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raffstore1.hoehe</span><span class="w"> </span><span class="c1"># Definition des zu ändernden Höhe-Items</span>
+<span class="w">            </span><span class="nt">se_item_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raffstore1.lamelle</span><span class="w"> </span><span class="c1"># Definition des zu ändernden Lamellen-Items</span>
+<span class="w">            </span><span class="nt">se_mindelta_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"> </span><span class="c1"># Mindeständerung von 10 Grad, sonst werden die Lamellen nicht aktualisiert.</span>
+<span class="w">            </span><span class="nt">Daemmerung</span><span class="p">:</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">se_action_height</span><span class="p p-Indicator">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">value:100&#39;</span>
+<span class="w">                </span><span class="nt">se_action_lamella</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">value:25&#39;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
+<span class="w">            </span><span class="nt">Nachfuehren</span><span class="p">:</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">se_action_height</span><span class="p p-Indicator">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">value:100&#39;</span>
+<span class="w">                </span><span class="nt">se_action_lamella</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">eval:se_eval.sun_tracking()&#39;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
+<span class="w">            </span><span class="nt">Sonder</span><span class="p">:</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">se_action_logic1</span><span class="p p-Indicator">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">trigger&#39;</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;logic:</span><span class="nv"> </span><span class="s">myLogic&#39;</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;value:</span><span class="nv"> </span><span class="s">42&#39;</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">10&#39;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
 </pre></div>
 </div>
 </section>
@@ -3920,13 +3920,13 @@ errechnete Wert um mindestens 10 Grad vom aktuellen Lamellenwert unterscheidet.<
 <p>Bei yaml Files werden die Parameter mittels Aufzählungszeichen „-“
 untereinander definiert, die Listeneinträge müssen in Anführungszeichen oder
 Hochkommas gesetzt werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">&lt;func&gt;&#39;</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Detailparameter der Funktion, z.B. &quot;to</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..&quot;</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">&lt;delay&gt;&#39;</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">&lt;order&gt;&#39;</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">&lt;repeat&gt;&#39;</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;conditionset:</span><span class="nv"> </span><span class="s">&lt;conditionset</span><span class="nv"> </span><span class="s">regex&gt;&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">&lt;func&gt;&#39;</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Detailparameter der Funktion, z.B. &quot;to</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..&quot;</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">&lt;delay&gt;&#39;</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">&lt;order&gt;&#39;</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">&lt;repeat&gt;&#39;</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;conditionset:</span><span class="nv"> </span><span class="s">&lt;conditionset</span><span class="nv"> </span><span class="s">regex&gt;&#39;</span>
 </pre></div>
 </div>
 </section>
@@ -3937,10 +3937,10 @@ festgelegt. In Abhängigkeit zur gewählten Funktion werden
 zusätzliche Detailparameter erforderlich.
 Folgende Werte sind möglich:</p>
 <p><strong>Funktion set: Item auf einen Wert setzen</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;force:</span><span class="nv"> </span><span class="s">[True/False]&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;force:</span><span class="nv"> </span><span class="s">[True/False]&#39;</span>
 </pre></div>
 </div>
 <p>Das Item, das verändert werden soll, muss auf Ebene des
@@ -3964,10 +3964,10 @@ Wertänderung (ggf. sogar zwei) mit allen damit in Zusammenhang
 stehenden Änderungen (evals, Aktualisierung der Änderungszeiten,
 etc).</p>
 <p><strong>Funktion add: Wert zu einem Listenitem hinzufügen</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">add&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;value:</span><span class="nv"> </span><span class="s">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;force:</span><span class="nv"> </span><span class="s">[True/False]&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">add&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;value:</span><span class="nv"> </span><span class="s">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;force:</span><span class="nv"> </span><span class="s">[True/False]&#39;</span>
 </pre></div>
 </div>
 <p>Das Item, das verändert werden soll, muss auf Ebene des
@@ -3978,10 +3978,10 @@ mit dem Typ <code class="docutils literal notranslate"><span class="pre">list</s
 Wert angegeben, ist darauf zu achten, dass ein String unter Anführungszeichen
 stehen muss, während eine Zahl das nicht sollte.</p>
 <p><strong>Funktion remove: Wert von einem Listenitem entfernen</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">remove&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;value:</span><span class="nv"> </span><span class="s">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;mode:</span><span class="nv"> </span><span class="s">[first/last/all]&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">remove&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;value:</span><span class="nv"> </span><span class="s">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;mode:</span><span class="nv"> </span><span class="s">[first/last/all]&#39;</span>
 </pre></div>
 </div>
 <p>Das Item, das verändert werden soll, muss auf Ebene des
@@ -3997,19 +3997,19 @@ Einträge in der Liste (mode: all) oder nur der erste (first) bzw. der letzte (l
 Eintrag gelöscht werden sollen. Wird der Parameter nicht angegeben, werden immer
 alle passenden Einträge gelöscht.</p>
 <p><strong>Funktion run: Ausführen einer Funktion</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">run&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;eval:</span><span class="nv"> </span><span class="s">(Funktion)&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">run&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;eval:</span><span class="nv"> </span><span class="s">(Funktion)&#39;</span>
 </pre></div>
 </div>
 <p>Die Angabe ist vergleichbar mit dem Ausführen einer Funktion zur
 Ermittlung des Werts für ein Item, hier wird jedoch kein Item
 benötigt. Außerdem wird der Rückgabewert der Funktion ignoriert.</p>
 <p><strong>Funktion trigger: Auslösen einer Logikausführung</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">trigger&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;logic:</span><span class="nv"> </span><span class="s">&lt;Logikname&gt;&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;value:</span><span class="nv"> </span><span class="s">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">trigger&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;logic:</span><span class="nv"> </span><span class="s">&lt;Logikname&gt;&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;value:</span><span class="nv"> </span><span class="s">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;&#39;</span>
 </pre></div>
 </div>
 <p>Löst die Ausführung der Logik <code class="docutils literal notranslate"><span class="pre">&lt;Logikname&gt;</span></code> aus. Um beim
@@ -4017,9 +4017,9 @@ Auslösen einen Wert an die Logik zu übergeben, kann dieser Wert
 über die Angabe von <code class="docutils literal notranslate"><span class="pre">value:</span> <span class="pre">&lt;Wert&gt;</span></code> hinter dem Logiknamen
 angegeben werden. Die Angabe kann aber auch entfallen.</p>
 <p><strong>Funktion byattr: Alle Items mit bestimmtem Attribut auf einen Wert setzen</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">byattr&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;attribute:</span><span class="nv"> </span><span class="s">&lt;Attributname&gt;&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">byattr&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;attribute:</span><span class="nv"> </span><span class="s">&lt;Attributname&gt;&#39;</span>
 </pre></div>
 </div>
 <p>Mit dieser Funktion wird der Name eines anderen (beliebigen)
@@ -4027,23 +4027,23 @@ Attributs angegeben. Beim Ausführen werden alle Items
 herausgesucht, die das angegebene Attribut enthalten. Diese Items
 werden auf den Wert gesetzt, der dem genannten Attribut in den
 Items jeweils zugewiesen ist.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dummy1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&lt;Attributname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dummy1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">&lt;Attributname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
 </pre></div>
 </div>
 <p>dummy1 wird auf <code class="docutils literal notranslate"><span class="pre">42</span></code> gesetzt.
 Ein anderes Item, dummy2,</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dummy2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">&lt;Attributname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rums</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dummy2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">&lt;Attributname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rums</span>
 </pre></div>
 </div>
 <p>wird gleichzeitig auf <code class="docutils literal notranslate"><span class="pre">Rums</span></code> gesetzt.</p>
 <p><strong>Funktion special: Sondervorgänge</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">special</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Sondervorgang&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_action_&lt;Aktionsname&gt;</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">special</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Sondervorgang&gt;</span>
 </pre></div>
 </div>
 <p>Für bestimmte Sondervorgänge sind besondere Aktionen im Plugin
@@ -4061,9 +4061,9 @@ definiert. Aktuell gibt es zwei besondere Vorgänge:</p>
 Aktion ausgeführt werden soll.</p>
 <p>Die Angabe erfolgt in Sekunden oder mit dem Suffix „m“ in Minuten. Die Verzögerungszeit
 kann auch durch ein eval oder Item zur Laufzeit berechnet werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">&lt;eval&gt;/&lt;item&gt;&#39;</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--&gt; Ergebnis eines Eval-Ausdrucks oder eines Items</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">&#39;delay</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30&#39;            --&gt; 30 Sekunden</span><span class="w"></span>
-<span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">30m&#39;</span><span class="w">           </span><span class="l l-Scalar l-Scalar-Plain">--&gt; 30 Minuten</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">&lt;eval&gt;/&lt;item&gt;&#39;</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--&gt; Ergebnis eines Eval-Ausdrucks oder eines Items</span>
+<span class="l l-Scalar l-Scalar-Plain">&#39;delay</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30&#39;            --&gt; 30 Sekunden</span>
+<span class="s">&#39;delay:</span><span class="nv"> </span><span class="s">30m&#39;</span><span class="w">           </span><span class="l l-Scalar l-Scalar-Plain">--&gt; 30 Minuten</span>
 </pre></div>
 </div>
 <p>Der Timer zur Ausführung der Aktion nach der angegebenen
@@ -4073,12 +4073,12 @@ ausgeführt werden soll (egal ob verzögert oder nicht).</p>
 <p>Über den optionalen Parameter <code class="docutils literal notranslate"><span class="pre">&lt;instanteval&gt;</span></code> wird für verzögerte Aktionen angegeben,
 ob etwaige eval Ausdrücke sofort evaluiert und gespeichert werden sollen oder
 die Evaluierung erst zum Ausführungszeitpunkt stattfinden soll.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="s">&#39;instanteval:</span><span class="nv"> </span><span class="s">[True|False]&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="s">&#39;instanteval:</span><span class="nv"> </span><span class="s">[True|False]&#39;</span>
 </pre></div>
 </div>
 <p>Beispiel: Ein Item soll auf einen Wert aus einem Item gesetzt werden. Das Item wird
 anhand des gerade aktuellen Zustands durch ein eval eruiert:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">eval:sh.return_item(se_eval.get_relative_itemid(&#39;..settings.{}&#39;.format(se_eval.get_relative_itemvalue(&#39;..state_name&#39;))))()</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">eval:sh.return_item(se_eval.get_relative_itemid(&#39;..settings.{}&#39;.format(se_eval.get_relative_itemvalue(&#39;..state_name&#39;))))()</span>
 </pre></div>
 </div>
 <p>Angenommen, der aktuelle Zustand heißt <code class="docutils literal notranslate"><span class="pre">regen</span></code>, so wird durch den obigen Code das Item
@@ -4087,7 +4087,7 @@ der Zustand auf <code class="docutils literal notranslate"><span class="pre">son
 herangezogen werden. Wenn dies nicht erwünscht ist und das Item also auf den Vorgabewert des
 ursprünglichen Zustands (regen) gesetzt werden soll, kann der Parameter <code class="docutils literal notranslate"><span class="pre">instanteval:</span> <span class="pre">True</span></code> gesetzt werden.</p>
 <p><strong>repeat: &lt;bool&gt;</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">[True|False]&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="s">&#39;repeat:</span><span class="nv"> </span><span class="s">[True|False]&#39;</span>
 </pre></div>
 </div>
 <p>Über das Attribut wird unabhängig vom globalen Setting für das
@@ -4107,11 +4107,11 @@ Reihenfolge auszuführen. Dies kann über den Parameter
 <code class="docutils literal notranslate"><span class="pre">order:</span> <span class="pre">&lt;order&gt;</span></code> erfolgen. Mit diesem Attribut wird der Aktion
 eine Zahl zugewiesen, die als value, item oder eval vorliegen kann.
 Aktionen werden in aufsteigender Reihenfolge der zugewiesenen Zahlen ausgeführt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">[1|2|...]&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">[1|2|...]&#39;</span>
 </pre></div>
 </div>
 <p><strong>conditionset: &lt;conditionset regex&gt;</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="s">&#39;conditionset:</span><span class="nv"> </span><span class="s">[&quot;regex:enter_(.*)_test&quot;,</span><span class="nv"> </span><span class="s">&quot;eval:sh.itemX.property.value&quot;]&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="s">&#39;conditionset:</span><span class="nv"> </span><span class="s">[&quot;regex:enter_(.*)_test&quot;,</span><span class="nv"> </span><span class="s">&quot;eval:sh.itemX.property.value&quot;]&#39;</span>
 </pre></div>
 </div>
 <p>Über das Attribut wird festgelegt, dass die Aktion nur dann ausgeführt werden
@@ -4144,7 +4144,7 @@ value: „screens.osten_s1.automatik.rules.abend.enter_abend“</p>
 </dd>
 </dl>
 <p>Der gesamte Pfad könnte wie folgt evaluiert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;eval:se_eval.get_relative_itemid(&#39;{}.&lt;bedingungsset&gt;&#39;.format(se_eval.get_relative_itemvalue(&#39;..state_id&#39;)))&quot;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;eval:se_eval.get_relative_itemid(&#39;{}.&lt;bedingungsset&gt;&#39;.format(se_eval.get_relative_itemvalue(&#39;..state_id&#39;)))&quot;</span>
 </pre></div>
 </div>
 <p>Eine sinnvolle Anwendung hierfür wäre, anstelle von verschiedenen Zuständen mit
@@ -4154,35 +4154,35 @@ Beispiel zwar auch mittels <code class="docutils literal notranslate"><span clas
 andere Situationen, wo das komplizierter oder weniger zielführend wäre. Im Beispiel
 wird abends die Höhe des Raffstores auf 100 gesetzt, falls es regnet. Falls es nicht
 regnet hingegen auf den Wert, der in den Settings hinterlegt ist.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">abend</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">on_enter_or_stay</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_action_hoehe</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">item:..settings.abend.hoehe&#39;</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">1&#39;</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;conditionset:</span><span class="nv"> </span><span class="s">regex:(.*)enter(?!_regen)(.*)&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">se_action_hoehe_regen</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">100&#39;</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">1&#39;</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;conditionset:</span><span class="nv"> </span><span class="s">regex:(.*)enter_regen&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">abend</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">on_enter_or_stay</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">se_action_hoehe</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">item:..settings.abend.hoehe&#39;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">1&#39;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;conditionset:</span><span class="nv"> </span><span class="s">regex:(.*)enter(?!_regen)(.*)&#39;</span>
+<span class="w">        </span><span class="nt">se_action_hoehe_regen</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">100&#39;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;order:</span><span class="nv"> </span><span class="s">1&#39;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;conditionset:</span><span class="nv"> </span><span class="s">regex:(.*)enter_regen&#39;</span>
 
-<span class="w">    </span><span class="nt">enter_normal</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">diverse Bedingungen</span><span class="w"></span>
+<span class="w">    </span><span class="nt">enter_normal</span><span class="p">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">diverse Bedingungen</span>
 
-<span class="w">    </span><span class="nt">enter_regen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">diverse andere Bedingungen</span><span class="w"></span>
+<span class="w">    </span><span class="nt">enter_regen</span><span class="p">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">diverse andere Bedingungen</span>
 </pre></div>
 </div>
 <p><strong>previousconditionset: &lt;conditionset regex&gt;</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">previousconditionset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">regex:enter_(.*)_test&quot;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">previousconditionset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">regex:enter_(.*)_test&quot;</span>
 </pre></div>
 </div>
 <p>Über das Attribut wird festgelegt, dass die Aktion nur dann ausgeführt werden
 soll, wenn die vorherige Bedingungsgruppe des aktuellen Zustands mit dem angegebenen Ausdruck übereinstimmt.
 Die Abfrage erfolgt dabei nach den gleichen Regeln wie bei <code class="docutils literal notranslate"><span class="pre">conditionset</span></code> oben angegeben.</p>
 <p><strong>previousstate_conditionset: &lt;conditionset regex&gt;</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">previousstate_conditionset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">regex:enter_(.*)_test&quot;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">previousstate_conditionset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">regex:enter_(.*)_test&quot;</span>
 </pre></div>
 </div>
 <p>Über das Attribut wird festgelegt, dass die Aktion nur dann ausgeführt werden
@@ -4196,15 +4196,15 @@ Zustand) immer die gleichen Ausdrücke ein, so kann Letzteres als Template
 definiert und referenziert werden. Dadurch wird die Handhabung
 komplexerer Wertdeklarationen deutlich vereinfacht. Diese Templates müssen wie se_item/se_eval
 auf höchster Ebene des StateEngine Items (also z.B. rules) deklariert werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">se_template_test</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemid(&#39;wetterstation.helligkeit_{}&#39;.format(se_eval.get_relative_itemvalue(&#39;..state_name&#39;)))</span><span class="w"></span>
-<span class="w">  </span><span class="nt">se_item_specialitem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">meinitem.specialitem</span><span class="w"> </span><span class="c1"># declare an existing item here</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">se_template_test</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemid(&#39;wetterstation.helligkeit_{}&#39;.format(se_eval.get_relative_itemvalue(&#39;..state_name&#39;)))</span>
+<span class="w">  </span><span class="nt">se_item_specialitem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">meinitem.specialitem</span><span class="w"> </span><span class="c1"># declare an existing item here</span>
 
-<span class="w">  </span><span class="nt">state_one</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">on_enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">se_action_specialitem</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">template:test&#39;</span><span class="w"></span>
+<span class="w">  </span><span class="nt">state_one</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">on_enter</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">se_action_specialitem</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;to:</span><span class="nv"> </span><span class="s">template:test&#39;</span>
 </pre></div>
 </div>
 </section>

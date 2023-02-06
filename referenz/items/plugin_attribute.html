@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="../../konfiguration/items/items.html">Items</a> &raquo;</li>
-      <li>Plugin-spezifische Attribute</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="../../konfiguration/items/items.html">Items</a></li>
+      <li class="breadcrumb-item active">Plugin-spezifische Attribute</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3921,19 +3921,19 @@ Für <code class="code docutils literal notranslate"><span class="pre">&lt;Attri
 <code class="code docutils literal notranslate"><span class="pre">.</span></code> um aus der übergeordneten Ebene das Attribut mit dem gleichen Namen zu referenzieren.</p>
 <p>Um den Wert eines Attributes (mit gleichem Namen) von dem übergeordnetem Item (Parent-Item) zu erben, muss
 in der Konfiguration das Attribut mit dem Wert <code class="code docutils literal notranslate"><span class="pre">..:.</span></code> konfiguriert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fenstergriff_kueche</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">hm_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OEQ1234567</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fenstergriff_kueche</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">hm_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OEQ1234567</span>
 
-<span class="w">    </span><span class="nt">sabotage</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">       </span><span class="nt">hm_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span><span class="w"></span>
-<span class="w">       </span><span class="nt">hm_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SABOTAGE</span><span class="w"></span>
+<span class="w">    </span><span class="nt">sabotage</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">       </span><span class="nt">hm_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span>
+<span class="w">       </span><span class="nt">hm_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SABOTAGE</span>
 
-<span class="w">    </span><span class="nt">low_battery</span><span class="p">:</span><span class="w"></span>
-<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">       </span><span class="nt">hm_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span><span class="w"></span>
-<span class="w">       </span><span class="nt">hm_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOW_BAT</span><span class="w"></span>
+<span class="w">    </span><span class="nt">low_battery</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">       </span><span class="nt">hm_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span>
+<span class="w">       </span><span class="nt">hm_function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOW_BAT</span>
 </pre></div>
 </div>
 <p>In diesem Beispiel sieht man, dass die HomeMatic Adresse des Devices nur einmal angegeben werden muss.

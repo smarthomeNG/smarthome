@@ -70,6 +70,8 @@ Wenn auf 'on'/'true' gesetzt, wird jedes KNX-Paket im Standard-Logger protokolli
    - **logger** |_| - |_| in eigenen Logger
    - **true** |_| - |_| Ein
    - **false** |_| - |_| Aus
+   - **True**
+   - **False**
 
 
 date_ga

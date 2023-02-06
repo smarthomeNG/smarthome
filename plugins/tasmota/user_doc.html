@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a> &raquo;</li>
-      <li>tasmota</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a></li>
+      <li class="breadcrumb-item active">tasmota</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3871,24 +3871,24 @@ durchführt. Dieses Modul muß geladen und konfiguriert sein, damit das Plugin f
 <h2>Konfiguration<a class="headerlink" href="#konfiguration" title="Permalink to this heading"></a></h2>
 <p>Für die Nutzung eines Tasmota Devices müssen in dem entsprechenden Item die zwei Attribute <code class="docutils literal notranslate"><span class="pre">tasmota_topic</span></code> und
 <code class="docutils literal notranslate"><span class="pre">tasmota_attr</span></code> konfiguriert werden, wie im folgenden Beispiel gezeigt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">schalter</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tasmota_topic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">delock_switch2</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tasmota_attr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relay</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">schalter</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">tasmota_topic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">delock_switch2</span>
+<span class="w">    </span><span class="nt">tasmota_attr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relay</span>
 
-<span class="w">    </span><span class="nt">leistung</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">tasmota_topic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">tasmota_attr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">power</span><span class="w"></span>
+<span class="w">    </span><span class="nt">leistung</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">tasmota_topic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..:.</span>
+<span class="w">        </span><span class="nt">tasmota_attr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">power</span>
 </pre></div>
 </div>
 <p>Für die Nutzung von Zigbee Devices über eine ZigbeeBridge mit Tasmota müssen in dem entsprechenden Item die drei Attribute
 <code class="docutils literal notranslate"><span class="pre">tasmota_topic</span></code>, <code class="docutils literal notranslate"><span class="pre">tasmota_zb_device</span></code> und <code class="docutils literal notranslate"><span class="pre">tasmota_zb_attr</span></code> konfiguriert werden, wie im folgenden Beispiel gezeigt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">temp</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tasmota_topic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SONOFF_ZB1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tasmota_zb_device</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snzb02_01</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tasmota_zb_attr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Temperature</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">temp</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">tasmota_topic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SONOFF_ZB1</span>
+<span class="w">    </span><span class="nt">tasmota_zb_device</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snzb02_01</span>
+<span class="w">    </span><span class="nt">tasmota_zb_attr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Temperature</span>
 </pre></div>
 </div>
 <p>Dabei ist zu beachten, dass bei Verwnendung des Kurznamen (bspw. 0x9CB) zur Identifikation des Zigbee-Gerätes

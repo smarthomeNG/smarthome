@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Sonos</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Sonos</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3869,7 +3869,7 @@
 <li><p>SoCo 0.22 (it will be necessary to update the Sonos software to ≥10.1)</p></li>
 </ul>
 <p>To install all necessary libraries for SmarthomeNG, you can run following bash command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo pip3 install -r /usr/local/smarthome/requirements/all.txt
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>/usr/local/smarthome/requirements/all.txt
 </pre></div>
 </div>
 <p>Change the path <code class="docutils literal notranslate"><span class="pre">/usr/local/smarthome</span></code> to your SmarthomeNG base directory.</p>
@@ -3884,15 +3884,15 @@
 <p>The output should be just about like this:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>---------------------------------------------------------
 rincon_000f448c3392a01411
-        ip           : <span class="m">192</span>.168.1.100
-        speaker name : Wohnzimmer 
-        speaker model: Sonos PLAY:1 
+<span class="w">        </span>ip<span class="w">           </span>:<span class="w"> </span><span class="m">192</span>.168.1.100
+<span class="w">        </span>speaker<span class="w"> </span>name<span class="w"> </span>:<span class="w"> </span>Wohnzimmer<span class="w"> </span>
+<span class="w">        </span>speaker<span class="w"> </span>model:<span class="w"> </span>Sonos<span class="w"> </span>PLAY:1<span class="w"> </span>
 
 ---------------------------------------------------------
 rincon_c7e91735d19711411
-        ip           : <span class="m">192</span>.168.1.99
-        speaker name : Kinderzimmer 
-        speaker model: Sonos PLAY:3 
+<span class="w">        </span>ip<span class="w">           </span>:<span class="w"> </span><span class="m">192</span>.168.1.99
+<span class="w">        </span>speaker<span class="w"> </span>name<span class="w"> </span>:<span class="w"> </span>Kinderzimmer<span class="w"> </span>
+<span class="w">        </span>speaker<span class="w"> </span>model:<span class="w"> </span>Sonos<span class="w"> </span>PLAY:3<span class="w"> </span>
 ---------------------------------------------------------
 </pre></div>
 </div>
@@ -3902,26 +3902,26 @@ rincon_c7e91735d19711411
 <section id="a-name-sh-a-smarthome-integration">
 <h2><a name="sh"></a>Smarthome Integration<a class="headerlink" href="#a-name-sh-a-smarthome-integration" title="Permalink to this heading"></a></h2>
 <p>Edit the file <code class="docutils literal notranslate"><span class="pre">/usr/local/smarthome/etc/plugins.yaml</span></code> (might differ) and add the following entry:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Sonos</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sonos</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.sonos</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># tts: true                                     # optional, default:  false</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># local_webservice_path: /tmp/tts               # optional, default:  empty. If &#39;tts&#39; is enabled, this option is mandatory. </span><span class="w"></span>
-<span class="w">                                                    </span><span class="c1"># All tts files will be stored here.</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># local_webservice_path_snippet: /tmp/snippet   # optional, default:  empty. For some reasons it could be necessary to have </span><span class="w"></span>
-<span class="w">                                                    </span><span class="c1"># separated paths for TTS files and your own snippet files. You can define the</span><span class="w"></span>
-<span class="w">                                                    </span><span class="c1"># local path for your snippets here. If &#39;tts&#39; is enabled and </span><span class="w"></span>
-<span class="w">                                                    </span><span class="c1"># &#39;local_webservice_path_snippet&#39; is empty, the value for </span><span class="w"></span>
-<span class="w">                                                    </span><span class="c1"># &#39;local_webservice_path&#39; is used for your snippet audio files.</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># webservice_ip: 192.168.1.40                   # optional, default:  automatic. You can set a specific ip address.</span><span class="w"></span>
-<span class="w">                                                    </span><span class="c1"># If you&#39;re using a docker container, you have to set the host </span><span class="w"></span>
-<span class="w">                                                    </span><span class="c1"># ip address here.  </span><span class="w"></span>
-<span class="w">    </span><span class="c1"># webservice_port: 23500                        # optional, default:  23500</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># discover_cycle: 180                           # optional, default:  180 (in seconds)</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># snippet_duration_offset: 0.4                  # optional, default: 0.0 (in seconds)</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># speaker_ips:                                  # optional. You can set static IP addresses for your Sonos speaker. This</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#   - 192.168.1.10                              # will disable auto-discovery. This is useful if you&#39;re using a </span><span class="w"></span>
-<span class="w">    </span><span class="c1">#   - 192.168.1.77                              # containerized environment with restricted network access.</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Sonos</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sonos</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.sonos</span>
+<span class="w">    </span><span class="c1"># tts: true                                     # optional, default:  false</span>
+<span class="w">    </span><span class="c1"># local_webservice_path: /tmp/tts               # optional, default:  empty. If &#39;tts&#39; is enabled, this option is mandatory. </span>
+<span class="w">                                                    </span><span class="c1"># All tts files will be stored here.</span>
+<span class="w">    </span><span class="c1"># local_webservice_path_snippet: /tmp/snippet   # optional, default:  empty. For some reasons it could be necessary to have </span>
+<span class="w">                                                    </span><span class="c1"># separated paths for TTS files and your own snippet files. You can define the</span>
+<span class="w">                                                    </span><span class="c1"># local path for your snippets here. If &#39;tts&#39; is enabled and </span>
+<span class="w">                                                    </span><span class="c1"># &#39;local_webservice_path_snippet&#39; is empty, the value for </span>
+<span class="w">                                                    </span><span class="c1"># &#39;local_webservice_path&#39; is used for your snippet audio files.</span>
+<span class="w">    </span><span class="c1"># webservice_ip: 192.168.1.40                   # optional, default:  automatic. You can set a specific ip address.</span>
+<span class="w">                                                    </span><span class="c1"># If you&#39;re using a docker container, you have to set the host </span>
+<span class="w">                                                    </span><span class="c1"># ip address here.  </span>
+<span class="w">    </span><span class="c1"># webservice_port: 23500                        # optional, default:  23500</span>
+<span class="w">    </span><span class="c1"># discover_cycle: 180                           # optional, default:  180 (in seconds)</span>
+<span class="w">    </span><span class="c1"># snippet_duration_offset: 0.4                  # optional, default: 0.0 (in seconds)</span>
+<span class="w">    </span><span class="c1"># speaker_ips:                                  # optional. You can set static IP addresses for your Sonos speaker. This</span>
+<span class="w">    </span><span class="c1">#   - 192.168.1.10                              # will disable auto-discovery. This is useful if you&#39;re using a </span>
+<span class="w">    </span><span class="c1">#   - 192.168.1.77                              # containerized environment with restricted network access.</span>
 </pre></div>
 </div>
 <p>After that you have to create an item configuration file under <code class="docutils literal notranslate"><span class="pre">/usr/local/smarthome/items</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">sonos.yaml</span></code>.
@@ -3937,74 +3937,74 @@ widget.</p>
 <code class="docutils literal notranslate"><span class="pre">visu</span></code>. These attributes indicates whether an item is readable and/or writeable.</p>
 <p>For a minimal functionality you have to set up an item with the attribute ‚sonos_uid‘ and at least one child item.
 Example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">MyRoom</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">MySonos</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_xxxxxxxxxxxxxx</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">MyRoom</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">MySonos</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_xxxxxxxxxxxxxx</span>
 <span class="w">        </span>
-<span class="w">        </span><span class="nt">play</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
+<span class="w">        </span><span class="nt">play</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
+<span class="w">            </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
 </pre></div>
 </div>
 <p>The level of the item with the attribute ‚sonos_uid‘ doesn’t matter, the below example is also possible.
 Example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">MyRoom</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">parent</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">child</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">MyRoom</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">parent</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">child</span><span class="p">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 <span class="w">        </span>
-<span class="w">        </span><span class="nt">child2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">        </span><span class="nt">child2</span><span class="p">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 <span class="w">        </span>
-<span class="w">        </span><span class="nt">child3</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">MySonos</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_xxxxxxxxxxxxxx</span><span class="w"></span>
+<span class="w">        </span><span class="nt">child3</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">MySonos</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_xxxxxxxxxxxxxx</span>
 <span class="w">    </span>
-<span class="w">                </span><span class="nt">play</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                  </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
-<span class="w">                  </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
+<span class="w">                </span><span class="nt">play</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                  </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
+<span class="w">                  </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
 </pre></div>
 </div>
 <p>You can multiple use the same Sonos speaker for your items. The only requirement for a Sonos item is the parent item
 with the sonos uid.</p>
 <p>Example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Kitchen</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">child1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">MySonos</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_xxxxxxxxxxxxxx</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Kitchen</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">child1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">MySonos</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_xxxxxxxxxxxxxx</span>
 <span class="w">            </span>
-<span class="w">            </span><span class="nt">play</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
-<span class="w">                </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
+<span class="w">            </span><span class="nt">play</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
+<span class="w">                </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
 <span class="w">        </span>
-<span class="w">        </span><span class="nt">child2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">MySonos2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_xxxxxxxxxxxxxx</span><span class="w"></span>
+<span class="w">        </span><span class="nt">child2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">MySonos2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_xxxxxxxxxxxxxx</span>
 <span class="w">            </span>
-<span class="w">            </span><span class="nt">play</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
-<span class="w">                </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
-<span class="w">            </span><span class="nt">stop</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stop</span><span class="w"></span>
-<span class="w">                </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stop</span><span class="w"></span>
+<span class="w">            </span><span class="nt">play</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
+<span class="w">                </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
+<span class="w">            </span><span class="nt">stop</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stop</span>
+<span class="w">                </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stop</span>
 </pre></div>
 </div>
 <p>Last but not least you can rename the item name. This is not recommended due to the fact, that (only) the Sonos widget
 depends on that names (of course you can edit the sonos.html to adapt the widget to your changes).</p>
 <p>Example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">MyRoom</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">MySonos</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_xxxxxxxxxxxxxx</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">MyRoom</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">MySonos</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_xxxxxxxxxxxxxx</span>
 <span class="w">        </span>
-<span class="w">        </span><span class="nt">my_awesome_mute_item_name</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span><span class="w"></span>
+<span class="w">        </span><span class="nt">my_awesome_mute_item_name</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span>
+<span class="w">            </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span>
 </pre></div>
 </div>
 </section>
@@ -4358,19 +4358,19 @@ set to the given <code class="docutils literal notranslate"><span class="pre">ma
 <p><em>child item</em> <code class="docutils literal notranslate"><span class="pre">volume_dpt3</span></code>:
 Things get a little bit more complicated when you’re trying to increase or decrease the volume level via a knx dpt3
 command. To make it easier and without logics, a child item <code class="docutils literal notranslate"><span class="pre">volume_dpt3</span></code> can be added to the volume item:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">volume</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">volume_dpt3</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vol_dpt3</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sonos_dpt3_step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sonos_dpt3_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">volume</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">volume_dpt3</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list</span>
+<span class="w">        </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vol_dpt3</span>
+<span class="w">        </span><span class="nt">sonos_dpt3_step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">        </span><span class="nt">sonos_dpt3_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 <span class="w">    </span>
-<span class="w">        </span><span class="nt">helper</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dpt3_helper</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span><span class="w"></span>
+<span class="w">        </span><span class="nt">helper</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dpt3_helper</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span>
 </pre></div>
 </div>
 <p>Make sure you also add the shown helper item. You can change the fade steps [<code class="docutils literal notranslate"><span class="pre">sonos_dpt3_step</span></code>] and the time per
@@ -4397,16 +4397,16 @@ item is changed by Sonos events and should always be up-to-date.</p>
 <p>To install / show the Sonos widget via the <code class="docutils literal notranslate"><span class="pre">visu_smartvisu</span></code> plugin, you have to <a class="reference external" href="https://github.com/smarthomeNG/plugins/blob/develop/visu_smartvisu/README.md">set up the mentioned plugin
 properly</a>. After that you can define a
 page item like that:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">MyPage</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sonos</span><span class="w"></span>
-<span class="w">    </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span><span class="w"></span>
-<span class="w">    </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audio_audio.svg</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">MyPage</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sonos</span>
+<span class="w">    </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span>
+<span class="w">    </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audio_audio.svg</span>
 
-<span class="w">    </span><span class="nt">sonos</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sonos Kitchen</span><span class="w"></span>
-<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">      </span><span class="nt">sv_blocksize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># optional</span><span class="w"></span>
-<span class="w">      </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">sonos.player(&#39;sonos_kueche&#39;,</span><span class="nv"> </span><span class="s">&#39;MySonos.Kueche&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">sonos</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sonos Kitchen</span>
+<span class="w">      </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">      </span><span class="nt">sv_blocksize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># optional</span>
+<span class="w">      </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">sonos.player(&#39;sonos_kueche&#39;,</span><span class="nv"> </span><span class="s">&#39;MySonos.Kueche&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
 </pre></div>
 </div>
 <p>The important entry here is <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">sonos.player('sonos_kueche',</span> <span class="pre">'MySonos.Kueche')</span> <span class="pre">}}</span></code>.  The first value is a
@@ -4416,7 +4416,7 @@ have more than one Sonos widget per page, make sure you set an <strong>unique</s
 <section id="manual-setup">
 <h3>Manual setup<a class="headerlink" href="#manual-setup" title="Permalink to this heading"></a></h3>
 <p>Copy the file <code class="docutils literal notranslate"><span class="pre">widget_sonos.html</span></code> from the <code class="docutils literal notranslate"><span class="pre">sv_widget</span></code> folder to your smartVISU directory, e.g.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/var/www/smartvisu/pages/YOUR_PATH_HERE 
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/var/www/smartvisu/pages/YOUR_PATH_HERE<span class="w"> </span>
 </pre></div>
 </div>
 <p>Change to this directory and create two directories (if not exists) <code class="docutils literal notranslate"><span class="pre">css</span></code> and <code class="docutils literal notranslate"><span class="pre">js</span></code>.
@@ -4494,91 +4494,91 @@ status_light</p>
 configuration in the future. Feel free to change this example  to the „classical“ format. SmarthomeNG is
 backwards compatible.</p>
 <p>This example shows a yaml config and the ‚classic‘ pendant:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">MySonos</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">Kueche</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_xxxxxxxxxxxxxx</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">MySonos</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Kueche</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_xxxxxxxxxxxxxx</span>
 
-<span class="w">    </span><span class="nt">is_initialized</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">      </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">is_initialized</span><span class="w"></span>
+<span class="w">    </span><span class="nt">is_initialized</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">      </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">is_initialized</span>
 
-<span class="w">    </span><span class="nt">volume</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">      </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span><span class="w"></span>
-<span class="w">      </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span><span class="w"></span>
+<span class="w">    </span><span class="nt">volume</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">      </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span>
+<span class="w">      </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span>
 
-<span class="w">      </span><span class="nt">group_command</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group</span><span class="w"></span>
+<span class="w">      </span><span class="nt">group_command</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group</span>
 
-<span class="w">    </span><span class="nt">play</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">      </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
-<span class="w">      </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span><span class="w"></span>
+<span class="w">    </span><span class="nt">play</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">      </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
+<span class="w">      </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play</span>
 <span class="w">      </span>
-<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">.....</span><span class="w"></span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">.....</span>
 </pre></div>
 </div>
 <p>becomes</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">[</span><span class="nv">MySonos</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">[[</span><span class="nv">Kueche</span><span class="p p-Indicator">]]</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">sonos_uid = rincon_xxxxxxxxxxxxxx</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">[</span><span class="nv">MySonos</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="p p-Indicator">[[</span><span class="nv">Kueche</span><span class="p p-Indicator">]]</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">sonos_uid = rincon_xxxxxxxxxxxxxx</span>
 
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">[[[is_initialized]]]</span><span class="w"></span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">type =bool</span><span class="w"></span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">sonos_recv = is_initialized</span><span class="w"></span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">[[[is_initialized]]]</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">type =bool</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">sonos_recv = is_initialized</span>
 
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">[[[volume]]</span><span class="w"></span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">type = num</span><span class="w"></span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">sonos_recv = volume</span><span class="w"></span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">sonos_send = volume</span><span class="w"></span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">[[[[group_command]]]]</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">type = bool</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">value = false</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">sonos_attrib = group</span><span class="w"></span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">[[[volume]]</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">type = num</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">sonos_recv = volume</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">sonos_send = volume</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">[[[[group_command]]]]</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">type = bool</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">value = false</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">sonos_attrib = group</span>
 <span class="w">    </span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">[[[play]]]</span><span class="w"></span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">type = bool</span><span class="w"></span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">sonos_recv = play</span><span class="w"></span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">sonos_send = play</span><span class="w"></span>
-<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">.....</span><span class="w"></span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">[[[play]]]</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">type = bool</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">sonos_recv = play</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">sonos_send = play</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">.....</span>
 </pre></div>
 </div>
 </section>
 <section id="dpt3-volume-example">
 <h3>DPT3 volume example<a class="headerlink" href="#dpt3-volume-example" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="nt">Kueche</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_000e58cxxxxxxxxx</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="nt">Kueche</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">sonos_uid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rincon_000e58cxxxxxxxxx</span>
 
-<span class="w">    </span><span class="nt">volume</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">      </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span><span class="w"></span>
-<span class="w">      </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span><span class="w"></span>
-<span class="w">      </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">    </span><span class="nt">volume</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">      </span><span class="nt">sonos_recv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span>
+<span class="w">      </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span>
+<span class="w">      </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">      </span><span class="nt">group_command</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group</span><span class="w"></span>
+<span class="w">      </span><span class="nt">group_command</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group</span>
 
-<span class="w">      </span><span class="nt">max_volume</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max_volume</span><span class="w"></span>
+<span class="w">      </span><span class="nt">max_volume</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1</span>
+<span class="w">        </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max_volume</span>
 
-<span class="w">      </span><span class="nt">volume_dpt3</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vol_dpt3</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sonos_dpt3_step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sonos_dpt3_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7/1/0</span><span class="w"></span>
+<span class="w">      </span><span class="nt">volume_dpt3</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list</span>
+<span class="w">        </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vol_dpt3</span>
+<span class="w">        </span><span class="nt">sonos_dpt3_step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">        </span><span class="nt">sonos_dpt3_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7/1/0</span>
 
-<span class="w">        </span><span class="nt">helper</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dpt3_helper</span><span class="w"></span>
-<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">          </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span><span class="w"></span>
+<span class="w">        </span><span class="nt">helper</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">sonos_attrib</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dpt3_helper</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">          </span><span class="nt">sonos_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span>
 </pre></div>
 </div>
 </section>
@@ -4596,9 +4596,9 @@ In order to adapt the automatically calculated duration of audio snippets to dif
 <p>You can set the IP addresses of your speakers statically to avoid using the internal discover function.
 This can be useful if you’re using Docker or Rkt and you don’t want to allow UDP and/or Multicast packets.<br />
 To do so, edit your <code class="docutils literal notranslate"><span class="pre">etc/plugin.yaml</span></code> and configure it like this:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Sonos</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sonos</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.sonos</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Sonos</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sonos</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.sonos</span>
 <span class="w">    </span><span class="nt">speaker_ips</span><span class="p">:</span><span class="w">                       </span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.1.10</span><span class="w">                    </span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.1.77</span><span class="w">                   </span>

@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="konfigdateien.html">Konfiguration über Dateien</a> &raquo;</li>
-      <li>plugin.yaml</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="konfigdateien.html">Konfiguration über Dateien</a></li>
+      <li class="breadcrumb-item active">plugin.yaml</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3863,184 +3863,184 @@ dass genutzt werden soll.</p>
 Verzeichnis <strong>../plugins</strong> gesucht.</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">plugin.yaml</span><a class="headerlink" href="#id2" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
-<span class="nt">database</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database</span><span class="w"></span>
-<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite3</span><span class="w"></span>
-<span class="w">    </span><span class="nt">connect</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">database:./var/db/smarthomeng.db</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">check_same_thread:0</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span>
+<span class="nn">---</span>
+<span class="nt">database</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite3</span>
+<span class="w">    </span><span class="nt">connect</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">database:./var/db/smarthomeng.db</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">check_same_thread:0</span>
 
-<span class="nt">knx</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#host: 127.0.0.1</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#port: 6720</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#send_time: 600    # update date/time every 600 seconds, default none</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#time_ga: 6/0/0    # default none</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#date_ga: 6/0/1    # default none</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#busmonitor: on    # log all knx messages, default off</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#readonly: True    ## don&#39;t write to knx bus, default False</span><span class="w"></span>
+<span class="nt">knx</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx</span>
+<span class="w">    </span><span class="nt">plugin_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="w">    </span><span class="c1">#host: 127.0.0.1</span>
+<span class="w">    </span><span class="c1">#port: 6720</span>
+<span class="w">    </span><span class="c1">#send_time: 600    # update date/time every 600 seconds, default none</span>
+<span class="w">    </span><span class="c1">#time_ga: 6/0/0    # default none</span>
+<span class="w">    </span><span class="c1">#date_ga: 6/0/1    # default none</span>
+<span class="w">    </span><span class="c1">#busmonitor: on    # log all knx messages, default off</span>
+<span class="w">    </span><span class="c1">#readonly: True    ## don&#39;t write to knx bus, default False</span>
 
-<span class="nt">cli</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0.0.0</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#port: 2323</span><span class="w"></span>
-<span class="w">    </span><span class="nt">update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#hashed_password: 1245a9633edf47b7091f37c4d294b5be5a9936c81c5359b16d1c48337$</span><span class="w"></span>
+<span class="nt">cli</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli</span>
+<span class="w">    </span><span class="nt">plugin_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="w">    </span><span class="nt">ip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0.0.0</span>
+<span class="w">    </span><span class="c1">#port: 2323</span>
+<span class="w">    </span><span class="nt">update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">    </span><span class="c1">#hashed_password: 1245a9633edf47b7091f37c4d294b5be5a9936c81c5359b16d1c48337$</span>
 
-<span class="c1">#database_mysql:</span><span class="w"></span>
-<span class="c1">#    plugin_name: database</span><span class="w"></span>
-<span class="c1">#    instance: nas</span><span class="w"></span>
-<span class="c1">#    precision: 4</span><span class="w"></span>
-<span class="c1">#    driver: pymysql</span><span class="w"></span>
-<span class="c1">#    connect:</span><span class="w"></span>
-<span class="c1">#      - host:localhost</span><span class="w"></span>
-<span class="c1">#      - user:smarthome</span><span class="w"></span>
-<span class="c1">#      - passwd:smarthome</span><span class="w"></span>
-<span class="c1">#      - db:smarthome</span><span class="w"></span>
-<span class="c1">#      - port:3306</span><span class="w"></span>
+<span class="c1">#database_mysql:</span>
+<span class="c1">#    plugin_name: database</span>
+<span class="c1">#    instance: nas</span>
+<span class="c1">#    precision: 4</span>
+<span class="c1">#    driver: pymysql</span>
+<span class="c1">#    connect:</span>
+<span class="c1">#      - host:localhost</span>
+<span class="c1">#      - user:smarthome</span>
+<span class="c1">#      - passwd:smarthome</span>
+<span class="c1">#      - db:smarthome</span>
+<span class="c1">#      - port:3306</span>
 
-<span class="c1"># memlog:</span><span class="w"></span>
-<span class="c1">#     plugin_name: memlog</span><span class="w"></span>
-<span class="c1">#     name: alert</span><span class="w"></span>
+<span class="c1"># memlog:</span>
+<span class="c1">#     plugin_name: memlog</span>
+<span class="c1">#     name: alert</span>
 
-<span class="c1"># ow:</span><span class="w"></span>
-<span class="c1">#     plugin_name: onewire</span><span class="w"></span>
-<span class="c1">#     host: 127.0.0.1</span><span class="w"></span>
-<span class="c1">#     port: 4304</span><span class="w"></span>
+<span class="c1"># ow:</span>
+<span class="c1">#     plugin_name: onewire</span>
+<span class="c1">#     host: 127.0.0.1</span>
+<span class="c1">#     port: 4304</span>
 
-<span class="c1"># Autogenerierung von Webseiten für SmartVISU UND Aktivierung des Nutzdatenprotokolls über Websocket für die smartVISU</span><span class="w"></span>
-<span class="nt">smartvisu_pages</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">smartvisu</span><span class="w"></span>
-<span class="w">    </span><span class="nt">smartvisu_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/www/html/smartvisu</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#generate_pages: True</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#overwrite_templates: True</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#visu_style: std</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#default_acl: rw</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#handle_widgets: True</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#list_deprecated_warnings: False</span><span class="w"></span>
+<span class="c1"># Autogenerierung von Webseiten für SmartVISU UND Aktivierung des Nutzdatenprotokolls über Websocket für die smartVISU</span>
+<span class="nt">smartvisu_pages</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">smartvisu</span>
+<span class="w">    </span><span class="nt">smartvisu_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/www/html/smartvisu</span>
+<span class="w">    </span><span class="c1">#generate_pages: True</span>
+<span class="w">    </span><span class="c1">#overwrite_templates: True</span>
+<span class="w">    </span><span class="c1">#visu_style: std</span>
+<span class="w">    </span><span class="c1">#default_acl: rw</span>
+<span class="w">    </span><span class="c1">#handle_widgets: True</span>
+<span class="w">    </span><span class="c1">#list_deprecated_warnings: False</span>
 
-<span class="c1">#stateengine:</span><span class="w"></span>
-<span class="c1">#    plugin_name: stateengine</span><span class="w"></span>
-<span class="c1">#    log_level: 2</span><span class="w"></span>
-<span class="c1">#    log_directory: var/log/stateengine/</span><span class="w"></span>
-<span class="c1">#    startup_delay_default: 120</span><span class="w"></span>
-<span class="c1">#    suspend_time_default: 10800</span><span class="w"></span>
-<span class="c1">#    laststate_name_manually_locked: gesperrt</span><span class="w"></span>
-<span class="c1">#    laststate_name_suspended: ausgesetzt</span><span class="w"></span>
-<span class="c1">#    log_maxage: 1</span><span class="w"></span>
+<span class="c1">#stateengine:</span>
+<span class="c1">#    plugin_name: stateengine</span>
+<span class="c1">#    log_level: 2</span>
+<span class="c1">#    log_directory: var/log/stateengine/</span>
+<span class="c1">#    startup_delay_default: 120</span>
+<span class="c1">#    suspend_time_default: 10800</span>
+<span class="c1">#    laststate_name_manually_locked: gesperrt</span>
+<span class="c1">#    laststate_name_suspended: ausgesetzt</span>
+<span class="c1">#    log_maxage: 1</span>
 
-<span class="c1"># apcups:</span><span class="w"></span>
-<span class="c1">#     plugin_name: apcups</span><span class="w"></span>
-<span class="c1">#     host: localhost</span><span class="w"></span>
-<span class="c1">#     port: 3551</span><span class="w"></span>
+<span class="c1"># apcups:</span>
+<span class="c1">#     plugin_name: apcups</span>
+<span class="c1">#     host: localhost</span>
+<span class="c1">#     port: 3551</span>
 
-<span class="c1"># dmx1:</span><span class="w"></span>
-<span class="c1">#     plugin_name: artnet</span><span class="w"></span>
-<span class="c1">#     artnet_subnet: 0</span><span class="w"></span>
-<span class="c1">#     artnet_net: 0</span><span class="w"></span>
-<span class="c1">#     artnet_universe: 0</span><span class="w"></span>
-<span class="c1">#     ip: 192.168.1.123</span><span class="w"></span>
-<span class="c1">#     port: 6454</span><span class="w"></span>
+<span class="c1"># dmx1:</span>
+<span class="c1">#     plugin_name: artnet</span>
+<span class="c1">#     artnet_subnet: 0</span>
+<span class="c1">#     artnet_net: 0</span>
+<span class="c1">#     artnet_universe: 0</span>
+<span class="c1">#     ip: 192.168.1.123</span>
+<span class="c1">#     port: 6454</span>
 
-<span class="c1"># ast:</span><span class="w"></span>
-<span class="c1">#     plugin_name: asterisk</span><span class="w"></span>
-<span class="c1">#     username: admin</span><span class="w"></span>
-<span class="c1">#     password: secret</span><span class="w"></span>
-<span class="c1">#     host: 127.0.0.1    # default</span><span class="w"></span>
-<span class="c1">#     port: 5038    # default</span><span class="w"></span>
+<span class="c1"># ast:</span>
+<span class="c1">#     plugin_name: asterisk</span>
+<span class="c1">#     username: admin</span>
+<span class="c1">#     password: secret</span>
+<span class="c1">#     host: 127.0.0.1    # default</span>
+<span class="c1">#     port: 5038    # default</span>
 
-<span class="c1"># avm1:</span><span class="w"></span>
-<span class="c1">#     plugin_name: avm</span><span class="w"></span>
-<span class="c1">#     username: ...    # optional</span><span class="w"></span>
-<span class="c1">#     password: &#39;...&#39;</span><span class="w"></span>
-<span class="c1">#     host: fritz.box</span><span class="w"></span>
-<span class="c1">#     port: 49443</span><span class="w"></span>
-<span class="c1">#     cycle: 300</span><span class="w"></span>
-<span class="c1">#     ssl: True    # use https or not</span><span class="w"></span>
-<span class="c1">#     verify: False    # verify ssl certificate</span><span class="w"></span>
-<span class="c1">#     call_monitor: &#39;True&#39;</span><span class="w"></span>
-<span class="c1">#     call_monitor_incoming_filter: &quot;...    ## optional, don&#39;t set if you don&#39;t want to watch only one specific number with your call monitor&quot;</span><span class="w"></span>
-<span class="c1">#     avm_identifier: fritzbox_1</span><span class="w"></span>
+<span class="c1"># avm1:</span>
+<span class="c1">#     plugin_name: avm</span>
+<span class="c1">#     username: ...    # optional</span>
+<span class="c1">#     password: &#39;...&#39;</span>
+<span class="c1">#     host: fritz.box</span>
+<span class="c1">#     port: 49443</span>
+<span class="c1">#     cycle: 300</span>
+<span class="c1">#     ssl: True    # use https or not</span>
+<span class="c1">#     verify: False    # verify ssl certificate</span>
+<span class="c1">#     call_monitor: &#39;True&#39;</span>
+<span class="c1">#     call_monitor_incoming_filter: &quot;...    ## optional, don&#39;t set if you don&#39;t want to watch only one specific number with your call monitor&quot;</span>
+<span class="c1">#     avm_identifier: fritzbox_1</span>
 
-<span class="c1"># boxcar:</span><span class="w"></span>
-<span class="c1">#     plugin_name: boxcar</span><span class="w"></span>
-<span class="c1">#     apikey: abcdefghij123456    # Get it from your Boxcar Account</span><span class="w"></span>
-<span class="c1">#     email: your@mail.org    # Registered with Boxcar</span><span class="w"></span>
+<span class="c1"># boxcar:</span>
+<span class="c1">#     plugin_name: boxcar</span>
+<span class="c1">#     apikey: abcdefghij123456    # Get it from your Boxcar Account</span>
+<span class="c1">#     email: your@mail.org    # Registered with Boxcar</span>
 
-<span class="c1"># comfoair:</span><span class="w"></span>
-<span class="c1">#     plugin_name: comfoair</span><span class="w"></span>
-<span class="c1">#     kwltype: comfoair350    # Currently supported: comfoair350 and comfoair500</span><span class="w"></span>
-<span class="c1">#     host: 192.168.123.6    # Provide host and port if you want to use TCP connection (for a TCP to serial converter)</span><span class="w"></span>
-<span class="c1">#     port: 5555    # Port</span><span class="w"></span>
-<span class="c1">#     serialport: /dev/ttyUSB0    # Enable this if you want to use a serial connection</span><span class="w"></span>
+<span class="c1"># comfoair:</span>
+<span class="c1">#     plugin_name: comfoair</span>
+<span class="c1">#     kwltype: comfoair350    # Currently supported: comfoair350 and comfoair500</span>
+<span class="c1">#     host: 192.168.123.6    # Provide host and port if you want to use TCP connection (for a TCP to serial converter)</span>
+<span class="c1">#     port: 5555    # Port</span>
+<span class="c1">#     serialport: /dev/ttyUSB0    # Enable this if you want to use a serial connection</span>
 
-<span class="c1"># datalog:</span><span class="w"></span>
-<span class="c1">#     plugin_name: datalog</span><span class="w"></span>
-<span class="c1">#     path: var/log/data</span><span class="w"></span>
-<span class="c1">#     filepatterns:</span><span class="w"></span>
-<span class="c1">#       - default:{log}-{year}-{month}-{day}.csv</span><span class="w"></span>
-<span class="c1">#       - yearly:{log}-{year}.csv</span><span class="w"></span>
-<span class="c1">#     logpatterns: csv:{time};{item};{value}\n</span><span class="w"></span>
-<span class="c1">#     cycle: 300</span><span class="w"></span>
+<span class="c1"># datalog:</span>
+<span class="c1">#     plugin_name: datalog</span>
+<span class="c1">#     path: var/log/data</span>
+<span class="c1">#     filepatterns:</span>
+<span class="c1">#       - default:{log}-{year}-{month}-{day}.csv</span>
+<span class="c1">#       - yearly:{log}-{year}.csv</span>
+<span class="c1">#     logpatterns: csv:{time};{item};{value}\n</span>
+<span class="c1">#     cycle: 300</span>
 
-<span class="c1"># dlms:</span><span class="w"></span>
-<span class="c1">#     plugin_name: dlms</span><span class="w"></span>
-<span class="c1">#     serialport: /dev/ttyO1</span><span class="w"></span>
-<span class="c1">#     baudrate: 300    # default 300</span><span class="w"></span>
-<span class="c1">#     update_cycle: 20    # default 20</span><span class="w"></span>
-<span class="c1">#     use_checksum: no    # default no</span><span class="w"></span>
-<span class="c1">#     reset_baudrate: no    # default no</span><span class="w"></span>
-<span class="c1">#     no_waiting: yes    # default yes</span><span class="w"></span>
+<span class="c1"># dlms:</span>
+<span class="c1">#     plugin_name: dlms</span>
+<span class="c1">#     serialport: /dev/ttyO1</span>
+<span class="c1">#     baudrate: 300    # default 300</span>
+<span class="c1">#     update_cycle: 20    # default 20</span>
+<span class="c1">#     use_checksum: no    # default no</span>
+<span class="c1">#     reset_baudrate: no    # default no</span>
+<span class="c1">#     no_waiting: yes    # default yes</span>
 
-<span class="c1"># dmx:</span><span class="w"></span>
-<span class="c1">#     plugin_name: dmx</span><span class="w"></span>
-<span class="c1">#     tty: /dev/usbtty...</span><span class="w"></span>
-<span class="c1">#     interface: nanodmx</span><span class="w"></span>
+<span class="c1"># dmx:</span>
+<span class="c1">#     plugin_name: dmx</span>
+<span class="c1">#     tty: /dev/usbtty...</span>
+<span class="c1">#     interface: nanodmx</span>
 
-<span class="c1"># DuW:</span><span class="w"></span>
-<span class="c1">#     plugin_name: drexelundweiss</span><span class="w"></span>
-<span class="c1">#     tty: /dev/ttyUSB0</span><span class="w"></span>
-<span class="c1">#     Busmonitor: 1</span><span class="w"></span>
-<span class="c1">#     LU_ID: 130</span><span class="w"></span>
-<span class="c1">#     WP_ID: 140</span><span class="w"></span>
-<span class="c1">#     device: 14</span><span class="w"></span>
-<span class="c1">#     cycle: 60</span><span class="w"></span>
-<span class="c1">#     retrylimit: 10</span><span class="w"></span>
+<span class="c1"># DuW:</span>
+<span class="c1">#     plugin_name: drexelundweiss</span>
+<span class="c1">#     tty: /dev/ttyUSB0</span>
+<span class="c1">#     Busmonitor: 1</span>
+<span class="c1">#     LU_ID: 130</span>
+<span class="c1">#     WP_ID: 140</span>
+<span class="c1">#     device: 14</span>
+<span class="c1">#     cycle: 60</span>
+<span class="c1">#     retrylimit: 10</span>
 
-<span class="c1"># squeezebox:</span><span class="w"></span>
-<span class="c1">#     plugin_name: squeezebox</span><span class="w"></span>
-<span class="c1">#     host: squeezeserver</span><span class="w"></span>
-<span class="c1">#     # port: &lt;port&gt;</span><span class="w"></span>
+<span class="c1"># squeezebox:</span>
+<span class="c1">#     plugin_name: squeezebox</span>
+<span class="c1">#     host: squeezeserver</span>
+<span class="c1">#     # port: &lt;port&gt;</span>
 
-<span class="c1"># uzsu:</span><span class="w"></span>
-<span class="c1">#     plugin_name: uzsu</span><span class="w"></span>
+<span class="c1"># uzsu:</span>
+<span class="c1">#     plugin_name: uzsu</span>
 
-<span class="c1"># simulation:</span><span class="w"></span>
-<span class="c1">#     plugin_name: simulation</span><span class="w"></span>
-<span class="c1">#     data_file: ./var/db/simulation.txt</span><span class="w"></span>
+<span class="c1"># simulation:</span>
+<span class="c1">#     plugin_name: simulation</span>
+<span class="c1">#     data_file: ./var/db/simulation.txt</span>
 
-<span class="c1"># nw:</span><span class="w"></span>
-<span class="c1">#     plugin_name: network</span><span class="w"></span>
-<span class="c1">#     ip: 0.0.0.0</span><span class="w"></span>
-<span class="c1">#     port: 2727</span><span class="w"></span>
-<span class="c1">#     http: 8765</span><span class="w"></span>
-<span class="c1">#     tcp_acl:</span><span class="w"></span>
-<span class="c1">#       - 127.0.0.1</span><span class="w"></span>
-<span class="c1">#       - 192.168.0.34</span><span class="w"></span>
-<span class="c1">#     udp: &#39;no&#39;</span><span class="w"></span>
-<span class="c1">#     udp_acl: &#39;*&#39;</span><span class="w"></span>
+<span class="c1"># nw:</span>
+<span class="c1">#     plugin_name: network</span>
+<span class="c1">#     ip: 0.0.0.0</span>
+<span class="c1">#     port: 2727</span>
+<span class="c1">#     http: 8765</span>
+<span class="c1">#     tcp_acl:</span>
+<span class="c1">#       - 127.0.0.1</span>
+<span class="c1">#       - 192.168.0.34</span>
+<span class="c1">#     udp: &#39;no&#39;</span>
+<span class="c1">#     udp_acl: &#39;*&#39;</span>
 
-<span class="c1"># wol:</span><span class="w"></span>
-<span class="c1">#     plugin_name: wol</span><span class="w"></span>
+<span class="c1"># wol:</span>
+<span class="c1">#     plugin_name: wol</span>
 
-<span class="c1"># homematic:</span><span class="w"></span>
-<span class="c1">#     plugin_name: homematic</span><span class="w"></span>
-<span class="c1">#     host: 192.168.50.250</span><span class="w"></span>
-<span class="c1">#     port: 2001</span><span class="w"></span>
+<span class="c1"># homematic:</span>
+<span class="c1">#     plugin_name: homematic</span>
+<span class="c1">#     host: 192.168.50.250</span>
+<span class="c1">#     port: 2001</span>
 </pre></div>
 </div>
 </div>

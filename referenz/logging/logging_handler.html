@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="../../konfiguration/logging.html">Logging</a> &raquo;</li>
-      <li>Logging Handler</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="../../konfiguration/logging.html">Logging</a></li>
+      <li class="breadcrumb-item active">Logging Handler</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3879,29 +3879,29 @@ in der GUI eines Betriebssystems geöffnet werden.</p>
 <h3>Benutzung des Handlers<a class="headerlink" href="#benutzung-des-handlers" title="Permalink to this heading"></a></h3>
 <p>In der Datei <code class="docutils literal notranslate"><span class="pre">../etc/logging.yaml</span></code> wird der Handler als Ersatz für <strong>TimedRotatingFileHandler</strong> eingesetzt.
 Dort wo im Abschnitt <code class="docutils literal notranslate"><span class="pre">handler:</span></code> bisher der Handler <strong>TimedRotatingFileHandler</strong> konfiguriert ist:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">handler</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">shng_warnings_file</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span><span class="w"></span>
-<span class="w">        </span><span class="nt">utc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span><span class="w"></span>
-<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-warnings.log</span><span class="w"></span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">handler</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">shng_warnings_file</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+<span class="w">        </span><span class="nt">utc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span>
+<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-warnings.log</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span>
 </pre></div>
 </div>
 <p>wird anstelle des <code class="docutils literal notranslate"><span class="pre">class:</span></code> Attributes der Handler <strong>ShngTimedRotatingFileHandler</strong> folgendermaßen konfiguriert:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">handler</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">shng_warnings_file</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.log.ShngTimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span><span class="w"></span>
-<span class="w">        </span><span class="nt">utc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span><span class="w"></span>
-<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-warnings.log</span><span class="w"></span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">handler</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">shng_warnings_file</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.log.ShngTimedRotatingFileHandler</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+<span class="w">        </span><span class="nt">utc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span>
+<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-warnings.log</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span>
 </pre></div>
 </div>
 <div class="line-block">
@@ -3923,12 +3923,12 @@ und der Handler wird in den konfigurierten Loggern als (zusätzlicher) Logger ko
 <section id="id1">
 <h3>Benutzung des Handlers<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
 <p>In der Datei <code class="docutils literal notranslate"><span class="pre">../etc/logging.yaml</span></code> wird der <strong>ShngMemLogHandler</strong> im Abschnitt <code class="docutils literal notranslate"><span class="pre">handler:</span></code> konfiguriert.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">handler</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">memory_heizung</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.log.ShngMemLogHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">logname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mem_heiz</span><span class="w"></span>
-<span class="w">        </span><span class="nt">maxlen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">handler</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">memory_heizung</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.log.ShngMemLogHandler</span>
+<span class="w">        </span><span class="nt">logname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mem_heiz</span>
+<span class="w">        </span><span class="nt">maxlen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
 </pre></div>
 </div>
 <p><strong>ShngMemLogHandler</strong> hat zwei Parameter:</p>
@@ -3946,9 +3946,9 @@ gelöscht wird.</p></li>
 </div>
 <p>Um den Handler im Python Logging zu nutzen, wird es anschließend der Handler zum gewünschten Logger hinzu
 gefügt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">heizung</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_heizung_file</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">memory_heizung</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">loggers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">heizung</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_heizung_file</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">memory_heizung</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </section>

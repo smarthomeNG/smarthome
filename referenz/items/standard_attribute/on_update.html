@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="../../../konfiguration/items/items.html">Items</a> &raquo;</li>
-          <li><a href="standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a> &raquo;</li>
-      <li><em>on_update</em> und <em>on_change</em></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="../../../konfiguration/items/items.html">Items</a></li>
+          <li class="breadcrumb-item"><a href="standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a></li>
+      <li class="breadcrumb-item active"><em>on_update</em> und <em>on_change</em></li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3911,23 +3911,23 @@ das Ziel Item (sh.&lt;item&gt;) den Wert None zugewiesen bekommt.</p>
 <p>Beispiel:</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">../items/&lt;filename&gt;.yaml (Ausschnitt)</span><a class="headerlink" href="#id1" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">itemA1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># eine einzelne Zuweisung</span><span class="w"></span>
-<span class="w">    </span><span class="nt">on_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">itemB = 1</span><span class="w">                  </span><span class="c1"># bei jedem Update von itemA1 (mit oder ohne Wertänderung)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">itemA1</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># eine einzelne Zuweisung</span>
+<span class="w">    </span><span class="nt">on_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">itemB = 1</span><span class="w">                  </span><span class="c1"># bei jedem Update von itemA1 (mit oder ohne Wertänderung)</span>
 
-<span class="nt">itemA2</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># eine Liste mehrerer Zuweisungen</span><span class="w"></span>
-<span class="w">    </span><span class="nt">on_change</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">itemC = False</span><span class="w">                       </span><span class="c1"># nur wenn sich der Wert von itemA2 ändert</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">itemD = sh.itemB()</span><span class="w">                  </span><span class="c1"># oder sh.itemB.property.value</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">itemE = sh.itemB() if value else 0</span><span class="w">  </span><span class="c1">#</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="nt">itemA2</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># eine Liste mehrerer Zuweisungen</span>
+<span class="w">    </span><span class="nt">on_change</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">itemC = False</span><span class="w">                       </span><span class="c1"># nur wenn sich der Wert von itemA2 ändert</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">itemD = sh.itemB()</span><span class="w">                  </span><span class="c1"># oder sh.itemB.property.value</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">itemE = sh.itemB() if value else 0</span><span class="w">  </span><span class="c1">#</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 
-<span class="nt">itemB</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="nt">itemB</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 
-<span class="nt">itemC</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="nt">itemC</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </pre></div>
 </div>
 </div>

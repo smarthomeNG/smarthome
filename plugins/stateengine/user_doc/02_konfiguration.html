@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-          <li><a href="../user_doc.html">stateengine</a> &raquo;</li>
-      <li>Konfiguration</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_doc/plugins_system.html">System Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../user_doc.html">stateengine</a></li>
+      <li class="breadcrumb-item active">Konfiguration</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3860,15 +3860,15 @@
 </div>
 <section id="pluginkonfiguration">
 <h2>Pluginkonfiguration<a class="headerlink" href="#pluginkonfiguration" title="Permalink to this heading"></a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#etc/plugin.yaml</span><span class="w"></span>
-<span class="nt">stateengine</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#startup_delay_default: 10</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#suspend_time_default: 3600</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#log_level: 0</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#log_directory: var/log/StateEngine/</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#log_maxage: 0</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#etc/plugin.yaml</span>
+<span class="nt">stateengine</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine</span>
+<span class="w">    </span><span class="nt">plugin_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">    </span><span class="c1">#startup_delay_default: 10</span>
+<span class="w">    </span><span class="c1">#suspend_time_default: 3600</span>
+<span class="w">    </span><span class="c1">#log_level: 0</span>
+<span class="w">    </span><span class="c1">#log_directory: var/log/StateEngine/</span>
+<span class="w">    </span><span class="c1">#log_maxage: 0</span>
 </pre></div>
 </div>
 </section>
@@ -3878,12 +3878,12 @@
 auf <code class="docutils literal notranslate"><span class="pre">active</span></code> zu setzen. Dies ist in der generellen struct Vorlage bereits
 hinterlegt, muss aber manuell gesetzt werden, falls das <code class="docutils literal notranslate"><span class="pre">struct:</span> <span class="pre">stateengine.general</span></code>
 nicht eingesetzt wird.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">           </span><span class="nt">se_plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">active</span><span class="w"></span>
-<span class="w">           </span><span class="nt">se_log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">           </span><span class="nt">se_plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">active</span>
+<span class="w">           </span><span class="nt">se_log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 </pre></div>
 </div>
 </section>
@@ -3898,49 +3898,49 @@ pro Item mittels <code class="docutils literal notranslate"><span class="pre">se
 <p><strong>logging.yaml</strong>
 Sowohl der Output des Plugins generell, als auch der Einträge für bestimmte Items
 können in der logging.yaml Datei wie folgt deklariert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#etc/logging.yaml</span><span class="w"></span>
-<span class="nt">filters</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">notfound</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span><span class="w"></span>
-<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(.*)Item</span><span class="nv"> </span><span class="s">(.*)</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">found!&quot;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#etc/logging.yaml</span>
+<span class="nt">filters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">notfound</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span>
+<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(.*)Item</span><span class="nv"> </span><span class="s">(.*)</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">found!&quot;</span>
 
-<span class="nt">handlers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">stateengine_licht_file</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span><span class="w"></span>
-<span class="w">        </span><span class="nt">utc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span><span class="w"></span>
-<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/stateengine_licht.log</span><span class="w"></span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filters</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">notfound</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="nt">handlers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">stateengine_licht_file</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+<span class="w">        </span><span class="nt">utc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span>
+<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/stateengine_licht.log</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span>
+<span class="w">        </span><span class="nt">filters</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">notfound</span><span class="p p-Indicator">]</span>
 
-<span class="w">    </span><span class="nt">stateengine_all_file</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span><span class="w"></span>
-<span class="w">        </span><span class="nt">utc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span><span class="w"></span>
-<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/stateengine.log</span><span class="w"></span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span><span class="w"></span>
+<span class="w">    </span><span class="nt">stateengine_all_file</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+<span class="w">        </span><span class="nt">utc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span>
+<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/stateengine.log</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span>
 
-<span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugins.stateengine</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG plugins</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
+<span class="nt">loggers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugins.stateengine</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG plugins</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
 
-<span class="w">    </span><span class="nt">stateengine.licht</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG plugins</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">stateengine_licht_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span><span class="w"></span>
+<span class="w">    </span><span class="nt">stateengine.licht</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG plugins</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">stateengine_licht_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
 
-<span class="w">    </span><span class="nt">stateengine</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG plugins</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">stateengine_all_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span><span class="w"></span>
+<span class="w">    </span><span class="nt">stateengine</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG plugins</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">stateengine_all_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span>
 </pre></div>
 </div>
 <p>Das obige Beispiel würde in die Datei var/log/stateengine_licht.log sämtliche

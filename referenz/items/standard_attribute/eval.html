@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="../../../konfiguration/items/items.html">Items</a> &raquo;</li>
-          <li><a href="standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a> &raquo;</li>
-      <li><em>eval</em> und <em>eval_trigger</em></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="../../../konfiguration/items/items.html">Items</a></li>
+          <li class="breadcrumb-item"><a href="standard_attribute.html">Standard Attribute <span class="bluesup">Update</span></a></li>
+      <li class="breadcrumb-item active"><em>eval</em> und <em>eval_trigger</em></li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3866,10 +3866,10 @@ Wert des Items unterschiedlich sein oder ist das Attribut
 abhängige Logiken getriggert.</p>
 <p>Im folgenden Beispiel liefert ein Sensor die Temperatur in Fahrenheit.
 Das Item soll aber die Temperatur in °Celsius speichern.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Temperatur</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Formel (°F  -  32)  x  5/9 = °C</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(value - 32 ) * 5 / 9</span><span class="w">  </span><span class="c1"># Aus 68°F werden somit 20°C</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Temperatur</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Formel (°F  -  32)  x  5/9 = °C</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(value - 32 ) * 5 / 9</span><span class="w">  </span><span class="c1"># Aus 68°F werden somit 20°C</span>
 </pre></div>
 </div>
 <dl class="simple">
@@ -3887,13 +3887,13 @@ beinhalten. Wichtig ist, dass bei der Angabe eines <strong>if</strong> auch ein 
 implementiert sein muss. Außerdem ist dem Item ein <strong>sh.</strong> voran zu
 setzen. Die () Klammern hinter dem Item sind nötig, um den Item-Wert
 abzufragen. Anstelle der Klammern kann auch property.value genutzt werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Temperatur</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Wird wahr, wenn die Temperatur über 20 Grad wird und falsch, wenn nicht.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 if sh.Temperatur() &gt; 20 else 0</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># alternativ eval: 1 if sh.Temperatur.property.value &gt; 20 else 0</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Temperatur</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Temperatur</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Trigger</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># Wird wahr, wenn die Temperatur über 20 Grad wird und falsch, wenn nicht.</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 if sh.Temperatur() &gt; 20 else 0</span>
+<span class="w">        </span><span class="c1"># alternativ eval: 1 if sh.Temperatur.property.value &gt; 20 else 0</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Temperatur</span>
 </pre></div>
 </div>
 <p>Weiter ist es möglich, direkt die Werte der eval_trigger im eval
@@ -3932,23 +3932,23 @@ entsprechend auszuwerten:</p>
 </tbody>
 </table>
 <p>Beispiel:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Raum</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Raum</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">Temperatur</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">average temperature</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avg</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room_a.temp</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room_b.temp</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Temperatur</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">average temperature</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avg</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room_a.temp</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room_b.temp</span>
 
-<span class="w">    </span><span class="nt">Praesenz</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">movement in on the rooms</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or</span><span class="w"></span>
-<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room_a.presence</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room_b.presence</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Praesenz</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">movement in on the rooms</span>
+<span class="w">        </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or</span>
+<span class="w">        </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room_a.presence</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room_b.presence</span>
 </pre></div>
 </div>
 <section id="zusatzliche-funktionen-in-eval-ausdrucken">
@@ -3958,9 +3958,9 @@ bereitgestellt und es können entsprechende Funktionen genutzt werden. Außerdem
 <a class="reference internal" href="../../logiken/logiken_items.html"><span class="doc">Items-API</span></a> als <strong>items</strong> (z.B. items.return_item(‚bla‘)) und das
 <a class="reference internal" href="../../smarthomeng/feiertage_datum_zeit.html"><span class="doc">shtime Modul</span></a> mittels <strong>shtime</strong> (z.B. shtime.now()) verfügbar.</p>
 <p>Beispiel:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">oneitem</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">  </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">math.ceil(sh.otheritem() / 60.0)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">oneitem</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">  </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">math.ceil(sh.otheritem() / 60.0)</span>
 </pre></div>
 </div>
 <p>Aktuell stehen zusätzlich zum Python Standard Sprachumfang folgende Packages bzw. SmartHomeNG Libraries zur Nutzung
@@ -3994,13 +3994,13 @@ weitere ausführliche Beispiele zu finden.</p>
 <p>Zu beachten ist, dass der Syntax einer if-Bedingung in einer Python conditional Expression folgender ist:</p>
 <p><code class="docutils literal notranslate"><span class="pre">eval:</span> <span class="pre">&lt;expression-if-true&gt;</span> <span class="pre">if</span> <span class="pre">&lt;condition&gt;</span> <span class="pre">else</span> <span class="pre">&lt;expression-if-false&gt;</span></code></p>
 <p>Beispiel:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value if value&gt;0 else 0</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value if value&gt;0 else 0</span>
 </pre></div>
 </div>
 <p>Die Expression setzt den Item-Wert auf den bisherigen Wert, falls er &gt;0 ist, sonst wird der Wert auf 0 gesetzt.
 Damit findet eine Zuweisung statt und on_change bzw. on_update Trigger werden ausgelöst.</p>
 <p>Wenn das Beispiel folgendermaßen formuliert wird:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0 if value&lt;0 else None</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0 if value&lt;0 else None</span>
 </pre></div>
 </div>
 <p>Hätte es auf den Item-Wert letztlich die selben Auswirkungen: Hier wird der Item-Wert auf 0 gesetzt, falls der Wert &lt;0 ist,
@@ -4014,13 +4014,13 @@ werden keine Trigger ausgelöst.</p>
 <p>Das Attribut eval_trigger legt eine Abhängigkeit von anderen Items fest.
 Sobald sich diese im Wert ändern, wird eine Neuberechnung gestartet. Das
 obige Beispiel könnte so erweitert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">TemperaturFahrenheit</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="nt">TemperaturCelsius</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Formel (°F  -  32)  x  5/9 = °C</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(sh.TemperaturFahrenheit() - 32 ) * 5 / 9</span><span class="w">  </span><span class="c1"># Aus 68°F werden somit 20°C</span><span class="w"></span>
-<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TemperaturFahrenheit</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">TemperaturFahrenheit</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="nt">TemperaturCelsius</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Formel (°F  -  32)  x  5/9 = °C</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(sh.TemperaturFahrenheit() - 32 ) * 5 / 9</span><span class="w">  </span><span class="c1"># Aus 68°F werden somit 20°C</span>
+<span class="w">    </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TemperaturFahrenheit</span>
 </pre></div>
 </div>
 <p>Hier gibt es nun ein Attribut <strong>eval_trigger</strong> mit dem Item Namen

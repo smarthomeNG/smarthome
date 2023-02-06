@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_interface.html">Interface Plugins</a> &raquo;</li>
-      <li>yamahayxc</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_interface.html">Interface Plugins</a></li>
+      <li class="breadcrumb-item active">yamahayxc</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3875,16 +3875,16 @@ Das Plugin nutzt die YXC API, welche auf dem Austausch von JSON-formatierten Dat
 </div></blockquote>
 <p>Dies wird normalerweise durch SmartHomeNG automatisch installiert. Wer es manuell installieren möchte, kann das über das PIP-Tool oder über die Distribution tun:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python</span>
-pip3 install requests
+pip3<span class="w"> </span>install<span class="w"> </span>requests
 
 <span class="c1"># Debian based</span>
-sudo apt-get install python3-requests
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>python3-requests
 
 <span class="c1"># Arch Linux</span>
-sudo pacman -S python-requests
+sudo<span class="w"> </span>pacman<span class="w"> </span>-S<span class="w"> </span>python-requests
 
 <span class="c1"># Fedora</span>
-sudo dnf install python3-requests
+sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>python3-requests
 </pre></div>
 </div>
 </section>
@@ -3892,132 +3892,132 @@ sudo dnf install python3-requests
 <h2>Konfiguration<a class="headerlink" href="#konfiguration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">yamahayxc</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">plugin_name = YamahaYXC</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">yamahayxc</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">plugin_name = YamahaYXC</span>
 </pre></div>
 </div>
 </section>
 <section id="items-yaml">
 <h3>items.yaml<a class="headerlink" href="#items-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">media</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wx010</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">yamahayxc_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.2.211</span><span class="w"></span>
-<span class="w">        </span><span class="nt">yamahayxc_zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">media</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">wx010</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">yamahayxc_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.2.211</span>
+<span class="w">        </span><span class="nt">yamahayxc_zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 
-<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yamahayxc.basic</span><span class="w"></span>
+<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yamahayxc.basic</span>
 </pre></div>
 </div>
 <p>oder ohne Item-Structs (mit identischem Resultat):</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">media</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">media</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">wx010</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">yamahayxc_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.2.211</span><span class="w"></span>
-<span class="w">        </span><span class="nt">yamahayxc_zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span><span class="w"></span>
+<span class="w">    </span><span class="nt">wx010</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">yamahayxc_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.2.211</span>
+<span class="w">        </span><span class="nt">yamahayxc_zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 
-<span class="c1"># writable items to control device/playback</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># True = power on, False = standby</span><span class="w"></span>
-<span class="w">        </span><span class="nt">power</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">power</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="c1"># writable items to control device/playback</span>
+<span class="w">        </span><span class="c1"># True = power on, False = standby</span>
+<span class="w">        </span><span class="nt">power</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">power</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 
-<span class="w">        </span><span class="c1"># numeric volume. Range is 0..60 on my devices. May vary</span><span class="w"></span>
-<span class="w">        </span><span class="nt">volume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># numeric volume. Range is 0..60 on my devices. May vary</span>
+<span class="w">        </span><span class="nt">volume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 
-<span class="w">        </span><span class="c1"># True = mute enable, False = mute disable</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mute</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># True = mute enable, False = mute disable</span>
+<span class="w">        </span><span class="nt">mute</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mute</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 
-<span class="w">        </span><span class="c1"># input source as string. Heavily dependent on device.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">input</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">input</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># input source as string. Heavily dependent on device.</span>
+<span class="w">        </span><span class="nt">input</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">input</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 
-<span class="w">        </span><span class="c1"># possible values are &#39;play&#39;, &#39;stop&#39;, &#39;pause&#39;, &#39;previous&#39;, &#39;next&#39;...</span><span class="w"></span>
-<span class="w">        </span><span class="nt">playback</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playback</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># possible values are &#39;play&#39;, &#39;stop&#39;, &#39;pause&#39;, &#39;previous&#39;, &#39;next&#39;...</span>
+<span class="w">        </span><span class="nt">playback</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playback</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 
-<span class="w">        </span><span class="c1"># values are numeric and can (as of now) not be queried by the plugin</span><span class="w"></span>
-<span class="w">        </span><span class="nt">preset</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">preset</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># values are numeric and can (as of now) not be queried by the plugin</span>
+<span class="w">        </span><span class="nt">preset</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">preset</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 
-<span class="w">        </span><span class="c1"># values are numeric and can be 0 / 30 / 60 / 90 / 120 [minutes]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sleep</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sleep</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># values are numeric and can be 0 / 30 / 60 / 90 / 120 [minutes]</span>
+<span class="w">        </span><span class="nt">sleep</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sleep</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 
-<span class="c1"># read-only items to monitor device/playback status</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># name of current track, if available</span><span class="w"></span>
-<span class="w">        </span><span class="nt">track</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">track</span><span class="w"></span>
+<span class="c1"># read-only items to monitor device/playback status</span>
+<span class="w">        </span><span class="c1"># name of current track, if available</span>
+<span class="w">        </span><span class="nt">track</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">track</span>
 
-<span class="w">        </span><span class="c1"># name of current artist, if available. Radio station name for net_radio</span><span class="w"></span>
-<span class="w">        </span><span class="nt">artist</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artist</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># name of current artist, if available. Radio station name for net_radio</span>
+<span class="w">        </span><span class="nt">artist</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artist</span>
 
-<span class="w">        </span><span class="c1"># this is the URL of current album art image, if supported / supplied</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># it is hosted on the respective yamaha device</span><span class="w"></span>
-<span class="w">        </span><span class="nt">albumart</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">albumart</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># this is the URL of current album art image, if supported / supplied</span>
+<span class="w">        </span><span class="c1"># it is hosted on the respective yamaha device</span>
+<span class="w">        </span><span class="nt">albumart</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">albumart</span>
 
-<span class="w">        </span><span class="c1"># current time of playback in percent of total_time</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># -1 if total_time is not available</span><span class="w"></span>
-<span class="w">        </span><span class="nt">play_pos</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play_time</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># current time of playback in percent of total_time</span>
+<span class="w">        </span><span class="c1"># -1 if total_time is not available</span>
+<span class="w">        </span><span class="nt">play_pos</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play_time</span>
 
-<span class="w">        </span><span class="c1"># total time of playback in seconds. 0 if not applicable / available</span><span class="w"></span>
-<span class="w">        </span><span class="nt">totaltime</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">total_time</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># total time of playback in seconds. 0 if not applicable / available</span>
+<span class="w">        </span><span class="nt">totaltime</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">total_time</span>
 
-<span class="c1"># write-only item to pass arbitrary command. Use at own discretion</span><span class="w"></span>
-<span class="w">        </span><span class="nt">passthru</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">passthru</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="c1"># write-only item to pass arbitrary command. Use at own discretion</span>
+<span class="w">        </span><span class="nt">passthru</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">passthru</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 
-<span class="c1"># write-only item to force update of all items above. See notes.</span><span class="w"></span>
-<span class="w">        </span><span class="w w-Error"> </span><span class="nt">update</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">state</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="c1"># write-only item to force update of all items above. See notes.</span>
+<span class="w">        </span><span class="w w-Error"> </span><span class="nt">update</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">state</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 
 
-<span class="c1"># the following items are only valid for devices with alarm clock functions</span><span class="w"></span>
-<span class="c1"># these are included in addition to the others from the &#39;alarm&#39; struct:</span><span class="w"></span>
+<span class="c1"># the following items are only valid for devices with alarm clock functions</span>
+<span class="c1"># these are included in addition to the others from the &#39;alarm&#39; struct:</span>
 
-<span class="w">        </span><span class="c1"># enable / disable alarm function</span><span class="w"></span>
-<span class="w">        </span><span class="nt">alarm_on</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alarm_on</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># enable / disable alarm function</span>
+<span class="w">        </span><span class="nt">alarm_on</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alarm_on</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 
-<span class="w">        </span><span class="c1"># enable / disable alarm beep (solo or in addition to music)</span><span class="w"></span>
-<span class="w">        </span><span class="nt">alarm_beep</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alarm_beep</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># enable / disable alarm beep (solo or in addition to music)</span>
+<span class="w">        </span><span class="nt">alarm_beep</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alarm_beep</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 
-<span class="w">        </span><span class="c1"># get/set alarm time. Formatted as 4 digit 24 hour string</span><span class="w"></span>
-<span class="w">        </span><span class="nt">alarm_time</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alarm_time</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># get/set alarm time. Formatted as 4 digit 24 hour string</span>
+<span class="w">        </span><span class="nt">alarm_time</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">yamahayxc_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alarm_time</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
 </pre></div>
 </div>
 </section>

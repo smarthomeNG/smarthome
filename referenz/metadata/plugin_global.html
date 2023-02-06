@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../referenz.html">Referenz <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="metadata.html">Metadaten</a> &raquo;</li>
-      <li>plugin</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../referenz.html">Referenz <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="metadata.html">Metadaten</a></li>
+      <li class="breadcrumb-item active">plugin</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3854,30 +3854,30 @@
   <span class="target" id="index-0"></span><span class="target" id="index-1"></span><section id="plugin">
 <span id="index-2"></span><h1>plugin<a class="headerlink" href="#plugin" title="Permalink to this heading"></a></h1>
 <p>Der globale Metadaten Abschnitt <code class="docutils literal notranslate"><span class="pre">plugin:</span></code> kennt die folgenden Schlüsselbegriffe:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Metadata for the Smart-plugin</span><span class="w"></span>
-<span class="nt">plugin</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Global plugin attributes</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span><span class="w">                   </span><span class="c1"># plugin type (gateway, interface, protocol, system, cloud, un-classified)</span><span class="w"></span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Plugin</span><span class="nv"> </span><span class="s">für</span><span class="nv"> </span><span class="s">...&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Plugin</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">...&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">maintainer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msinn</span><span class="w">           </span><span class="c1"># Optional: Who maintains this plugin?</span><span class="w"></span>
-<span class="c1">#   tester:                     # Optional: Who tests this plugin?</span><span class="w"></span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qa-passed</span><span class="w"></span>
-<span class="w">    </span><span class="nt">keywords</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">weather</span><span class="w">           </span><span class="c1"># keywords, where applicable</span><span class="w"></span>
-<span class="w">    </span><span class="nt">documentation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/smarthomeNG/...</span><span class="w">        </span><span class="c1"># url of additional wiki page (in addition to user_doc.rst of plugin</span><span class="w"></span>
-<span class="c1">#    support: https://knx-user-forum.de/forum/supportforen/smarthome-py      # url of the support thread or forum</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Metadata for the Smart-plugin</span>
+<span class="nt">plugin</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Global plugin attributes</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span><span class="w">                   </span><span class="c1"># plugin type (gateway, interface, protocol, system, cloud, un-classified)</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Plugin</span><span class="nv"> </span><span class="s">für</span><span class="nv"> </span><span class="s">...&#39;</span>
+<span class="w">        </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Plugin</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">...&#39;</span>
+<span class="w">    </span><span class="nt">maintainer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msinn</span><span class="w">           </span><span class="c1"># Optional: Who maintains this plugin?</span>
+<span class="c1">#   tester:                     # Optional: Who tests this plugin?</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qa-passed</span>
+<span class="w">    </span><span class="nt">keywords</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">weather</span><span class="w">           </span><span class="c1"># keywords, where applicable</span>
+<span class="w">    </span><span class="nt">documentation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/smarthomeNG/...</span><span class="w">        </span><span class="c1"># url of additional wiki page (in addition to user_doc.rst of plugin</span>
+<span class="c1">#    support: https://knx-user-forum.de/forum/supportforen/smarthome-py      # url of the support thread or forum</span>
 
-<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.4.3</span><span class="w"></span>
-<span class="w">    </span><span class="nt">sh_minversion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.7</span><span class="w">           </span><span class="c1"># minimum shNG version to use this plugin (leave empty if no special requirement)</span><span class="w"></span>
-<span class="c1">#    sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)</span><span class="w"></span>
-<span class="c1">#    py_minversion: 3.6          # minimum Python version needed for this plugin (leave empty if no special requirement)</span><span class="w"></span>
-<span class="c1">#    py_maxversion:              # maximum Python version to use this plugin (leave empty if no special requirement)</span><span class="w"></span>
-<span class="w">    </span><span class="nt">multi_instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># plugin supports multi instance (if not specified, False is assumed)</span><span class="w"></span>
+<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.4.3</span>
+<span class="w">    </span><span class="nt">sh_minversion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.7</span><span class="w">           </span><span class="c1"># minimum shNG version to use this plugin (leave empty if no special requirement)</span>
+<span class="c1">#    sh_maxversion:              # maximum shNG version to use this plugin (leave empty if latest)</span>
+<span class="c1">#    py_minversion: 3.6          # minimum Python version needed for this plugin (leave empty if no special requirement)</span>
+<span class="c1">#    py_maxversion:              # maximum Python version to use this plugin (leave empty if no special requirement)</span>
+<span class="w">    </span><span class="nt">multi_instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># plugin supports multi instance (if not specified, False is assumed)</span>
 
-<span class="w">    </span><span class="nt">configuration_needed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">  </span><span class="c1"># False: The plugin will be enabled by the Admin GUI without configuration</span><span class="w"></span>
+<span class="w">    </span><span class="nt">configuration_needed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">  </span><span class="c1"># False: The plugin will be enabled by the Admin GUI without configuration</span>
 
-<span class="w">    </span><span class="nt">classname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;plugin_class&gt;</span><span class="w">   </span><span class="c1"># Name of the class that implements the plugin</span><span class="w"></span>
+<span class="w">    </span><span class="nt">classname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;plugin_class&gt;</span><span class="w">   </span><span class="c1"># Name of the class that implements the plugin</span>
 </pre></div>
 </div>
 <p>Beschreibung der Schlüsselbegriffe im Abschnitt <code class="docutils literal notranslate"><span class="pre">plugin:</span></code></p>

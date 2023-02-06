@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="entwicklung.html">Entwicklung</a> &raquo;</li>
-      <li>Bau der Dokumentation</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="entwicklung.html">Entwicklung</a></li>
+      <li class="breadcrumb-item active">Bau der Dokumentation</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3860,20 +3860,20 @@ wird nach und nach in die Anwender Dokumentation integriert werden, so dass am E
 <section id="checkout-und-bau-der-dokumentation">
 <h2>Checkout und Bau der Dokumentation<a class="headerlink" href="#checkout-und-bau-der-dokumentation" title="Permalink to this heading"></a></h2>
 <p>Zuerst muss ein lokaler Ordner für den Build-Prozess angelegt werden:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/local
-sudo mkdir shng_doc
-sudo chown -R smarthome:smarthome /usr/local/shng_doc
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/local
+sudo<span class="w"> </span>mkdir<span class="w"> </span>shng_doc
+sudo<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>smarthome:smarthome<span class="w"> </span>/usr/local/shng_doc
 </pre></div>
 </div>
 <p>Das Build-Skript muss aus der lokalen SmartHomeNG Installation in diesen Ordner kopiert und
 ausführbar gemacht werden:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> shng_doc
-cp /usr/local/smarthome/doc/build_doc.sh .
-chmod <span class="m">755</span> build_doc.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>shng_doc
+cp<span class="w"> </span>/usr/local/smarthome/doc/build_doc.sh<span class="w"> </span>.
+chmod<span class="w"> </span><span class="m">755</span><span class="w"> </span>build_doc.sh
 </pre></div>
 </div>
 <p>Die Python Packages, die für den Bau der Dokumentation benötigt werden, müssen installiert werden:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install sphinx sphinx_rtd_theme recommonmark
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>sphinx<span class="w"> </span>sphinx_rtd_theme<span class="w"> </span>recommonmark
 </pre></div>
 </div>
 <p>Der eigentliche Bau der Dokumentation erfolgt mit dem folgenden Befehl:</p>

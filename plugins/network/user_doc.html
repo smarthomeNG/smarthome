@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_protocol.html">Protokoll Plugins</a> &raquo;</li>
-      <li>network</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_protocol.html">Protokoll Plugins</a></li>
+      <li class="breadcrumb-item active">network</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3860,18 +3860,18 @@
 unter <a class="reference internal" href="../../plugins_doc/config/influxdb2.html"><span class="doc">Plugin ‚influxdb2‘ Konfiguration</span></a> nachzulesen.</p>
 <section id="plugin-yaml">
 <span id="pluginyaml"></span><h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">nw</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Network</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.network</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># ip: 0.0.0.0</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># port: 2727</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tcp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tcp_acl</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.34</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># udp: no</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># udp_acl: &#39;*&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">http</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12345</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">nw</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Network</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.network</span>
+<span class="w">    </span><span class="c1"># ip: 0.0.0.0</span>
+<span class="w">    </span><span class="c1"># port: 2727</span>
+<span class="w">    </span><span class="nt">tcp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">    </span><span class="nt">tcp_acl</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.34</span>
+<span class="w">    </span><span class="c1"># udp: no</span>
+<span class="w">    </span><span class="c1"># udp_acl: &#39;*&#39;</span>
+<span class="w">    </span><span class="nt">http</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12345</span>
 </pre></div>
 </div>
 </section>
@@ -3910,11 +3910,11 @@ einer oder mehrerer IP Adressen den Zugriff einzuschränken.</p></li>
 <h4>nw<a class="headerlink" href="#nw" title="Permalink to this heading"></a></h4>
 <p>Wenn dieses Attribut auf ‚yes‘ gesetzt ist, kann dieses Item mit Datenpaketen via
 TCP und/oder UDP gesetzt werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">item1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">nw</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">item1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">nw</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
 </pre></div>
 </div>
 </section>
@@ -3931,22 +3931,22 @@ Ein vorhandenes <code class="docutils literal notranslate"><span class="pre">tcp
 für ein Item kann eine spezielle Verbindungskombination festgelegt werden.
 Ein http listener quittiert wie ein herkoemmlicher HTTP Server eingehende POST und GET Anfragen.
 Das Argument kann ein Port sein oder die Kombination von IP und Port.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">item1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># bind to 0.0.0.0:7777 (jede IP Addresse)</span><span class="w"></span>
-<span class="w">        </span><span class="nt">nw_tcp_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7777</span><span class="w"></span>
+<span class="w">    </span><span class="nt">item1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="c1"># bind to 0.0.0.0:7777 (jede IP Addresse)</span>
+<span class="w">        </span><span class="nt">nw_tcp_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7777</span>
 
-<span class="w">    </span><span class="nt">item2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># bind to 0.0.0.0:7777 and 127.0.0.1:8888</span><span class="w"></span>
-<span class="w">        </span><span class="nt">nw_udp_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1:8888</span><span class="w"></span>
+<span class="w">    </span><span class="nt">item2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="c1"># bind to 0.0.0.0:7777 and 127.0.0.1:8888</span>
+<span class="w">        </span><span class="nt">nw_udp_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1:8888</span>
 
-<span class="w">    </span><span class="nt">item3</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># bind to 192.168.1.1:7778</span><span class="w"></span>
-<span class="w">        </span><span class="nt">nw_http_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.1.1:7778</span><span class="w"></span>
+<span class="w">    </span><span class="nt">item3</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="c1"># bind to 192.168.1.1:7778</span>
+<span class="w">        </span><span class="nt">nw_http_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.1.1:7778</span>
 </pre></div>
 </div>
 <p>Wenn ein TCP/UDP Paket an den Port gesendet wird, wird das Item auf den Wert des
@@ -3962,22 +3962,22 @@ Wird zusätzlich zu Port und IP noch ein <code class="docutils literal notransla
 so wird anstelle des Itemwertes hier <strong>Benutzerdatenstring</strong> gesendet.
 Wenn in diesem zusätzlichen <code class="docutils literal notranslate"><span class="pre">=Benutzerdatenstring</span></code> das Wort itemvalue vorkommt,
 so wird für das Wort itemvalue der Wert des Items ersetzt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">test</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">item1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># sendet per UDP Paket ein Datenpaket mit dem Wert des Items</span><span class="w"></span>
-<span class="w">        </span><span class="nt">nw_udp_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">11.11.11.11:7777</span><span class="w"></span>
+<span class="w">    </span><span class="nt">item1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="c1"># sendet per UDP Paket ein Datenpaket mit dem Wert des Items</span>
+<span class="w">        </span><span class="nt">nw_udp_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">11.11.11.11:7777</span>
 
-<span class="w">    </span><span class="nt">item2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="c1">## sendet per UDP ein Datenpaket mit &#39;Benutzerdatenstring&#39; als Inhalt</span><span class="w"></span>
-<span class="w">        </span><span class="nt">nw_udp_send</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;11.11.11.11:7777=Benutzerdatenstring&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">item2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="c1">## sendet per UDP ein Datenpaket mit &#39;Benutzerdatenstring&#39; als Inhalt</span>
+<span class="w">        </span><span class="nt">nw_udp_send</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;11.11.11.11:7777=Benutzerdatenstring&quot;</span>
 
-<span class="w">    </span><span class="nt">item3</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="c1">## sendet per UDP ein Datenpaket mit &#39;Kommando: &lt;hier der Wert von sh.test.item3&gt;&#39; als Inhalt</span><span class="w"></span>
-<span class="w">        </span><span class="nt">nw_udp_send</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;11.11.11.11:7777=Kommando:</span><span class="nv"> </span><span class="s">itemvalue&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">item3</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="c1">## sendet per UDP ein Datenpaket mit &#39;Kommando: &lt;hier der Wert von sh.test.item3&gt;&#39; als Inhalt</span>
+<span class="w">        </span><span class="nt">nw_udp_send</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;11.11.11.11:7777=Kommando:</span><span class="nv"> </span><span class="s">itemvalue&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -4003,17 +4003,17 @@ Aktuell werden drei Schlüsselworte unterstützt:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">log|loglevel|message</span></code> # loglevel kann <code class="docutils literal notranslate"><span class="pre">info</span></code>, <code class="docutils literal notranslate"><span class="pre">warning</span></code> oder <code class="docutils literal notranslate"><span class="pre">error</span></code> sein</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># sendet ein Datenpaket per UDP um das Item &#39;network.incoming&#39; auf &#39;123&#39; zu setzen</span>
-$ <span class="nb">echo</span> <span class="s2">&quot;item|network.incoming|123&quot;</span> <span class="p">|</span> nc -uw <span class="m">1</span> XX.XX.XX.XX <span class="m">2727</span><span class="sb">`</span>
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;item|network.incoming|123&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>-uw<span class="w"> </span><span class="m">1</span><span class="w"> </span>XX.XX.XX.XX<span class="w"> </span><span class="m">2727</span><span class="sb">`</span>
 
 <span class="c1"># sendet ein Datenpaket per TCP um die Logik &#39;sage&#39; mit &#39;Hallo Welt!&#39; zu triggern</span>
-$ <span class="nb">echo</span> <span class="s2">&quot;logic|sage|Hallo Welt!&quot;</span> <span class="p">|</span> nc -w <span class="m">1</span> XX.XX.XX.XX <span class="m">2727</span><span class="sb">`</span>
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;logic|sage|Hallo Welt!&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>-w<span class="w"> </span><span class="m">1</span><span class="w"> </span>XX.XX.XX.XX<span class="w"> </span><span class="m">2727</span><span class="sb">`</span>
 
 <span class="c1"># sendet ein Datenpaket per UDP um einen Loggingeintrag mit dem Loglevel &#39;warning&#39;</span>
 <span class="c1"># und der Meldung &#39;Internet Verbindung verloren&#39; zu erstellen</span>
-$ <span class="nb">echo</span> <span class="s2">&quot;log|warning|Internet Verbindung verloren&quot;</span> <span class="p">|</span> nc -uw <span class="m">1</span> XX.XX.XX.XX <span class="m">2727</span><span class="sb">`</span>
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;log|warning|Internet Verbindung verloren&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>-uw<span class="w"> </span><span class="m">1</span><span class="w"> </span>XX.XX.XX.XX<span class="w"> </span><span class="m">2727</span><span class="sb">`</span>
 
 <span class="c1"># http Anfrage um das Item  &#39;network.incoming&#39; auf &#39;123&#39; zu setzen</span>
-$ wget <span class="s2">&quot;http://XX.XX.XX.XX:8090/item|network.incoming|123&quot;</span>
+$<span class="w"> </span>wget<span class="w"> </span><span class="s2">&quot;http://XX.XX.XX.XX:8090/item|network.incoming|123&quot;</span>
 </pre></div>
 </div>
 </section>

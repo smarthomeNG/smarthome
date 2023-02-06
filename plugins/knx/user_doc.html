@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a> &raquo;</li>
-      <li>knx</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a></li>
+      <li class="breadcrumb-item active">knx</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3861,23 +3861,23 @@
 <p>Bitte die Dokumentation lesen, die aus den Metadaten der <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> erzeugt wurde.</p>
 <p>Nachfolgend eine Beispielkonfiguration für das Logging der eingehenden KNX Telegramme auf einen separaten
 Logger. Die einzelnen Abschnitte müssen in die <code class="docutils literal notranslate"><span class="pre">logging.yaml</span></code> integriert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">formatters</span><span class="p">:</span><span class="w"></span>
-<span class="hll"><span class="w">   </span><span class="nt">busmonitor</span><span class="p">:</span><span class="w"></span>
-</span><span class="hll"><span class="w">      </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s;%(message)s&#39;</span><span class="w"></span>
-</span><span class="hll"><span class="w">      </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv"> </span><span class="s">%H:%M:%S&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">formatters</span><span class="p">:</span>
+<span class="hll"><span class="w">   </span><span class="nt">busmonitor</span><span class="p">:</span>
+</span><span class="hll"><span class="w">      </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s;%(message)s&#39;</span>
+</span><span class="hll"><span class="w">      </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv"> </span><span class="s">%H:%M:%S&#39;</span>
 </span>
-<span class="nt">handlers</span><span class="p">:</span><span class="w"></span>
-<span class="hll"><span class="w">   </span><span class="nt">busmonitor_file</span><span class="p">:</span><span class="w"></span>
-</span><span class="hll"><span class="w">      </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span><span class="w"></span>
-</span><span class="hll"><span class="w">      </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">busmonitor</span><span class="w"></span>
-</span><span class="hll"><span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span><span class="w"></span>
-</span><span class="hll"><span class="w">      </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"></span>
-</span><span class="hll"><span class="w">      </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/knx_busmonitor.log</span><span class="w"></span>
+<span class="nt">handlers</span><span class="p">:</span>
+<span class="hll"><span class="w">   </span><span class="nt">busmonitor_file</span><span class="p">:</span>
+</span><span class="hll"><span class="w">      </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span>
+</span><span class="hll"><span class="w">      </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">busmonitor</span>
+</span><span class="hll"><span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span>
+</span><span class="hll"><span class="w">      </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+</span><span class="hll"><span class="w">      </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/knx_busmonitor.log</span>
 </span>
-<span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
-<span class="hll"><span class="w">   </span><span class="nt">knx_busmonitor</span><span class="p">:</span><span class="w"></span>
-</span><span class="hll"><span class="w">      </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
-</span><span class="hll"><span class="w">      </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">busmonitor_file</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="nt">loggers</span><span class="p">:</span>
+<span class="hll"><span class="w">   </span><span class="nt">knx_busmonitor</span><span class="p">:</span>
+</span><span class="hll"><span class="w">      </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
+</span><span class="hll"><span class="w">      </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">busmonitor_file</span><span class="p p-Indicator">]</span>
 </span></pre></div>
 </div>
 <p>Mit dieser Konfiguration werde alle busmonitor Mitteilungen in
@@ -3886,32 +3886,32 @@ Logger. Die einzelnen Abschnitte müssen in die <code class="docutils literal no
 <h4>items.yaml<a class="headerlink" href="#items-yaml" title="Permalink to this heading"></a></h4>
 <p>Bitte die Dokumentation lesen, die aus den Metadaten der <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> erzeugt wurde.</p>
 <p>Nachfolgend eine Datei mit Beispielen für Item Definitionen unter Berücksichtigung des KNX Plugins</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">living_room</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">living_room</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">light</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/3</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/4</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/5</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/6</span><span class="w"></span>
+<span class="w">    </span><span class="nt">light</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/3</span>
+<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/4</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/5</span>
+<span class="w">        </span><span class="nt">knx_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/6</span>
 
-<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/6</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/6</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># see 1-Wire plugin</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;28.BBBBB20000&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">T</span><span class="w"></span>
+<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span>
+<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/6</span>
+<span class="w">        </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/6</span>
+<span class="w">        </span><span class="c1"># see 1-Wire plugin</span>
+<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;28.BBBBB20000&#39;</span>
+<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">T</span>
 
-<span class="w">    </span><span class="nt">window</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_poll</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/9</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
+<span class="w">    </span><span class="nt">window</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">knx_poll</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/9</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
 </pre></div>
 </div>
 </section>
@@ -3920,15 +3920,15 @@ Logger. Die einzelnen Abschnitte müssen in die <code class="docutils literal no
 <p>Bitte die Dokumentation lesen, die aus den Metadaten der <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> erzeugt wurde.</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">etc/logics.yaml</span><a class="headerlink" href="#id1" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logic1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/7</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logic1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span>
+<span class="w">    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/7</span>
 
-<span class="nt">logic2</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_reply</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/8</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/8</span><span class="w"></span>
+<span class="nt">logic2</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span>
+<span class="w">    </span><span class="nt">knx_reply</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/8</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/8</span>
 </pre></div>
 </div>
 </div>

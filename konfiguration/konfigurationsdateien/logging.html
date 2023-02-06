@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="konfigdateien.html">Konfiguration über Dateien</a> &raquo;</li>
-      <li>logging.yaml</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="konfigdateien.html">Konfiguration über Dateien</a></li>
+      <li class="breadcrumb-item active">logging.yaml</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3862,268 +3862,268 @@ vorgegeben sind. Einfach diese Datei zu <code class="docutils literal notranslat
 anpassen. Die Konfiguration sollte in etwa so aussehen:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">logging.yaml</span><a class="headerlink" href="#id2" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
-<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="nt">disable_existing_loggers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span>
+<span class="nn">---</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">disable_existing_loggers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 
-<span class="nt">formatters</span><span class="p">:</span><span class="w"></span>
+<span class="nt">formatters</span><span class="p">:</span>
 
-<span class="w">    </span><span class="c1"># The following sections define the output formats to be used in the different logs</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#</span><span class="w"></span>
-<span class="w">    </span><span class="nt">shng_simple</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-19s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># The following sections define the output formats to be used in the different logs</span>
+<span class="w">    </span><span class="c1">#</span>
+<span class="w">    </span><span class="nt">shng_simple</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-19s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span>
+<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span>
 
-<span class="w">    </span><span class="nt">shng_detail1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(module)-17s</span><span class="nv"> </span><span class="s">%(threadName)-12s</span><span class="nv"> </span><span class="s">%(message)s</span><span class="nv">  </span><span class="s">--</span><span class="nv">  </span><span class="s">(%(filename)s:%(funcName)s:%(lineno)d)&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv"> </span><span class="s">%H:%M:%S</span><span class="nv"> </span><span class="s">%Z&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">shng_detail1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(module)-17s</span><span class="nv"> </span><span class="s">%(threadName)-12s</span><span class="nv"> </span><span class="s">%(message)s</span><span class="nv">  </span><span class="s">--</span><span class="nv">  </span><span class="s">(%(filename)s:%(funcName)s:%(lineno)d)&#39;</span>
+<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv"> </span><span class="s">%H:%M:%S</span><span class="nv"> </span><span class="s">%Z&#39;</span>
 
-<span class="w">    </span><span class="nt">shng_detail2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-19s</span><span class="nv"> </span><span class="s">%(module)-19s</span><span class="nv"> </span><span class="s">%(funcName)-12s</span><span class="nv"> </span><span class="s">ln:%(lineno)-3d</span><span class="nv"> </span><span class="s">%(message)s</span><span class="nv">  </span><span class="s">----</span><span class="nv">  </span><span class="s">%(threadName)-12s</span><span class="nv"> </span><span class="s">&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv"> </span><span class="s">%H:%M:%S</span><span class="nv"> </span><span class="s">%Z&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">shng_detail2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-19s</span><span class="nv"> </span><span class="s">%(module)-19s</span><span class="nv"> </span><span class="s">%(funcName)-12s</span><span class="nv"> </span><span class="s">ln:%(lineno)-3d</span><span class="nv"> </span><span class="s">%(message)s</span><span class="nv">  </span><span class="s">----</span><span class="nv">  </span><span class="s">%(threadName)-12s</span><span class="nv"> </span><span class="s">&#39;</span>
+<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv"> </span><span class="s">%H:%M:%S</span><span class="nv"> </span><span class="s">%Z&#39;</span>
 
-<span class="w">    </span><span class="nt">shng_items</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(module)-12s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv"> </span><span class="s">%H:%M:%S&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">shng_items</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(module)-12s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span>
+<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv"> </span><span class="s">%H:%M:%S&#39;</span>
 
-<span class="w">    </span><span class="nt">shng_busmonitor</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># This formatter must be enabled when busmonitor logging from the knx plugin should be used.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s;%(message)s;&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d;%H:%M:%S&#39;</span><span class="w"></span>
-
-
-<span class="nt">filters</span><span class="p">:</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># The following sections define filters that can be used for different logs</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_filter</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># This filter must be enabled when busmonitor logging from the knx plugin should be used.</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># It filters all log entries coming from the logger named knx_busmonitor (that is initialized in the KNX plugin)</span><span class="w"></span>
-<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx_busmonitor</span><span class="w"></span>
-
-<span class="w">    </span><span class="nt">filter_example</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># This filter hides all messages from logger module &quot;item&quot; with messages containing &quot;This is a very nice filter&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span><span class="w"></span>
-<span class="w">        </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">item</span><span class="w"></span>
-<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;This</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">very</span><span class="nv"> </span><span class="s">nice</span><span class="nv"> </span><span class="s">filter&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># The next invert: True parameter would ONLY show messages matching both module and msg parameters and nothing else</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#invert: True</span><span class="w"></span>
+<span class="w">    </span><span class="nt">shng_busmonitor</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This formatter must be enabled when busmonitor logging from the knx plugin should be used.</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s;%(message)s;&#39;</span>
+<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d;%H:%M:%S&#39;</span>
 
 
-<span class="nt">handlers</span><span class="p">:</span><span class="w"></span>
+<span class="nt">filters</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">shng_warnings_file</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># This handler writes only entries with level NOTICE/WARNING and above</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># to the file. This allows for a quick check if all is running smooth.</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># To keep the warnings file easy readable, the level should always be NOTICE!</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># The TimedRotatingFileHandler seperates the logentries by day and</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># keeps the entries of the last seven days in seperate files.</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#class: logging.handlers.TimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.log.ShngTimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NOTICE</span><span class="w"></span>
-<span class="w">        </span><span class="nt">utc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span><span class="w"></span>
-<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-warnings.log</span><span class="w"></span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># The following sections define filters that can be used for different logs</span>
+<span class="w">    </span><span class="c1">#</span>
+<span class="w">    </span><span class="nt">knx_filter</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This filter must be enabled when busmonitor logging from the knx plugin should be used.</span>
+<span class="w">        </span><span class="c1"># It filters all log entries coming from the logger named knx_busmonitor (that is initialized in the KNX plugin)</span>
+<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx_busmonitor</span>
 
-<span class="w">    </span><span class="nt">shng_details_file</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># This handler writes all entries to the details-file. Log entries with level WARNING</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># and above are additionally written to the warnings-file (through the root logger).</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># The TimedRotatingFileHandler seperates the logentries by day and</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># keeps the entries of the last seven days in seperate files.</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#</span><span class="w"></span>
-<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.log.ShngTimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span><span class="w"></span>
-<span class="w">        </span><span class="nt">utc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span><span class="w"></span>
-<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-details.log</span><span class="w"></span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filters</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">knx_filter</span><span class="p p-Indicator">]</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1">#develop_file:</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    # This handler should be used for development purposes. It writes all entries to</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    # the develop-file. Log entries with level WARNING and above are additionally written</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    # to the warnings-file (through the root logger).</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    #</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    # The TimedRotatingFileHandler seperates the logentries by day and</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    # keeps the entries of the last seven days in seperate files.</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    #</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    (): lib.log.ShngTimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    formatter: shng_detail</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    level: DEBUG</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    utc: false</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    when: midnight</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    backupCount: 7</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    filename: ./var/log/smarthome-develop.log</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    encoding: utf8</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    filters: [filter_example]</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1">#shng_busmonitor_file:</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    # This handler must be enabled when busmonitor logging from the knx plugin should be used.</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    #</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    (): lib.log.ShngTimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    formatter: shng_busmonitor</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    level: DEBUG</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    when: midnight</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    backupCount: 7</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    encoding: utf8</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    filename: ./var/log/knx_busmonitor.log</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1">#shng_items_file:</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    # This handler is an example for logging item-value changes to a seperate log file</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    #</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    (): lib.log.ShngTimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    formatter: shng_items</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    when: midnight</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    backupCount: 7</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    filename: ./var/log/item-value-change.log</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#    encoding: utf8</span><span class="w"></span>
-
-<span class="w">    </span><span class="nt">console</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.StreamHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span><span class="w"></span>
-<span class="w">        </span><span class="nt">stream</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ext://sys.stdout</span><span class="w"></span>
-
-<span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># The following default loggers should not be changed. If additional logging</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># is required, a logger for the specific lib, module or plugin shoud be added.</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#</span><span class="w"></span>
-<span class="w">    </span><span class="nt">functions</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
-
-<span class="w">    </span><span class="nt">lib</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG libraries</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NOTICE</span><span class="w"></span>
-
-<span class="w">    </span><span class="nt">lib.smarthome</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Add all logging handlers that should receive the initial log lines after a startup</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># (example below) but leave out the logging handlers that are defined in the root-logger</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># (otherwise log entries will be doubled).</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># 2020-12-29  11:35:34 NOTICE  lib.smarthome   --------------------   Init SmartHomeNG 1.8.0   --------------------</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># 2020-12-29  11:35:34 NOTICE  lib.smarthome   Running in Python interpreter &#39;v3.8.3 final&#39; in virtual environment</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># 2020-12-29  11:35:34 NOTICE  lib.smarthome    - on Linux-4.9.0-6-amd64-x86_64-with-glibc2.17 (pid=24407)</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># 2020-12-29  11:35:35 NOTICE  lib.smarthome    - Nutze Feiertage für Land &#39;DE&#39;, Provinz &#39;HH&#39;, 1 benutzerdefinierte(r) Feiertag(e) definiert</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># 2020-12-29  11:36:54 NOTICE  lib.smarthome   --------------------   SmartHomeNG initialization finished   --------------------</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># logging to shng_details_file is already enabled in logger lib:</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#handlers: [shng_develop_file]</span><span class="w"></span>
-
-<span class="w">        </span><span class="c1"># set to WARNING LEVEL to prevent unwanted log entries and add ONLY start and stop log-messages to further logfiles</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NOTICE</span><span class="w"></span>
-
-<span class="w">    </span><span class="nt">modules</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG modules</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NOTICE</span><span class="w"></span>
-
-<span class="w">    </span><span class="nt">plugins</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG plugins</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># ------------------------------------------</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># plugins.cli:</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     # Example for changing the loglevel for a specific plugin (cli plugin)</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     # a handler should only be specified, if logging should be done to</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     # another destination, otherwise duplicate log entries could be produced.</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     level: INFO</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># ------------------------------------------</span><span class="w"></span>
-
-<span class="w">    </span><span class="nt">logics</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG logics</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># to change the loglevel for all logics, the level can be changed.</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># Alternatively individual loggers for certain logics can be added.</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># logics.ex_logging:</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     # Example of a logger for a specific logic (configured as ex_logging in logics.yaml)</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     #</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     level: INFO</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># logics.ex_logging2:</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     # Example of a logger for a specific logic (configured as ex_logging2 in logics.yaml)</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     # This logger logs info for the logic to another file (logics_file). (WARNINGs will still be</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     # logged to shng_details_file.</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     #</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     handlers: [logics_file]</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     level: INFO</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># ------------------------------------------</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># items.temperatures:</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     # Logging items with configuration: log_change: temperatures</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     #</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     handlers: [shng_details_file]</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     level: INFO</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># items.new_device:</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     # Logging items with configuration: log_change: new_device</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     # to a different file</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     #</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     handlers: [shng_items_file]</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     level: DEBUG</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># ------------------------------------------</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># knx_busmonitor:</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     # This logger must be enabled when busmonitor logging from the knx plugin should be used.</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     level: INFO</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     handlers: [shng_busmonitor_file]</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># ------------------------------------------</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># Some Python packages log to loggers defined by the package itself. Such</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># loggers could be configured analog to the other loggers described above.</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Some Examples are listed below.</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># cherrypy.error:</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     # Error logging for the cherrypy package</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     handlers: [shng_details_file]</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     level: INFO</span><span class="w"></span>
-
-<span class="w">    </span><span class="c1"># jinja2:</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     # Logger for the Jinja2 template engine</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     handlers: [shng_details_file]</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#     level: INFO</span><span class="w"></span>
+<span class="w">    </span><span class="nt">filter_example</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This filter hides all messages from logger module &quot;item&quot; with messages containing &quot;This is a very nice filter&quot;</span>
+<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span>
+<span class="w">        </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">item</span>
+<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;This</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">very</span><span class="nv"> </span><span class="s">nice</span><span class="nv"> </span><span class="s">filter&quot;</span>
+<span class="w">        </span><span class="c1"># The next invert: True parameter would ONLY show messages matching both module and msg parameters and nothing else</span>
+<span class="w">        </span><span class="c1">#invert: True</span>
 
 
-<span class="w">    </span><span class="c1"># ================</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># special loggers</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># ----------------</span><span class="w"></span>
+<span class="nt">handlers</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">__main__</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span><span class="w"></span>
+<span class="w">    </span><span class="nt">shng_warnings_file</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This handler writes only entries with level NOTICE/WARNING and above</span>
+<span class="w">        </span><span class="c1"># to the file. This allows for a quick check if all is running smooth.</span>
+<span class="w">        </span><span class="c1">#</span>
+<span class="w">        </span><span class="c1"># To keep the warnings file easy readable, the level should always be NOTICE!</span>
+<span class="w">        </span><span class="c1">#</span>
+<span class="w">        </span><span class="c1"># The TimedRotatingFileHandler seperates the logentries by day and</span>
+<span class="w">        </span><span class="c1"># keeps the entries of the last seven days in seperate files.</span>
+<span class="w">        </span><span class="c1">#</span>
+<span class="w">        </span><span class="c1">#class: logging.handlers.TimedRotatingFileHandler</span>
+<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.log.ShngTimedRotatingFileHandler</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NOTICE</span>
+<span class="w">        </span><span class="nt">utc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span>
+<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-warnings.log</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span>
+
+<span class="w">    </span><span class="nt">shng_details_file</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This handler writes all entries to the details-file. Log entries with level WARNING</span>
+<span class="w">        </span><span class="c1"># and above are additionally written to the warnings-file (through the root logger).</span>
+<span class="w">        </span><span class="c1">#</span>
+<span class="w">        </span><span class="c1"># The TimedRotatingFileHandler seperates the logentries by day and</span>
+<span class="w">        </span><span class="c1"># keeps the entries of the last seven days in seperate files.</span>
+<span class="w">        </span><span class="c1">#</span>
+<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.log.ShngTimedRotatingFileHandler</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+<span class="w">        </span><span class="nt">utc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span>
+<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-details.log</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span>
+<span class="w">        </span><span class="nt">filters</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">knx_filter</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="c1">#develop_file:</span>
+<span class="w">    </span><span class="c1">#    # This handler should be used for development purposes. It writes all entries to</span>
+<span class="w">    </span><span class="c1">#    # the develop-file. Log entries with level WARNING and above are additionally written</span>
+<span class="w">    </span><span class="c1">#    # to the warnings-file (through the root logger).</span>
+<span class="w">    </span><span class="c1">#    #</span>
+<span class="w">    </span><span class="c1">#    # The TimedRotatingFileHandler seperates the logentries by day and</span>
+<span class="w">    </span><span class="c1">#    # keeps the entries of the last seven days in seperate files.</span>
+<span class="w">    </span><span class="c1">#    #</span>
+<span class="w">    </span><span class="c1">#    (): lib.log.ShngTimedRotatingFileHandler</span>
+<span class="w">    </span><span class="c1">#    formatter: shng_detail</span>
+<span class="w">    </span><span class="c1">#    level: DEBUG</span>
+<span class="w">    </span><span class="c1">#    utc: false</span>
+<span class="w">    </span><span class="c1">#    when: midnight</span>
+<span class="w">    </span><span class="c1">#    backupCount: 7</span>
+<span class="w">    </span><span class="c1">#    filename: ./var/log/smarthome-develop.log</span>
+<span class="w">    </span><span class="c1">#    encoding: utf8</span>
+<span class="w">    </span><span class="c1">#    filters: [filter_example]</span>
+
+<span class="w">    </span><span class="c1">#shng_busmonitor_file:</span>
+<span class="w">    </span><span class="c1">#    # This handler must be enabled when busmonitor logging from the knx plugin should be used.</span>
+<span class="w">    </span><span class="c1">#    #</span>
+<span class="w">    </span><span class="c1">#    (): lib.log.ShngTimedRotatingFileHandler</span>
+<span class="w">    </span><span class="c1">#    formatter: shng_busmonitor</span>
+<span class="w">    </span><span class="c1">#    level: DEBUG</span>
+<span class="w">    </span><span class="c1">#    when: midnight</span>
+<span class="w">    </span><span class="c1">#    backupCount: 7</span>
+<span class="w">    </span><span class="c1">#    encoding: utf8</span>
+<span class="w">    </span><span class="c1">#    filename: ./var/log/knx_busmonitor.log</span>
+
+<span class="w">    </span><span class="c1">#shng_items_file:</span>
+<span class="w">    </span><span class="c1">#    # This handler is an example for logging item-value changes to a seperate log file</span>
+<span class="w">    </span><span class="c1">#    #</span>
+<span class="w">    </span><span class="c1">#    (): lib.log.ShngTimedRotatingFileHandler</span>
+<span class="w">    </span><span class="c1">#    formatter: shng_items</span>
+<span class="w">    </span><span class="c1">#    when: midnight</span>
+<span class="w">    </span><span class="c1">#    backupCount: 7</span>
+<span class="w">    </span><span class="c1">#    filename: ./var/log/item-value-change.log</span>
+<span class="w">    </span><span class="c1">#    encoding: utf8</span>
+
+<span class="w">    </span><span class="nt">console</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.StreamHandler</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span>
+<span class="w">        </span><span class="nt">stream</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ext://sys.stdout</span>
+
+<span class="nt">loggers</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># The following default loggers should not be changed. If additional logging</span>
+<span class="w">    </span><span class="c1"># is required, a logger for the specific lib, module or plugin shoud be added.</span>
+<span class="w">    </span><span class="c1">#</span>
+<span class="w">    </span><span class="nt">functions</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
+
+<span class="w">    </span><span class="nt">lib</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG libraries</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NOTICE</span>
+
+<span class="w">    </span><span class="nt">lib.smarthome</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># Add all logging handlers that should receive the initial log lines after a startup</span>
+<span class="w">        </span><span class="c1"># (example below) but leave out the logging handlers that are defined in the root-logger</span>
+<span class="w">        </span><span class="c1"># (otherwise log entries will be doubled).</span>
+<span class="w">        </span><span class="c1">#</span>
+<span class="w">        </span><span class="c1"># 2020-12-29  11:35:34 NOTICE  lib.smarthome   --------------------   Init SmartHomeNG 1.8.0   --------------------</span>
+<span class="w">        </span><span class="c1"># 2020-12-29  11:35:34 NOTICE  lib.smarthome   Running in Python interpreter &#39;v3.8.3 final&#39; in virtual environment</span>
+<span class="w">        </span><span class="c1"># 2020-12-29  11:35:34 NOTICE  lib.smarthome    - on Linux-4.9.0-6-amd64-x86_64-with-glibc2.17 (pid=24407)</span>
+<span class="w">        </span><span class="c1"># 2020-12-29  11:35:35 NOTICE  lib.smarthome    - Nutze Feiertage für Land &#39;DE&#39;, Provinz &#39;HH&#39;, 1 benutzerdefinierte(r) Feiertag(e) definiert</span>
+<span class="w">        </span><span class="c1"># 2020-12-29  11:36:54 NOTICE  lib.smarthome   --------------------   SmartHomeNG initialization finished   --------------------</span>
+<span class="w">        </span><span class="c1">#</span>
+<span class="w">        </span><span class="c1"># logging to shng_details_file is already enabled in logger lib:</span>
+<span class="w">        </span><span class="c1">#handlers: [shng_develop_file]</span>
+
+<span class="w">        </span><span class="c1"># set to WARNING LEVEL to prevent unwanted log entries and add ONLY start and stop log-messages to further logfiles</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NOTICE</span>
+
+<span class="w">    </span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG modules</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NOTICE</span>
+
+<span class="w">    </span><span class="nt">plugins</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG plugins</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+
+<span class="w">    </span><span class="c1"># ------------------------------------------</span>
+
+<span class="w">    </span><span class="c1"># plugins.cli:</span>
+<span class="w">    </span><span class="c1">#     # Example for changing the loglevel for a specific plugin (cli plugin)</span>
+<span class="w">    </span><span class="c1">#     # a handler should only be specified, if logging should be done to</span>
+<span class="w">    </span><span class="c1">#     # another destination, otherwise duplicate log entries could be produced.</span>
+<span class="w">    </span><span class="c1">#     level: INFO</span>
+
+<span class="w">    </span><span class="c1"># ------------------------------------------</span>
+
+<span class="w">    </span><span class="nt">logics</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># Default logger for SmartHomeNG logics</span>
+<span class="w">        </span><span class="c1"># to change the loglevel for all logics, the level can be changed.</span>
+<span class="w">        </span><span class="c1"># Alternatively individual loggers for certain logics can be added.</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+
+<span class="w">    </span><span class="c1"># logics.ex_logging:</span>
+<span class="w">    </span><span class="c1">#     # Example of a logger for a specific logic (configured as ex_logging in logics.yaml)</span>
+<span class="w">    </span><span class="c1">#     #</span>
+<span class="w">    </span><span class="c1">#     level: INFO</span>
+
+<span class="w">    </span><span class="c1"># logics.ex_logging2:</span>
+<span class="w">    </span><span class="c1">#     # Example of a logger for a specific logic (configured as ex_logging2 in logics.yaml)</span>
+<span class="w">    </span><span class="c1">#     # This logger logs info for the logic to another file (logics_file). (WARNINGs will still be</span>
+<span class="w">    </span><span class="c1">#     # logged to shng_details_file.</span>
+<span class="w">    </span><span class="c1">#     #</span>
+<span class="w">    </span><span class="c1">#     handlers: [logics_file]</span>
+<span class="w">    </span><span class="c1">#     level: INFO</span>
+
+<span class="w">    </span><span class="c1"># ------------------------------------------</span>
+
+<span class="w">    </span><span class="c1"># items.temperatures:</span>
+<span class="w">    </span><span class="c1">#     # Logging items with configuration: log_change: temperatures</span>
+<span class="w">    </span><span class="c1">#     #</span>
+<span class="w">    </span><span class="c1">#     handlers: [shng_details_file]</span>
+<span class="w">    </span><span class="c1">#     level: INFO</span>
+
+<span class="w">    </span><span class="c1"># items.new_device:</span>
+<span class="w">    </span><span class="c1">#     # Logging items with configuration: log_change: new_device</span>
+<span class="w">    </span><span class="c1">#     # to a different file</span>
+<span class="w">    </span><span class="c1">#     #</span>
+<span class="w">    </span><span class="c1">#     handlers: [shng_items_file]</span>
+<span class="w">    </span><span class="c1">#     level: DEBUG</span>
+
+<span class="w">    </span><span class="c1"># ------------------------------------------</span>
+
+<span class="w">    </span><span class="c1"># knx_busmonitor:</span>
+<span class="w">    </span><span class="c1">#     # This logger must be enabled when busmonitor logging from the knx plugin should be used.</span>
+<span class="w">    </span><span class="c1">#     level: INFO</span>
+<span class="w">    </span><span class="c1">#     handlers: [shng_busmonitor_file]</span>
+
+<span class="w">    </span><span class="c1"># ------------------------------------------</span>
+
+<span class="w">    </span><span class="c1"># Some Python packages log to loggers defined by the package itself. Such</span>
+<span class="w">    </span><span class="c1"># loggers could be configured analog to the other loggers described above.</span>
+<span class="w">    </span><span class="c1"># Some Examples are listed below.</span>
+<span class="w">    </span><span class="c1">#</span>
+
+<span class="w">    </span><span class="c1"># cherrypy.error:</span>
+<span class="w">    </span><span class="c1">#     # Error logging for the cherrypy package</span>
+<span class="w">    </span><span class="c1">#     handlers: [shng_details_file]</span>
+<span class="w">    </span><span class="c1">#     level: INFO</span>
+
+<span class="w">    </span><span class="c1"># jinja2:</span>
+<span class="w">    </span><span class="c1">#     # Logger for the Jinja2 template engine</span>
+<span class="w">    </span><span class="c1">#</span>
+<span class="w">    </span><span class="c1">#     handlers: [shng_details_file]</span>
+<span class="w">    </span><span class="c1">#     level: INFO</span>
 
 
-<span class="nt">root</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># This is the configuration of the root logger. Additionally to be written to other logs,</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># ALL entries are handed to this logger. To keep the warnings file easy readable,</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># the level should always be WARNING!</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Logging of details (level INFO and DEBUG) should be handled by other loggers and written</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># to other log files than the warnings file.</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#</span><span class="w"></span>
-<span class="w">    </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span><span class="w"></span>
-<span class="w">    </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_warnings_file</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># ================</span>
+<span class="w">    </span><span class="c1"># special loggers</span>
+<span class="w">    </span><span class="c1"># ----------------</span>
+
+<span class="w">    </span><span class="nt">__main__</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+
+
+<span class="nt">root</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># This is the configuration of the root logger. Additionally to be written to other logs,</span>
+<span class="w">    </span><span class="c1"># ALL entries are handed to this logger. To keep the warnings file easy readable,</span>
+<span class="w">    </span><span class="c1"># the level should always be WARNING!</span>
+<span class="w">    </span><span class="c1">#</span>
+<span class="w">    </span><span class="c1"># Logging of details (level INFO and DEBUG) should be handled by other loggers and written</span>
+<span class="w">    </span><span class="c1"># to other log files than the warnings file.</span>
+<span class="w">    </span><span class="c1">#</span>
+<span class="w">    </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+<span class="w">    </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_warnings_file</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </div>

@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_web.html">Web/Cloud Plugins</a> &raquo;</li>
-      <li>telegram</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_web.html">Web/Cloud Plugins</a></li>
+      <li class="breadcrumb-item active">telegram</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3913,22 +3913,22 @@ in der Nachricht zu verwenden.</p>
 <p>[ID] [NAME] [VALUE] [CALLER] [SOURCE] [DEST]</p>
 <section id="einfaches-beispiel">
 <h4>Einfaches Beispiel<a class="headerlink" href="#einfaches-beispiel" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Tuerklingel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Türklingel (entprellt)</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Es</span><span class="nv"> </span><span class="s">klingelt</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">der</span><span class="nv"> </span><span class="s">Tür&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Tuerklingel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Türklingel (entprellt)</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">telegram_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Es</span><span class="nv"> </span><span class="s">klingelt</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">der</span><span class="nv"> </span><span class="s">Tür&#39;</span>
 </pre></div>
 </div>
 </section>
 <section id="beispiel-mit-platzhaltern">
 <h4>Beispiel mit Platzhaltern<a class="headerlink" href="#beispiel-mit-platzhaltern" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">state_name</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name des aktuellen Zustands</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;New</span><span class="nv"> </span><span class="s">AutoBlind</span><span class="nv"> </span><span class="s">state:</span><span class="nv"> </span><span class="s">[VALUE]&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">state_name</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name des aktuellen Zustands</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span>
+<span class="w">    </span><span class="nt">telegram_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;New</span><span class="nv"> </span><span class="s">AutoBlind</span><span class="nv"> </span><span class="s">state:</span><span class="nv"> </span><span class="s">[VALUE]&#39;</span>
 </pre></div>
 </div>
 </section>
@@ -3939,13 +3939,13 @@ in der Nachricht zu verwenden.</p>
 Um das zu verhindern, kann einem Item das Attribut <code class="docutils literal notranslate"><span class="pre">telegram_condition:</span> <span class="pre">on_change</span></code> zugewiesen werden.</p>
 <section id="id1">
 <h4>Einfaches Beispiel<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Tuerklingel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Es</span><span class="nv"> </span><span class="s">klingelt</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">der</span><span class="nv"> </span><span class="s">Tür&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on_change</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_value_match_regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(true|True|1)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Tuerklingel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">    </span><span class="nt">telegram_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Es</span><span class="nv"> </span><span class="s">klingelt</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">der</span><span class="nv"> </span><span class="s">Tür&#39;</span>
+<span class="w">    </span><span class="nt">telegram_condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on_change</span>
+<span class="w">    </span><span class="nt">telegram_value_match_regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(true|True|1)</span>
 </pre></div>
 </div>
 <p>Dadurch wird auf eine mehrfache Zuweisung des Items mit dem Wert <code class="docutils literal notranslate"><span class="pre">True</span></code> nur einmal mit einer Nachricht reagiert. Um eine weitere Nachricht zu generieren
@@ -3959,16 +3959,16 @@ auf <code class="docutils literal notranslate"><span class="pre">False</span></c
 Nachricht gesendet wird. Geprüft wird gegen/mit den Regex, der als Parameterwert angegeben ist.</p>
 <section id="beispiel">
 <h4>Beispiel<a class="headerlink" href="#beispiel" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">TestNum</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;TestNum:</span><span class="nv"> </span><span class="s">[VALUE]&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_value_match_regex</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[0-1][0-9]&#39;</span><span class="w"> </span><span class="c1"># nur Nachrichten senden wenn Zahlen von 0 - 19</span><span class="w"></span>
-<span class="nt">TestBool</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TestBool:</span><span class="nv"> </span><span class="s">[VALUE]&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_value_match_regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">            </span><span class="c1"># nur Nachricht senden wenn 1 (True)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">TestNum</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">    </span><span class="nt">telegram_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;TestNum:</span><span class="nv"> </span><span class="s">[VALUE]&#39;</span>
+<span class="w">    </span><span class="nt">telegram_value_match_regex</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[0-1][0-9]&#39;</span><span class="w"> </span><span class="c1"># nur Nachrichten senden wenn Zahlen von 0 - 19</span>
+<span class="nt">TestBool</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">    </span><span class="nt">telegram_message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TestBool:</span><span class="nv"> </span><span class="s">[VALUE]&quot;</span>
+<span class="w">    </span><span class="nt">telegram_value_match_regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">            </span><span class="c1"># nur Nachricht senden wenn 1 (True)</span>
 </pre></div>
 </div>
 </section>
@@ -3979,13 +3979,13 @@ Nachricht gesendet wird. Geprüft wird gegen/mit den Regex, der als Parameterwer
 Ist das Attribut nicht gesetzt, erfolgt der Versand der Nachricht an alle Chat-IDs, die dem Plugin bekannt sind.</p>
 <section id="id2">
 <h4>Einfaches Beispiel<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Tuerklingel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Es</span><span class="nv"> </span><span class="s">klingelt</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">der</span><span class="nv"> </span><span class="s">Tür&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_message_chat_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3234123342</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_value_match_regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(true|True|1)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Tuerklingel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">    </span><span class="nt">telegram_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Es</span><span class="nv"> </span><span class="s">klingelt</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">der</span><span class="nv"> </span><span class="s">Tür&#39;</span>
+<span class="w">    </span><span class="nt">telegram_message_chat_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3234123342</span>
+<span class="w">    </span><span class="nt">telegram_value_match_regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(true|True|1)</span>
 </pre></div>
 </div>
 </section>
@@ -3998,23 +3998,23 @@ Bei Auswahl eines dieser Kommandos im Telegram Client wird dann für jedes Item,
 der Wert des Items ausgegeben.</p>
 <section id="id3">
 <h4>Beispiel<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Aussentemperatur</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aussentemperatur in °C</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetter</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Aussentemperatur</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aussentemperatur in °C</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span>
+<span class="w">    </span><span class="nt">telegram_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetter</span>
 
-<span class="nt">Wind_kmh</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Windgeschwindigkeit in kmh</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetter</span><span class="w"></span>
+<span class="nt">Wind_kmh</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Windgeschwindigkeit in kmh</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span>
+<span class="w">    </span><span class="nt">telegram_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetter</span>
 
-<span class="nt">Raumtemperatur</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur Wohnzimmer in °C</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtr_ist</span><span class="w"></span>
+<span class="nt">Raumtemperatur</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur Wohnzimmer in °C</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9</span>
+<span class="w">    </span><span class="nt">telegram_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtr_ist</span>
 </pre></div>
 </div>
 <p>Das Kommando <code class="docutils literal notranslate"><span class="pre">/info</span></code> veranlasst den Bot zu antworten mit</p>
@@ -4037,10 +4037,10 @@ der Wert des Items ausgegeben.</p>
 <p>Items mit dem Attribut <code class="docutils literal notranslate"><span class="pre">telegram_text</span></code> und dem Attributwert <code class="docutils literal notranslate"><span class="pre">True</span></code> bekommen eine Mitteilung, die von einem Telegram Client an den Bot gesendet wird, als Wert zugewiesen.</p>
 <section id="id4">
 <h4>Beispiel<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">telegram_message</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Textnachricht von Telegram</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">    </span><span class="nt">telegram_text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">telegram_message</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Textnachricht von Telegram</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">    </span><span class="nt">telegram_text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
 <p>Nach der Eingabe von <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">world!</span></code> am Telegram wird das Item <code class="docutils literal notranslate"><span class="pre">telegram_message</span></code>

@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Systemair</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Systemair</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3905,12 +3905,12 @@ You use this plugin at your own risk. Please check the official Modbus document 
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Systemair</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Systemair</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.systemair</span><span class="w"></span>
-<span class="w">    </span><span class="nt">serialport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB0</span><span class="w">    </span><span class="c1"># serial port of modbus device</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># slave_address: 1 # default: 1</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># update_cycle: 30 # default: 30sec</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Systemair</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Systemair</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.systemair</span>
+<span class="w">    </span><span class="nt">serialport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB0</span><span class="w">    </span><span class="c1"># serial port of modbus device</span>
+<span class="w">    </span><span class="c1"># slave_address: 1 # default: 1</span>
+<span class="w">    </span><span class="c1"># update_cycle: 30 # default: 30sec</span>
 </pre></div>
 </div>
 </section>
@@ -3921,161 +3921,161 @@ To get all possible register open the ‚systemair.yaml‘ in the plugin folder.
 </section>
 <section id="example">
 <h3>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lueftergeschwindigkeit</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read/write</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 0: Aus</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 1: Langsame Geschwindigkeit</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 2: Mittlere Geschwindigkeit</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 3: Schnelle Geschwindigkeit</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">101</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lueftergeschwindigkeit</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read/write</span>
+<span class="w">    </span><span class="c1"># 0: Aus</span>
+<span class="w">    </span><span class="c1"># 1: Langsame Geschwindigkeit</span>
+<span class="w">    </span><span class="c1"># 2: Mittlere Geschwindigkeit</span>
+<span class="w">    </span><span class="c1"># 3: Schnelle Geschwindigkeit</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">101</span>
 
-<span class="nt">Luefterdrehzahl_Zuluft</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># in Umdrehung pro Minute</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">111</span><span class="w"></span>
+<span class="nt">Luefterdrehzahl_Zuluft</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># in Umdrehung pro Minute</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">111</span>
 
-<span class="nt">Luefterdrehzahl_Abluft</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># in Umdrehung pro Minute</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">112</span><span class="w"></span>
+<span class="nt">Luefterdrehzahl_Abluft</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># in Umdrehung pro Minute</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">112</span>
 
-<span class="nt">Frostschutzlevel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read/write</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Frotschutzlevel, erlaubte Werte: 70,80,90,100,110,120 = 7,8,9,10,11,12°C</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">206</span><span class="w"></span>
+<span class="nt">Frostschutzlevel</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read/write</span>
+<span class="w">    </span><span class="c1"># Frotschutzlevel, erlaubte Werte: 70,80,90,100,110,120 = 7,8,9,10,11,12°C</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">206</span>
 
-<span class="nt">Sollwerttemperatur_Heizregister</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read/write</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Sollwerttemperatur des Heizregisters</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Werte 0 - 5 beziehen sich auf die Temperaturen von Temperaturlevel1_Heizregister bis Temperaturlevel5_Heizregister</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># anders als die offizielle Beschreibung: Wert 0 ist die Temp. von Temperaturlevel1_Heizregister, 1 von Temperaturlevel2_Heizregister usw.</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Weitere Werte je nach Gerät (6-29) möglich</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># in Grad Celsius 0:0, 1:12, 2:13, 3:14, 4:15, 5:16, 6:17, 7:18, 8:19, 9:20, 10:21, 11:22 usw.</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">207</span><span class="w"></span>
-<span class="w">    </span><span class="nt">mod_write</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
+<span class="nt">Sollwerttemperatur_Heizregister</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read/write</span>
+<span class="w">    </span><span class="c1"># Sollwerttemperatur des Heizregisters</span>
+<span class="w">    </span><span class="c1"># Werte 0 - 5 beziehen sich auf die Temperaturen von Temperaturlevel1_Heizregister bis Temperaturlevel5_Heizregister</span>
+<span class="w">    </span><span class="c1"># anders als die offizielle Beschreibung: Wert 0 ist die Temp. von Temperaturlevel1_Heizregister, 1 von Temperaturlevel2_Heizregister usw.</span>
+<span class="w">    </span><span class="c1"># Weitere Werte je nach Gerät (6-29) möglich</span>
+<span class="w">    </span><span class="c1"># in Grad Celsius 0:0, 1:12, 2:13, 3:14, 4:15, 5:16, 6:17, 7:18, 8:19, 9:20, 10:21, 11:22 usw.</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">207</span>
+<span class="w">    </span><span class="nt">mod_write</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
 
-<span class="nt">Isttemperatur_Heizregister</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">208</span><span class="w"></span>
+<span class="nt">Isttemperatur_Heizregister</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">208</span>
 
-<span class="nt">Temperatursensor_1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">214</span><span class="w"></span>
+<span class="nt">Temperatursensor_1</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">214</span>
 
-<span class="nt">Temperatursensor_2</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">215</span><span class="w"></span>
+<span class="nt">Temperatursensor_2</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">215</span>
 
-<span class="nt">Temperatursensor_3</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">216</span><span class="w"></span>
+<span class="nt">Temperatursensor_3</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">216</span>
 
-<span class="nt">Temperatursensor_4</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">217</span><span class="w"></span>
+<span class="nt">Temperatursensor_4</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">217</span>
 
-<span class="nt">Temperatursensor_5</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">218</span><span class="w"></span>
+<span class="nt">Temperatursensor_5</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">218</span>
 
-<span class="nt">Wochenprogramm_Aktiv</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 0: aus, 1: ein</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">coil_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6401</span><span class="w"></span>
+<span class="nt">Wochenprogramm_Aktiv</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="c1"># 0: aus, 1: ein</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">coil_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6401</span>
 
-<span class="nt">Filter_Wechselzeitraum</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read/write</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Wert in Monaten</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">601</span><span class="w"></span>
+<span class="nt">Filter_Wechselzeitraum</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read/write</span>
+<span class="w">    </span><span class="c1"># Wert in Monaten</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">601</span>
 
-<span class="nt">Filter_Verbrauchte_Zeit</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read/write</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Wert in Tagen</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">602</span><span class="w"></span>
+<span class="nt">Filter_Verbrauchte_Zeit</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read/write</span>
+<span class="w">    </span><span class="c1"># Wert in Tagen</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">602</span>
 
-<span class="nt">Defroster_Status</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Werte:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 0: No defrosting ongoing, 1: Reduced flow defrosting, 2: Bypass defrosting, 3: Stop defrosting</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">651</span><span class="w"></span>
+<span class="nt">Defroster_Status</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="c1"># Werte:</span>
+<span class="w">    </span><span class="c1"># 0: No defrosting ongoing, 1: Reduced flow defrosting, 2: Bypass defrosting, 3: Stop defrosting</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_regaddr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">651</span>
 
-<span class="nt">Alarm_Filter</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Werte:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12801</span><span class="w"></span>
+<span class="nt">Alarm_Filter</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="c1"># Werte:</span>
+<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12801</span>
 
-<span class="nt">Alarm_Luefter</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Werte</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12802</span><span class="w"></span>
+<span class="nt">Alarm_Luefter</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="c1"># Werte</span>
+<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12802</span>
 
-<span class="nt">Alarm_Rotor</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Werte</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12804</span><span class="w"></span>
+<span class="nt">Alarm_Rotor</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="c1"># Werte</span>
+<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12804</span>
 
-<span class="nt">Alarm_Frost</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Werte</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12805</span><span class="w"></span>
+<span class="nt">Alarm_Frost</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="c1"># Werte</span>
+<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12805</span>
 
-<span class="nt">Alarm_PCU</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Werte</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12806</span><span class="w"></span>
+<span class="nt">Alarm_PCU</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="c1"># Werte</span>
+<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12806</span>
 
-<span class="nt">Alarm_Temperatursensor</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Werte</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12807</span><span class="w"></span>
+<span class="nt">Alarm_Temperatursensor</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="c1"># Werte</span>
+<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12807</span>
 
-<span class="nt">Alarm_Notfallthermostat</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Werte</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12808</span><span class="w"></span>
+<span class="nt">Alarm_Notfallthermostat</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="c1"># Werte</span>
+<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12808</span>
 
-<span class="nt">Alarm_Lueftungsklappe</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Werte</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12809</span><span class="w"></span>
+<span class="nt">Alarm_Lueftungsklappe</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="c1"># Werte</span>
+<span class="w">    </span><span class="c1"># 0: Alarm nicht aktiv, 1: Alarm aktiv</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12809</span>
 
-<span class="nt">Alarm_Relais_Aktiv</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># read</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Werte</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># 0: Relais nicht aktiv, 1: Relais aktiv</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12817</span><span class="w"></span>
+<span class="nt">Alarm_Relais_Aktiv</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># read</span>
+<span class="w">    </span><span class="c1"># Werte</span>
+<span class="w">    </span><span class="c1"># 0: Relais nicht aktiv, 1: Relais aktiv</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">systemair_coiladdr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12817</span>
 </pre></div>
 </div>
 </section>

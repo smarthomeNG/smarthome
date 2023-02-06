@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-      <li>Plugins</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+      <li class="breadcrumb-item active">Plugins</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3857,15 +3857,15 @@ ist ein Zusatzmodul in einem Unterverzeichnis unterhalb des Verzeichnisses <stro
 Um ein Plugin in SmartHomeNG zu verwenden (eine Instanz des Plugins zu laden) muss eine Sektion
 für das gewünschte Plugin in der Datei <strong>etc/plugin.conf</strong> erstellt werden.</p>
 <p>Für das oft benutzte KNX-Plugin sieht das z.B. so aus:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span><span class="w"></span>
-<span class="nt">knx</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx</span><span class="w"></span>
-<span class="c1">#    instance: knx_1</span><span class="w"></span>
-<span class="c1">#    host: 127.0.0.1</span><span class="w"></span>
-<span class="c1">#    port: 6720</span><span class="w"></span>
-<span class="w">    </span><span class="nt">send_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span><span class="w">    </span><span class="c1"># update date/time every 600 seconds, default none</span><span class="w"></span>
-<span class="w">    </span><span class="nt">time_ga</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8/0/0</span><span class="w"></span>
-<span class="w">    </span><span class="nt">date_ga</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8/0/1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span>
+<span class="nt">knx</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx</span>
+<span class="c1">#    instance: knx_1</span>
+<span class="c1">#    host: 127.0.0.1</span>
+<span class="c1">#    port: 6720</span>
+<span class="w">    </span><span class="nt">send_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span><span class="w">    </span><span class="c1"># update date/time every 600 seconds, default none</span>
+<span class="w">    </span><span class="nt">time_ga</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8/0/0</span>
+<span class="w">    </span><span class="nt">date_ga</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8/0/1</span>
 </pre></div>
 </div>
 <p>bzw. im alten Format:</p>
@@ -3946,22 +3946,22 @@ beachten. Dann wird ein solches Plugin konfiguriert wie alle andern Plugins auch
 eine Information hinterlegt werden, auf welche Instanz des Plugins sich das Item bezieht. Dazu
 <strong>muss</strong> jeder Instanz ein eindeutiger Name gegeben werden. Das erfolgt in der <strong>../etc/plugin.yaml</strong>
 dadurch, dass jeder Instanz ein Parameter <strong>instance</strong> hinzugefügt wird:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fritzbox_1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fb6360</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fritzbox_1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fb6360</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 
-<span class="nt">fritzbox_2</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fb7490</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="nt">fritzbox_2</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fb7490</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </pre></div>
 </div>
 <p>Außerdem muss jedem Item die Information mitgegeben werden, auf welche Instanz sich das Item bezieht:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">wan</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">connection_status</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">avm_data_type@fb7490</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wan_connection_status</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">wan</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">connection_status</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">avm_data_type@fb7490</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wan_connection_status</span>
 </pre></div>
 </div>
 <p>Wenn ein Item mehrere Attribute nutzt, die das Plugin zur Verfügung stellt, ist als Grundregel

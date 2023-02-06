@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Influxdb</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Influxdb</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3888,43 +3888,43 @@
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
 <p>you can setup global tags and fields (JSON encoded)</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">influxdb</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InfluxDB</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.influxdb</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># host: localhost</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># udp_port: 8089</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># keyword: influxdb</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># value_field: value</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># write_http: True</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># http_port: 8086</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{&quot;key&quot;:</span><span class="nv"> </span><span class="s">&quot;value&quot;,</span><span class="nv"> </span><span class="s">&quot;foo&quot;:</span><span class="nv"> </span><span class="s">&quot;bar&quot;}&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">fields</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{&quot;key&quot;:</span><span class="nv"> </span><span class="s">&quot;value&quot;,</span><span class="nv"> </span><span class="s">&quot;foo&quot;:</span><span class="nv"> </span><span class="s">&quot;bar&quot;}&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">influxdb</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InfluxDB</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.influxdb</span>
+<span class="w">    </span><span class="c1"># host: localhost</span>
+<span class="w">    </span><span class="c1"># udp_port: 8089</span>
+<span class="w">    </span><span class="c1"># keyword: influxdb</span>
+<span class="w">    </span><span class="c1"># value_field: value</span>
+<span class="w">    </span><span class="c1"># write_http: True</span>
+<span class="w">    </span><span class="c1"># http_port: 8086</span>
+<span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{&quot;key&quot;:</span><span class="nv"> </span><span class="s">&quot;value&quot;,</span><span class="nv"> </span><span class="s">&quot;foo&quot;:</span><span class="nv"> </span><span class="s">&quot;bar&quot;}&#39;</span>
+<span class="w">    </span><span class="nt">fields</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{&quot;key&quot;:</span><span class="nv"> </span><span class="s">&quot;value&quot;,</span><span class="nv"> </span><span class="s">&quot;foo&quot;:</span><span class="nv"> </span><span class="s">&quot;bar&quot;}&#39;</span>
 </pre></div>
 </div>
 </section>
 <section id="items-yaml">
 <h3>items.yaml<a class="headerlink" href="#items-yaml" title="Permalink to this heading"></a></h3>
 <p>logging into a measurement named <code class="docutils literal notranslate"><span class="pre">root.some_item</span></code>, default tags and tags/fields as specified in plugin.yaml</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">root</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">root</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">some_item</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">influxdb</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">some_item</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">influxdb</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
 </pre></div>
 </div>
 <p>if <code class="docutils literal notranslate"><span class="pre">keyword</span></code> in plugin.yaml is set to <code class="docutils literal notranslate"><span class="pre">sqlite</span></code> this can also be used as a drop-in replacement for sqlite.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">root</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">root</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">some_item</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">some_item</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
 </pre></div>
 </div>
 <p><em>recommended</em>: logging into the measurement <code class="docutils literal notranslate"><span class="pre">temp</span></code> with an additional tag <code class="docutils literal notranslate"><span class="pre">room</span></code>
 and default tags (including <code class="docutils literal notranslate"><span class="pre">item:</span> <span class="pre">root.dining_temp</span></code>) and tags/fields as specified in plugin.yaml</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">root</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">root</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">dining_temp</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">influxdb_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temp</span><span class="w"></span>
-<span class="w">        </span><span class="nt">influxdb_tags</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{&quot;room&quot;:</span><span class="nv"> </span><span class="s">&quot;dining&quot;}&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dining_temp</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">influxdb_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temp</span>
+<span class="w">        </span><span class="nt">influxdb_tags</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{&quot;room&quot;:</span><span class="nv"> </span><span class="s">&quot;dining&quot;}&#39;</span>
 </pre></div>
 </div>
 </section>

@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-          <li><a href="../user_doc.html">stateengine</a> &raquo;</li>
-      <li>Sonstiges</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_doc/plugins_system.html">System Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../user_doc.html">stateengine</a></li>
+      <li class="breadcrumb-item active">Sonstiges</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3858,7 +3858,7 @@
 <h2>Einbinden anderer Zustände<a class="headerlink" href="#einbinden-anderer-zustande" title="Permalink to this heading"></a></h2>
 <p><strong>se_use (optional):</strong>
 <em>Einbinden einer weiteren Zustandskonfiguration</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Zustandsitem&gt;</span><span class="w"> </span><span class="c1"># z.B. stateengine_defaults.state_suspend.rules.suspend</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Zustandsitem&gt;</span><span class="w"> </span><span class="c1"># z.B. stateengine_defaults.state_suspend.rules.suspend</span>
 </pre></div>
 </div>
 <p>Seit Version 1.8 wird se_use gleich behandelt wie andere Plugin spezifische Attribute mit Wertzuweisung.
@@ -3903,15 +3903,15 @@ zum Zustandsitem. Es reicht also ein Punkt vor dem Namen des Zustandes.</p>
 <p>Ein Beispiel:
 Der in der Hierarchie ganz oben (unter lock und release)
 angesiedelte Suspendmodus hat das Attribut definiert:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_suspend</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.state_suspend</span>
 
-<span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">suspend</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">se_releasedby</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.Nacht</span><span class="w"></span>
+<span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">suspend</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">se_releasedby</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.Nacht</span>
 
-<span class="w">  </span><span class="nt">Nacht</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">&lt;Bedingungen&gt;</span><span class="w"></span>
+<span class="w">  </span><span class="nt">Nacht</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">&lt;Bedingungen&gt;</span>
 </pre></div>
 </div>
 <p>Angenommen, aktuell ist der Zustand „Nacht“ aktiv. Es wird nun ein

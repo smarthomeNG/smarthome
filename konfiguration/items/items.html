@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-      <li>Items</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+      <li class="breadcrumb-item active">Items</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3857,8 +3857,8 @@
 <section id="uberblick">
 <h2>Überblick<a class="headerlink" href="#uberblick" title="Permalink to this heading"></a></h2>
 <p>Das einfachste Item ist eines nur mit dem Itemnamen:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># myitem.yaml</span><span class="w"></span>
-<span class="nt">One</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># myitem.yaml</span>
+<span class="nt">One</span><span class="p">:</span>
 </pre></div>
 </div>
 <p>Für den Itemnamen sollten nur die Zeichen <strong>A-Z</strong> und <strong>a-z</strong> verwendet werden. Ein <strong>Unterstrich</strong>
@@ -3872,10 +3872,10 @@ reservierte Worte der Programmiersprache Python zu verwenden.</p>
 <p>Items können hierarchisch aufgebaut sein, ein Item kann Kinder-Items haben, die ihrerseits wiederum
 Kinder-Items haben können. Zur Kennzeichnung der Hierarchieebene wird im yaml Dateiformat eine
 Einrückung verwendet.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># myitem.yaml</span><span class="w"></span>
-<span class="nt">Opa</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">Papa</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">Kind</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># myitem.yaml</span>
+<span class="nt">Opa</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">Papa</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">Kind</span><span class="p">:</span>
 </pre></div>
 </div>
 <p>Die richtige Referenzierung der Items wäre hier <code class="docutils literal notranslate"><span class="pre">Opa</span></code>, <code class="docutils literal notranslate"><span class="pre">Opa.Papa</span></code> und <code class="docutils literal notranslate"><span class="pre">Opa.Papa.Kind</span></code></p>
@@ -3895,8 +3895,8 @@ zuzugreifen, statt auf das Plugin.</p>
 <section id="attribute">
 <h2>Attribute<a class="headerlink" href="#attribute" title="Permalink to this heading"></a></h2>
 <p>Attribute eines Items werden in der Konfigurationsdatei in der Form</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># myitem.yaml</span><span class="w"></span>
-<span class="nt">&lt;Attribut-Name&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Attribut-Wert&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># myitem.yaml</span>
+<span class="nt">&lt;Attribut-Name&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Attribut-Wert&gt;</span>
 </pre></div>
 </div>
 <p>angegeben. Normalerweise sind Attribut-Werte einzeilig. Es wird alles bis zum Zeilenende oder bis

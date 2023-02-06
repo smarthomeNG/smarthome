@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Apple TV plugin</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Apple TV plugin</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3874,12 +3874,12 @@
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">appletv</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AppleTV</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.appletv</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#instance: wohnzimmer</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#ip: 192.168.2.103</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#login_id: 00000000-0580-3568-6c73-86bd9b834320</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">appletv</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AppleTV</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.appletv</span>
+<span class="w">    </span><span class="c1">#instance: wohnzimmer</span>
+<span class="w">    </span><span class="c1">#ip: 192.168.2.103</span>
+<span class="w">    </span><span class="c1">#login_id: 00000000-0580-3568-6c73-86bd9b834320</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">instance</span></code> name is only needed if you have more than one Apple TV. If not specified it uses the default instance.</p>
@@ -4023,110 +4023,110 @@ The plugin resets this item to <code class="docutils literal notranslate"><span 
 </section>
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">atv</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wohnzimmer</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span><span class="w"></span>
-<span class="w">        </span><span class="nt">artwork_url</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artwork_url</span><span class="w"></span>
-<span class="w">        </span><span class="nt">play_state</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play_state</span><span class="w"></span>
-<span class="w">        </span><span class="nt">play_state_string</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play_state_string</span><span class="w"></span>
-<span class="w">        </span><span class="nt">playing</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playing</span><span class="w"></span>
-<span class="w">        </span><span class="nt">media_type</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">media_type</span><span class="w"></span>
-<span class="w">        </span><span class="nt">media_type_string</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">media_type_string</span><span class="w"></span>
-<span class="w">        </span><span class="nt">album</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">album</span><span class="w"></span>
-<span class="w">        </span><span class="nt">artist</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artist</span><span class="w"></span>
-<span class="w">        </span><span class="nt">genre</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">genre</span><span class="w"></span>
-<span class="w">        </span><span class="nt">title</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">title</span><span class="w"></span>
-<span class="w">        </span><span class="nt">position</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">position</span><span class="w"></span>
-<span class="w">        </span><span class="nt">total_time</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">total_time</span><span class="w"></span>
-<span class="w">        </span><span class="nt">position_percent</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">position_percent</span><span class="w"></span>
-<span class="w">        </span><span class="nt">repeat</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat</span><span class="w"></span>
-<span class="w">        </span><span class="nt">repeat_string</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat_string</span><span class="w"></span>
-<span class="w">        </span><span class="nt">shuffle</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shuffle</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rc_top_menu</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_top_menu</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rc_menu</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_menu</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rc_select</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_select</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rc_left</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_left</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rc_up</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_up</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rc_down</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_down</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rc_right</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_right</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rc_previous</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_previous</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rc_play</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_play</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rc_pause</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_pause</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rc_stop</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_stop</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rc_next</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_next</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">atv</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">wohnzimmer</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
+<span class="w">        </span><span class="nt">artwork_url</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artwork_url</span>
+<span class="w">        </span><span class="nt">play_state</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play_state</span>
+<span class="w">        </span><span class="nt">play_state_string</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">play_state_string</span>
+<span class="w">        </span><span class="nt">playing</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">playing</span>
+<span class="w">        </span><span class="nt">media_type</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">media_type</span>
+<span class="w">        </span><span class="nt">media_type_string</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">media_type_string</span>
+<span class="w">        </span><span class="nt">album</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">album</span>
+<span class="w">        </span><span class="nt">artist</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artist</span>
+<span class="w">        </span><span class="nt">genre</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">genre</span>
+<span class="w">        </span><span class="nt">title</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">title</span>
+<span class="w">        </span><span class="nt">position</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">position</span>
+<span class="w">        </span><span class="nt">total_time</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">total_time</span>
+<span class="w">        </span><span class="nt">position_percent</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">position_percent</span>
+<span class="w">        </span><span class="nt">repeat</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat</span>
+<span class="w">        </span><span class="nt">repeat_string</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat_string</span>
+<span class="w">        </span><span class="nt">shuffle</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shuffle</span>
+<span class="w">        </span><span class="nt">rc_top_menu</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_top_menu</span>
+<span class="w">        </span><span class="nt">rc_menu</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_menu</span>
+<span class="w">        </span><span class="nt">rc_select</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_select</span>
+<span class="w">        </span><span class="nt">rc_left</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_left</span>
+<span class="w">        </span><span class="nt">rc_up</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_up</span>
+<span class="w">        </span><span class="nt">rc_down</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_down</span>
+<span class="w">        </span><span class="nt">rc_right</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_right</span>
+<span class="w">        </span><span class="nt">rc_previous</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_previous</span>
+<span class="w">        </span><span class="nt">rc_play</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_play</span>
+<span class="w">        </span><span class="nt">rc_pause</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_pause</span>
+<span class="w">        </span><span class="nt">rc_stop</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_stop</span>
+<span class="w">        </span><span class="nt">rc_next</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">atv@wohnzimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rc_next</span>
 </pre></div>
 </div>
 </section>

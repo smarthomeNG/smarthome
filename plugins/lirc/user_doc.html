@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a> &raquo;</li>
-      <li>lirc</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a></li>
+      <li class="breadcrumb-item active">lirc</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3863,12 +3863,12 @@ Infrarot-Empfänger.</p>
 <p class="admonition-title">Wichtig</p>
 <p>Detaillierte Informationen zur Konfiguration des Plugins sind unter <a class="reference internal" href="../../plugins_doc/config/lirc.html"><span class="doc">Plugin ‚lirc‘ Konfiguration</span></a> zu finden.</p>
 </div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span><span class="w"></span>
-<span class="nt">lirc</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lirc</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#instance: hifisystem</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#lirc_host: 192.168.1.10</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#lirc_port: 6610</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span>
+<span class="nt">lirc</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lirc</span>
+<span class="w">    </span><span class="c1">#instance: hifisystem</span>
+<span class="w">    </span><span class="c1">#lirc_host: 192.168.1.10</span>
+<span class="w">    </span><span class="c1">#lirc_port: 6610</span>
 </pre></div>
 </div>
 </section>
@@ -3877,12 +3877,12 @@ Infrarot-Empfänger.</p>
 <p>Sobald ein entsprechend konfiguriertes Item gesetzt oder aktualisiert wird, sendet das Plugin den entsprechenden Befehl x Mal.
 x wird dabei vom Wert bestimmt, auf den das Item gesetzt wird. Nach dem Senden wird der Wert des Items automatisch auf 0 gesetzt.
 Beispiel:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/item.yaml</span><span class="w"></span>
-<span class="nt">REMOTE_DVDLIVINGROOM</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">DVDLIVINGROOM_POWER</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">lirc_remote@instancename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;PHILIPSDVD&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">lirc_key@instancename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;POWER&quot;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/item.yaml</span>
+<span class="nt">REMOTE_DVDLIVINGROOM</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">DVDLIVINGROOM_POWER</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">lirc_remote@instancename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;PHILIPSDVD&quot;</span>
+<span class="w">        </span><span class="nt">lirc_key@instancename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;POWER&quot;</span>
 </pre></div>
 </div>
 <p>Wird DVDLIVINGROOM_POWER auf 5 gesetzt, wird der „POWER“ Befehl 5 Mal gesendet.

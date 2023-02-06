@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>SQLite (for SmartVisu &gt;= 2.8)</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">SQLite (for SmartVisu &gt;= 2.8)</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3853,10 +3853,10 @@
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sql</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite_visu2_8</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># path: None</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># dumpfile: /tmp/smarthomedb.dump</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sql</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite_visu2_8</span>
+<span class="w">    </span><span class="c1"># path: None</span>
+<span class="w">    </span><span class="c1"># dumpfile: /tmp/smarthomedb.dump</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">path</span></code> attribute allows you to specify the of the SQLite database.</p>
@@ -3865,13 +3865,13 @@
 <section id="items-yaml">
 <h3>items.yaml<a class="headerlink" href="#items-yaml" title="Permalink to this heading"></a></h3>
 <p>For num and bool items, you could set the attribute: <code class="docutils literal notranslate"><span class="pre">sqlite</span></code>. By this you enable logging of the item values and SmartHomeNG set the item to the last know value at start up (equal cache = yes).</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">outside</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Outside</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">outside</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Outside</span>
 
-<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Temperatur</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Temperatur</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
 </pre></div>
 </div>
 </section>

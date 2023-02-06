@@ -3840,10 +3840,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../installation.html">Installation</a> &raquo;</li>
-          <li><a href="komplettanleitung.html">Komplettanleitung</a> &raquo;</li>
-      <li>Debian Linux installieren</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../installation.html">Installation</a></li>
+          <li class="breadcrumb-item"><a href="komplettanleitung.html">Komplettanleitung</a></li>
+      <li class="breadcrumb-item active">Debian Linux installieren</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3891,8 +3891,8 @@ auf eine SD-Karte übertragen werden. Die unten stehenden Schritte bis
 <strong>Einloggen via SSH</strong> entfallen. Es ist allerdings notwendig, sich beim
 ersten Start direkt am Raspberry Pi einzuloggen (User: pi, Passwort:
 raspberry - Achtung, englische Tastatur!) und mittels</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl start ssh
-sudo systemctl <span class="nb">enable</span> ssh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>ssh
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>ssh
 </pre></div>
 </div>
 <p>den SSH Server jetzt und bei zukünftigen Neustarts automatisch zu
@@ -3959,9 +3959,9 @@ Namen des neuen SmartHomeNG Servers.</div>
 Passwort für diesen User. Wurde kein Passwort angegeben und möchte man
 SSH so konfigurieren, dass man sich mit einem leeren Passwort einloggen
 kann, sind folgende Operationen notwendig:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo sed -i -e <span class="s1">&#39;s/#PermitEmptyPasswords no/PermitEmptyPasswords yes/g&#39;</span> /etc/ssh/sshd_config
-sudo sed -i -e <span class="s1">&#39;/console/s/.*/&amp;\nssh/&#39;</span> /etc/securetty
-sudo systemctl restart sshd
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;s/#PermitEmptyPasswords no/PermitEmptyPasswords yes/g&#39;</span><span class="w"> </span>/etc/ssh/sshd_config
+sudo<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;/console/s/.*/&amp;\nssh/&#39;</span><span class="w"> </span>/etc/securetty
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
 </pre></div>
 </div>
 <p>Generell wird aber empfohlen, den SSH-Zugang mit Zertifikaten
@@ -3973,8 +3973,8 @@ gibt es z.B. bei Thomas Krenn.</p>
 <section id="systemaktualisierung">
 <h2><a class="toc-backref" href="#id3">Systemaktualisierung</a><a class="headerlink" href="#systemaktualisierung" title="Permalink to this heading"></a></h2>
 <p>Nach der Anmeldung ist zunächst mit</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get update
-sudo apt-get upgrade
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>upgrade
 </pre></div>
 </div>
 <p>das frisch installierte System mit den neuesten Systemupdates zu
@@ -3998,7 +3998,7 @@ getätigt werden. Es empfiehlt sich, die Sprache auf de_DE.UTF-8 und das
 Tastaturlayout auf Deutsch umzustellen. Außerdem können hier diverse
 Services aktiviert und das Filesystem auf die Größe der SD-Karte
 erweitert werden.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo raspi-config
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>raspi-config
 </pre></div>
 </div>
 </div>
@@ -4014,11 +4014,11 @@ erfolgt ist, so werden für Debian bullseye 11.3 bereits die
 open-vm-tools mitinstalliert.</p>
 <p>Für bereits existierende Systeme können die Tools nachinstalliert werden:</p>
 <p>Servervariante</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install open-vm-tools
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>open-vm-tools
 </pre></div>
 </div>
 <p>Grafische Benutzeroberfläche</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install open-vm-tools-desktop
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>open-vm-tools-desktop
 </pre></div>
 </div>
 <p>Die automatische Anpassung der Bildschirmgröße funktioniert erst nach
@@ -4026,7 +4026,7 @@ einem Neustart.</p>
 </div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>Um die Gästeerweiterungen zu installieren zuerst unter <strong>Geräte</strong> -&gt;
 <strong>Gästeerweiterungen einlegen</strong> anklicken. Diese nun via Terminal/Shell
 ausführen und den Anweisungen folgen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo sh /media/cdrom/VBoxLinuxAdditions.run
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>sh<span class="w"> </span>/media/cdrom/VBoxLinuxAdditions.run
 </pre></div>
 </div>
 <p>Nach einem Neustart passt sich nun bspw. bei Verwendung einer GUI die
@@ -4040,36 +4040,36 @@ Installation erstellte User (hier: smarthome) automatisch in die Gruppe
 für sudo aufgenommen.</p>
 <p>Falls man einen anderen Benutzernamen bei der Installation gewählt hat,
 muss man den User smarthome zunächst erstellen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo  adduser smarthome --disabled-password --gecos <span class="s2">&quot;First Last,RoomNumber,WorkPhone,HomePhone&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w">  </span>adduser<span class="w"> </span>smarthome<span class="w"> </span>--disabled-password<span class="w"> </span>--gecos<span class="w"> </span><span class="s2">&quot;First Last,RoomNumber,WorkPhone,HomePhone&quot;</span>
 </pre></div>
 </div>
 <p>Den Benutzer <strong>smarthome</strong> in die <strong>www-data</strong> und <strong>sudo</strong> Gruppe
 hinzufügen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo usermod -aG www-data,sudo smarthome
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>www-data,sudo<span class="w"> </span>smarthome
 </pre></div>
 </div>
 <p>Auch wenn der Benutzer smarthome schon existiert muss er in die Gruppe
 www-data mit folgendem Befehl eingetragen werden.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo usermod -aG www-data smarthome
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>www-data<span class="w"> </span>smarthome
 </pre></div>
 </div>
 <p>Vor dem Neustart wird jetzt noch die Datei <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> bearbeitet um einige Befehle auf der
 Shell (Kommandozeile bzw. Konsole) abzukürzen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~
-nano .bashrc
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~
+nano<span class="w"> </span>.bashrc
 </pre></div>
 </div>
 <p>Dort an am Ende anfügen oder wenn bereits vorhanden das Kommentarzeichen <code class="docutils literal notranslate"><span class="pre">#</span></code> am Zeilenanfang entfernen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span> <span class="nv">la</span><span class="o">=</span><span class="s1">&#39;ls -A&#39;</span>
-<span class="nb">alias</span> <span class="nv">ll</span><span class="o">=</span><span class="s1">&#39;ls -l&#39;</span>
-<span class="nb">alias</span> ..<span class="o">=</span><span class="s1">&#39;cd ..&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span><span class="w"> </span><span class="nv">la</span><span class="o">=</span><span class="s1">&#39;ls -A&#39;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ll</span><span class="o">=</span><span class="s1">&#39;ls -l&#39;</span>
+<span class="nb">alias</span><span class="w"> </span>..<span class="o">=</span><span class="s1">&#39;cd ..&#39;</span>
 </pre></div>
 </div>
 <p>Der Benutzer <strong>smarthome</strong> muß nun abgemeldet und neu angemeldet werden,
 damit die Rechte neu eingelesen werden. Dies ist eine gute Gelegenheit
 um einen alternativen Snapshot zu erstellen. Dazu dann wiederum das
 System ausschalten mit:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo poweroff
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>poweroff
 </pre></div>
 </div>
 </section>

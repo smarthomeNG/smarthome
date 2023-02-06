@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Database</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Database</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3906,14 +3906,14 @@ Make sure the installed module supports one of this!</p>
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">database</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database</span><span class="w"></span>
-<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite3</span><span class="w"></span>
-<span class="w">    </span><span class="nt">connect</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;database:/path/to/log.db&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;check_same_thread:0&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># prefix: log</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># precision: 2</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">database</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite3</span>
+<span class="w">    </span><span class="nt">connect</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;database:/path/to/log.db&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;check_same_thread:0&quot;</span>
+<span class="w">    </span><span class="c1"># prefix: log</span>
+<span class="w">    </span><span class="c1"># precision: 2</span>
 </pre></div>
 </div>
 <p>The following attributes can be used in the plugin configuration:</p>
@@ -3944,10 +3944,10 @@ into the database.</p>
 <p>If value <code class="docutils literal notranslate"><span class="pre">init</span></code> is used, the item will
 be initialized from the database after SmartHomeNG is restarted. Also, in this
 case the item’s inital_value is prevented from being written to the database.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">some</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"> </span><span class="c1"># or &#39;init&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">some</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">item</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"> </span><span class="c1"># or &#39;init&#39;</span>
 </pre></div>
 </div>
 </section>

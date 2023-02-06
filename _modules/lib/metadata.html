@@ -3837,9 +3837,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Modul-Quellcode</a> &raquo;</li>
-      <li>lib.metadata</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Modul-Quellcode</a></li>
+      <li class="breadcrumb-item active">lib.metadata</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3906,7 +3906,7 @@
 
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">addon_name</span><span class="p">,</span> <span class="n">addon_type</span><span class="p">,</span> <span class="n">classpath</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialzes the metadata for an addon (plugin or module) from the definition file</span>
 
 <span class="sd">        :param sh: SmartHomeNG main object</span>
@@ -4101,7 +4101,7 @@
 
 
 <div class="viewcode-block" id="Metadata.get_plugin_function_defstrings"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_plugin_function_defstrings">[Doku]</a>    <span class="k">def</span> <span class="nf">get_plugin_function_defstrings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_type</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Build the documentation strings of the plugin&#39;s functions</span>
 
 <span class="sd">        used e.g. for code completion in logic editor</span>
@@ -4137,7 +4137,7 @@
 
 
     <span class="k">def</span> <span class="nf">_test_definitions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition_list</span><span class="p">,</span> <span class="n">definition_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test parameter or item-attribute definitions for validity</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">definition_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">definition_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -4207,7 +4207,7 @@
     <span class="c1">#</span>
 
 <div class="viewcode-block" id="Metadata.get_string"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_string">[Doku]</a>    <span class="k">def</span> <span class="nf">get_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the value for a global key as a string</span>
 
 <span class="sd">        :param key: global key to look up (in section &#39;plugin&#39; or &#39;module&#39;)</span>
@@ -4223,7 +4223,7 @@
 
 
 <div class="viewcode-block" id="Metadata.get_mlstring"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_mlstring">[Doku]</a>    <span class="k">def</span> <span class="nf">get_mlstring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mlkey</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the value for a global multilanguage-key as a string</span>
 
 <span class="sd">        It trys to lookup th value for the default language.</span>
@@ -4254,7 +4254,7 @@
 
 
 <div class="viewcode-block" id="Metadata.get_bool"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_bool">[Doku]</a>    <span class="k">def</span> <span class="nf">get_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the value for a global key as a bool</span>
 
 <span class="sd">        :param key: global key to look up (in section &#39;plugin&#39; or &#39;module&#39;)</span>
@@ -4270,7 +4270,7 @@
 
 
 <div class="viewcode-block" id="Metadata.test_shngcompatibility"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.test_shngcompatibility">[Doku]</a>    <span class="k">def</span> <span class="nf">test_shngcompatibility</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test if the actual running version of SmartHomeNG is in the range of supported versions for this addon (module/plugin)</span>
 
 <span class="sd">        :return: True if the SmartHomeNG version is in the supported range</span>
@@ -4295,7 +4295,7 @@
 
 
 <div class="viewcode-block" id="Metadata.test_pythoncompatibility"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.test_pythoncompatibility">[Doku]</a>    <span class="k">def</span> <span class="nf">test_pythoncompatibility</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test if the actual running version of Python is in the range of supported versions for this addon (module/plugin)</span>
 
 <span class="sd">        :return: True if the Python version is in the supported range</span>
@@ -4332,7 +4332,7 @@
 
 
 <div class="viewcode-block" id="Metadata.get_version"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_version">[Doku]</a>    <span class="k">def</span> <span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the version of the addon</span>
 
 <span class="sd">        If test_version has been called before, the code_version is taken into account,</span>
@@ -4347,7 +4347,7 @@
 
 
 <div class="viewcode-block" id="Metadata.test_version"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.test_version">[Doku]</a>    <span class="k">def</span> <span class="nf">test_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code_version</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests if the loaded Python code has a version set and compares it to the metadata version.</span>
 
 <span class="sd">        :param code_version: version of the python code</span>
@@ -4384,7 +4384,7 @@
     <span class="c1">#</span>
 
     <span class="k">def</span> <span class="nf">_test_valuetype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">subtype</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns True, if the value can be converted to the specified type</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 <span class="c1">#        logger.warning(self._log_premsg+&quot;_test_valuetype-list: typ={}, subtype={}, value={}&quot;.format(typ, subtype, value))</span>
@@ -4445,7 +4445,7 @@
 
 
     <span class="k">def</span> <span class="nf">_test_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">definition</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns True, if the value can be converted to specified type</span>
 
 <span class="sd">        :param value: value to be checked</span>
@@ -4468,7 +4468,7 @@
 
 
     <span class="k">def</span> <span class="nf">_expand_listvalues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">definition</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If a parameter is defined as a list, but the value is of a basic datatype,</span>
 <span class="sd">        value is expanded to a list. In all other cases, the value is returned nuchanged</span>
 
@@ -4490,7 +4490,7 @@
 
 
     <span class="k">def</span> <span class="nf">_convert_valuetotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the value converted to the parameters type</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">typ</span> <span class="o">==</span> <span class="s1">&#39;bool&#39;</span><span class="p">:</span>
@@ -4527,7 +4527,7 @@
 
 
     <span class="k">def</span> <span class="nf">_convert_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">is_default</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the value converted to the parameters type</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
@@ -4548,7 +4548,7 @@
 
 
     <span class="k">def</span> <span class="nf">_test_against_valid_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test if value is in the valid list(s) of the metadata definition</span>
 <span class="sd">        :param definition:</span>
 <span class="sd">        :param value:</span>
@@ -4580,7 +4580,7 @@
 
 
     <span class="k">def</span> <span class="nf">_test_validity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_default</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks the value against a list of valid values.</span>
 <span class="sd">        If valid, it returns the value.</span>
 <span class="sd">        Otherwise it returns the first entry of the list of valid values.</span>
@@ -4655,7 +4655,7 @@
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">_get_default_if_none</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the default value for  datatype.</span>
 <span class="sd">        It is used, if no default value is defined for a parameter.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4667,7 +4667,7 @@
     <span class="c1">#</span>
 
 <div class="viewcode-block" id="Metadata.get_parameterlist"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_parameterlist">[Doku]</a>    <span class="k">def</span> <span class="nf">get_parameterlist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the list of parameter names</span>
 
 <span class="sd">        :return: List of strings with parameter names</span>
@@ -4677,7 +4677,7 @@
 
 
 <div class="viewcode-block" id="Metadata.get_itemdefinitionlist"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_itemdefinitionlist">[Doku]</a>    <span class="k">def</span> <span class="nf">get_itemdefinitionlist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the list of item attribute definitions</span>
 
 <span class="sd">        :return: List of strings with item attribute names</span>
@@ -4687,7 +4687,7 @@
 
 
     <span class="k">def</span> <span class="nf">_get_definition_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">definitions</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the datatype of a parameter</span>
 
 <span class="sd">        If the defined datatype is &#39;foo&#39;, None is returned</span>
@@ -4705,20 +4705,20 @@
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">definitions</span><span class="p">[</span><span class="n">definition</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">FOO</span><span class="p">))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Metadata.get_parameter_type"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_parameter_type">[Doku]</a>    <span class="k">def</span> <span class="nf">get_parameter_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the datatype of a parameter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_definition_type</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Metadata.get_itemdefinition_type"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_itemdefinition_type">[Doku]</a>    <span class="k">def</span> <span class="nf">get_itemdefinition_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the datatype of an item attribute definition</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_definition_type</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">itemdefinitions</span><span class="p">)</span></div>
 
 
     <span class="k">def</span> <span class="nf">_get_definition_subtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">definitions</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the subtype of a parameter</span>
 
 <span class="sd">        If the defined datatype is &#39;foo&#39;, None is returned</span>
@@ -4741,20 +4741,20 @@
         <span class="k">return</span> <span class="n">sub</span>
 
 <div class="viewcode-block" id="Metadata.get_parameter_subtype"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_parameter_subtype">[Doku]</a>    <span class="k">def</span> <span class="nf">get_parameter_subtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the subtype of a parameter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_definition_subtype</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Metadata.get_itemdefinition_subtype"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_itemdefinition_subtype">[Doku]</a>    <span class="k">def</span> <span class="nf">get_itemdefinition_subtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the subtype of an item attribute definition</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_definition_subtype</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">itemdefinitions</span><span class="p">)</span></div>
 
 
     <span class="k">def</span> <span class="nf">_get_definition_listlen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">definitions</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the len of a parameter of type list of a parameter</span>
 
 <span class="sd">        :param param: Name of the parameter</span>
@@ -4774,20 +4774,20 @@
         <span class="k">return</span> <span class="n">llen</span>
 
 <div class="viewcode-block" id="Metadata.get_parameter_listlen"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_parameter_listlen">[Doku]</a>    <span class="k">def</span> <span class="nf">get_parameter_listlen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the len of a parameter of type list of a parameter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_definition_listlen</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Metadata.get_itemdefinition_listlen"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_itemdefinition_listlen">[Doku]</a>    <span class="k">def</span> <span class="nf">get_itemdefinition_listlen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the len of a parameter of type list of an item attribute definition</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_definition_listlen</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">itemdefinitions</span><span class="p">)</span></div>
 
 
     <span class="k">def</span> <span class="nf">_get_definition_type_with_subtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">definitions</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the datatype of a parameter with subtype (if subtype exists)</span>
 
 <span class="sd">        If the defined datatype is &#39;foo&#39;, None is returned</span>
@@ -4816,19 +4816,19 @@
         <span class="k">return</span> <span class="n">result</span>
 
 <div class="viewcode-block" id="Metadata.get_parameter_type_with_subtype"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_parameter_type_with_subtype">[Doku]</a>    <span class="k">def</span> <span class="nf">get_parameter_type_with_subtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the datatype of a parameter with subtype (if subtype exists)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_definition_type_with_subtype</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Metadata.get_itemdefinition_type_with_subtype"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_itemdefinition_type_with_subtype">[Doku]</a>    <span class="k">def</span> <span class="nf">get_itemdefinition_type_with_subtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the datatype of an item attribute definition with subtype (if subtype exists)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_definition_type_with_subtype</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">itemdefinitions</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_get_definition_defaultvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">definitions</span><span class="p">,</span> <span class="n">definitionlist</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the default value for the parameter</span>
 
 <span class="sd">        If no default value is specified for the parameter, the default value for the datatype</span>
@@ -4881,7 +4881,7 @@
         <span class="k">return</span> <span class="n">value</span>
 
 <div class="viewcode-block" id="Metadata.get_parameter_defaultvalue"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_parameter_defaultvalue">[Doku]</a>    <span class="k">def</span> <span class="nf">get_parameter_defaultvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the default value for the parameter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_definition_defaultvalue</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_paramlist</span><span class="p">)</span></div>
@@ -4893,7 +4893,7 @@
 <span class="c1">#        return self._get_definition_defaultvalue(definition, self.itemdefinitions, self._itemdeflist)</span>
 
     <span class="k">def</span> <span class="nf">_get_definitioninfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">definitions</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the value for a key of a parameter as a string</span>
 
 <span class="sd">        :param parameter: parameter to get the definition info from</span>
@@ -4911,19 +4911,19 @@
         <span class="k">return</span> <span class="n">result</span>
 
 <div class="viewcode-block" id="Metadata.get_parameterdefinition"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_parameterdefinition">[Doku]</a>    <span class="k">def</span> <span class="nf">get_parameterdefinition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the value for a key of a parameter as a string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_definitioninfo</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Metadata.get_itemdefinition"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.get_itemdefinition">[Doku]</a>    <span class="k">def</span> <span class="nf">get_itemdefinition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the value for a key of a parameter as a string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_definitioninfo</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">itemdefinitions</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Metadata.check_parameters"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.check_parameters">[Doku]</a>    <span class="k">def</span> <span class="nf">check_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks the values of a dict of configured parameters.</span>
 
 <span class="sd">        Returns a dict with all defined parameters with values and a bool indicating if all parameters are ok (True)</span>
@@ -4984,7 +4984,7 @@
 
 
 <div class="viewcode-block" id="Metadata.check_itemattribute"><a class="viewcode-back" href="../../lib/metadata.html#lib.metadata.Metadata.check_itemattribute">[Doku]</a>    <span class="k">def</span> <span class="nf">check_itemattribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">defined_in_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks the value of a plugin-specific item attribute</span>
 <span class="sd">        and returnes the checked value or the default value if needed</span>
 
@@ -5046,7 +5046,7 @@
 
 
     <span class="k">def</span> <span class="nf">_compare_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vers1</span><span class="p">,</span> <span class="n">vers2</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span> <span class="n">res_old</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compare two version numbers and return if the condition is met</span>
 
 <span class="sd">        :param vers1:</span>
@@ -5076,7 +5076,7 @@
 
 
     <span class="k">def</span> <span class="nf">_version_to_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vers</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Split version number to list and get rid of non-numeric parts</span>
 
 <span class="sd">        :param vers:</span>

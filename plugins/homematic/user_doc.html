@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a> &raquo;</li>
-      <li>homematic</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a></li>
+      <li class="breadcrumb-item active">homematic</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3939,315 +3939,315 @@ des SmartHomeNG Plugins ist <strong>nicht</strong> möglich.</p>
 mit dem Plugin laufen. (Getestet sind sie in Ermangelung der Geräte natürlich nicht alle):</p>
 <section id="aktoren">
 <h4>Aktoren<a class="headerlink" href="#aktoren" title="Permalink to this heading"></a></h4>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">DEVICETYPES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Bl1-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Bl1-SM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Bl1-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Bl1-FM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Bl1PBU-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Bl1-PB-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Ja1PBU-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ZEL STG RM FEP 230V&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 146&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 147&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-BlX&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-Win&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-BROLL&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPKeyBlind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-BBL&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPKeyBlindTilt</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1L-Pl&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1L-Pl-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1L-Pl-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1L-CV&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1L-CV-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-Pl&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-Pl-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-Pl-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-CV&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-CV-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-FM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-FM-LF&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1PWM-CV&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1PWM-CV-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1TPBU-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1TPBU-FM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim2L-CV&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim2L-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim2L-SM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim2T-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Dim2T-SM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HSS-DX&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 132&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 133&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 134&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Dis-TD-T&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-OU-CF-Pl&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-OU-CM-PCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-OU-CFM-Pl&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-OU-CFM-TW&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-PCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-DN-R1&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-DN-R2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-DN-R3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-DN-R4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-DN-R5&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-CT-R1&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-CT-R2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-CT-R3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-CT-R4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-CT-R5&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-OM54&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-SM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-FM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-PB-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Ba-PCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-SM-ATmega168&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1PBU-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2-FM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2-DR-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2-PB-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2PBU-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-Ba-PCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-SM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-SM-ATmega168&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-PCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-PCB-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-WM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-DR-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 130&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 131&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ZEL STG RM FZS&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ZEL STG RM FZS-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-LC-SwX&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-MOD-Re-8&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;IT-Switch&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;REV-Ritter-Switch&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-Pl&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-Pl-DN-R1&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-Pl-DN-R2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-Pl-DN-R3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-Pl-DN-R4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-Pl-DN-R5&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-ES-PMSwX&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMW-IO-12-Sw7-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IOSwitch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMW-IO-12-Sw14-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">HMWIOSwitch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMW-LC-Sw2-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IOSwitch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMW-LC-Bl1-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyBlind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMW-LC-Bl1-DR-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyBlind</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMW-LC-Dim1L-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyDimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMIP-PS&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-PS&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitch</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMIP-PSM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-PSM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-PSM-CH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-FSM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-BSM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitchPowermeter</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMIP-BDT&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPKeyDimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-BDT&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPKeyDimmer</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-Key&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyMatic</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-Key-S&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyMatic</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-Key-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyMatic</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-Key-Generic&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyMatic</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sen-RD-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Rain</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ST6-SH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">EcoLogic</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-Sir-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RFSiren</span><span class="p">,</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">DEVICETYPES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Bl1-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Bl1-SM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Bl1-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Bl1-FM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Bl1PBU-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Bl1-PB-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Ja1PBU-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ZEL STG RM FEP 230V&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 146&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 147&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-BlX&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-Win&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Blind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-BROLL&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPKeyBlind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-BBL&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPKeyBlindTilt</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1L-Pl&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1L-Pl-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1L-Pl-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1L-CV&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1L-CV-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-Pl&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-Pl-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-Pl-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-CV&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-CV-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-FM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1T-FM-LF&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1PWM-CV&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1PWM-CV-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1TPBU-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim1TPBU-FM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim2L-CV&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim2L-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim2L-SM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim2T-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Dim2T-SM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HSS-DX&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 132&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 133&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 134&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Dimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Dis-TD-T&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-OU-CF-Pl&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-OU-CM-PCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-OU-CFM-Pl&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-OU-CFM-TW&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-PCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-DN-R1&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-DN-R2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-DN-R3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-DN-R4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-DN-R5&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-CT-R1&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-CT-R2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-CT-R3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-CT-R4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-CT-R5&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Pl-OM54&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-SM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-FM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-PB-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-Ba-PCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1-SM-ATmega168&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw1PBU-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2-FM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2-DR-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2-PB-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw2PBU-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-Ba-PCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-SM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-SM-ATmega168&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-PCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-PCB-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-WM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-Sw4-DR-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 130&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 131&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ZEL STG RM FZS&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ZEL STG RM FZS-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-LC-SwX&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-MOD-Re-8&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;IT-Switch&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;REV-Ritter-Switch&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Switch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-Pl&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-Pl-DN-R1&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-Pl-DN-R2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-Pl-DN-R3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-Pl-DN-R4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-Pl-DN-R5&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-ES-PMSw1-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-ES-PMSwX&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMW-IO-12-Sw7-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IOSwitch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMW-IO-12-Sw14-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">HMWIOSwitch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMW-LC-Sw2-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IOSwitch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMW-LC-Bl1-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyBlind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMW-LC-Bl1-DR-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyBlind</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMW-LC-Dim1L-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyDimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMIP-PS&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-PS&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitch</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMIP-PSM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-PSM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-PSM-CH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-FSM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-BSM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSwitchPowermeter</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMIP-BDT&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPKeyDimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-BDT&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPKeyDimmer</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-Key&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyMatic</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-Key-S&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyMatic</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-Key-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyMatic</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-Key-Generic&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">KeyMatic</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sen-RD-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Rain</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ST6-SH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">EcoLogic</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-Sir-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RFSiren</span><span class="p">,</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
 <section id="sensoren">
 <h4>Sensoren<a class="headerlink" href="#sensoren" title="Permalink to this heading"></a></h4>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">DEVICETYPES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-SC&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ShutterContact</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-SC-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ShutterContact</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-SCo&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ShutterContact</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ZEL STG RM FFK&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ShutterContact</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;BC-SC-Rd-WM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MaxShutterContact</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;BC-SC-Rd-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MaxShutterContact</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-SCI-3-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPShutterContact</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMIP-SWDO&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPShutterContact</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-SWDO&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPShutterContact</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-SWDO-I&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPShutterContact</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-SRH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RotaryHandleSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-RHS&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RotaryHandleSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ZEL STG RM FDK&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RotaryHandleSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-RHS-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RotaryHandleSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-xx&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RotaryHandleSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-WDS&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WaterSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-WDS-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WaterSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-ES-TX-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">PowermeterGas</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sen-DB-PCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">GongSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-SD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Smoke</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-SD-Generic&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Smoke</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-SD-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SmokeV2</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-SD-2-Generic&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SmokeV2</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-SWSD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSmoke</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sen-MDIR-WM55&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemoteMotion</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sen-MDIR-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Motion</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sen-MDIR-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Motion</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-MD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Motion</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sen-MDIR-O-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Motion</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-MDIR-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionV2</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-MDIR-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionV2</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-MDIR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionV2</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 162&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionV2</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-MD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionV2</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-SMI&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionIP</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-SMO&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionIP</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-SMO-A&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionIP</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-SPI&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">PresenceIP</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sen-LI-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">LuxSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sen-EP&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ImpulseSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sen-X&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ImpulseSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ASH550I&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ASH550&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-WDS10-TH-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-WDS20-TH-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-WDS40-TH-I&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-WDS40-TH-I-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 157&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 158&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;IS-WDS-TH-OD-S-R3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-WDS100-C6-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-WDS100-C6-O-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;KS550&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;KS888&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;KS550Tech&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;KS550LC&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-SWO-PR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPWeatherSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;WS550&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherStation</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;WS888&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherStation</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;WS550Tech&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherStation</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;WS550LCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherStation</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;WS550LCW&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherStation</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-WDC7000&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherStation</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sec-TiS&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">TiltSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-CC-SCD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">CO2Sensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 160&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">CO2Sensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-WDS30-OT2-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">TemperatureDiffSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-WDS30-OT2-SM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">TemperatureDiffSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-WDS30-T-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">TemperatureSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;S550IA&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">TemperatureSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Sen-Wa-Od&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">FillingLevel</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMW-Sen-SC-12-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WiredSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMW-Sen-SC-12-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WiredSensor</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-CC-VD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ValveDrive</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ZEL STG RM FSA&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ValveDrive</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-SAM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">TiltIP</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-STHO&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPAreaThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-STHO-A&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPAreaThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">DEVICETYPES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-SC&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ShutterContact</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-SC-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ShutterContact</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-SCo&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ShutterContact</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ZEL STG RM FFK&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ShutterContact</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;BC-SC-Rd-WM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MaxShutterContact</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;BC-SC-Rd-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MaxShutterContact</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-SCI-3-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPShutterContact</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMIP-SWDO&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPShutterContact</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-SWDO&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPShutterContact</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-SWDO-I&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPShutterContact</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-SRH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RotaryHandleSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-RHS&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RotaryHandleSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ZEL STG RM FDK&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RotaryHandleSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-RHS-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RotaryHandleSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-xx&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RotaryHandleSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-WDS&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WaterSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-WDS-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WaterSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-ES-TX-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">PowermeterGas</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sen-DB-PCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">GongSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-SD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Smoke</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-SD-Generic&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Smoke</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-SD-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SmokeV2</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-SD-2-Generic&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">SmokeV2</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-SWSD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPSmoke</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sen-MDIR-WM55&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemoteMotion</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sen-MDIR-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Motion</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sen-MDIR-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Motion</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-MD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Motion</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sen-MDIR-O-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Motion</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-MDIR-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionV2</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-MDIR-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionV2</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-MDIR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionV2</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 162&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionV2</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-MD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionV2</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-SMI&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionIP</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-SMO&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionIP</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-SMO-A&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MotionIP</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-SPI&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">PresenceIP</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sen-LI-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">LuxSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sen-EP&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ImpulseSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sen-X&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ImpulseSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ASH550I&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ASH550&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-WDS10-TH-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-WDS20-TH-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-WDS40-TH-I&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-WDS40-TH-I-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 157&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 158&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;IS-WDS-TH-OD-S-R3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">AreaThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-WDS100-C6-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-WDS100-C6-O-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;KS550&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;KS888&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;KS550Tech&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;KS550LC&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-SWO-PR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPWeatherSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;WS550&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherStation</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;WS888&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherStation</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;WS550Tech&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherStation</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;WS550LCB&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherStation</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;WS550LCW&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherStation</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-WDC7000&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WeatherStation</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sec-TiS&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">TiltSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-CC-SCD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">CO2Sensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 160&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">CO2Sensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-WDS30-OT2-SM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">TemperatureDiffSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-WDS30-OT2-SM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">TemperatureDiffSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-WDS30-T-O&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">TemperatureSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;S550IA&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">TemperatureSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Sen-Wa-Od&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">FillingLevel</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMW-Sen-SC-12-DR&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WiredSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMW-Sen-SC-12-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">WiredSensor</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-CC-VD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ValveDrive</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ZEL STG RM FSA&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ValveDrive</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-SAM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">TiltIP</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-STHO&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPAreaThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-STHO-A&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPAreaThermostat</span><span class="p">,</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
 <section id="thermostate">
 <h4>Thermostate<a class="headerlink" href="#thermostate" title="Permalink to this heading"></a></h4>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">DEVICETYPES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-CC-VG-1&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ThermostatGroup</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-CC-RT-DN&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Thermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-CC-RT-DN-BoM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Thermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-TC-IT-WM-W-EU&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ThermostatWall</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-CC-TC&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ThermostatWall2</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ZEL STG RM FWT&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ThermostatWall2</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;BC-RT-TRX-CyG&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;BC-RT-TRX-CyG-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;BC-RT-TRX-CyG-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;BC-RT-TRX-CyG-4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;BC-RT-TRX-CyN&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;BC-TC-C-WM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXWallThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;BC-TC-C-WM-4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXWallThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMIP-eTRV&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-eTRV&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-eTRV-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostat</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-STHD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostatWall</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-STH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostatWall</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-WTH-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostatWall</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMIP-WTH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostatWall</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-WTH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostatWall</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-BWTH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostatWall</span><span class="p">,</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">DEVICETYPES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;HM-CC-VG-1&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ThermostatGroup</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-CC-RT-DN&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Thermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-CC-RT-DN-BoM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Thermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-TC-IT-WM-W-EU&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ThermostatWall</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-CC-TC&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ThermostatWall2</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ZEL STG RM FWT&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">ThermostatWall2</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;BC-RT-TRX-CyG&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;BC-RT-TRX-CyG-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;BC-RT-TRX-CyG-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;BC-RT-TRX-CyG-4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;BC-RT-TRX-CyN&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;BC-TC-C-WM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXWallThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;BC-TC-C-WM-4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">MAXWallThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMIP-eTRV&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-eTRV&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-eTRV-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostat</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-STHD&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostatWall</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-STH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostatWall</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-WTH-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostatWall</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMIP-WTH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostatWall</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-WTH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostatWall</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-BWTH&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">IPThermostatWall</span><span class="p">,</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
 <section id="sonstige">
 <h4>Sonstige<a class="headerlink" href="#sonstige" title="Permalink to this heading"></a></h4>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">DEVICETYPES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RCV-50&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemoteVirtual</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-2-PBU-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-Dis-H-x-EU&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-4-B&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-4-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-4-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-4-3-D&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-8&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-12&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-12-B&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-12-SW&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-19&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-19-B&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-19-SW&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-Key3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-Key3-B&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-Key4-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-Key4-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-Sec3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-Sec3-B&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-Sec4-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-Sec4-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-P1&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-SB-X&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-RC-X&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-PB-2-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-PB-2-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;BC-PB-2-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemotePress</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-PB-4-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-PB-6-WM55&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-PB-2-WM55-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-PB-2-WM55&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-PBI-4-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-PBI-X&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Dis-WM55&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-Dis-EP-WM55&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-MOD-EM-8&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;RC-H&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;BRC-H&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;atent&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ZEL STG RM WT 2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ZEL STG RM HS 4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ZEL STG RM FST UP4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 145&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 135&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-OU-LED16&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-PB-4Dis-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-PB-4Dis-WM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMW-IO-4-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMW-IO-12-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMIP-WRC2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-WRC2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-WRC6&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-SwI-3-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemotePress</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;ZEL STG RM FSS UP3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemotePress</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;263 144&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemotePress</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HM-SwI-X&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemotePress</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HMW-RCV-50&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemoteVirtual</span><span class="p">,</span><span class="w"></span>
-<span class="w">  </span><span class="s2">&quot;HmIP-RC8&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">DEVICETYPES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;HM-RCV-50&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemoteVirtual</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-2-PBU-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-Dis-H-x-EU&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-4-B&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-4-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-4-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-4-3-D&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-8&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-12&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-12-B&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-12-SW&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-19&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-19-B&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-19-SW&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-Key3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-Key3-B&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-Key4-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-Key4-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-Sec3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-Sec3-B&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-Sec4-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-Sec4-3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-P1&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-SB-X&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-RC-X&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-PB-2-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-PB-2-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;BC-PB-2-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemotePress</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-PB-4-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-PB-6-WM55&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-PB-2-WM55-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-PB-2-WM55&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-PBI-4-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-PBI-X&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Dis-WM55&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-Dis-EP-WM55&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-MOD-EM-8&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;RC-H&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;BRC-H&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;atent&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ZEL STG RM WT 2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ZEL STG RM HS 4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ZEL STG RM FST UP4&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 145&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 135&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-OU-LED16&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-PB-4Dis-WM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-PB-4Dis-WM-2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMW-IO-4-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMW-IO-12-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMIP-WRC2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-WRC2&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-WRC6&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-SwI-3-FM&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemotePress</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;ZEL STG RM FSS UP3&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemotePress</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;263 144&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemotePress</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HM-SwI-X&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemotePress</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HMW-RCV-50&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">RemoteVirtual</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;HmIP-RC8&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">Remote</span><span class="p">,</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>

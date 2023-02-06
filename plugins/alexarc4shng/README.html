@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>AlexaRc4shNG</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">AlexaRc4shNG</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3896,13 +3896,13 @@
 </section>
 <section id="placeholders">
 <h3>Placeholders :<a class="headerlink" href="#placeholders" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">&lt;mValue&gt;                = Value to send as alpha</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">&lt;nValue&gt;                = Value to send as numeric</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">#item.path/#            = item-path of the value that should be inserted into text or ssml</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">&lt;serialNumber&gt;          = SerialNo. of the device where the command should go to</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">&lt;familiy&gt;               = device family</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">&lt;deviceType&gt;            = deviceType</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">&lt;deviceOwnerCustomerId&gt; = OwnerID of the device</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">&lt;mValue&gt;                = Value to send as alpha</span>
+<span class="l l-Scalar l-Scalar-Plain">&lt;nValue&gt;                = Value to send as numeric</span>
+<span class="l l-Scalar l-Scalar-Plain">#item.path/#            = item-path of the value that should be inserted into text or ssml</span>
+<span class="l l-Scalar l-Scalar-Plain">&lt;serialNumber&gt;          = SerialNo. of the device where the command should go to</span>
+<span class="l l-Scalar l-Scalar-Plain">&lt;familiy&gt;               = device family</span>
+<span class="l l-Scalar l-Scalar-Plain">&lt;deviceType&gt;            = deviceType</span>
+<span class="l l-Scalar l-Scalar-Plain">&lt;deviceOwnerCustomerId&gt; = OwnerID of the device</span>
 </pre></div>
 </div>
 <section id="strong-please-keep-in-mind-to-use-the-and-to-qualify-the-placeholders-strong">
@@ -4025,13 +4025,13 @@ Item2EnableAlexaRC-&gt;Item controlled by UZSU or something else which enables t
 alexa_credentials-&gt; user:pwd (base64 encoded)<br>
 item_2_enable_alexa_rc -&gt; Item to allow smarthomeNG to send Commands to Echo’s<br>
 login_update_cycle-&gt;seconds to wait for automatic Login in to refresh the cookie</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">AlexaRc4shNG</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alexarc4shng</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cookiefile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/local/smarthome/plugins/alexarc4shng/cookies.txt</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alexa.amazon.de</span><span class="w"></span>
-<span class="w">    </span><span class="nt">item_2_enable_alexa_rc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Item_to_enable_Alexaremote</span><span class="w"></span>
-<span class="w">    </span><span class="nt">alexa_credentials</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;USER&gt;:&lt;PWD&gt;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">login_update_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">432000</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">AlexaRc4shNG</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alexarc4shng</span>
+<span class="w">    </span><span class="nt">cookiefile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/local/smarthome/plugins/alexarc4shng/cookies.txt</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alexa.amazon.de</span>
+<span class="w">    </span><span class="nt">item_2_enable_alexa_rc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Item_to_enable_Alexaremote</span>
+<span class="w">    </span><span class="nt">alexa_credentials</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;USER&gt;:&lt;PWD&gt;</span>
+<span class="w">    </span><span class="nt">login_update_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">432000</span>
 </pre></div>
 </div>
 </section>
@@ -4047,9 +4047,9 @@ alexa_cmd_01: comparison:EchoDevice:Commandlet:Value_to_Send
 <p>„True“, „False“ and for numeric values „&lt;=“,“&gt;=“,“=“,“&lt;“,“&gt;“</p>
 <section id="sample-to-switch-on-a-radiostation-by-using-tunein-br-br">
 <h4>Sample to switch on a Radiostation by using TuneIN<br><br><a class="headerlink" href="#sample-to-switch-on-a-radiostation-by-using-tunein-br-br" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">Value = True means the item() becomes &quot;ON&quot;</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">EchodotKueche = Devicename where the Command should be send to StartTuneInStaion = Name of the Commandlet</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">s96141 = Value of the Radiostation (here S96141 = baden.fm)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">Value = True means the item() becomes &quot;ON&quot;</span>
+<span class="l l-Scalar l-Scalar-Plain">EchodotKueche = Devicename where the Command should be send to StartTuneInStaion = Name of the Commandlet</span>
+<span class="l l-Scalar l-Scalar-Plain">s96141 = Value of the Radiostation (here S96141 = baden.fm)</span>
 </pre></div>
 </div>
 <p>example:
@@ -4057,10 +4057,10 @@ alexa_cmd_01: comparison:EchoDevice:Commandlet:Value_to_Send
 </section>
 <section id="sample-to-send-text-with-item-value-included-based-on-value-lower-then-20-degrees-br-br">
 <h4>Sample to send Text with item-value included based on value lower then 20 degrees<br><br><a class="headerlink" href="#sample-to-send-text-with-item-value-included-based-on-value-lower-then-20-degrees-br-br" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">Value           = &lt;20.0 - send command when value of the item becomes less then 20.0</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">EchodotKueche   = Devicename where the Command should be send to</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">Text2Speech     = Name of the Commandlet</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">Value_to_Send   = Die Temperatur in der Kueche ist niedriger als 20 Grad Die Temperatur ist jetzt</span><span class="w"> </span><span class="c1">#test.testzimmer.temperature.actual/# Grad #test.testzimmer.temperature.actual/# = item-path of the value that should be inserted</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">Value           = &lt;20.0 - send command when value of the item becomes less then 20.0</span>
+<span class="l l-Scalar l-Scalar-Plain">EchodotKueche   = Devicename where the Command should be send to</span>
+<span class="l l-Scalar l-Scalar-Plain">Text2Speech     = Name of the Commandlet</span>
+<span class="l l-Scalar l-Scalar-Plain">Value_to_Send   = Die Temperatur in der Kueche ist niedriger als 20 Grad Die Temperatur ist jetzt</span><span class="w"> </span><span class="c1">#test.testzimmer.temperature.actual/# Grad #test.testzimmer.temperature.actual/# = item-path of the value that should be inserted</span>
 </pre></div>
 </div>
 <p><strong>example:<br></strong>
@@ -4075,52 +4075,52 @@ alexa_cmd_01: comparison:EchoDevice:Commandlet:Value_to_Send
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h4>
 <p>Example for settings in an item.yaml file :</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.yaml</span><span class="w"></span>
-<span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.yaml</span>
+<span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span>
+<span class="nn">---</span>
 
-<span class="nt">OG</span><span class="p">:</span><span class="w"></span>
+<span class="nt">OG</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">Buero</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Buero</span><span class="w"></span>
-<span class="w">        </span><span class="nt">Licht</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">alexa_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Licht Büro</span><span class="w"></span>
-<span class="w">            </span><span class="nt">alexa_description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Licht Büro</span><span class="w"></span>
-<span class="w">            </span><span class="nt">alexa_actions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TurnOn TurnOff</span><span class="w"></span>
-<span class="w">            </span><span class="nt">alexa_icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LIGHT</span><span class="w"></span>
-<span class="w">            </span><span class="nt">alexa_cmd_01</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True:EchoDotKueche:StartTuneInStation:s96141</span><span class="w"></span>
-<span class="w">            </span><span class="nt">alexa_cmd_02</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True:EchoDotKueche:Text2Speech:Hallo das Licht im Buero ist eingeschalten</span><span class="w"></span>
-<span class="w">            </span><span class="nt">alexa_cmd_03</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False:EchoDotKueche:Text2Speech:Hallo das Licht im Buero ist aus</span><span class="w"></span>
-<span class="w">            </span><span class="nt">alexa_cmd_04</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False:EchoDotKueche:Pause:</span><span class="nv"> </span><span class="s">&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/105</span><span class="w"></span>
-<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/105</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Buero</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Buero</span>
+<span class="w">        </span><span class="nt">Licht</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">alexa_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Licht Büro</span>
+<span class="w">            </span><span class="nt">alexa_description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Licht Büro</span>
+<span class="w">            </span><span class="nt">alexa_actions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TurnOn TurnOff</span>
+<span class="w">            </span><span class="nt">alexa_icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LIGHT</span>
+<span class="w">            </span><span class="nt">alexa_cmd_01</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True:EchoDotKueche:StartTuneInStation:s96141</span>
+<span class="w">            </span><span class="nt">alexa_cmd_02</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True:EchoDotKueche:Text2Speech:Hallo das Licht im Buero ist eingeschalten</span>
+<span class="w">            </span><span class="nt">alexa_cmd_03</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False:EchoDotKueche:Text2Speech:Hallo das Licht im Buero ist aus</span>
+<span class="w">            </span><span class="nt">alexa_cmd_04</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False:EchoDotKueche:Pause:</span><span class="nv"> </span><span class="s">&#39;</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/105</span>
+<span class="w">            </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/105</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
 </pre></div>
 </div>
 <p>Example for settings in an item.conf file :</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.conf</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/my.conf</span>
 
-<span class="p p-Indicator">[</span><span class="nv">OG</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">[[</span><span class="nv">Buero</span><span class="p p-Indicator">]]</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">name = Buero</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">[[[Licht]]]</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">type = bool</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_name = &quot;Licht Büro&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_description = &quot;Licht Büro&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_actions = &quot;TurnOn TurnOff&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_icon = &quot;LIGHT&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_cmd_01 = &#39;&quot;True:EchoDotKueche:StartTuneInStation:s96141&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_cmd_02 =&quot;True:EchoDotKueche:Text2Speech:Hallo das Licht im Buero ist eingeschalten&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_cmd_03 = &quot;False:EchoDotKueche:Text2Speech:Hallo das Licht im Buero ist aus&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_cmd_04 = &quot;False:EchoDotKueche:Pause</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="s">visu_acl</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">rw</span><span class="w"></span>
-<span class="w">        </span><span class="s">knx_dpt</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">1</span><span class="w"></span>
-<span class="w">        </span><span class="s">knx_listen</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">1/1/105</span><span class="w"></span>
-<span class="w">        </span><span class="s">knx_send</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">1/1/105</span><span class="w"></span>
-<span class="w">        </span><span class="s">enforce_updates</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">truey_attr:</span><span class="nv"> </span><span class="s">setting</span><span class="w"></span>
+<span class="p p-Indicator">[</span><span class="nv">OG</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="p p-Indicator">[[</span><span class="nv">Buero</span><span class="p p-Indicator">]]</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">name = Buero</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">[[[Licht]]]</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">type = bool</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_name = &quot;Licht Büro&quot;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_description = &quot;Licht Büro&quot;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_actions = &quot;TurnOn TurnOff&quot;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_icon = &quot;LIGHT&quot;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_cmd_01 = &#39;&quot;True:EchoDotKueche:StartTuneInStation:s96141&quot;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_cmd_02 =&quot;True:EchoDotKueche:Text2Speech:Hallo das Licht im Buero ist eingeschalten&quot;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_cmd_03 = &quot;False:EchoDotKueche:Text2Speech:Hallo das Licht im Buero ist aus&quot;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">alexa_cmd_04 = &quot;False:EchoDotKueche:Pause</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;</span>
+<span class="w">        </span><span class="s">visu_acl</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">rw</span>
+<span class="w">        </span><span class="s">knx_dpt</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">1</span>
+<span class="w">        </span><span class="s">knx_listen</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">1/1/105</span>
+<span class="w">        </span><span class="s">knx_send</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">1/1/105</span>
+<span class="w">        </span><span class="s">enforce_updates</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">truey_attr:</span><span class="nv"> </span><span class="s">setting</span>
 </pre></div>
 </div>
 </section>
@@ -4136,9 +4136,9 @@ alexa_cmd_01: comparison:EchoDevice:Commandlet:Value_to_Send
 <section id="send-cmd-dvname-cmdname-mvalue">
 <h3>send_cmd(dvName, cmdName, mValue)<a class="headerlink" href="#send-cmd-dvname-cmdname-mvalue" title="Permalink to this heading"></a></h3>
 <p>example how to use in logics:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">sh.AlexaRc4shNG.send_cmd(&quot;yourDevice&quot;, &quot;Text2Speech&quot;, &quot;yourValue&quot;)</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">sh.AlexaRc4shNG.send_cmd(&#39;Kueche&#39;,&#39;Text2Speech&#39;,&#39;Der Sensor der Hebenlage signalisiert ein Problem.&#39;)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">sh.AlexaRc4shNG.send_cmd(&quot;yourDevice&quot;, &quot;Text2Speech&quot;, &quot;yourValue&quot;)</span>
+<span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">sh.AlexaRc4shNG.send_cmd(&#39;Kueche&#39;,&#39;Text2Speech&#39;,&#39;Der Sensor der Hebenlage signalisiert ein Problem.&#39;)</span>
 </pre></div>
 </div>
 <p>Sends a command to the device. „dvName“ is the name of the device,  „cmdName“ is the name of the CommandLet, mValue is the value you would send.
@@ -4151,7 +4151,7 @@ You can also user the <span class="xref myst">placeholders</span></p>
 <section id="get-last-alexa">
 <h3>get_last_alexa()<a class="headerlink" href="#get-last-alexa" title="Permalink to this heading"></a></h3>
 <p>This function returns the Device-Name of the last Echo Device which got a voice command. You can use it in logics to trigger events based on the last used Echo device.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">myLastDevice = sh.AlexaRc4shNG.get_last_alexa()</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">myLastDevice = sh.AlexaRc4shNG.get_last_alexa()</span>
 </pre></div>
 </div>
 </section>

@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="../../konfiguration/module/module.html">Module</a> &raquo;</li>
-          <li><a href="../module/module_metadata.html">Metadaten für Module</a> &raquo;</li>
-      <li>module</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../konfiguration/konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="../../konfiguration/module/module.html">Module</a></li>
+          <li class="breadcrumb-item"><a href="../module/module_metadata.html">Metadaten für Module</a></li>
+      <li class="breadcrumb-item active">module</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3855,18 +3855,18 @@
   <span class="target" id="index-0"></span><span class="target" id="index-1"></span><section id="module">
 <span id="index-2"></span><h1>module<a class="headerlink" href="#module" title="Permalink to this heading"></a></h1>
 <p>Der globale Metadaten Abschnitt <code class="docutils literal notranslate"><span class="pre">module:</span></code> kennt die folgenden Schlüsselbegriffe:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Metadata for the module</span><span class="w"></span>
-<span class="nt">module</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Global module attributes</span><span class="w"></span>
-<span class="w">    </span><span class="nt">classname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Http</span><span class="w"></span>
-<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.4.3</span><span class="w"></span>
-<span class="c1">#    sh_minversion: 1.7          # minimum shNG version to use this module (leave empty if no special requirement)</span><span class="w"></span>
-<span class="c1">#    sh_maxversion:              # maximum shNG version to use this module (leave empty if latest)</span><span class="w"></span>
-<span class="c1">#    py_minversion: 3.6          # minimum Python version needed for this module (leave empty if no special requirement)</span><span class="w"></span>
-<span class="c1">#    py_maxversion:              # maximum Python version to use this module (leave empty if no special requirement)</span><span class="w"></span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Modul</span><span class="nv"> </span><span class="s">zur</span><span class="nv"> </span><span class="s">Implementierung</span><span class="nv"> </span><span class="s">von</span><span class="nv"> </span><span class="s">Backend-Webinterfaces</span><span class="nv"> </span><span class="s">für</span><span class="nv"> </span><span class="s">Plugins&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Module</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">implementing</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">backend-webinterface</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">plugins&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Metadata for the module</span>
+<span class="nt">module</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Global module attributes</span>
+<span class="w">    </span><span class="nt">classname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Http</span>
+<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.4.3</span>
+<span class="c1">#    sh_minversion: 1.7          # minimum shNG version to use this module (leave empty if no special requirement)</span>
+<span class="c1">#    sh_maxversion:              # maximum shNG version to use this module (leave empty if latest)</span>
+<span class="c1">#    py_minversion: 3.6          # minimum Python version needed for this module (leave empty if no special requirement)</span>
+<span class="c1">#    py_maxversion:              # maximum Python version to use this module (leave empty if no special requirement)</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Modul</span><span class="nv"> </span><span class="s">zur</span><span class="nv"> </span><span class="s">Implementierung</span><span class="nv"> </span><span class="s">von</span><span class="nv"> </span><span class="s">Backend-Webinterfaces</span><span class="nv"> </span><span class="s">für</span><span class="nv"> </span><span class="s">Plugins&#39;</span>
+<span class="w">        </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Module</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">implementing</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">backend-webinterface</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">plugins&#39;</span>
 </pre></div>
 </div>
 <p>Beschreibung der Schlüsselbegriffe im Abschnitt <code class="docutils literal notranslate"><span class="pre">module:</span></code></p>

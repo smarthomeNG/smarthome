@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>VR100</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">VR100</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3853,17 +3853,17 @@
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
 <p>bluez</p>
 <p>install by</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ apt-get install bluez
-$ hcitool scan
-Scanning ...
-        &lt;bt-addr&gt;       &lt;name of your bluetooth-module, e.g. <span class="s1">&#39;HC-05&#39;</span> or custom&gt;
-$ simple-agent hci0 &lt;bt-addr&gt;
-RequestPinCode <span class="o">(</span>/org/bluez/3070/hci0/dev_bt_addr_underscores<span class="o">)</span>
-Enter PIN Code: &lt;pin-code&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>bluez
+$<span class="w"> </span>hcitool<span class="w"> </span>scan
+Scanning<span class="w"> </span>...
+<span class="w">        </span>&lt;bt-addr&gt;<span class="w">       </span>&lt;name<span class="w"> </span>of<span class="w"> </span>your<span class="w"> </span>bluetooth-module,<span class="w"> </span>e.g.<span class="w"> </span><span class="s1">&#39;HC-05&#39;</span><span class="w"> </span>or<span class="w"> </span>custom&gt;
+$<span class="w"> </span>simple-agent<span class="w"> </span>hci0<span class="w"> </span>&lt;bt-addr&gt;
+RequestPinCode<span class="w"> </span><span class="o">(</span>/org/bluez/3070/hci0/dev_bt_addr_underscores<span class="o">)</span>
+Enter<span class="w"> </span>PIN<span class="w"> </span>Code:<span class="w"> </span>&lt;pin-code&gt;
 Release
-New device <span class="o">(</span>/org/bluez/3070/hci0/dev_bt_addr_underscores<span class="o">)</span>
-$ bluez-test-device trusted &lt;bt-addr&gt; yes
-$ bluez-test-device list
+New<span class="w"> </span>device<span class="w"> </span><span class="o">(</span>/org/bluez/3070/hci0/dev_bt_addr_underscores<span class="o">)</span>
+$<span class="w"> </span>bluez-test-device<span class="w"> </span>trusted<span class="w"> </span>&lt;bt-addr&gt;<span class="w"> </span>yes
+$<span class="w"> </span>bluez-test-device<span class="w"> </span>list
 </pre></div>
 </div>
 </section>
@@ -3902,35 +3902,35 @@ $ bluez-test-device list
 <li><p><strong>{}</strong>: the value of the item is written to this placeholder (don’t use if a fixed/no value is required)</p></li>
 </ul>
 <p>You should verify all your commands manually by using the serial interface.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">VR100</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">VR100</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">Reinigung</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">vr100_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Clean</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Reinigung</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">vr100_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Clean</span>
 
-<span class="w">        </span><span class="nt">Spot</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">vr100_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Clean Spot</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Spot</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">vr100_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Clean Spot</span>
 
-<span class="w">    </span><span class="nt">Batterie</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Batterie</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">Fuellstand</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">vr100_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GetCharger FuelPercent</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Fuellstand</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">vr100_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GetCharger FuelPercent</span>
 
-<span class="w">        </span><span class="nt">Ladung_aktiv</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">vr100_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GetCharger ChargingActive</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Ladung_aktiv</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">vr100_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GetCharger ChargingActive</span>
 
-<span class="w">        </span><span class="nt">leer</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">vr100_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GetCharger EmptyFuel</span><span class="w"></span>
+<span class="w">        </span><span class="nt">leer</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">vr100_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GetCharger EmptyFuel</span>
 
-<span class="w">        </span><span class="nt">Spannung</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">vr100_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GetCharger VBattV</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Spannung</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+<span class="w">            </span><span class="nt">vr100_info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GetCharger VBattV</span>
 </pre></div>
 </div>
 </section>

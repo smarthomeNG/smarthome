@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>EnOcean</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">EnOcean</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3924,11 +3924,11 @@ b) Via the logfiles created by the Enocean plugin.</p>
 </section>
 <section id="example-plugin-yaml">
 <h4>Example plugin.yaml<a class="headerlink" href="#example-plugin-yaml" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">enocean</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnOcean</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.enocean</span><span class="w"></span>
-<span class="w">    </span><span class="nt">serialport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB0</span><span class="w"></span>
-<span class="w">    </span><span class="nt">tx_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FFFF4680</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">enocean</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnOcean</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.enocean</span>
+<span class="w">    </span><span class="nt">serialport</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB0</span>
+<span class="w">    </span><span class="nt">tx_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FFFF4680</span>
 </pre></div>
 </div>
 </section>
@@ -4338,9 +4338,9 @@ Generally follow the teach-in procedure as described by EnOcean:</p>
 <li><p>Exit the learn mode of the actor</p></li>
 </ol>
 <p>The SmarthomeNG interactive console can be reached via:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/local/smarthome/bin
-sudo systemctl stop smarthome
-sudo ./smarthome.py -i
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/local/smarthome/bin
+sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>smarthome
+sudo<span class="w"> </span>./smarthome.py<span class="w"> </span>-i
 </pre></div>
 </div>
 <p>The learn message is issued by the following command:</p>

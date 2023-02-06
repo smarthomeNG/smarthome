@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>ECMD</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">ECMD</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3886,11 +3886,11 @@ The ECMD protocoll provides access to attached 1wire temperature sensors DS1820.
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
 <p>You can specify the host ip of your ethersex device.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ecmd</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ECMD</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.ecmd</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.10.10.10</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># port: 2701</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ecmd</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ECMD</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.ecmd</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.10.10.10</span>
+<span class="w">    </span><span class="c1"># port: 2701</span>
 </pre></div>
 </div>
 <p>This plugin needs an host attribute and you could specify a port attribute which differs from the default ‚1010‘.</p>
@@ -3900,25 +3900,25 @@ The ECMD protocoll provides access to attached 1wire temperature sensors DS1820.
 <p>The item needs to define the 1-wire address of the sensor.</p>
 <section id="ecmd1wire-addr">
 <h4>ecmd1wire_addr<a class="headerlink" href="#ecmd1wire-addr" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">mysensor</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ecmd1wire_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10f01929020800dc</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">mysensor</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">ecmd1wire_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10f01929020800dc</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
 </pre></div>
 </div>
 </section>
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h4>
 <p>Please provide an item configuration with every attribute and usefull settings.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">someroom</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">someroom</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ecmd1wire_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10f01929020800dc</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">history</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;\&quot;{{</span><span class="nv"> </span><span class="s">basic.float(&#39;item&#39;,</span><span class="nv"> </span><span class="s">&#39;item&#39;,</span><span class="nv"> </span><span class="s">&#39;°&#39;)</span><span class="nv"> </span><span class="s">}}\&quot;</span><span class="nv"> </span><span class="s">,</span><span class="nv"> </span><span class="s">\&quot;{{</span><span class="nv"> </span><span class="s">plot.period(&#39;item-plot&#39;,</span><span class="nv"> </span><span class="s">&#39;item&#39;)</span><span class="nv"> </span><span class="s">}}\&quot;&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raumtemperatur</span>
+<span class="w">        </span><span class="nt">ecmd1wire_addr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10f01929020800dc</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">sqlite</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">        </span><span class="nt">history</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">        </span><span class="nt">visu</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">        </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;\&quot;{{</span><span class="nv"> </span><span class="s">basic.float(&#39;item&#39;,</span><span class="nv"> </span><span class="s">&#39;item&#39;,</span><span class="nv"> </span><span class="s">&#39;°&#39;)</span><span class="nv"> </span><span class="s">}}\&quot;</span><span class="nv"> </span><span class="s">,</span><span class="nv"> </span><span class="s">\&quot;{{</span><span class="nv"> </span><span class="s">plot.period(&#39;item-plot&#39;,</span><span class="nv"> </span><span class="s">&#39;item&#39;)</span><span class="nv"> </span><span class="s">}}\&quot;&quot;</span>
 </pre></div>
 </div>
 </section>

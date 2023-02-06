@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>DataLog</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">DataLog</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3896,11 +3896,11 @@ data into the log files, which defaults to 300 seconds.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">value</span></code> - the value of items</p></li>
 </ul>
 <p>Example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datalog</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">class_name = DataLog</span><span class="w"></span>
-<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">class_path = plugins.datalog</span><span class="w"></span>
-<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">filepatterns = default:{log}-{year}-{month}-{day}.csv | custom:{log}-{year}-{month}-{day}.txt</span><span class="w"></span>
-<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">logpatterns = csv:{time};{item};{value}\n</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datalog</span><span class="p">:</span>
+<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">class_name = DataLog</span>
+<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">class_path = plugins.datalog</span>
+<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">filepatterns = default:{log}-{year}-{month}-{day}.csv | custom:{log}-{year}-{month}-{day}.txt</span>
+<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">logpatterns = csv:{time};{item};{value}\n</span>
 </pre></div>
 </div>
 <p>In this example the <code class="docutils literal notranslate"><span class="pre">default</span></code> log file will use the configured log pattern. The
@@ -3936,18 +3936,18 @@ the extension (part behind the last <code class="docutils literal notranslate"><
 <section id="items-yaml">
 <h3>items.yaml<a class="headerlink" href="#items-yaml" title="Permalink to this heading"></a></h3>
 <p>Example configuration using the plugin configuration on top of the page.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">some</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">item1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datalog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
-<span class="w">    </span><span class="nt">item2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datalog</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom</span><span class="w"></span>
-<span class="w">    </span><span class="nt">item3</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datalog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">some</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">item1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">datalog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">    </span><span class="nt">item2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">datalog</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom</span>
+<span class="w">    </span><span class="nt">item3</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">datalog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom</span>
 </pre></div>
 </div>
 <p>This will log the items</p>

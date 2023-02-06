@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="items.html">Items</a> &raquo;</li>
-      <li>Initiale Item-Konfiguration</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="items.html">Items</a></li>
+      <li class="breadcrumb-item active">Initiale Item-Konfiguration</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3866,9 +3866,9 @@ ausgeschaltet werden. Dazu braucht es zwei Schritte:</p>
 <li><p>Das <strong>KNX Plugin</strong> muss installiert und aktiviert werden.
 Das geschieht in der Datei <code class="docutils literal notranslate"><span class="pre">./etc/plugins.yaml</span></code>.
 Typischerweise sieht der entsprechende Eintrag dann so aus:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">knx</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx</span><span class="w"></span>
-<span class="w">   </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">knx</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knx</span>
+<span class="w">   </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span>
 </pre></div>
 </div>
 </li>
@@ -3877,7 +3877,7 @@ Dazu wird eine Datei mit beliebigem Namen im Verzeichnis <code class="docutils l
 mit der Endung <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> angelegt. z.B. die Datei <code class="docutils literal notranslate"><span class="pre">./items/Lampen.yaml</span></code>.
 In dieser Datei wird das Item angelegt indem den Name des Items gefolgt von
 einem Doppelpunkt notiert wird. Der Inhalt der Datei wäre also:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lampe</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lampe</span><span class="p">:</span>
 </pre></div>
 </div>
 <p>Die Lampe soll an- und ausgeschaltet werden können und daher muß mit dem
@@ -3885,8 +3885,8 @@ Schlüsselwort <strong>type</strong> der Datentyp <strong>bool</strong> zugewies
 Zudem muß das Schlüsselwort um einige Zeichen eingerückt werden um dem
 yaml Parser von SmartHomeNG zu zeigen, das nun eine neue Ebene erfolgt.
 Somit ergibt sich:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lampe</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lampe</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
 </pre></div>
 </div>
 <p>Nun muß dem KNX Plugin über das Schlüsselwort <strong>knx_listen</strong> signalisiert
@@ -3896,11 +3896,11 @@ des Items die nicht vom KNX Plugin initiiert werden dann auf den Bus gesendet
 werden sollen. Zudem wird dem KNX Plugin noch der Datentyp vorgegeben,
 mit dem die Daten vom KNX Bus codiert bzw. decodiert werden sollen.
 Das Schlüsselwort hierzu ist <strong>knx_dpt</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lampe</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/133</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/130</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lampe</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/133</span>
+<span class="w">    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/130</span>
 </pre></div>
 </div>
 <p>Sollte die fiktive Lampe auch über einen Dimmer angesteuert werden können,
@@ -3908,56 +3908,56 @@ muß ein weiteres Item angelegt werden, da der Dimmwert ja nicht ein oder aus is
 sondern einen Zahlenwert für die Dimmeinstellung vorsieht.
 Dazu benötigt man ein weiteres Item. Hierbei wird das Schlüsselwort <strong>type</strong> auf
 <strong>num</strong> gesetzt und der KNX Datentyp passend dazu <strong>knx_dpt: 5</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">LampeDimmen</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/134</span><span class="w"></span>
-<span class="w">    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/132</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">LampeDimmen</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/134</span>
+<span class="w">    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/132</span>
 </pre></div>
 </div>
 <p>Um sich viel Tipparbeit zu ersparen und die Struktur übersichtlich zu gestalten
 können Items hierarchisch angeordnet werden.
 Für das Beispiel mit der Lampe gibt es nun ein Hauptitem <strong>Lampe</strong> und darunter
 zwei Kinditems <strong>schalten</strong> und <strong>dimmen</strong> mit den oben eingeführten Schlüsselwörtern:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lampe</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">schalten</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/133</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/130</span><span class="w"></span>
-<span class="w">    </span><span class="nt">dimmen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/134</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/132</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lampe</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">schalten</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/133</span>
+<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/130</span>
+<span class="w">    </span><span class="nt">dimmen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/134</span>
+<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/132</span>
 </pre></div>
 </div>
 </li>
 </ol>
 <p>Um den Überblick zu behalten empfiehlt sich folgendes Schema für die Erstellung
 von Item Dateien:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Stockwerk</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Raum</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">Gewerk</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">Ort</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">Eigenschaft</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Stockwerk</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Raum</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">Gewerk</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">Ort</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">Eigenschaft</span><span class="p">:</span>
 </pre></div>
 </div>
 <p>Beispiel:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">EG</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">Bad</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">Licht</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">Decke</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">schalten</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/133</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/130</span><span class="w"></span>
-<span class="w">                </span><span class="nt">dimmen</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/134</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/132</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">EG</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Bad</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">Licht</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">Decke</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">schalten</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">                    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/133</span>
+<span class="w">                    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/130</span>
+<span class="w">                </span><span class="nt">dimmen</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">                    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/134</span>
+<span class="w">                    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/132</span>
 </pre></div>
 </div>
 <p>Ein solches Schema hat den Vorteil, dass man mit
@@ -3966,26 +3966,26 @@ beispielsweise um eine Logik auszulösen.</p>
 <p>Möchte man nun das Beispiel erweitern um z.B. mit der SmartVISU die Lampe zu schalten,
 muss man zunächst das Plugin <strong>visu_websocket</strong> in der <code class="docutils literal notranslate"><span class="pre">./etc/plugin.yaml</span></code>
 durch folgenden Eintrag aktivieren:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">visu</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">visu_websocket</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">visu</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">visu_websocket</span>
 </pre></div>
 </div>
 <p>Bei den Items ist das Schlüsselwort <strong>visu_acl</strong> zu ergänzen mit der Berechtigungsebene für den Websocket.
 Im Falle der Lampe wäre das <strong>rw</strong> für einen Read/Write also Lese und Schreibzugriff auf
 das Item durch das visu_websocket Plugin.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lampe</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">schalten</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/133</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/130</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">    </span><span class="nt">dimmen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/134</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/132</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lampe</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">schalten</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/133</span>
+<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/130</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">    </span><span class="nt">dimmen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/134</span>
+<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/132</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
 </pre></div>
 </div>
 <p>Um ein Item auf weitere Plugins reagieren zu lassen muss nun ebenfalls das gewünschte
@@ -3994,15 +3994,15 @@ jedes Plugin Konfigurationsinformationen und zumeist noch weiterführende Hilfe 
 Anwendungen, Links auf Support Threads im KNX User Forum oder Artikel im SmartHomeNG Blog.</p>
 <p>Um also z.B. das Dash-Button Plugin zu nutzen muss dieses nur aktiviert werden und
 das Item einfach noch um das Dash-Button Attribut erweitert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lampe</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">schalten</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/133</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/130</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">        </span><span class="nt">dashbutton_mac</span><span class="p">:</span><span class="w">  </span><span class="s">&#39;AC:63:B0:02:CA:12&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">dashbutton_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;flip&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Lampe</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">schalten</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/133</span>
+<span class="w">        </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1/1/130</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">        </span><span class="nt">dashbutton_mac</span><span class="p">:</span><span class="w">  </span><span class="s">&#39;AC:63:B0:02:CA:12&#39;</span>
+<span class="w">        </span><span class="nt">dashbutton_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;flip&#39;</span>
 </pre></div>
 </div>
 <p>D.h. man kann die Lampe nun via KNX, SmartVISU oder Dashbutton ein- und

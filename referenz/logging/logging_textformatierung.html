@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../referenz.html">Referenz <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="logging.html">Logging</a> &raquo;</li>
-      <li>Text Formatierung beim Logging</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../referenz.html">Referenz <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="logging.html">Logging</a></li>
+      <li class="breadcrumb-item active">Text Formatierung beim Logging</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3893,13 +3893,13 @@ SmartHomeNG genutzt werden.</p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">menge</span> <span class="o">=</span> <span class="mi">24</span>
 <span class="n">preis</span> <span class="o">=</span> <span class="mf">19.98</span>
-<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Artikelmenge: </span><span class="si">{</span><span class="n">menge</span><span class="si">}</span><span class="s2">, Preis: </span><span class="si">{</span><span class="n">preis</span><span class="si">}</span><span class="s2">, Gesamt: </span><span class="si">{</span><span class="n">menge</span> <span class="o">*</span> <span class="n">preis</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Artikelmenge: </span><span class="si">{</span><span class="n">menge</span><span class="si">}</span><span class="s2">, Preis: </span><span class="si">{</span><span class="n">preis</span><span class="si">}</span><span class="s2">, Gesamt: </span><span class="si">{</span><span class="n">menge</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">preis</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Auch hier ist die Formatierung der Variableninhalte möglich:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">menge</span> <span class="o">=</span> <span class="mi">24</span>
 <span class="n">preis</span> <span class="o">=</span> <span class="mf">19.98</span>
-<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Artikelmenge: </span><span class="si">{</span><span class="n">menge</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2">, Preis: </span><span class="si">{</span><span class="n">preis</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">, Gesamt: </span><span class="si">{</span><span class="n">menge</span> <span class="o">*</span> <span class="n">preis</span><span class="si">:</span><span class="s2">8.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Artikelmenge: </span><span class="si">{</span><span class="n">menge</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2">, Preis: </span><span class="si">{</span><span class="n">preis</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2">, Gesamt: </span><span class="si">{</span><span class="n">menge</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">preis</span><span class="si">:</span><span class="s2">8.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

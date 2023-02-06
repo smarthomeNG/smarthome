@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-      <li>operationlog</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_system.html">System Plugins</a></li>
+      <li class="breadcrumb-item active">operationlog</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3863,22 +3863,22 @@
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
 <p>Das Plugin wird in der <code class="docutils literal notranslate"><span class="pre">/etc/plugin.yaml</span></code> konfiguriert:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">mylogname1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operationlog</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># maxlen = 50</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># cache = yes</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># logtofile = yes</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># filepattern = {year:04}-{month:02}-{day:02}-{name}.log</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># logger =</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">mylogname1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operationlog</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span>
+<span class="w">    </span><span class="c1"># maxlen = 50</span>
+<span class="w">    </span><span class="c1"># cache = yes</span>
+<span class="w">    </span><span class="c1"># logtofile = yes</span>
+<span class="w">    </span><span class="c1"># filepattern = {year:04}-{month:02}-{day:02}-{name}.log</span>
+<span class="w">    </span><span class="c1"># logger =</span>
 
-<span class="nt">mylogname2</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operationlog</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname2</span><span class="w"></span>
-<span class="w">    </span><span class="nt">maxlen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;no&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">logtofile</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filepattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yearly_log-{name}-{year:04}.log</span><span class="w"></span>
+<span class="nt">mylogname2</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operationlog</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname2</span>
+<span class="w">    </span><span class="nt">maxlen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;no&#39;</span>
+<span class="w">    </span><span class="nt">logtofile</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">    </span><span class="nt">filepattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yearly_log-{name}-{year:04}.log</span>
 </pre></div>
 </div>
 <p>Diese Konfiguration erzeugt zwei Logs mit den Namen <strong>mylogname1</strong> und <strong>mylogname2</strong>.</p>
@@ -3895,15 +3895,15 @@
 <section id="items-yaml">
 <h3>items.yaml<a class="headerlink" href="#items-yaml" title="Permalink to this heading"></a></h3>
 <p>Ein Item kann für das Logging wie folgt konfiguriert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">foo</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Foo</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">foo</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Foo</span>
 
-<span class="w">    </span><span class="nt">bar</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># olog_rules: *:value</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># olog_txt: {id} = {value}</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># olog_level: INFO</span><span class="w"></span>
+<span class="w">    </span><span class="nt">bar</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">olog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span>
+<span class="w">        </span><span class="c1"># olog_rules: *:value</span>
+<span class="w">        </span><span class="c1"># olog_txt: {id} = {value}</span>
+<span class="w">        </span><span class="c1"># olog_level: INFO</span>
 </pre></div>
 </div>
 <p>foo.bar nutzt die minimale Konfiguration mit Standardwerten. Wenn ein Item geändert wird, wird ein neuer Logeintrag der Kategorie ‚INFO‘ im Log mylogname1 erzeugt . Das Format des Eintrags ist „foo.bar = value“. Der Standardwert <code class="docutils literal notranslate"><span class="pre">olog_rules</span> <span class="pre">=</span> <span class="pre">*:value</span></code> gibt an, dass alle Werte eine Logeintrag auslösen. Es können Itemtypen <code class="docutils literal notranslate"><span class="pre">num</span></code>, <code class="docutils literal notranslate"><span class="pre">bool</span></code> and <code class="docutils literal notranslate"><span class="pre">str</span></code> genutzt werden.</p>
@@ -3961,62 +3961,62 @@
 </section>
 <section id="item-log-beispiele">
 <h3>Item Log Beispiele:<a class="headerlink" href="#item-log-beispiele" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">foo</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Foo</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">foo</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Foo</span>
 
-<span class="w">    </span><span class="nt">bar1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bar1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog_rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2:two</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0:zero</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1:one</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*:value&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog_txt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This is a log text for item with name {name} and value {value} mapped to {mvalue}, parent item name is {pname}</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ERROR</span><span class="w"></span>
+<span class="w">    </span><span class="nt">bar1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bar1</span>
+<span class="w">        </span><span class="nt">olog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span>
+<span class="w">        </span><span class="nt">olog_rules</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2:two</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0:zero</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1:one</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*:value&#39;</span>
+<span class="w">        </span><span class="nt">olog_txt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This is a log text for item with name {name} and value {value} mapped to {mvalue}, parent item name is {pname}</span>
+<span class="w">        </span><span class="nt">olog_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ERROR</span>
 
-<span class="w">    </span><span class="nt">bar2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bar2</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog_rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True:the value is true</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False:the value is false</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog_txt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This is a log text for {value} mapped to &#39;{mvalue}&#39;, {name} changed after {age} seconds</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span><span class="w"></span>
+<span class="w">    </span><span class="nt">bar2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bar2</span>
+<span class="w">        </span><span class="nt">olog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span>
+<span class="w">        </span><span class="nt">olog_rules</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True:the value is true</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False:the value is false</span>
+<span class="w">        </span><span class="nt">olog_txt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This is a log text for {value} mapped to &#39;{mvalue}&#39;, {name} changed after {age} seconds</span>
+<span class="w">        </span><span class="nt">olog_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
 
-<span class="w">    </span><span class="nt">bar3</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bar3</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog_rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">t1:text string number one</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">t2:text string number two</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*:value&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog_txt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;text</span><span class="nv"> </span><span class="s">{value}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">mapped</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">logtext</span><span class="nv"> </span><span class="s">&#39;{mvalue}&#39;,</span><span class="nv"> </span><span class="s">expression</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">syntax</span><span class="nv"> </span><span class="s">errors:</span><span class="nv"> </span><span class="s">{eval=sh.this.item.doesnotexist()*/+-42}&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span><span class="w"></span>
+<span class="w">    </span><span class="nt">bar3</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bar3</span>
+<span class="w">        </span><span class="nt">olog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span>
+<span class="w">        </span><span class="nt">olog_rules</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">t1:text string number one</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">t2:text string number two</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*:value&#39;</span>
+<span class="w">        </span><span class="nt">olog_txt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;text</span><span class="nv"> </span><span class="s">{value}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">mapped</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">logtext</span><span class="nv"> </span><span class="s">&#39;{mvalue}&#39;,</span><span class="nv"> </span><span class="s">expression</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">syntax</span><span class="nv"> </span><span class="s">errors:</span><span class="nv"> </span><span class="s">{eval=sh.this.item.doesnotexist()*/+-42}&quot;</span>
+<span class="w">        </span><span class="nt">olog_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
 
-<span class="w">    </span><span class="nt">bar4</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bar4</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog_rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lowlim:-1.0</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">highlim:10.0</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog_txt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Item with name {name} has lowlim={lowlim} &lt;= value={value} &lt; highlim={highlim}, the value {eval=&#39;increased&#39; if sh.foo.bar4() &gt; sh.foo.bar4.prev_value() else &#39;decreased&#39;} by {eval=round(abs(sh.foo.bar4() - sh.foo.bar4.prev_value()), 3)}</span><span class="w"></span>
-<span class="w">        </span><span class="nt">olog_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">info</span><span class="w"></span>
+<span class="w">    </span><span class="nt">bar4</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bar4</span>
+<span class="w">        </span><span class="nt">olog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span>
+<span class="w">        </span><span class="nt">olog_rules</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lowlim:-1.0</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">highlim:10.0</span>
+<span class="w">        </span><span class="nt">olog_txt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Item with name {name} has lowlim={lowlim} &lt;= value={value} &lt; highlim={highlim}, the value {eval=&#39;increased&#39; if sh.foo.bar4() &gt; sh.foo.bar4.prev_value() else &#39;decreased&#39;} by {eval=round(abs(sh.foo.bar4() - sh.foo.bar4.prev_value()), 3)}</span>
+<span class="w">        </span><span class="nt">olog_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">info</span>
 </pre></div>
 </div>
 </section>
 <section id="logics-yaml">
 <h3>Logics.yaml<a class="headerlink" href="#logics-yaml" title="Permalink to this heading"></a></h3>
 <p>Logiken können wie folgt für Logging konfiguriert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">some_logic</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">script.py</span><span class="w"></span>
-<span class="w">    </span><span class="nt">olog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># olog_txt: The logic {logic.name} was triggered!</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># olog_level: INFO</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">some_logic</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">script.py</span>
+<span class="w">    </span><span class="nt">olog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mylogname1</span>
+<span class="w">    </span><span class="c1"># olog_txt: The logic {logic.name} was triggered!</span>
+<span class="w">    </span><span class="c1"># olog_level: INFO</span>
 </pre></div>
 </div>
 <p>Um Logging für eine Logik zu aktivieren, reicht es, das <code class="docutils literal notranslate"><span class="pre">olog</span></code>-Attribut anzugeben. Standardmäßig wird der Text „Logic {logic.name} triggered“ ausgegeben.</p>

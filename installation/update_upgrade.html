@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="installation.html">Installation</a> &raquo;</li>
-      <li>Update von einer älteren Version</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="installation.html">Installation</a></li>
+      <li class="breadcrumb-item active">Update von einer älteren Version</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3863,18 +3863,18 @@ Es ist also ein wenig ein Stückwerk.</p>
 <p>Die Reihenfolge ist prinzipiell folgende:</p>
 <ul>
 <li><p>Unter Linux einen Dienst, der SmartHomeNG automatisch startet (systemd) abschalten, beispielsweise mit</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/usr/local/smarthome$ sudo systemctl disable smarthome.service
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/usr/local/smarthome$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>disable<span class="w"> </span>smarthome.service
 </pre></div>
 </div>
 </li>
 <li><p>Über das Admin-Interface via <strong>Dienste -&gt; Konfiguration - letzte Sicherung -&gt; Herunterladen</strong>
 eine Sicherung der Konfiguration erstellen (ein ZIP Archiv wird über den Browser heruntergeladen)</p></li>
 <li><p>SmartHomeNG selbst beenden beispielsweise mit</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/usr/local/smarthome$ python3 bin/smarthome.py -s
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/usr/local/smarthome$<span class="w"> </span>python3<span class="w"> </span>bin/smarthome.py<span class="w"> </span>-s
 </pre></div>
 </div>
 <p>oder wenn SmartHomeNG via systemd sonst automatisch gestartet wird mit</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/usr/local/smarthome$ sudo systemctl stop smarthome.service
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/usr/local/smarthome$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>smarthome.service
 </pre></div>
 </div>
 </li>
@@ -3971,33 +3971,33 @@ die via Attribut <code class="docutils literal notranslate"><span class="pre">ca
 <h3>Update von SmarthomeNG ab v1.1 und höher<a class="headerlink" href="#update-von-smarthomeng-ab-v1-1-und-hoher" title="Permalink to this heading"></a></h3>
 <p>Wenn man SmarthomeNG laut der Komplettanleitung <a class="reference internal" href="komplettanleitung/02_smarthomeng.html"><span class="doc">SmartHomeNG installieren</span></a>
 (mithilfe „git clone […]“) installiert hat, in das Verzeichnis „smarthome“ wechseln und anschliessend</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git pull
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>pull
 </pre></div>
 </div>
 <p>eingeben. Daraufhin sollte der Update-Vorgang starten.</p>
 <p>Nachdem SmartHomeNG aktualisiert wurde, müssen unbedingt noch die <strong>Plugins
 aktualisiert</strong> werden. Dazu in das <strong>plugins</strong> Verzeichnis wechseln und
 einen Pull durchführen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> plugins
-git pull
-<span class="nb">cd</span> ..
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>plugins
+git<span class="w"> </span>pull
+<span class="nb">cd</span><span class="w"> </span>..
 
-.. note::
+..<span class="w"> </span>note::
 
-    Es kann durchaus vorkommen, das das <span class="sb">``</span>git pull<span class="sb">``</span> abgebrochen wird mit einer
-    Fehlermeldung der Art:
+<span class="w">    </span>Es<span class="w"> </span>kann<span class="w"> </span>durchaus<span class="w"> </span>vorkommen,<span class="w"> </span>das<span class="w"> </span>das<span class="w"> </span><span class="sb">``</span>git<span class="w"> </span>pull<span class="sb">``</span><span class="w"> </span>abgebrochen<span class="w"> </span>wird<span class="w"> </span>mit<span class="w"> </span>einer
+<span class="w">    </span>Fehlermeldung<span class="w"> </span>der<span class="w"> </span>Art:
 
-    .. code-block: python
+<span class="w">    </span>..<span class="w"> </span>code-block:<span class="w"> </span>python
 
-        error: Ihre lokalen Änderungen <span class="k">in</span> den folgenden Dateien würden durch den
-        Merge überschrieben werden:
-        requirements/all.txt
-        Bitte committen oder stashen Sie Ihre Änderungen, bevor sie mergen.
-        Abbruch
+<span class="w">        </span>error:<span class="w"> </span>Ihre<span class="w"> </span>lokalen<span class="w"> </span>Änderungen<span class="w"> </span><span class="k">in</span><span class="w"> </span>den<span class="w"> </span>folgenden<span class="w"> </span>Dateien<span class="w"> </span>würden<span class="w"> </span>durch<span class="w"> </span>den
+<span class="w">        </span>Merge<span class="w"> </span>überschrieben<span class="w"> </span>werden:
+<span class="w">        </span>requirements/all.txt
+<span class="w">        </span>Bitte<span class="w"> </span>committen<span class="w"> </span>oder<span class="w"> </span>stashen<span class="w"> </span>Sie<span class="w"> </span>Ihre<span class="w"> </span>Änderungen,<span class="w"> </span>bevor<span class="w"> </span>sie<span class="w"> </span>mergen.
+<span class="w">        </span>Abbruch
 
-    In diesem Fall würde ein <span class="sb">``</span>git checkout -- requirements/all.txt<span class="sb">``</span> aus dem
-    aktuellen Branch die fragliche Datei auschecken und damit für <span class="sb">``</span>git pull<span class="sb">``</span>
-    wieder überschreibbar machen.
+<span class="w">    </span>In<span class="w"> </span>diesem<span class="w"> </span>Fall<span class="w"> </span>würde<span class="w"> </span>ein<span class="w"> </span><span class="sb">``</span>git<span class="w"> </span>checkout<span class="w"> </span>--<span class="w"> </span>requirements/all.txt<span class="sb">``</span><span class="w"> </span>aus<span class="w"> </span>dem
+<span class="w">    </span>aktuellen<span class="w"> </span>Branch<span class="w"> </span>die<span class="w"> </span>fragliche<span class="w"> </span>Datei<span class="w"> </span>auschecken<span class="w"> </span>und<span class="w"> </span>damit<span class="w"> </span>für<span class="w"> </span><span class="sb">``</span>git<span class="w"> </span>pull<span class="sb">``</span>
+<span class="w">    </span>wieder<span class="w"> </span>überschreibbar<span class="w"> </span>machen.
 </pre></div>
 </div>
 <p>Anschließend müssen noch benötigte Pakete aktualisiert werden.
@@ -4007,7 +4007,7 @@ Die Abhängigkeiten von externen Bibliotheken sind für den Programmkern und die
 Um eine Liste der Abhängigkeiten zu erstellen, gibt es ein Skript das unter
 anderem alle Plugin Unterverzeichnisse durchläuft und die Abhängigkeiten
 der Plugins ermittelt. Dies Skript wird aufgerufen mit:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 tools/build_requirements.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>tools/build_requirements.py
 </pre></div>
 </div>
 <div class="admonition note">
@@ -4020,14 +4020,14 @@ nicht erfüllt, beendet sich SmartHomeNG mit einem entsprechenden Eintrag im Log
 </div>
 <p>Vom Programmkern benötigte Bibliotheken herunterladen und installieren mit:</p>
 <blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install -r requirements/base.txt --user
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements/base.txt<span class="w"> </span>--user
 </pre></div>
 </div>
 </div></blockquote>
 <p>Und dann für jedes Plugin einzeln die benötigten Bibliotheken herunterladen
 und installieren mit:</p>
 <blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install -r plugins/&lt;pluginname&gt;/requirements.txt --user
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>plugins/&lt;pluginname&gt;/requirements.txt<span class="w"> </span>--user
 </pre></div>
 </div>
 </div></blockquote>
@@ -4044,7 +4044,7 @@ für den entsprechenden User mit <strong>–user</strong> erfolgen (wie oben bes
 <p>Zum Abschluss dann SmarthomeNG starten. Um zu prüfen, ob sich vielleicht
 Fehler oder Änderungen in den Plugins ergeben haben, sollte man dies im
 von der Kommandozeile aus machen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 bin/smarthome.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>bin/smarthome.py
 </pre></div>
 </div>
 <p>Jetzt heißt es genau zu schauen, was an <strong>WARNING</strong> oder <strong>ERROR</strong> gemeldet wird. Logfiles findet man im
@@ -4113,7 +4113,7 @@ Wenn keine weiteren Fehler auftreten können die Items übernommen werden.</p>
 <li><p>kopieren der Dateien mit den Definitionen der Items aus der alten Installation <code class="docutils literal notranslate"><span class="pre">/usr/local/smarthome.old/items/</span></code>
 in das Verzeichnis <code class="docutils literal notranslate"><span class="pre">/usr/local/smarthome/items/</span></code> der neuen Installation.</p></li>
 <li><p>starten des Konvertierungstools:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/usr/local/smarthome$ python3 tools/conf_to_yaml_converter.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/usr/local/smarthome$<span class="w"> </span>python3<span class="w"> </span>tools/conf_to_yaml_converter.py
 </pre></div>
 </div>
 <p>Bei erfolgreichem Durchlauf des Konverters ist jetzt für jede <code class="docutils literal notranslate"><span class="pre">*.conf</span></code> Datei eine passende <code class="docutils literal notranslate"><span class="pre">*.yaml</span></code> Datei erstellt worden.

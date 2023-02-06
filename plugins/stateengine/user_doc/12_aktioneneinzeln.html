@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-          <li><a href="../user_doc.html">stateengine</a> &raquo;</li>
-      <li>Aktionen - einzeln</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_doc/plugins_system.html">System Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../user_doc.html">stateengine</a></li>
+      <li class="breadcrumb-item active">Aktionen - einzeln</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3866,7 +3866,7 @@ Bedingung gehören, folgen dem Muster <code class="docutils literal notranslate"
 <section id="definition-der-aktion">
 <h2>Definition der Aktion<a class="headerlink" href="#definition-der-aktion" title="Permalink to this heading"></a></h2>
 <p><strong>Aktion set: Item auf einen Wert setzen</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_set_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_set_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;</span>
 </pre></div>
 </div>
 <p>Das Item, das verändert werden soll, muss auf Ebene des
@@ -3876,7 +3876,7 @@ angegeben werden.</p>
 Items oder als Ergebnis der Ausführung einer Funktion festgelegt
 werden.</p>
 <p><strong>Aktion force: Item zwangsweise auf einen Wert setzen</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_force_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_force_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;</span>
 </pre></div>
 </div>
 <p>Diese Aktion funktioniert analog zu <code class="docutils literal notranslate"><span class="pre">se_set_&lt;Aktionsname&gt;</span></code>.
@@ -3892,21 +3892,21 @@ Wertänderung (ggf. sogar zwei) mit allen damit in Zusammenhang
 stehenden Änderungen (eval’s, Aktualisierung der Änderungszeiten,
 etc).</p>
 <p><strong>Aktion run: Ausführen einer Funktion</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_run_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:(Funktion)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_run_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:(Funktion)</span>
 </pre></div>
 </div>
 <p>Die Angabe ist vergleichbar mit dem Ausführen einer Funktion zur
 Ermittlung des Werts für ein Item, hier wird jedoch kein Item
 benötigt. Außerdem wird der Rückgabewert der Funktion ignoriert.</p>
 <p><strong>Aktion trigger: Auslösen einer Logikausführung</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_trigger_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">meineLogik:Zu übergebender Wert</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_trigger_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">meineLogik:Zu übergebender Wert</span>
 </pre></div>
 </div>
 <p>Um beim Auslösen einen Wert an die Logik zu übergeben, kann dieser
 Wert im Attribut über die Angabe von <code class="docutils literal notranslate"><span class="pre">:&lt;Wert&gt;</span></code> hinter dem
 Logiknamen angegeben werden.</p>
 <p><strong>Funktion byattr: Alle Items mit bestimmtem auf den Wert setzen</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_byattr_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mein_eigenes_Attribut</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_byattr_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mein_eigenes_Attribut</span>
 </pre></div>
 </div>
 <p>Mit diesem Attribut wird der Name eines anderen (beliebigen)
@@ -3914,21 +3914,21 @@ Attributs angegeben. Beim Ausführen werden alle Items
 herausgesucht, die das angegebene Attribut enthalten. Diese Items
 werden auf den Wert gesetzt, der dem genannten Attribut in den
 Items jeweils zugewiesen ist.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dummy</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mein_eigenes_Attribut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dummy</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">mein_eigenes_Attribut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
 </pre></div>
 </div>
 <p>wird dann auf <code class="docutils literal notranslate"><span class="pre">42</span></code> gesetzt.
 Ein anderes Item</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dummy2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">mein_eigenes_Attribut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rums</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dummy2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">mein_eigenes_Attribut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rums</span>
 </pre></div>
 </div>
 <p>wird gleichzeitig auf <code class="docutils literal notranslate"><span class="pre">Rums</span></code> gesetzt.</p>
 <p><strong>Aktion add: Wert zu einem Listenitem hinzufügen</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_add_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_add_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;</span>
 </pre></div>
 </div>
 <p>Der Wert des Attributs legt fest, welcher Wert zum Item
@@ -3936,7 +3936,7 @@ mit dem Typ <code class="docutils literal notranslate"><span class="pre">list</s
 Wert angegeben, ist darauf zu achten, dass ein String unter Anführungszeichen
 stehen muss, während eine Zahl das nicht sollte.</p>
 <p><strong>Aktion remove: Wert von einem Listenitem entfernen</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_remove_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_remove_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;val&gt;/&lt;eval&gt;/&lt;var&gt;/&lt;item&gt;</span>
 </pre></div>
 </div>
 <p>Der Wert des Attributs legt fest, welcher Wert vom Item
@@ -3949,7 +3949,7 @@ Einträge in der Liste (mode: all) oder nur der erste (first) bzw. der letzte (l
 Eintrag gelöscht werden sollen. Wird der Parameter nicht angegeben, werden immer
 alle passenden Einträge gelöscht.</p>
 <p><strong>Aktion special: Sondervorgänge</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_special_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(Sondervorgang)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_special_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(Sondervorgang)</span>
 </pre></div>
 </div>
 <p>Für bestimmte Sondervorgänge sind besondere Aktionen im Plugin
@@ -3967,7 +3967,7 @@ vorgenommen. Die Minimumabweichung wird über das Attribut
 <code class="docutils literal notranslate"><span class="pre">se_mindelta_&lt;Aktionsname&gt;</span></code> auf der Ebene des Regelwerk-Items
 festgelegt.</p>
 <p><strong>delay: &lt;int&gt;</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_delay_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30 (Sekunden)|30m (Minuten)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_delay_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30 (Sekunden)|30m (Minuten)</span>
 </pre></div>
 </div>
 <p>Über das Attribut wird die Verzögerung angegeben, nach der die
@@ -3980,18 +3980,18 @@ die Verzögerung größer als der <code class="docutils literal notranslate"><sp
 nie durchgeführt werden, es sei denn die Aktion soll nur
 einmalig ausgeführt werden.</p>
 <p><strong>repeat: &lt;bool&gt;</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_repeat_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">True|False</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_repeat_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">True|False</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>Über das Attribut wird unabhängig vom globalen Setting für das
 stateengine Item festgelegt, ob eine Aktion auch beim erneuten
 Eintritt in den Status ausgeführt wird oder nicht.</p>
 <p><strong>order: &lt;int&gt;</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_order_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;int&gt;</span><span class="w"></span>
-<span class="nt">se_order_aktion1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
-<span class="nt">se_order_aktion2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
-<span class="nt">se_order_aktion3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="nt">se_order_aktion4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_order_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;int&gt;</span>
+<span class="nt">se_order_aktion1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="nt">se_order_aktion2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="nt">se_order_aktion3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">se_order_aktion4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 </pre></div>
 </div>
 <p>Die Reihenfolge, in der die Aktionen ausgeführt werden, ist nicht
@@ -4009,12 +4009,12 @@ Aktionen jedoch an der angegebenen Position ausgeführt.</p>
 <p>Über das optionale Attribut <code class="docutils literal notranslate"><span class="pre">se_instanteval</span></code> wird für verzögerte Aktionen angegeben,
 ob etwaige eval Ausdrücke sofort evaluiert und gespeichert werden sollen oder
 die Evaluierung erst zum Ausführungszeitpunkt stattfinden soll.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_instanteval_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">True|False</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">se_instanteval_&lt;Aktionsname&gt;</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">True|False</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>Beispiel: Ein Item soll auf einen Wert aus einem anderen Item gesetzt werden. Das andere Item wird
 anhand des gerade aktuellen Zustands durch ein eval eruiert:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">eval:sh.return_item(se_eval.get_relative_itemid(&#39;..settings.{}&#39;.format(se_eval.get_relative_itemvalue(&#39;..state_name&#39;))))()</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">eval:sh.return_item(se_eval.get_relative_itemid(&#39;..settings.{}&#39;.format(se_eval.get_relative_itemvalue(&#39;..state_name&#39;))))()</span>
 </pre></div>
 </div>
 <p>Angenommen, der aktuelle Zustand heißt <code class="docutils literal notranslate"><span class="pre">regen</span></code>, so wird durch den obigen Code das Item
@@ -4026,36 +4026,36 @@ ursprünglichen Zustands (regen) gesetzt werden soll, kann das Attribut
 </section>
 <section id="beispiel-zu-aktionen">
 <h2>Beispiel zu Aktionen<a class="headerlink" href="#beispiel-zu-aktionen" title="Permalink to this heading"></a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">beispiel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">raffstore</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">se_item_height</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.hoehe</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_mindelta_height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_item_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.lamelle</span><span class="w"></span>
-<span class="w">                </span><span class="nt">se_mindelta_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">beispiel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">raffstore</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">se_item_height</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.hoehe</span>
+<span class="w">                </span><span class="nt">se_mindelta_height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">                </span><span class="nt">se_item_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beispiel.raffstore1.lamelle</span>
+<span class="w">                </span><span class="nt">se_mindelta_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
 
-<span class="w">                </span><span class="nt">Daemmerung</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">se_set_height</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:100</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:25</span><span class="w"></span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">Nacht</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">se_set_height</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:100</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:0</span><span class="w"></span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">Sonnenstand</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">se_set_height</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:100</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:se_eval.sun_tracking()</span><span class="w"></span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
-<span class="w">                </span><span class="nt">Sonder</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">se_trigger_logic1</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myLogic:42</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_delay_logic1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span><span class="w"></span>
+<span class="w">                </span><span class="nt">Daemmerung</span><span class="p">:</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">se_set_height</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:100</span>
+<span class="w">                    </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:25</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
+<span class="w">                </span><span class="nt">Nacht</span><span class="p">:</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">se_set_height</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:100</span>
+<span class="w">                    </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:0</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
+<span class="w">                </span><span class="nt">Sonnenstand</span><span class="p">:</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">se_set_height</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value:100</span>
+<span class="w">                    </span><span class="nt">se_set_lamella</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:se_eval.sun_tracking()</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
+<span class="w">                </span><span class="nt">Sonder</span><span class="p">:</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">se_trigger_logic1</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myLogic:42</span>
+<span class="w">                    </span><span class="nt">se_delay_logic1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">&lt;...&gt;</span>
 </pre></div>
 </div>
 </section>

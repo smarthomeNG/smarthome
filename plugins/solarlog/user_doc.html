@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_interface.html">Interface Plugins</a> &raquo;</li>
-      <li>Solarlog</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_interface.html">Interface Plugins</a></li>
+      <li class="breadcrumb-item active">Solarlog</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3871,9 +3871,9 @@ Christian Michels in das alte Plugin integriert.</p>
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">logic.yaml</span><a class="headerlink" href="#id2" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Solarlog</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">solarlog</span><span class="w"></span>
-<span class="w">   </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://solarlog.fritz.box/</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Solarlog</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">solarlog</span>
+<span class="w">   </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://solarlog.fritz.box/</span>
 </pre></div>
 </div>
 </div>
@@ -3901,91 +3901,91 @@ müssen lediglich die Variablennamen wie auf der oben beschriebenen Site verwend
 werden soll, muss der Variablenname underscore inverter-1 underscore string-1 verwendet werden:</p>
 <p><code class="docutils literal notranslate"><span class="pre">var</span> <span class="pre">[\_</span> <span class="pre">inverter</span> <span class="pre">[\_</span> <span class="pre">string]]</span></code></p>
 <p>In diesem Beispiel sollten Details zur Verwendung mit Firmware &lt;= 2.x erläutert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">pv</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">pac</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pac</span><span class="w"></span>
-<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">    </span><span class="nt">kwp</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AnlagenKWP</span><span class="w"></span>
-<span class="w">        </span><span class="nt">soll</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SollYearKWP</span><span class="w"></span>
-<span class="w">    </span><span class="nt">inverter1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">online</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isOnline</span><span class="w"></span>
-<span class="w">        </span><span class="nt">inverter1_pac</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pac_0</span><span class="w"></span>
-<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">out</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">out_0</span><span class="w"></span>
-<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">string1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">string1_pdc</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pdc_0_0</span><span class="w"></span>
-<span class="w">                </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">            </span><span class="nt">string1_udc</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">udc_0_0</span><span class="w"></span>
-<span class="w">                </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">string2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">string2_pdc</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pdc_0_1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">            </span><span class="nt">string2_udc</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">udc_0_1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">pv</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">pac</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pac</span>
+<span class="w">        </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">    </span><span class="nt">kwp</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AnlagenKWP</span>
+<span class="w">        </span><span class="nt">soll</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SollYearKWP</span>
+<span class="w">    </span><span class="nt">inverter1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">online</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isOnline</span>
+<span class="w">        </span><span class="nt">inverter1_pac</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pac_0</span>
+<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">out</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">out_0</span>
+<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">string1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">string1_pdc</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pdc_0_0</span>
+<span class="w">                </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">            </span><span class="nt">string1_udc</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">udc_0_0</span>
+<span class="w">                </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">string2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">string2_pdc</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pdc_0_1</span>
+<span class="w">                </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">            </span><span class="nt">string2_udc</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">udc_0_1</span>
+<span class="w">                </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
 </pre></div>
 </div>
 <p>In diesem Beispiel sollten Details zur Verwendung mit Firmware &gt;= 3.x erläutert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">pv</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">w_gesamt_zaehler</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">101</span><span class="w"></span>
-<span class="w">    </span><span class="nt">w_gesamt</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">102</span><span class="w"></span>
-<span class="w">    </span><span class="nt">spannung_ac</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">103</span><span class="w"></span>
-<span class="w">    </span><span class="nt">spannung_dc1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">104</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wh_heute</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">105</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wh_gestern</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">106</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wh_monat</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">107</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wh_jahr</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">108</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wh_gesamt</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">109</span><span class="w"></span>
-<span class="w">    </span><span class="nt">wp_generatorleistung</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">116</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">pv</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">w_gesamt_zaehler</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span>
+<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">101</span>
+<span class="w">    </span><span class="nt">w_gesamt</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span>
+<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">102</span>
+<span class="w">    </span><span class="nt">spannung_ac</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span>
+<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">103</span>
+<span class="w">    </span><span class="nt">spannung_dc1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span>
+<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">104</span>
+<span class="w">    </span><span class="nt">wh_heute</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">105</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span>
+<span class="w">    </span><span class="nt">wh_gestern</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span>
+<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">106</span>
+<span class="w">    </span><span class="nt">wh_monat</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span>
+<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">107</span>
+<span class="w">    </span><span class="nt">wh_jahr</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span>
+<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">108</span>
+<span class="w">    </span><span class="nt">wh_gesamt</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span>
+<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">109</span>
+<span class="w">    </span><span class="nt">wp_generatorleistung</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;on&#39;</span>
+<span class="w">        </span><span class="nt">solarlog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">116</span>
 </pre></div>
 </div>
 <p>Das <code class="docutils literal notranslate"><span class="pre">database:</span> <span class="pre">yes</span></code> impliziert, dass auch ein Datenbank-Plugin konfiguriert ist.

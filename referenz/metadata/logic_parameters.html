@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../referenz.html">Referenz <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="metadata.html">Metadaten</a> &raquo;</li>
-      <li>logic_parameters</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../referenz.html">Referenz <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="metadata.html">Metadaten</a></li>
+      <li class="breadcrumb-item active">logic_parameters</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3858,20 +3858,20 @@ Parameter für die Konfiguration von Logiken in der Admin GUI verwendet. Falls d
 sind, werden Warnungen in das Logfile von SmartHomeNG geschrieben.</p>
 <p>Der Abschnitt <code class="docutils literal notranslate"><span class="pre">logic_parameters:</span></code> enthält einen Abschnitt für jeden Parameter der für eine Logik verwendet
 werden kann. Der Name dieses Unter-Abschnitts ist der Name des Parameters der Logik.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logic_parameters</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">param1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span><span class="w"></span>
-<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span><span class="w"></span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">valid_list</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2222</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4321</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logic_parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">param1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">de</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Deutsche</span><span class="nv"> </span><span class="s">Beschreibung&#39;</span>
+<span class="w">            </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;English</span><span class="nv"> </span><span class="s">description&#39;</span>
+<span class="w">        </span><span class="nt">valid_list</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2222</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4321</span>
 
-<span class="w">    </span><span class="nt">param2</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">    </span><span class="nt">param2</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </pre></div>
 </div>
 <p>Beschreibung der Schlüssel im Abschnitt für einen Parameter bzw. ein Attribut:</p>
@@ -3953,7 +3953,7 @@ geladen/initialisiert wird. Diese Einschränkung ist wirkungslos, falls ein Wert
 <h2>Plugins ohne Logic Parameter<a class="headerlink" href="#plugins-ohne-logic-parameter" title="Permalink to this heading"></a></h2>
 <p>Falls ein Plugin keine Logik Parameter hat, wird das durch den folgenden Eintrag in der Datei <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code>
 angezeigt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logic_parameters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">logic_parameters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span>
 </pre></div>
 </div>
 <div class="admonition hint">

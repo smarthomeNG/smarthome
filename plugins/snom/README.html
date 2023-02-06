@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>snom</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">snom</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3857,12 +3857,12 @@
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">snom</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Snom</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.snom</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># phonebook: None</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># username: None</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># password: None</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">snom</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Snom</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.snom</span>
+<span class="w">    </span><span class="c1"># phonebook: None</span>
+<span class="w">    </span><span class="c1"># username: None</span>
+<span class="w">    </span><span class="c1"># password: None</span>
 </pre></div>
 </div>
 <section id="attributes">
@@ -3884,20 +3884,20 @@
 <section id="snom-key">
 <h4>snom_key<a class="headerlink" href="#snom-key" title="Permalink to this heading"></a></h4>
 <p>This is the key name of an item in the snom configuration. You have to specify the ‚snom_host‘ in the same or the item above to make the link to the phone.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">phone</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">snom_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0.0.4</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">phone</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">snom_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0.0.4</span>
 
-<span class="w">    </span><span class="nt">display</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-<span class="w">        </span><span class="nt">snom_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user_realname1</span><span class="w"></span>
+<span class="w">    </span><span class="nt">display</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">snom_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user_realname1</span>
 
-<span class="w">    </span><span class="nt">mailbox</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ast_box</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">33</span><span class="w"></span>
+<span class="w">    </span><span class="nt">mailbox</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">ast_box</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">33</span>
 
-<span class="w">    </span><span class="nt">hook</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">nw</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">hook</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">nw</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
 </pre></div>
 </div>
 </section>

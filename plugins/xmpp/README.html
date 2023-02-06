@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>XMPP</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">XMPP</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3859,17 +3859,17 @@ and use this XEP-384 from there (currently only possible via manual installation
 <p>This Plugin can also be used to setup a standard logger category which
 can be used to log messages using XMPP to some chat or groupchat contact.
 The logging configuration looks like this:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">handlers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">xmpp</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.xmpp.XMPPLogHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span><span class="w"></span>
-<span class="w">        </span><span class="nt">xmpp_plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xmpp</span><span class="w"></span>
-<span class="w">        </span><span class="nt">xmpp_receiver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room@conference.example.com</span><span class="w"></span>
-<span class="w">        </span><span class="nt">xmpp_receiver_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">groupchat</span><span class="w"></span>
-<span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">xmpp</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">xmpp</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARN</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">handlers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">xmpp</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.xmpp.XMPPLogHandler</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span>
+<span class="w">        </span><span class="nt">xmpp_plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xmpp</span>
+<span class="w">        </span><span class="nt">xmpp_receiver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room@conference.example.com</span>
+<span class="w">        </span><span class="nt">xmpp_receiver_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">groupchat</span>
+<span class="nt">loggers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">xmpp</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">xmpp</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARN</span>
 </pre></div>
 </div>
 <p>This requires a XMPP plugin configured in a section named <code class="docutils literal notranslate"><span class="pre">xmpp</span></code> (e.g.
@@ -3880,10 +3880,10 @@ contact receiving the messages.</p>
 via XMPP. E.g. when having multiple operation logs configured, one for events
 one for alarms, the alarms operation log can be send via XMPP when it
 receives log messages:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugins.operationlog.alarms</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">xmpp</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">loggers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugins.operationlog.alarms</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">xmpp</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
 </pre></div>
 </div>
 </section>
@@ -3891,16 +3891,16 @@ receives log messages:</p>
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">xmpp</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">XMPP</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.xmpp</span><span class="w"></span>
-<span class="w">    </span><span class="nt">jid</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;user</span><span class="nv"> </span><span class="s">account</span><span class="nv"> </span><span class="s">eg</span><span class="nv"> </span><span class="s">skender@somexmppserver.com&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your xmpp server password</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#server: 127.0.0.1:5222</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#use_ipv6: 1</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#plugins:</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#  - xep_0199  # MUC</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#  - xep_0045  # PING</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">xmpp</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">XMPP</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.xmpp</span>
+<span class="w">    </span><span class="nt">jid</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;user</span><span class="nv"> </span><span class="s">account</span><span class="nv"> </span><span class="s">eg</span><span class="nv"> </span><span class="s">skender@somexmppserver.com&#39;</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your xmpp server password</span>
+<span class="w">    </span><span class="c1">#server: 127.0.0.1:5222</span>
+<span class="w">    </span><span class="c1">#use_ipv6: 1</span>
+<span class="w">    </span><span class="c1">#plugins:</span>
+<span class="w">    </span><span class="c1">#  - xep_0199  # MUC</span>
+<span class="w">    </span><span class="c1">#  - xep_0045  # PING</span>
 </pre></div>
 </div>
 <p>Description of the attributes:</p>

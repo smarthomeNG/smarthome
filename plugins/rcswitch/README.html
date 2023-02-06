@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>RCswitch</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">RCswitch</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3875,19 +3875,19 @@ The plugin supports two setups:</p>
 <section id="installation-of-wiringpi">
 <h3>Installation of wiringPi:<a class="headerlink" href="#installation-of-wiringpi" title="Permalink to this heading"></a></h3>
 <p>All steps have to be done on the machine where the on the machine where the 433 MHz transmitter is installed. In case not already done, update the system and install git:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install git-core
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>upgrade
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>git-core
 </pre></div>
 </div>
 <p>Then download wiringPi to /usr/local/bin/wiringPi</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/local/bin
-sudo git clone git://git.drogon.net/wiringPi
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/local/bin
+sudo<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>git://git.drogon.net/wiringPi
 </pre></div>
 </div>
 <p>and install it:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> wiringPi
-sudo ./build
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>wiringPi
+sudo<span class="w"> </span>./build
 </pre></div>
 </div>
 <blockquote>
@@ -3897,34 +3897,34 @@ sudo ./build
 <section id="installation-of-rcswitch-pi">
 <h3>Installation of rcswitch-pi<a class="headerlink" href="#installation-of-rcswitch-pi" title="Permalink to this heading"></a></h3>
 <p>All steps have to be done on the machine where the 433 MHz transmitter is installed. Download the sources into /usr/local/bin/rcswitch-pi:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/local/bin
-sudo git clone https://github.com/r10r/rcswitch-pi.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/local/bin
+sudo<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/r10r/rcswitch-pi.git
 </pre></div>
 </div>
 <p>Before building rcswitch-pi, the port has to be defined the code has to be changed slightly. Therefore edit the file send.cpp and the change the port to your needs and replace the command wiringPiSetup() to wiringPiSetupSys(). For editing the file:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> rcswitch-pi
-sudo nano send.cpp
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>rcswitch-pi
+sudo<span class="w"> </span>nano<span class="w"> </span>send.cpp
 </pre></div>
 </div>
 <p>In our example the file send.cpp has to look like follows:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">PIN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">systemCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span><span class="w"></span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">unitCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span><span class="w"></span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">PIN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">systemCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">unitCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
 
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">wiringPiSetupSys</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">-1</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
-<span class="w">     </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;sending systemCode[%s] unitCode[%i] command[%i]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">systemCode</span><span class="p">,</span><span class="w"> </span><span class="n">unitCode</span><span class="p">,</span><span class="w"> </span><span class="n">command</span><span class="p">);</span><span class="w"></span>
-<span class="w">     </span><span class="n">RCSwitch</span><span class="w"> </span><span class="n">mySwitch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RCSwitch</span><span class="p">();</span><span class="w"></span>
-<span class="w">     </span><span class="n">mySwitch</span><span class="p">.</span><span class="n">enableTransmit</span><span class="p">(</span><span class="n">PIN</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">wiringPiSetupSys</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">-1</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">     </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;sending systemCode[%s] unitCode[%i] command[%i]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">systemCode</span><span class="p">,</span><span class="w"> </span><span class="n">unitCode</span><span class="p">,</span><span class="w"> </span><span class="n">command</span><span class="p">);</span>
+<span class="w">     </span><span class="n">RCSwitch</span><span class="w"> </span><span class="n">mySwitch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RCSwitch</span><span class="p">();</span>
+<span class="w">     </span><span class="n">mySwitch</span><span class="p">.</span><span class="n">enableTransmit</span><span class="p">(</span><span class="n">PIN</span><span class="p">);</span>
 
-<span class="w">  </span><span class="k">switch</span><span class="p">(</span><span class="n">command</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="n">mySwitch</span><span class="p">.</span><span class="n">switchOn</span><span class="p">(</span><span class="n">systemCode</span><span class="p">,</span><span class="w"> </span><span class="n">unitCode</span><span class="p">);</span><span class="w"></span>
-<span class="w">          </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
-<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="n">mySwitch</span><span class="p">.</span><span class="n">switchOff</span><span class="p">(</span><span class="n">systemCode</span><span class="p">,</span><span class="w"> </span><span class="n">unitCode</span><span class="p">);</span><span class="w"></span>
-<span class="w">          </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
-<span class="w">      </span><span class="k">default</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="k">switch</span><span class="p">(</span><span class="n">command</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span>
+<span class="w">          </span><span class="n">mySwitch</span><span class="p">.</span><span class="n">switchOn</span><span class="p">(</span><span class="n">systemCode</span><span class="p">,</span><span class="w"> </span><span class="n">unitCode</span><span class="p">);</span>
+<span class="w">          </span><span class="k">break</span><span class="p">;</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span>
+<span class="w">          </span><span class="n">mySwitch</span><span class="p">.</span><span class="n">switchOff</span><span class="p">(</span><span class="n">systemCode</span><span class="p">,</span><span class="w"> </span><span class="n">unitCode</span><span class="p">);</span>
+<span class="w">          </span><span class="k">break</span><span class="p">;</span>
+<span class="w">      </span><span class="k">default</span><span class="o">:</span>
 </pre></div>
 </div>
 <p>Save the file (ctrl + o) and leave nano (ctrl+x)
@@ -3940,30 +3940,30 @@ Now rcswitch pi can be compiled:</p>
 <section id="send-as-non-root-and-testing">
 <h3>Send as non-root and testing<a class="headerlink" href="#send-as-non-root-and-testing" title="Permalink to this heading"></a></h3>
 <p>For a first basic test, write access to non-root users can be granted with the command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gpio <span class="nb">export</span> <span class="m">17</span> out
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gpio<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="m">17</span><span class="w"> </span>out
 </pre></div>
 </div>
 <p>Now, with the send command the power plugs can be switched. Assuming, the power plug has code 11111 and address 2 (=B), the command to switch it on is:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./send <span class="m">11111</span> <span class="m">2</span> <span class="m">1</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./send<span class="w"> </span><span class="m">11111</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">1</span>
 </pre></div>
 </div>
 <p>If the power plug does not switch at this point, you need to figure out why before proceeding.</p>
 <p>Because the setting of port 17, done with the command ‚gpio export 17 out‘ will be lost after reboot, it has to made persistent. Therefore, create file /usr/local/scripts/exportGPIO17</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo mkdir /usr/local/scripts/
-<span class="nb">cd</span> /usr/local/scripts/
-sudo nano exportGPIO17
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>mkdir<span class="w"> </span>/usr/local/scripts/
+<span class="nb">cd</span><span class="w"> </span>/usr/local/scripts/
+sudo<span class="w"> </span>nano<span class="w"> </span>exportGPIO17
 </pre></div>
 </div>
 <p>… and add following content:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/sh  </span>
-<span class="nb">echo</span> <span class="s2">&quot;17&quot;</span> &gt; /sys/class/gpio/export
-<span class="nb">echo</span> <span class="s2">&quot;out&quot;</span> &gt; /sys/class/gpio/gpio17/direction
-chmod <span class="m">666</span> /sys/class/gpio/gpio17/value
-chmod <span class="m">666</span> /sys/class/gpio/gpio17/direction
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;17&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/gpio/export
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;out&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/gpio/gpio17/direction
+chmod<span class="w"> </span><span class="m">666</span><span class="w"> </span>/sys/class/gpio/gpio17/value
+chmod<span class="w"> </span><span class="m">666</span><span class="w"> </span>/sys/class/gpio/gpio17/direction
 </pre></div>
 </div>
 <p>Save and close the file. Now the file has to be made executable with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo sudo chmod +x exportGPIO17
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>exportGPIO17
 </pre></div>
 </div>
 <p>Last step is to ensure that the file is called during system boot. Therefore, the following line has to be added to <code class="docutils literal notranslate"><span class="pre">/etc/rc.local</span></code>, right before the <code class="docutils literal notranslate"><span class="pre">exit</span> <span class="pre">0</span></code> command:</p>
@@ -3975,15 +3975,15 @@ chmod <span class="m">666</span> /sys/class/gpio/gpio17/direction
 <section id="installation-of-ssh-and-sshpass">
 <h3>Installation of ssh and sshpass<a class="headerlink" href="#installation-of-ssh-and-sshpass" title="Permalink to this heading"></a></h3>
 <p>Optional step: In case smarthomeNG wants to access the 433 MHz transmitter on an remote host, the following steps have to be done on the machine where smarthomeNG runs:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt-get update
-apt-get upgrade
-apt-get install ssh sshpass
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt-get<span class="w"> </span>update
+apt-get<span class="w"> </span>upgrade
+apt-get<span class="w"> </span>install<span class="w"> </span>ssh<span class="w"> </span>sshpass
 </pre></div>
 </div>
 <p>Also, ssh has to be installed on the machine where the 433 MHz transmitter is connected to:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt-get update
-apt-get upgrade
-apt-get install ssh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt-get<span class="w"> </span>update
+apt-get<span class="w"> </span>upgrade
+apt-get<span class="w"> </span>install<span class="w"> </span>ssh
 </pre></div>
 </div>
 </section>
@@ -3993,14 +3993,14 @@ apt-get install ssh
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
 <p>Adding following lines to plugin.yaml in smarthomeNG will enable the rcswitch plugin:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rc</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RCswitch</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.rcswitch</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rcswitch_dir</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">path of rc switch</span><span class="p p-Indicator">}</span><span class="w"> </span><span class="c1"># optional parameter. Default: /usr/local/bin/rcswitch-pi</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rcswitch_sendDuration</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">minimum time in s between sending commands</span><span class="p p-Indicator">}</span><span class="w"> </span><span class="c1"># optional parameter. Default: 0.5</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rcswitch_host</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">ip</span><span class="p p-Indicator">}</span><span class="c1"># optional parameter. Default: empty</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rcswitch_user</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">user at remote host</span><span class="p p-Indicator">}</span><span class="c1">#  optional parameter. Default: empty</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rcswitch_password</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">password for user at remote host</span><span class="p p-Indicator">}</span><span class="c1"># optional parameter. Default: empty</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rc</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RCswitch</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.rcswitch</span>
+<span class="w">    </span><span class="nt">rcswitch_dir</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">path of rc switch</span><span class="p p-Indicator">}</span><span class="w"> </span><span class="c1"># optional parameter. Default: /usr/local/bin/rcswitch-pi</span>
+<span class="w">    </span><span class="nt">rcswitch_sendDuration</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">minimum time in s between sending commands</span><span class="p p-Indicator">}</span><span class="w"> </span><span class="c1"># optional parameter. Default: 0.5</span>
+<span class="w">    </span><span class="nt">rcswitch_host</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">ip</span><span class="p p-Indicator">}</span><span class="c1"># optional parameter. Default: empty</span>
+<span class="w">    </span><span class="nt">rcswitch_user</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">user at remote host</span><span class="p p-Indicator">}</span><span class="c1">#  optional parameter. Default: empty</span>
+<span class="w">    </span><span class="nt">rcswitch_password</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">password for user at remote host</span><span class="p p-Indicator">}</span><span class="c1"># optional parameter. Default: empty</span>
 </pre></div>
 </div>
 <section id="attributes">
@@ -4015,14 +4015,14 @@ apt-get install ssh
 </section>
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rc</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RCswitch</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.rcswitch</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rcswitch_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/local/bin/rcswitch-pi</span><span class="w">    </span><span class="c1"># optional</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rcswitch_sendDuration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">    </span><span class="c1"># optional</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rcswitch_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.4</span><span class="w">    </span><span class="c1"># optional</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rcswitch_user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pi</span><span class="w">    </span><span class="c1"># optional</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rcswitch_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raspberry</span><span class="w">    </span><span class="c1"># optional</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rc</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RCswitch</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.rcswitch</span>
+<span class="w">    </span><span class="nt">rcswitch_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/local/bin/rcswitch-pi</span><span class="w">    </span><span class="c1"># optional</span>
+<span class="w">    </span><span class="nt">rcswitch_sendDuration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">    </span><span class="c1"># optional</span>
+<span class="w">    </span><span class="nt">rcswitch_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.4</span><span class="w">    </span><span class="c1"># optional</span>
+<span class="w">    </span><span class="nt">rcswitch_user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pi</span><span class="w">    </span><span class="c1"># optional</span>
+<span class="w">    </span><span class="nt">rcswitch_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raspberry</span><span class="w">    </span><span class="c1"># optional</span>
 </pre></div>
 </div>
 </section>
@@ -4043,21 +4043,21 @@ apt-get install ssh
 </section>
 <section id="id2">
 <h4>Example:<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Basement</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Basement</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">LivingRoom</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">LivingRoom</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">RCpowerPlug</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">RCpowerPlug</span><span class="p">:</span>
 
-<span class="w">            </span><span class="nt">TV</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="nt">TV</span><span class="p">:</span>
 
-<span class="w">                </span><span class="nt">switch</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14/0/10</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14/0/13</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">rc_code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">11111</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">rc_device</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<span class="w">                </span><span class="nt">switch</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">                    </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">                    </span><span class="nt">knx_listen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14/0/10</span>
+<span class="w">                    </span><span class="nt">knx_send</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14/0/13</span>
+<span class="w">                    </span><span class="nt">rc_code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">11111</span>
+<span class="w">                    </span><span class="nt">rc_device</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 </pre></div>
 </div>
 </section>
@@ -4068,8 +4068,8 @@ apt-get install ssh
 <h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h2>
 <p>If the switch does not work, but you are sure that the installation was done properly, make sure that the user (normally) smarthome is part of the group gpio.</p>
 <p>If not, it is easy to do this.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo usermod -aG gpio smarthome
-sudo reboot
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>gpio<span class="w"> </span>smarthome
+sudo<span class="w"> </span>reboot
 </pre></div>
 </div>
 </section>

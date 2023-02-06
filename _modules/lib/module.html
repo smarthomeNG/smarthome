@@ -3837,9 +3837,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Modul-Quellcode</a> &raquo;</li>
-      <li>lib.module</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Modul-Quellcode</a></li>
+      <li class="breadcrumb-item active">lib.module</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3910,7 +3910,7 @@
 
 
 <div class="viewcode-block" id="Modules"><a class="viewcode-back" href="../../lib/module.html#lib.module.Modules">[Doku]</a><span class="k">class</span> <span class="nc">Modules</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Module loader class. Parses config file and creates an instance for each module.</span>
 <span class="sd">    To start the modules, the start() method has to be called.</span>
 
@@ -3966,7 +3966,7 @@
 
 
     <span class="k">def</span> <span class="nf">_get_modulename_and_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">mod_conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the actual module name and the metadata instance</span>
 
 <span class="sd">        :param mod_conf: loaded section of the module.yaml for the actual module</span>
@@ -3995,7 +3995,7 @@
 
 
     <span class="k">def</span> <span class="nf">_get_conf_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod_conf</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the parameters/values for the actual module as args-dict</span>
 
 <span class="sd">        :param mod_conf: loaded section of the module.yaml for the actual module</span>
@@ -4015,7 +4015,7 @@
 
 
     <span class="k">def</span> <span class="nf">_get_classname_and_classpath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod_conf</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the classname and the classpath for the actual module</span>
 
 <span class="sd">        :param mod_conf: loaded section of the module.yaml for the actual module</span>
@@ -4037,7 +4037,7 @@
 
 
     <span class="k">def</span> <span class="nf">_test_duplicate_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">classname</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns True, if a module instance of the classname is already loaded by another configuration section</span>
 
 <span class="sd">        :param module: Name of the configuration</span>
@@ -4058,7 +4058,7 @@
 
 
     <span class="k">def</span> <span class="nf">_load_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">classname</span><span class="p">,</span> <span class="n">classpath</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Module Loader. Loads one module defined by the parameters classname and classpath.</span>
 <span class="sd">        Parameters defined in the configuration file are passed to this function as &#39;args&#39;</span>
 
@@ -4150,7 +4150,7 @@
 
 <div class="viewcode-block" id="Modules.get_instance"><a class="viewcode-back" href="../../lib/module.html#lib.module.Modules.get_instance">[Doku]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_instance</span><span class="p">():</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the instance of the Modules class, to be used to access the modules-api</span>
 
 <span class="sd">        Use it the following way to access the api:</span>
@@ -4174,7 +4174,7 @@
 
 
 <div class="viewcode-block" id="Modules.return_modules"><a class="viewcode-back" href="../../lib/module.html#lib.module.Modules.return_modules">[Doku]</a>    <span class="k">def</span> <span class="nf">return_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list with the names of all loaded modules</span>
 
 <span class="sd">        :return: list of module names</span>
@@ -4187,7 +4187,7 @@
 
 
 <div class="viewcode-block" id="Modules.get_module"><a class="viewcode-back" href="../../lib/module.html#lib.module.Modules.get_module">[Doku]</a>    <span class="k">def</span> <span class="nf">get_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the module object for the module named by the parameter</span>
 <span class="sd">        or None, if the named module is not loaded</span>
 
@@ -4201,7 +4201,7 @@
 
 
 <div class="viewcode-block" id="Modules.start"><a class="viewcode-back" href="../../lib/module.html#lib.module.Modules.start">[Doku]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Start all modules</span>
 
 <span class="sd">        Call start routine of module in case the module wants to start any threads</span>
@@ -4215,7 +4215,7 @@
 
 
 <div class="viewcode-block" id="Modules.stop"><a class="viewcode-back" href="../../lib/module.html#lib.module.Modules.stop">[Doku]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stop all modules</span>
 
 <span class="sd">        Call stop routine of module to clean up in case the module has started any threads</span>

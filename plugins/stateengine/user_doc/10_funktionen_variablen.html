@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-          <li><a href="../user_doc.html">stateengine</a> &raquo;</li>
-      <li>Funktionen und Variablen</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_doc/plugins_system.html">System Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../user_doc.html">stateengine</a></li>
+      <li class="breadcrumb-item active">Funktionen und Variablen</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3866,39 +3866,39 @@ Optional kann noch ein Offset in Klammer mitgegeben werden, um etwaige kleine Ab
 kann auch global bei der Pluginkonfiguration mittels <code class="docutils literal notranslate"><span class="pre">lamella_offset</span></code> eingestellt werden, was sich dann auf
 sämtliche Aufrufe der Funktion auswirkt. Der Offset wird in Grad angegeben, wobei ein negativer Offset dafür sorgt, dass sich die Lamellen weniger weit drehen. Bei einem positiven Offset hingegen werden die Lamellen mehr geschlossen. Die Angabe beim direkten Aufruf der Funktion hat dabei immer Vorrang. Da verschiedene Lamellenarten unterschiedliche Prozentwerte im offenen Zustand
 haben können, kann die Berechnung auch mittels <code class="docutils literal notranslate"><span class="pre">lamella_open_value</span></code> manipuliert werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.sun_tracking(-10)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.sun_tracking(-10)</span>
 </pre></div>
 </div>
 <p><strong>Zufallszahl</strong>
 <em>Über min und max kann die kleinste/größte Nummer, die zurückgegeben werden soll, festgelegt werden.</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_random_int(min,max)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_random_int(min,max)</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">min</span></code> und <code class="docutils literal notranslate"><span class="pre">max</span></code> können weggelassen werden, in diesem Fall sind die
 Vorgabewerte 0 für <code class="docutils literal notranslate"><span class="pre">min</span></code> und 255 für <code class="docutils literal notranslate"><span class="pre">max</span></code>.</p>
 <p><strong>Shell-Kommando ausführen</strong>
 <em>Führt ein Shell-Kommando aus</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.execute(command)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.execute(command)</span>
 </pre></div>
 </div>
 <p><strong>Wert einer Variable ermitteln</strong>
 <em>Liefert den Wert der Variablen &lt;varname&gt;</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_variable(varname)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_variable(varname)</span>
 </pre></div>
 </div>
 <p><strong>Item relativ zum Regelwerk-Item ermitteln</strong>
 <em>Ein Item Objekt relativ zur Item-Id des Regelwerk-Items wird ermittelt.</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_item(subitem_id)</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_item(&#39;..suspend&#39;)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_item(subitem_id)</span>
+<span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_item(&#39;..suspend&#39;)</span>
 </pre></div>
 </div>
 <p>Das zurückgelieferte Item kann nun genutzt werden, um in einem eval Ausdruck
 gesetzt oder abgefragt zu werden.</p>
 <p><strong>Wert eines Item-Attributs ermitteln</strong>
 <em>Der Wert eines Attributs wird ermittelt.</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_attribute_value(item or var, attribute)</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">se_eval.get_attribute_value(&#39;..settings&#39;, &#39;some_special_attribute&#39;)</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">se_eval.get_attribute_value(&#39;var:current.state_id&#39;, &#39;some_special_attribute&#39;)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_attribute_value(item or var, attribute)</span>
+<span class="l l-Scalar l-Scalar-Plain">se_eval.get_attribute_value(&#39;..settings&#39;, &#39;some_special_attribute&#39;)</span>
+<span class="l l-Scalar l-Scalar-Plain">se_eval.get_attribute_value(&#39;var:current.state_id&#39;, &#39;some_special_attribute&#39;)</span>
 </pre></div>
 </div>
 <p>Der erste Wert muss ein String sein, der entweder ein (relatives) Item enthält
@@ -3907,7 +3907,7 @@ Attributname, der eruiert werden soll. Gerade in Kombination mit der Abfrage
 der aktuellen Status- oder Conditionset-ID können hier Konfigurationen vereinfacht werden.</p>
 <p><strong>Suspend-Ende in einen Text einsetzen</strong>
 <em>Das Ende der Suspend-Zeit wird in den Text suspend_text eingesetzt.</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.insert_suspend_time(suspend_item_id, suspend_text=&quot;Ausgesetzt bis %X&quot;)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.insert_suspend_time(suspend_item_id, suspend_text=&quot;Ausgesetzt bis %X&quot;)</span>
 </pre></div>
 </div>
 <p>Im Text sind entsprechende Platzhalter
@@ -3923,8 +3923,8 @@ bestimmt. Dies könnte auch über ein relatives Item angegeben werden,
 wobei dieses unbedingt in Anführungszeichen gesetzt werden muss, z.B. <code class="docutils literal notranslate"><span class="pre">'..suspend'</span></code></p>
 <p><strong>Item-Id relativ zum Regelwerk-Item ermitteln</strong>
 <em>Eine Item-Id relativ zur Item-Id des Regelwerk-Items wird ermittelt.</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemid(subitem_id)</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemid(&#39;..suspend&#39;)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemid(subitem_id)</span>
+<span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemid(&#39;..suspend&#39;)</span>
 </pre></div>
 </div>
 <p>Statt dieser Funktion kann se_eval.get_relative_itemproperty(‚..suspend‘, ‚path‘)
@@ -3932,8 +3932,8 @@ verwendet werden. Alternativ ist es auch möglich, die aus SmarthomeNG bekannte 
 <code class="docutils literal notranslate"><span class="pre">sh...suspend.property.path</span></code> zu verwenden. Insofern hat diese Funktion nur wenig Relevanz.</p>
 <p><strong>Item-Wert relativ zum Regelwerk-Item ermitteln</strong>
 <em>Der Wert eines Items relativ zur Item-Id des Regelwerk-Items wird ermittelt.</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemvalue(subitem_id)</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemvalue(&#39;..suspend&#39;)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemvalue(subitem_id)</span>
+<span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemvalue(&#39;..suspend&#39;)</span>
 </pre></div>
 </div>
 <p>Statt dieser Funktion kann se_eval.get_relative_itemproperty(‚..suspend‘, ‚value‘)
@@ -3942,8 +3942,8 @@ verwendet werden. Alternativ ist es auch möglich, die aus SmarthomeNG bekannte 
 Insofern hat diese Funktion nur wenig Relevanz.</p>
 <p><strong>Item-Property relativ zum Regelwerk-Item ermitteln</strong>
 <em>Eine Property eines Items relativ zur Item-Id des Regelwerk-Items wird ermittelt.</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemproperty(subitem_id, property)</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemproperty(&#39;..suspend&#39;, &#39;last_change_age&#39;)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemproperty(subitem_id, property)</span>
+<span class="l l-Scalar l-Scalar-Plain">se_eval.get_relative_itemproperty(&#39;..suspend&#39;, &#39;last_change_age&#39;)</span>
 </pre></div>
 </div>
 <p>Welche Werte für <code class="docutils literal notranslate"><span class="pre">property</span></code> genutzt werden können, ist hier nachzulesen:
@@ -3979,46 +3979,46 @@ abgeschlossen ist, ist diese Variable leer.
 Ein Beispiel: Das Template „setvalue“ wird für das
 Setzen mehrerer Items herangezogen. Der eval Ausdruck schafft eine Referenz
 auf das passende Unteritem in licht1.automatik.settings.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">licht1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">irgendeinitem</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">licht1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">irgendeinitem</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
 
-<span class="w">    </span><span class="nt">dimmen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">warm</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sollwert</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">kalt</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sollwert</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dimmen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">warm</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sollwert</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">kalt</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sollwert</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
 
-<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">settings</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sollwert_warm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sollwert_kalt</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wasauchimmer</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
+<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">settings</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sollwert_warm</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">sollwert_kalt</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">wasauchimmer</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
 
-<span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_item_sollwert_warm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht1.dimmen.warm.sollwert</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_item_sollwert_kalt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht1.dimmen.kalt.sollwert</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_item_wasauchimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht1.irgendeinitem</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_template_setvalue</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;eval:sh.return_item(se_eval.get_relative_itemid(&#39;..settings.{}&#39;.format(</span><span class="w"></span>
-<span class="w">                                   </span><span class="s">se_eval.get_variable(&#39;current.action_name&#39;))))()&quot;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">zustand1</span><span class="p">:</span><span class="w"></span>
-<span class="w">               </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Ein</span><span class="nv"> </span><span class="s">Zustand&#39;</span><span class="w"></span>
-<span class="w">               </span><span class="nt">on_enter_or_stay</span><span class="p">:</span><span class="w"></span>
-<span class="w">                   </span><span class="nt">se_action_sollwert_warm</span><span class="p">:</span><span class="w"></span>
-<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">template:setvalue&quot;</span><span class="w"></span>
-<span class="w">                   </span><span class="nt">se_action_sollwert_kalt</span><span class="p">:</span><span class="w"></span>
-<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">template:setvalue&quot;</span><span class="w"></span>
-<span class="w">                   </span><span class="nt">se_action_wasauchimmer</span><span class="p">:</span><span class="w"></span>
-<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span><span class="w"></span>
-<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">template:setvalue&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">se_item_sollwert_warm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht1.dimmen.warm.sollwert</span>
+<span class="w">            </span><span class="nt">se_item_sollwert_kalt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht1.dimmen.kalt.sollwert</span>
+<span class="w">            </span><span class="nt">se_item_wasauchimmer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">licht1.irgendeinitem</span>
+<span class="w">            </span><span class="nt">se_template_setvalue</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;eval:sh.return_item(se_eval.get_relative_itemid(&#39;..settings.{}&#39;.format(</span>
+<span class="w">                                   </span><span class="s">se_eval.get_variable(&#39;current.action_name&#39;))))()&quot;</span>
+<span class="w">            </span><span class="nt">zustand1</span><span class="p">:</span>
+<span class="w">               </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Ein</span><span class="nv"> </span><span class="s">Zustand&#39;</span>
+<span class="w">               </span><span class="nt">on_enter_or_stay</span><span class="p">:</span>
+<span class="w">                   </span><span class="nt">se_action_sollwert_warm</span><span class="p">:</span>
+<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">template:setvalue&quot;</span>
+<span class="w">                   </span><span class="nt">se_action_sollwert_kalt</span><span class="p">:</span>
+<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">template:setvalue&quot;</span>
+<span class="w">                   </span><span class="nt">se_action_wasauchimmer</span><span class="p">:</span>
+<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;function:</span><span class="nv"> </span><span class="s">set&#39;</span>
+<span class="w">                     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;to:</span><span class="nv"> </span><span class="s">template:setvalue&quot;</span>
 </pre></div>
 </div>
 <p><strong>current.state_id:</strong>
@@ -4038,35 +4038,35 @@ verglichen werden. Im Zustand_Zwei namens osten würde der Vergleich hingegen
 mit dem Item automatik.settings.osten.max_bright stattfinden. Zu beachten ist,
 dass die Eval Ausdrücke exakt gleich sind, wodurch ein Anlegen von eigenen Templates
 die Situation deutlich vereinfachen würde.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span>
 
-<span class="w">        </span><span class="nt">settings</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sueden</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">max_bright</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"></span>
+<span class="w">        </span><span class="nt">settings</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sueden</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">max_bright</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
 
-<span class="w">            </span><span class="nt">osten</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">max_bright</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w"></span>
+<span class="w">            </span><span class="nt">osten</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">max_bright</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
 
-<span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_item_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetterstation.helligkeit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
+<span class="w">        </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">se_item_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wetterstation.helligkeit</span>
+<span class="w">            </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 
-<span class="w">            </span><span class="nt">Zustand_Eins</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sueden</span><span class="w"></span>
-<span class="w">                </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_max_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:se_eval.get_relative_itemvalue(&#39;..settings.{}.max_bright&#39;.format(se_eval.get_variable(&#39;current.state_name&#39;))</span><span class="w"></span>
+<span class="w">            </span><span class="nt">Zustand_Eins</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sueden</span>
+<span class="w">                </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">se_max_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:se_eval.get_relative_itemvalue(&#39;..settings.{}.max_bright&#39;.format(se_eval.get_variable(&#39;current.state_name&#39;))</span>
 
-<span class="w">            </span><span class="nt">Zustand_Zwei</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">osten</span><span class="w"></span>
-<span class="w">                </span><span class="nt">enter</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_max_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:se_eval.get_relative_itemvalue(&#39;..settings.{}.max_bright&#39;.format(se_eval.get_variable(&#39;current.state_name&#39;))</span><span class="w"></span>
+<span class="w">            </span><span class="nt">Zustand_Zwei</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">osten</span>
+<span class="w">                </span><span class="nt">enter</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">se_max_brightness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:se_eval.get_relative_itemvalue(&#39;..settings.{}.max_bright&#39;.format(se_eval.get_variable(&#39;current.state_name&#39;))</span>
 </pre></div>
 </div>
 <p><strong>current.conditionset_id:</strong>
@@ -4089,33 +4089,33 @@ der x-Zustand aktiv war.</p></li>
 </ul>
 <p>Beim Verlassen des Windzustands (on_leave) wird nun ein bestimmtes Item (y)
 auf True gesetzt - aber nur, wenn zuvor der x-Zustand aktiv war.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span><span class="w"></span>
-<span class="nt">raffstore1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">se_item_wind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">....sicherheit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">wind</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wind</span><span class="w"></span>
-<span class="w">                </span><span class="nt">on_leave</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_action_y</span><span class="p">:</span><span class="w"></span>
-<span class="w">                      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">function:set</span><span class="w"></span>
-<span class="w">                      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">to:True</span><span class="w"></span>
-<span class="w">                      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conditionset:(.*)enter_(.*)_x</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1">#items/item.yaml</span>
+<span class="nt">raffstore1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">automatik</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stateengine.general</span>
+<span class="w">        </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">se_item_wind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">....sicherheit</span>
+<span class="w">            </span><span class="nt">wind</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wind</span>
+<span class="w">                </span><span class="nt">on_leave</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">se_action_y</span><span class="p">:</span>
+<span class="w">                      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">function:set</span>
+<span class="w">                      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">to:True</span>
+<span class="w">                      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conditionset:(.*)enter_(.*)_x</span>
 
-<span class="w">                </span><span class="nt">enter_after_x</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_value_wind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:stateengine_eval.get_relative_itemid(&#39;..rules.x&#39;)</span><span class="w"></span>
+<span class="w">                </span><span class="nt">enter_after_x</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">se_value_wind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">                    </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval:stateengine_eval.get_relative_itemid(&#39;..rules.x&#39;)</span>
 
-<span class="w">                </span><span class="nt">enter_stayafter_x</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_value_wind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_value_lastconditionset_name</span><span class="p">:</span><span class="w"></span>
-<span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;var:current.conditionset_name&#39;</span><span class="w"></span>
-<span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;enter_after_x&#39;</span><span class="w"></span>
+<span class="w">                </span><span class="nt">enter_stayafter_x</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">se_value_wind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">                    </span><span class="nt">se_value_laststate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">var:current.state_id</span>
+<span class="w">                    </span><span class="nt">se_value_lastconditionset_name</span><span class="p">:</span>
+<span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;var:current.conditionset_name&#39;</span>
+<span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;enter_after_x&#39;</span>
 
-<span class="w">                </span><span class="nt">enter_normal</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">se_value_wind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">                </span><span class="nt">enter_normal</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">se_value_wind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 </pre></div>
 </div>
 <p><strong>previous.conditionset_id:</strong>

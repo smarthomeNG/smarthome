@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../entwicklung.html">Entwicklung</a> &raquo;</li>
-          <li><a href="plugins.html">Plugins <span class="bluesup">under construction</span></a> &raquo;</li>
-      <li>Beispielplugin <span class="bluesup">update</span></li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../entwicklung.html">Entwicklung</a></li>
+          <li class="breadcrumb-item"><a href="plugins.html">Plugins <span class="bluesup">under construction</span></a></li>
+      <li class="breadcrumb-item active">Beispielplugin <span class="bluesup">update</span></li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -4004,7 +4004,7 @@
 
 
 <span class="k">class</span> <span class="nc">SamplePlugin</span><span class="p">(</span><span class="n">SmartPlugin</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main class of the Plugin. Does all plugin specific stuff and provides</span>
 <span class="sd">    the update functions for the items</span>
 
@@ -4016,7 +4016,7 @@
     <span class="n">PLUGIN_VERSION</span> <span class="o">=</span> <span class="s1">&#39;1.0.0&#39;</span>    <span class="c1"># (must match the version specified in plugin.yaml), use &#39;1.0.0&#39; for your initial plugin Release</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sh</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initalizes the plugin.</span>
 
 <span class="sd">        If you need the sh object at all, use the method self.get_sh() to get it. There should be almost no need for</span>
@@ -4062,7 +4062,7 @@
         <span class="k">return</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run method for the plugin</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Run method called&quot;</span><span class="p">)</span>
@@ -4074,7 +4074,7 @@
         <span class="c1"># They will not shutdown properly. (It&#39;s a python bug)</span>
 
     <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stop method for the plugin</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stop method called&quot;</span><span class="p">)</span>
@@ -4082,7 +4082,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">alive</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">parse_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Default plugin parse_item method. Is called when the plugin is initialized.</span>
 <span class="sd">        The plugin can, corresponding to its attribute keywords, decide what to do with</span>
 <span class="sd">        the item in future, like adding it to an internal array for future reference</span>
@@ -4103,7 +4103,7 @@
         <span class="c1">#   return self.update_item</span>
 
     <span class="k">def</span> <span class="nf">parse_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logic</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Default plugin parse_logic method</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s1">&#39;xxx&#39;</span> <span class="ow">in</span> <span class="n">logic</span><span class="o">.</span><span class="n">conf</span><span class="p">:</span>
@@ -4111,7 +4111,7 @@
             <span class="k">pass</span>
 
     <span class="k">def</span> <span class="nf">update_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Item has been updated</span>
 
 <span class="sd">        This method is called, if the value of an item has been updated by SmartHomeNG.</span>
@@ -4133,7 +4133,7 @@
             <span class="k">pass</span>
 
     <span class="k">def</span> <span class="nf">poll_device</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Polls for updates of the device</span>
 
 <span class="sd">        This method is only needed, if the device (hardware/interface) does not propagate</span>

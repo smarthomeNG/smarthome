@@ -3837,9 +3837,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Modul-Quellcode</a> &raquo;</li>
-      <li>lib.log</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Modul-Quellcode</a></li>
+      <li class="breadcrumb-item active">lib.log</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3971,7 +3971,7 @@
 
 
 <div class="viewcode-block" id="Logs.add_logging_level"><a class="viewcode-back" href="../../lib/log.html#lib.log.Logs.add_logging_level">[Doku]</a>    <span class="k">def</span> <span class="nf">add_logging_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a new Logging level to the standard python logging</span>
 
 <span class="sd">        :param description: appearance within logs SYSINFO</span>
@@ -3999,7 +3999,7 @@
 
 
 <div class="viewcode-block" id="Logs.initMemLog"><a class="viewcode-back" href="../../lib/log.html#lib.log.Logs.initMemLog">[Doku]</a>    <span class="k">def</span> <span class="nf">initMemLog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function initializes all needed datastructures to use the &#39;env.core.log&#39; mem-logger and</span>
 <span class="sd">        the (old) memlog plugin</span>
 
@@ -4022,7 +4022,7 @@
 
 
 <div class="viewcode-block" id="Logs.add_log"><a class="viewcode-back" href="../../lib/log.html#lib.log.Logs.add_log">[Doku]</a>    <span class="k">def</span> <span class="nf">add_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">log</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a log (object) to the list of memory logs</span>
 
 <span class="sd">        :param name: Name of log</span>
@@ -4032,7 +4032,7 @@
 
 
 <div class="viewcode-block" id="Logs.return_logs"><a class="viewcode-back" href="../../lib/log.html#lib.log.Logs.return_logs">[Doku]</a>    <span class="k">def</span> <span class="nf">return_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function to the list of memory logs</span>
 
 <span class="sd">        :return: List of logs</span>
@@ -4045,7 +4045,7 @@
 <div class="viewcode-block" id="Log"><a class="viewcode-back" href="../../lib/log.html#lib.log.Log">[Doku]</a><span class="k">class</span> <span class="nc">Log</span><span class="p">(</span><span class="n">collections</span><span class="o">.</span><span class="n">deque</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smarthome</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">maxlen</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Class to implement a memory log</span>
 
 <span class="sd">        As of shng version 1.7a develop this is used in core at bin/smarthome.py and</span>
@@ -4072,7 +4072,7 @@
         <span class="n">logs_instance</span><span class="o">.</span><span class="n">add_log</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Log.add"><a class="viewcode-back" href="../../lib/log.html#lib.log.Log.add">[Doku]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a log entry to the memory log. If the log already has reached the maximum length, the oldest</span>
 <span class="sd">        entry is removed from the log automatically.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4081,7 +4081,7 @@
             <span class="n">listener</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">entry</span><span class="p">))]})</span></div>
 
 <div class="viewcode-block" id="Log.last"><a class="viewcode-back" href="../../lib/log.html#lib.log.Log.last">[Doku]</a>    <span class="k">def</span> <span class="nf">last</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the newest entries of the log</span>
 
 <span class="sd">        :param number: Number of entries to return</span>
@@ -4091,7 +4091,7 @@
         <span class="k">return</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)[</span><span class="o">-</span><span class="n">number</span><span class="p">:])</span></div>
 
 <div class="viewcode-block" id="Log.export"><a class="viewcode-back" href="../../lib/log.html#lib.log.Log.export">[Doku]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the newest entries of the log and prepares them with the mapping</span>
 
 <span class="sd">        :param number: Number of entries to return</span>
@@ -4101,7 +4101,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)[:</span><span class="n">number</span><span class="p">]]</span></div>
 
 <div class="viewcode-block" id="Log.clean"><a class="viewcode-back" href="../../lib/log.html#lib.log.Log.clean">[Doku]</a>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Assuming dt to be a datetime: remove all entries that are smaller or equal</span>
 <span class="sd">        to this given datetime from the right side of the queue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4122,12 +4122,12 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ShngTimedRotatingFileHandler"><a class="viewcode-back" href="../../lib/log.html#lib.log.ShngTimedRotatingFileHandler">[Doku]</a><span class="k">class</span> <span class="nc">ShngTimedRotatingFileHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">TimedRotatingFileHandler</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TimedRotatingFilehandler with a different naming scheme for rotated files</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ShngTimedRotatingFileHandler.getFilesToDelete"><a class="viewcode-back" href="../../lib/log.html#lib.log.ShngTimedRotatingFileHandler.getFilesToDelete">[Doku]</a>    <span class="k">def</span> <span class="nf">getFilesToDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine the files to delete when rolling over.</span>
 
 <span class="sd">        More specific than the earlier method, which just used glob.glob().</span>
@@ -4165,7 +4165,7 @@
         <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="ShngTimedRotatingFileHandler.doRollover"><a class="viewcode-back" href="../../lib/log.html#lib.log.ShngTimedRotatingFileHandler.doRollover">[Doku]</a>    <span class="k">def</span> <span class="nf">doRollover</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        do a rollover; in this case, a date/time stamp is appended to the filename</span>
 <span class="sd">        when the rollover happens.  However, you want the file to be named for the</span>
 <span class="sd">        start of the interval, not the current time.  If there is a backup count,</span>
@@ -4224,7 +4224,7 @@
 
 
 <div class="viewcode-block" id="ShngMemLogHandler"><a class="viewcode-back" href="../../lib/log.html#lib.log.ShngMemLogHandler">[Doku]</a><span class="k">class</span> <span class="nc">ShngMemLogHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    LogHandler used by MemLog</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logname</span><span class="o">=</span><span class="s1">&#39;undefined&#39;</span><span class="p">,</span> <span class="n">maxlen</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">NOTSET</span><span class="p">):</span>

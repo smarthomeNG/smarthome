@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a> &raquo;</li>
-      <li>zigbee2mqtt</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a></li>
+      <li class="breadcrumb-item active">zigbee2mqtt</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3886,15 +3886,15 @@ durchführt. Dieses Modul muß geladen und konfiguriert sein, damit das Plugin f
 <h3>Konfiguration von Items<a class="headerlink" href="#konfiguration-von-items" title="Permalink to this heading"></a></h3>
 <p>Für die Nutzung eines Zigbee Devices müssen in dem entsprechenden Item die zwei Attribute <code class="docutils literal notranslate"><span class="pre">zigbee2mqtt_topic</span></code> und
 <code class="docutils literal notranslate"><span class="pre">zigbee2mqtt_attr</span></code> konfiguriert werden, wie im folgenden Beispiel gezeigt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sensor</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">temp</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">zigbee2mqtt_topic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SNZB02_01</span><span class="w"></span>
-<span class="w">        </span><span class="nt">zigbee2mqtt_attr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature</span><span class="w"></span>
-<span class="w">    </span><span class="nt">hum</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">zigbee2mqtt_topic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SNZB02_01</span><span class="w"></span>
-<span class="w">        </span><span class="nt">zigbee2mqtt_attr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">humidity</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sensor</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">temp</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">zigbee2mqtt_topic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SNZB02_01</span>
+<span class="w">        </span><span class="nt">zigbee2mqtt_attr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature</span>
+<span class="w">    </span><span class="nt">hum</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">zigbee2mqtt_topic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SNZB02_01</span>
+<span class="w">        </span><span class="nt">zigbee2mqtt_attr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">humidity</span>
 </pre></div>
 </div>
 <p>Dabei entspricht das Attribute <code class="docutils literal notranslate"><span class="pre">zigbee2mqtt_topic</span></code> dem Zigbee <code class="docutils literal notranslate"><span class="pre">Friendly</span> <span class="pre">Name</span></code> des Device bzw. dem MQTT Topic Level_2, um mit dem ZigBee2MQTT Gateway zu kommunizieren.</p>

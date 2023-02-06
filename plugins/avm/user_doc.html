@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_interface.html">Interface Plugins</a> &raquo;</li>
-      <li>AVM</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_interface.html">Interface Plugins</a></li>
+      <li class="breadcrumb-item active">AVM</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3981,34 +3981,34 @@ Dafür stehen die folgenden Einstellungen zur Verfügung:</p>
 <li><p><cite>instance</cite>: Unique identifier for each FritzDevice / each instance of the plugin</p></li>
 </ul>
 <p>Alternativ kann das Plugin auch manuell konfiguriert werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fb1</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AVM</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.avm</span><span class="w"></span>
-<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w">    </span><span class="c1"># optional</span><span class="w"></span>
-<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;...&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fritz.box</span><span class="w"></span>
-<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">49443</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ssl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w">    </span><span class="c1"># use https or not</span><span class="w"></span>
-<span class="w">    </span><span class="nt">verify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w">    </span><span class="c1"># verify ssl certificate</span><span class="w"></span>
-<span class="w">    </span><span class="nt">call_monitor</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">call_monitor_incoming_filter</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;...</span><span class="nv">    </span><span class="s">##</span><span class="nv"> </span><span class="s">optional,</span><span class="nv"> </span><span class="s">don&#39;t</span><span class="nv"> </span><span class="s">set</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">don&#39;t</span><span class="nv"> </span><span class="s">want</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">watch</span><span class="nv"> </span><span class="s">only</span><span class="nv"> </span><span class="s">one</span><span class="nv"> </span><span class="s">specific</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">call</span><span class="nv"> </span><span class="s">monitor&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">avm_home_automation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fritzbox_7490</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fb1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AVM</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.avm</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w">    </span><span class="c1"># optional</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;...&#39;</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fritz.box</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">49443</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">    </span><span class="nt">ssl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w">    </span><span class="c1"># use https or not</span>
+<span class="w">    </span><span class="nt">verify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w">    </span><span class="c1"># verify ssl certificate</span>
+<span class="w">    </span><span class="nt">call_monitor</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
+<span class="w">    </span><span class="nt">call_monitor_incoming_filter</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;...</span><span class="nv">    </span><span class="s">##</span><span class="nv"> </span><span class="s">optional,</span><span class="nv"> </span><span class="s">don&#39;t</span><span class="nv"> </span><span class="s">set</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">don&#39;t</span><span class="nv"> </span><span class="s">want</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">watch</span><span class="nv"> </span><span class="s">only</span><span class="nv"> </span><span class="s">one</span><span class="nv"> </span><span class="s">specific</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">call</span><span class="nv"> </span><span class="s">monitor&quot;</span>
+<span class="w">    </span><span class="nt">avm_home_automation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fritzbox_7490</span>
 
-<span class="nt">fb2</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AVM</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.avm</span><span class="w"></span>
-<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w">    </span><span class="c1"># optional</span><span class="w"></span>
-<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;...&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;...&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">49443</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ssl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w">    </span><span class="c1"># use https or not</span><span class="w"></span>
-<span class="w">    </span><span class="nt">verify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w">    </span><span class="c1"># verify ssl certificate</span><span class="w"></span>
-<span class="w">    </span><span class="nt">call_monitor</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">avm_home_automation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wlan_repeater_1750</span><span class="w"></span>
+<span class="nt">fb2</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AVM</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.avm</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w">    </span><span class="c1"># optional</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;...&#39;</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;...&#39;</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">49443</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">    </span><span class="nt">ssl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w">    </span><span class="c1"># use https or not</span>
+<span class="w">    </span><span class="nt">verify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w">    </span><span class="c1"># verify ssl certificate</span>
+<span class="w">    </span><span class="nt">call_monitor</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True&#39;</span>
+<span class="w">    </span><span class="nt">avm_home_automation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;False&#39;</span>
+<span class="w">    </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wlan_repeater_1750</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -4076,71 +4076,71 @@ unterstützt.‘</p>
 </ul>
 <section id="item-beispiel-mit-verwendung-der-structs-ohne-instanz">
 <h3>Item Beispiel mit Verwendung der structs ohne Instanz<a class="headerlink" href="#item-beispiel-mit-verwendung-der-structs-ohne-instanz" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">avm</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">fritzbox</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">info</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.info</span><span class="w"></span>
-<span class="w">        </span><span class="nt">reboot</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w"></span>
-<span class="w">        </span><span class="nt">monitor</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.monitor</span><span class="w"></span>
-<span class="w">        </span><span class="nt">tam</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.tam</span><span class="w"></span>
-<span class="w">        </span><span class="nt">rufumleitung</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">rufumleitung_1</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.deflection</span><span class="w"></span>
-<span class="w">            </span><span class="nt">rufumleitung_2</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">avm_deflection_index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
-<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.deflection</span><span class="w"></span>
-<span class="w">        </span><span class="nt">wan</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.wan</span><span class="w"></span>
-<span class="w">        </span><span class="nt">wlan</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.wlan</span><span class="w"></span>
-<span class="w">        </span><span class="nt">connected_devices</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mobile_1</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">avm_mac</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xx:xx:xx:xx:xx:xx</span><span class="w"></span>
-<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.device</span><span class="w"></span>
-<span class="w">            </span><span class="nt">mobile_2</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">avm_mac</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xx:xx:xx:xx:xx:xx</span><span class="w"></span>
-<span class="w">                </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.device</span><span class="w"></span>
-<span class="w">    </span><span class="nt">smarthome</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">hkr_og_bad</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">            </span><span class="nt">avm_ain</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;xxxxx</span><span class="nv"> </span><span class="s">xxxxxxx&#39;</span><span class="w"></span>
-<span class="w">            </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_general</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_hkr</span><span class="w"></span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_temperatur_sensor</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">avm</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">fritzbox</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">info</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.info</span>
+<span class="w">        </span><span class="nt">reboot</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">            </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">        </span><span class="nt">monitor</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.monitor</span>
+<span class="w">        </span><span class="nt">tam</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.tam</span>
+<span class="w">        </span><span class="nt">rufumleitung</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">rufumleitung_1</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.deflection</span>
+<span class="w">            </span><span class="nt">rufumleitung_2</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">avm_deflection_index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">                </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.deflection</span>
+<span class="w">        </span><span class="nt">wan</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.wan</span>
+<span class="w">        </span><span class="nt">wlan</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.wlan</span>
+<span class="w">        </span><span class="nt">connected_devices</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">mobile_1</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">avm_mac</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xx:xx:xx:xx:xx:xx</span>
+<span class="w">                </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.device</span>
+<span class="w">            </span><span class="nt">mobile_2</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">avm_mac</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xx:xx:xx:xx:xx:xx</span>
+<span class="w">                </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.device</span>
+<span class="w">    </span><span class="nt">smarthome</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">hkr_og_bad</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">            </span><span class="nt">avm_ain</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;xxxxx</span><span class="nv"> </span><span class="s">xxxxxxx&#39;</span>
+<span class="w">            </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_general</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_hkr</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_temperatur_sensor</span>
 </pre></div>
 </div>
 </section>
 <section id="item-beispiel-mit-verwendung-der-structs-mit-instanz">
 <h3>Item Beispiel mit Verwendung der structs mit Instanz<a class="headerlink" href="#item-beispiel-mit-verwendung-der-structs-mit-instanz" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">smarthome</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">socket_3D_Drucker</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ain@fritzbox_1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;xxxxx</span><span class="nv"> </span><span class="s">xxxxxxx&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fritzbox_1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">struct</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_general</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_switch</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_powermeter</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_temperature_sensor</span><span class="w"></span>
-<span class="w">        </span><span class="nt">temperature</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">power</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">smarthome</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">socket_3D_Drucker</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">        </span><span class="nt">ain@fritzbox_1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;xxxxx</span><span class="nv"> </span><span class="s">xxxxxxx&#39;</span>
+<span class="w">        </span><span class="nt">instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fritzbox_1</span>
+<span class="w">        </span><span class="nt">struct</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_general</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_switch</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_powermeter</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avm.smarthome_temperature_sensor</span>
+<span class="w">        </span><span class="nt">temperature</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
+<span class="w">        </span><span class="nt">power</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
 </pre></div>
 </div>
 <p>Hier wird zusätzlich das Item „smarthome.socket_3D_Drucker.temperature“, welches durch das struct erstellt wird, um das
@@ -4160,7 +4160,7 @@ Attribut „database“ ergänzt, um den Wert in die Datenbank zuschreiben.</p>
 </pre></div>
 </div>
 <p>CURL for this function:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl --anyauth -u user:password <span class="s2">&quot;https://fritz.box:49443/upnp/control/x_voip&quot;</span> -H <span class="s2">&quot;Content-Type: text/xml; charset=&quot;</span>utf-8<span class="s2">&quot;&quot;</span> -H <span class="s2">&quot;SoapAction:urn:dslforum-org:service:X_VoIP:1#X_AVM-DE_DialGetConfig&quot;</span> -d <span class="s2">&quot;&lt;?xml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;?&gt;&lt;s:Envelope s:encodingStyle=&#39;http://schemas.xmlsoap.org/soap/encoding/&#39; xmlns:s=&#39;http://schemas.xmlsoap.org/soap/envelope/&#39;&gt;&lt;s:Body&gt;&lt;u:X_AVM-DE_DialGetConfig xmlns:u=&#39;urn:dslforum-org:service:X_VoIP:1&#39; /&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;&quot;</span> -s -k
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--anyauth<span class="w"> </span>-u<span class="w"> </span>user:password<span class="w"> </span><span class="s2">&quot;https://fritz.box:49443/upnp/control/x_voip&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: text/xml; charset=&quot;</span>utf-8<span class="s2">&quot;&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;SoapAction:urn:dslforum-org:service:X_VoIP:1#X_AVM-DE_DialGetConfig&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;&lt;?xml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;?&gt;&lt;s:Envelope s:encodingStyle=&#39;http://schemas.xmlsoap.org/soap/encoding/&#39; xmlns:s=&#39;http://schemas.xmlsoap.org/soap/envelope/&#39;&gt;&lt;s:Body&gt;&lt;u:X_AVM-DE_DialGetConfig xmlns:u=&#39;urn:dslforum-org:service:X_VoIP:1&#39; /&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;&quot;</span><span class="w"> </span>-s<span class="w"> </span>-k
 </pre></div>
 </div>
 </section>
@@ -4251,7 +4251,7 @@ dict keys: name, interface_type, ip_address, mac_address, is_active, lease_time_
 <p>Prüft, ob eine MAC Adresse auf dem Gerät aktiv ist. Das kann bspw. für die Umsetzung einer Präsenzerkennung genutzt
 werden.</p>
 <p>CURL for this function:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl --anyauth -u user:password <span class="s2">&quot;https://fritz.box:49443/upnp/control/hosts&quot;</span> -H <span class="s2">&quot;Content-Type: text/xml; charset=&quot;</span>utf-8<span class="s2">&quot;&quot;</span> -H <span class="s2">&quot;SoapAction:urn:dslforum-org:service:Hosts:1#GetSpecificHostEntry&quot;</span> -d <span class="s2">&quot;&lt;?xml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;?&gt;&lt;s:Envelope s:encodingStyle=&#39;http://schemas.xmlsoap.org/soap/encoding/&#39; xmlns:s=&#39;http://schemas.xmlsoap.org/soap/envelope/&#39;&gt;&lt;s:Body&gt;&lt;u:GetSpecificHostEntry xmlns:u=&#39;urn:dslforum-org:service:Hosts:1&#39;&gt;&lt;s:NewMACAddress&gt;XX:XX:XX:XX:XX:XX&lt;/s:NewMACAddress&gt;&lt;/u:GetSpecificHostEntry&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;&quot;</span> -s -k
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--anyauth<span class="w"> </span>-u<span class="w"> </span>user:password<span class="w"> </span><span class="s2">&quot;https://fritz.box:49443/upnp/control/hosts&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: text/xml; charset=&quot;</span>utf-8<span class="s2">&quot;&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;SoapAction:urn:dslforum-org:service:Hosts:1#GetSpecificHostEntry&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;&lt;?xml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;?&gt;&lt;s:Envelope s:encodingStyle=&#39;http://schemas.xmlsoap.org/soap/encoding/&#39; xmlns:s=&#39;http://schemas.xmlsoap.org/soap/envelope/&#39;&gt;&lt;s:Body&gt;&lt;u:GetSpecificHostEntry xmlns:u=&#39;urn:dslforum-org:service:Hosts:1&#39;&gt;&lt;s:NewMACAddress&gt;XX:XX:XX:XX:XX:XX&lt;/s:NewMACAddress&gt;&lt;/u:GetSpecificHostEntry&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;&quot;</span><span class="w"> </span>-s<span class="w"> </span>-k
 </pre></div>
 </div>
 </section>

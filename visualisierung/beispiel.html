@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="visualisierung.html">Visualisierung mit smartVISU <span class="greensup">Update</span></a> &raquo;</li>
-      <li>Vollständiges Beispiel</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="visualisierung.html">Visualisierung mit smartVISU <span class="greensup">Update</span></a></li>
+      <li class="breadcrumb-item active">Vollständiges Beispiel</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3856,38 +3856,38 @@
 Visualisierung zu erzeugen. (Quasi ein Hello-World für die Visualisierung)</p>
 <p>Die eigentlichen Items sind eine Deckenleuchte und eine Tresenbeleuchtung in der Küche, sowie eine dimmbare Stehlampe
 im Wohnzimmer:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">world</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">world</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">deckenlicht</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Decke</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_dpt: 1</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_send: 2/1/10</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_init: 2/2/10</span><span class="w"></span>
+<span class="w">        </span><span class="nt">deckenlicht</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Decke</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="c1">#knx_dpt: 1</span>
+<span class="w">            </span><span class="c1">#knx_send: 2/1/10</span>
+<span class="w">            </span><span class="c1">#knx_init: 2/2/10</span>
 
-<span class="w">        </span><span class="nt">tresenlicht</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tresen</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_dpt: 1</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_send: 2/1/11</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_init: 2/2/11</span><span class="w"></span>
+<span class="w">        </span><span class="nt">tresenlicht</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tresen</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="c1">#knx_dpt: 1</span>
+<span class="w">            </span><span class="c1">#knx_send: 2/1/11</span>
+<span class="w">            </span><span class="c1">#knx_init: 2/2/11</span>
 
-<span class="w">    </span><span class="nt">wohnen</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">wohnen</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">stehlampe</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Stehlampe</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_dpt: 1</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_send: 2/1/8</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_init: 2/2/8</span><span class="w"></span>
+<span class="w">        </span><span class="nt">stehlampe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Stehlampe</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="c1">#knx_dpt: 1</span>
+<span class="w">            </span><span class="c1">#knx_send: 2/1/8</span>
+<span class="w">            </span><span class="c1">#knx_init: 2/2/8</span>
 
-<span class="w">            </span><span class="nt">level</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="c1">#knx_dpt: 5</span><span class="w"></span>
-<span class="w">                </span><span class="c1">#knx_send: 2/4/8</span><span class="w"></span>
-<span class="w">                </span><span class="c1">#knx_init: 2/5/8</span><span class="w"></span>
+<span class="w">            </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="c1">#knx_dpt: 5</span>
+<span class="w">                </span><span class="c1">#knx_send: 2/4/8</span>
+<span class="w">                </span><span class="c1">#knx_init: 2/5/8</span>
 </pre></div>
 </div>
 <p>Um die Räume für die Navigation der Visualisierung zu definieren, müssen folgende Attribute hinzugefügt werden:</p>
@@ -3900,44 +3900,44 @@ im Wohnzimmer:</p>
 </div></blockquote>
 <p>Das folgende Beispiel würde eine Visualisierung erzeugen, die zwei Seiten (Küche und Wohnzimmer) hat. Die beiden Seiten
 sind jedoch noch leer.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">world</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">world</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Küche</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_cooking.svg</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Küche</span>
+<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_cooking.svg</span>
 
-<span class="w">        </span><span class="nt">deckenlicht</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Decke</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_dpt: 1</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_send: 2/1/10</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_init: 2/2/10</span><span class="w"></span>
+<span class="w">        </span><span class="nt">deckenlicht</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Decke</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="c1">#knx_dpt: 1</span>
+<span class="w">            </span><span class="c1">#knx_send: 2/1/10</span>
+<span class="w">            </span><span class="c1">#knx_init: 2/2/10</span>
 
-<span class="w">        </span><span class="nt">tresenlicht</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tresen</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_dpt: 1</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_send: 2/1/11</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_init: 2/2/11</span><span class="w"></span>
+<span class="w">        </span><span class="nt">tresenlicht</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tresen</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="c1">#knx_dpt: 1</span>
+<span class="w">            </span><span class="c1">#knx_send: 2/1/11</span>
+<span class="w">            </span><span class="c1">#knx_init: 2/2/11</span>
 
-<span class="w">    </span><span class="nt">wohnen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wohnzimmer</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_livingroom.svg</span><span class="w"></span>
+<span class="w">    </span><span class="nt">wohnen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wohnzimmer</span>
+<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_livingroom.svg</span>
 
-<span class="w">        </span><span class="nt">stehlampe</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Stehlampe</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_dpt: 1</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_send: 2/1/8</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_init: 2/2/8</span><span class="w"></span>
+<span class="w">        </span><span class="nt">stehlampe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Stehlampe</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="c1">#knx_dpt: 1</span>
+<span class="w">            </span><span class="c1">#knx_send: 2/1/8</span>
+<span class="w">            </span><span class="c1">#knx_init: 2/2/8</span>
 
-<span class="w">            </span><span class="nt">level</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="c1">#knx_dpt: 5</span><span class="w"></span>
-<span class="w">                </span><span class="c1">#knx_send: 2/4/8</span><span class="w"></span>
-<span class="w">                </span><span class="c1">#knx_init: 2/5/8</span><span class="w"></span>
+<span class="w">            </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="c1">#knx_dpt: 5</span>
+<span class="w">                </span><span class="c1">#knx_send: 2/4/8</span>
+<span class="w">                </span><span class="c1">#knx_init: 2/5/8</span>
 </pre></div>
 </div>
 <p>Das Ergebnis siht folgendermaßen aus:</p>
@@ -3964,61 +3964,61 @@ und mit dem <code class="docutils literal notranslate"><span class="pre">sv_widg
 <li><p>visublock01: Ein Dimmer für die Stehlampe</p></li>
 </ul>
 </div></blockquote>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">world</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">world</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Küche</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_cooking.svg</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kochen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Küche</span>
+<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_cooking.svg</span>
 
-<span class="w">        </span><span class="nt">visublock01</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raum Beleuchtung</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.stateswitch(&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;world.kochen.deckenlicht&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">Deckenlicht&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">visublock01</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raum Beleuchtung</span>
+<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.stateswitch(&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;world.kochen.deckenlicht&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">Deckenlicht&quot;</span>
 
-<span class="w">        </span><span class="nt">visublock02</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tresen</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.stateswitch(&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;world.kochen.tresenlicht&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">Arbeitsfläche&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">visublock02</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tresen</span>
+<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.stateswitch(&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;world.kochen.tresenlicht&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">Arbeitsfläche&quot;</span>
 
-<span class="w">        </span><span class="nt">visublock03</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gesamte Beleuchtung</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.stateswitch(&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;world.kochen.deckenlicht&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">Deckenlicht</span><span class="nv"> </span><span class="s">&lt;br&gt;</span><span class="w"></span>
-<span class="w">                        </span><span class="s">{{</span><span class="nv"> </span><span class="s">basic.stateswitch(&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;world.kochen.tresenlicht&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">Arbeitsfläche&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">visublock03</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gesamte Beleuchtung</span>
+<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">basic.stateswitch(&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;world.kochen.deckenlicht&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">Deckenlicht</span><span class="nv"> </span><span class="s">&lt;br&gt;</span>
+<span class="w">                        </span><span class="s">{{</span><span class="nv"> </span><span class="s">basic.stateswitch(&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;world.kochen.tresenlicht&#39;)</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">Arbeitsfläche&quot;</span>
 
-<span class="w">        </span><span class="nt">deckenlicht</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Decke</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_dpt: 1</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_send: 2/1/10</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_init: 2/2/10</span><span class="w"></span>
+<span class="w">        </span><span class="nt">deckenlicht</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Decke</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="c1">#knx_dpt: 1</span>
+<span class="w">            </span><span class="c1">#knx_send: 2/1/10</span>
+<span class="w">            </span><span class="c1">#knx_init: 2/2/10</span>
 
-<span class="w">        </span><span class="nt">tresenlicht</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tresen</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_dpt: 1</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_send: 2/1/11</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_init: 2/2/11</span><span class="w"></span>
+<span class="w">        </span><span class="nt">tresenlicht</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tresen</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="c1">#knx_dpt: 1</span>
+<span class="w">            </span><span class="c1">#knx_send: 2/1/11</span>
+<span class="w">            </span><span class="c1">#knx_init: 2/2/11</span>
 
-<span class="w">    </span><span class="nt">wohnen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wohnzimmer</span><span class="w"></span>
-<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_livingroom.svg</span><span class="w"></span>
+<span class="w">    </span><span class="nt">wohnen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">sv_page</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">room</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wohnzimmer</span>
+<span class="w">        </span><span class="nt">sv_img</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scene_livingroom.svg</span>
 
-<span class="w">        </span><span class="nt">visublock01</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Beleuchtung</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">device.dimmer(&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;Stehlampe&#39;,</span><span class="nv"> </span><span class="s">&#39;world.wohnen.stehlampe&#39;,</span><span class="nv"> </span><span class="s">&#39;world.wohnen.stehlampe.level&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">visublock01</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Beleuchtung</span>
+<span class="w">            </span><span class="nt">sv_widget</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">device.dimmer(&#39;&#39;,</span><span class="nv"> </span><span class="s">&#39;Stehlampe&#39;,</span><span class="nv"> </span><span class="s">&#39;world.wohnen.stehlampe&#39;,</span><span class="nv"> </span><span class="s">&#39;world.wohnen.stehlampe.level&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
 
-<span class="w">        </span><span class="nt">stehlampe</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Stehlampe</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_dpt: 1</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_send: 2/1/8</span><span class="w"></span>
-<span class="w">            </span><span class="c1">#knx_init: 2/2/8</span><span class="w"></span>
+<span class="w">        </span><span class="nt">stehlampe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Stehlampe</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="c1">#knx_dpt: 1</span>
+<span class="w">            </span><span class="c1">#knx_send: 2/1/8</span>
+<span class="w">            </span><span class="c1">#knx_init: 2/2/8</span>
 
-<span class="w">            </span><span class="nt">level</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="c1">#knx_dpt: 5</span><span class="w"></span>
-<span class="w">                </span><span class="c1">#knx_send: 2/4/8</span><span class="w"></span>
-<span class="w">                </span><span class="c1">#knx_init: 2/5/8</span><span class="w"></span>
+<span class="w">            </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="c1">#knx_dpt: 5</span>
+<span class="w">                </span><span class="c1">#knx_send: 2/4/8</span>
+<span class="w">                </span><span class="c1">#knx_init: 2/5/8</span>
 </pre></div>
 </div>
 <p>Die Seiten für die beiden Räume sehen dann folgendermaßen aus:</p>

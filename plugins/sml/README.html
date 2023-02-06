@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Sml</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Sml</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3962,7 +3962,7 @@ available or explicitely unset it’s value will be set to None.</p>
 <section id="sml-obis">
 <h4>sml_obis<a class="headerlink" href="#sml-obis" title="Permalink to this heading"></a></h4>
 <p>This assigns the value for the given OBIS code to the item.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:1.8.0*255</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:1.8.0*255</span>
 </pre></div>
 </div>
 </section>
@@ -3970,29 +3970,29 @@ available or explicitely unset it’s value will be set to None.</p>
 <h4>sml_prop<a class="headerlink" href="#sml-prop" title="Permalink to this heading"></a></h4>
 <p>Use this to assign other information for an OBIS code to the item. When not
 explicitely specified it defaults to <code class="docutils literal notranslate"><span class="pre">valueReal</span></code>.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sml_prop</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unitName</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sml_prop</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unitName</span>
 </pre></div>
 </div>
 </section>
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h4>
 <p>Here you can find a sample configuration:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">power</span><span class="p">:</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">power</span><span class="p">:</span>
 
-<span class="w">    </span><span class="nt">home</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">home</span><span class="p">:</span>
 
-<span class="w">        </span><span class="nt">total</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:1.8.0*255</span><span class="w"></span>
+<span class="w">        </span><span class="nt">total</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:1.8.0*255</span>
 
-<span class="w">        </span><span class="nt">current</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:16.7.0*255</span><span class="w"></span>
+<span class="w">        </span><span class="nt">current</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:16.7.0*255</span>
 
-<span class="w">        </span><span class="nt">unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:16.7.0*255</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sml_prop</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unitName</span><span class="w"></span>
+<span class="w">        </span><span class="nt">unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">            </span><span class="nt">sml_obis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-0:16.7.0*255</span>
+<span class="w">            </span><span class="nt">sml_prop</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unitName</span>
 </pre></div>
 </div>
 </section>

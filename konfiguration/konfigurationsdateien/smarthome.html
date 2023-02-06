@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="konfigdateien.html">Konfiguration über Dateien</a> &raquo;</li>
-      <li>smarthome.yaml</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="konfigdateien.html">Konfiguration über Dateien</a></li>
+      <li class="breadcrumb-item active">smarthome.yaml</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3868,65 +3868,65 @@ an.</p>
 <p>Die Datei sollte folgendermaßen aussehen:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">smarthome.yaml</span><a class="headerlink" href="#id2" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
-<span class="c1"># etc/smarthome.yaml</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">%YAML</span><span class="w"> </span><span class="m">1.1</span>
+<span class="nn">---</span>
+<span class="c1"># etc/smarthome.yaml</span>
 
-<span class="c1"># Airport Berlin Tegel</span><span class="w"></span>
-<span class="nt">lat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">52.5588327</span><span class="w">          </span><span class="c1"># latitude</span><span class="w"></span>
-<span class="nt">lon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">13.2884374</span><span class="w">          </span><span class="c1"># longitude</span><span class="w"></span>
-<span class="nt">elev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">35</span><span class="w">                 </span><span class="c1"># elevation</span><span class="w"></span>
+<span class="c1"># Airport Berlin Tegel</span>
+<span class="nt">lat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">52.5588327</span><span class="w">          </span><span class="c1"># latitude</span>
+<span class="nt">lon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">13.2884374</span><span class="w">          </span><span class="c1"># longitude</span>
+<span class="nt">elev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">35</span><span class="w">                 </span><span class="c1"># elevation</span>
 
-<span class="nt">tz</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Europe/Berlin&#39;</span><span class="w">      </span><span class="c1"># timezone, the example will be fine for most parts of central Europe</span><span class="w"></span>
+<span class="nt">tz</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Europe/Berlin&#39;</span><span class="w">      </span><span class="c1"># timezone, the example will be fine for most parts of central Europe</span>
 
-<span class="nt">default_language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">de</span><span class="w">     </span><span class="c1"># default_language is used, where multiple languages are supported (de, if not specified)</span><span class="w"></span>
-
-
-<span class="c1"># control type casting when assiging values to items</span><span class="w"></span>
-<span class="c1"># latest or compat_1.2 (compat_1.2 is default for shNG v1.3, latest is default for higher versions)</span><span class="w"></span>
-<span class="c1">#assign_compatibility: latest</span><span class="w"></span>
-
-<span class="c1"># If the standard commend PIP3 does not work when multiple Python3 versions are installed</span><span class="w"></span>
-<span class="c1"># enter the name or full path of the right pip command below</span><span class="w"></span>
-<span class="c1">#pip_command: &quot;python3 -m pip&quot;</span><span class="w"></span>
-<span class="c1">#or on Windows platform</span><span class="w"></span>
-<span class="c1">#pip_command: &quot;python -m pip&quot;</span><span class="w"></span>
-
-<span class="c1"># Additional directory for modules - is added to sys.path (should not be needed)</span><span class="w"></span>
-<span class="c1">#module_paths: /usr/local/python/lib    # list of path-entries is possible</span><span class="w"></span>
-
-<span class="c1"># Crontab entry for schedule task in shpypi</span><span class="w"></span>
-<span class="c1">#shpypi_crontab: &#39;9 5 * *&#39;</span><span class="w"></span>
-
-<span class="c1"># Stem for name of configuration backup files</span><span class="w"></span>
-<span class="c1">#backup_name_stem: myinstallation</span><span class="w"></span>
+<span class="nt">default_language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">de</span><span class="w">     </span><span class="c1"># default_language is used, where multiple languages are supported (de, if not specified)</span>
 
 
-<span class="c1">#-----------------------------------------</span><span class="w"></span>
-<span class="c1"># develop (might be altered for release)</span><span class="w"></span>
-<span class="c1">#</span><span class="w"></span>
+<span class="c1"># control type casting when assiging values to items</span>
+<span class="c1"># latest or compat_1.2 (compat_1.2 is default for shNG v1.3, latest is default for higher versions)</span>
+<span class="c1">#assign_compatibility: latest</span>
 
-<span class="c1"># version 1.5 and up:</span><span class="w"></span>
-<span class="c1">#</span><span class="w"></span>
-<span class="c1"># Loggen von Warnungen, falls abgekündigte Funktionen aufgerufen werden (Standard: False)</span><span class="w"></span>
-<span class="c1">#deprecated_warnings: True</span><span class="w"></span>
+<span class="c1"># If the standard commend PIP3 does not work when multiple Python3 versions are installed</span>
+<span class="c1"># enter the name or full path of the right pip command below</span>
+<span class="c1">#pip_command: &quot;python3 -m pip&quot;</span>
+<span class="c1">#or on Windows platform</span>
+<span class="c1">#pip_command: &quot;python -m pip&quot;</span>
 
-<span class="c1"># Change log level for logging of using undefined item attributes</span><span class="w"></span>
-<span class="c1"># (Attributes that are no statdard-attributes and not defined by a configured plugin)</span><span class="w"></span>
-<span class="c1">#undef_item_attr_loglevel_info: True</span><span class="w"></span>
+<span class="c1"># Additional directory for modules - is added to sys.path (should not be needed)</span>
+<span class="c1">#module_paths: /usr/local/python/lib    # list of path-entries is possible</span>
 
-<span class="c1"># To get info which thread consumes how many cpu when using shng tool &#39;cpuusage.py&#39;</span><span class="w"></span>
-<span class="c1">#threadinfo_export: True</span><span class="w"></span>
+<span class="c1"># Crontab entry for schedule task in shpypi</span>
+<span class="c1">#shpypi_crontab: &#39;9 5 * *&#39;</span>
+
+<span class="c1"># Stem for name of configuration backup files</span>
+<span class="c1">#backup_name_stem: myinstallation</span>
 
 
-<span class="c1">#-----------------------------------------</span><span class="w"></span>
-<span class="c1"># not used? - following entries are probably not used</span><span class="w"></span>
-<span class="c1">#</span><span class="w"></span>
+<span class="c1">#-----------------------------------------</span>
+<span class="c1"># develop (might be altered for release)</span>
+<span class="c1">#</span>
 
-<span class="c1"># supportded databases - db: Format: &lt;name&gt;:&lt;python-module&gt;, list of database-entries is possible</span><span class="w"></span>
-<span class="c1">#db:</span><span class="w"></span>
-<span class="c1">#  - sqlite:sqlite3</span><span class="w"></span>
-<span class="c1">#  - mysql:pymysql</span><span class="w"></span>
+<span class="c1"># version 1.5 and up:</span>
+<span class="c1">#</span>
+<span class="c1"># Loggen von Warnungen, falls abgekündigte Funktionen aufgerufen werden (Standard: False)</span>
+<span class="c1">#deprecated_warnings: True</span>
+
+<span class="c1"># Change log level for logging of using undefined item attributes</span>
+<span class="c1"># (Attributes that are no statdard-attributes and not defined by a configured plugin)</span>
+<span class="c1">#undef_item_attr_loglevel_info: True</span>
+
+<span class="c1"># To get info which thread consumes how many cpu when using shng tool &#39;cpuusage.py&#39;</span>
+<span class="c1">#threadinfo_export: True</span>
+
+
+<span class="c1">#-----------------------------------------</span>
+<span class="c1"># not used? - following entries are probably not used</span>
+<span class="c1">#</span>
+
+<span class="c1"># supportded databases - db: Format: &lt;name&gt;:&lt;python-module&gt;, list of database-entries is possible</span>
+<span class="c1">#db:</span>
+<span class="c1">#  - sqlite:sqlite3</span>
+<span class="c1">#  - mysql:pymysql</span>
 </pre></div>
 </div>
 </div>

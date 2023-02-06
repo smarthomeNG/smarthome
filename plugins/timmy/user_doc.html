@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-      <li>timmy</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_system.html">System Plugins</a></li>
+      <li class="breadcrumb-item active">timmy</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3879,40 +3879,40 @@
 </section>
 <section id="beispiele">
 <h2>Beispiele<a class="headerlink" href="#beispiele" title="Permalink to this heading"></a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w"> </span><span class="nt">some_lamp</span><span class="p">:</span><span class="w"></span>
-<span class="linenos"> 2</span><span class="w">     </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w"> </span><span class="nt">some_lamp</span><span class="p">:</span>
+<span class="linenos"> 2</span><span class="w">     </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
 <span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="w">     </span><span class="nt">blinker</span><span class="p">:</span><span class="w"></span>
-<span class="linenos"> 5</span><span class="w">         </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="linenos"> 6</span><span class="w">         </span><span class="nt">timmy_blink_target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
-<span class="linenos"> 7</span><span class="w">         </span><span class="nt">timmy_blink_loops</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="linenos"> 4</span><span class="w">     </span><span class="nt">blinker</span><span class="p">:</span>
+<span class="linenos"> 5</span><span class="w">         </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="linenos"> 6</span><span class="w">         </span><span class="nt">timmy_blink_target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
+<span class="linenos"> 7</span><span class="w">         </span><span class="nt">timmy_blink_loops</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 <span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="w">     </span><span class="nt">blinker_2</span><span class="p">:</span><span class="w"></span>
-<span class="linenos">10</span><span class="w">         </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="linenos">11</span><span class="w">         </span><span class="nt">timmy_blink_target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
-<span class="linenos">12</span><span class="w">         </span><span class="nt">timmy_blink_loops</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
-<span class="linenos">13</span><span class="w">         </span><span class="nt">timmy_blink_cycles</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">.3</span><span class="p p-Indicator">,</span><span class="nv">.3</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="linenos">14</span><span class="w">         </span><span class="nt">timmy_blink_pattern</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">True</span><span class="p p-Indicator">,</span><span class="nv">False</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="linenos"> 9</span><span class="w">     </span><span class="nt">blinker_2</span><span class="p">:</span>
+<span class="linenos">10</span><span class="w">         </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="linenos">11</span><span class="w">         </span><span class="nt">timmy_blink_target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
+<span class="linenos">12</span><span class="w">         </span><span class="nt">timmy_blink_loops</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="linenos">13</span><span class="w">         </span><span class="nt">timmy_blink_cycles</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">.3</span><span class="p p-Indicator">,</span><span class="nv">.3</span><span class="p p-Indicator">]</span>
+<span class="linenos">14</span><span class="w">         </span><span class="nt">timmy_blink_pattern</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">True</span><span class="p p-Indicator">,</span><span class="nv">False</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w"> </span><span class="nt">temperature</span><span class="p">:</span><span class="w"></span>
-<span class="linenos"> 2</span><span class="w">     </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w"> </span><span class="nt">temperature</span><span class="p">:</span>
+<span class="linenos"> 2</span><span class="w">     </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
 <span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="w">     </span><span class="nt">sun_protect_needed</span><span class="p">:</span><span class="w"></span>
-<span class="linenos"> 5</span><span class="w">         </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="linenos"> 6</span><span class="w">         </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh...self() &gt; sh..defined_limit()</span><span class="w"></span>
-<span class="linenos"> 7</span><span class="w">         </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"></span>
-<span class="linenos"> 8</span><span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..self</span><span class="w"></span>
-<span class="linenos"> 9</span><span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.defined_limit</span><span class="w"></span>
-<span class="linenos">10</span><span class="w">         </span><span class="nt">timmy_delay_target_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.post_hysteresis</span><span class="w"></span>
-<span class="linenos">11</span><span class="w">         </span><span class="nt">timmy_delay_off_delay_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800</span><span class="w"></span>
-<span class="linenos">12</span><span class="w">         </span><span class="nt">timmy_delay_on_delay_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w"></span>
+<span class="linenos"> 4</span><span class="w">     </span><span class="nt">sun_protect_needed</span><span class="p">:</span>
+<span class="linenos"> 5</span><span class="w">         </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="linenos"> 6</span><span class="w">         </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh...self() &gt; sh..defined_limit()</span>
+<span class="linenos"> 7</span><span class="w">         </span><span class="nt">eval_trigger</span><span class="p">:</span>
+<span class="linenos"> 8</span><span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..self</span>
+<span class="linenos"> 9</span><span class="w">             </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.defined_limit</span>
+<span class="linenos">10</span><span class="w">         </span><span class="nt">timmy_delay_target_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.post_hysteresis</span>
+<span class="linenos">11</span><span class="w">         </span><span class="nt">timmy_delay_off_delay_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800</span>
+<span class="linenos">12</span><span class="w">         </span><span class="nt">timmy_delay_on_delay_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
 <span class="linenos">13</span>
-<span class="linenos">14</span><span class="w">         </span><span class="nt">defined_limit</span><span class="p">:</span><span class="w"></span>
-<span class="linenos">15</span><span class="w">             </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
+<span class="linenos">14</span><span class="w">         </span><span class="nt">defined_limit</span><span class="p">:</span>
+<span class="linenos">15</span><span class="w">             </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
 <span class="linenos">16</span>
-<span class="linenos">17</span><span class="w">         </span><span class="nt">post_hysteresis</span><span class="p">:</span><span class="w"></span>
-<span class="linenos">18</span><span class="w">             </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
+<span class="linenos">17</span><span class="w">         </span><span class="nt">post_hysteresis</span><span class="p">:</span>
+<span class="linenos">18</span><span class="w">             </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
 </pre></div>
 </div>
 </section>

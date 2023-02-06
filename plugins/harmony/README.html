@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Harmony Hub Plugin</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Harmony Hub Plugin</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3941,12 +3941,12 @@ for a Harmony Hub activity the activity id.</p>
 <li><p>Activate the plugin in your plugins.yaml</p></li>
 <li><p>Set the IP for your Harmony hub device</p></li>
 </ul>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="nt">harmony</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Harmony</span><span class="w"></span>
-<span class="w">        </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.harmony</span><span class="w"></span>
-<span class="w">        </span><span class="nt">harmony_ip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.178.78</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#harmony_port: 5222 # [default: 5222, int]</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#sleekxmpp_debug: false  #[default:false, bool]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="nt">harmony</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Harmony</span>
+<span class="w">        </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.harmony</span>
+<span class="w">        </span><span class="nt">harmony_ip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.178.78</span>
+<span class="w">        </span><span class="c1">#harmony_port: 5222 # [default: 5222, int]</span>
+<span class="w">        </span><span class="c1">#sleekxmpp_debug: false  #[default:false, bool]</span>
 </pre></div>
 </div>
 </section>
@@ -3994,7 +3994,7 @@ can set all delays to 0 for that device since it has no function. If this is don
 harmony_command chain to make sure, your activity is triggered.</p>
 <p>You can also trigger the default Harmony Hub activity „Power Off“, that switch the current active activity off. This
 can be done by sending ‚-1‘ to the Hub.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">a:-1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">a:-1</span>
 </pre></div>
 </div>
 </section>
@@ -4007,10 +4007,10 @@ activity in the Harmony Hub. Everytime the active activity was changed (by your 
 are set with status values about this activity.</p>
 <section id="harmony-current-activity-by-id">
 <h4>Harmony Current Activity by ID<a class="headerlink" href="#harmony-current-activity-by-id" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">MyItem</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
-<span class="w">    </span><span class="nt">harmony_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_activity_id</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">MyItem</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">    </span><span class="nt">enforce_updates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">harmony_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current_activity_id</span>
 </pre></div>
 </div>
 <p>To retrieve the current activated activity ID in the Harmony Hub, your item has to be type ‚num‘ an must implement
@@ -4035,27 +4035,27 @@ the attribute <code class="docutils literal notranslate"><span class="pre">harmo
 <hr class="docutils" />
 <section id="examples">
 <h3>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="nt">Shield</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">harmony_command_1</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42282391:PowerOn:6</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42282391:InputBd:1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">harmony_command_0</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42282391:PowerOff</span><span class="w"></span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">activity:-1</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="nt">Shield</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">harmony_command_1</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42282391:PowerOn:6</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42282391:InputBd:1</span>
+<span class="w">        </span><span class="nt">harmony_command_0</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42282391:PowerOff</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">activity:-1</span>
 </pre></div>
 </div>
 <p>If the Item ‚Shield‘ is set to True, the AV receiver is powered on with an delay of 6 seconds after the item ‚Shield‘
 was set to „True“. With an additional delay of one second, the input channel is set to ‚Bluray‘.
 If the Item ‚Shield‘ is set to False, the command „PowerOff“ is triggered instantly. 5 seconds later, the default
 Harmony Hub activity ‚Power Off‘ is triggered</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">RTL</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">    </span><span class="nt">harmony_command_1</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a:12345123</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42282391:InputSat/Cbl:2</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;31914808:3:0.3&#39;</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">31914808:Select</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">RTL</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">harmony_command_1</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a:12345123</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42282391:InputSat/Cbl:2</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;31914808:3:0.3&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">31914808:Select</span>
 </pre></div>
 </div>
 <p>This command starts the Harmony Hub activity with the id 12345123 (e.g. ‚start movie scene‘). After a delay of 2 seconds, the input channel of the AV receiver is switched to SAT/Cbl. 0.3 seconds later, a ‚3‘ is triggered and committed with a ‚Select‘ command.</p>

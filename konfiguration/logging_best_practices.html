@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="konfiguration.html">Konfiguration <span class="greensup">Update</span></a> &raquo;</li>
-          <li><a href="logging.html">Logging</a> &raquo;</li>
-      <li>Logging - Best Practices</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="konfiguration.html">Konfiguration <span class="greensup">Update</span></a></li>
+          <li class="breadcrumb-item"><a href="logging.html">Logging</a></li>
+      <li class="breadcrumb-item active">Logging - Best Practices</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3892,51 +3892,51 @@ Entwicklung</a></p>
 <section id="grundkonfiguration-des-loggings">
 <h2>Grundkonfiguration des Loggings<a class="headerlink" href="#grundkonfiguration-des-loggings" title="Permalink to this heading"></a></h2>
 <p>Die grundsätzliche Konfiguration des Loggings sieht dann so aus:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/logging.yaml</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/logging.yaml</span>
 
-<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="nt">disable_existing_loggers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">formatters</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">shng_simple</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-19s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span><span class="w"></span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">disable_existing_loggers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+<span class="nt">formatters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">shng_simple</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-19s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span>
+<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span>
 
-<span class="w">    </span><span class="nt">shng_detail</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(module)-17s</span><span class="nv"> </span><span class="s">%(threadName)-12s</span><span class="nv"> </span><span class="s">%(message)s</span><span class="nv">  </span><span class="s">--</span><span class="nv">  </span><span class="s">(%(filename)s:%(funcName)s:%(lineno)d)&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv"> </span><span class="s">%H:%M:%S</span><span class="nv"> </span><span class="s">%Z&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">shng_detail</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(module)-17s</span><span class="nv"> </span><span class="s">%(threadName)-12s</span><span class="nv"> </span><span class="s">%(message)s</span><span class="nv">  </span><span class="s">--</span><span class="nv">  </span><span class="s">(%(filename)s:%(funcName)s:%(lineno)d)&#39;</span>
+<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv"> </span><span class="s">%H:%M:%S</span><span class="nv"> </span><span class="s">%Z&#39;</span>
 
-<span class="nt">handlers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">console</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.StreamHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">simple</span><span class="w"></span>
-<span class="w">        </span><span class="nt">stream</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ext://sys.stdout</span><span class="w"></span>
+<span class="nt">handlers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">console</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.StreamHandler</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">simple</span>
+<span class="w">        </span><span class="nt">stream</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ext://sys.stdout</span>
 
-<span class="w">    </span><span class="nt">shng_warnings_file</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span><span class="w"></span>
-<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span><span class="w"></span>
-<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-warnings.log</span><span class="w"></span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span><span class="w"></span>
+<span class="w">    </span><span class="nt">shng_warnings_file</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span>
+<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-warnings.log</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span>
 
-<span class="w">    </span><span class="nt">shng_details_file</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_detail</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span><span class="w"></span>
-<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span><span class="w"></span>
-<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-details.log</span><span class="w"></span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span><span class="w"></span>
+<span class="w">    </span><span class="nt">shng_details_file</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_detail</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span>
+<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-details.log</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span>
 
-<span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">__main__</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="nt">loggers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">__main__</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
 
-<span class="nt">root</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span><span class="w"></span>
-<span class="w">    </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_warnings_file</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="nt">root</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+<span class="w">    </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_warnings_file</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>Sie loggt nur Warnungen und Fehler in das Hauptlog. Das Zusatzlog wird
@@ -3974,28 +3974,28 @@ der einzelnen Logger festgelegt. Prinzipiell kann das Zusatzlog ja alle
 Loglevel aufnehmen.</p>
 <p>Um zum Beispiel für das Plugin <strong>mqtt</strong> INFO Logausgaben zu schreiben,
 muss ein zusätzlicher Logger folgendermaßen konfiguriert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ausschnitt aus etc/logging.yaml</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ausschnitt aus etc/logging.yaml</span>
 
-<span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugins.mqtt</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
+<span class="nt">loggers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugins.mqtt</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
 </pre></div>
 </div>
 <p>Dieser Logger schreibt in das Zusatzlog und zwar bis zum Level INFO.</p>
 <p>Wenn jetzt noch zusätzlich für das Plugin <strong>enogw</strong> DEBUG Logausgaben
 geschrieben werden sollen, muss ein weiterer Logger folgendermaßen
 konfiguriert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ausschnitt aus etc/logging.yaml</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ausschnitt aus etc/logging.yaml</span>
 
-<span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugins.mqtt</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
+<span class="nt">loggers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugins.mqtt</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
 
-<span class="w">    </span><span class="nt">plugins.enogw</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span><span class="w"></span>
+<span class="w">    </span><span class="nt">plugins.enogw</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
 </pre></div>
 </div>
 <p>Nun werden INFO Logs des mqtt Plugins, sowie DEBUG und INFO Logs des
@@ -4004,8 +4004,8 @@ enogw Plugins in das Zusatzlog geschrieben.</p>
 <section id="identifizieren-von-neustarts-im-zusatzlog">
 <h2>Identifizieren von Neustarts im Zusatzlog<a class="headerlink" href="#identifizieren-von-neustarts-im-zusatzlog" title="Permalink to this heading"></a></h2>
 <p>Im Hauptlog werden zwei Zeilen</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">2018</span>-11-10  <span class="m">01</span>:03:23 WARNING  __main__            --------------------   Init SmartHomeNG <span class="m">1</span>.6   --------------------
-<span class="m">2018</span>-11-10  <span class="m">01</span>:03:23 WARNING  __main__            Running <span class="k">in</span> Python interpreter <span class="s1">&#39;v3.6.5 final&#39;</span> <span class="o">(</span><span class="nv">pid</span><span class="o">=</span><span class="m">18624</span><span class="o">)</span> on linux platform
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">2018</span>-11-10<span class="w">  </span><span class="m">01</span>:03:23<span class="w"> </span>WARNING<span class="w">  </span>__main__<span class="w">            </span>--------------------<span class="w">   </span>Init<span class="w"> </span>SmartHomeNG<span class="w"> </span><span class="m">1</span>.6<span class="w">   </span>--------------------
+<span class="m">2018</span>-11-10<span class="w">  </span><span class="m">01</span>:03:23<span class="w"> </span>WARNING<span class="w">  </span>__main__<span class="w">            </span>Running<span class="w"> </span><span class="k">in</span><span class="w"> </span>Python<span class="w"> </span>interpreter<span class="w"> </span><span class="s1">&#39;v3.6.5 final&#39;</span><span class="w"> </span><span class="o">(</span><span class="nv">pid</span><span class="o">=</span><span class="m">18624</span><span class="o">)</span><span class="w"> </span>on<span class="w"> </span>linux<span class="w"> </span>platform
 </pre></div>
 </div>
 <p>bei jedem Start von SmartHomeNG geschrieben, um die Neustarts im Log
@@ -4014,20 +4014,20 @@ standardmäßig nicht.</p>
 <p>Wenn man diese Zeile auch im Zusatzlog haben möchte, muss man die
 WARNINGs des main-Loggers auch in das Zusatzlog lenken. Das geschieht
 indem man den logger <code class="docutils literal notranslate"><span class="pre">__main__</span></code> folgendermaßen konfiguriert:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ausschnitt aus etc/logging.yaml</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ausschnitt aus etc/logging.yaml</span>
 
-<span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">__main__</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span><span class="w"></span>
+<span class="nt">loggers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">__main__</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WARNING</span>
 
-<span class="w">    </span><span class="nt">plugins.mqtt</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span><span class="w"></span>
+<span class="w">    </span><span class="nt">plugins.mqtt</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
 
-<span class="w">    </span><span class="nt">plugins.enogw</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span><span class="w"></span>
+<span class="w">    </span><span class="nt">plugins.enogw</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">shng_details_file</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
 </pre></div>
 </div>
 </section>
@@ -4036,19 +4036,19 @@ indem man den logger <code class="docutils literal notranslate"><span class="pre
 <p>In der Standardkonfiguration des Loggings wurde von SmartHomeNG wird
 bisher nach Datum und Loglevel der Threadname vor der eigentlichen
 Logmessage ausgegeben:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">formatters</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">simple</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(threadName)-12s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">formatters</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">simple</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(threadName)-12s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span>
+<span class="w">    </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span>
 </pre></div>
 </div>
 <p>Folgende Einstellung (wie oben im Beispiel bereits angegeben) schreibt
 statt des Thread Names (der nicht besonders hilfeich ist), den Python
 Modul Namen in das log (also z.B.: lib.plugin, plugins.knx, …):</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">formatters</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">shng_simple</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-19s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">formatters</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">shng_simple</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-19s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span>
+<span class="w">    </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span>
 </pre></div>
 </div>
 <p>Das ist hilfreicher um zu identifizieren woher die Logmessage stammt.</p>
@@ -4063,32 +4063,32 @@ auch noch erweitern.</p>
 <h3>Logging Filter<a class="headerlink" href="#logging-filter" title="Permalink to this heading"></a></h3>
 <p>Filter können dazu genutzt werden, nur bestimmte Logeinträge anzuzeigen bzw.
 diese eben auch zu verstecken. Hierzu wird zuerst ein Filter angelegt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">filter</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">meinfilter</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span><span class="w"></span>
-<span class="w">        </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;[sS]tate[eE]ngineLogger&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;plugins.stateengine.licht.test&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(.*)Item</span><span class="nv"> </span><span class="s">(.*)</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">found!&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="c1">#invert: True</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">filter</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">meinfilter</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span>
+<span class="w">        </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;[sS]tate[eE]ngineLogger&quot;</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;plugins.stateengine.licht.test&quot;</span>
+<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(.*)Item</span><span class="nv"> </span><span class="s">(.*)</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">found!&quot;</span>
+<span class="w">        </span><span class="c1">#invert: True</span>
 </pre></div>
 </div>
 <p>Dieser Filter muss nun beim entsprechenden Handler noch referenziert werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">handlers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">stateengine_file</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/stateengine.log</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filters</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">meinfilter</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">handlers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">stateengine_file</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shng_simple</span>
+<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/stateengine.log</span>
+<span class="w">        </span><span class="nt">filters</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">meinfilter</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>Wichtig sind dabei die eckigen Klammern, auch wenn nur ein Filter referenziert
 wird. Und ja, es können hier durch Beistrich auch mehrere Filter gelistet
 werden. Schließlich muss der Handler noch im entsprechenden logger eingetragen
 werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">loggers</span><span class="p">:</span><span class="w"></span>
-<span class="w">     </span><span class="nt">plugins.stateengine</span><span class="p">:</span><span class="w"></span>
-<span class="w">         </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">stateengine_file</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">         </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">loggers</span><span class="p">:</span>
+<span class="w">     </span><span class="nt">plugins.stateengine</span><span class="p">:</span>
+<span class="w">         </span><span class="nt">handlers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">stateengine_file</span><span class="p p-Indicator">]</span>
+<span class="w">         </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
 </pre></div>
 </div>
 <p>Dies führt dazu, dass nicht mehr alle DEBUG Informationen des Loggers vom
@@ -4106,20 +4106,20 @@ werden, die NICHT den oben genannten Kriterien entsprechen.</p>
 morgens filtert und somit nicht ins Log schreibt. Wie im Beispiel zu sehen,
 können auch mehrere Angaben zu einem Filterattribut (hier timestamp) als Liste
 deklariert werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">filter</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filter_nacht</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span><span class="w"></span>
-<span class="w">        </span><span class="nt">timestamp</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;(.*)\s2[0-4]:(.*)&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;(.*)\s0[0-8]:(.*)&#39;</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">filter</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filter_nacht</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span>
+<span class="w">        </span><span class="nt">timestamp</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;(.*)\s2[0-4]:(.*)&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;(.*)\s0[0-8]:(.*)&#39;</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>Erläuterung der RegEx:
 Es werden beliebige Einträge für Jahr-Monat-Tag akzeptiert. Anschließend folgt
 ein Leerzeichen und der relevante Filtercode. ‚2[0-4]{1}‘ filtert alles zwischen
 20 und 24 Uhr und ‚0[0-8]{1}‘ alles zwischen 00 und 08 Uhr.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">filter</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filter_abend_mai</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span><span class="w"></span>
-<span class="w">        </span><span class="nt">timestamp</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;^[0-9]{4}-05-[0-9]{1,2}\s2[0-4]{1}:(.*)&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">filter</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filter_abend_mai</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span>
+<span class="w">        </span><span class="nt">timestamp</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;^[0-9]{4}-05-[0-9]{1,2}\s2[0-4]{1}:(.*)&#39;</span>
 </pre></div>
 </div>
 <p>Erläuterung der RegEx:
@@ -4131,10 +4131,10 @@ notwendig, diese zu escapen.
 Hierbei ist zu beachten, dass doppelte <code class="docutils literal notranslate"><span class="pre">\\</span></code> benutzt werden müssen.
 Möchte man mehrere verschiedene Logeinträge abfangen, können diese als Liste
 angegeben werden.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">filter</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filter_eintrag_mitSonderzeichen</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span><span class="w"></span>
-<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;(.*)\\(TCP_Client_192\\.0\\.1\\.1:9621\\)</span><span class="nv"> </span><span class="s">TCP</span><span class="nv"> </span><span class="s">connection</span><span class="nv"> </span><span class="s">failed(.*)&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Error.*TCP_Client.*&quot;</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">filter</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filter_eintrag_mitSonderzeichen</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lib.logutils.Filter</span>
+<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;(.*)\\(TCP_Client_192\\.0\\.1\\.1:9621\\)</span><span class="nv"> </span><span class="s">TCP</span><span class="nv"> </span><span class="s">connection</span><span class="nv"> </span><span class="s">failed(.*)&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Error.*TCP_Client.*&quot;</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>Erläuterung der RegEx:
@@ -4153,27 +4153,27 @@ geschrieben hat, mit anzeigt.</p>
 (verbesserten) simple Formatter und nennt ihn <code class="docutils literal notranslate"><span class="pre">funcname</span></code>. Dann fügt
 man den Platzhalter <code class="docutils literal notranslate"><span class="pre">%(funcName)-16s</span></code> in den Format-String ein, der
 den Funktionsnamen ausgibt.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">formatters</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">simple</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-16s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">funcname</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-16s</span><span class="nv"> </span><span class="s">%(funcName)-16s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">formatters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">simple</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-16s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span>
+<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span>
+<span class="w">    </span><span class="nt">funcname</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%(asctime)s</span><span class="nv"> </span><span class="s">%(levelname)-8s</span><span class="nv"> </span><span class="s">%(name)-16s</span><span class="nv"> </span><span class="s">%(funcName)-16s</span><span class="nv"> </span><span class="s">%(message)s&#39;</span>
+<span class="w">        </span><span class="nt">datefmt</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;%Y-%m-%d</span><span class="nv">  </span><span class="s">%H:%M:%S&#39;</span>
 </pre></div>
 </div>
 <p>Damit dieser neue Formatter auch genutzt wird, muss er noch im Handler
 <code class="docutils literal notranslate"><span class="pre">file_additional</span></code> an Stelle des <code class="docutils literal notranslate"><span class="pre">simple</span></code> Formatters eingetragen
 werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">handlers</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">shng_details_file</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span><span class="w"></span>
-<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">funcname</span><span class="w"></span>
-<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span><span class="w"></span>
-<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span><span class="w"></span>
-<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"></span>
-<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-details.log</span><span class="w"></span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">handlers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">shng_details_file</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logging.handlers.TimedRotatingFileHandler</span>
+<span class="w">        </span><span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">funcname</span>
+<span class="w">        </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+<span class="w">        </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">midnight</span>
+<span class="w">        </span><span class="nt">backupCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./var/log/smarthome-details.log</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span>
 </pre></div>
 </div>
 <p>Das bewirkt, dass im Zusatzlog die Funktionsnamen mit geloggt werden,

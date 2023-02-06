@@ -3837,9 +3837,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Modul-Quellcode</a> &raquo;</li>
-      <li>lib.translation</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Modul-Quellcode</a></li>
+      <li class="breadcrumb-item active">lib.translation</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3906,7 +3906,7 @@
 
 
 <div class="viewcode-block" id="initialize_translations"><a class="viewcode-back" href="../../lib/translation.html#lib.translation.initialize_translations">[Doku]</a><span class="k">def</span> <span class="nf">initialize_translations</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">default_language</span><span class="p">,</span> <span class="n">fallback_language_order</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Initialize the multi-language support</span>
 
 <span class="sd">    :param base_dir: Base directory of SmartHomeNG</span>
@@ -3925,7 +3925,7 @@
 
 
 <div class="viewcode-block" id="set_default_language"><a class="viewcode-back" href="../../lib/translation.html#lib.translation.set_default_language">[Doku]</a><span class="k">def</span> <span class="nf">set_default_language</span><span class="p">(</span><span class="n">language</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set language to be used for translations</span>
 
 <span class="sd">    :param language: language to be used for translations: &#39;de&#39;, &#39;en&#39;, &#39;fr&#39;, ...</span>
@@ -3939,7 +3939,7 @@
 
 
 <div class="viewcode-block" id="set_fallback_language_order"><a class="viewcode-back" href="../../lib/translation.html#lib.translation.set_fallback_language_order">[Doku]</a><span class="k">def</span> <span class="nf">set_fallback_language_order</span><span class="p">(</span><span class="n">language_order</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set fallback languages and their order</span>
 
 <span class="sd">    Fallback languages are used, if a translation for the selected default_language is not available</span>
@@ -3955,7 +3955,7 @@
 
 
 <div class="viewcode-block" id="load_translations"><a class="viewcode-back" href="../../lib/translation.html#lib.translation.load_translations">[Doku]</a><span class="k">def</span> <span class="nf">load_translations</span><span class="p">(</span><span class="n">translation_type</span><span class="o">=</span><span class="s1">&#39;global&#39;</span><span class="p">,</span> <span class="n">from_dir</span><span class="o">=</span><span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="n">translation_id</span><span class="o">=</span><span class="s1">&#39;global&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load global or plugin-specific translations from a locale.yaml file</span>
 
 <span class="sd">    :param translation_type: &#39;global&#39; or &#39;plugin&#39;</span>
@@ -3994,7 +3994,7 @@
 
 
 <div class="viewcode-block" id="reload_translations"><a class="viewcode-back" href="../../lib/translation.html#lib.translation.reload_translations">[Doku]</a><span class="k">def</span> <span class="nf">reload_translations</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reload translations for existing translation_ids - to test new translations without having to restart SmartHomeNG</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;reload_translations&quot;</span><span class="p">)</span>
@@ -4018,7 +4018,7 @@
 
 
 <span class="k">def</span> <span class="nf">_get_translation</span><span class="p">(</span><span class="n">translation_lang</span><span class="p">,</span> <span class="n">txt</span><span class="p">,</span> <span class="n">additional_translations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns translated text from for a specified language from additional_translations or global_translations</span>
 
 <span class="sd">    :param translation_lang: Language to be used for translation</span>
@@ -4047,7 +4047,7 @@
 
 
 <div class="viewcode-block" id="translate"><a class="viewcode-back" href="../../lib/translation.html#lib.translation.translate">[Doku]</a><span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">additional_translations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns translated text</span>
 
 <span class="sd">    :param txt: TEXT TO TRANSLATE</span>

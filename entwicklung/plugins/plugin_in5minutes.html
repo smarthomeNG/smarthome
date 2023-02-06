@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../entwicklung.html">Entwicklung</a> &raquo;</li>
-          <li><a href="plugins.html">Plugins <span class="bluesup">under construction</span></a> &raquo;</li>
-      <li>In 5 Minuten zum eigenen Plugin…</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../entwicklung.html">Entwicklung</a></li>
+          <li class="breadcrumb-item"><a href="plugins.html">Plugins <span class="bluesup">under construction</span></a></li>
+      <li class="breadcrumb-item active">In 5 Minuten zum eigenen Plugin…</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3909,22 +3909,22 @@ Die restliche Dokumentation sollte nur noch im <code class="docutils literal not
 </ul>
 <section id="beispiel-einer-metadaten-datei">
 <h4>Beispiel einer Metadaten-Datei:<a class="headerlink" href="#beispiel-einer-metadaten-datei" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># meta data for the plugin</span><span class="w"></span>
-<span class="nt">plugin</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Global plugin attributes</span><span class="w"></span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">interface</span><span class="w">                </span><span class="c1"># plugin type (gateway, interface, protocol, system, web)</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># meta data for the plugin</span>
+<span class="nt">plugin</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Global plugin attributes</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">interface</span><span class="w">                </span><span class="c1"># plugin type (gateway, interface, protocol, system, web)</span>
 
-<span class="nt">parameters</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Definition of parameters to be configured in etc/plugin.yaml</span><span class="w"></span>
+<span class="nt">parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Definition of parameters to be configured in etc/plugin.yaml</span>
 
-<span class="nt">item_attributes</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># Definition of item attributes defined by this plugin</span><span class="w"></span>
+<span class="nt">item_attributes</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Definition of item attributes defined by this plugin</span>
 
-<span class="nt">item_structs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span><span class="w"></span>
+<span class="nt">item_structs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span>
 
-<span class="nt">logic_parameters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span><span class="w"></span>
+<span class="nt">logic_parameters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span>
 
-<span class="nt">plugin_functions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span><span class="w"></span>
+<span class="nt">plugin_functions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span>
 </pre></div>
 </div>
 </section>
@@ -3986,10 +3986,10 @@ Ein anderer Eintrag als Überschrift sorgt für Inkonsistenzen in den Navigation
 <p>Die Konfigurationsdatei <code class="docutils literal notranslate"><span class="pre">plugin.yaml</span></code> befindet sich im Unterordner <code class="docutils literal notranslate"><span class="pre">etc</span></code> der SmartHomeNG-Installation.
 Hier wird SmartHomeNG mitgeteilt, welche Plugins geladen werden sollen, wo sie zu finden sind und welche Optionen sie ggf. benötigen.</p>
 <p>Dies ist ein typischer Abschnitt für ein neues Plugin. Wir nehmen an, dass das Plugin <code class="docutils literal notranslate"><span class="pre">myplugin</span></code> heißt:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span><span class="w"></span>
-<span class="nt">myplugin_instance</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myplugin</span><span class="w"></span>
-<span class="w">    </span><span class="nt">parameter1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># etc/plugin.yaml</span>
+<span class="nt">myplugin_instance</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">plugin_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myplugin</span>
+<span class="w">    </span><span class="nt">parameter1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
 </pre></div>
 </div>
 <p>Werfen wir einen Blick auf die einzelnen Angaben:</p>
@@ -4030,7 +4030,7 @@ Das ist näher im Abschnitt „Der Scheduler“ beschrieben.</p>
 <span class="n">PLUGIN_VERSION</span> <span class="o">=</span> <span class="s2">&quot;a.b.c&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sh</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the plugin. The parameters describe for this method are pulled from the entry in plugin.conf.</span>
 
 <span class="sd">        :param sh:  The instance of the smarthome object, save it for later references</span>
@@ -4046,7 +4046,7 @@ Das ist näher im Abschnitt „Der Scheduler“ beschrieben.</p>
 
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run method for the plugin</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;run method called&quot;</span><span class="p">)</span>
@@ -4054,7 +4054,7 @@ Das ist näher im Abschnitt „Der Scheduler“ beschrieben.</p>
 
 
     <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stop method for the plugin</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;stop method called&quot;</span><span class="p">)</span>
@@ -4062,7 +4062,7 @@ Das ist näher im Abschnitt „Der Scheduler“ beschrieben.</p>
 
 
     <span class="k">def</span> <span class="nf">parse_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Default plugin parse_item method. Is called when the plugin is initialized.</span>
 <span class="sd">        The plugin can, corresponding to its attribute keywords, decide what to do with</span>
 <span class="sd">        the item in future, like adding it to an internal array for future reference</span>
@@ -4085,7 +4085,7 @@ Das ist näher im Abschnitt „Der Scheduler“ beschrieben.</p>
 
 
     <span class="k">def</span> <span class="nf">parse_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logic</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Default plugin parse_logic method</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s1">&#39;xxx&#39;</span> <span class="ow">in</span> <span class="n">logic</span><span class="o">.</span><span class="n">conf</span><span class="p">:</span>
@@ -4094,7 +4094,7 @@ Das ist näher im Abschnitt „Der Scheduler“ beschrieben.</p>
 
 
     <span class="k">def</span> <span class="nf">update_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write items values</span>
 
 <span class="sd">        :param item: item to be updated towards the plugin</span>
@@ -4157,14 +4157,14 @@ nicht mehr weitergeben und auch keine Daten empfangen und in Items sichern.</p>
 <p>Diese Funktion wird während des Starts für jedes Item einmal aufgerufen, wenn SmartHomeNG
 die Datei <code class="docutils literal notranslate"><span class="pre">/items/items.yaml</span></code> liest. Hier können Item-Parameter ausgelesen und entsprechende Aktionen ausgelöst werden.
 Wenn z.B. das folgende Item definiert ist:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/xxx.yaml</span><span class="w"></span>
-<span class="nt">upstairs</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">lamp</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ivalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">…</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># items/xxx.yaml</span>
+<span class="nt">upstairs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">lamp</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">visu_acl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rw</span>
+<span class="w">        </span><span class="nt">ivalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">knx_dpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">…</span>
 </pre></div>
 </div>
 <p>dann kann mit dem folgenden Code auf den Parameter <code class="docutils literal notranslate"><span class="pre">ivalue</span></code> zugegriffen werden:</p>
@@ -4190,11 +4190,11 @@ ausgelöst und das Item hat keinen Einfluss auf und keine Verbindung zum Plugin.
 </div>
 <p>Diese Funktion wird beim Systemstart für jede Logik aufgerufen, wenn SmartHomeNG die Datei <code class="docutils literal notranslate"><span class="pre">/etc/logic.yaml</span></code> liest.
 Hier können Logikparameter ausgelesen und Aktionen ausgeführt werden. Wenn z.B. die folgende Logik definiert ist:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">etc/logic.yaml</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">jalousie_up</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jalousie-up.py</span><span class="w"></span>
-<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunrise+20m</span><span class="w"></span>
-<span class="w">    </span><span class="nt">some_plugin_setting</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">send-notify</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">etc/logic.yaml</span>
+<span class="l l-Scalar l-Scalar-Plain">jalousie_up</span><span class="p p-Indicator">:</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jalousie-up.py</span>
+<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sunrise+20m</span>
+<span class="w">    </span><span class="nt">some_plugin_setting</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">send-notify</span>
 </pre></div>
 </div>
 <p>kann das Plugin jetzt den Parameter <code class="docutils literal notranslate"><span class="pre">some_plugin_setting</span></code> prüfen und feststellen, ob es mit der

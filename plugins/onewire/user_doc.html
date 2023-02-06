@@ -3839,10 +3839,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a> &raquo;</li>
-      <li>onewire</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../plugins_doc/plugins_gateway.html">Gateway Plugins</a></li>
+      <li class="breadcrumb-item active">onewire</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3869,7 +3869,7 @@ Die Installation und Konfiguration ist je nach Schnittstelle und Linux Variante 
 <p>Zumeist wird eine USB Schnittstelle DS2490 verwendet. Für die Konfiguration wird typischerweise bei Linux
 eine udev-Rule angelegt damit owserver ohne root Rechte betrieben werden kann.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># /etc/udev/rules.d/80-smarthome.rules</span>
-<span class="nv">SUBSYSTEM</span><span class="o">==</span><span class="s2">&quot;usb&quot;</span>,ENV<span class="o">{</span>DEVTYPE<span class="o">}==</span><span class="s2">&quot;usb_device&quot;</span>,ATTR<span class="o">{</span>idVendor<span class="o">}==</span><span class="s2">&quot;04fa&quot;</span>, ATTR<span class="o">{</span>idProduct<span class="o">}==</span><span class="s2">&quot;2490&quot;</span>,GROUP<span class="o">=</span><span class="s2">&quot;smarthome&quot;</span>,MODE<span class="o">=</span><span class="s2">&quot;0660&quot;</span>
+<span class="nv">SUBSYSTEM</span><span class="o">==</span><span class="s2">&quot;usb&quot;</span>,ENV<span class="o">{</span>DEVTYPE<span class="o">}==</span><span class="s2">&quot;usb_device&quot;</span>,ATTR<span class="o">{</span>idVendor<span class="o">}==</span><span class="s2">&quot;04fa&quot;</span>,<span class="w"> </span>ATTR<span class="o">{</span>idProduct<span class="o">}==</span><span class="s2">&quot;2490&quot;</span>,GROUP<span class="o">=</span><span class="s2">&quot;smarthome&quot;</span>,MODE<span class="o">=</span><span class="s2">&quot;0660&quot;</span>
 </pre></div>
 </div>
 <p>Der owserver kann auch auf einem anderen System laufen und muß nicht lokal installiert sein.</p>
@@ -3912,12 +3912,12 @@ sonst kann es unter Umständen dazu kommen das aus der yaml-Datei die Onewire Ad
 interpretiert wird und damit keine Funktion gegeben ist.</p>
 <p>Es ist möglich für Busteilnehmer einer Onewire Adresse einen alias zuzuweisen. Das geschieht durch die Angabe eines
 Links in der Datei <code class="docutils literal notranslate"><span class="pre">/etc/owfs.conf</span></code> auf eine Datei die Paare von Sensor ID und alias definiert:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>server: <span class="nb">alias</span> <span class="o">=</span> /usr/smarthome/items/ow_aliases
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>server:<span class="w"> </span><span class="nb">alias</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>/usr/smarthome/items/ow_aliases
 </pre></div>
 </div>
 <p>Eine Datei <code class="docutils literal notranslate"><span class="pre">ow_aliases</span></code> enthält dann die Sensor ID und zugewiesene alias</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">28.XXXXXXXXXXXX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">kitchen</span><span class="w"></span>
-<span class="na">28.XXXXXXXXXXXX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bathroom</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">28.XXXXXXXXXXXX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">kitchen</span>
+<span class="na">28.XXXXXXXXXXXX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bathroom</span>
 </pre></div>
 </div>
 <p>Wenn auf diese Weise alias definiert werden, kann das Plugin für das Attribut <code class="docutils literal notranslate"><span class="pre">ow_addr</span></code> auch den alias nutzen</p>
@@ -3969,50 +3969,50 @@ die ID noch im Zwischenspeicher ist. Der temporäre Speicher wird alle 10 Minute
 </section>
 <section id="beispiel">
 <h2>Beispiel<a class="headerlink" href="#beispiel" title="Permalink to this heading"></a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">onewiresample</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">bm_ibutton</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibutton busmaster to identify ibutton buses</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;81.75172D000000&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BM</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ib_guest</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibutton guest</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;01.787D58130000&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">B</span><span class="w"></span>
-<span class="w">    </span><span class="nt">temp_outside</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature outside</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;28.8DEAAA030000&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># could be T, T9, T10, T11, T12</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">T</span><span class="w"></span>
-<span class="w">    </span><span class="nt">lux_outside</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lux / lightintensity outside</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;26.8DD76B010000&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">L</span><span class="w"></span>
-<span class="w">    </span><span class="nt">humidity_outside</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">humidity outside</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;26.8DD76B010000&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">H</span><span class="w"></span>
-<span class="w">    </span><span class="nt">input_water_leak</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">input water leak detection</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3A.C6CC07000000&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># could be IA, IB</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IA</span><span class="w"></span>
-<span class="w">    </span><span class="nt">output_led1</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">output led1 keys</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3A.C6CC07000000&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="c1"># could be OA, OB</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OB</span><span class="w"></span>
-<span class="w">    </span><span class="nt">voltage_sensor</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">voltage of the sensor input (0-10V)</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;26.A9D76B010000&#39;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">V</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">onewiresample</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">bm_ibutton</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibutton busmaster to identify ibutton buses</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;81.75172D000000&#39;</span>
+<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BM</span>
+<span class="w">    </span><span class="nt">ib_guest</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ibutton guest</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;01.787D58130000&#39;</span>
+<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">B</span>
+<span class="w">    </span><span class="nt">temp_outside</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature outside</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;28.8DEAAA030000&#39;</span>
+<span class="w">        </span><span class="c1"># could be T, T9, T10, T11, T12</span>
+<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">T</span>
+<span class="w">    </span><span class="nt">lux_outside</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lux / lightintensity outside</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;26.8DD76B010000&#39;</span>
+<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">L</span>
+<span class="w">    </span><span class="nt">humidity_outside</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">humidity outside</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;26.8DD76B010000&#39;</span>
+<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">H</span>
+<span class="w">    </span><span class="nt">input_water_leak</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">input water leak detection</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3A.C6CC07000000&#39;</span>
+<span class="w">        </span><span class="c1"># could be IA, IB</span>
+<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IA</span>
+<span class="w">    </span><span class="nt">output_led1</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">output led1 keys</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3A.C6CC07000000&#39;</span>
+<span class="w">        </span><span class="c1"># could be OA, OB</span>
+<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OB</span>
+<span class="w">    </span><span class="nt">voltage_sensor</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">voltage of the sensor input (0-10V)</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">        </span><span class="nt">ow_addr</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;26.A9D76B010000&#39;</span>
+<span class="w">        </span><span class="nt">ow_sensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">V</span>
 </pre></div>
 </div>
 </section>

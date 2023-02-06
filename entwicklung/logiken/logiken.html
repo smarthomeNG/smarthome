@@ -3839,9 +3839,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../entwicklung.html">Entwicklung</a> &raquo;</li>
-      <li>Logiken <span class="bluesup">under construction</span></li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../entwicklung.html">Entwicklung</a></li>
+      <li class="breadcrumb-item active">Logiken <span class="bluesup">under construction</span></li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3952,8 +3952,8 @@ Datei <code class="docutils literal notranslate"><span class="pre">logics/exampl
 <p>Anschließend muss noch in der Konfigurationsdatei <code class="docutils literal notranslate"><span class="pre">etc/logic.yaml</span></code> die Konfiguration für die Logik festgelegt
 werden.</p>
 <p>Die Minimalkonfiguration sieht für das Beispiel folgendermaßen aus:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">example</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.py</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">example</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.py</span>
 </pre></div>
 </div>
 <p>Der Name der Logik wird durch den Namen des Abschnitts <code class="docutils literal notranslate"><span class="pre">example</span></code> in der Konfigurationsdatei festgelegt. Unter diesem
@@ -3968,9 +3968,9 @@ ein normaler Ereignis innerhalb von SmartHomeNG getriggert, da keine Trigger def
 aus der Admin GUI getriggert werden.</p>
 <p>Wenn die Logik zum Beispiel beim Start von SmartHomeNG getriggert werden soll, so muss noch der folgende <code class="docutils literal notranslate"><span class="pre">crontab</span></code>
 Parameter angebeben werden:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">example</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.py</span><span class="w"></span>
-<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">example</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.py</span>
+<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 </pre></div>
 </div>
 </section>
@@ -3999,25 +3999,25 @@ in der Logik verwendet wird, um einen Schwellwert zu definieren.</p></li>
 </ul>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">etc/logic.yaml</span><a class="headerlink" href="#id2" title="Link zu diesem Quellcode"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">InitSmarthomeNG</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">initsmarthomeng.py</span><span class="w"></span>
-<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">InitSmarthomeNG</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">initsmarthomeng.py</span>
+<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
 
-<span class="nt">Hourly</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">time.py</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w"></span>
+<span class="nt">Hourly</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">time.py</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
 
-<span class="nt">Gate</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gate.py</span><span class="w"></span>
-<span class="w">    </span><span class="nt">watch_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gate.alarm</span><span class="w">    </span><span class="c1"># monitor for changes</span><span class="w"></span>
+<span class="nt">Gate</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gate.py</span>
+<span class="w">    </span><span class="nt">watch_item</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gate.alarm</span><span class="w">    </span><span class="c1"># monitor for changes</span>
 
-<span class="nt">disks</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disks.py</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># &#39;crontab: run at start and every 5 minutes&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;0,5,10,15,20,25,30,35,40,45,50,55</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">usage_warning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span><span class="w"></span>
+<span class="nt">disks</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disks.py</span>
+<span class="w">    </span><span class="c1"># &#39;crontab: run at start and every 5 minutes&#39;</span>
+<span class="w">    </span><span class="nt">crontab</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;0,5,10,15,20,25,30,35,40,45,50,55</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&#39;</span>
+<span class="w">    </span><span class="nt">usage_warning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
 </pre></div>
 </div>
 </div>

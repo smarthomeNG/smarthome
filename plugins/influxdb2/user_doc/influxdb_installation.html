@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../plugins_all.html">Plugins</a> &raquo;</li>
-          <li><a href="../../../plugins_doc/plugins_system.html">System Plugins</a> &raquo;</li>
-          <li><a href="../user_doc.html">influxdb2</a> &raquo;</li>
-      <li>InfluxDB Installation</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_all.html">Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../../../plugins_doc/plugins_system.html">System Plugins</a></li>
+          <li class="breadcrumb-item"><a href="../user_doc.html">influxdb2</a></li>
+      <li class="breadcrumb-item active">InfluxDB Installation</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3859,22 +3859,22 @@ Die vollständige Installationsdokumentation ist auf der
 <a class="reference external" href="https://docs.influxdata.com/influxdb/v2.1/install/">Website von Influxdata</a> zu finden.
 Dort wird auch beschrieben, wie InfluxDB auf anderen Betriebssystemen zu installieren ist.</p>
 <p>Die folgende Beschreibung installiert die Version 2.1.1 der InfluxDB Software für x86 Prozessoren (amd64).</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget https://dl.influxdata.com/influxdb/releases/influxdb2-2.1.1-amd64.deb
-sudo dpkg -i influxdb2-2.1.1-amd64.deb
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget<span class="w"> </span>https://dl.influxdata.com/influxdb/releases/influxdb2-2.1.1-amd64.deb
+sudo<span class="w"> </span>dpkg<span class="w"> </span>-i<span class="w"> </span>influxdb2-2.1.1-amd64.deb
 </pre></div>
 </div>
 <p>Das Installationspaket installiert auch einen Service, der InfluxDB bei einem Systemstart startet. Ohne zum
 jetzigen Zeitpunkt das System neu starten zu müssen, kann InfluxDB mit dem folgenden Kommando gestartet werden:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo service influxdb start
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>service<span class="w"> </span>influxdb<span class="w"> </span>start
 </pre></div>
 </div>
 <p>Ab jetzt kann mit einem Browser auf InfluxDB zugegriffen werden. Dazu im Browser als
 Url <code class="docutils literal notranslate"><span class="pre">http://&lt;IP</span> <span class="pre">des</span> <span class="pre">Servers&gt;:8086</span></code> eingeben.</p>
 <p>Falls das Commandline Interface von InfluxDB genutzt werden soll, kann dieses folgendermaßen installiert werden:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget https://dl.influxdata.com/influxdb/releases/influxdb2-client-2.2.0-linux-amd64.tar.gz
-tar xvzf path/to/influxdb2-client-2.2.0-linux-amd64.tar.gz
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget<span class="w"> </span>https://dl.influxdata.com/influxdb/releases/influxdb2-client-2.2.0-linux-amd64.tar.gz
+tar<span class="w"> </span>xvzf<span class="w"> </span>path/to/influxdb2-client-2.2.0-linux-amd64.tar.gz
 
-sudo cp influxdb2-client-2.2.0-linux-amd64/influx /usr/local/bin/
+sudo<span class="w"> </span>cp<span class="w"> </span>influxdb2-client-2.2.0-linux-amd64/influx<span class="w"> </span>/usr/local/bin/
 </pre></div>
 </div>
 <p>…</p>

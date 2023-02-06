@@ -3837,8 +3837,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>SMA-EM Plugin</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">SMA-EM Plugin</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -3862,11 +3862,11 @@ versions of this plugin on demand. The available values can be seen in the reade
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <section id="plugin-yaml">
 <h3>plugin.yaml<a class="headerlink" href="#plugin-yaml" title="Permalink to this heading"></a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sma_em</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SMA_EM</span><span class="w"></span>
-<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.sma_em</span><span class="w"></span>
-<span class="w">    </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxx</span><span class="w"></span>
-<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sma_em</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">class_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SMA_EM</span>
+<span class="w">    </span><span class="nt">class_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugins.sma_em</span>
+<span class="w">    </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xxxxxxxxxx</span>
+<span class="w">    </span><span class="nt">cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
 </pre></div>
 </div>
 <section id="attributes">
@@ -3881,509 +3881,509 @@ versions of this plugin on demand. The available values can be seen in the reade
 <h3>items.yaml<a class="headerlink" href="#items-yaml" title="Permalink to this heading"></a></h3>
 <section id="example">
 <h4>Example:<a class="headerlink" href="#example" title="Permalink to this heading"></a></h4>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">smaem</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">main</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Main Data from SMA Energy Meter</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">speedwire_version</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Speedwire Version</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">speedwire-version</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">supply</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Supply</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">psupply</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">kw</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">round(sh...() / 1000, 2)</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">supply_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Supply Unit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">psupplyunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">consume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Consume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pconsume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">            </span><span class="nt">kw</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">round(sh...() / 1000, 2)</span><span class="w"></span>
-<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">consume_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Consume Unit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pconsumeunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">supply_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Supply Counter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">psupplycounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">supply_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Supply Counter Unit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">psupplycounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">consume_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Consume Counter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pconsumecounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">consume_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Consume Counter Unit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pconsumecounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">cosphi</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">cosphi_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphiunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">consume_active</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh...consume() &gt; 1 else False</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..consume</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">supply_active</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh...supply() &gt; 1 else False</span><span class="w"></span>
-<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..supply</span><span class="w"></span>
-
-<span class="w">    </span><span class="nt">detailed</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">More Detailed Data from SMA Energy Meter</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">ssupply</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssupply</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">ssupply_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssupplyunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">ssupply_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssupplycounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">ssupply_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssupplycounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">sconsume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sconsume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">sconsume_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sconsumeunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">sconsume_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sconsumecounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">sconsume_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sconsumecounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">qsupply</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qsupply</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">qsupply_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qsupplyunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">qsupply_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qsupplycounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">qsupply_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qsupplycounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">qconsume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qconsume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">qconsume_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qconsumeunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">qconsume_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qconsumecounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">qconsume_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qconsumecounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p1supply</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1supply</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p1supply_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1supplyunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p1supply_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1supplycounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p1supply_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1supplycounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p1consume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1consume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p1consume_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1consumeunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p1consume_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1consumecounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p1consume_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1consumecounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s1supply</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1supply</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s1supply_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1supplyunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s1supply_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1supplycounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s1supply_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1supplycounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s1consume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1consume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s1consume_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1consumeunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s1consume_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1consumecounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s1consume_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1consumecounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q1supply</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1supply</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q1supply_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1supplyunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q1supply_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1supplycounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q1supply_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1supplycounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q1consume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1consume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q1consume_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1consumeunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q1consume_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1consumecounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q1consume_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1consumecounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">i1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">i1_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i1unit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">u1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">u1_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1unit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">cosphi1</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi1</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">cosphi1_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi1unit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p2supply</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2supply</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p2supply_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2supplyunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p2supply_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2supplycounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p2supply_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2supplycounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p2consume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2consume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p2consume_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2consumeunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p2consume_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2consumecounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p2consume_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2consumecounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s2supply</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2supply</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s2supply_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2supplyunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s2supply_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2supplycounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s2supply_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2supplycounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s2consume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2consume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s2consume_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2consumeunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s2consume_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2consumecounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s2consume_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2consumecounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q2supply</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2supply</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q2supply_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2supplyunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q2supply_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2supplycounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q2supply_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2supplycounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q2consume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2consume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q2consume_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2consumeunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q2consume_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2consumecounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q2consume_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2consumecounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">i2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i2</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">i2_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i2unit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">u2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">u2_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2unit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">cosphi2</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi2</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">cosphi2_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi2unit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p3supply</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3supply</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p3supply_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3supplyunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p3supply_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3supplycounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p3supply_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3supplycounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p3consume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3consume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p3consume_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3consumeunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p3consume_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3consumecounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">p3consume_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3consumecounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s3supply</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3supply</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s3supply_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3supplyunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s3supply_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3supplycounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s3supply_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3supplycounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s3consume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3consume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s3consume_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3consumeunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s3consume_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3consumecounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">s3consume_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3consumecounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q3supply</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3supply</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q3supply_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3supplyunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q3supply_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3supplycounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q3supply_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3supplycounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q3consume</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3consume</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q3consume_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3consumeunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q3consume_counter</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3consumecounter</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">q3consume_counter_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3consumecounterunit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">i3</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i3</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">i3_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i3unit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">u3</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u3</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">u3_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u3unit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">cosphi3</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi3</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span><span class="w"></span>
-
-<span class="w">        </span><span class="nt">cosphi3_unit</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi3unit</span><span class="w"></span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">smaem</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">main</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Main Data from SMA Energy Meter</span>
+
+<span class="w">        </span><span class="nt">speedwire_version</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Speedwire Version</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">speedwire-version</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">supply</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Supply</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">psupply</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">            </span><span class="nt">kw</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">round(sh...() / 1000, 2)</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
+
+<span class="w">        </span><span class="nt">supply_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Supply Unit</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">psupplyunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">consume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Consume</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pconsume</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">            </span><span class="nt">kw</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+<span class="w">                </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">round(sh...() / 1000, 2)</span>
+<span class="w">                </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..</span>
+
+<span class="w">        </span><span class="nt">consume_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Consume Unit</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pconsumeunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">supply_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Supply Counter</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">psupplycounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">supply_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Supply Counter Unit</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">psupplycounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">consume_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Consume Counter</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pconsumecounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">consume_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Solar Energy Consume Counter Unit</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pconsumecounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">cosphi</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">cosphi_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphiunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">consume_active</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh...consume() &gt; 1 else False</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..consume</span>
+
+<span class="w">        </span><span class="nt">supply_active</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">            </span><span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True if sh...supply() &gt; 1 else False</span>
+<span class="w">            </span><span class="nt">eval_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">..supply</span>
+
+<span class="w">    </span><span class="nt">detailed</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">More Detailed Data from SMA Energy Meter</span>
+
+<span class="w">        </span><span class="nt">ssupply</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssupply</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">ssupply_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssupplyunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">ssupply_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssupplycounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">ssupply_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssupplycounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">sconsume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sconsume</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">sconsume_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sconsumeunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">sconsume_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sconsumecounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">sconsume_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sconsumecounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">qsupply</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qsupply</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">qsupply_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qsupplyunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">qsupply_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qsupplycounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">qsupply_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qsupplycounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">qconsume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qconsume</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">qconsume_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qconsumeunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">qconsume_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qconsumecounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">qconsume_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qconsumecounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">p1supply</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1supply</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">p1supply_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1supplyunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">p1supply_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1supplycounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">p1supply_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1supplycounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">p1consume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1consume</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">p1consume_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1consumeunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">p1consume_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1consumecounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">p1consume_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p1consumecounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">s1supply</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1supply</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">s1supply_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1supplyunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">s1supply_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1supplycounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">s1supply_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1supplycounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">s1consume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1consume</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">s1consume_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1consumeunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">s1consume_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1consumecounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">s1consume_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1consumecounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">q1supply</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1supply</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">q1supply_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1supplyunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">q1supply_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1supplycounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">q1supply_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1supplycounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">q1consume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1consume</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">q1consume_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1consumeunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">q1consume_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1consumecounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">q1consume_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1consumecounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">i1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i1</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">i1_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i1unit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">u1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">u1_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1unit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">cosphi1</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi1</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">cosphi1_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi1unit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">p2supply</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2supply</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">p2supply_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2supplyunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">p2supply_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2supplycounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">p2supply_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2supplycounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">p2consume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2consume</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">p2consume_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2consumeunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">p2consume_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2consumecounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">p2consume_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p2consumecounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">s2supply</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2supply</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">s2supply_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2supplyunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">s2supply_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2supplycounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">s2supply_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2supplycounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">s2consume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2consume</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">s2consume_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2consumeunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">s2consume_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2consumecounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">s2consume_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2consumecounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">q2supply</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2supply</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">q2supply_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2supplyunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">q2supply_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2supplycounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">q2supply_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2supplycounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">q2consume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2consume</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">q2consume_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2consumeunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">q2consume_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2consumecounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">q2consume_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2consumecounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">i2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i2</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">i2_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i2unit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">u2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">u2_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2unit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">cosphi2</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi2</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">cosphi2_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi2unit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">p3supply</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3supply</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">p3supply_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3supplyunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">p3supply_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3supplycounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">p3supply_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3supplycounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">p3consume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3consume</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">p3consume_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3consumeunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">p3consume_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3consumecounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">p3consume_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p3consumecounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">s3supply</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3supply</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">s3supply_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3supplyunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">s3supply_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3supplycounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">s3supply_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3supplycounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">s3consume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3consume</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">s3consume_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3consumeunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">s3consume_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3consumecounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">s3consume_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3consumecounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">q3supply</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3supply</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">q3supply_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3supplyunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">q3supply_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3supplycounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">q3supply_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3supplycounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">q3consume</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3consume</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">q3consume_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3consumeunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">q3consume_counter</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3consumecounter</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">q3consume_counter_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3consumecounterunit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">i3</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i3</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">i3_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i3unit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">u3</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u3</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">u3_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u3unit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+
+<span class="w">        </span><span class="nt">cosphi3</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi3</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num</span>
+
+<span class="w">        </span><span class="nt">cosphi3_unit</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">sma_em_data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosphi3unit</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
 </pre></div>
 </div>
 </section>

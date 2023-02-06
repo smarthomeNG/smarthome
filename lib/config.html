@@ -3839,11 +3839,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../entwicklung/entwicklung.html">Entwicklung</a> &raquo;</li>
-          <li><a href="../entwicklung/core/core.html">Entwicklung des Core</a> &raquo;</li>
-          <li><a href="../entwicklung/core/core_libraries.html">Programm Module</a> &raquo;</li>
-      <li>lib.config</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../entwicklung/entwicklung.html">Entwicklung</a></li>
+          <li class="breadcrumb-item"><a href="../entwicklung/core/core.html">Entwicklung des Core</a></li>
+          <li class="breadcrumb-item"><a href="../entwicklung/core/core_libraries.html">Programm Module</a></li>
+      <li class="breadcrumb-item active">lib.config</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -4001,23 +4001,23 @@ and merge it to the configuration tree</p>
 </dd>
 </dl>
 <p>The config file should stick to the following setup:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[firstlevel]</span><span class="w"></span>
-<span class="w">    </span><span class="na">attribute1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">xyz</span><span class="w"></span>
-<span class="w">    </span><span class="na">attribute2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">foo</span><span class="w"></span>
-<span class="w">    </span><span class="na">attribute3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bar</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[firstlevel]</span>
+<span class="w">    </span><span class="na">attribute1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">xyz</span>
+<span class="w">    </span><span class="na">attribute2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">foo</span>
+<span class="w">    </span><span class="na">attribute3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bar</span>
 
-<span class="w">    </span><span class="k">[[secondlevel]]</span><span class="w"></span>
-<span class="w">        </span><span class="na">attribute1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">abc</span><span class="w"></span>
-<span class="w">        </span><span class="na">attribute2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bar</span><span class="w"></span>
-<span class="w">        </span><span class="na">attribute3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">foo</span><span class="w"></span>
+<span class="w">    </span><span class="k">[[secondlevel]]</span>
+<span class="w">        </span><span class="na">attribute1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">abc</span>
+<span class="w">        </span><span class="na">attribute2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bar</span>
+<span class="w">        </span><span class="na">attribute3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">foo</span>
 
-<span class="w">        </span><span class="k">[[[thirdlevel]]]</span><span class="w"></span>
-<span class="w">            </span><span class="na">attribute1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">def</span><span class="w"></span>
-<span class="w">            </span><span class="na">attribute2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">barfoo</span><span class="w"></span>
-<span class="w">            </span><span class="na">attribute3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">foobar</span><span class="w"></span>
+<span class="w">        </span><span class="k">[[[thirdlevel]]]</span>
+<span class="w">            </span><span class="na">attribute1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">def</span>
+<span class="w">            </span><span class="na">attribute2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">barfoo</span>
+<span class="w">            </span><span class="na">attribute3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">foobar</span>
 
-<span class="w">    </span><span class="k">[[anothersecondlevel]]</span><span class="w"></span>
-<span class="w">        </span><span class="na">attribute1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">and so on</span><span class="w"></span>
+<span class="w">    </span><span class="k">[[anothersecondlevel]]</span>
+<span class="w">        </span><span class="na">attribute1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">and so on</span>
 </pre></div>
 </div>
 <p>where firstlevel, secondlevel, thirdlevel and anothersecondlevel are defined as items and attribute are their respective attribute - value pairs</p>
@@ -4072,23 +4072,23 @@ Both filetypes are read, even if they have the same basename</p>
 </dd>
 </dl>
 <p>The config file should stick to the following setup:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">firstlevel</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">attribute1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xyz</span><span class="w"></span>
-<span class="w">    </span><span class="nt">attribute2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
-<span class="w">    </span><span class="nt">attribute3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">firstlevel</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">attribute1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xyz</span>
+<span class="w">    </span><span class="nt">attribute2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="w">    </span><span class="nt">attribute3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span>
 
-<span class="w">    </span><span class="nt">secondlevel</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">attribute1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">abc</span><span class="w"></span>
-<span class="w">        </span><span class="nt">attribute2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span><span class="w"></span>
-<span class="w">        </span><span class="nt">attribute3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span><span class="w"></span>
+<span class="w">    </span><span class="nt">secondlevel</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">attribute1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">abc</span>
+<span class="w">        </span><span class="nt">attribute2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span>
+<span class="w">        </span><span class="nt">attribute3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
 
-<span class="w">        </span><span class="nt">thirdlevel</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">attribute1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">def</span><span class="w"></span>
-<span class="w">            </span><span class="nt">attribute2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">barfoo</span><span class="w"></span>
-<span class="w">            </span><span class="nt">attribute3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foobar</span><span class="w"></span>
+<span class="w">        </span><span class="nt">thirdlevel</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">attribute1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">def</span>
+<span class="w">            </span><span class="nt">attribute2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">barfoo</span>
+<span class="w">            </span><span class="nt">attribute3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foobar</span>
 
-<span class="w">    </span><span class="nt">anothersecondlevel</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">attribute1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">and so on</span><span class="w"></span>
+<span class="w">    </span><span class="nt">anothersecondlevel</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">attribute1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">and so on</span>
 </pre></div>
 </div>
 <p>where firstlevel, secondlevel, thirdlevel and anothersecondlevel are defined as items and attribute are their respective attribute - value pairs</p>
