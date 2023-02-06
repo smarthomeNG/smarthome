@@ -228,7 +228,7 @@ class SmartDevicePlugin(SmartPlugin):
                 self._items_read_all.remove(item.path())
             except Exception:
                 pass
-            cmd = self._plg_item_dict[item]['device_command']
+            cmd = self._plg_item_dict[item]['mapping']
             if cmd:
                 try:
                     self._commands_read[cmd].remove(item)
@@ -394,7 +394,7 @@ class SmartDevicePlugin(SmartPlugin):
             # from here on command is combined if device.custom_commands is set
             # and a valid custom token is found
 
-            self.add_item(item, device_command=command)
+            self.add_item(item, mapping=command)
 
             # command marked for reading
             if self.get_iattr_value(item.conf, self._item_attrs.get('ITEM_ATTR_READ', 'foo')):
