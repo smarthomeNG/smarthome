@@ -28,7 +28,7 @@ import plugin_metadata_checker as mc
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(os.path.basename(__file__))))
 
-VERSION = '0.6.2'
+VERSION = '0.6.3'
 
 sum_errors = 0
 sum_warnings = 0
@@ -171,7 +171,7 @@ def check_documentation(plg, quiet=False):
     doc_filename = 'user_doc.rst'
     if not quiet:
         print()
-        print(f"*** Checking documentation '{doc_filename}' of plugin '{plg}':")
+        print(f"*** Checking documentation of plugin '{plg}' ({doc_filename}):")
         print()
 
     if not os.path.isfile(doc_filename):
@@ -230,9 +230,9 @@ def check_documentation(plg, quiet=False):
 webif_found = False
 
 
-def check_code_webinterface(lines):
+def check_code_webinterface(lines, webif_lines):
 
-    # - ist ein Webinterface definiert?
+    # - is a webinterface defined?
     webif_seperated = False
     for line in lines:
         if line.find('from .webif import WebInterface') > -1:
@@ -246,7 +246,7 @@ def check_code_webinterface(lines):
             mc.disp_hint("No webinterface is implemented", "You should consider to to implement a webinterface.")
             return
 
-    # - Wird ein Webinterface initialisiert?
+    # - is the webinterface being initialized?
     for line in lines:
         if line.find('self.init_webinterface') > -1:
             if line.find('#') == -1:
@@ -258,9 +258,15 @@ def check_code_webinterface(lines):
     global webif_found
     webif_found = True
 
-    # - ist der Code des Webinterfaces ausgegliedert in eigenen Ordner?
+    # - is the code of the webinterface seperated into the webif subfolder?
     if not webif_seperated:
         mc.disp_hint("The code of the webinterface is not seperated into a different file", "You should consider to seperate the code the webinterface into the subfolder 'webif'. Take a look at the sample plugin in the ../dev folder.")
+    else:
+        # - was "Sample plugin" from the templaate file changed?
+        for line in webif_lines:
+            if line.lower().find('sample plugin') > -1 and line.startswith('#'):
+                mc.disp_hint("The description of the sample plugin in the comments of the web interface code was not replaced", "Replace the description in webif/__init__.py with a meaningful text")
+                break
 
 
 def check_code(plg, quiet=False):
@@ -269,28 +275,73 @@ def check_code(plg, quiet=False):
     mc.hints = 0
 
     code_filename = '__init__.py'
+    webif_code_filename = os.path.join('webif', '__init__.py')
     if not quiet:
         print()
-        print(f"*** Checking python code of plugin '{plg}' ({code_filename}):")
+        print(f"*** Checking python code of plugin '{plg}' (__init__.py, webif{os.sep}__init__.py):")
         print()
 
     if not os.path.isfile(code_filename):
         mc.disp_error(f"No code ('{code_filename}') found for the plugin '{plg}'", "Aborting code check")
     else:
-        # read documentation file
+        # read code file of the plugin
         with open(code_filename) as f:
             lines = f.readlines()
         # remove newlines from the end of each line
         for lineno, line in enumerate(lines):
             lines[lineno] = lines[lineno].rstrip()
 
-        check_code_webinterface(lines)
+        # read code file of the web interface
+        with open(code_filename) as f:
+            webif_lines = f.readlines()
+        # remove newlines from the end of each line
+        for lineno, line in enumerate(webif_lines):
+            webif_lines[lineno] = webif_lines[lineno].rstrip()
+
+        # TODO
+        # - check if get_parameter() is used in __init__ -> Warning
+        # - check if add_item is used in parse_item -> Hint
+
+        # - is super().__init__() being called from __init__()?
+        in_init_method = False
+        init_found = False
+        for lineno, line in enumerate(webif_lines):
+            if line.lstrip().startswith('def'):
+                if line.lstrip().startswith('def __init__(self'):
+                    in_init_method = True
+                    init_found = True
+                else:
+                    in_init_method = False
+
+            if in_init_method:
+                if line.find('super().__init__()') > -1:
+                    if line.find('#') == -1:
+                        break
+                    if not line.find('#') < line.find('super().__init__()'):
+                        break
+        else:
+            if init_found:
+                mc.disp_error("super().__init__() is not called from __init__()")
+            else:
+                mc.disp_error("__init__() method not found")
+
+        # - is a stop() method defined?
+        for lineno, line in enumerate(webif_lines):
+            if line.find('def stop(') > -1:
+                if line.find('#') == -1:
+                    break
+                if not line.find('#') < line.find('def stop('):
+                    break
+        else:
+                mc.disp_error("no stop() method found")
 
         # - was "Sample plugin" from the templaate file changed?
         for line in lines:
             if line.lower().find('sample plugin') > -1 and line.startswith('#'):
-                mc.disp_hint("The description of the sample plugin in the comments was not replaced", "Replace the description with a meaningful text")
+                mc.disp_hint("The description of the sample plugin in the comments was not replaced", "Replace the description in __init__.py with a meaningful text")
                 break
+
+        check_code_webinterface(lines, webif_lines)
 
         if not quiet:
             mc.print_errorcount('Code', mc.errors, mc.warnings, mc.hints)
@@ -327,7 +378,7 @@ def check_one_plugin(plg, chk_meta, chk_code, chk_docu):
     print()
 
 
-def check_all_plugins(chk_meta, chk_code, chk_docu):
+def check_all_plugins(chk_meta, chk_code, chk_docu, quiet=True):
     pluginsdir = os.path.join(BASE, 'plugins')
 
     plugins = mc.get_local_pluginlist(pluginsdir)
@@ -335,19 +386,24 @@ def check_all_plugins(chk_meta, chk_code, chk_docu):
     print(f"{'-'*16:<16.16}      {'-'*8:>10}  {'-'*8:>10}  {'-'*8:>10}")
 
     for plg in plugins:
-        mc.quiet = True
+        mc.quiet = quiet
         if chk_meta:
-            check_metadata(plg, quiet=True)
+            check_metadata(plg, quiet=quiet)
 
         os.chdir(os.path.join(pluginsdir, plg))
         if chk_code:
-            check_code(plg, quiet=True)
+            check_code(plg, quiet=quiet)
 
         os.chdir(os.path.join(pluginsdir, plg))
         if chk_docu:
-            check_documentation(plg, quiet=True)
+            check_documentation(plg, quiet=quiet)
 
+        global sum_errors, sum_warnings, sum_hints
         print(f"{plg:<16.16}    {sum_errors:10}  {sum_warnings:10}  {sum_hints:10}")
+
+        sum_errors = 0
+        sum_warnings = 0
+        sum_hints = 0
 
     print(f"{'-'*16:<16.16}      {'-'*8:<10}  {'-'*8:<10}  {'-'*8:<10}")
     print(f"{'':<16.16}    {total_errors:10}  {total_warnings:10}  {total_hints:10}")

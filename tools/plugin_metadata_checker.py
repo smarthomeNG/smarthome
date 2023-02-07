@@ -643,7 +643,7 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
     if metadata == None:
         return
     if not check_quiet:
-        print("*** Check metadata of {}-plugin '{}':".format(plg_type, plg))
+        print(f"*** Check metadata of {plg_type}-plugin '{plg}' (plugin.yaml):")
         print()
 
     # Checking plugin name

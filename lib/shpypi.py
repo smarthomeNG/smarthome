@@ -676,8 +676,9 @@ class Shpypi:
                         package['is_required_for_docbuild'] = True
                         package['sort'] = self._build_sortstring(package)
 
-                    if package['vers_req_min'] == '' and package['vers_req_max'] == '':
+                    if package['vers_req_min'] == '':
                         package['vers_req_min'] = required_packages[pkg_name].get('min', '*')
+                    if package['vers_req_max'] == '':
                         package['vers_req_max'] = required_packages[pkg_name].get('max', '*')
                     package['vers_req_msg'] = ''
                     package['vers_req_source'] = ''
@@ -762,11 +763,13 @@ class Shpypi:
             max = package['vers_req_max']
             recent = package['pypi_version']
             inst_vers = package['vers_installed']
-            if min == '*':
+            if min is None or min == '*':
+                min = '*'
                 min_met = True
             else:
                 min_met = self._compare_versions(min, inst_vers, '<=')
-            if max == '*':
+            if max is None or max == '*':
+                max = '*'
                 max_met = True
             else:
                 max_met = self._compare_versions(inst_vers, max, '<=')

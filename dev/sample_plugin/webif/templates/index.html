@@ -4,27 +4,27 @@
 
 <!-- set update_interval to a value > 0 (in milliseconds) to enable periodic data updates -->
 {% set update_interval = 0 %}
-<!-- for data-heavy plugins it might be useful to set the update interval based on the amount of data
+<!-- for data-heavy plugins it might be useful to set the update interval based on the amount of data -->
 {% set update_interval = (200 * (log_array | length)) %}
- -->
-<!-- set dataSet if you need specific data to be updated automatically. Also see init.py in plugin webif!
+
+<!-- set dataSet if you need specific data to be updated automatically. Also see init.py in plugin webif!-->
 {% set dataSet = 'devices_info' %}
--->
-<!-- set update_params if you need to provide additional parameters for the auto-update function
+
+<!-- set update_params if you need to provide additional parameters for the auto-update function-->
 {% set update_params = item_id %}
--->
-<!-- if you don't need any buttons in the header, disable them completely
+
+<!-- if you don't need any buttons in the header, disable them completely-->
 {% set buttons = false %}
--->
-<!-- if you don't need any auto-refresh elements in the header, disable them
+
+<!-- if you don't need any auto-refresh elements in the header, disable them-->
 {% set autorefresh_buttons = false %}
--->
-<!-- if you don't need the reload_button in the header, disable it
+
+<!-- if you don't need the reload_button in the header, disable it-->
 {% set reload_button = false %}
--->
-<!-- if you don't need the close in the header, disable it
+
+<!-- if you don't need the close in the header, disable it-->
 {% set close_button = false %}
--->
+
 
 <!--
 	Additional styles go into this block. Examples are for datatables
@@ -75,45 +75,38 @@
 -->
 <script>
     $(document).ready( function () {
+		/*
+		loading defaults from /modules/http/webif/gstatic/datatables/datatables.defaults.js
+		You can copy that file, put it in your plugin directory, rename the "bind" function and
+		trigger that function here instead of datatables_defaults if you want to change the behaviour.
+		Of course you can also overwrite defaults by putting the option declarations in {} below.
+		*/
+		$(window).trigger('datatables_defaults');
+		{% if webif_pagelength is defined %}webif_pagelength = {{ webif_pagelength|int }};{% endif %}
+		if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
+			resize = true;
+			webif_pagelength = -1;
+			console.log('Activating automatic table resize ' + webif_pagelength);
+		}
+		else {
+			resize = false;
+		}
+		try {
 			/*
-			loading defaults from /modules/http/webif/gstatic/datatables/datatables.defaults.js
-			You can copy that file, put it in your plugin directory, rename the "bind" function and
-			trigger that function here instead of datatables_defaults if you want to change the behaviour.
-			Of course you can also overwrite defaults by putting the option declarations in {} below.
+			Copy this part for every datatable on your page. Adjust options if necessary.
+			pageLength and pageResize should be included as they are to adjust it based on the plugin settings
 			*/
-			$(window).trigger('datatables_defaults');
-      try {
-        {% if webif_pagelength is defined %}webif_pagelength = {{ webif_pagelength|int }};{% endif %}
-        if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
-          resize = true;
-          webif_pagelength = -1;
-        }
-        else {
-          resize = false;
-        }
-        console.log("Using page length from http module/plugin " + webif_pagelength + ", pageResize: " + resize);
-      }
-      catch (e) {
-        webif_pagelength = 100;
-        resize = false;
-        console.log("Using default values for page length " + webif_pagelength + ", pageResize: " + resize);
-      }
-      try {
-        /*
-        Copy this part for every datatable on your page. Adjust options if necessary.
-        pageLength and pageResize should be included as they are to adjust it based on the plugin settings
-        */
-        table = $('#maintable').DataTable( {
-          /* If you want to define your own columnDefs options (e.g. for hiding a column by default), use the concat function shown here.
-          */
-          columnDefs: [{ "targets": [2], "className": "value"}].concat($.fn.dataTable.defaults.columnDefs),
-          pageLength: webif_pagelength,
-          pageResize: resize});
-      }
-      catch (e) {
-        console.warn("Datatable JS not loaded, showing standard table without reorder option " + e);
-      }
-    });
+			table = $('#maintable').DataTable( {
+			  /* If you want to define your own columnDefs options (e.g. for hiding a column by default), use the concat function shown here.
+			  */
+			  columnDefs: [{ "targets": [2], "className": "value"}].concat($.fn.dataTable.defaults.columnDefs),
+			  pageLength: webif_pagelength,
+			  pageResize: resize});
+		}
+		catch (e) {
+			console.warn("Datatable JS not loaded, showing standard table without reorder option " + e);
+		}
+	});
 </script>
 <!--
 This is an example on how to update the page refresh method. You can set the dataSet, update interval, special parameters or (de)activate the auto refresh
