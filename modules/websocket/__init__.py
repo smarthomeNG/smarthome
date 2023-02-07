@@ -741,7 +741,7 @@ class Websocket(Module):
                         self.logger.info(f"WebSocket: no entries for series {path} {series}")
             else:
                 if path.startswith('env.'):
-                    self.logger.warning(f"Client {self.build_log_info(client_addr)} requested invalid series: {path}. Probably not database plugin is configured")
+                    self.logger.warning(f"Client {self.build_log_info(client_addr)} requested invalid series: {path}. Probably, the database plugin is not configured")
                 else:
                     self.logger.warning(f"Client {self.build_log_info(client_addr)} requested invalid series: {path}.")
         return answer
