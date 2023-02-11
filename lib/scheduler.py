@@ -308,7 +308,12 @@ class Scheduler(threading.Thread):
                 self._lock.release()
             time.sleep(0.5)
 
-        logger.warning("scheduler leaves run method")
+        if self._sh.shng_status['code'] > 20:
+            logger.info("scheduler leaves run method")
+        else:
+            logger.warning("scheduler leaves run method")
+        return
+
 
     def stop(self):
         self.alive = False
