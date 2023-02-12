@@ -1,5 +1,5 @@
 ============================
-Release 1.x.x - tt. mmm 2023
+Release 1.9.x - tt. mmm 2023
 ============================
 
 Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
@@ -14,10 +14,10 @@ sowie einige neue Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 5. Feb 2023
-       (check_plugin.py:)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 5. Feb 2023
-       (Merge pull request #666 from ivan73/develop)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 11. Feb 2023
+       (...)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 12. Feb 2023
+       (knx: Updated description of knx_init)
 
 
 Überblick
@@ -111,6 +111,7 @@ Updates in the CORE
   * lib.scheduler:
 
     * Catch more exceptions outside scheduler to prevent thread end
+    * Adjusted logging on leaving run method
 
   * lib.shpypi:
 
@@ -124,6 +125,10 @@ Updates in the CORE
   * lib.translation:
 
     * Enhanced translations to accept module specific translations (for module/http)
+
+  * lib.utils:
+
+    * Corrected handling of is_knx_groupaddress() when parameter 'groupaddress' is no string
 
 
 * Modules:
@@ -158,6 +163,7 @@ Updates in the CORE
     * Webinterfaces: Improved datatable implementation (fix responsive issues on tab load/change, include <div> above datatable in resize calculation)
     * Webinterfaces: Fix resize calculation.. consider all divs with class mb-2 for resize
     * Webinterfaces: Instant update table refresh if checkbox for autoupdate is activated
+    * Webinterfaces: Included javascript file for codemirror
 
   * mqtt:
 
@@ -186,6 +192,7 @@ Updates in the CORE
     * Separated WebIf into separate file
     * Cleaned-up user_doc
     * Added changelog to user_doc
+    * Minor change to user_doc
 
   * cli:
 
@@ -196,21 +203,18 @@ Updates in the CORE
 
     * Include webif_pagelength from module.yaml, move column classes to dt init function
     * Minor webif fixes and improvements
-    * Bump to v1.6.4
     * Simplify and improve web interface
     * Added parameter to set a default maxage for items w/o individual one
     * Optimized remove of log entries older as maxage (extreme speed increase)
     * Reimplemented cleanup (removal of orphans) to be able to run parallel to normal operation
     * Corrected download filename for csv dump
     * Implemented sql dump for sqlite3 databases
-    * Bumped version to 1.6.5
     * Added orphan-tab to web interface; enhanced/fixed ude of http-module translations;
-    * Bumped version to 1.6.7
     * Code cleanup
     * Updated user dorumentation
-    * Bumped version to 1.6.8
     * Implemented separate db connection for maintenance (orphan handling) to fix problems with mysql driver (whiwch allows only one cursor per connection)
     * Fix showing of orphaned items if logcount is disabled.
+    * Bumped version to 1.6.9
     * Minor adjustments in metadata and documentation
     * Adjusted a log message
 
@@ -222,6 +226,7 @@ Updates in the CORE
 
     * Separated WebIf from main file
     * New user_doc
+    * Fixed EEP F6_10_00, further work on user_doc
 
   * executor:
 
@@ -249,17 +254,15 @@ Updates in the CORE
 
     * Implemented for lights: read from bridge für items with function 'dict'
     * Added Modell ID to web interface
-    * bumped version to 2.2.2
     * Added more verbose log messages for deCONZ software bridge
     * Added function 'modify_scene'
-    * Bumped version to 2.2.3
     * Incorporated fixes/additions from pr #667 for bridge discovery, typo for "hue_refence_light_id"
     * Implementation On-State retrieval for groups through parsing groups "any_on" state
-    * Bump version to 2.2.3
     * Added handling for sensors and a couple of hue2_functions for sensors
     * Bump to v2.3.0
     * Added reading of some config parameters for sensors
     * Removed some logging
+    * Added enforce_updates to dict item in struct _light_basic
 
   * husky2:
 
@@ -290,6 +293,11 @@ Updates in the CORE
     * Improve web interface
     * Fix values being None for plugin with instance defined
     * Adjust webif_pagelength handling, first preparation for automatic data update in webif
+    * Webif: Adapt handling of knx_Listen: If knx_listen just contains 1 entry, it will be shown directly, if knx_listen contains more than 1 entry, it will be shown as list.
+    * Updated metadata definition
+    * Corrected description of knx_cache in metadata
+    * Fixed call to _cacheread() in handle_connect(), if ga is an empty string
+    * Bumped version to 1.8.5
 
   * kostalmodbus:
 
@@ -324,8 +332,6 @@ Updates in the CORE
 
     * Several enhancements and fixes
     * Vastly extended webinterface
-    * Uses functionallity of SmartPlugin from core 1.9.3.3
-    * Bumped version to 1.9.0
     * Documentation updates
     * Implemented auto refresh for the webinterface
     * Added plugin parameter 'warn_after'
@@ -362,7 +368,7 @@ Updates in the CORE
 
   * rtr2:
 
-    * rtr2: v2.1.0 fixes the configuration of Kp and Ki for individual rtrs using the rtr2_controller_settings item attribute
+    * F2ixes the configuration of Kp and Ki for individual rtrs using the rtr2_controller_settings item attribute
     * Added english descriptions vor plugin parameters
     * Added a section to user_doc.rst from PR #648
     * Added 'cache: True' to item stellwert' in struct to prevent mis-regulations when restarting SmartHomeNG
@@ -398,7 +404,8 @@ Updates in the CORE
     * Added play_sharelink command (to support Spotify sharelinks)
     * Added user_doc
     * Separated WebIf from main file
-
+    * Massive rework of user_doc
+    * Several changes (description in commit 6761e43)
 
   * stateengine:
 
