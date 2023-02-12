@@ -627,6 +627,7 @@ class SmartDevicePlugin(SmartPlugin):
         commands = None
         if command is not None:
             self.logger.debug(f'received data "{data}" from {by} for command {command}')
+            commands = [command]
         else:
             # command == None means that we got raw data from a callback and
             # don't know yet to which command this belongs to. So find out...
