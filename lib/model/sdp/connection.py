@@ -32,6 +32,7 @@ import socket
 from threading import Lock, Thread
 from contextlib import contextmanager
 import json
+from importlib import import_module
 
 from lib.network import Tcp_client
 
@@ -578,6 +579,7 @@ class SDPConnectionSerial(SDPConnection):
         def data_received_callback(by, message)
     If callbacks are class members, they need the additional first parameter 'self'
     """
+
     def __init__(self, data_received_callback, name=None, **kwargs):
 
         class TimeoutLock(object):
@@ -597,10 +599,10 @@ class SDPConnectionSerial(SDPConnection):
             def release(self):
                 self._lock.release()
 
-        # only import serial now we know we need it -> reduce requirements for non-serial setups
-        import serial
-
         super().__init__(data_received_callback, done=False, name=name, **kwargs)
+
+        # only import serial now we know we need it -> reduce requirements for non-serial setups
+        self.serial = import_module('serial')
 
         # set class properties
         self._lock = TimeoutLock()
@@ -614,7 +616,7 @@ class SDPConnectionSerial(SDPConnection):
         self._listener_active = False
 
         # initialize connection
-        self._connection = serial.Serial()
+        self._connection = self.serial.Serial()
         self._connection.baudrate = self._params[PLUGIN_ATTR_SERIAL_BAUD]
         self._connection.parity = self._params[PLUGIN_ATTR_SERIAL_PARITY]
         self._connection.bytesize = self._params[PLUGIN_ATTR_SERIAL_BSIZE]
@@ -643,7 +645,7 @@ class SDPConnectionSerial(SDPConnection):
                     self._params[PLUGIN_ATTR_CB_ON_CONNECT](self)
                 self._setup_listener()
                 return True
-            except (serial.SerialException, ValueError) as e:
+            except (self.serial.SerialException, ValueError) as e:
                 self.logger.error(f'error on connection to {self._params[PLUGIN_ATTR_SERIAL_PORT]}. Error was: {e}')
                 self._connection_attempts = 0
                 return False
@@ -699,11 +701,11 @@ class SDPConnectionSerial(SDPConnection):
             self._open()
 
         if not self._is_connected:
-            raise serial.SerialException(f'trying to send {data}, but connection can\'t be opened.')
+            raise self.serial.SerialException(f'trying to send {data}, but connection can\'t be opened.')
 
         if not self._send_bytes(data):
             self.is_connected = False
-            raise serial.SerialException(f'data {data} could not be sent')
+            raise self.serial.SerialException(f'data {data} could not be sent')
 
         # don't try to read response if listener is active
         if self._listener_active:
@@ -738,7 +740,7 @@ class SDPConnectionSerial(SDPConnection):
 
         try:
             numbytes = self._connection.write(packet)
-        except serial.SerialTimeoutException:
+        except self.serial.SerialTimeoutException:
             return False
 
         # self.logger.debug(f'_send_bytes: sent {packet} with {numbytes} bytes')
@@ -879,7 +881,7 @@ class SDPConnectionSerialAsync(SDPConnectionSerial):
             while self._is_connected and self._listener_active:
                 try:
                     msg = self._read_bytes(0)
-                except serial.SerialTimeoutException:
+                except self.serial.SerialTimeoutException:
                     pass
 
                 if msg:
