@@ -919,24 +919,29 @@ class Websocket(Module):
         self.logger.info(f"Logs cancelation: path={path}, max={max}")
         to_remove = ""
         logdict = self.sv_monitor_logs.get(client_addr, {})
+        to_remove = None
         for entry in logdict:
             if entry == path:
                 to_remove = entry
 
-        try:
-            # Delete the log-Abos here
-            self.sv_monitor_logs[client_addr].remove(to_remove)
-            reply = f"path={path}, max={max}"
-            self.logger.info(f"cancel_log: reply=cancel log for :{reply}")
-        except Exception as e:
-            self.logger.error(f"cancel_log: Problem cancel log for {path}: {e}")
+        if to_remove is None:
+            answer = {"cmd": "log_cancel", "error": f"Log updates for {path} were not subscribed"}
         else:
-            if len(self.sv_monitor_logs[client_addr]) == 0:
-                try:
-                    del self.sv_monitor_logs[client_addr]
-                except Exception as e:
-                    self.logger.error(f"cancel_log: Quere for {client_addr} is empty problem to remove client from dict : {e}")
-            answer = {"cmd": "log_cancel", "result": f"Log updates for {path} canceled"}
+            try:
+                # Delete the log-Abos here
+                self.sv_monitor_logs[client_addr].remove(to_remove)
+                reply = f"path={path}, max={max}"
+                self.logger.info(f"cancel_log: reply=cancel log for :{reply}")
+            except Exception as e:
+                self.logger.error(f"cancel_log: Problem to cancel log for {path}: {e}")
+                answer = {"cmd": "log_cancel", "error": f"Problem to cancel log for {path}: {e}"}
+            else:
+                if len(self.sv_monitor_logs[client_addr]) == 0:
+                    try:
+                        del self.sv_monitor_logs[client_addr]
+                    except Exception as e:
+                        self.logger.error(f"cancel_log: Quere for {client_addr} is empty problem to remove client from dict : {e}")
+                answer = {"cmd": "log_cancel", "result": f"Log updates for {path} canceled"}
         return answer
 
 
