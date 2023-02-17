@@ -512,6 +512,9 @@ def get_struct_from_dict(struct_name, struct_dict):
     if not struct:
         return None
 
+    if s_name == struct_name:
+        return struct
+
     parts = struct_name[len(s_name) + 1:].split('.')
 
     for p in parts:
