@@ -488,6 +488,41 @@ def set_attr_for_subtree(subtree, attr, value, indent=0):
     return
 
 
+def get_struct_from_dict(struct_name, struct_dict):
+    '''
+    Try to retrieve the named struct from the struct dict. Try for sub-structs, if unsuccessful
+
+    :param struct_name: Name of the struct to use
+    :param struct_dict: dict with all defined structs (from /etc/structs.yaml and loaded plugins)
+    
+    :return: Struct tree if found (Ordered_dict) or None
+    '''
+    logger.info(f"looking for struct {struct_name} in struct_dict")
+    s_name = struct_name
+
+    while True:
+
+        struct = struct_dict.get(s_name)
+
+        if not struct and '.' in s_name:
+            s_name = s_name[:s_name.rfind('.')]
+        elif struct or (not struct and '.' not in s_name):
+            break
+
+    if not struct:
+        return None
+
+    parts = struct_name[len(s_name) + 1:].split('.')
+
+    for p in parts:
+        try:
+            struct = struct.get(p)
+        except KeyError:
+            return None
+
+    return struct
+
+
 def add_struct_to_item_template(path, struct_name, template, struct_dict, instance):
     '''
     Add the referenced struct to the items_template subtree
@@ -501,7 +536,7 @@ def add_struct_to_item_template(path, struct_name, template, struct_dict, instan
     :return:
     '''
     logger.info("add_struct_to_item_template: path (parent)={}, struct_name={}, template={}".format(path, struct_name, dict(template)))
-    struct = struct_dict.get(struct_name, None)
+    struct = get_struct_from_dict(struct_name, struct_dict)
     if struct is None:
         # no struct/template with this name
         nf = collections.OrderedDict()
