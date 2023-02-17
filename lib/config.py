@@ -519,7 +519,7 @@ def get_struct_from_dict(struct_name, struct_dict):
 
     for p in parts:
         try:
-            struct = struct.get(p)
+            struct = struct[p]
         except KeyError:
             return None
 
