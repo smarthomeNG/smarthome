@@ -77,6 +77,11 @@ class Websocket(Module):
         self.tls_cert = self.get_parameter_value('tls_cert')
         self.tls_key = self.get_parameter_value('tls_key')
 
+        # parameters and class instance for sync_example protocol
+        # hand the websocket module instance to protocol object
+        from . import protocol_sync_example
+        self.sync_example_protocol = protocol_sync_example.Sync_example(self)
+
         # parameters for smartVISU handling are initialized by the smartvisu plugin
         # self.sv_enabled = self.get_parameter_value('sv_enabled')
         # self.sv_acl = self.get_parameter_value('default_acl')
@@ -291,13 +296,17 @@ class Websocket(Module):
         try:
 
             if path == '/' and self.sv_enabled:
+                self.logger.info(f"Starting 'smartVISU' payload protocol")
                 await self.smartVISU_protocol_v4(websocket)
             elif path == '/sync':
-                await self.counter_sync(websocket)
+                self.logger.info(f"Starting 'sync_example_protocol' payload protocol")
+                await self.sync_example_protocol.counter_sync(websocket)
+            else:
+                self.logger.notice(f"Unsupported websocket path '{path}' - terminating connection")
 
         except Exception as e:
             # connection has been ended or not established in payload protocol
-            self.logger.info(f"handle_new_connection: Connection to {e} has been terminated in payload protocol or couldn't be established")
+            self.logger.info(f"handle_new_connection: Connection to {e} has been terminated in payload protocol")
         finally:
             await self.unregister(websocket)
         return
@@ -315,8 +324,9 @@ class Websocket(Module):
         Unregister an incoming connection
         """
         # test, if a smartVISU session has to be ended
-        client_addr = self.client_address(websocket)
-        self.sv_cancel_all_abos(client_addr)
+        if websocket.path == '/':
+            client_addr = self.client_address(websocket)
+            self.sv_cancel_all_abos(client_addr)
 
         self.USERS.remove(websocket)
         await self.log_connection_event('removed', websocket)
@@ -331,55 +341,12 @@ class Websocket(Module):
         else:
             self.logger.info(f"USER {action}: {self.build_client_info(websocket.remote_address)} - local port: {websocket.port}")
 
-        self.logger.debug(f"Connected USERS: {len(self.USERS)}")
+        self.logger.dbghigh(f"Connected USERS: {len(self.USERS)}")
         for u in self.USERS:
-            self.logger.debug(f"- user: {u.remote_address}   path: {u.path}    secure: {u.secure}")
+            self.logger.dbghigh(f"- user: {self.client_address(u)}    path: {u.path}    secure: {u.secure}    port: {u.port}")
         return
 
-    """
-    ===============================================================================
-    =
-    =  The following method(s) implement the webmethods protocol for sync example
-    =
-    """
 
-    STATE = {"value": 0}
-
-    def state_event(self):
-        return json.dumps({"type": "state", **self.STATE})
-
-    def users_event(self):
-        return json.dumps({"type": "users", "count": len(self.USERS)})
-
-    async def notify_state(self):
-        if self.USERS:  # asyncio.wait doesn't accept an empty list
-            message = self.state_event()
-            await asyncio.wait([user.send(message) for user in self.USERS])
-
-    async def notify_users(self):
-        if self.USERS:  # asyncio.wait doesn't accept an empty list
-            message = self.users_event()
-            await asyncio.wait([user.send(message) for user in self.USERS])
-
-    async def counter_sync(self, websocket):
-        await self.notify_users()
-        await websocket.send(self.state_event())
-
-        async for message in websocket:
-            data = json.loads(message)
-            if data.get("cmd", ''):
-                self.logger.warning(f"CMD: {data}")
-            elif data.get("action", '') == "minus":
-                self.STATE["value"] -= 1
-                await self.notify_state()
-            elif data.get("action", '') == "plus":
-                self.STATE["value"] += 1
-                await self.notify_state()
-            else:
-                logging.error(f"unsupported event: {data}")
-
-        await self.notify_users()
-        return
 
     """
     ===============================================================================
@@ -501,7 +468,7 @@ class Websocket(Module):
                 command = data.get("cmd", '')
                 protocol = 'wss' if websocket.secure else 'ws '
                 # self.logger.warning("{} <CMD  : '{}'   -   from {}".format(protocol, data, client_addr))
-                self.logger.info(f"{self.build_log_info(client_addr)} sent '{data}'")
+                self.logger.dbgmed(f"{self.build_log_info(client_addr)} sent '{data}'")
                 answer = {"error": "unhandled command"}
 
                 try:
@@ -816,7 +783,7 @@ class Websocket(Module):
                     replys = await self.loop.run_in_executor(None, self.update_series, client_addr)
                     for reply in replys:
                         if (client_addr in self.sv_clients) and not (client_addr in remove):
-                            self.logger.info(f"update_all_series: reply {reply}  -->  Replys for client {self.build_log_info(client_addr)}: {replys}")
+                            self.logger.dbgmed(f"update_all_series: reply {reply}  -->  Replys for client {self.build_log_info(client_addr)}: {replys}")
                             try:
                                 await websocket.send(json.dumps(reply, default=self.json_serial))
                                 self.logger.debug(f">SerUp {reply}: {self.build_log_info(client_addr)}")
@@ -951,7 +918,8 @@ class Websocket(Module):
 
         self.logger.info(f"Logs cancelation: path={path}, max={max}")
         to_remove = ""
-        for entry in self.sv_monitor_logs[client_addr]:
+        logdict = self.sv_monitor_logs.get(client_addr, {})
+        for entry in logdict:
             if entry == path:
                 to_remove = entry
 
@@ -1278,3 +1246,4 @@ class Websocket(Module):
             client_list.append(infos)
 
         return client_list
+
