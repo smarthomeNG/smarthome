@@ -37,6 +37,11 @@ class Sync_example():
 
     STATE = {"value": 0}
 
+    protocol_name = 'sync_example'
+    protocol_path = '/sync'
+    protocol_enabled = True
+
+
     def __init__(self, ws_modul):
 
         self.logger = logging.getLogger(__name__)

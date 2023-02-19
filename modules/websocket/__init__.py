@@ -47,7 +47,7 @@ from lib.utils import Utils
 
 
 class Websocket(Module):
-    version = '1.0.6'
+    version = '1.0.7'
     longname = 'Websocket module for SmartHomeNG'
     port = 0
 
@@ -77,21 +77,6 @@ class Websocket(Module):
         self.tls_cert = self.get_parameter_value('tls_cert')
         self.tls_key = self.get_parameter_value('tls_key')
 
-        # parameters and class instance for sync_example protocol
-        # hand the websocket module instance to protocol object
-        from . import protocol_sync_example
-        self.sync_example_protocol = protocol_sync_example.Sync_example(self)
-
-        # parameters for smartVISU handling are initialized by the smartvisu plugin
-        # self.sv_enabled = self.get_parameter_value('sv_enabled')
-        # self.sv_acl = self.get_parameter_value('default_acl')
-        # self.sv_querydef = self.get_parameter_value('sv_querydef')
-        # self.sv_ser_upd_cycle = self.get_parameter_value('sv_ser_upd_cycle')
-        self.sv_enabled = False
-        self.sv_acl = 'deny'
-        self.sv_querydef = False
-        self.sv_ser_upd_cycle = 0
-
         self.ssl_context = None
         if self.use_tls:
             self.ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
@@ -115,17 +100,16 @@ class Websocket(Module):
             self.logger.info(f"Listening on IP .: {self.ip}")
         self.logger.info(f"port / tls_port .: {self.port} / {self.tls_port}")
         self.logger.info(f"use_tls .........: {self.use_tls}")
-        self.logger.info(f"certificate / key: {self.tls_cert} / {self.tls_key}")
+        self.logger.info(f"certificate .....: key: ../etc/{self.tls_cert} / ../etc/{self.tls_key}")
 
         # try to get API handles
         self.items = Items.get_instance()
         self.logics = Logics.get_instance()
 
+        self.initialize_payload_protocols()
+
         self.loop = None    # Var to hold the event loop for asyncio
-
-        # For Release 1.8 only: Enable smartVISU protocol support even if smartvisu plugin is not loaded
-        self.set_smartvisu_support(protocol_enabled=True)
-
+        return
 
     def start(self):
         """
@@ -164,6 +148,38 @@ class Websocket(Module):
         return
 
 
+    def initialize_payload_protocols(self):
+        """
+        Initialize the supported payload protocols
+
+        :return:
+        """
+
+        # parameters and class instance for sync_example protocol
+        # hand the websocket module instance to protocol object
+        from . import protocol_sync_example
+        self.sync_example_protocol = protocol_sync_example.Sync_example(self)
+        self.logger.info(f"Payload protocol '{ self.sync_example_protocol.protocol_name}' initialized ({'enabled' if self.sync_example_protocol.protocol_enabled else 'disabled'})")
+
+        # parameters for smartVISU handling are initialized by the smartvisu plugin
+        # self.sv_protocol_enabled = self.get_parameter_value('sv_enabled')
+        # self.sv_acl = self.get_parameter_value('default_acl')
+        # self.sv_querydef = self.get_parameter_value('sv_querydef')
+        # self.sv_ser_upd_cycle = self.get_parameter_value('sv_ser_upd_cycle')
+        self.sv_protocol_name = 'smartVISU'
+        self.sv_protocol_path = '/'
+        self.sv_protocol_enabled = False
+        self.sv_acl = 'deny'
+        self.sv_querydef = False
+        self.sv_ser_upd_cycle = 0
+        self.logger.info(f"Payload protocol '{ self.sv_protocol_name}' initialized ({'enabled' if self.sv_protocol_enabled else 'disabled'})")
+
+        # For Release 1.8 only: Enable smartVISU protocol support even if smartvisu plugin is not loaded
+        #self.set_smartvisu_support(protocol_enabled=True)
+
+        return
+
+
     def set_smartvisu_support(self, protocol_enabled=False, default_acl='ro', query_definitions=False, series_updatecycle=0):
         """
         Set state of smartvisu support
@@ -172,12 +188,14 @@ class Websocket(Module):
         :param query_definitions:   enable or disable the query of item definitions over websocket protocol
         :param series_updatecycle:  update cycle for smartVISU series requests (if 0, timing from database plugin is used)
         """
-        self.sv_enabled = protocol_enabled
         self.sv_acl = default_acl
         self.sv_querydef = query_definitions
         self.sv_ser_upd_cycle = int(series_updatecycle)
-        self.logger.info(f"set_smartvisu_support: Set to protocol_enabled={protocol_enabled}, default_acl={default_acl}, query_definitions={query_definitions}, series_updatecycle={series_updatecycle}")
-        # self.sv_config = {'enabled': self.sv_enabled, 'acl': self.sv_acl, 'query_def': self.sv_querydef, 'upd_cycle': self.sv_ser_upd_cycle}
+        self.sv_protocol_enabled = protocol_enabled
+        if self.sv_protocol_enabled:
+            self.logger.info(f"Payload protocol '{self.sv_protocol_name}' enabled")
+            self.logger.info(f"set_smartvisu_support: Set to default_acl={default_acl}, query_definitions={query_definitions}, series_updatecycle={series_updatecycle}")
+        # self.sv_config = {'enabled': self.sv_protocol_enabled, 'acl': self.sv_acl, 'query_def': self.sv_querydef, 'upd_cycle': self.sv_ser_upd_cycle}
         # self.logger.warning(f"sv_config {self.sv_config}")
 
         # self.stop()
@@ -186,16 +204,31 @@ class Websocket(Module):
 
 
     def get_port(self):
+        """
+        Returns the port used for the ws:// protocol
+
+        :return: port number
+        """
 
         return self.port
 
 
     def get_tls_port(self):
+        """
+        Returns the port used for the secure wss:// protocol
+
+        :return: port number
+        """
 
         return self.tls_port
 
 
     def get_use_tls(self):
+        """
+        Returns True, if secure websocket protocol (wss://) is enabled
+
+        :return: True, if secure websocket protocol is enabled
+        """
 
         return self.use_tls
 
@@ -295,14 +328,14 @@ class Websocket(Module):
         await self.register(websocket)
         try:
 
-            if path == '/' and self.sv_enabled:
+            if path == '/' and self.sv_protocol_enabled:
                 self.logger.info(f"Starting 'smartVISU' payload protocol")
                 await self.smartVISU_protocol_v4(websocket)
-            elif path == '/sync':
-                self.logger.info(f"Starting 'sync_example_protocol' payload protocol")
+            elif path == self.sync_example_protocol.protocol_path and self.sync_example_protocol.protocol_enabled:
+                self.logger.info(f"Starting '{self.sync_example_protocol.protocol_name}' payload protocol")
                 await self.sync_example_protocol.counter_sync(websocket)
             else:
-                self.logger.notice(f"Unsupported websocket path '{path}' - terminating connection")
+                self.logger.warning(f"Unsupported websocket path '{path}' used by {self.client_address(websocket)}. Cannot determine payload protocol - terminating connection")
 
         except Exception as e:
             # connection has been ended or not established in payload protocol
@@ -325,6 +358,7 @@ class Websocket(Module):
         """
         # test, if a smartVISU session has to be ended
         if websocket.path == '/':
+            # smartVISU client
             client_addr = self.client_address(websocket)
             self.sv_cancel_all_abos(client_addr)
 
@@ -337,9 +371,9 @@ class Websocket(Module):
         Print info about connection/disconnection of users
         """
         if not websocket.remote_address:
-            self.logger.info(f"USER {action}: {'with SSL connection'} - local port: {websocket.port}")
+            self.logger.info(f"USER {action}: {'with SSL connection'} - local port: {websocket.port} - path: {websocket.path}")
         else:
-            self.logger.info(f"USER {action}: {self.build_client_info(websocket.remote_address)} - local port: {websocket.port}")
+            self.logger.info(f"USER {action}: {self.build_client_info(websocket.remote_address)} - local port: {websocket.port} - path: {websocket.path}")
 
         self.logger.dbghigh(f"Connected USERS: {len(self.USERS)}")
         for u in self.USERS:
@@ -404,11 +438,11 @@ class Websocket(Module):
         :param client_addr:
         :return:
         """
-        self.logger.info(f"sv_cancel_all_abos - Client-Addr {client_addr} : ")
-        self.logger.info(f"- sv_Series-Dict : {self.sv_update_series}")
-        self.logger.info(f"- sv_clients-Dict : {self.sv_clients}")
-        self.logger.info(f"- sv_monitor_logs-Dict : {self.sv_monitor_logs}")
-        self.logger.info(f"- sv_monitor_items-Dict : {self.sv_monitor_items}")
+        self.logger.debug(f"sv_cancel_all_abos - Client-Addr {client_addr} : ")
+        self.logger.debug(f"- sv_Series-Dict : {self.sv_update_series}")
+        self.logger.debug(f"- sv_clients-Dict : {self.sv_clients}")
+        self.logger.debug(f"- sv_monitor_logs-Dict : {self.sv_monitor_logs}")
+        self.logger.debug(f"- sv_monitor_items-Dict : {self.sv_monitor_items}")
 
         # Remove client from series updates
         if (client_addr in self.sv_update_series):
