@@ -85,6 +85,13 @@ parameters:
             de: 'Entwickler Modus aktivieren'
             en: 'Activate developer mode'
 
+    rest_dispatch_force_exception:
+        type: bool
+        default: False
+        description:
+            de: 'Sollen WARNINGs aus REST_dispatch_execute als EXECPTION geloggt werden?'
+            en: 'Activate developer mode'
+
     click_dropdown_header:
         type: bool
         default: False

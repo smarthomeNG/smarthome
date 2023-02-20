@@ -12,6 +12,12 @@ import zipfile
 import os
 import argparse
 
+# for tarfile fix, maybe not necessary as os is already imported...
+from os.path import abspath, realpath, dirname, join as joinpath
+# also for tarfile fix. As no logging is defined, this skips files instead of halting...
+import sys
+
+
 class BackupAndRestore:
     def __init__(self):
         self.files = []
@@ -37,7 +43,6 @@ class BackupAndRestore:
         for name in self.files:
             tar.add(name, filter=self.change_fileinfo)
         tar.close()
-         
 
     def get_files(self,apath):
         if not os.path.exists(apath):
@@ -57,6 +62,32 @@ class BackupAndRestore:
         return tarinfo
 
     def restore(self, afile, outdir, selector=None):
+
+        # added and adjusted fix for CVE-2007-4559) from https://stackoverflow.com/questions/10060069/safely-extract-zip-or-tar-using-python/10077309#10077309
+        resolved = lambda x: realpath(abspath(x))
+
+        def badpath(path, base):
+            # joinpath will ignore base if path is absolute
+            return not resolved(joinpath(base, path)).startswith(base)
+
+        def badlink(info, base):
+            # Links are interpreted relative to the directory containing the link
+            tip = resolved(joinpath(base, dirname(info.name)))
+            return badpath(info.linkname, base=tip)
+
+        def safemembers(members):
+            base = resolved(".")
+
+            for finfo in members:
+                if badpath(finfo.name, base):
+                    print(f'{finfo.name} is blocked (illegal path)', file=sys.stderr)
+                elif finfo.issym() and badlink(finfo, base):
+                    print(f'{finfo.name} is blocked: hard link to {finfo.linkname}', file=sys.stderr)
+                elif finfo.islnk() and badlink(finfo, base):
+                    print(f'{finfo.name} is blocked: symlink to {finfo.linkname}', file=sys.stderr)
+                else:
+                    yield finfo
+
         readmode = None
         extractor = None
         afilelow = afile.lower()

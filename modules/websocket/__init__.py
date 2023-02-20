@@ -47,7 +47,7 @@ from lib.utils import Utils
 
 
 class Websocket(Module):
-    version = '1.0.5'
+    version = '1.0.7'
     longname = 'Websocket module for SmartHomeNG'
     port = 0
 
@@ -77,16 +77,6 @@ class Websocket(Module):
         self.tls_cert = self.get_parameter_value('tls_cert')
         self.tls_key = self.get_parameter_value('tls_key')
 
-        # parameters for smartVISU handling are initialized by the smartvisu plugin
-        # self.sv_enabled = self.get_parameter_value('sv_enabled')
-        # self.sv_acl = self.get_parameter_value('default_acl')
-        # self.sv_querydef = self.get_parameter_value('sv_querydef')
-        # self.sv_ser_upd_cycle = self.get_parameter_value('sv_ser_upd_cycle')
-        self.sv_enabled = False
-        self.sv_acl = 'deny'
-        self.sv_querydef = False
-        self.sv_ser_upd_cycle = 0
-
         self.ssl_context = None
         if self.use_tls:
             self.ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
@@ -110,17 +100,16 @@ class Websocket(Module):
             self.logger.info(f"Listening on IP .: {self.ip}")
         self.logger.info(f"port / tls_port .: {self.port} / {self.tls_port}")
         self.logger.info(f"use_tls .........: {self.use_tls}")
-        self.logger.info(f"certificate / key: {self.tls_cert} / {self.tls_key}")
+        self.logger.info(f"certificate .....: key: ../etc/{self.tls_cert} / ../etc/{self.tls_key}")
 
         # try to get API handles
         self.items = Items.get_instance()
         self.logics = Logics.get_instance()
 
+        self.initialize_payload_protocols()
+
         self.loop = None    # Var to hold the event loop for asyncio
-
-        # For Release 1.8 only: Enable smartVISU protocol support even if smartvisu plugin is not loaded
-        self.set_smartvisu_support(protocol_enabled=True)
-
+        return
 
     def start(self):
         """
@@ -158,6 +147,39 @@ class Websocket(Module):
             pass
         return
 
+
+    def initialize_payload_protocols(self):
+        """
+        Initialize the supported payload protocols
+
+        :return:
+        """
+
+        # parameters and class instance for sync_example protocol
+        # hand the websocket module instance to protocol object
+        from . import protocol_sync_example
+        self.sync_example_protocol = protocol_sync_example.Sync_example(self)
+        self.logger.info(f"Payload protocol '{ self.sync_example_protocol.protocol_name}' initialized ({'enabled' if self.sync_example_protocol.protocol_enabled else 'disabled'})")
+
+        # parameters for smartVISU handling are initialized by the smartvisu plugin
+        # self.sv_protocol_enabled = self.get_parameter_value('sv_enabled')
+        # self.sv_acl = self.get_parameter_value('default_acl')
+        # self.sv_querydef = self.get_parameter_value('sv_querydef')
+        # self.sv_ser_upd_cycle = self.get_parameter_value('sv_ser_upd_cycle')
+        self.sv_protocol_name = 'smartVISU'
+        self.sv_protocol_path = '/'
+        self.sv_protocol_enabled = False
+        self.sv_acl = 'deny'
+        self.sv_querydef = False
+        self.sv_ser_upd_cycle = 0
+        self.logger.info(f"Payload protocol '{ self.sv_protocol_name}' initialized ({'enabled' if self.sv_protocol_enabled else 'disabled'})")
+
+        # For Release 1.8 only: Enable smartVISU protocol support even if smartvisu plugin is not loaded
+        #self.set_smartvisu_support(protocol_enabled=True)
+
+        return
+
+
     def set_smartvisu_support(self, protocol_enabled=False, default_acl='ro', query_definitions=False, series_updatecycle=0):
         """
         Set state of smartvisu support
@@ -166,12 +188,14 @@ class Websocket(Module):
         :param query_definitions:   enable or disable the query of item definitions over websocket protocol
         :param series_updatecycle:  update cycle for smartVISU series requests (if 0, timing from database plugin is used)
         """
-        self.sv_enabled = protocol_enabled
         self.sv_acl = default_acl
         self.sv_querydef = query_definitions
         self.sv_ser_upd_cycle = int(series_updatecycle)
-        self.logger.info(f"set_smartvisu_support: Set to protocol_enabled={protocol_enabled}, default_acl={default_acl}, query_definitions={query_definitions}, series_updatecycle={series_updatecycle}")
-        # self.sv_config = {'enabled': self.sv_enabled, 'acl': self.sv_acl, 'query_def': self.sv_querydef, 'upd_cycle': self.sv_ser_upd_cycle}
+        self.sv_protocol_enabled = protocol_enabled
+        if self.sv_protocol_enabled:
+            self.logger.info(f"Payload protocol '{self.sv_protocol_name}' enabled")
+            self.logger.info(f"set_smartvisu_support: Set to default_acl={default_acl}, query_definitions={query_definitions}, series_updatecycle={series_updatecycle}")
+        # self.sv_config = {'enabled': self.sv_protocol_enabled, 'acl': self.sv_acl, 'query_def': self.sv_querydef, 'upd_cycle': self.sv_ser_upd_cycle}
         # self.logger.warning(f"sv_config {self.sv_config}")
 
         # self.stop()
@@ -180,16 +204,31 @@ class Websocket(Module):
 
 
     def get_port(self):
+        """
+        Returns the port used for the ws:// protocol
+
+        :return: port number
+        """
 
         return self.port
 
 
     def get_tls_port(self):
+        """
+        Returns the port used for the secure wss:// protocol
+
+        :return: port number
+        """
 
         return self.tls_port
 
 
     def get_use_tls(self):
+        """
+        Returns True, if secure websocket protocol (wss://) is enabled
+
+        :return: True, if secure websocket protocol is enabled
+        """
 
         return self.use_tls
 
@@ -289,14 +328,18 @@ class Websocket(Module):
         await self.register(websocket)
         try:
 
-            if path == '/' and self.sv_enabled:
+            if path == '/' and self.sv_protocol_enabled:
+                self.logger.info(f"Starting 'smartVISU' payload protocol")
                 await self.smartVISU_protocol_v4(websocket)
-            elif path == '/sync':
-                await self.counter_sync(websocket)
+            elif path == self.sync_example_protocol.protocol_path and self.sync_example_protocol.protocol_enabled:
+                self.logger.info(f"Starting '{self.sync_example_protocol.protocol_name}' payload protocol")
+                await self.sync_example_protocol.counter_sync(websocket)
+            else:
+                self.logger.warning(f"Unsupported websocket path '{path}' used by {self.client_address(websocket)}. Cannot determine payload protocol - terminating connection")
 
         except Exception as e:
             # connection has been ended or not established in payload protocol
-            self.logger.info(f"handle_new_connection - Connection to {e} has been terminated in payload protocol or couldn't be established")
+            self.logger.info(f"handle_new_connection: Connection to {e} has been terminated in payload protocol")
         finally:
             await self.unregister(websocket)
         return
@@ -313,6 +356,12 @@ class Websocket(Module):
         """
         Unregister an incoming connection
         """
+        # test, if a smartVISU session has to be ended
+        if websocket.path == '/':
+            # smartVISU client
+            client_addr = self.client_address(websocket)
+            self.sv_cancel_all_abos(client_addr)
+
         self.USERS.remove(websocket)
         await self.log_connection_event('removed', websocket)
         return
@@ -322,59 +371,16 @@ class Websocket(Module):
         Print info about connection/disconnection of users
         """
         if not websocket.remote_address:
-            self.logger.info(f"USER {action}: {'with SSL connection'} - local port: {websocket.port}")
+            self.logger.info(f"USER {action}: {'with SSL connection'} - local port: {websocket.port} - path: {websocket.path}")
         else:
-            self.logger.info(f"USER {action}: {self.build_client_info(websocket.remote_address)} - local port: {websocket.port}")
+            self.logger.info(f"USER {action}: {self.build_client_info(websocket.remote_address)} - local port: {websocket.port} - path: {websocket.path}")
 
-        self.logger.debug(f"Connected USERS: {len(self.USERS)}")
+        self.logger.dbghigh(f"Connected USERS: {len(self.USERS)}")
         for u in self.USERS:
-            self.logger.debug(f"- user: {u.remote_address}   path: {u.path}    secure: {u.secure}")
+            self.logger.dbghigh(f"- user: {self.client_address(u)}    path: {u.path}    secure: {u.secure}    port: {u.port}")
         return
 
-    """
-    ===============================================================================
-    =
-    =  The following method(s) implement the webmethods protocol for sync example
-    =
-    """
 
-    STATE = {"value": 0}
-
-    def state_event(self):
-        return json.dumps({"type": "state", **self.STATE})
-
-    def users_event(self):
-        return json.dumps({"type": "users", "count": len(self.USERS)})
-
-    async def notify_state(self):
-        if self.USERS:  # asyncio.wait doesn't accept an empty list
-            message = self.state_event()
-            await asyncio.wait([user.send(message) for user in self.USERS])
-
-    async def notify_users(self):
-        if self.USERS:  # asyncio.wait doesn't accept an empty list
-            message = self.users_event()
-            await asyncio.wait([user.send(message) for user in self.USERS])
-
-    async def counter_sync(self, websocket):
-        await self.notify_users()
-        await websocket.send(self.state_event())
-
-        async for message in websocket:
-            data = json.loads(message)
-            if data.get("cmd", ''):
-                self.logger.warning(f"CMD: {data}")
-            elif data.get("action", '') == "minus":
-                self.STATE["value"] -= 1
-                await self.notify_state()
-            elif data.get("action", '') == "plus":
-                self.STATE["value"] += 1
-                await self.notify_state()
-            else:
-                logging.error(f"unsupported event: {data}")
-
-        await self.notify_users()
-        return
 
     """
     ===============================================================================
@@ -393,7 +399,7 @@ class Websocket(Module):
     sv_clients = {}
     sv_update_series = {}
     clients = []
-    proto = 4
+    proto = 4.1
     _series_lock = threading.Lock()
 
     janus_queue = None      # var that holds the queue betweed threaded and async
@@ -424,6 +430,42 @@ class Websocket(Module):
             return obj.isoformat()
 
         raise TypeError("Type %s not serializable" % type(obj))
+
+    def sv_cancel_all_abos(self, client_addr):
+        """
+        Remove all abos for a smartVISU client session
+
+        :param client_addr:
+        :return:
+        """
+        self.logger.debug(f"sv_cancel_all_abos - Client-Addr {client_addr} : ")
+        self.logger.debug(f"- sv_Series-Dict : {self.sv_update_series}")
+        self.logger.debug(f"- sv_clients-Dict : {self.sv_clients}")
+        self.logger.debug(f"- sv_monitor_logs-Dict : {self.sv_monitor_logs}")
+        self.logger.debug(f"- sv_monitor_items-Dict : {self.sv_monitor_items}")
+
+        # Remove client from series updates
+        if (client_addr in self.sv_update_series):
+            del (self.sv_update_series[client_addr])
+            self.logger.info(f"sv_cancel_all_abos: Series updates for {client_addr} were stoped")
+
+        # Remove client from log updates
+        if (client_addr in self.sv_monitor_logs):
+            del (self.sv_monitor_logs[client_addr])
+            self.logger.info(f"sv_cancel_all_abos: Log updates for {client_addr} were stoped")
+
+        # Remove client from item monitoring dict
+        if (client_addr in self.sv_monitor_items):
+            del(self.sv_monitor_items[client_addr])
+            self.logger.info(f"sv_cancel_all_abos: Item monitoring for {client_addr} was removed")
+
+        # Remove client dict of active clients
+        if (client_addr in self.sv_clients):
+            del(self.sv_clients[client_addr])
+            self.logger.info(f"sv_cancel_all_abos: Client {client_addr} was removed")
+
+        return
+
 
     async def smartVISU_protocol_v4(self, websocket):
 
@@ -460,7 +502,7 @@ class Websocket(Module):
                 command = data.get("cmd", '')
                 protocol = 'wss' if websocket.secure else 'ws '
                 # self.logger.warning("{} <CMD  : '{}'   -   from {}".format(protocol, data, client_addr))
-                self.logger.info(f"{self.build_log_info(client_addr)} sent '{data}'")
+                self.logger.dbgmed(f"{self.build_log_info(client_addr)} sent '{data}'")
                 answer = {"error": "unhandled command"}
 
                 try:
@@ -512,8 +554,6 @@ class Websocket(Module):
                         num = 10
                         if 'max' in data:
                             num = int(data['max'])
-                        #self.logger.notice(f"command == 'log': data={data}")
-                        #self.logger.notice(f"command == 'log': self.logs={self.logs}")
                         if name in self.logs:
                             answer = {'cmd': 'log', 'name': name, 'log': self.logs[name].export(num), 'init': 'y'}
                             if client_addr not in self.sv_monitor_logs:
@@ -523,19 +563,22 @@ class Websocket(Module):
                         else:
                             self.logger.warning(f"Client {self.build_log_info(client_addr)} requested invalid log: {name}")
 
+                    elif command == 'log_cancel':
+                        answer = await self.cancel_log(data, client_addr)
+
                     elif command == 'ping':
                         answer = {'cmd': 'pong'}
 
                     elif command == 'proto':  # protocol version
                         proto = data['ver']
-                        if proto > self.proto:
+                        if int(proto) > int(self.proto):
                             self.logger.warning(f"WebSocket: protocol mismatch. SmartHomeNG protocol version={self.proto}, visu protocol version={proto}")
-                        elif proto < self.proto:
+                        elif int(proto) < int(self.proto):
                             self.logger.warning(f"WebSocket: protocol mismatch. Update your client: {self.build_log_info(client_addr)}")
+                        self.sv_clients[client_addr]['proto'] = data.get('ver', '')
                         answer = {'cmd': 'proto', 'ver': self.proto, 'server': 'module.websocket', 'time': self.shtime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")}
 
                     elif command == 'identity':  # identify client
-                        client = data.get('sw', "'some_visu'")
                         self.sv_clients[client_addr]['sw'] = data.get('sw', '')
                         self.sv_clients[client_addr]['ver'] = data.get('ver', '')
                         if data.get('hostname', '') != '':
@@ -575,22 +618,15 @@ class Websocket(Module):
                         self.logger.warning(f"smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {e} - reply = {reply} to {self.build_log_info(websocket.remote_address)}")
 
         except Exception as e:
-            ex = str(e)
-            if str(e).startswith(('code = 1005', 'code = 1006', 'no close frame received or sent')) or str(e).endswith('keepalive ping timeout; no close frame received'):
-                self.logger.warning(f"smartVISU_protocol_v4 error: Client {self.build_log_info(client_addr)} - {e}")
+            logmsg = f"smartVISU_protocol_v4 error: Client {self.build_log_info(client_addr)} - {e}"
+            if str(e).startswith(('no close frame received or sent', 'received 1005')):
+                self.logger.info(logmsg)
+            elif str(e).startswith(('code = 1005', 'code = 1006')) or str(e).endswith('keepalive ping timeout; no close frame received'):
+                self.logger.warning(logmsg)
             else:
-                self.logger.error(f"smartVISU_protocol_v4 exception: Client {self.build_log_info(client_addr)} - {ex}")
+                self.logger.error(logmsg)
 
-        # ms: Test wg. "iPad Sleep"
-        #if str(e).startswith('no close frame received or sent'):
-        #    return
-
-        # Remove client from monitoring dict and from dict of active clients     #ms: Block eingerückt am 26.10.22
-        del(self.sv_monitor_items[client_addr])
-        try:
-            del(self.sv_clients[client_addr])
-        except Exception as e:
-            self.logger.error(f"smartVISU_protocol_v4 error deleting client session data: {e}")
+        self.sv_cancel_all_abos(client_addr)
 
         self.logger.info(f"smartVISU_protocol_v4: Client {self.build_log_info(client_addr)} stopped")
         return
@@ -741,7 +777,7 @@ class Websocket(Module):
                         self.logger.info(f"WebSocket: no entries for series {path} {series}")
             else:
                 if path.startswith('env.'):
-                    self.logger.warning(f"Client {self.build_log_info(client_addr)} requested invalid series: {path}. Probably not database plugin is configured")
+                    self.logger.warning(f"Client {self.build_log_info(client_addr)} requested invalid series: {path}. Probably, the database plugin is not configured")
                 else:
                     self.logger.warning(f"Client {self.build_log_info(client_addr)} requested invalid series: {path}.")
         return answer
@@ -781,10 +817,10 @@ class Websocket(Module):
                     replys = await self.loop.run_in_executor(None, self.update_series, client_addr)
                     for reply in replys:
                         if (client_addr in self.sv_clients) and not (client_addr in remove):
-                            self.logger.info(f"update_all_series: reply {reply}  -->  Replys for client {self.build_log_info(client_addr)}: {replys}")
+                            self.logger.dbgmed(f"update_all_series: reply {reply}  -->  Replys for client {self.build_log_info(client_addr)}: {replys}")
                             try:
                                 await websocket.send(json.dumps(reply, default=self.json_serial))
-                                self.logger.info(f">SerUp {reply}: {self.build_log_info(client_addr)}")
+                                self.logger.debug(f">SerUp {reply}: {self.build_log_info(client_addr)}")
                             # except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                             except Exception as e:
                                 self.logger.info(f"update_all_series: Exception in 'await websocket.send(reply)': {e}")
@@ -798,7 +834,7 @@ class Websocket(Module):
 
             # Remove series for clients that are not connected any more
             for client_addr in remove:
-                del (self.sv_update_series[client_addr])
+                self.sv_cancel_all_abos(client_addr)
 
             await self.sleep(10)
 
@@ -897,6 +933,51 @@ class Websocket(Module):
         else:
             answer = await self.loop.run_in_executor(None, self.cancel_periodic_series_updates, reply, path, client_addr)
         return answer
+
+    async def cancel_log(self, data, client_addr):
+        """
+        Cancel the update of log data for a specified log
+
+        :param data: data of the visu's request
+        :param client_addr: address of the client (visu)
+
+        :return: answer to the visu
+        """
+        answer = {}
+        path = data['name']
+        if 'max' in data:
+            max = data['max']
+        else:
+            max = 100
+
+        self.logger.info(f"Logs cancelation: path={path}, max={max}")
+        to_remove = ""
+        logdict = self.sv_monitor_logs.get(client_addr, {})
+        to_remove = None
+        for entry in logdict:
+            if entry == path:
+                to_remove = entry
+
+        if to_remove is None:
+            answer = {"cmd": "log_cancel", "error": f"Log updates for {path} were not subscribed"}
+        else:
+            try:
+                # Delete the log-Abos here
+                self.sv_monitor_logs[client_addr].remove(to_remove)
+                reply = f"path={path}, max={max}"
+                self.logger.info(f"cancel_log: reply=cancel log for :{reply}")
+            except Exception as e:
+                self.logger.error(f"cancel_log: Problem to cancel log for {path}: {e}")
+                answer = {"cmd": "log_cancel", "error": f"Problem to cancel log for {path}: {e}"}
+            else:
+                if len(self.sv_monitor_logs[client_addr]) == 0:
+                    try:
+                        del self.sv_monitor_logs[client_addr]
+                    except Exception as e:
+                        self.logger.error(f"cancel_log: Quere for {client_addr} is empty problem to remove client from dict : {e}")
+                answer = {"cmd": "log_cancel", "result": f"Log updates for {path} canceled"}
+        return answer
+
 
     def cancel_periodic_series_updates(self, reply, path, client_addr):
         """
@@ -1031,7 +1112,7 @@ class Websocket(Module):
 
         # Remove series for clients that are not connected any more
         for client_addr in remove:
-            del (self.sv_monitor_logs[client_addr])
+            self.sv_cancel_all_abos(client_addr)
 
         return
 
@@ -1194,6 +1275,7 @@ class Websocket(Module):
             infos['port'] = port
             websocket = self.sv_clients[client_addr]['websocket']
             infos['protocol'] = 'wss' if websocket.secure else 'ws'
+            infos['proto'] = self.sv_clients[client_addr].get('proto', '')
             infos['sw'] = self.sv_clients[client_addr].get('sw', '')
             infos['swversion'] = self.sv_clients[client_addr].get('ver','')
             infos['hostname'] = self.sv_clients[client_addr].get('hostname', '')
@@ -1203,3 +1285,4 @@ class Websocket(Module):
             client_list.append(infos)
 
         return client_list
+
