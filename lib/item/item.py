@@ -341,8 +341,9 @@ class Item():
 
                     # Test if the plugin-specific attribute contains a valid value
                     # and set the default value, if needed
-                    value = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], value, self._filename)
-                    self.conf[attr] = value
+                    if hasattr(self.plugins, 'meta'):
+                        value = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], value, self._filename)
+                        self.conf[attr] = value
 
         self.property.init_dynamic_properties()
 
