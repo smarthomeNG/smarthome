@@ -19,6 +19,8 @@
 #  along with SmartHomeNG.  If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
+from functools import partial
+
 import asyncio
 import logging
 
@@ -41,11 +43,21 @@ class Protocol():
     protocol_enabled = True
 
 
-    def __init__(self, ws_modul):
+    def __init__(self, ws_server, logger_name):
 
-        self.logger = logging.getLogger(ws_modul.logger.name + '.' + self.protocol_id)
+        self.logger = logging.getLogger(logger_name)
 
-        self.ws_modul = ws_modul
+        self.client_address = ws_server.client_address
+        self.get_users = partial(ws_server.get_payload_users, self.protocol_path)
+
+        return
+
+
+    def start_global_tasks(self, loop):
+
+        self.loop = loop
+
+        self.logger.dbghigh("start_global_tasks: Nothing to start")
         return
 
 
@@ -61,14 +73,6 @@ class Protocol():
         return
 
 
-    def get_protocol_users(self):
-        # get USERS, that use this protocol
-        protocol_USERS = set()
-        for user in self.ws_modul.USERS:
-            if user.path == self.protocol_path:
-                protocol_USERS.add(user)
-        return protocol_USERS
-
 #--------------
 
     STATE = {"value": 0}
@@ -77,17 +81,18 @@ class Protocol():
         return json.dumps({"type": "state", **self.STATE})
 
     def users_event(self):
-        return json.dumps({"type": "users", "count": len(self.ws_modul.USERS)})
+        sync_USERS = self.get_users()
+        return json.dumps({"type": "users", "count": len(sync_USERS)})
 
     async def notify_state(self):
-        if self.ws_modul.USERS:  # asyncio.wait doesn't accept an empty list
+        sync_USERS = self.get_users()
+        if sync_USERS:  # asyncio.wait doesn't accept an empty list
             message = self.state_event()
-            await asyncio.wait([user.send(message) for user in self.ws_modul.USERS])
+            await asyncio.wait([user.send(message) for user in sync_USERS])
 
     async def notify_users(self):
         try:
-            sync_USERS = self.get_protocol_users()
-            self.logger.info(f"notify_users: USERS: {len(self.ws_modul.USERS)}, sync_USERS: {len(sync_USERS)}")
+            sync_USERS = self.get_users()
 
             if sync_USERS:  # asyncio.wait doesn't accept an empty list
                 message = self.users_event()
@@ -126,13 +131,13 @@ class Protocol():
                     self.logger.info(f"Incremented value to {self.STATE['value']}")
                     await self.notify_state()
                 else:
-                    self.ws_modul.logging.error(f"Sync-protocol: unsupported event: {data}")
+                    self.logging.error(f"Sync-protocol: unsupported event: {data}")
 
             await self.notify_users()
 
         except Exception as e:
             #logmsg = f"counter_sync error: Client {self.build_log_info(client_addr)} - {e}"
-            logmsg = f"counter_sync error: Client {self.ws_modul.client_address(websocket)} - {e}"
+            logmsg = f"counter_sync error: Client {self.client_address(websocket)} - {e}"
             if str(e).startswith(('no close frame received or sent', 'received 1005')):
                 self.logger.info(logmsg)
             elif str(e).startswith(('code = 1005', 'code = 1006')) or str(e).endswith('keepalive ping timeout; no close frame received'):

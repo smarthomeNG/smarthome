@@ -19,11 +19,14 @@
 #  along with SmartHomeNG.  If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
+from functools import partial
+
 import asyncio
 import janus
 import threading
 import decimal
 
+import sys
 import socket
 import logging
 from datetime import date, datetime
@@ -51,23 +54,42 @@ class Protocol():
     version = '1.0.0'
 
     protocol_id = 'sv'
-    protocol_name = 'smartVISU'
+    protocol_name = 'smartvisu'
     protocol_path = '/'
     protocol_enabled = False
 
 
-    def __init__(self, ws_modul):
+    def __init__(self, ws_server, logger_name):
 
-        self.logger = logging.getLogger(ws_modul.logger.name + '.' + self.protocol_id)
+        self.logger = logging.getLogger(logger_name)
 
-        self.ws_modul = ws_modul
-        self._sh = ws_modul._sh
+        # Get API handles
         self.shtime = Shtime.get_instance()
-
-        # try to get API handles
         self.items = Items.get_instance()
         self.logics = Logics.get_instance()
 
+        self._sh = ws_server._sh
+
+        self.client_address = ws_server.client_address
+        #self.get_users = partial(ws_server.get_payload_users, self.protocol_path)
+
+        return
+
+
+    def start_global_tasks(self, loop):
+
+        self.loop = loop
+        #self.client_address = ws_server.client_address
+
+        python_version = str(sys.version_info[0]) + '.' + str(sys.version_info[1])
+        if python_version == '3.7':
+            self.loop.create_task(self.update_visu())
+            self.loop.create_task(self.update_all_series())
+        else:
+            self.loop.create_task(self.update_visu(), name='update_visu')
+            self.loop.create_task(self.update_all_series(), name='update_all_series')
+
+        self.logger.dbghigh(f"start_global_tasks: create_task(s) for update_visu() and update_all_series()")
         return
 
 
@@ -79,7 +101,7 @@ class Protocol():
 
     async def cleanup_connection(self, websocket):
 
-        client_addr = self.ws_modul.client_address(websocket)
+        client_addr = self.client_address(websocket)
         self.sv_cancel_all_abos(client_addr)
         return
 
@@ -142,7 +164,7 @@ class Protocol():
         self.protocol_enabled = protocol_enabled
         if self.protocol_enabled:
             self.logger.info(f"Payload protocol '{self.protocol_name}' enabled")
-            self.logger.info(f"set_smartvisu_support: Set to default_acl={default_acl}, query_definitions={query_definitions}, series_updatecycle={series_updatecycle}")
+            self.logger.info(f"smartvisu support: default_acl={default_acl}, query_definitions={query_definitions}, series_updatecycle={series_updatecycle}")
         # self.sv_config = {'enabled': self.sv_protocol_enabled, 'acl': self.sv_acl, 'query_def': self.sv_querydef, 'upd_cycle': self.sv_ser_upd_cycle}
         # self.logger.warning(f"sv_config {self.sv_config}")
 
@@ -163,9 +185,9 @@ class Protocol():
         if self.update_visulog not in known_log_listeners:
             self._sh.add_event_listener(['log'], self.update_visulog)
         else:
-            self.logger.debug(f"smartVISU_protocol_v4: self.update_visulog function already subscribed as event listener")
+            self.logger.debug(f"self.update_visulog function already subscribed as event listener")
 
-        client_addr = self.ws_modul.client_address(websocket)
+        client_addr = self.client_address(websocket)
         client_ip = websocket.remote_address[0]
         self.sv_clients[client_addr] = {}
         self.sv_clients[client_addr]['websocket'] = websocket
@@ -173,13 +195,14 @@ class Protocol():
             self.sv_clients[client_addr]['hostname'] = socket.gethostbyaddr(client_ip)[0]
         except:
             pass
+        self.sv_clients[client_addr]['sw'] = ""
+        self.logger.info(f"Client {self.build_log_info(client_addr)} started")
         self.sv_clients[client_addr]['sw'] = "'some_visu'"
-        self.logger.info(f"smartVISU_protocol_v4: Client {self.build_log_info(client_addr)} started")
         # client_addr = websocket.remote_address[0] + ':' + str(websocket.remote_address[1])
         await self.get_shng_class_instances()
 
-        if not self.janus_queue:
-            self.janus_queue = janus.Queue()
+        #if not self.janus_queue:
+        #    self.janus_queue = janus.Queue()
 
         try:
             async for message in websocket:
@@ -270,7 +293,7 @@ class Protocol():
                             self.sv_clients[client_addr]['hostname'] = data.get('hostname', '')
                         self.sv_clients[client_addr]['browser'] = data.get('browser', '')
                         self.sv_clients[client_addr]['bver'] = data.get('bver', '')
-                        self.logger.info(f"smartVISU_protocol_v4: Client {self.build_client_info(client_addr)} identified as {self.build_sw_info(client_addr)}")
+                        self.logger.info(f"Client {self.build_client_info(client_addr)} identified as {self.build_sw_info(client_addr)}")
                         answer = {}
 
                     elif command == 'list_items':
@@ -300,7 +323,7 @@ class Protocol():
                         self.logger.dbgmed(f"visu >REPLY: '{answer}'   -   to {self.build_log_info(websocket.remote_address)}")
                     #except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                     except Exception as e:
-                        self.logger.warning(f"smartVISU_protocol_v4: Exception in 'await websocket.send(reply)': {e} - reply = {reply} to {self.build_log_info(websocket.remote_address)}")
+                        self.logger.warning(f"Exception in 'await websocket.send(reply)': {e} - reply = {reply} to {self.build_log_info(websocket.remote_address)}")
 
         except Exception as e:
             logmsg = f"smartVISU_protocol_v4 error: Client {self.build_log_info(client_addr)} - {e}"
@@ -313,7 +336,7 @@ class Protocol():
 
         self.sv_cancel_all_abos(client_addr)
 
-        self.logger.info(f"smartVISU_protocol_v4: Client {self.build_log_info(client_addr)} stopped")
+        self.logger.info(f"Client {self.build_log_info(client_addr)} stopped")
         return # smartVISU_protocol_v4
 
     def sv_cancel_all_abos(self, client_addr):
@@ -483,12 +506,12 @@ class Protocol():
             if hasattr(item, 'series'):
                 try:
                     # reply = item.series(series, start, end, count)
-                    reply = await self.ws_modul.loop.run_in_executor(None, item.series, series, start, end, count)
+                    reply = await self.loop.run_in_executor(None, item.series, series, start, end, count)
                 except Exception as e:
                     self.logger.error(f"Problem fetching series for {path}: {e} - Wrong sqlite/database plugin?")
                 else:
                     if 'update' in reply:
-                        await self.ws_modul.loop.run_in_executor(None, self.set_periodic_series_updates, reply, client_addr)
+                        await self.loop.run_in_executor(None, self.set_periodic_series_updates, reply, client_addr)
                         #     with self._series_lock:
                         #           self.sv_update_series[reply['sid']] = {'update': reply['update'], 'params': reply['params']}
                         del (reply['update'])
@@ -514,15 +537,18 @@ class Protocol():
             self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
         return
 
+
     async def update_all_series(self):
         """
-        Async task to periodically update the series data for the visu(s)
+        Async task to periodically update the series data for all active visus
+
+        This task ist started once, before the first client connection is started
         """
         # wait until SmartHomeNG is completly initialized
         while self._sh.shng_status['code'] != 20:
             await asyncio.sleep(1)
+        self.logger.info("Task update_all_series() started")
 
-        self.logger.info("update_all_series: Started")
         keep_running = True
         while keep_running:
             remove = []
@@ -536,7 +562,7 @@ class Protocol():
                 if (client_addr in self.sv_clients) and not (client_addr in remove):
                     self.logger.debug(f"update_all_series: Updating client {self.build_log_info(client_addr)}...")
                     websocket = self.sv_clients[client_addr]['websocket']
-                    replys = await self.ws_modul.loop.run_in_executor(None, self.update_series, client_addr)
+                    replys = await self.loop.run_in_executor(None, self.update_series, client_addr)
                     for reply in replys:
                         if (client_addr in self.sv_clients) and not (client_addr in remove):
                             self.logger.dbgmed(f"update_all_series: reply {reply}  -->  Replys for client {self.build_log_info(client_addr)}: {replys}")
@@ -646,13 +672,13 @@ class Protocol():
         item = self.items.return_item(path)
         try:
             # reply = item.series(series, start, end, count)
-            reply = await self.ws_modul.loop.run_in_executor(None, item.series, series, start, end, count)
-            self.logger.info(f"cancel_series: reply={reply}")
-            self.logger.info(f"cancel_series: self.sv_update_series={self.sv_update_series}")
+            reply = await self.loop.run_in_executor(None, item.series, series, start, end, count)
+            self.logger.dbghigh(f"cancel_series: reply={reply}")
+            self.logger.dbghigh(f"cancel_series: self.sv_update_series={self.sv_update_series}")
         except Exception as e:
             self.logger.error(f"cancel_series: Problem fetching series for {path}: {e} - Wrong sqlite plugin?")
         else:
-            answer = await self.ws_modul.loop.run_in_executor(None, self.cancel_periodic_series_updates, reply, path, client_addr)
+            answer = await self.loop.run_in_executor(None, self.cancel_periodic_series_updates, reply, path, client_addr)
         return answer
 
     async def cancel_log(self, data, client_addr):
@@ -718,10 +744,16 @@ class Protocol():
 
     async def update_visu(self):
         """
-        Async task to update the visu(s) if items have changed or an url command has been issued
+        Async task to update all active visus, if items have changed or an url command has been issued
         """
-        while not self.janus_queue:
+        # wait until SmartHomeNG is completly initialized
+        while self._sh.shng_status['code'] != 20:
             await asyncio.sleep(1)
+        self.logger.info("Task update_visu() started")
+
+        if not self.janus_queue:
+            self.janus_queue = janus.Queue()
+            self.logger.dbghigh("janus queue initialized")
 
         while True:
             if self.janus_queue:
@@ -752,7 +784,7 @@ class Protocol():
                         self.logger.warning(f"visu >command: '{command}'   -   to {client_addr}")
                     # except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                     except Exception as e:
-                        self.logger.error(f"smartVISU_protocol_v4: Exception in 'await websocket.send(url-command)': {e}")
+                        self.logger.error(f"Exception in 'await websocket.send(url-command)': {e}")
                 else:
                     self.logger.error(f"update_visu: Unknown queueentry type '{queue_entry[0]}'")
 
@@ -797,13 +829,13 @@ class Protocol():
                 data = {'cmd': 'item', 'items': items}
                 msg = json.dumps(data, default=self.json_serial)
                 try:
-                    self.logger.dbgmed(f"visu >MONIT: '{msg}'   -   to {self.build_log_info(self.ws_modul.client_address(websocket))}")
+                    self.logger.dbgmed(f"visu >MONIT: '{msg}'   -   to {self.build_log_info(self.client_address(websocket))}")
                     await websocket.send(msg)
                 except Exception as e:
                     if str(e).startswith(('code = 1001', 'code = 1005', 'code = 1006')):
-                        self.logger.info(f"update_item: Error sending {data} - to {self.build_log_info(self.ws_modul.client_address(websocket))}  -  Error in 'await websocket.send(data)': {e}")
+                        self.logger.info(f"update_item: Error sending {data} - to {self.build_log_info(self.client_address(websocket))}  -  Error in 'await websocket.send(data)': {e}")
                     else:
-                        self.logger.notice(f"update_item: Error sending {data} - to {self.build_log_info(self.ws_modul.client_address(websocket))}  -  Error in 'await websocket.send(data)': {e}")
+                        self.logger.notice(f"update_item: Error sending {data} - to {self.build_log_info(self.client_address(websocket))}  -  Error in 'await websocket.send(data)': {e}")
 
         return
 
@@ -820,7 +852,7 @@ class Protocol():
                 log_entry['cmd'] = 'log'
                 msg = json.dumps(log_entry, default=self.json_serial)
                 try:
-                    #self.logger.notice(">LogUp {}: {}".format(self.ws_modul.client_address(websocket), msg))
+                    #self.logger.notice(">LogUp {}: {}".format(self.client_address(websocket), msg))
                     await websocket.send(msg)
                 except Exception as e:
                     if not str(e).startswith(('code = 1005', 'code = 1006')):
