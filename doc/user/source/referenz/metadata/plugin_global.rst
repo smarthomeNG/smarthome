@@ -33,7 +33,8 @@ Der globale Metadaten Abschnitt ``plugin:`` kennt die folgenden Schlüsselbegrif
     #    py_minversion: 3.6          # minimum Python version needed for this plugin (leave empty if no special requirement)
     #    py_maxversion:              # maximum Python version to use this plugin (leave empty if no special requirement)
         multi_instance: true        # plugin supports multi instance (if not specified, False is assumed)
-
+        restartebly: unknown
+    #    startorder: normal          # should only be set on special plugins
         configuration_needed: true  # False: The plugin will be enabled by the Admin GUI without configuration
 
         classname: <plugin_class>   # Name of the class that implements the plugin
@@ -60,20 +61,33 @@ Beschreibung der Schlüsselbegriffe im Abschnitt ``plugin:``
     - ``tester:`` Optional können hier die Nutzer angegeben werden, die sich bereit erklärt haben das Plugin zu testen
     - ``state:`` Entwicklungs-Status des Plugins (gültige Werte: ``develop``, ``ready``, ``qa-passed``)
     - ``keywords:`` Liste der Schlüsselwörter die das Plugin beschreiben (durch Leerzeichen getrennt)
-    - ``documentation:`` url die auf eine weiterführende Dokumentation verweist (damit sind **nicht** die Dateien user_doc.rst oder die veraltete README.md gemeint)
+    - ``documentation:`` url die auf eine weiterführende Dokumentation verweist (damit sind **nicht** die Dateien
+      user_doc.rst oder die veraltete README.md gemeint)
     - ``support:`` url die auf einen Support Thread oder ein Support Forum verweist
 
-    - ``version:`` VersionsNumber des Plugins. Sie wird beim Laden mit der Versionsnummer die im Code definierert ist verglichen.
-    - ``sh_minversion:`` Minimale SmartHomeNG Version mit der das Plugin kmpatibel ist. Falls `sh_minversion`` leer ist, nimmt SmartHomeNG an, dass das Plugin mit jeder älteren Version von SmartHomeNG kompatibel ist.
-    - ``sh_maxversion:`` Maximale SmartHomeNG Version mit der das Plugin kmpatibel ist. Falls `sh_maxversion`` leer ist, nimmt SmartHomeNG an, dass das Plugin mit jeder neueren Version von SmartHomeNG kompatibel ist.
-    - ``py_minversion:`` Minimale Python Version mit der das Plugin kmpatibel ist. Falls `py_minversion`` leer ist, nimmt SmartHomeNG an, dass das Plugin mit jeder älteren Python Version komatibel ist die von SmartHomeNG unterstützt wird.
-    - ``py_maxversion:`` Maximale Python Version mit der das Plugin kmpatibel ist. Falls `py_maxversion`` leer ist, nimmt SmartHomeNG an, dass das Plugin mit jeder neueren Python Version komatibel ist die von SmartHomeNG unterstützt wird.
+    - ``version:`` VersionsNumber des Plugins. Sie wird beim Laden mit der Versionsnummer die im Code definierert ist
+      verglichen.
+    - ``sh_minversion:`` Minimale SmartHomeNG Version mit der das Plugin kmpatibel ist. Falls `sh_minversion`` leer
+      ist, nimmt SmartHomeNG an, dass das Plugin mit jeder älteren Version von SmartHomeNG kompatibel ist.
+    - ``sh_maxversion:`` Maximale SmartHomeNG Version mit der das Plugin kmpatibel ist. Falls `sh_maxversion`` leer
+      ist, nimmt SmartHomeNG an, dass das Plugin mit jeder neueren Version von SmartHomeNG kompatibel ist.
+    - ``py_minversion:`` Minimale Python Version mit der das Plugin kmpatibel ist. Falls `py_minversion`` leer ist,
+      nimmt SmartHomeNG an, dass das Plugin mit jeder älteren Python Version komatibel ist die von SmartHomeNG
+      unterstützt wird.
+    - ``py_maxversion:`` Maximale Python Version mit der das Plugin kmpatibel ist. Falls `py_maxversion`` leer ist,
+      nimmt SmartHomeNG an, dass das Plugin mit jeder neueren Python Version komatibel ist die von SmartHomeNG
+      unterstützt wird.
     - ``multi_instance:`` Ist das Plugin in der Lage in mehreren Instanzen gestartet zu werden? (``True``, ``False``)
-    - ``configuration_needed:`` Normalerweise wird in der Admin GUI ein Plugin im Status disabled hinzugefügt und muss erst konfiguriert werden.
-      Wenn dieser Parameter auf ``False`` gesetzt wird, wird das Plugin im Status ``enabled`` hinzugefügt. Das ist sinnvoll bei Plugins, die
-      ohne Konfiguration lauffähig sind. (``True``, ``False``)
+    - ``configuration_needed:`` Normalerweise wird in der Admin GUI ein Plugin im Status disabled hinzugefügt und muss
+      erst konfiguriert werden. Wenn dieser Parameter auf ``False`` gesetzt wird, wird das Plugin im
+      Status ``enabled`` hinzugefügt. Das ist sinnvoll bei Plugins, die ohne Konfiguration lauffähig sind.
+      (``True``, ``False``)
     - ``restartable:`` Is the Plugin Restart bzw. Reload fählg?  (gültige Werte: ``True``, ``False``, ``unknown``)
-    - ``classname:`` Name der Python Klasse die das Plugin implementiert un die zum Start des Plugins initialisiert wird
-
-    - ``classpath:`` **Wird normalerweise nicht angegeben** - Nur angeben, wenn das Plugin außerhalb des ``/plugins`` Verzeichnisses gespeichert ist,
+    - ``startorder`` Dieser Parameter darf nur bei speziellen Plugins gesetzt werden, die besondere Anforderungen
+      an die Startreihenfolge haben (wie z.B. das database Plugin). Gültige Werte sind ``early``, ``normal``
+      und ``late``.
+    - ``classname:`` Name der Python Klasse die das Plugin implementiert un die zum Start des Plugins initialisiert
+      wird.
+    - ``classpath:`` **Wird normalerweise nicht angegeben** - Nur angeben, wenn das Plugin außerhalb des ``/plugins``
+      Verzeichnisses gespeichert ist,
 
