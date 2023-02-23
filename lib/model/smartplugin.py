@@ -109,7 +109,7 @@ class SmartPlugin(SmartObject, Utils):
         This method should be called from parse_item to register the item. If parse_item returns a reference to `update_item`,
         this method is called again by the Item instance itself to change the `is_updating` key.
 
-        :note: Only available in SmartHomeNG versions v1.9.4 and up.
+        Only available in SmartHomeNG versions **v1.9.4 and up**.
 
         :param item: item
         :param config_data_dict: Dictionary with the plugin-specific configuration information for the item
@@ -207,7 +207,6 @@ class SmartPlugin(SmartObject, Utils):
 
         :param item: item object
         :type item: item
-        :return:
         """
         if item.path() not in self._plg_item_dict:
             self.add_item(item)
@@ -215,10 +214,10 @@ class SmartPlugin(SmartObject, Utils):
 
     def get_item_config(self, item):
         """
-        Returns the plugin-specific configuration information for the given item
+        Returns the plugin-specific configuration information (config_data_dict) for the given item
 
-        :param item: item to get config info for
-        :type item: class Item or str with path of an item
+        :param item: item or item_path (str) to get config info for
+        :type item: item object or str
 
         :return: dict with the configuration information for the given item
         :rtype: dict
@@ -233,10 +232,10 @@ class SmartPlugin(SmartObject, Utils):
         """
         Returns the plugin-specific mapping that was defined by add_item()
 
-        :note: Only available in SmartHomeNG versions v1.9.4 and up.
+        Only available in SmartHomeNG versions **v1.9.4 and up**.
 
-        :param item: item to get config info for
-        :type item: class Item or str with path of an item
+        :param item: item or item_path (str) to get config info for
+        :type item: item object or str
 
         :return: mapping string for that item
         :rtype: str
@@ -251,7 +250,7 @@ class SmartPlugin(SmartObject, Utils):
         """
         Return list of stored item paths used by this plugin
 
-        :note: Only available in SmartHomeNG versions v1.9.4 and up.
+        Only available in SmartHomeNG versions **v1.9.4 and up**.
 
         :param filter_key: key of the configdata dict used to filter
         :param filter_value: value for filtering item_path_list
@@ -271,7 +270,7 @@ class SmartPlugin(SmartObject, Utils):
         """
         Return list of stored items used by this plugin
 
-        :note: Only available in SmartHomeNG versions v1.9.4 and up.
+        Only available in SmartHomeNG versions **v1.9.4 and up**.
 
         :param filter_key: key of the configdata dict used to filter
         :param filter_value: value for filtering item_path_list
@@ -290,7 +289,7 @@ class SmartPlugin(SmartObject, Utils):
         """
         Return list of stored items which were marked as updating
 
-        :note: Only available in SmartHomeNG versions v1.9.4 and up.
+        Only available in SmartHomeNG versions **v1.9.4 and up**.
         """
         return [self._plg_item_dict[item_path]['item'] for item_path in self._plg_item_dict if self._plg_item_dict[item_path]['is_updating']]
 
@@ -298,7 +297,7 @@ class SmartPlugin(SmartObject, Utils):
         """
         Returns a list of items that should receive data for the given mapping
 
-        :note: Only available in SmartHomeNG versions v1.9.4 and up.
+        Only available in SmartHomeNG versions **v1.9.4 and up**.
 
         :param mapping: mapping, for which the receiving items should be returned
         :type mapping: str
@@ -312,7 +311,7 @@ class SmartPlugin(SmartObject, Utils):
         """
         Returns a list containing all mappings, which have items associated with it
 
-        :note: Only available in SmartHomeNG versions v1.9.4 and up.
+        Only available in SmartHomeNG versions **v1.9.4 and up**.
 
         :return: List of mappings
         :rtype: list
