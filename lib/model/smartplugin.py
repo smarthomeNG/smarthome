@@ -239,17 +239,40 @@ class SmartPlugin(SmartObject, Utils):
             item_path = item.path()
         return self._plg_item_dict[item_path].get('mapping')
 
-    def get_item_path_list(self):
+    def get_item_path_list(self, filter_key=None, filter_value=None):
         """
-        Return list of stored item paths
-        """
-        return self._plg_item_dict.keys()
+        Return list of stored item paths used by this plugin
 
-    def get_item_list(self):
+        :param filter_key: key of the configdata dict used to filter
+        :param filter_value: value for filtering item_path_list
+        :type filter_key: str
+        :type filter_value: any
+
+        :return: List of item pathes
+        :rtype: list(str)
         """
-        Return list of stored items
+        if filter_key is None or filter_value is None:
+            return self._plg_item_dict.keys()
+
+        return [self._plg_item_dict[item_path] for item_path in self._plg_item_dict if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
+
+
+    def get_item_list(self, filter_key=None, filter_value=None):
         """
-        return [self._plg_item_dict[item_path]['item'] for item_path in self._plg_item_dict]
+        Return list of stored items used by this plugin
+
+        :param filter_key: key of the configdata dict used to filter
+        :param filter_value: value for filtering item_path_list
+        :type filter_key: str
+        :type filter_value: any
+
+        :return: List of item objects
+        :rtype: list(item)
+        """
+        if filter_key is None or filter_value is None:
+            return [self._plg_item_dict[item_path]['item'] for item_path in self._plg_item_dict]
+
+        return [self._plg_item_dict[item_path]['item'] for item_path in self._plg_item_dict if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
 
     def get_trigger_items(self):
         """

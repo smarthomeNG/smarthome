@@ -221,9 +221,15 @@ Methoden
 
 -   verschiedene Getter-Methoden (``get_items()``,
     ``get_trigger_items()``, ``get_items_for_command()``,
-    ``get_item_path_list``):
+    ``get_item_path_list()``):
 
-    Geben Listen von Items bzw. Item-Pfaden zurück
+    Geben Listen von Items bzw. Item-Pfaden zurück.
+
+    ``get_items()`` und ``get_item_path_list()`` können optional gefiltert werden.
+    Das Filtern geschieht über einen anzugebenen filter_key des config_data_dicts und einen anzugebenen filter_value.
+    Wenn filter_key und filter_value angegeben sind, wird ein Item nur in die Ergebnisliste eingeschlossen,
+    wenn der value im config_data_dict zu dem angegebenen filter_key dem filter_value entspricht.
+
 
 TODO
 ====

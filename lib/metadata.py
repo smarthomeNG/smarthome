@@ -127,8 +127,11 @@ class Metadata():
                 self.itemstructs = self.meta.get(META_STRUCT_SECTION)
             else:
                 self.global_parameters = self.get_global_plugin_parameters()
-                self.parameters = self.meta.get(META_PLUGIN_PARAMETER_SECTION)
-                if not isinstance(self.parameters, str):
+                self.parameters = self.meta.get(META_PLUGIN_PARAMETER_SECTION, {})
+                if isinstance(self.parameters, str):
+                    # if plugin parameter section is declared as NONE
+                    self.parameters = self.global_parameters
+                else:
                     self.parameters.update(self.global_parameters)
                 self.itemdefinitions = self.meta.get(META_PLUGIN_ITEMATTRIBUTE_SECTION)
                 self.itemprefixdefinitions = self.meta.get(META_PLUGIN_ITEMATTRIBUTEPREFIX_SECTION)
