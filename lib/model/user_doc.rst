@@ -220,7 +220,7 @@ Methoden
     ``remove_item()`` aufgerufen.
 
 -   verschiedene Getter-Methoden (``get_items()``,
-    ``get_trigger_items()``, ``get_items_for_command()``,
+    ``get_trigger_items()``, ``get_items_for_mapping()``,
     ``get_item_path_list()``):
 
     Geben Listen von Items bzw. Item-Pfaden zurück.

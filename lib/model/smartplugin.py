@@ -109,6 +109,8 @@ class SmartPlugin(SmartObject, Utils):
         This method should be called from parse_item to register the item. If parse_item returns a reference to `update_item`,
         this method is called again by the Item instance itself to change the `is_updating` key.
 
+        :note: Only available in SmartHomeNG versions v1.9.4 and up.
+
         :param item: item
         :param config_data_dict: Dictionary with the plugin-specific configuration information for the item
         :param mapping: String identifing the origin (source/kind) of received data (e.g. the address on a bus)
@@ -202,6 +204,10 @@ class SmartPlugin(SmartObject, Utils):
         #       as non-updating first. Registering them as updating usually only
         #       occurs via parse_item(), which in turn makes the item class
         #       add the item as updating.
+
+        :param item: item object
+        :type item: item
+        :return:
         """
         if item.path() not in self._plg_item_dict:
             self.add_item(item)
@@ -227,6 +233,8 @@ class SmartPlugin(SmartObject, Utils):
         """
         Returns the plugin-specific mapping that was defined by add_item()
 
+        :note: Only available in SmartHomeNG versions v1.9.4 and up.
+
         :param item: item to get config info for
         :type item: class Item or str with path of an item
 
@@ -242,6 +250,8 @@ class SmartPlugin(SmartObject, Utils):
     def get_item_path_list(self, filter_key=None, filter_value=None):
         """
         Return list of stored item paths used by this plugin
+
+        :note: Only available in SmartHomeNG versions v1.9.4 and up.
 
         :param filter_key: key of the configdata dict used to filter
         :param filter_value: value for filtering item_path_list
@@ -261,6 +271,8 @@ class SmartPlugin(SmartObject, Utils):
         """
         Return list of stored items used by this plugin
 
+        :note: Only available in SmartHomeNG versions v1.9.4 and up.
+
         :param filter_key: key of the configdata dict used to filter
         :param filter_value: value for filtering item_path_list
         :type filter_key: str
@@ -277,12 +289,16 @@ class SmartPlugin(SmartObject, Utils):
     def get_trigger_items(self):
         """
         Return list of stored items which were marked as updating
+
+        :note: Only available in SmartHomeNG versions v1.9.4 and up.
         """
         return [self._plg_item_dict[item_path]['item'] for item_path in self._plg_item_dict if self._plg_item_dict[item_path]['is_updating']]
 
-    def get_items_for_command(self, mapping):
+    def get_items_for_mapping(self, mapping):
         """
         Returns a list of items that should receive data for the given mapping
+
+        :note: Only available in SmartHomeNG versions v1.9.4 and up.
 
         :param mapping: mapping, for which the receiving items should be returned
         :type mapping: str
@@ -295,6 +311,8 @@ class SmartPlugin(SmartObject, Utils):
     def get_mappings(self):
         """
         Returns a list containing all mappings, which have items associated with it
+
+        :note: Only available in SmartHomeNG versions v1.9.4 and up.
 
         :return: List of mappings
         :rtype: list
@@ -318,8 +336,6 @@ class SmartPlugin(SmartObject, Utils):
         """
         return the name of the plugin instance as defined in plugin.yaml (section name)
 
-        :note: Only available in SmartHomeNG versions **beyond** v1.4
-
         :return: name of the plugin instance as defined in plugin.yaml
         :rtype: str
         """
@@ -332,8 +348,6 @@ class SmartPlugin(SmartObject, Utils):
 
         :Note: Usually **you don't need to call this method**, since it is called during loading of the plugin
 
-        :note: Only available in SmartHomeNG versions **beyond** v1.4
-
         :param configname: name of the plugin instance as defined in plugin.yaml
         :type configname: str
         """
@@ -343,8 +357,6 @@ class SmartPlugin(SmartObject, Utils):
     def get_shortname(self):
         """
         return the shortname of the plugin (name of it's directory)
-
-        :note: Only available in SmartHomeNG versions **beyond** v1.3
 
         :return: shortname of the plugin
         :rtype: str
@@ -357,8 +369,6 @@ class SmartPlugin(SmartObject, Utils):
         ...
 
         :Note: Usually **you don't need to call this method**, since it is called during loading of the plugin
-
-        :note: Only available in SmartHomeNG versions **beyond** v1.3
 
         :param shortname: short name of the plugin (name of it's directory)
         :type shortname: str
@@ -395,8 +405,6 @@ class SmartPlugin(SmartObject, Utils):
         """
         return the full name of the plugin (shortname & instancename)
 
-        :note: Only available in SmartHomeNG versions v1.3c and up
-
         :return: full name of the plugin
         :rtype: str
         """
@@ -411,8 +419,6 @@ class SmartPlugin(SmartObject, Utils):
         """
         return the classname of the plugin
 
-        :note: Only available in SmartHomeNG versions **beyond** v1.3
-
         :return: classname of the plugin
         :rtype: str
         """
@@ -424,8 +430,6 @@ class SmartPlugin(SmartObject, Utils):
         ...
 
         :Note: Usually **you don't need to call this method**, since it is called during loading of the plugin
-
-        :note: Only available in SmartHomeNG versions **beyond** v1.3
 
         :param classname: name of the plugin's class
         :type classname: str
@@ -483,8 +487,6 @@ class SmartPlugin(SmartObject, Utils):
         """
         return the directory where the pluing files are stored in
 
-        :note: Only available in SmartHomeNG versions **beyond** v1.3
-
         :return: name of the directory
         :rtype: str
         """
@@ -497,8 +499,6 @@ class SmartPlugin(SmartObject, Utils):
         You can reference the main object of SmartHmeNG by using self._plugin_dir.
 
         :Note: Usually **you don't need to call this method**, since it is called during loading of the plugin by PluginWrapper
-
-        :note: Only available in SmartHomeNG versions **beyond** v1.3
 
         :param dir: name of the directory where the plugin resides in
         :type dir: str
@@ -765,8 +765,6 @@ class SmartPlugin(SmartObject, Utils):
         """
         Return the main object of smarthomeNG (usually refered to as **smarthome** or **sh**)
         You can reference the main object of SmartHomeNG by using self.get_sh() in your plugin
-
-        :note: Only available in SmartHomeNG versions **beyond** v1.3
 
         :return: the main object of smarthomeNG (usually refered to as **smarthome** or **sh**)
         :rtype: object
