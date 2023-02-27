@@ -20,8 +20,8 @@
 
     {%- block styles %}
 
+    <link rel="icon" href="/gstatic/img/favicon.ico" type="image/png">
     {% if isfile("static/img/plugin_logo.png") %}
-      <link rel="icon" href="static/img/plugin_logo.png" type="image/png">
       <link rel="apple-touch-icon" href="static/img/plugin_logo.png">
       {% if isfile("static/img/plugin_logo_big.png") %}
       <link rel="apple-touch-startup-image" href="static/img/plugin_logo_big.png">
@@ -29,7 +29,6 @@
       <link rel="apple-touch-startup-image" href="static/img/plugin_logo.png">
       {% endif %}
     {% else %}
-      <link rel="icon" href="/gstatic/img/logo_small_152x152.png" type="image/png">
       <link rel="apple-touch-icon" href="/gstatic/img/logo_small_152x152.png">
       <link rel="apple-touch-startup-image" href="/gstatic/img/logo_big.png">
     {% endif %}
