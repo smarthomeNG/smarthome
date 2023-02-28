@@ -85,7 +85,8 @@ Beschreibung der Schlüsselbegriffe im Abschnitt ``plugin:``
     - ``restartable:`` Is the Plugin Restart bzw. Reload fählg?  (gültige Werte: ``True``, ``False``, ``unknown``)
     - ``startorder`` Dieser Parameter darf nur bei speziellen Plugins gesetzt werden, die besondere Anforderungen
       an die Startreihenfolge haben (wie z.B. das database Plugin). Gültige Werte sind ``early``, ``normal``
-      und ``late``.
+      und ``late``. Plugins mit ``startorder`` ``early`` werden vor den anderen Plugins gestartet (und beim
+      Beenden nach den anderen Plugins beendet)
     - ``classname:`` Name der Python Klasse die das Plugin implementiert un die zum Start des Plugins initialisiert
       wird.
     - ``classpath:`` **Wird normalerweise nicht angegeben** - Nur angeben, wenn das Plugin außerhalb des ``/plugins``

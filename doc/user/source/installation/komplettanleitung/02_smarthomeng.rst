@@ -46,6 +46,8 @@ unter dem später SmartHomeNG laufen soll, **nicht als root**.
    git clone https://github.com/smarthomeNG/smarthome.git .
    git clone https://github.com/smarthomeNG/plugins.git plugins
 
+   bash tools/setpermissions
+
 Bitte auf den **Punkt** am Ende des ersten **git clone** Kommandos achten!
 
 
