@@ -28,8 +28,8 @@
 # Check mimimum Python Version
 #####################################################################
 import sys
-if sys.hexversion < 0x03060000:
-    print("Sorry your python interpreter ({0}.{1}) is too old. Please update to 3.6 or newer.".format(sys.version_info[0], sys.version_info[1]))
+if sys.hexversion < 0x03070000:
+    print("Sorry your python interpreter ({0}.{1}) is too old. Please update to 3.7 or newer.".format(sys.version_info[0], sys.version_info[1]))
     exit()
 
 

@@ -113,6 +113,8 @@ class Plugins():
             return
 
         logger.info('Load plugins')
+        threads_early = []
+        threads_late = []
 
         # for every section (plugin) in the plugin.yaml file
         for plugin in _conf:
@@ -163,17 +165,29 @@ class Plugins():
                         plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance, self.meta, self._configfile)
                         if plugin_thread._init_complete == True:
                             try:
+                                try:
+                                    startorder = self.meta.pluginsettings.get('startorder', 'normal').lower()
+                                except Exception as e:
+                                    logger.warning(f"Plugin {str(classpath).split('.')[1]} error on getting startorder: {e}")
+                                    startorder = 'normal'
                                 self._plugins.append(plugin_thread.plugin)
-                                self._threads.append(plugin_thread)
+                                if startorder == 'early':
+                                    threads_early.append(plugin_thread)
+                                elif startorder == 'late':
+                                    threads_late.append(plugin_thread)
+                                else:
+                                    self._threads.append(plugin_thread)
                                 if instance == '':
                                     logger.info("Initialized plugin '{}' from section '{}'".format( str(classpath).split('.')[1], plugin ) )
                                 else:
                                     logger.info("Initialized plugin '{}' instance '{}' from section '{}'".format( str(classpath).split('.')[1], instance, plugin ) )
-                            except:
-                                logger.warning("Plugin '{}' from section '{}' not loaded".format( str(classpath).split('.')[1], plugin ) )
+                            except Exception as e:
+                                logger.warning(f"Plugin '{str(classpath).split('.')[1]}' from section '{plugin}' not loaded - exception {e}" )
                     except Exception as e:
                         logger.exception("Plugin '{}' from section '{}' exception: {}".format(str(classpath).split('.')[1], plugin, e))
 
+        # join the start_early and start_late lists with the main thread list
+        self._threads = threads_early + self._threads + threads_late
         logger.info('Load of plugins finished')
         del(_conf)  # clean up
 
@@ -488,14 +502,14 @@ class Plugins():
 
     def stop(self):
         logger.info('Stop plugins')
-        for plugin in self._threads:
+        for plugin in list(reversed(self._threads)):
             try:
                 instance = plugin.get_implementation().get_instance_name()
                 if instance != '':
                     instance = ", instance '"+instance+"'"
-                logger.debug("Stopping plugin '{}'{}".format(plugin.get_implementation().get_shortname(), instance))
+                logger.debug(f"Stopping plugin '{plugin.get_implementation().get_shortname()}'{instance}")
             except:
-                logger.debug("Stopping classic-plugin from section '{}'".format(plugin.name))
+                logger.debug(f"Stopping classic-plugin from section '{plugin.name}'")
             try:
                 plugin.stop()
             except:

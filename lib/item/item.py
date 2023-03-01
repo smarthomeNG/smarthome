@@ -341,8 +341,9 @@ class Item():
 
                     # Test if the plugin-specific attribute contains a valid value
                     # and set the default value, if needed
-                    value = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], value, self._filename)
-                    self.conf[attr] = value
+                    if hasattr(self.plugins, 'meta'):
+                        value = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], value, self._filename)
+                        self.conf[attr] = value
 
         self.property.init_dynamic_properties()
 
@@ -398,7 +399,7 @@ class Item():
         # Cache
         #############################################################
         if self._cache:
-            self._cache = self._sh._cache_dir + self._path
+            self._cache = os.path.join(self._sh._cache_dir, self._path)
             try:
                 self.__changed_by = 'Init:Cache'
                 self.__last_change, self._value = cache_read(self._cache, self.shtime.tzinfo())
@@ -412,9 +413,13 @@ class Item():
                 self._log_on_change(self._value, self.__changed_by, 'Cache', None)
             except Exception as e:
                 if str(e).startswith('[Errno 2]'):
-                    logger.info("Item {}: No cached value: {}".format(self._path, e))
+                    logger.info(f"Item {self._path}: No cached value: {e}")
                 else:
-                    logger.warning("Item {}: Problem reading cache: {}".format(self._path, e))
+                    if os.stat(self._cache).st_size == 0:
+                        logger.warning(f"Item {self._path}: Problem reading cache: Filesize is 0 bytes. Deleting invalid cache file")
+                        os.remove(self._cache)
+                    else:
+                        logger.warning(f"Item {self._path}: Problem reading cache: {e}")
 
         #############################################################
         # Cache write/init
@@ -422,7 +427,7 @@ class Item():
         if self._cache:
             if not os.path.isfile(self._cache):
                 cache_write(self._cache, self._value)
-                logger.notice("Created cache for item: {} in file {}".format(self._cache, self._cache))
+                logger.notice(f"Created cache for item {self._cache} in file {self._cache}")
 
         #############################################################
         # Plugins

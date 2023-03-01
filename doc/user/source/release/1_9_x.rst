@@ -1,6 +1,6 @@
-============================
-Release 1.9.x - tt. mmm 2023
-============================
+=============================
+Release 1.9.x - tt. März 2023
+=============================
 
 Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
 sowie einige neue Plugins.
@@ -14,10 +14,10 @@ sowie einige neue Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 11. Feb 2023
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 23. Feb 2023
        (...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 12. Feb 2023
-       (knx: Updated description of knx_init)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 28. Feb 2023
+       (onewire: ...)
 
 
 Überblick
@@ -76,14 +76,25 @@ Updates in the CORE
 
 * Libs:
 
+  * lib.config:
+
+    * Adjusting log levels for missing module/plugin config
+    * Fix startup error on empty plugins/modules config
+
   * lib-daemon:
 
     * Fix for issue #498 - Error on restarting if SmartHomeNG is not running
+
+  * lib.item:
+
+    * Fix startup error on empty plugins/modules config
+    * Delete invalid cahe files (size=0 bytes), so a new cache file is created
 
   * lib.metadata:
 
     * Moved definition of global plugin parameter 'instance' from shngadmin to lib.metadata
     * Implemented global plugin parameter 'webif_pagelength' (takes definition from parameter with same name in module.http)
+    * Added plugin parameter 'startorder'
 
   * lib.model.smartplugin:
 
@@ -99,6 +110,9 @@ Updates in the CORE
     * Changed 'device_command' to 'mapping'
     * added get_item_mapping()
     * bumped core version to 1.9.3.4
+    * Added filter_key and filter_value as arguments for get_item_list() and get_item_path_list()
+    * Renamed get_items_for_command() to get_items_for_mapping()
+    * Updated inline documentation
 
   * lib.network:
 
@@ -107,6 +121,8 @@ Updates in the CORE
   * lib.plugin:
 
     * Implemented extended logging levels (NOTICE, DBGHIGH, DBGMED, DBGLOW) for plugins too
+    * Added plugin parameter 'startorder'
+    * Reversed stop order of plugins. Now they are stopped in the oposite order they were started
 
   * lib.scheduler:
 
@@ -116,6 +132,10 @@ Updates in the CORE
   * lib.shpypi:
 
     * Bugfix
+
+  * lib.shtime:
+
+    * current_monthname() implemented
 
   * lib.smarthome:
 
@@ -169,6 +189,22 @@ Updates in the CORE
 
     * Fixed a runtime error "dictionary changed size during iteration"
 
+  * websocket:
+
+    * Added canceling of all smartVISU abos when websocket connection is dropped
+    * Adjusted log levels for lost connections
+    * Added cancel_log to sv payload protocol
+    * Bumped sv payload protocol version to 4.1
+    * Bumped module version to 1.0.6
+    * Fixed bug trying do cancel a log, when no logs are monitored for that client
+    * Seperated example protocol 'sync example' to it's own class
+    * Improved handling in cancel_log, if log subscription is not found
+    * Some code streamlining
+    * Bumped to v1.0.7
+    * Completed isolation of payload protocols
+    * Bumped to v1.0.9
+    * Bumped core version to 1.9.3.5
+    * Improved handling in cancel_log, if log subscription is not found
 
 
 * Plugins:
@@ -180,6 +216,15 @@ Updates in the CORE
   * avm:
 
     * Minor clean-up for user_doc and metadata
+    * Complete re-writing of plugin, putting TR064, AHA und CallMonitor in separate Classes for better readability
+      and maintenance
+    * Available services and actions will be read at startup from device itself and are in general available within
+      the plugin all known item attributes and functions are available
+    * Deprecated warning for some item attributes will be put to logger
+    * Please change to new attributes (e.g. ain --> avm_ain)
+    * Items with avm_attribute causing errors (e.g. read of deflection of not set) will be blacklisted
+      after error occurred 3 times, Reset of blacklist is available during runtime via WebIF
+    * Some new functions implemented
 
   * beolink:
 
@@ -217,6 +262,7 @@ Updates in the CORE
     * Bumped version to 1.6.9
     * Minor adjustments in metadata and documentation
     * Adjusted a log message
+    * Set startorder to 'early'
 
   * dlms:
 
@@ -227,6 +273,7 @@ Updates in the CORE
     * Separated WebIf from main file
     * New user_doc
     * Fixed EEP F6_10_00, further work on user_doc
+    * Improved user_doc
 
   * executor:
 
@@ -237,6 +284,12 @@ Updates in the CORE
 
     * Fix minor typos, add user doc, implement webif_pagelength and correct automatic page length on browser window resize
     * Adjust webif_pagelength handling
+
+  * harmony:
+
+    * Added item attribute to metadata
+    * Bumped version to 1.4.2
+    * Fixed bug 'PowerOff handling not correct' from issue #674
 
   * helios:
 
@@ -274,9 +327,18 @@ Updates in the CORE
       events of a calendar series are rescheduled once.
     * Minor adaptions in user_doc
 
+  * influxdata:
+
+    * Set startorder to 'early'
+
+  * influxdb:
+
+    * Set startorder to 'early'
+
   * influxdb2:
 
     * Updates to documentation
+    * Set startorder to 'early'
 
   * join:
 
@@ -340,6 +402,7 @@ Updates in the CORE
     * Streamlined handling of webif_pagelength
     * Changed to use new SmartPlugin (core v1.9.3.4)
     * Bumped version to 1.9.1
+    * Update for changed SmartPlugin method name get_items_for_mapping()
 
   * openweathermap:
 
@@ -385,6 +448,13 @@ Updates in the CORE
   * smartvisu:
 
     * Updates to documentation
+    * Implemented auto refresh for clients tab in web interface;
+    * Bumped version to 1.8.7
+    * Extended protocol documentation (log_cancel)
+    * Modified to work with websocket module 1.0.9
+    * Set sh_minversion to 1.9.3.5
+    * Bumped version to 1.8.8
+    * Fixed bug 'error reading deprecated.yaml' from issue #670
 
   * smlx:
 
@@ -406,6 +476,13 @@ Updates in the CORE
     * Separated WebIf from main file
     * Massive rework of user_doc
     * Several changes (description in commit 6761e43)
+    * Added methods to class speaker
+    * Added handling of play_favorite_title, play_favorite_number, play_favorite_radio_number,
+      play_favorite_radio_title, _play_sonos_radio to class Sonos
+    * Added attribute 'send_attributes' to metadata
+    * Documentation update
+    * Bumped version to 1.8.0
+    * minor fix for play_favorite_number function, catching exception that occurs if index position 0 is passed as argument
 
   * stateengine:
 
@@ -557,10 +634,18 @@ Weitere Änderungen
 Tools
 -----
 
+* backup_restore.py:
+
+  * Proposed fix for tarfile extractall
+
 * check_plugin.py:
 
   * Initial development version of check_plugin.py (a formal plugin checker)
   * Option added to check all plugins
+
+* setpermissions:
+
+  * New tool to set permissions after checkout from github
 
 
 Dokumentation
