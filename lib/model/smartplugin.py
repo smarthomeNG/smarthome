@@ -263,7 +263,7 @@ class SmartPlugin(SmartObject, Utils):
         if filter_key is None or filter_value is None:
             return self._plg_item_dict.keys()
 
-        return [self._plg_item_dict[item_path] for item_path in self._plg_item_dict if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
+        return [item_path for item_path in self._plg_item_dict if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
 
 
     def get_item_list(self, filter_key=None, filter_value=None):
