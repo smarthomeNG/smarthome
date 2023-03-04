@@ -83,7 +83,7 @@ class SmartPlugin(SmartObject, Utils):
             self.stop()
 
         if not items:
-            items = self.get_items()
+            items = self.get_item_list()
         elif not isinstance(items, list):
             items = [items]
 
