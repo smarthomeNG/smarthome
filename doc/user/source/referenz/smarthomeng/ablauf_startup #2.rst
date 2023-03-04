@@ -183,7 +183,6 @@ SmartHomeNG beendet laufende Threads.
 
 SmartHomeNG wurde beendet.
 
-|
 
 Das shng_status dict
 ====================
@@ -191,7 +190,7 @@ Das shng_status dict
 .. index:: shng_status
 .. index:: SmartHomeNG Status
 
-Die oben beschriebenen Stati können über das ``shng_status`` dict des smarthome Objektes abgerufen werden.
+Die oben beschriebenen Stati können über das ```hng_status``` dict des smarthome Objektes abgerufen werden.
 Das Dict enthält zwei Einträge (``code`` und ``text``). Über den Key ``code`` kann auf den numerischen Wert des
 Status von SmartHomeNG zugegriffen werden. Unter dem Key ``text`` ist der Status im Klartext hinterlegt. Diese
 Texte werden in der Admin GUI unter Dienste angezeigt.
@@ -202,5 +201,4 @@ nicht im Begriff ist sich zu beenden, kann abgefragt werden, ob der Status-Code 
 .. code-block:: python
 
     if self._sh.shng_status['code'] == 20:
-        ...
 

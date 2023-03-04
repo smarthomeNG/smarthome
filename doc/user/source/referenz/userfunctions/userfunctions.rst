@@ -3,9 +3,9 @@
 .. role:: greensup
 .. role:: redsup
 
-===========================
-Userfunctions :redsup:`Neu`
-===========================
+=============
+Userfunctions
+=============
 
 Ab Version 1.9 von SmartHomeNG ist die Möglichkeit implementiert, benutzerdefinierte Funktionen (Userfunctions) zu
 schreiben und in eval Statements sowie in Logiken zu verwenden.
