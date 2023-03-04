@@ -83,7 +83,7 @@ class SmartPlugin(SmartObject, Utils):
             self.stop()
 
         if not items:
-            items = self.get_items()
+            items = self.get_item_list()
         elif not isinstance(items, list):
             items = [items]
 
@@ -199,11 +199,11 @@ class SmartPlugin(SmartObject, Utils):
         Mark item in self._plg_item_dict as registered in shng for updating
         (usually done by returning self.update_item from self.parse_item)
 
-        # NOTE: Items are added to _plg_item_dict by the item class as updating
-        #       by default. This could only be used if items were added manually
-        #       as non-updating first. Registering them as updating usually only
-        #       occurs via parse_item(), which in turn makes the item class
-        #       add the item as updating.
+        NOTE: Items are added to _plg_item_dict by the item class as updating
+              by default. This could only be used if items were added manually
+              as non-updating first. Registering them as updating usually only
+              occurs via parse_item(), which in turn makes the item class
+              add the item as updating.
 
         :param item: item object
         :type item: item
@@ -263,7 +263,7 @@ class SmartPlugin(SmartObject, Utils):
         if filter_key is None or filter_value is None:
             return self._plg_item_dict.keys()
 
-        return [item_path for item_path in self._plg_item_dict if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
+        return [item_path for item_path in list(self._plg_item_dict.keys()) if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
 
 
     def get_item_list(self, filter_key=None, filter_value=None):
@@ -281,9 +281,9 @@ class SmartPlugin(SmartObject, Utils):
         :rtype: list(item)
         """
         if filter_key is None or filter_value is None:
-            return [self._plg_item_dict[item_path]['item'] for item_path in self._plg_item_dict]
+            return [self._plg_item_dict[item_path]['item'] for item_path in list(self._plg_item_dict.keys())]
 
-        return [self._plg_item_dict[item_path]['item'] for item_path in self._plg_item_dict if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
+        return [self._plg_item_dict[item_path]['item'] for item_path in list(self._plg_item_dict.keys()) if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
 
     def get_trigger_items(self):
         """
