@@ -597,7 +597,7 @@ class Item():
         else:
             self._eval_unexpanded = value
             value = self.get_stringwithabsolutepathes(value, 'sh.', '(', KEY_EVAL)
-            value = self.get_stringwithabsolutepathes(value, 'sh.', '.property', KEY_EVAL)
+            #value = self.get_stringwithabsolutepathes(value, 'sh.', '.property', KEY_EVAL)
             self._eval = value
 
 
@@ -629,7 +629,7 @@ class Item():
             #                        val = 'sh.'+dest_item+'( '+ self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE) +' )'
             val_list_unexpanded.append(val)
             val = self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE)
-            val = self.get_stringwithabsolutepathes(val, 'sh.', '.property', KEY_ON_CHANGE)
+            #val = self.get_stringwithabsolutepathes(val, 'sh.', '.property', KEY_ON_CHANGE)
             #                        logger.warning("Item __init__: {}: for attr '{}', dest_item '{}', val '{}'".format(self._path, attr, dest_item, val))
             val_list.append(val)
             dest_var_list.append(dest_item)
@@ -1001,6 +1001,7 @@ class Item():
         :return: string with the statement containing absolute item paths
         """
         def __checkfortags(evalstr, begintag, endtag):
+
             pref = ''
             rest = evalstr
             while (rest.find(begintag+'.') != -1):
@@ -1013,11 +1014,15 @@ class Item():
                     rel = rest[:rest.find(endtag)]
                 rest = rest[rest.find(endtag):]
                 pref += self.get_absolutepath(rel, attribute)
+                # Re-combine string for next loop
+                rest = pref+rest
+                pref = ''
 
             pref += rest
             logger.debug("{}.get_stringwithabsolutepathes('{}') with begintag = '{}', endtag = '{}': result = '{}'".format(
                 self._path, evalstr, begintag, endtag, pref))
-            return pref
+            return pref # end of __checkfortags(...)
+
 
         if not isinstance(evalstr, str):
             return evalstr
@@ -1111,7 +1116,7 @@ class Item():
 
                         # expand relative item paths
                         wrk = self.get_stringwithabsolutepathes(wrk, 'sh.', '(', KEY_CONDITION)
-                        wrk = self.get_stringwithabsolutepathes(wrk, 'sh.', '.property', KEY_CONDITION)
+                        #wrk = self.get_stringwithabsolutepathes(wrk, 'sh.', '.property', KEY_CONDITION)
 
                         and_cond.append(wrk)
 
