@@ -6,12 +6,12 @@
 .. role:: redsup
 .. role:: bluesup
 
-Beispielplugin mit MQTT-Unterstützung :redsup:`new`
-===================================================
+Beispielplugin mit MQTT-Unterstützung
+=====================================
 
 Dieser Abschnitt zeigt ein Beispielplugin mit MQTT-Unterstützung. Es kann mit oder ohne Webinterface umgesetzt werden.
 
-Das komplette Plugin mit allen Dateien kann auf github unter https://github.com/smarthomeng/smarthome im ``/dev``-Ordner gefunden werden. 
+Das komplette Plugin mit allen Dateien kann auf github unter https://github.com/smarthomeng/smarthome im ``/dev``-Ordner gefunden werden.
 
 :Note: Diese Dokumentation bezieht sich auf Versionen ab v1.7.0. Sie gilt nicht für Versionen vor v1.7.0
 
@@ -65,15 +65,15 @@ Die Datei für Mehrsprachigkeit:
 Die Dokumentation:
 ------------------
 
-Die folgende Datei skizziert den Mindestumfang für die Plugin-Dokumentation. 
+Die folgende Datei skizziert den Mindestumfang für die Plugin-Dokumentation.
 
 .. literalinclude:: /dev/sample_mqttplugin/user_doc.rst
     :caption: user_doc.rst
 
 .. hint::
 
-   Das in früheren Versionen verwendete **README**-Format für die Dokumentation von Plugins ist veraltet. 
-   Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in **plugin.yaml** übergegangen. 
+   Das in früheren Versionen verwendete **README**-Format für die Dokumentation von Plugins ist veraltet.
+   Ein Großteil der Dokumentation ist in die Metadaten-Dokumentation in **plugin.yaml** übergegangen.
    Die restliche Dokumentation sollte nur noch im **user_doc**-Format erfolgen.
 
    Soweit möglich, sollten bestehende **README** im Rahmen von Aktualisierungen in entsprechende **user_doc** überführt werden.
