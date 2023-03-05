@@ -249,3 +249,5 @@ man **uf.reload('anhalter')** eingeben und **Prüfen** klicken.
 
 Man kann auch alle benutzerdefinierte Dateien neu laden, indem man **uf.reload_all()** eingibt und **Prüfen** klickt.
 
+Über die reload Funktionalität für Userfunctions können auch Userfunction Module neu geladen werden, die erst nach dem Start von
+SmartHomeNG erstellt wurden.
