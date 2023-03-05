@@ -127,8 +127,8 @@ class Item():
         self._trigger_condition = None
         self._on_update = None				# -> KEY_ON_UPDATE eval expression
         self._on_change = None				# -> KEY_ON_CHANGE eval expression
-        self._on_update_dest_var = None		# -> KEY_ON_UPDATE destination var
-        self._on_change_dest_var = None		# -> KEY_ON_CHANGE destination var
+        self._on_update_dest_var = None		# -> KEY_ON_UPDATE destination var (list: only filled if '=' syntax is used)
+        self._on_change_dest_var = None		# -> KEY_ON_CHANGE destination var (list: only filled if '=' syntax is used)
         self._on_update_unexpanded = [] 	# -> KEY_ON_UPDATE eval expression (with unexpanded item references)
         self._on_change_unexpanded = [] 	# -> KEY_ON_CHANGE eval expression (with unexpanded item references)
         self._on_update_dest_var_unexp = []	# -> KEY_ON_UPDATE destination var (with unexpanded item reference)
@@ -623,9 +623,12 @@ class Item():
         for val in value:
             # separate destination item (if it exists)
             dest_item, val = self._split_destitem_from_value(val)
-            dest_var_list_unexp.append(dest_item)
+            dest_item = dest_item.strip()
+            if dest_item.startswith('sh.'):
+                dest_item = dest_item[3:]
+            dest_var_list_unexp.append(dest_item.strip())
             # expand relative item paths
-            dest_item = self.get_absolutepath(dest_item, KEY_ON_CHANGE).strip()
+            dest_item = self.get_absolutepath(dest_item.strip()).strip()
             #                        val = 'sh.'+dest_item+'( '+ self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE) +' )'
             val_list_unexpanded.append(val)
             val = self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE)
@@ -638,7 +641,7 @@ class Item():
         setattr(self, '_' + attr + '_dest_var', dest_var_list)
         setattr(self, '_' + attr + '_dest_var_unexp', dest_var_list_unexp)
         return
-
+#### ms
 
     def _get_last_change(self):
         return self.__last_change
