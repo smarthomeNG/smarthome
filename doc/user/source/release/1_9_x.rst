@@ -14,10 +14,10 @@ sowie einige neue Plugins.
 
     Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 23. Feb 2023
-       (...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 28. Feb 2023
-       (onewire: ...)
+     - Berücksichtigt sind Commits im smarthome Repository bis incl. 5. März 2023
+       (shmgadmin: Fix for displaying on_update and on_change in item details)
+     - Berücksichtigt sind Commits im plugins Repository bis incl. 4. März 2023
+       (smartvisu: Support for darkmode handling of smartvisu 3.3 and above added)
 
 
 Überblick
@@ -89,6 +89,8 @@ Updates in the CORE
 
     * Fix startup error on empty plugins/modules config
     * Delete invalid cahe files (size=0 bytes), so a new cache file is created
+    * Bugfix for relative path expansion
+    * Bugfix for relative destination item pathes in on_update/on_change if '=' assignement is used
 
   * lib.metadata:
 
@@ -159,6 +161,9 @@ Updates in the CORE
     * Updated module to reflect new url of documentation and allow access to documentation of defelop branch
     * Updated shngAdmin to v0.6.1
     * Moved definition of global plugin parameter 'instance' from shngadmin to lib.metadata
+    * Updated shngAdmin to v0.6.3
+    * Fix for displaying on_update and on_change in item details
+    * Updated shngAdmin to v0.6.4
 
   * http:
 
@@ -184,6 +189,8 @@ Updates in the CORE
     * Webinterfaces: Fix resize calculation.. consider all divs with class mb-2 for resize
     * Webinterfaces: Instant update table refresh if checkbox for autoupdate is activated
     * Webinterfaces: Included javascript file for codemirror
+    * Webinterfaces: When creating an icon on the homescreen on iPhones and iPads, the created icon is the plugin logo
+      if the plugin logo is an png file
 
   * mqtt:
 
@@ -212,6 +219,7 @@ Updates in the CORE
   * avdevice:
 
     * Fix web interface to work with newest datatables changes
+    * Update and improve web interface and webif_pagelength handling
 
   * avm:
 
@@ -403,6 +411,7 @@ Updates in the CORE
     * Changed to use new SmartPlugin (core v1.9.3.4)
     * Bumped version to 1.9.1
     * Update for changed SmartPlugin method name get_items_for_mapping()
+    * Modified some log messages
 
   * openweathermap:
 
@@ -455,6 +464,9 @@ Updates in the CORE
     * Set sh_minversion to 1.9.3.5
     * Bumped version to 1.8.8
     * Fixed bug 'error reading deprecated.yaml' from issue #670
+    * Simplify webif_pagelength in index.html
+    * Support for darkmode handling of smartvisu 3.3 and above added
+    * Bumped version to 1.8.9
 
   * smlx:
 
@@ -494,6 +506,7 @@ Updates in the CORE
     * Fix error on startup (important)
     * Fix metadata and implement webif in docu
     * Adjust webif_pagelength handling
+    * Simplify webif_pagelength in index.html
 
   * tasmota:
 
@@ -506,6 +519,11 @@ Updates in the CORE
     * Added support for SHT3x sensor connected to Tasmota device
     * Updated WebIF to latest http-module
     * Code Cleanup and beautifying for better readability
+    * Implement Tasmota SML; Add further Zigbee attributes
+    * Update WebIF
+    * Use pagelength for http module
+    * Support ESP32 temps and temps an analog pin
+    * User docu update
 
   * tankerkoenig:
 
@@ -558,7 +576,7 @@ Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugin
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
 * piratewthr: ew weather plugin as a replacement for the darksky plugin. It is (almost) a dropin replacement
-
+* indego4shng: New plugin, the original indego-plugin is deprecated
 
 
 Plugin Updates

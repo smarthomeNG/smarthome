@@ -8,6 +8,7 @@ chmod +x tools/build_requirements.py
 chmod +x tools/check_plugin.py
 chmod +x tools/conf_to_yaml_converter.py
 chmod +x tools/getshngpid
+chmod +x tools/measure_cpu_speed.py
 chmod +x tools/plugin_metadata_checker.py
 chmod +x tools/test_running
 

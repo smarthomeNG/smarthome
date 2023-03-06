@@ -453,6 +453,7 @@ if __name__ == '__main__':
         check_all_plugins(chk_meta, chk_code, chk_docu)
     elif plg == '':
         parser.print_help()
+        print()
     else:
         check_one_plugin(plg, chk_meta, chk_code, chk_docu)
 

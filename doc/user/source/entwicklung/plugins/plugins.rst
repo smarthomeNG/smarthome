@@ -34,6 +34,7 @@ gefunden werden. Die Libraries im Verzeichnis ``/lib`` stellen den Kern der Funk
    :hidden:
 
    plugin_in5minutes.rst
+   plugin_checker.rst
 
 
 Alle Dateien eines Plugins befinden sich in einem Unterverzeichnis des Verzeichnisses ``/plugins``, welches den Namen des Plugins trägt (nur Kleinbuchstaben). Ein Plugin besteht mindestens den folgenden zwei Dateien:
