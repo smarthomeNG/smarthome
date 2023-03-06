@@ -196,59 +196,38 @@ class SmartDevicePlugin(SmartPlugin):
 
         self.logger.debug(f'device initialized from {self.__class__.__name__}')
 
-    def deinit(self, items=None):
-        """
-        If the plugin needs special code to be executed before it is unloaded,
-        this method has to be overwritten for de-initialization
-        """
-        if self.alive:
-            self.stop()
+    def remove_item_addon(self, item):
+        """ remove item from custom plugin dicts/lists """
+        if item in self._items_write:
+            del self._items_write[item]
 
-        # if standalone, only stop (we have no items)
-        if not self._sh:     
+        if item.path() in self._items_read_grp:
+            del self._items_read_grp[item.path()]
+
+        if item.path() in self._items_custom:
+            del self._items_custom[item.path()]
+
+        if item.path() in self._items_read_all:
+            self._items_read_all.remove(item.path())
+
+        cmd = self._plg_item_dict[item]['mapping']
+
+        # done already?
+        if not cmd:
             return
 
-        # remove items from internal lists
-        if not items:
-            items = self.get_item_list()
-        elif not isinstance(items, list):
-            items = [items]
+        if item in self._commands_read[cmd]:
+            self._commands_read[cmd].remove(item)
+        if item in self._commands_pseudo[cmd]:
+            self._commands_pseudo[cmd].remove(item)
+        if cmd in self._commands_initial:
+            self._commands_initial.remove(cmd)
+        if cmd in self._commands_cyclic:
+            del self._commands_cyclic[cmd]
 
-        for item in items:
-            try:
-                del self._items_write[item]
-            except Exception:
-                pass
-            try:
-                del self._items_read_grp[item.path()]
-                del self._items_custom[item.path()]
-            except Exception:
-                pass
-            try:
-                self._items_read_all.remove(item.path())
-            except Exception:
-                pass
-            cmd = self._plg_item_dict[item]['mapping']
-            if cmd:
-                try:
-                    self._commands_read[cmd].remove(item)
-                    self._commands_pseudo[cmd].remove(item)
-                except Exception:
-                    pass
-                try:
-                    self._commands_initial.remove(cmd)
-                except Exception:
-                    pass
-                try:
-                    del self._commands_cyclic[cmd]
-                except Exception:
-                    pass
-
-                for grp in self._commands_read_grp:
-                    try:
-                        self._commands_read_grp[grp].remove(cmd)
-                    except Exception:
-                        pass
+        for grp in self._commands_read_grp:
+            if cmd in self._commands_read_grp[grp]:
+                self._commands_read_grp[grp].remove(cmd)
 
     def update_plugin_config(self, **kwargs):
         """
