@@ -1,5 +1,6 @@
 
 .. index:: Plugin-Checker
+.. index:: Plugin Checker
 .. index:: check_plugin.py
 
 .. role:: redsup
