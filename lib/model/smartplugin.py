@@ -20,8 +20,6 @@
 #  along with SmartHomeNG  If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
-#import lib.scheduler
-
 from lib.model.smartobject import SmartObject
 
 from lib.shtime import Shtime
@@ -31,6 +29,7 @@ from lib.utils import Utils
 from lib.translation import translate as lib_translate
 import logging
 import os
+
 
 class SmartPlugin(SmartObject, Utils):
     """
@@ -136,11 +135,6 @@ class SmartPlugin(SmartObject, Utils):
             self.logger.warning(f"Trying to add an existing item: {item.path()}")
             return False
 
-        #if config_data_dict is None:
-        #    conf_data_dict = {}
-        #else:
-        #    conf_data_dict = config_data_dict.copy
-
         self._plg_item_dict[item.path()] = {
             'item': item,
             'is_updating': updating,
@@ -192,7 +186,40 @@ class SmartPlugin(SmartObject, Utils):
         # unregister item update method
         self.unparse_item(item)
 
+        # call custom remove_item methods
+        self.remove_item_addon(item)
+
         return True
+
+    def remove_item_addon(self, item):
+        """
+        Addon method to remove custom item bindings/entries from plugin on
+        item removal. This method is called by remove_item and only serves
+        as a drop-in method to prevent remove_item from needing to be overwritten.
+
+        Overwrite this method if you store item references in custom dicts.
+
+        :param item: item object
+        :rype item: item
+        """
+        pass
+
+    def update_item(self, item, caller=None, source=None, dest=None):
+        """
+        Item has been updated
+
+        This method is called, if the value of an item has been updated by
+        SmartHomeNG. It should write the changed value out to the device
+        (hardware/interface) that is managed by this plugin.
+
+        Method must be overwritten to be functional.
+
+        :param item: item to be updated towards the plugin
+        :param caller: if given it represents the callers name
+        :param source: if given it represents the source
+        :param dest: if given it represents the dest
+        """
+        pass
 
     def register_updating(self, item):
         """
@@ -264,7 +291,6 @@ class SmartPlugin(SmartObject, Utils):
             return self._plg_item_dict.keys()
 
         return [item_path for item_path in list(self._plg_item_dict.keys()) if self._plg_item_dict[item_path]['config_data'].get(filter_key, None) == filter_value]
-
 
     def get_item_list(self, filter_key=None, filter_value=None):
         """
