@@ -217,11 +217,7 @@ class Item():
                 elif attr in [KEY_EVAL]:
                     self._process_eval(value)
                 elif attr in [KEY_RATE_LIMIT]:  # cast to num
-                    try:
-                        setattr(self, '_' + attr, cast_num(value))
-                    except:
-                        logger.warning("Item '{0}': problem parsing '{1}'.".format(self._path, attr))
-                        continue
+                    setattr(self, '_' + attr, cast_num(value))
                 elif attr in [KEY_CACHE, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE]:  # cast to bool
                     try:
                         setattr(self, '_' + attr, cast_bool(value))
@@ -1558,11 +1554,11 @@ class Item():
             if self._rate_limit is not None:
                 time_delta = (self.shtime.now() - self.__last_update).total_seconds()
                 # when sending to fast
-                if time_delta < self._rate_limit:
+                if time_delta < (1.0 / self._rate_limit):
                     # run later again and cancel already running timer since we only use the latest value
                     if self.__timer is not None:
                         self.__timer.cancel()
-                    self.__timer = threading.Timer(time_delta - self._rate_limit, self.__update, args=(value, caller, source, dest))
+                    self.__timer = threading.Timer(time_delta - (1.0 / self._rate_limit), self.__update, args=(value, caller, source, dest))
                     self.__timer.start()
                     return
             _changed = False

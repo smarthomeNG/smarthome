@@ -19,8 +19,8 @@ item_attributes:
     rate_limit:
         type: num
         description:
-            de: "Limitiert die Anzahl an Änderungen eines Items innerhalb einer gegebnen Zeitspanne in Sekunden. Dabei wird immer der letzte wert übernommen"
-            en: "Limits the number of changes of an item within a given time span in seconds. The latest value is always applied.."
+            de: "Begrenzt die Anzahl der Änderungen eines Items auf eine Frequenz in msg/sec. Dabei wird immer der neuste wert übernommen."
+            en: "Limits the number of changes of an item to a frequency in  msg/sec. The latest value is always applied."
 
     cache:
         type: bool
