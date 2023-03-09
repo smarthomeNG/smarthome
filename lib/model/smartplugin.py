@@ -688,7 +688,7 @@ class SmartPlugin(SmartObject, Utils):
         __attr = self.__get_iattr(attr)
         if __attr in conf:
             return __attr
-        elif f"{attr}s@*" in conf:
+        elif f"{attr}@*" in conf:
             return f"{attr}@*"
         return None
 
