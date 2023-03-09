@@ -39,6 +39,7 @@ class SmartPlugin(SmartObject, Utils):
     In addition the methods implemented in lib.utils.Utils are inherited.
     """
 
+    PLUGIN_VERSION = ''
     ALLOW_MULTIINSTANCE = None
 
     __instance = ''       #: Name of this instance of the plugin
@@ -59,7 +60,8 @@ class SmartPlugin(SmartObject, Utils):
                             # contains a list of items for each mapping
     _add_translation = None
 
-    _parameters = {}    # Dict for storing the configuration parameters read from /etc/plugin.yaml
+    _parameters = {}        # Dict for storing the configuration parameters read from /etc/plugin.yaml
+    _hide_parameters = {}   # Dict for storing parameters to hide from AdminUI
 
     logger = logging.getLogger(__name__)
 
@@ -186,23 +188,7 @@ class SmartPlugin(SmartObject, Utils):
         # unregister item update method
         self.unparse_item(item)
 
-        # call custom remove_item methods
-        self.remove_item_addon(item)
-
         return True
-
-    def remove_item_addon(self, item):
-        """
-        Addon method to remove custom item bindings/entries from plugin on
-        item removal. This method is called by remove_item and only serves
-        as a drop-in method to prevent remove_item from needing to be overwritten.
-
-        Overwrite this method if you store item references in custom dicts.
-
-        :param item: item object
-        :rype item: item
-        """
-        pass
 
     def update_item(self, item, caller=None, source=None, dest=None):
         """
@@ -423,7 +409,7 @@ class SmartPlugin(SmartObject, Utils):
         if hasattr(self, 'ALLOW_MULTIINSTANCE') and self.ALLOW_MULTIINSTANCE:
             self.__instance = instance
         elif hasattr(self, 'ALLOW_MULTIINSTANCE') and not self.ALLOW_MULTIINSTANCE:
-            self.logger.warning("Plugin '{}': Only multi-instance capable plugins allow setting a name for an instance".format(self.get_shortname()))
+            self.logger.warning(f"Plugin '{self.get_shortname()}': Only multi-instance capable plugins allow setting a name for an instance")
 
 
     def get_fullname(self):
@@ -436,8 +422,7 @@ class SmartPlugin(SmartObject, Utils):
         if self.get_instance_name() == '':
             return self.get_shortname()
         else:
-#            return self.get_instance_name() + '@' + self.get_shortname()
-            return  self.get_shortname() + '_' + self.get_instance_name()
+            return self.get_shortname() + '_' + self.get_instance_name()
 
 
     def get_classname(self):
@@ -488,7 +473,7 @@ class SmartPlugin(SmartObject, Utils):
         :return: True, if success or ALLOW_MULTIINSTANCE == mi
         :rtype: bool
         """
-        if hasattr(self, 'ALLOW_MULTIINSTANCE') and (self.ALLOW_MULTIINSTANCE != None):
+        if hasattr(self, 'ALLOW_MULTIINSTANCE') and (self.ALLOW_MULTIINSTANCE is not None):
             return (self.ALLOW_MULTIINSTANCE == mi)
         else:
             self.ALLOW_MULTIINSTANCE = mi
@@ -538,7 +523,7 @@ class SmartPlugin(SmartObject, Utils):
         :return: plugin Info
         :rtype: str
         """
-        return "Plugin: '{0}.{1}', Version: '{2}', Instance: '{3}'".format(self.__module__, self.__class__.__name__,  self.get_version(),self.get_instance_name())
+        return f"Plugin: '{self.get_shortname()}.{self.__class__.__name__}', Version: '{self.get_version()}', Instance: '{self.get_instance_name()}'"
 
 
     def get_parameter_value(self, parameter_name):
@@ -600,15 +585,15 @@ class SmartPlugin(SmartObject, Utils):
         :return:
         """
         param_names = list(self.metadata.parameters.keys())
-        self.logger.debug("update_config_section: Beginning to update section '{}' of ../etc/plugin.yaml".format(self._configname))
-        self.logger.debug("update_config_section: valid parameter names to update = {}".format(param_names))
-        self.logger.info("update_config_section: Config file = '{}', update data = {}".format(self._configfilename, param_dict))
+        self.logger.debug(f"update_config_section: Beginning to update section '{self._configname}' of ../etc/plugin.yaml")
+        self.logger.debug(f"update_config_section: valid parameter names to update = {param_names}")
+        self.logger.info(f"update_config_section: Config file = '{self._configfilename}', update data = {param_dict}")
 
         # read plugin.yaml
         plugin_conf = shyaml.yaml_load_roundtrip(self._configfilename)
         sect = plugin_conf.get(self._configname)
         if sect is None:
-            self.logger.error("update_config_section: Config section '{}' not found in ../etc/plugin.yaml".format(self._configname))
+            self.logger.error(f"update_config_section: Config section '{self._configname}' not found in ../etc/plugin.yaml")
             return
 
         parameters_changed = False
@@ -625,13 +610,11 @@ class SmartPlugin(SmartObject, Utils):
                     else:
                         try:
                             this_param = int(float(param_dict[param]))
-                            #this_param = int(param_dict[param])
-                        except:
-                            self.logger.error(f"update_config_section: Parameter {param} -> Cannot convert '{param_dict[param]}' to type 'int'" )
-                            #self.logger.warning("update_config_section: Changing Parameter '{}' -> type = '{}' from '{}' to '{}'".format(param, self.metadata.parameters[param]['type'], sect.get(param, None), this_param))
+                        except ValueError:
+                            self.logger.error(f"update_config_section: Parameter {param} -> Cannot convert '{param_dict[param]}' to type 'int'")
                 else:
                     this_param = param_dict[param]
-                self.logger.info("update_config_section: Changing Parameter '{}' -> type = '{}' from '{}' to '{}'".format(param, self.metadata.parameters[param]['type'], sect.get(param, None), this_param))
+                self.logger.info(f"update_config_section: Changing Parameter '{param}' -> type = '{self.metadata.parameters[param]['type']}' from '{sect.get(param, None)}' to '{this_param}'")
                 if param_dict[param] == '' or param_dict[param] == {} or param_dict[param] == []:
                     try:
                         del sect[param]
@@ -641,31 +624,14 @@ class SmartPlugin(SmartObject, Utils):
                     sect[param] = this_param
                 parameters_changed = True
             else:
-                self.logger.error("update_config_section: Invalid parameter '{}' specified for update".format(param, param_dict[param]))
+                self.logger.error(f"update_config_section: Invalid parameter '{param}' specified for update")
 
-        self.logger.debug("update_config_section: Config section content = '{}'".format(sect))
+        self.logger.debug(f"update_config_section: Config section content = '{sect}'")
         # write plugin.yaml
         if parameters_changed:
             shyaml.yaml_save_roundtrip(self._configfilename, plugin_conf, True)
-        self.logger.debug("update_config_section: Finished updating section '{}' of ../etc/plugin.yaml".format(self._configname))
+        self.logger.debug(f"update_config_section: Finished updating section '{self._configname}' of ../etc/plugin.yaml")
         return
-
-#---
-#plugin_conf = shyaml.yaml_load_roundtrip(config_filename)
-#sect = plugin_conf.get(id)
-#if sect is None:
-#    response = {'result': 'error', 'description': "Configuration section '{}' does not exist".format(id)}
-#else:
-#    self.logger.debug("update: params = {}".format(params))
-#    if params.get('config', {}).get('plugin_enabled', None) == True:
-#        del params['config']['plugin_enabled']
-#    plugin_conf[id] = params.get('config', {})
-#    shyaml.yaml_save_roundtrip(config_filename, plugin_conf, False)
-#    response = {'result': 'ok'}
-
-
-#---
-
 
     def get_loginstance(self):
         """
@@ -686,7 +652,7 @@ class SmartPlugin(SmartObject, Utils):
         if self.__instance == '':
             return ''
         else:
-            return self.__instance+'@: '
+            return self.__instance + '@: '
 
 
     def __get_iattr(self, attr):
@@ -703,7 +669,7 @@ class SmartPlugin(SmartObject, Utils):
         if self.__instance == '':
             return attr
         else:
-           return "%s@%s"%(attr, self.__instance)
+            return f"{attr}@{self.__instance}"
 
 
     def __get_iattr_conf(self, conf, attr):
@@ -722,8 +688,8 @@ class SmartPlugin(SmartObject, Utils):
         __attr = self.__get_iattr(attr)
         if __attr in conf:
             return __attr
-        elif "%s@*"%attr in conf:
-            return "%s@*"%attr
+        elif f"{attr}s@*" in conf:
+            return f"{attr}@*"
         return None
 
 
@@ -781,9 +747,9 @@ class SmartPlugin(SmartObject, Utils):
 
         It tests, if PLUGIN_VERSION is defined.
         """
-        if not hasattr(cls,'PLUGIN_VERSION'):
+        if not hasattr(cls, 'PLUGIN_VERSION'):
             raise NotImplementedError("'Plugin' subclasses should have a 'PLUGIN_VERSION' attribute")
-        return SmartObject.__new__(cls,*args,**kargs)
+        return SmartObject.__new__(cls, *args, **kargs)
 
 
     def get_sh(self):
@@ -819,12 +785,12 @@ class SmartPlugin(SmartObject, Utils):
         """
         try:
             mymod = Modules.get_instance().get_module(modulename)
-        except:
-             mymod = None
-        if mymod == None:
-            self.logger.error("Module '{}' not loaded".format(modulename))
+        except Exception:
+            mymod = None
+        if mymod is None:
+            self.logger.error(f"Module '{modulename}' not loaded")
         else:
-            self.logger.info("Using module '{}'".format(str( mymod._shortname ) ) )
+            self.logger.info(f"Using module '{str(mymod._shortname)}'")
         return mymod
 
 
@@ -832,7 +798,7 @@ class SmartPlugin(SmartObject, Utils):
         """
         Join an existing path and a directory
         """
-        return os.path.join( path, dir )
+        return os.path.join(path, dir)
 
 
     def parse_logic(self, logic):
@@ -865,7 +831,7 @@ class SmartPlugin(SmartObject, Utils):
         if name != '':
             name = '.' + name
         name = self._pluginname_prefix + self.get_fullname() + name
-        self.logger.debug("scheduler_return_next: name = {}".format(name))
+        self.logger.debug(f"scheduler_return_next: name = {name}")
         return self._sh.scheduler.return_next(name, from_smartplugin=True)
 
     def scheduler_trigger(self, name, obj=None, by=None, source=None, value=None, dest=None, prio=3, dt=None):
@@ -880,10 +846,10 @@ class SmartPlugin(SmartObject, Utils):
             name = '.' + name
         name = self._pluginname_prefix + self.get_fullname() + name
         if by is None:
-            by = 'Plugin {}'.format(name)
-        parameters = ', '.join(['{}={!r}'.format(k, v) for k, v in locals().items()
-                                if v and not k in ['name', 'self', 'obj']])
-        self.logger.debug("scheduler_trigger: name = {}, parameters: {}".format(name, parameters))
+            by = f'Plugin {name}'
+        parameters = ', '.join([f'{k}={v!r}' for k, v in locals().items()
+                                if v and k not in ['name', 'self', 'obj']])
+        self.logger.debug(f"scheduler_trigger: name = {name}, parameters: {parameters}")
         self._sh.scheduler.trigger(name, obj, by, source, value, dest, prio, dt, from_smartplugin=True)
 
     def scheduler_add(self, name, obj, prio=3, cron=None, cycle=None, value=None, offset=None, next=None):
@@ -895,11 +861,11 @@ class SmartPlugin(SmartObject, Utils):
         The parameters are identical to the scheduler.add method from lib.scheduler
         """
         if name != '':
-            name = '.'+name
-        name = self._pluginname_prefix+self.get_fullname()+name
-        parameters = ', '.join(['{}={!r}'.format(k, v) for k, v in locals().items()
-                                if v and not k in ['name', 'self', 'obj']])
-        self.logger.debug("scheduler_add: name = {}, parameters: {}".format(name, parameters))
+            name = '.' + name
+        name = self._pluginname_prefix + self.get_fullname() + name
+        parameters = ', '.join([f'{k}={v!r}' for k, v in locals().items()
+                                if v and k not in ['name', 'self', 'obj']])
+        self.logger.debug(f"scheduler_add: name = {name}, parameters: {parameters}")
         self._sh.scheduler.add(name, obj, prio, cron, cycle, value, offset, next, from_smartplugin=True)
 
 
@@ -912,11 +878,11 @@ class SmartPlugin(SmartObject, Utils):
         The parameters are identical to the scheduler.change method from lib.scheduler
         """
         if name != '':
-            name = '.'+name
-        name = self._pluginname_prefix+self.get_fullname()+name
-        kwargs['from_smartplugin']=True
-        parameters = ', '.join(['{}={!r}'.format(k, v) for k, v in kwargs.items()])
-        self.logger.debug("scheduler_change: name = {}, parameters: {}".format(name, parameters))
+            name = '.' + name
+        name = self._pluginname_prefix + self.get_fullname() + name
+        kwargs['from_smartplugin'] = True
+        parameters = ', '.join([f'{k}={v!r}' for k, v in kwargs.items()])
+        self.logger.debug(f"scheduler_change: name = {name}, parameters: {parameters}")
         self._sh.scheduler.change(name, **kwargs)
 
 
@@ -929,9 +895,9 @@ class SmartPlugin(SmartObject, Utils):
         The parameters are identical to the scheduler.remove method from lib.scheduler
         """
         if name != '':
-            name = '.'+name
-        name = self._pluginname_prefix+self.get_fullname()+name
-        self.logger.debug("scheduler_remove: name = {}".format(name))
+            name = '.' + name
+        name = self._pluginname_prefix + self.get_fullname() + name
+        self.logger.debug(f"scheduler_remove: name = {name}")
         self._sh.scheduler.remove(name, from_smartplugin=True)
 
 
@@ -946,7 +912,7 @@ class SmartPlugin(SmartObject, Utils):
         if name != '':
             name = '.' + name
         name = self._pluginname_prefix + self.get_fullname() + name
-        self.logger.debug("scheduler_get: name = {}".format(name))
+        self.logger.debug(f"scheduler_get: name = {name}")
         return self._sh.scheduler.get(name, from_smartplugin=True)
 
 
@@ -974,7 +940,7 @@ class SmartPlugin(SmartObject, Utils):
         """
         txt = str(txt)
         if block:
-            self.logger.warning("unsuported 3. parameter '{}' used in translation function _( ... )".format(block))
+            self.logger.warning(f"unsuported 3. parameter '{block}' used in translation function _( ... )")
 
         if self._add_translation is None:
             # test initially, if plugin has additional translations
@@ -1001,7 +967,7 @@ class SmartPlugin(SmartObject, Utils):
             self.mod_http = Modules.get_instance().get_module('http')
         except:
             self.mod_http = None
-        if self.mod_http == None:
+        if self.mod_http is None:
             self.logger.warning("Module 'http' not loaded. Not initializing the web interface for the plugin")
             return False
 
@@ -1059,12 +1025,11 @@ class SmartPluginWebIf():
         :return: Jinja2 template engine environment
         :rtype: object
         """
-        mytemplates = self.plugin.path_join( self.webif_dir, 'templates' )
+        mytemplates = self.plugin.path_join(self.webif_dir, 'templates')
         globaltemplates = self.plugin.mod_http.gtemplates_dir
-        tplenv = Environment(loader=FileSystemLoader([mytemplates,globaltemplates]))
+        tplenv = Environment(loader=FileSystemLoader([mytemplates, globaltemplates]))
 
         tplenv.globals['isfile'] = self.is_staticfile
-        #tplenv.globals['_'] = self.plugin.translate
         tplenv.globals['_'] = self.translate        # use translate method of webinterface class
         tplenv.globals['len'] = len
         return tplenv
@@ -1084,14 +1049,11 @@ class SmartPluginWebIf():
         :rtype: bool
         """
         if path.startswith('/gstatic/'):
-#            complete_path = self.plugin.path_join(Modules.get_instance().get_module('http')._gstatic_dir, path[len('/gstatic/'):])
             complete_path = self.plugin.path_join(self.plugin.mod_http.gstatic_dir, path[len('/gstatic/'):])
         else:
             complete_path = self.plugin.path_join(self.webif_dir, path)
         from os.path import isfile as isfile
-        result = isfile(complete_path)
-        # self.logger.debug("is_staticfile: path={}, complete_path={}, result={}".format(path, complete_path, result))
-        return result
+        return isfile(complete_path)
 
 
     def translate(self, txt, vars=None):
@@ -1099,11 +1061,6 @@ class SmartPluginWebIf():
         Returns translated text for class SmartPluginWebIf
 
         This method extends the jinja2 template engine _( ... ) -> translate( ... )
-        """
-        #return self.plugin.translate(txt)
-
-        """
-        Returns translated text
         """
         txt = str(txt)
 
@@ -1113,7 +1070,7 @@ class SmartPluginWebIf():
             self.plugin._add_translation = os.path.isfile(translation_fn)
 
         if self.plugin._add_translation:
-            return lib_translate(txt, vars, plugin_translations='plugin/'+self.plugin.get_shortname(), module_translations='module/http')
+            return lib_translate(txt, vars, plugin_translations='plugin/' + self.plugin.get_shortname(), module_translations='module/http')
         else:
             return lib_translate(txt, vars, module_translations='module/http')
 
