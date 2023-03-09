@@ -196,7 +196,17 @@ class SmartDevicePlugin(SmartPlugin):
 
         self.logger.debug(f'device initialized from {self.__class__.__name__}')
 
-    def remove_item_addon(self, item):
+    def remove_item(self, item):
+
+        try:
+            cmd = self._plg_item_dict[item]['mapping']
+        except KeyError:
+            cmd = None
+
+        # call smartplugin method
+        if not super().remove_item(item):
+            return False
+
         """ remove item from custom plugin dicts/lists """
         if item in self._items_write:
             del self._items_write[item]
@@ -210,11 +220,9 @@ class SmartDevicePlugin(SmartPlugin):
         if item.path() in self._items_read_all:
             self._items_read_all.remove(item.path())
 
-        cmd = self._plg_item_dict[item]['mapping']
-
         # done already?
         if not cmd:
-            return
+            return True
 
         if item in self._commands_read[cmd]:
             self._commands_read[cmd].remove(item)
@@ -228,6 +236,8 @@ class SmartDevicePlugin(SmartPlugin):
         for grp in self._commands_read_grp:
             if cmd in self._commands_read_grp[grp]:
                 self._commands_read_grp[grp].remove(cmd)
+
+        return True
 
     def update_plugin_config(self, **kwargs):
         """
