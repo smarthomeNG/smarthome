@@ -41,17 +41,7 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
 
             :return: contents of the template after beeing rendered
             """
-            # try to get the webif pagelength from the module.yaml configuration
-            global_pagelength = cherrypy.config.get("webif_pagelength")
-            if global_pagelength:
-                pagelength = global_pagelength
-                self.logger.debug("Global pagelength {}".format(pagelength))
-            # try to get the webif pagelength from the plugin specific plugin.yaml configuration
-            try:
-                pagelength = self.plugin.webif_pagelength
-                self.logger.debug("Plugin pagelength {}".format(pagelength))
-            except Exception:
-                pass
+            pagelength = self.plugin.get_parameter_value('webif_pagelength')
             tmpl = self.tplenv.get_template('index.html')
             # add values to be passed to the Jinja2 template eg: tmpl.render(p=self.plugin, interface=interface, ...)
             return tmpl.render(webif_pagelength=pagelength, p=self.plugin)
@@ -70,38 +60,11 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
                               )
 
 
-   2. Die Variable ``webif_pagelength`` sollte genutzt werden, um die Anzahl an Einträgen
+   2. Die Variable ``webif_pagelength`` wird genutzt, um die Anzahl an Einträgen
       pro Seite im Web Interface über die plugin.yaml konfigurierbar zu machen.
-      Hierzu ist es notwendig, das ``__init__.py`` File des Plugins (nicht im webif Ordner!) und ``plugin.yaml`` wie folgt anzupassen.
-
-      .. code-block:: python
-
-        self.webif_pagelength = self.get_parameter_value('webif_pagelength')
-
-      Die plugin.yaml sollte hiermit ergänzt werden. Es sollte kein default Wert angegeben werden!
-
-      .. code-block:: yaml
-
-        webif_pagelength:
-          type: int
-          description:
-            de: 'Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
-                 0 = automatisch, -1 = alle'
-            en: 'Amount of items being listed in a web interface table per page by default.
-                 0 = automatic, -1 = all'
-          description_long:
-            de: 'Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.\n
-                 Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.\n
-                 Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.'
-            en: 'Amount of items being listed in a web interface table per page by default.\n
-                 0 adjusts the table height automatically based on the height of the browser windows.\n
-                 -1 shows all table entries on one page.'
-          valid_list:
-            - -1
-            - 0
-            - 25
-            - 50
-            - 100
+      Diese Variable kann vom User global im http-Modul gesetzt, aber auch individuell pro Plugin
+      überschrieben werden. Bei der Entwicklung eines Plugins ist dabei nichts Weiteres zu
+      beachten, da der Parameter automatisch jedem Plugin hinzugefügt wird.
 
 
    3. Im Template ``webif/templates/index.html`` werden Anzahl und Titel der Tabs sowie der Starttab konfiguriert.
@@ -123,6 +86,8 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
       Um im ersten Tab des Webinterface die Items anzuzeigen, die der obige Beispielcode zusammengestellt hat, wird der folgende Code zwischen ``{% block bodytab1 %}`` und ``{% endblock bodytab1 %}`` eingefügt. Es ist sicherzustellen, dass korrekter HTML Code
       für die Tabellen genutzt wird, ua. durch Nutzen der Tags ``<thead>`` und ``<tbody>``
       sowie der jeweiligen End-Tags. Außerdem muss jeder Tabelle eine einzigartige ID vergeben werden.
+      Sowohl im Tablehead als auch Tablebody ist eine leere erste Spalte einzufügen, die für das responsive
+      Feature der Datatables genutzt wird.
       Die Klasse``table-resize`` ist zwingend dem ``<div>`` Tag, in dem sich die Tabelle befindet, hinzuzufügen,
       um die automatische Anpassung der Datentabelle an die Fensterhöhe zu ermöglichen
       (siehe auch index.html im Example-Plugin). Sollen ober- oder unterhalb der Tabelle zusätzliche Informationen
@@ -175,22 +140,15 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
         <script>
           $(document).ready( function () {
             $(window).trigger('datatables_defaults'); // loading default behaviour
-            try {
-              {% if webif_pagelength is defined %}webif_pagelength = {{ webif_pagelength|int }};{% endif %}
-              if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
-                resize = true;
-                webif_pagelength = -1;
-              }
-              else {
-                resize = false;
-              }
-              console.log("Using page length from http module/plugin " + webif_pagelength + ", pageResize: " + resize);
+            {% if webif_pagelength is defined %}webif_pagelength = {{ webif_pagelength|int }};{% endif %}
+            if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
+              resize = true;
+              webif_pagelength = -1;
             }
-            catch (e) {
-              webif_pagelength = 100;
+            else {
               resize = false;
-              console.log("Using default values for page length " + webif_pagelength + ", pageResize: " + resize);
             }
+            console.log("Using page length from http module/plugin " + webif_pagelength + ", pageResize: " + resize);
             try {
               table = $('#maintable').DataTable( {pageLength: webif_pagelength, pageResize: resize} ); // put more options into {} if needed
               <table_xx> = $('#<table_id>').DataTable( {} ); // delete or change name of table and id
