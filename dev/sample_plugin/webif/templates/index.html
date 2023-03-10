@@ -72,6 +72,8 @@ Activate that function if needed, otherwise just remove the line to increase per
 				shngInsertText (item+'_value', objResponse[item]['value'], 'maintable', 5);
 				*/
 			}
+      // Redraw datatable after cell updates
+      // $('#maintable').DataTable().draw(false);
 		}
 	}
 </script>
@@ -102,7 +104,7 @@ Activate that function if needed, otherwise just remove the line to increase per
 			Copy this part for every datatable on your page. Adjust options if necessary.
 			pageLength and pageResize should be included as they are to adjust it based on the plugin settings
 			*/
-			table = $('#maintable').DataTable( {
+			maintable = $('#maintable').DataTable( {
 			  /* If you want to define your own columnDefs options (e.g. for hiding a column by default), use the concat function shown here.
 			  */
 			  columnDefs: [{ "targets": [2], "className": "value"}].concat($.fn.dataTable.defaults.columnDefs),
@@ -198,7 +200,7 @@ In the example the update is deactivated on the 12th of December 2022 (what migh
   </div>
 
 	<!-- set id accordingly -->
-	<table id="maintable">
+	<table id="maintable" class="dataTableAdditional">
 		<thead>
 			<tr>
         <!-- You HAVE to add an empty th here for correct implementation of the responsive plugin -->

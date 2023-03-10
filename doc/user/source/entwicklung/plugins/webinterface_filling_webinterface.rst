@@ -150,7 +150,7 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
             }
             console.log("Using page length from http module/plugin " + webif_pagelength + ", pageResize: " + resize);
             try {
-              table = $('#maintable').DataTable( {pageLength: webif_pagelength, pageResize: resize} ); // put more options into {} if needed
+              maintable = $('#maintable').DataTable( {pageLength: webif_pagelength, pageResize: resize} ); // put more options into {} if needed
               <table_xx> = $('#<table_id>').DataTable( {} ); // delete or change name of table and id
             }
             catch (e) {

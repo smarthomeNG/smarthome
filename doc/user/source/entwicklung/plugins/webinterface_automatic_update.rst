@@ -237,9 +237,11 @@ Die Parameter der shngInsertText-Funktion sind dabei wie folgt:
 
                 for (var item in objResponse) {
                     shngInsertText(item+'_value', objResponse['item'][item]['value'], null, 2);
-                    // bei Tabellen mit datatables Funktion sollte die Zeile lauten:
+                    // bei Tabellen mit datatables Funktion sollte die Zeile lauten (ID ersetzen!):
                     // shngInsertText(item+'_value', objResponse['item'][item]['value'], 'maintable', 2);
                 }
+                // Bei Datatables sollte nach der Schleife die gesamte Tabelle ein Mal aktualisert werden
+                // $('#maintable').DataTable().draw(false); // ID entsprechend ersetzen
             }
         }
     </script>
@@ -318,7 +320,8 @@ Anschließend wird der zweiten Spalte die relevante ID hinzugefügt, um zukünft
 aktualisieren zu können. Möchte man weiteren Spalten ebenfalls
 eine ID zuweisen, ist die Codezeile zu kopieren und die Zahl beim Eintrag ``td:eq(1)`` entsprechend
 zu ändern (0 = erste Spalte, 1 = zweite Spalte, etc.). Abschließend wird der leere Wert schließlich
-mittels ``shngInsertText`` aktualisiert und dank Angabe einer Zahl als 4. Parameter x Sekunden lang farblich markiert.
+mittels ``shngInsertText`` aktualisiert und dank Angabe einer Zahl als 4. Parameter x Sekunden lang farblich markiert. Nach der for-Schleife sollte die Tabelle neu gezeichnet werden (siehe Beispiel).
+
 
 .. code-block:: html+jinja
 
@@ -343,6 +346,7 @@ mittels ``shngInsertText`` aktualisiert und dank Angabe einer Zahl als 4. Parame
                     }
 
                 }
+                $('#maintable').DataTable().draw(false);
             }
         }
     </script>
@@ -375,8 +379,8 @@ im Block ``pluginStyles`` bei Bedarf überschrieben werden.
     {% endblock pluginstyles %}
 
 
-Festlegen des Aktualisierungsintervalls, dataSets und weiteren Parametern
--------------------------------------------------------------------------
+Festlegen von Aktualisierungsintervall, dataSets und weiteren Parametern
+------------------------------------------------------------------------
 
 Zu Beginn der Templatedatei ``webif/templates/index.html`` finden sich die folgenden Zeilen:
 
@@ -463,8 +467,8 @@ oder ohne Inhalt befüllt wurde.
 
         return {}
 
-Dynamische Anpassung des Aktualisierungsintervalls, dataSets und weiteren Parametern
-------------------------------------------------------------------------------------
+Dynamische Anpassung von Aktualisierungsintervall, dataSets und weiteren Parametern
+-----------------------------------------------------------------------------------
 
 Unter Umständen ist es sinnvoll, diverse Parameter der automatischen Aktualisierung durch ein Script (oder einen Button)
 anzupassen. Die Parameter werden dabei durch Aufruf von ``window.refresh.update({});`` in Form eines Dictionary aktualisiert.
