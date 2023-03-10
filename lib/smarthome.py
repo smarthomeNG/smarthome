@@ -100,6 +100,7 @@ from lib.shpypi import Shpypi
 from lib.triggertimes import TriggerTimes
 from lib.constants import (YAML_FILE, CONF_FILE, DEFAULT_FILE)
 import lib.userfunctions as uf
+from lib.systeminfo import Systeminfo
 
 #import bin.shngversion
 #MODE = 'default'
@@ -208,14 +209,13 @@ class SmartHome():
         os.chdir(self._base_dir)
 
         self.PYTHON_VERSION = lib.utils.get_python_version()
-
-        if os.name != 'nt':
-            self.python_bin = os.environ.get('_','')
-        else:
-            self.python_bin = sys.executable
+        self.python_bin = sys.executable
 
         if extern_conf_dir != '':
             self._extern_conf_dir = extern_conf_dir
+
+        # get systeminfo closs
+        self.systeminfo = Systeminfo
 
         # set default timezone to UTC
         self.shtime = Shtime(self)
@@ -223,10 +223,10 @@ class SmartHome():
         threading.current_thread().name = 'Main'
         self.alive = True
 
-        import bin.shngversion
-        VERSION = bin.shngversion.get_shng_version()
-        self.branch = bin.shngversion.get_shng_branch()
-        self.version = VERSION
+        # import bin.shngversion as shngversion
+        # VERSION = shngversion.get_shng_version()
+        # self.branch = shngversion.get_shng_branch()
+        # self.version = shngversion.get_shng_version()
         self.connections = []
 
         self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
@@ -291,6 +291,16 @@ class SmartHome():
         # setup logging
         self.init_logging(self._log_conf_basename, MODE)
 
+
+        #############################################################
+        # get shng version information
+        # shngversion.get_plugins_version() may only be called after logging is initialized
+        import bin.shngversion as shngversion
+        #VERSION = shngversion.get_shng_version()
+        self.branch = shngversion.get_shng_branch()
+        self.version = shngversion.get_shng_version()
+        self.plugins_version = shngversion.get_plugins_version()
+
         self.shng_status = {'code': 1, 'text': 'Initalizing: Logging initalized'}
 
         if hasattr(self, '_tz'):
@@ -315,7 +325,12 @@ class SmartHome():
             virtual_text = ' in virtual environment'
         self._logger_main.notice("--------------------   Init SmartHomeNG {}   --------------------".format(self.version))
         self._logger_main.notice(f"Running in Python interpreter 'v{self.PYTHON_VERSION}'{virtual_text}, from directory {self._base_dir}")
-        self._logger_main.notice(f" - on {platform.platform()} (pid={pid})")
+        #self._logger_main.notice(f" - on {platform.platform()} (pid={pid})")
+        self._logger_main.notice(f" - operating system '{self.systeminfo.get_osname()}' (pid={pid})")
+        if self.systeminfo.get_rasppi_info() == '':
+            self._logger_main.notice(f" - on '{self.systeminfo.get_cpubrand()}'")
+        else:
+            self._logger_main.notice(f" - on '{self.systeminfo.get_rasppi_info()}'")
         if logging.getLevelName('NOTICE') == 31:
             self._logger_main.notice(f" - Loglevel NOTICE is set to value {logging.getLevelName('NOTICE')} because handler of root logger is set to level WARNING or higher  -  Set level of handler '{self.logs.root_handler_name}' to 'NOTICE'!")
 
@@ -344,6 +359,14 @@ class SmartHome():
             self._logger.critical("No plugins found in folder '{}'. Please install plugins.".format(self._plugins_dir))
             self._logger.critical("Aborting")
             exit(1)
+
+
+        #############################################################
+        # check processor speed (if not done before)
+        if self.systeminfo.get_cpu_speed() is None:
+            self.shng_status = {'code': 2, 'text': 'Checking processor speed'}
+            self.systeminfo.check_cpu_speed()
+
 
         #############################################################
         # test if needed Python packages for configured plugins
@@ -375,7 +398,7 @@ class SmartHome():
             self._logger.critical("Aborting")
             exit(1)
 
-        self.shng_status = {'code': 2, 'text': 'Initalizing: Requirements checked'}
+        self.shng_status = {'code': 3, 'text': 'Initalizing: Requirements checked'}
 
 
         self.shtime._initialize_holidays()
@@ -839,7 +862,7 @@ class SmartHome():
 
     def _excepthook(self, typ, value, tb):
         mytb = "".join(traceback.format_tb(tb))
-        self._logger.error("Unhandled exception: {1}\n{0}\n{2}".format(typ, value, mytb))
+        self._logger.error(f"Unhandled exception: {value}\n{typ}\nrunning SmartHomeNG {self.version}\nException: {mytb}")
 
     def _garbage_collection(self):
         c = gc.collect()
