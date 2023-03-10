@@ -304,7 +304,7 @@ beispielsweise, wenn die letzten durchgeführten Commandos oder Logeinträge erg
 Hierzu ist es nötig, die Funktion ``handleUpdatedData`` entsprechend anzupassen.
 
 In der ersten if-Abfrage wird evaluiert, ob bereits ein Element mit entsprechender ID existiert.
-Falls nicht, wird die Zeile neu angelegt und sanft eingeblendet. Im untenstehenden Code wird zuerst gecheckt,
+Falls nicht, wird die Zeile neu angelegt und sanft eingeblendet. Im unten stehenden Code wird zuerst gecheckt,
 ob es eine Datentabelle mit der ID "maintable" gibt.
 In der Zeile ``if ( $.fn.dataTable.isDataTable('#maintable') )`` sowie in der darauf folgenden
 Zeile muss '#maintable' durch die tatsächliche ID der zu aktualisierenden Tabelle ersetzt werden.
@@ -390,6 +390,8 @@ Zu Beginn der Templatedatei ``webif/templates/index.html`` finden sich die folge
    {% set autorefresh_buttons = true %}
    {% set reload_button = true %}
    {% set close_button = true %}
+   {% set row_count = false %}
+   {% set initial_update = true %}
 
 Das Intervall wird via ``update_interval`` auf den gewünschten Wert in Millisekunden gesetzt. Dabei muss sichergestellt sein, dass das gewählte Intervall lang genug ist, dass die Python-Methode ``get_data_html()`` des Plugins die Daten liefern kann, bevor das Intervall abläuft. Wenn nur Daten zurückgegeben werden, die von anderen Routinen und Threads des Plugins bereits bereitgestellt wurden, kann ein Update-Intervall von ca. 1000 ms gewählt werden. Wenn die Python-Methode ``get_data_html()`` selbst noch weitere Routinen ausführen muss, sollte das Update-Intervall wahrscheinlich nicht kleiner als 5000 ms sein.
 
@@ -408,9 +410,20 @@ Außerdem ist es möglich, zusätzliche Parameter zu definieren, die der Methode
 Dazu sollte die Methode get_data_html in der webif __init__.py entsprechend angepasst werden. Das vereinfachte Beispiel ist dem
 Database Plugin entnommen, das zwei Tabs mit verschiedenen Daten anzeigt, die eben auch unterschiedliche Rückmeldungen aus dem
 Plugin erhalten.
+
 Die Angaben zu den Buttons sind optional und können
 genutzt werden, um die Schalter und Auto-Refresh Funktionen im Header zu verstecken, wenn sie nicht
 gebraucht werden.
+
+Durch Definieren der ``row_count`` Variable wird beim Anzeigen einer Tabelle automatisch die Anzahl
+an Datenreihen ermittelt und in die Variable ``window.row_count`` gespeichert. Auf diesen Wert kann
+in einem eigenen Javascript zugegriffen werden. Wird diese Funktion nicht gebraucht, sollte die entsprechende
+Zeile gelöscht bzw. nicht gesetzt werden.
+
+Wenn ``initial_update`` auf "true" gesetzt ist, werden automatisch beim Laden jeder Seite die Daten mittels
+get_data_html abgefragt. Dies ist insbesondere dann sinnvoll, wenn anfangs die Tabelle mit Dummy-Daten
+oder ohne Inhalt befüllt wurde.
+
 
 .. code-block:: python
 

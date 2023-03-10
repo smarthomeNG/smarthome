@@ -25,7 +25,13 @@
 		window.update_interval = 0;
 		window.update_active = false;
 		window.update_blocked = false;
-		// window.row_count = 0; If you want to get the row count on the current page, put this line in the resepctive plugin index.html
+		window.initial_update = false;
+		{%- if row_count is defined %}
+		  window.row_count = '{{ row_count|lower }}';
+		{%- endif %}
+		{%- if initial_update is defined %}
+		  window.initial_update = '{{ initial_update|lower }}';
+		{%- endif %}
 		{%- if dataSet is defined %}
 		  window.dataSet = '{{ dataSet }}';
 		{%- endif %}

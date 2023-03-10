@@ -25,6 +25,12 @@
 <!-- if you don't need the close in the header, disable it-->
 {% set close_button = false %}
 
+<!-- for some situations it might be useful to know the number of datatable rows shown on the current page.
+Activate that function if needed, otherwise just remove the line to increase performance -->
+{% set row_count = true %}
+
+<!-- if new values should be retrieved using automatic page update right in the beginning and on page changes -->
+{% set initial_update = true %}
 
 <!--
 	Additional styles go into this block. Examples are for datatables
