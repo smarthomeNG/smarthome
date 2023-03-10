@@ -42,163 +42,22 @@ from lib.shtime import Shtime
 from lib.utils import Utils, running_virtual
 import lib.config
 import lib.daemon
+import lib.systeminfo as systeminfo
 
 
 class SystemData:
 
-    def __init__(self):
+    def __init__(self, sh):
+        self._sh = sh
         self.logger = logging.getLogger(__name__)
         self.logger = logging.getLogger('modules.admin.systemdata')
         self.logger.debug("Systemdata.__init__()")
-
-        self.os_release = {}
-        self.cpu_info = {}
         self.pypi_sorted_package_list = []
 
         self.shpypi = Shpypi.get_instance()
 
-        self.read_cpuinfo()
+        #self.read_cpuinfo()
         return
-
-
-    def read_linuxinfo(self):
-        """
-        Read info from /etc/os-release
-
-        e.g.:
-            PRETTY_NAME="Debian GNU/Linux 9 (stretch)"
-            NAME="Debian GNU/Linux"
-            VERSION_ID="9"
-            VERSION="9 (stretch)"
-            ID=debian
-            HOME_URL="https://www.debian.org/"
-            SUPPORT_URL="https://www.debian.org/support"
-            BUG_REPORT_URL="https://bugs.debian.org/"
-
-        or:
-            PRETTY_NAME="Raspbian GNU/Linux 10 (buster)"
-            NAME="Raspbian GNU/Linux"
-            VERSION_ID="10"
-            VERSION="10 (buster)"
-            VERSION_CODENAME=buster
-            ID=raspbian
-            ID_LIKE=debian
-            HOME_URL="http://www.raspbian.org/"
-            SUPPORT_URL="http://www.raspbian.org/RaspbianForums"
-            BUG_REPORT_URL="http://www.raspbian.org/RaspbianBugs"
-
-        """
-        self.os_release = {}
-        pf = platform.system().lower()
-        if pf == 'linux':
-            if self.os_release == {}:
-                try:
-                    with open('/etc/os-release') as fp:
-                        for line in fp:
-                            if line.startswith('#'):
-                                continue
-                            key, val = line.strip().split('=')
-                            self.os_release[key] = val
-                except:
-                    self.os_release = {}
-        return
-
-
-    def read_cpuinfo(self):
-        import lib.cpuinfo
-        self.cpu_info = lib.cpuinfo._get_cpu_info_internal()
-
-
-    def running_on_rasppi(self):
-        """
-        Returns True, if running on a Raspberry Pi
-        """
-        if self.cpu_info.get('vendor_id_raw', '') == 'ARM':
-            if self.cpu_info.get('revision_raw', '') != '':
-                return self.cpu_info.get('revision_raw', '')
-        return ''
-
-
-    def decode_rasppi_revcode(self, revcode):
-        """
-        NOQuuuWuFMMMCCCCPPPPTTTTTTTTRRRR
-
-        NOQu uuWu FMMM CCCC PPPP TTTT TTTT RRRR
-
-        :param revcode:
-        :return:
-        """
-
-    def get_rasppi_info(self):
-        rev_info = {
-            '0002'  : {'model': 'Model B Rev 1', 'ram': '256MB', 'revision': ''},
-            '0003'  : {'model': 'Model B Rev 1 - ECN0001 (no fuses, D14 removed)', 'ram': '256MB', 'revision': ''},
-            '0004'  : {'model': 'Model B Rev 2', 'ram': '256MB', 'revision': ''},
-            '0005'  : {'model': 'Model B Rev 2', 'ram': '256MB', 'revision': ''},
-            '0006'  : {'model': 'Model B Rev 2', 'ram': '256MB', 'revision': ''},
-            '0007'  : {'model': 'Model A', 'ram': '256MB', 'revision': ''},
-            '0008'  : {'model': 'Model A', 'ram': '256MB', 'revision': ''},
-            '0009'  : {'model': 'Model A', 'ram': '256MB', 'revision': ''},
-            '000d'  : {'model': 'Model B Rev 2', 'ram': '512MB', 'revision': ''},
-            '000e'  : {'model': 'Model B Rev 2', 'ram': '512MB', 'revision': ''},
-            '000f'  : {'model': 'Model B Rev 2', 'ram': '512MB', 'revision': ''},
-            '0010'  : {'model': 'Model B+', 'ram': '512MB', 'revision': ''},
-            '0013'  : {'model': 'Model B+', 'ram': '512MB', 'revision': ''},
-            '900032': {'model': 'Model B+', 'ram': '512MB', 'revision': ''},
-            '0011'  : {'model': 'Compute Modul', 'ram': '512MB', 'revision': ''},
-            '0014'  : {'model': 'Compute Modul', 'ram': '512MB', 'revision': '', 'manufacturer': 'Embest, China'},
-            '0012'  : {'model': 'Model A+', 'ram': '256MB', 'revision': ''},
-            '0015'  : {'model': 'Model A+', 'ram': '256MB/512MB', 'revision': '', 'manufacturer': 'Embest, China'},
-            #'0015' : {'model': 'Model A+', 'ram': '512MB', 'revision': '', 'manufacturer': 'Embest, China'},
-
-            'a01041': {'model': 'Pi 2 Model B', 'ram': '1GB', 'revision': '1.1', 'manufacturer': 'Sony, UK'},
-            'a21041': {'model': 'Pi 2 Model B', 'ram': '1GB', 'revision': '1.1', 'manufacturer': 'Embest, China'},
-            'a22042': {'model': 'Pi 2 Model B', 'ram': '1GB', 'revision': '1.2'},
-            '900092': {'model': 'Pi Zero v1.2', 'ram': '512MB', 'revision': '1.2'},
-            '900093': {'model': 'Pi Zero v1.3', 'ram': '512MB', 'revision': '1.3'},
-            '9000C1': {'model': 'Pi Zero W', 'ram': '512MB', 'revision': '1.1'},
-
-            'a02082': {'model': 'Pi 3 Model B', 'ram': '1GB', 'revision': '1.2', 'manufacturer': 'Sony, UK'},
-            'a22082': {'model': 'Pi 3 Model B', 'ram': '1GB', 'revision': '1.2', 'manufacturer': 'Embest, China'},
-            'a020d3': {'model': 'Pi 3 Model B+', 'ram': '1GB', 'revision': '1.3', 'manufacturer': 'Sony, UK'},
-
-            'a03111': {'model': 'Pi 4', 'ram': '1GB', 'revision': '1.1', 'manufacturer': 'Sony, UK'},
-            'b03111': {'model': 'Pi 4', 'ram': '2GB', 'revision': '1.1', 'manufacturer': 'Sony, UK'},
-            'b03112': {'model': 'Pi 4', 'ram': '2GB', 'revision': '1.2', 'manufacturer': 'Sony, UK'},
-            'c03111': {'model': 'Pi 4', 'ram': '4GB', 'revision': '1.1', 'manufacturer': 'Sony, UK'},
-            'c03112': {'model': 'Pi 4', 'ram': '4GB', 'revision': '1.2', 'manufacturer': 'Sony, UK'},
-            'd03114': {'model': 'Pi 4', 'ram': '8GB', 'revision': '1.4', 'manufacturer': 'Sony, UK'},
-        }
-        if self.running_on_rasppi():
-            result = 'Raspberry '
-            info = rev_info.get(self.running_on_rasppi(), {})
-            if info == {}:
-                return result + 'Pi (Rev. ' + self.running_on_rasppi() + ')'
-
-            if info.get('model', ''):
-                result += info.get('model', '')
-            else:
-                result += 'Pi'
-            if info.get('revision', ''):
-                result += ' v' + info.get('revision', '')
-            if info.get('ram', ''):
-                result += ', '+info.get('ram', '')
-            if info.get('manufacturer', ''):
-                result += ' (' + info.get('manufacturer', '') + ')'
-            return result
-        return ''
-
-
-    def get_ostype(self):
-        pf = platform.system().lower()
-
-        if pf == 'linux':
-            self.read_linuxinfo()
-            if self.os_release == {}:
-                return pf
-            return self.os_release.get('ID', 'linux')
-        else:
-            return pf
 
 
     # -----------------------------------------------------------------------------------
@@ -217,8 +76,9 @@ class SystemData:
         now = str(self.module.shtime.now())
         system = platform.system()
 
-        self.read_linuxinfo()
-        vers = Utils.strip_quotes(self.os_release.get('PRETTY_NAME', ''))
+        #self.read_linuxinfo()
+        #vers = Utils.strip_quotes(self.os_release.get('PRETTY_NAME', ''))
+        vers = self._sh.systeminfo.get_osname()
         if vers == '':
             vers = platform.version()
         arch = platform.machine()
@@ -247,7 +107,8 @@ class SystemData:
 
         response = {}
         response['now'] = now
-        response['ostype'] = self.get_ostype()
+        response['ostype'] = self._sh.systeminfo.get_ostype()
+        response['osflavor'] = self._sh.systeminfo.get_osflavor()
         response['system'] = system
         response['sh_vers'] = shngversion.get_shng_version()
         response['sh_desc'] = shngversion.get_shng_description()
@@ -260,18 +121,15 @@ class SystemData:
         response['arch'] = arch
         response['user'] = user
         response['freespace'] = freespace
-        response['hardware'] = self.get_rasppi_info()
+        response['hardware'] = self._sh.systeminfo.get_rasppi_info()
         if response['hardware'] == '':
-            response['hardware'] = self.cpu_info.get('brand_raw', '')
-        response['rasppi'] = self.running_on_rasppi()
+            response['hardware'] = self._sh.systeminfo.get_cpubrand()
+        response['rasppi'] = self._sh.systeminfo.running_on_rasppi()
 
         response['uptime'] = time.mktime(datetime.datetime.now().timetuple()) - psutil.boot_time()
         response['sh_uptime'] = sh_runtime_seconds
         response['pyversion'] = pyversion
-        if self._sh.python_bin == '':
-            response['pypath'] = sys.executable
-        else:
-            response['pypath'] = self._sh.python_bin
+        response['pypath'] = self._sh.python_bin
         response['pyvirtual'] = lib.utils.running_virtual()
         response['ip'] = ip
         response['ipv6'] = ipv6
