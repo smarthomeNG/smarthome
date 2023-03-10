@@ -40,6 +40,18 @@ $(window).bind('datatables_defaults', function() {
 				 						 headerOffset: top_offset},
 				autoWidth: false,
 				initComplete: function () {
+					$(this).on( 'click', 'thead tr th', function () {
+						if ($(this).hasClass( "sorting" ) && window.initial_update == 'true'){
+							console.log("Instant value update after sorting");
+							shngGetUpdatedData();
+						}
+					});
+					$(".dataTables_filter").change( function () {
+						if (window.initial_update == 'true'){
+							console.log("Instant value update after search filter");
+							shngGetUpdatedData();
+						}
+					});
 					td_content = $(this).find('tbody').find('td:first-child').html();
 					if (td_content != '' && td_content != 'No data available in table')
 						console.warn("First column has to be empty! The plugin author has to add an empty first column in thead and tbody of " + $(this).attr('id'));
