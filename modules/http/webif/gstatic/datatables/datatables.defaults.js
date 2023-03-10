@@ -89,8 +89,6 @@ $(window).bind('datatables_defaults', function() {
 					$(this).addClass( "display" );
 					if (typeof window.row_count !== 'undefined' && window.row_count !== 'false' && initialized == true) {
 						setTimeout(function() { window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count(); console.log("Row count after draw is " + window.row_count);}, 200);
-
-
 					}
 				},
 				createdRow: function (row, data, index) {
@@ -99,7 +97,7 @@ $(window).bind('datatables_defaults', function() {
 					this.api().columns.adjust();
 					this.api().fixedHeader.adjust();
 					this.api().responsive.recalc();
-					if (typeof window.row_count !== 'undefined' && window.row_count !== 'false') {
+					if (typeof window.row_count !== 'undefined' && window.row_count !== 'false' && initialized == true) {
 						setTimeout(function() { window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count(); console.log("Row count after row creation is " + window.row_count);}, 200);
 					}
 				}
