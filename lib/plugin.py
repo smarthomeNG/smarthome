@@ -160,6 +160,11 @@ class Plugins():
                     args = self._get_conf_args(_conf[plugin])
 #                    logger.warning("Plugin '{}' from section '{}': classname = {}, classpath = {}".format( str(classpath).split('.')[1], plugin, classname, classpath ) )
                     instance = self._get_instancename(_conf[plugin]).lower()
+                    try:
+                        plugin_version = self.meta.pluginsettings.get('version', 'ersion unknown')
+                        plugin_version = 'v' + plugin_version
+                    except Exception as e:
+                        plugin_version = 'version unknown'
                     dummy = self._test_duplicate_pluginconfiguration(plugin, classname, instance)
                     try:
                         plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance, self.meta, self._configfile)
@@ -178,13 +183,13 @@ class Plugins():
                                 else:
                                     self._threads.append(plugin_thread)
                                 if instance == '':
-                                    logger.info("Initialized plugin '{}' from section '{}'".format( str(classpath).split('.')[1], plugin ) )
+                                    logger.info(f"Initialized plugin '{str(classpath).split('.')[1]}' from section '{plugin}'")
                                 else:
-                                    logger.info("Initialized plugin '{}' instance '{}' from section '{}'".format( str(classpath).split('.')[1], instance, plugin ) )
+                                    logger.info(f"Initialized plugin '{str(classpath).split('.')[1]}' instance '{instance}' from section '{plugin}'")
                             except Exception as e:
                                 logger.warning(f"Plugin '{str(classpath).split('.')[1]}' from section '{plugin}' not loaded - exception {e}" )
                     except Exception as e:
-                        logger.exception("Plugin '{}' from section '{}' exception: {}".format(str(classpath).split('.')[1], plugin, e))
+                        logger.exception(f"Plugin '{str(classpath).split('.')[1]}' {plugin_version} from section '{plugin}'\nException: {e}\nrunning SmartHomeNG {self._sh.version} / plugins {self._sh.plugins_version}")
 
         # join the start_early and start_late lists with the main thread list
         self._threads = threads_early + self._threads + threads_late
