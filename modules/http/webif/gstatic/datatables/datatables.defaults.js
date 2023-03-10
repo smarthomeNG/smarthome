@@ -73,7 +73,7 @@ $(window).bind('datatables_defaults', function() {
 							$(oSettings.nTableWrapper).find('.paginate_button').on('click', function(){
 								// scroll to top on page change
 							  $('html, body').animate({
-								  scrollTop: $('#'+oSettings.sTableId).offset().top - top_offset - $(oSettings.nTableWrapper).find('#maintable_filter').outerHeight() - 10
+								  scrollTop: $('#'+oSettings.sTableId).offset().top - top_offset - $(oSettings.nTableWrapper).find('.dataTables_filter').outerHeight() - 10
 							  }, 'slow');
 	 							 console.log("Instant value update is " + window.initial_update);
 	 							 if (window.initial_update == 'true') {
