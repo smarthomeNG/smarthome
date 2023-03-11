@@ -125,11 +125,13 @@ Updates in the CORE
     * Implemented extended logging levels (NOTICE, DBGHIGH, DBGMED, DBGLOW) for plugins too
     * Added plugin parameter 'startorder'
     * Reversed stop order of plugins. Now they are stopped in the oposite order they were started
+    * Info added to plugin exception log entries
 
   * lib.scheduler:
 
     * Catch more exceptions outside scheduler to prevent thread end
     * Adjusted logging on leaving run method
+    * Added set_worker_warn_count() method
 
   * lib.shpypi:
 
@@ -143,6 +145,13 @@ Updates in the CORE
 
     * Added reload_translations() to smarthome object to enable reload of translations during runtime through
       eval syntax-checker (evaluate: sh.reload_translations())
+    * Info added to log entires of not catched exceptions
+    * Modifications to use lib.systeminfo
+    * Added call lib.systeminfo to measure cpu speed and set worker-warn-count in scheduler acordingly
+
+  * lib.systeminfo:
+
+    * New library to get info about the system, SmartHomeNG is running on
 
   * lib.translation:
 
@@ -164,6 +173,10 @@ Updates in the CORE
     * Updated shngAdmin to v0.6.3
     * Fix for displaying on_update and on_change in item details
     * Updated shngAdmin to v0.6.4
+    * Fixed issue #522: Warning after changing plugin loglevel
+    * shngadmin: Modifications to system ovwerview (show if running in virtual environment, ...)
+    * Updated shngAdmin to v0.6.5
+    * Modified to use systeminfo from smarthome object
 
   * http:
 
@@ -665,6 +678,11 @@ Tools
 
   * New tool to set permissions after checkout from github
 
+* measure_cpu_speed.py:
+
+  * New tool to set permissions after checkout from github
+
+|
 
 Dokumentation
 -------------

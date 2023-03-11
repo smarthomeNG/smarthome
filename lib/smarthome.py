@@ -362,13 +362,6 @@ class SmartHome():
 
 
         #############################################################
-        # check processor speed (if not done before)
-        if self.systeminfo.get_cpu_speed() is None:
-            self.shng_status = {'code': 2, 'text': 'Checking processor speed'}
-            self.systeminfo.check_cpu_speed()
-
-
-        #############################################################
         # test if needed Python packages for configured plugins
         # are installed
         self.shpypi = Shpypi.get_instance()
@@ -400,10 +393,6 @@ class SmartHome():
 
         self.shng_status = {'code': 3, 'text': 'Initalizing: Requirements checked'}
 
-
-        self.shtime._initialize_holidays()
-        self._logger_main.notice(" - " + self.shtime.log_msg)
-
         # Add Signal Handling
 #        signal.signal(signal.SIGHUP, self.reload_logics)
         signal.signal(signal.SIGINT, self.stop)
@@ -419,6 +408,19 @@ class SmartHome():
         # Catching Exceptions
         sys.excepthook = self._excepthook
 
+        #############################################################
+        # Initialize holidays
+        self.shtime._initialize_holidays()
+        self._logger_main.notice(" - " + self.shtime.log_msg)
+
+        #############################################################
+        # check processor speed (if not done before)
+        self.cpu_speed_class = self.systeminfo.get_cpu_speed(self._var_dir)
+        if self.cpu_speed_class is None:
+            self.shng_status = {'code': 2, 'text': 'Checking processor speed'}
+            self.cpu_speed_class = self.systeminfo.check_cpu_speed(self._var_dir)
+
+        #############################################################
         # test if a valid locale is set in the operating system
         if os.name != 'nt':
             try:
@@ -428,6 +430,7 @@ class SmartHome():
                 self._logger.error("Locale for the enviroment is not set. Defaulting to en_US.UTF-8")
                 os.environ["LANG"] = 'en_US.UTF-8'
                 os.environ["LC_ALL"] = 'en_US.UTF-8'
+
 
         #############################################################
         # Link Tools
@@ -601,6 +604,15 @@ class SmartHome():
             self.scheduler = lib.scheduler.Scheduler(self)
         self.trigger = self.scheduler.trigger
         self.scheduler.start()
+
+        # set warn level to a higher number of workers on fast cpus
+        if self.cpu_speed_class == 'fast':
+            self.scheduler.set_worker_warn_count(60)
+        elif self.cpu_speed_class == 'medium':
+            self.scheduler.set_worker_warn_count(35)
+        else:
+            #leave it on standard (20 workers)
+            pass
 
         #############################################################
         # Init Connections

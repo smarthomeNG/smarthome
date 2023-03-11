@@ -39,6 +39,9 @@ except:
     yaml_support = False
 
 
+_logger = logging.getLogger(__name__)
+
+
 def _run_and_get_stdout(command, pipe_command=None):
     from subprocess import Popen, PIPE
 
@@ -255,19 +258,92 @@ class Systeminfo:
 
 
     @classmethod
-    def get_cpu_speed(cls):
+    def get_cpu_speed(cls, var_dir):
         if yaml_support:
+            # read previous results from yaml file
+            cls._systeminfo_dict = shyaml.yaml_load(os.path.join(var_dir, 'systeminfo.yaml'), ignore_notfound=True)
             pass
+            try:
+                cpu_speed_class = cls._systeminfo_dict['systeminfo']['cpu_speed_class']
+                if cls.get_cpubrand() == cls._systeminfo_dict['systeminfo']['cpu_brand']:
+                    # return time, if cpu brand has not changed since stored measurement
+                    return cpu_speed_class
+            except:
+                return None
+        return None     # None = No previous measurement stored
 
-        return None     # None = No previous measuremend stored
+
+    cpu_duration = None
+    cpu_speed_class = None
+
+    _systeminfo_dict = {}
+
+    @classmethod
+    def measure_cpu_speed(cls):
+        """
+        Measure the cpu speed to classify the machine (e.g. for scheduler configuration)
+
+        :return: number of seconds to complete the calculation loop
+
+        measured data for 50000 calculations: slow > 120sec > medium > 50sec > fast
+
+        computer / cpu                              seconds         measured by     Python version
+        ------------------------------------------  -----------     -----------     --------------
+        Raspi 2, ARMv7 rev 5 (v7l)                  181.47          morg42          3.7.3
+
+        Raspberry Pi 3                              119.83          sisamiwe        3.8.6
+        Raspberry Pi 3                              108.04          onkelandy       3.9.2
+        Raspberry Pi 3 ARMv7 Processor rev 4 (v7l)  99.65           msinn           3.7.3
+        Raspi  3B+, ARMv7 rev4 (v7l)                87.8            morg42          3.7.3
+
+        Raspberry Pi 4                              41.09           onkelandy       3.9.2
+        Raspberry Pi 4                              36.61           sisamiwe        3.9.2
+        NUC mit Celeron(R) CPU  N2820  @ 2.13GHz    36.05           bmxp            3.9.2
+        NUC mit Celeron(R) CPU  N2830  @ 2.16GHz    34.88           bmxp            3.9.2
+        Intel(R) Celeron(R) CPU J3455 @ 1.50GHz     23.49-26.35     msinn           3.8.3
+        NUC mit Celeron(R) J4005 CPU @ 2.00GHz      17.96           bmxp            3.9.2
+        E31265L                                     10.39           morg42          3.9.2
+        i5-8600K                                    9.78            morg42          3.9.7
+        """
+
+        import timeit
+
+        _logger.notice(f"Testing cpu speed...")
+
+        #cpu_speed = round(timeit.timeit('"|".join(str(i) for i in range(99999))', number=1000), 2)
+        cpu_duration = round(timeit.timeit('"|".join(str(i) for i in range(50000))', number=1000), 2)
+
+        if cpu_duration > 120:
+            cpu_speed_class = 'slow'
+        elif cpu_duration > 50:
+            cpu_speed_class = 'medium'
+        else:
+            cpu_speed_class = 'fast'
+
+        return cpu_duration, cpu_speed_class
 
 
     @classmethod
-    def check_cpu_speed(cls):
+    def check_cpu_speed(cls, var_dir):
+
         if yaml_support:
+            # read previous results from yaml file
+            cls._systeminfo_dict = shyaml.yaml_load(os.path.join(var_dir, 'systeminfo.yaml'), ignore_notfound=True)
             pass
 
-        return
+        # execute speed test
+        cls.cpu_duration, cls.cpu_speed_class = cls.measure_cpu_speed()
+        cls._systeminfo_dict = {}
+        cls._systeminfo_dict['systeminfo'] = {}
+        cls._systeminfo_dict['systeminfo']['cpu_brand'] = cls.get_cpubrand()
+        cls._systeminfo_dict['systeminfo']['cpu_measured_time'] = cls.cpu_duration
+        cls._systeminfo_dict['systeminfo']['cpu_speed_class'] = cls.cpu_speed_class   # slow / medium / fast
+
+        if yaml_support:
+
+            # write results to yaml file
+            shyaml.yaml_save(os.path.join(var_dir, 'systeminfo.yaml'), cls._systeminfo_dict)
+        return cls._systeminfo_dict['systeminfo']['cpu_speed_class']
 
     # ==========================================================================================
 

@@ -131,6 +131,7 @@ class Scheduler(threading.Thread):
     _worker_num = 5
     _worker_max = 20
     _worker_delta = 60  # wait 60 seconds before adding another worker thread
+
     _scheduler = {}                     # holder schedulers, key is the scheduler name. Each scheduler is stored in a dict
                                         # (keys are 'obj', 'active', 'prio', 'next', 'value', 'cycle', 'cron')
     _runq = _PriorityQueue()            # holds priority and a tuple of (name, obj, by, source, dest, value) for immediate execution
@@ -188,6 +189,12 @@ class Scheduler(threading.Thread):
             return None
         else:
             return _scheduler_instance
+
+
+    def set_worker_warn_count(self, count):
+
+        self._worker_max = count
+        logger.info(f"Warn Level for maximum number of workers set to {self._worker_max}")
 
 
     def get_worker_count(self):
