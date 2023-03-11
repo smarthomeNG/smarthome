@@ -40,25 +40,37 @@ $(window).bind('datatables_defaults', function() {
 				 						 headerOffset: top_offset},
 				autoWidth: false,
 				initComplete: function () {
+					// update content on ordering - if activated
 					$(this).on( 'click', 'thead tr th', function () {
 						if ($(this).hasClass( "sorting" ) && window.initial_update == 'true'){
 							console.log("Instant value update after sorting");
 							shngGetUpdatedData();
 						}
 					});
+					// slightly change resize_wrapper when expanding/collapsing responsive rows to fix some issues
+					$(this).on( 'click', 'tbody tr td', function () {
+						if ($(this).hasClass( "datatable-responsive" )){
+							window.toggle = window.toggle * -1
+							$('#resize_wrapper').css('height', $(window).height() - $('#webif-navbar').outerHeight() - $('#webif-tabs').outerHeight() - additional - $('.dataTables_info').outerHeight() - 5 - window.toggle);
+							$(this).parent().parent().parent().DataTable().responsive.recalc();
+						}
+					});
+					// update content on searching - if activated
 					$(".dataTables_filter").change( function () {
 						if (window.initial_update == 'true'){
 							console.log("Instant value update after search filter");
 							shngGetUpdatedData();
 						}
 					});
+					// Warning if first column is not empty (for responsive + sign)
 					td_content = $(this).find('tbody').find('td:first-child').html();
 					if (td_content != '' && td_content != 'No data available in table')
 						console.warn("First column has to be empty! The plugin author has to add an empty first column in thead and tbody of " + $(this).attr('id'));
-					$(this).show();
+
 					this.api().columns.adjust();
 					this.api().responsive.recalc();
 					initialized = true;
+					$(this).show();
 					if (typeof window.row_count !== 'undefined' && window.row_count !== 'false') {
 						setTimeout(function() { window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count(); console.log("Row count after init is " + window.row_count);}, 200);
 					}
@@ -77,7 +89,7 @@ $(window).bind('datatables_defaults', function() {
     		},
 				drawCallback: function(oSettings) { // hide pagination if not needed
 					$(window).resize();
-
+					console.log("draw datatable " + this.attr('id'));
 					if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay() || oSettings._iDisplayLength == -1) {
 						 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
 					} else {
@@ -99,9 +111,15 @@ $(window).bind('datatables_defaults', function() {
 					this.api().fixedHeader.adjust();
 					this.api().responsive.recalc();
 					$(this).addClass( "display" );
-					if (typeof window.row_count !== 'undefined' && window.row_count !== 'false' && initialized == true) {
-						setTimeout(function() { window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count(); console.log("Row count after draw is " + window.row_count);}, 200);
+					/*
+					if (initialized == true) {
+						$(this).find('tbody').find('tr:nth-child(3)').find('td:first-child').click();
 					}
+					*/
+					if (typeof window.row_count !== 'undefined' && window.row_count !== 'false' && initialized == true) {
+						setTimeout(function() { window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count(); console.log("Row count after draw is " + window.row_count);initialized = false;}, 200);
+					}
+
 				},
 				createdRow: function (row, data, index) {
 					$(row).hide().fadeIn('slow');
