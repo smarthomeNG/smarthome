@@ -2,10 +2,9 @@ name: "Unittests Core"
 #on: [workflow_dispatch, push]
 on:
   workflow_dispatch:
-  push:
+  pull_request:
     branches:
-      - '*'
-      - '!release_doc'
+      - 'develop'
 
 jobs:
   build:
@@ -35,11 +34,11 @@ jobs:
           repository: smarthomeNG/smarthome
           ref: ${{steps.extract_branch.outputs.branch}}
 
-      - name: Checkout plugins from ${{steps.extract_branch.outputs.branch}} branch (${{ github.event.pull_request.base.ref }})
+      - name: Checkout plugins from develop branch
         uses: actions/checkout@v3
         with:
           repository: smarthomeNG/plugins
-          ref: ${{steps.extract_branch.outputs.branch}}
+          ref: develop
           path: plugins
 
       - name: Set up Python
