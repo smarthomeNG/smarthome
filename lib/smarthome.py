@@ -391,7 +391,7 @@ class SmartHome():
             self._logger.critical("Aborting")
             exit(1)
 
-        self.shng_status = {'code': 3, 'text': 'Initalizing: Requirements checked'}
+        self.shng_status = {'code': 2, 'text': 'Initalizing: Requirements checked'}
 
         # Add Signal Handling
 #        signal.signal(signal.SIGHUP, self.reload_logics)
@@ -417,7 +417,7 @@ class SmartHome():
         # check processor speed (if not done before)
         self.cpu_speed_class = self.systeminfo.get_cpu_speed(self._var_dir)
         if self.cpu_speed_class is None:
-            self.shng_status = {'code': 2, 'text': 'Checking processor speed'}
+            self.shng_status = {'code': 3, 'text': 'Checking processor speed'}
             self.cpu_speed_class = self.systeminfo.check_cpu_speed(self._var_dir)
 
         #############################################################
