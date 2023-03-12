@@ -194,7 +194,7 @@ class SmartHome():
         """
         Initialization of main smarthome object
         """
-        self.shng_status = {'code': 0, 'text': 'Initalizing'}
+        self.shng_status = {'code': 0, 'text': 'Initializing'}
         self._logger = logging.getLogger(__name__)
         self._logger_main = logging.getLogger(__name__)
         self.logs = lib.log.Logs(self)   # initialize object for memory logs
@@ -301,7 +301,7 @@ class SmartHome():
         self.version = shngversion.get_shng_version()
         self.plugins_version = shngversion.get_plugins_version()
 
-        self.shng_status = {'code': 1, 'text': 'Initalizing: Logging initalized'}
+        self.shng_status = {'code': 1, 'text': 'Initializing: Logging initialized'}
 
         if hasattr(self, '_tz'):
             # set _tz again (now with logging enabled),
@@ -391,7 +391,7 @@ class SmartHome():
             self._logger.critical("Aborting")
             exit(1)
 
-        self.shng_status = {'code': 2, 'text': 'Initalizing: Requirements checked'}
+        self.shng_status = {'code': 2, 'text': 'Initializing: Requirements checked'}
 
         # Add Signal Handling
 #        signal.signal(signal.SIGHUP, self.reload_logics)
@@ -624,7 +624,7 @@ class SmartHome():
         #############################################################
         # Init and start loadable Modules
         #############################################################
-        self.shng_status = {'code': 11, 'text': 'Starting: Initalizing and starting loadable modules'}
+        self.shng_status = {'code': 11, 'text': 'Starting: Initializing and starting loadable modules'}
 
         self._logger.info("Init loadable Modules")
         self.modules = lib.module.Modules(self, configfile=self._module_conf_basename)
@@ -643,7 +643,7 @@ class SmartHome():
         #############################################################
         # Init Plugins
         #############################################################
-        self.shng_status = {'code': 12, 'text': 'Starting: Initalizing plugins'}
+        self.shng_status = {'code': 12, 'text': 'Starting: Initializing plugins'}
 
         self._logger.info("Init Plugins")
         self.plugins = lib.plugin.Plugins(self, configfile=self._plugin_conf_basename)

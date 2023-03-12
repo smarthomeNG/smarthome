@@ -188,14 +188,14 @@ def _get_translation(translation_lang, txt, plugin_translations=None, module_tra
         if plugin_translations in _translations.keys():
             translations = _translations[plugin_translations].get(txt, {})
         else:
-            logger.warning("Trying to use undefined aditional_translations '{}'".format(plugin_translations))
+            logger.warning("Trying to use undefined additional_translations '{}'".format(plugin_translations))
 
     if translations == {} and module_translations is not None:
         #translations = module_translations.get(txt, {})
         if module_translations in _translations.keys():
             translations = _translations[module_translations].get(txt, {})
         else:
-            logger.warning("Trying to use undefined aditional_translations '{}'".format(plugin_translations))
+            logger.warning("Trying to use undefined additional_translations '{}'".format(plugin_translations))
 
     if translations == {}:
         if 'global' in _translations.keys():
