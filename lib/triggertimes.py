@@ -78,7 +78,7 @@ class TriggerTimes():
     - An instance is created during initialization by bin/smarthome.py
     - There should be only one instance of this class. So: Don't create another instance
     """
-    # dict with all the items that are defined in the form: 
+    # dict with all the items that are defined in the form:
     # {"*/5 6-19/1 * * *":  crontab object, "* * 6 * : crontab object, ..."}
 
     def __init__(self, smarthome):
@@ -89,9 +89,9 @@ class TriggerTimes():
         self._sh = smarthome
         Skytime.set_smarthome_reference(smarthome)
         self.logger = logging.getLogger(__name__)
-        
+
         # a list with objects containing trigger times
-        self.__known_triggertimes = [] 
+        self.__known_triggertimes = []
 
         global _triggertimes_instance
         if _triggertimes_instance is not None:
@@ -198,12 +198,12 @@ class TriggerTime():
     This provides a base class for all trigger times like crontabs, or sun/moonbound trigger times
     It is mainly to share the same basics and static methods
     """
-    named_days = { 
+    named_days = {
         'mon':'0', 'tue':'1','wed':'2','thu':'3','fri':'4','sat':'5','sun':'6',
-        'mo':'0', 'di':'1','mi':'2','do':'3','fr':'4','sa':'5','so':'6' 
+        'mo':'0', 'di':'1','mi':'2','do':'3','fr':'4','sa':'5','so':'6'
         }
 
-    named_months = { 
+    named_months = {
         'jan':'1', 'feb':'2','mar':'3','apr':'4','may':'5','jun':'6','jul':'7',
         'aug': '8', 'sep': '9', 'oct': '10', 'nov': '11', 'dec': '12'
         }
@@ -221,11 +221,11 @@ class TriggerTime():
     @staticmethod
     def integer_range(entry, low, high):
         """
-        Inspects a string containing 
+        Inspects a string containing
         * intervals ('*/2' --> ['2','4','6', ... high]
-        * ranges ('9-11' --> ['9','10','11']), 
+        * ranges ('9-11' --> ['9','10','11']),
         * single values ('1,2,5,9' --> ['1','2','5','9'])
-        * or a combination of those and 
+        * or a combination of those and
         returns a sorted and distinct list of found integers
 
         :param entry: a string with single entries of intervals, numeric ranges or single values
@@ -291,7 +291,7 @@ class Crontab(TriggerTime):
     └───────────── minute (0 - 59)
 
     If 5 parts specified:
-    
+
     * * * * *
     │ │ │ │ │
     │ │ │ │ └───────────── weekday (0 - 6)
@@ -301,7 +301,7 @@ class Crontab(TriggerTime):
     └───────────── minute (0 - 59)
 
     If 6 parts specified:
-    
+
     * * * * * *
     │ │ │ │ │ │
     │ │ │ │ │ └───────────── weekday (0 - 6)
@@ -374,7 +374,7 @@ class Crontab(TriggerTime):
             except:
                 logger.error(f"crontab entry '{triggertime}' can not be split up into parts")
                 return False
-            
+
             self.parameter_count = len(parameter_set)
             if self.parameter_count < 4:
                 logger.error(f"crontab entry '{triggertime}' has fewer than 4 parts and is invalid")
@@ -458,7 +458,7 @@ class Crontab(TriggerTime):
                 #logger.warning(f"{searchtime}")
                 days = abs((starttime-searchtime).days)
                 if days > days_max_count:
-                    logger.error(f'No matches after {days} examined days, giving up')
+                    logger.error(f"No matches for '{self._triggertime}' after {days} examined days, giving up")
                     return get_invalid_time()
                 # preset current searcher
                 year = searchtime.year
@@ -738,14 +738,14 @@ class Skytime(TriggerTime):
     @staticmethod
     def split_offset(skyevent):
         """
-        This parses offsets from a sky event. It is expected for the offset to be 
-        a float when indicating degrees or 
+        This parses offsets from a sky event. It is expected for the offset to be
+        a float when indicating degrees or
         an integer when unit ``m`` is appended
 
         :param skyevent: (skyevent)[+|-][offset][unit]
         :type skyevent: str
         :return: a tuple of a skyevent and offsets for degree and time (in minutes)
-        :rtype: tuple 
+        :rtype: tuple
         """
         doff = 0.0  # degree offset
         moff = 0  # minute offset
@@ -926,10 +926,10 @@ class Skytime(TriggerTime):
                             else:
                                 logger.error(f'No function found to get next skyevent time for {self._triggertime}')
                                 return get_invalid_time()
-                            
+
                             # eventtime will contain the next time e.g. a sunset will take place
-                            # thus 
-                            #  - searchtime must be smaller than eventtime and 
+                            # thus
+                            #  - searchtime must be smaller than eventtime and
                             #  - eventtime might be one or more day(s) later
 
                             logger.debug(f"starting with {starttime} the next {self.event}({self.doff},{self.moff}) is {eventtime}")
