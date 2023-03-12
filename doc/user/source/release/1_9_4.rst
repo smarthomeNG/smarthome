@@ -1,5 +1,5 @@
 =============================
-Release 1.9.x - tt. März 2023
+Release 1.9.4 - tt. März 2023
 =============================
 
 Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
@@ -52,12 +52,6 @@ zu unterstützten Python Versionen)
 Änderungen am Core
 ==================
 
-Bugfixes in the CORE
---------------------
-
-* ...
-
-
 Updates in the CORE
 -------------------
 
@@ -66,14 +60,6 @@ Updates in the CORE
 * Configuration:
 
   * logging.yaml.default: Modified LEVEL for plugins: to NOTICE to reflect the ability of plugins to log NOTICEs
-
-* Items:
-
-  * ...
-
-* Logics:
-
-  * ...
 
 * Libs:
 
@@ -228,7 +214,34 @@ Updates in the CORE
     * Improved handling in cancel_log, if log subscription is not found
 
 
-* Plugins:
+* tests:
+
+  * Updated core mockup for extended log levels for plugins
+
+|
+
+Änderungen bei Plugins
+======================
+
+Neue Plugins
+------------
+
+Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* indego4shng: Plugin, the original indego-plugin is deprecated
+* piratewthr: Weather plugin as a replacement for the darksky plugin. It is (almost) a dropin replacement
+* rcs1000n: Plugin for 433 MHz wireless sockets e.g. for Brennenstuhl RCS 1000 N
+* sml2: Plugin to read out smartmeter information with SML protocol
+* webpush: Plugin to send web push messages to clients
+
+|
+
+Plugin Updates
+--------------
+
+Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * avdevice:
 
@@ -583,39 +596,7 @@ Updates in the CORE
     * Adjust webif_pagelength handling
     * Fix docu
 
-
-* tests:
-
-  * Updated core mockup for extended log levels for plugins
-
 |
-
-Änderungen bei Plugins
-======================
-
-Neue Plugins
-------------
-
-Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
-http://www.smarthomeng.de/user/plugins_all.html konsultieren.
-
-* indego4shng: Plugin, the original indego-plugin is deprecated
-* piratewthr: Weather plugin as a replacement for the darksky plugin. It is (almost) a dropin replacement
-* rcs1000n: Plugin for 433 MHz wireless sockets e.g. for Brennenstuhl RCS 1000 N
-* sml2: Plugin to read out smartmeter information with SML protocol
-* webpush: Plugin to send web push messages to clients
-
-
-Plugin Updates
---------------
-
-Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
-http://www.smarthomeng.de/user/plugins_all.html konsultieren.
-
-* <name>:
-
-  * ...
-
 
 Outdated Plugins
 ----------------
@@ -660,6 +641,7 @@ Weiterhin wurde das bisherige mqtt Plugin zu mqtt1 umbenannt und als *deprecated
 Plugin diese Funktionalität übernimmt. Das neue mqtt Plugin nutzt dazu das mqtt Modul des aktuellen Cores
 von SmartHomeNG.
 
+|
 
 Retired Plugins
 ---------------

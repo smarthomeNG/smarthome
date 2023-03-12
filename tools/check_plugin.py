@@ -21,6 +21,11 @@
 #  along with SmartHomeNG. If not, see <http://www.gnu.org/licenses/>.
 #########################################################################
 
+#TODO
+
+# user_doc: Prüfen, ob im Abschnitt Konfiguration ein Link auf die generierte Konfigurationsseite vorhanden ist
+# user_doc: Prüfen, ob das eingebundene Icon auch existiert
+
 import os
 import argparse
 
