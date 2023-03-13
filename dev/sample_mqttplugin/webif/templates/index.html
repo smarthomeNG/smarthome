@@ -55,6 +55,7 @@
 				shngInsertText (device+'_powerState', objResponse[device]['powerState'], 'maintable', 10));
 				-->
 			}
+      $('#maintable').DataTable().draw(false);
 		}
 	}
 </script>
@@ -129,7 +130,7 @@
     {{ _('Hier kommt der Inhalt des Webinterfaces hin.') }} (optional)
   </div>
 
-	<table id="maintable">
+	<table id="maintable" class="dataTableAdditional">
 		<thead>
 		<tr>
       <th></th>
