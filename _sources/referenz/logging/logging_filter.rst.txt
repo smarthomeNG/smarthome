@@ -95,12 +95,15 @@ Benutzung des Filters
 ---------------------
 
 In der Datei ``../etc/logging.yaml`` wird der **Filter** im Abschnitt ``filters:`` zur Nutzung
-konfiguriert.
+konfiguriert. Dabei ist die erste Zeile `(): lib.logutils.Filter` zwingend anzugeben,
+außerdem zumindest eine der darauffolgenden Zeilen (module, msg, timestamp). Die Angaben
+sind dabei als reguläre Ausdrücke anzugeben und können sogar in Listenform erfolgen.
+Bei Modulen wie item, metadata, etc. ist KEIN voranstehendes `lib.` anzugeben. 
 
 .. code-block:: yaml
 
     filters:
-        duplicatefilter:
+        examplefilter:
             (): lib.logutils.Filter
             name: []
             module: []

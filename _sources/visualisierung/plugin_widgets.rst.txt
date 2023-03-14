@@ -15,8 +15,9 @@ haben, in welchem die Plugins abgelegt werden. Alle Dateien aus diesem Verzeichn
 in die smartVISU Installation kopiert. Falls
 
 Ab smartVISU v2.9 gibt es in der smartVISU hierzu ein Verzeichnis ``dropins``, wo die Dateien des Widgets abgelegt
-werden. Die eigentlichen Widgets werden in ``dropins/widgets`` kopiert. Falls ein Widget Icons mitbringt
-(\*.png oder \*.svg), werden diese in ``dropins/icons/ws`` kopiert.
+werden. Die eigentlichen Widgets werden in ``dropins/widgets`` kopiert. Ab smartVISU v3.0 und shNG v1.9.2 wird das 
+Verzeichnis ``dropins/shwidgets`` verwendet. Falls ein Widget Icons mitbringt (\*.png oder \*.svg), werden diese in
+``dropins/icons/ws`` kopiert.
 
 .. note::
 

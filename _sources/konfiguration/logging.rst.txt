@@ -114,16 +114,18 @@ Die einzelnen Konfigurationseinträge haben die folgende Bedeutung:
 |                 | Klammern zu setzen, auch wenn nur ein Filter zum Einsatz kommen soll.                              |
 |                 | Jeder Filter kann durch bis zu drei Parameter definiert werden, wobei diese nach AND Logik         |
 |                 | evaluiert werden:                                                                                  |
+|                 |                                                                                                    |
 |                 | - name: Loggername (z.B. lib.item)                                                                 |
-|                 | - module: Loggermodul, va. bei Plugins u.U. relevant (z.B. item)                                   |
-|                 | - timestamp: Uhrzeit/Datum (z.B. "23:00")                                                          |
+|                 | - module: Loggermodul, va. bei Plugins u.U. relevant (z.B. item, metadata, etc. OHNE `lib.`)       |
+|                 | - timestamp: Uhrzeit/Datum (z.B. "23:00" oder ein regulärer Ausdruck)                              |
 |                 | - msg: Der tatsächliche Logeintrag als RegEx, z.B. "Result = (.\*) \(for attribute 'eval'\)"       |
+|                 |                                                                                                    |
 |                 | Durch die Angabe von invert: True werden NUR die passenden Messages geloggt und sonst nichts.      |
 |                 | Ein Beispiel ist unter :doc:`Logging - Best Practices <logging_best_practices>` zu finden.         |
 +-----------------+----------------------------------------------------------------------------------------------------+
 | **loggers:**    | Hier werden die einzelnen Logger definiert und was mit diesen Einträgen passiert,                  |
 |                 | welche Handler und formatter verwendet werden. Das Level konfiguriert dabei die                    |
-|                 | Logtiefe für die einzelne Komponente. Bei den loggern ist es nun möglich einzelne                  |
+|                 | Logtiefe für die einzelne Komponente. Bei den Loggern ist es nun möglich einzelne                  |
 |                 | Plugins oder Libs im Debug protokollieren zu lassen. Dazu sind in der Konfiguration                |
 |                 | bereits einige Beispiele.                                                                          |
 +-----------------+----------------------------------------------------------------------------------------------------+
@@ -142,7 +144,6 @@ Eintrag im Handler **file:** erfolgen. Der Eintrag `level: WARNING` führt dazu,
 Handler **file:** nur Ausgaben für Fehler und Warnungen erfolgen. INFO und DEBUG Ausgaben erfolgen
 dann nur noch über den zusätzlichen Handler.
 
-|
 
 Logging Handler und Filter
 ==========================
@@ -180,11 +181,11 @@ in der `__init__` Methode instanziert werden. Das ist inzwischen nicht mehr notw
 Klasse erzeugt den Logger inzwischen selbst. Ein **import logging** ist nicht mehr notwendig und die
 Initialisierung des Loggers in der `__init__` Methode sollte auch weggelassen werden.
 
-Der Logger konn/muss in der ``etc/logging,yaml`` konfiguriert werden. Der Name des Loggers ist ``plugins.<Name des Plugins>``.
+Der Logger kann/muss in der ``etc/logging.yaml`` konfiguriert werden. Der Name des Loggers ist ``plugins.<Name des Plugins>``.
 
 
 Für die Entwickler von Logiken:
-Verwendet man zur Instanziierung einen eigenen Namen (nicht empfohlen), wie z.B.
+Verwendet man zur Instanzierung einen eigenen Namen (nicht empfohlen), wie z.B.
 
 .. code-block:: python
 
@@ -201,7 +202,7 @@ muss in der config auch dieser Name verwendet werden. Ohne `plugin.` oder `logic
        DWD:
            level: DEBUG
 
-Standardmäßig haben Logiken bereits einen Logger, der in der ``etc/logging,yaml`` konfiguriert werden kann/muss.
+Standardmäßig haben Logiken bereits einen Logger, der in der ``etc/logging.yaml`` konfiguriert werden kann/muss.
 Der Name des Loggers ist ``logics.<Name der Logik>``, wobei der Name der Logik, der in der Konfiguration festgelegte
 Name ist und nicht der Name des Python Skriptes.
 

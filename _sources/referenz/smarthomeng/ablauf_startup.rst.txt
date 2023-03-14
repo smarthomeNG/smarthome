@@ -1,4 +1,4 @@
-d bleibt wehalten, bis SmartHomeNG beendet wi
+
 .. index:: Ablauf des Startups
 
 .. role:: bluesup
@@ -25,6 +25,8 @@ Danach wird das smarthome Objekt erzeugt und wie im Folgenden beschrieben initia
 
 Initialisierung des smarthome Objektes
 ======================================
+
+.. index:: SmartHomeNG Initialisierung
 
 Die Schritte der Objekt Initialisierung sind in Gruppen zusammengefasst. Der Aktuelle Stand (welche Gruppe gerade
 abgearbeitet wird bzw. abgearbeitet wurde) wird in der AdminGUI auf der Seite **Dienste** angezeigt.
@@ -71,6 +73,15 @@ einen plausiblen Wert hat.
 
 Es werden die Speicherstrukturen für das Memory-Log initialisiert. Diese Strukturen werden für das memlog Plugin
 benötigt.
+
+
+3 - Initialisierung: Prüfung der Prozessor-Geschwindigkeit
+----------------------------------------------------------
+
+SmartHomeNG prüft die CPU Geschwindigkeit. Dieses dient zur Optimierung einzelner Abläufe.
+
+Die gemessene Geschwindigkeit wird persistent gespeichert, so dass die Messung bei einem Neustart nicht erneut
+durchgeführt wird, es sei denn die Hardware hat sich geändert.
 
 
 10 - Startet
@@ -180,3 +191,25 @@ SmartHomeNG beendet laufende Threads.
 ---------------
 
 SmartHomeNG wurde beendet.
+
+|
+
+Das shng_status dict
+====================
+
+.. index:: shng_status
+.. index:: SmartHomeNG Status
+
+Die oben beschriebenen Stati können über das ``shng_status`` dict des smarthome Objektes abgerufen werden.
+Das Dict enthält zwei Einträge (``code`` und ``text``). Über den Key ``code`` kann auf den numerischen Wert des
+Status von SmartHomeNG zugegriffen werden. Unter dem Key ``text`` ist der Status im Klartext hinterlegt. Diese
+Texte werden in der Admin GUI unter Dienste angezeigt.
+
+Um sicher zu stellen, dass bestimmter Code nur ausgeführt wird, wenn SmartHomeNG vollständig initialisiert ist und
+nicht im Begriff ist sich zu beenden, kann abgefragt werden, ob der Status-Code 20 ist:
+
+.. code-block:: python
+
+    if self._sh.shng_status['code'] == 20:
+        ...
+

@@ -64,5 +64,5 @@ oder im `Chat auf gitter.im <https://gitter.im/smarthomeNG/smarthome>`_ .
    genindex
    impressum
    datenschutz
-   English translation of this documentation <https://translate.google.com/translate?hl=&sl=de&tl=en&u=https://www.smarthomeng.de/dev/user/>
+   English translation of this documentation <https://translate.google.com/translate?hl=&sl=de&tl=en&u=https://docs.smarthomeng.de/>
 
