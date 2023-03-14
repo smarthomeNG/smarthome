@@ -7,7 +7,7 @@
 .. role:: bluesup
 
 ============================
-Plugin-Checker :redsup:`new`
+Plugin-Checker :redsup:`neu`
 ============================
 
 Mit der SmartHomeNG Version 1.9.4 ist ein Tool hinzugekommen, welches Entwickler von Plugins unterstützt. Der

@@ -34,5 +34,8 @@ interne Konfigurationen vorzunehmen. Die Messung wird nur wiederholt, wenn sich 
 Die Messung nimmt, je nach CPU, einige Zeit in Anspruch. Auf einem Raspberry Pi 2 zum Beispiel, verlängert sich dadurch
 die Start Zeit beim ersten Start von SmartHomeNG um ca. 3 Minuten.
 
+Es sind auch :ref:`sechs neue Plugins </release/1_9_4> <neue_plugins>` hinzugekommen.
+
+
 Die vollständigen Änderungen können in den :doc:`Release Notes </release/1_9_4>` nachgelesen werden.
 

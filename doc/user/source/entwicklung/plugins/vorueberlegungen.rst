@@ -9,7 +9,11 @@ Fragestellungen
 Bevor die Erstellung eines Plugins beginnt, muss man sich einige Fragen stellen und beantworten:
 
 - Welchen Typ soll das Plugin haben, welches erstellt werden soll?
+- Soll das Plugin über MQTT mit dem/den anzusteuernden Device(s) kommunizieren?
 - Soll das externe System direkt angesteuert werden oder soll auf existierende Python Packages zurück gegriffen werden?
+- Unter welcher Python Version soll das Plugin laufen?
+
+|
 
 Typ des Plugins
 ===============
@@ -67,6 +71,18 @@ Beispiele für Web/Cloud Plugins sind: **alexa4p3**, **ical**, **jsonread** oder
 
 |
 
+Plugin Vorlagen
+===============
+
+Um ein neues Plugin zu erstellen, ist es am besten die Vorlage zu verwenden, die unter /dev/sample_plugin zu finden ist.
+Falls das Plugin über MQTT kommunizieren soll, ist es besser, die Vorlage zu verwenden, die unter /dev/sample_mqttplugin
+zu finden ist.
+
+Falls über MQTT kommuniziert werden soll, wäre es für einfache Aufgabenstellungen auch zu überlegen, kein eigenes Plugin
+zu schreiben, sondern das generische mqtt Plugin zu nutzen.
+
+|
+
 Nutzung von Python Packages
 ===========================
 
@@ -84,8 +100,9 @@ Python Version
 ==============
 
 Je nachdem unter welcher Python Version SmartHomeNG läuft, stehen Python Features zur Verfügung, oder eben auch nicht.
-Es sollten nach Möglichkeit nur Python Features genutzt werden, die bereits in der ältesten unterstützten Python
-Version (siehe ...) zur Verfügung stehen. Dadurch ist das Plugin am felxibelsten einsetzbar.
+Es sollten nach Möglichkeit nur Python Features genutzt werden, die bereits in der ältesten von SmartHomeNG
+unterstützten Python Version (siehe :ref:`Hard- u. Software Anforderungen <python_versionen>`) zur Verfügung stehen.
+Dadurch ist das Plugin am felxibelsten einsetzbar.
 
 Sollte auf ein Python Features zurück gegriffen werden (müssen), welches erst in neueren Python Versionen zur
 Verfügung steht, ist es wichtig, die minimale Python Version unter der das Plugin lauffähig ist, in den Metadaten

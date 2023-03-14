@@ -899,7 +899,7 @@ class Skytime(TriggerTime):
                 #logger.warning(f"difference {searchtime-starttime}")
                 days = abs((searchtime-starttime).days)
                 if days > days_max_count:
-                    logger.error(f'No matches after {days} examined days, giving up')
+                    logger.error(f"No matches for '{self._triggertime}' after {days} examined days, giving up")
                     return get_invalid_time()
                 # preset current searcher
                 year = searchtime.year

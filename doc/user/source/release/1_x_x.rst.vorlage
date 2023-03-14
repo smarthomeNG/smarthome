@@ -9,21 +9,23 @@ sowie einige neue Plugins.
 
     Dieses Release ist ein Feature-Release. Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
+|
 
-.. note::
+.. only: develop
+    .. note::
 
-    Diese Release Notes sind ein Arbeitsstand.
+        Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. ...
-       (...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. ...
-       (...)
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. ...
+           (...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. ...
+           (...)
 
 
 Überblick
 =========
 
-Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.9.3 sind im
+Dieses ist neues Release für SmartHomeNG. Die Änderungen gegenüber dem Release v1.9.4 sind im
 folgenden in diesen Release Notes beschrieben.
 
 
@@ -50,6 +52,14 @@ zu unterstützten Python Versionen)
 
 Änderungen am Core
 ==================
+
+Allgmein
+--------
+
+* Workflows:
+
+  * ...
+
 
 Bugfixes in the CORE
 --------------------
@@ -92,6 +102,14 @@ Updates in the CORE
 
 Änderungen bei Plugins
 ======================
+
+Allgmein
+--------
+
+* Workflows:
+
+  * ...
+
 
 Neue Plugins
 ------------

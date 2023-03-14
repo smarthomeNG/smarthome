@@ -36,7 +36,7 @@ Je nach Umfang und Erfordernissen sind folgende optionale Dateien hinzuzufügen:
 |                          | Standardinstallation von Python enthalten ist, muss diese Anforderung in der    |
 |                          | Datei ``requirements.txt`` dokumentiert werden. (Für eine Beschreibung der      |
 |                          | Dateiformats bitte in der Dokumentation des ``pip`` Kommandos nachlesen:        |
-|                          | (https://pip.pypa.io/en/stable/reference/pip_install/#requirements-file-format) |
+|                          | (https://pip.pypa.io/en/stable/cli/pip_install/)                                |
 +--------------------------+---------------------------------------------------------------------------------+
 | ``user_doc.rst``         | Weitergehende Dokumentation des Plugins, die in die Anwender-Dokumentation      |
 |                          | integriert wird. Falls die Dokumentation in ``user_doc.rst`` Bilder oder andere |

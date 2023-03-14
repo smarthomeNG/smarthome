@@ -1,5 +1,5 @@
 =============================
-Release 1.9.4 - tt. März 2023
+Release 1.9.4 - 14. März 2023
 =============================
 
 Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
@@ -9,15 +9,17 @@ sowie einige neue Plugins.
 
     Dieses Release ist ein Feature-Release. Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
+|
 
-.. note::
+.. only: develop
+    .. note::
 
-    Diese Release Notes sind ein Arbeitsstand.
+        Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 12. März 2023
-       (lib.triggertimes: ...)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 11. März 2023
-       (telegram plugin: fix webif_pagelength, bump version to 1.7.1)
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 13. März 2023
+           (http module: introduce ...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 11. März 2023
+           (telegram plugin: fix webif_pagelength, bump version to 1.7.1)
 
 
 Überblick
@@ -52,10 +54,17 @@ zu unterstützten Python Versionen)
 Änderungen am Core
 ==================
 
+Allgmein
+--------
+
+* Workflows:
+
+  * Added Python 3.11 to unit tests
+  * Added Github actions workflow to successfully test pull requests
+
+
 Updates in the CORE
 -------------------
-
-* Added Python 3.11 to unit tests
 
 * Configuration:
 
@@ -194,6 +203,7 @@ Updates in the CORE
     * Webinterfaces: Included javascript file for codemirror
     * Webinterfaces: When creating an icon on the homescreen on iPhones and iPads, the created icon is the plugin logo
       if the plugin logo is an png file
+    * Introduce connectionretries parameter, improve datatables handling
 
   * mqtt:
 
@@ -223,6 +233,16 @@ Updates in the CORE
 Änderungen bei Plugins
 ======================
 
+Allgmein
+--------
+
+* Workflows:
+
+  * Added Github actions workflow to successfully test pull requests
+
+
+.. _neue_plugins:
+
 Neue Plugins
 ------------
 
@@ -234,6 +254,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * rcs1000n: Plugin for 433 MHz wireless sockets e.g. for Brennenstuhl RCS 1000 N
 * sml2: Plugin to read out smartmeter information with SML protocol
 * webpush: Plugin to send web push messages to clients
+* db_addon: Add-On for the database plugin for data evaluation
 
 |
 
@@ -425,6 +446,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
     * Log only one error if robot is not reachable via backend
     * Seperated WebInterface into separate file
     * Cleaned-up user_doc
+    * Added warning message for server return code 500
 
   * network:
 
