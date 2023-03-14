@@ -59,7 +59,6 @@ Allgmein
 
 * Workflows:
 
-  * Added Python 3.11 to unit tests
   * Added Github actions workflow to successfully test pull requests
 
 
@@ -238,10 +237,11 @@ Allgmein
 
 * Workflows:
 
+  * Added Python 3.11 to unit tests
   * Added Github actions workflow to successfully test pull requests
 
 
-.. _neue_plugins:
+.. _release_neue_plugins:
 
 Neue Plugins
 ------------
