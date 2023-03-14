@@ -148,11 +148,11 @@ class Systeminfo:
     def read_macosinfo(cls):
 
         output = subprocess.Popen(["sw_vers", ], stdout=subprocess.PIPE).communicate()
-        os, vers, build, extra = output[0].decode().split('\n')
-        os = os.split('\t')[2]
+        ostype, vers, build, extra = output[0].decode().split('\n')
+        ostype = ostype.split('\t')[2]
         vers = vers.split('\t')[2]
         build = build.split('\t')[2]
-        os_release = os + ' ' + vers + ' (build ' + build + ')'
+        os_release = ostype + ' ' + vers + ' (build ' + build + ')'
         return os_release
 
     # ---------
@@ -287,23 +287,25 @@ class Systeminfo:
 
         measured data for 50000 calculations: slow > 120sec > medium > 50sec > fast
 
-        computer / cpu                              seconds         measured by     Python version
-        ------------------------------------------  -----------     -----------     --------------
-        Raspi 2, ARMv7 rev 5 (v7l)                  181.47          morg42          3.7.3
+        computer / cpu                                  seconds         measured by     Python version
+        ----------------------------------------------- -----------     -----------     --------------
+        Raspi 1, ARMv6-compatible processor rev 7 (v6l) 607,28          wvhn
+        Raspi 2, ARMv7 Processor rev 5 (v7l)            262.46          wvhn
+        Raspi 2, ARMv7 rev 5 (v7l)                      181.47          morg42          3.7.3
 
-        Raspberry Pi 3                              119.83          sisamiwe        3.8.6
-        Raspberry Pi 3                              108.04          onkelandy       3.9.2
-        Raspberry Pi 3 ARMv7 Processor rev 4 (v7l)  99.65           msinn           3.7.3
-        Raspi  3B+, ARMv7 rev4 (v7l)                87.8            morg42          3.7.3
+        Raspberry Pi 3                                  119.83          sisamiwe        3.8.6
+        Raspberry Pi 3                                  108.04          onkelandy       3.9.2
+        Raspberry Pi 3 ARMv7 Processor rev 4 (v7l)      99.65           msinn           3.7.3
+        Raspi  3B+, ARMv7 rev4 (v7l)                    87.8            morg42          3.7.3
 
-        Raspberry Pi 4                              41.09           onkelandy       3.9.2
-        Raspberry Pi 4                              36.61           sisamiwe        3.9.2
-        NUC mit Celeron(R) CPU  N2820  @ 2.13GHz    36.05           bmxp            3.9.2
-        NUC mit Celeron(R) CPU  N2830  @ 2.16GHz    34.88           bmxp            3.9.2
-        Intel(R) Celeron(R) CPU J3455 @ 1.50GHz     23.49-26.35     msinn           3.8.3
-        NUC mit Celeron(R) J4005 CPU @ 2.00GHz      17.96           bmxp            3.9.2
-        E31265L                                     10.39           morg42          3.9.2
-        i5-8600K                                    9.78            morg42          3.9.7
+        Raspberry Pi 4                                  41.09           onkelandy       3.9.2
+        Raspberry Pi 4                                  36.61           sisamiwe        3.9.2
+        NUC mit Celeron(R) CPU  N2820  @ 2.13GHz        36.05           bmxp            3.9.2
+        NUC mit Celeron(R) CPU  N2830  @ 2.16GHz        34.88           bmxp            3.9.2
+        Intel(R) Celeron(R) CPU J3455 @ 1.50GHz         23.49-26.35     msinn           3.8.3
+        NUC mit Celeron(R) J4005 CPU @ 2.00GHz          17.96           bmxp            3.9.2
+        E31265L                                         10.39           morg42          3.9.2
+        i5-8600K                                        9.78            morg42          3.9.7
         """
 
         import timeit
