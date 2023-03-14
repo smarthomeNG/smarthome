@@ -81,6 +81,15 @@ Alexa Aktionen die für diese Gerät bereitgestellt werden
  - Datentyp: **str**
 
 
+alexa_alias
+===========
+
+
+Alternative Alexa-Gerätenamen, um das Gerät anzusprechen
+
+ - Datentyp: **str**
+
+
 alexa_auth_cred
 ===============
 
@@ -95,6 +104,15 @@ alexa_camera_imageUri
 
 
 URL für das Standbild einer Kamera
+
+ - Datentyp: **str**
+
+
+alexa_color_temp_delta
+======================
+
+
+
 
  - Datentyp: **str**
 
@@ -178,6 +196,15 @@ alexa_proactivelyReported
 legt fest ob die Statuswerte bei Änderung an Amazon / Alexa übermittelt werden sollen, default FALSE
 
  - Datentyp: **bool**
+
+
+alexa_range_delta
+=================
+
+
+
+
+ - Datentyp: **str**
 
 
 alexa_retrievable

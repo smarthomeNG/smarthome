@@ -1,0 +1,417 @@
+.. |_| unicode:: 0xA0
+
+
+===============================
+Plugin 'db_addon' Konfiguration
+===============================
+
+
+.. index:: Plugins; db_addon Konfiguration
+
+.. image:: /plugins/db_addon/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **db_addon** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **system Plugin**.
+
+
+
+Beschreibung
+============
+
+Add-On für das database Plugin zur Datenauswertung
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9.3.5**
+ - Minimum Python Version: **3.8**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **db_addon** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+database_plugin_config
+======================
+
+
+Konfiguration des Plugin 'Database', für die das Plugin 'DatabaseAddOn' verwendet wird
+
+ - Datentyp: **str**
+ - Standardwert: **database**
+
+
+ignore_0
+========
+
+
+Bei Items, bei denen ein String aus der Liste im Pfadnamen vorkommt, werden 0-Werte (val_num = 0) bei Datenbankauswertungen ignoriert. Beispieleintrag: temp | hum
+
+ - Datentyp: **list**
+ - Standardwert: **[]**
+
+
+startup_run_delay
+=================
+
+
+Zeitlicher Abstand in Sekunden, mit der die Berechnungen bei Startup ausgeführt werden sollen
+
+ - Datentyp: **int**
+ - Standardwert: **60**
+
+
+use_oldest_entry
+================
+
+
+True: Verwendung des ältesten Eintrags des Items in der Datenbank, falls der Start des Abfragezeitraums zeitlich vor diesem Eintrag liegt False: Abbruch der Datenbankabfrage
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+db_addon_admin
+==============
+
+
+Admin-Funktion des DB-Addon Plugins
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **suspend**
+   - **recalc_all**
+   - **clean_cache_values**
+
+
+db_addon_fct
+============
+
+
+Auswertefunktion des DB-Addon Plugins
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **verbrauch_heute**
+   - **verbrauch_woche**
+   - **verbrauch_monat**
+   - **verbrauch_jahr**
+   - **verbrauch_heute_minus1**
+   - **verbrauch_heute_minus2**
+   - **verbrauch_heute_minus3**
+   - **verbrauch_heute_minus4**
+   - **verbrauch_heute_minus5**
+   - **verbrauch_heute_minus6**
+   - **verbrauch_heute_minus7**
+   - **verbrauch_woche_minus1**
+   - **verbrauch_woche_minus2**
+   - **verbrauch_woche_minus3**
+   - **verbrauch_woche_minus4**
+   - **verbrauch_monat_minus1**
+   - **verbrauch_monat_minus2**
+   - **verbrauch_monat_minus3**
+   - **verbrauch_monat_minus4**
+   - **verbrauch_monat_minus12**
+   - **verbrauch_jahr_minus1**
+   - **verbrauch_jahr_minus2**
+   - **verbrauch_rolling_12m_heute_minus1**
+   - **verbrauch_rolling_12m_woche_minus1**
+   - **verbrauch_rolling_12m_monat_minus1**
+   - **verbrauch_rolling_12m_jahr_minus1**
+   - **verbrauch_jahreszeitraum_minus1**
+   - **verbrauch_jahreszeitraum_minus2**
+   - **verbrauch_jahreszeitraum_minus3**
+   - **zaehlerstand_heute_minus1**
+   - **zaehlerstand_woche_minus1**
+   - **zaehlerstand_woche_minus2**
+   - **zaehlerstand_woche_minus3**
+   - **zaehlerstand_monat_minus1**
+   - **zaehlerstand_monat_minus2**
+   - **zaehlerstand_monat_minus3**
+   - **zaehlerstand_jahr_minus1**
+   - **zaehlerstand_jahr_minus2**
+   - **zaehlerstand_jahr_minus3**
+   - **minmax_last_24h_min**
+   - **minmax_last_24h_max**
+   - **minmax_last_24h_avg**
+   - **minmax_last_7d_min**
+   - **minmax_last_7d_max**
+   - **minmax_last_7d_avg**
+   - **minmax_heute_min**
+   - **minmax_heute_max**
+   - **minmax_heute_minus1_min**
+   - **minmax_heute_minus1_max**
+   - **minmax_heute_minus1_avg**
+   - **minmax_heute_minus2_min**
+   - **minmax_heute_minus2_max**
+   - **minmax_heute_minus2_avg**
+   - **minmax_heute_minus3_min**
+   - **minmax_heute_minus3_max**
+   - **minmax_heute_minus3_avg**
+   - **minmax_woche_min**
+   - **minmax_woche_max**
+   - **minmax_woche_minus1_min**
+   - **minmax_woche_minus1_max**
+   - **minmax_woche_minus1_avg**
+   - **minmax_woche_minus2_min**
+   - **minmax_woche_minus2_max**
+   - **minmax_woche_minus2_avg**
+   - **minmax_monat_min**
+   - **minmax_monat_max**
+   - **minmax_monat_minus1_min**
+   - **minmax_monat_minus1_max**
+   - **minmax_monat_minus1_avg**
+   - **minmax_monat_minus2_min**
+   - **minmax_monat_minus2_max**
+   - **minmax_monat_minus2_avg**
+   - **minmax_jahr_min**
+   - **minmax_jahr_max**
+   - **minmax_jahr_minus1_min**
+   - **minmax_jahr_minus1_max**
+   - **minmax_jahr_minus1_avg**
+   - **serie_minmax_monat_min_15m**
+   - **serie_minmax_monat_max_15m**
+   - **serie_minmax_monat_avg_15m**
+   - **serie_minmax_woche_min_30w**
+   - **serie_minmax_woche_max_30w**
+   - **serie_minmax_woche_avg_30w**
+   - **serie_minmax_tag_min_30d**
+   - **serie_minmax_tag_max_30d**
+   - **serie_minmax_tag_avg_30d**
+   - **serie_verbrauch_tag_30d**
+   - **serie_verbrauch_woche_30w**
+   - **serie_verbrauch_monat_18m**
+   - **serie_zaehlerstand_tag_30d**
+   - **serie_zaehlerstand_woche_30w**
+   - **serie_zaehlerstand_monat_18m**
+   - **serie_waermesumme_monat_24m**
+   - **serie_kaeltesumme_monat_24m**
+   - **serie_tagesmittelwert_stunde_0d**
+   - **serie_tagesmittelwert_tag_stunde_30d**
+   - **general_oldest_value**
+   - **general_oldest_log**
+   - **kaeltesumme**
+   - **waermesumme**
+   - **gruenlandtempsumme**
+   - **tagesmitteltemperatur**
+   - **db_request**
+
+
+db_addon_ignore_value
+=====================
+
+
+Wert der bei Abfrage bzw. Auswertung der Datenbank für diese Item ignoriert werden soll
+
+ - Datentyp: **num**
+
+
+db_addon_info
+=============
+
+
+Info-Funktion des DB-Addon Plugins
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **db_version**
+
+
+db_addon_params
+===============
+
+
+Parameter für eine Auswertefunktion des DB-Addon Plugins im Format 'kwargs' enclosed in quotes like 'keyword=argument, keyword=argument'
+
+ - Datentyp: **str**
+
+
+db_addon_startup
+================
+
+
+Ausführen der Berechnung bei Plugin Start (mit zeitlichem Abstand, wie in den Plugin Parametern definiert)
+
+ - Datentyp: **bool**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+db_version()
+============
+
+
+Liefer die verwendete Version der Datenbank
+
+ - Ergebnistyp der Funktion: **str**
+
+
+fetch_log(func, item, timeframe, start, end, count, group, group2)
+==================================================================
+
+
+Liefert für das angegebene Item und die Parameter das Abfrageergebnis zurück
+
+ - Ergebnistyp der Funktion: **list**
+
+
+func
+----
+
+zu verwendende Abfragefunktion
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **min**
+   - **max**
+   - **sum**
+   - **on**
+   - **integrate**
+   - **sum_max**
+   - **sum_avg**
+   - **sum_min_neg**
+   - **diff_max**
+
+
+item
+----
+
+Das Item-Objekt oder die Item_ID der DB
+
+ - Datentyp: **foo**
+
+
+timeframe
+---------
+
+Zeitinkrement für die DB-Abfrage
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **day**
+   - **week**
+   - **month**
+   - **year**
+
+
+start
+-----
+
+Zeitlicher Beginn der DB-Abfrage: x Zeitinkrementen von jetzt in die Vergangenheit
+
+ - Datentyp: **int**
+
+
+end
+---
+
+Zeitliches Ende der DB-Abfrage: x Zeitinkrementen von jetzt in die Vergangenheit
+
+ - Datentyp: **int**
+
+
+count
+-----
+
+Anzahl der Zeitinkremente, vom Start in die Vergangenheit abzufragen sind. Alternative zu 'end'
+
+ - Datentyp: **int**
+
+
+group
+-----
+
+erste Gruppierung der DB-Abfrage
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **day**
+   - **week**
+   - **month**
+   - **year**
+
+
+group2
+------
+
+zweite Gruppierung der DB-Abfrage
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **day**
+   - **week**
+   - **month**
+   - **year**
+
+
+suspend()
+=========
+
+
+Pausiert die Berechnungen des Plugins
+
+ - Ergebnistyp der Funktion: **bool**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

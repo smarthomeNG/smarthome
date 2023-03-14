@@ -63,6 +63,21 @@ Altitude des Ortes, für den die Wetterdaten abgerufen werden sollen. Default: S
  - Datentyp: **str**
 
 
+api_version
+===========
+
+
+Version der Openweathermap Onecall API. Neue User nutzen 3.0
+
+ - Datentyp: **str**
+ - Standardwert: **2.5**
+
+ - Mögliche Werte:
+
+   - **2.5**
+   - **3.0**
+
+
 cycle
 =====
 
@@ -239,7 +254,7 @@ get_beaufort_description(speed_in_bft)
 ======================================
 
 
-
+Gibt die angegebene Windstärke als beschreibeneden Text aus
 
  - Ergebnistyp der Funktion: **str**
 

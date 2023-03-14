@@ -93,6 +93,15 @@ Item Attribute
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
 
+kostal_06
+=========
+
+
+
+
+ - Datentyp: **str**
+
+
 kostal_100
 ==========
 
@@ -111,8 +120,62 @@ kostal_104
  - Datentyp: **num**
 
 
+kostal_1056
+===========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_1058
+===========
+
+
+
+
+ - Datentyp: **num**
+
+
 kostal_106
 ==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_1060
+===========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_1062
+===========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_1064
+===========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_1066
+===========
 
 
 
@@ -199,6 +262,15 @@ kostal_124
 
 
  - Datentyp: **num**
+
+
+kostal_14
+=========
+
+
+
+
+ - Datentyp: **str**
 
 
 kostal_144
@@ -741,6 +813,78 @@ kostal_36
  - Datentyp: **num**
 
 
+kostal_38
+=========
+
+
+
+
+ - Datentyp: **str**
+
+
+kostal_384
+==========
+
+
+
+
+ - Datentyp: **str**
+
+
+kostal_420
+==========
+
+
+
+
+ - Datentyp: **str**
+
+
+kostal_428
+==========
+
+
+
+
+ - Datentyp: **str**
+
+
+kostal_436
+==========
+
+
+
+
+ - Datentyp: **str**
+
+
+kostal_446
+==========
+
+
+
+
+ - Datentyp: **str**
+
+
+kostal_454
+==========
+
+
+
+
+ - Datentyp: **str**
+
+
+kostal_46
+=========
+
+
+
+
+ - Datentyp: **str**
+
+
 kostal_512
 ==========
 
@@ -766,6 +910,15 @@ kostal_515
 
 
  - Datentyp: **num**
+
+
+kostal_517
+==========
+
+
+
+
+ - Datentyp: **str**
 
 
 kostal_525
@@ -795,6 +948,15 @@ kostal_531
  - Datentyp: **num**
 
 
+kostal_535
+==========
+
+
+
+
+ - Datentyp: **str**
+
+
 kostal_54
 =========
 
@@ -802,6 +964,15 @@ kostal_54
 
 
  - Datentyp: **num**
+
+
+kostal_559
+==========
+
+
+
+
+ - Datentyp: **str**
 
 
 kostal_56
@@ -851,6 +1022,33 @@ kostal_586
 
 kostal_588
 ==========
+
+
+
+
+ - Datentyp: **num**
+
+
+kostal_768
+==========
+
+
+
+
+ - Datentyp: **str**
+
+
+kostal_800
+==========
+
+
+
+
+ - Datentyp: **str**
+
+
+kostal_98
+=========
 
 
 

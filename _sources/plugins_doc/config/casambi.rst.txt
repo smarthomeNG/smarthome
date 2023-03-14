@@ -8,8 +8,8 @@ Plugin 'casambi' Konfiguration
 
 .. index:: Plugins; casambi Konfiguration
 
-.. image:: /_static/img/gateway.svg
-   :alt: plugin type logo
+.. image:: /plugins/casambi/webif/static/img/plugin_logo.png
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %

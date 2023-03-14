@@ -1,0 +1,165 @@
+.. |_| unicode:: 0xA0
+
+
+=================================
+Plugin 'piratewthr' Konfiguration
+=================================
+
+
+.. index:: Plugins; piratewthr Konfiguration
+
+.. image:: /plugins/piratewthr/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **piratewthr** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Wetterdaten über pirateweather.net.
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.9.3.4**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **piratewthr** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+(optional) Zeit zwischen zwei Updateläufen. Default ist 300 Sekunden.
+
+ - Datentyp: **int**
+ - Standardwert: **300**
+
+
+key
+===
+
+
+Persönlicher API Key für pirateweather.net. Registrierung unter https://pirateweather.net/.
+
+ - Datentyp: **str**
+
+
+lang
+====
+
+
+Sprache der zurückgelieferten Daten. Mögliche Werte siehe https://pirateweather.net/.
+
+ - Datentyp: **str**
+ - Standardwert: **de**
+
+
+latitude
+========
+
+
+Latitude des Ortes, für den die Wetterdaten abgerufen werden sollen. Default: SmartHomeNG Settings
+
+ - Datentyp: **str**
+
+
+longitude
+=========
+
+
+Longitude des Ortes, für den die Wetterdaten abgerufen werden sollen. Default: SmartHomeNG Settings.
+
+ - Datentyp: **str**
+
+
+units
+=====
+
+
+Einheit der zurückgelieferten Daten. Mögliche Werte siehe https://pirateweather.net/. Default: "ca".
+
+ - Datentyp: **str**
+ - Standardwert: **ca**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+pw_matchstring
+==============
+
+
+Matchstring basierend auf der Response des "Forecast Request" aus https://pirateweather.net/ (Example Request), bspw. "currently/temperature". Ausnahmen: Im Fall von "alerts" wird ein Item vom Typ "list" benötigt, der Wert "alerts_string" schreibt die Alerts-Liste in einen HTML String. Das Array in "flags/sources" wird in ein "str" Item gemerged.
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+map_icon(icon)
+==============
+
+
+Gibt das SmartVisu Icon zum übergebenen Pirate-Weather Icon zurück.
+
+ - Ergebnistyp der Funktion: **str**
+
+
+icon
+----
+
+Icon als String.
+
+ - Datentyp: **str**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

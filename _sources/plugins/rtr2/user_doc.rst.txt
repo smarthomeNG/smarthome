@@ -1,8 +1,16 @@
 .. index:: Plugins; rtr2 (Raumtemperatur Regler v2)
-.. index:: rtr rtr2
+.. index:: rtr2 rtr
 
+====
 rtr2
-####
+====
+
+.. image:: webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
 
 Das Plugin implementiert einen oder mehrere Raumtemperatur Regler. Es ist eine komplette Neuentwicklung mit einem
 erweiterten Funktionsumfang gegenüber dem alten rtr Plugin:
@@ -244,6 +252,42 @@ Um den Heiz-Status eines RTR mit der Id **dusche** abzufragen, muss ein Item fol
         type: bool
         rtr2_id: dusche
         rtr2_function: heating_status
+
+|
+
+Abweichende Reglerparameter
+===========================
+
+Möchte man dem Regler von den globalen Einstellungen abweichende Werte übergeben, wird dies über ``rtr_settings`` und
+``rtr2_controller_settings`` erledigt. Die Paramter hierfür sind wie folgt anzugeben:
+
+.. code-block:: yaml
+
+    test_rtr:
+        rtr2_id: dusche
+        rtr2_settings:
+          - 22.0 # Temperatur Komfort Modus
+          - 3.0  # Temperaturreduktion Nacht Modus
+          - 1.0  # Temperaturreduktion Standby Modus
+          - True # fixed_reduction
+          - 2    # HVAC Modus
+          - 7.0  # Temperatur Frost Modus
+        rtr2_controller_settings:
+          - 4.0 # Kp
+          - 120 # Ki
+          - 3.0 # Kd (wird nicht verwendet, wird nur für den noch nicht implementierten PID Regler benötigt)
+
+Zu Beachten ist, dass man die letzten Parameter immer weglassen kann, aber nicht die davor. Die weggelassenen Parameter
+werden dann mit den definierten Standardwerten belegt. Möchte man z.B nur eine neue Temperaturreduktion für den
+Nacht Modus angeben, muss man also auch die Temperatur für den Komfort Modus angeben. Das würde wie folgt aussehen.
+
+.. code-block:: yaml
+
+    test_rtr:
+        rtr2_id: dusche
+        rtr2_settings:
+          - 22.0
+          - 2.0
 
 
 |

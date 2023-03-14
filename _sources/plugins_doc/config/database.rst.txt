@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.8.0**
+ - Minimum SmartHomeNG Version: **1.9.3.2**
 
 Konfiguration
 =============
@@ -61,6 +61,25 @@ connect
 Spezifiziert die Verbindungsparameter, welche genutzt werden, um die connect() Funktion des DB API 2 aufzurufen.
 
  - Datentyp: **list(str)**
+
+
+copy_database
+=============
+
+
+Nur für SQLite3: Auf True setzen, um beim Start von SmartHomeNG eine Kopie der Datenbank Datei zu erzeugen
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+copy_database_name
+==================
+
+
+Nur für SQLite3: Pfad/Name der Datenbank Kopie
+
+ - Datentyp: **str**
 
 
 count_logentries
@@ -111,9 +130,9 @@ max_delete_logentries
 Maximal auf einmal zu löschende Anzahl an Log Einträgen mit dem database_maxage Attribut, reduziert die Belastung der Datenbank bei alten Datenbeständen
 
  - Datentyp: **int**
- - Standardwert: **1500**
+ - Standardwert: **20000**
 
- - Minimalwert: **20**
+ - Minimalwert: **1000**
 
 precision
 =========
@@ -142,26 +161,6 @@ Remove old Cycle bestimmt wie oft die Prüfung auf veraltete Daten gestartet wer
 
  - Datentyp: **int**
  - Standardwert: **91**
-
-
-webif_pagelength
-================
-
-
-Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
-Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.
-Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.
-
- - Datentyp: **int**
- - Standardwert: **0**
-
- - Mögliche Werte:
-
-   - **-1**
-   - **0**
-   - **25**
-   - **50**
-   - **100**
 
 
 ==============

@@ -1,5 +1,16 @@
+.. index:: Plugins; viessmann
+.. index:: viessmann
+
+=========
 viessmann
 =========
+
+.. image:: webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
 
 Das Viessmann-Plugin ermöglicht die Verbindung zu einer Viessmann-Heizung über einen IR-Adapter (z.B. Optolink oder Nachbauten, wie im OpenV-Wiki beschrieben) und das Lesen und Schreiben von Parametern der Heizung.
 Derzeit sind das P300- und das KW-Protokoll unterstützt. Weitere Gerätetypen, die diese Protokolle unterstützen, können einfach hinzugefügt werden. Für weitere Protokolle (z.B. GWG) wird zusätzliche Entwicklungsarbeit notwendig sein.
@@ -42,12 +53,12 @@ Changelog
 -  Erste Version
 
 Anforderungen
--------------
+=============
 
 Das Plugin benötigt die ``pyserial``-Bibliothek und einen seriellen IR-Adapter.
 
 Unterstützte Geräte
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Jede Viessmann-Heizung mit Optolink-Anschluss wird grundsätzlich unterstützt.
 
@@ -61,10 +72,14 @@ Derzeit sind Gerätekonfigurationen (Befehlssätze) für die folgenden Type verf
 Weitere Gerätetypen können problemlos hinzugefügt werden, wenn die entsprechenden Befehlsadressen bekannt sind.
 
 Konfiguration
--------------
+=============
+
+Diese Plugin Parameter und die Informationen zur Item-spezifischen Konfiguration des Plugins sind
+unter :doc:`/plugins_doc/config/viessmann` beschrieben.
+
 
 plugin.yaml
-~~~~~~~~~~~
+-----------
 
 .. code:: yaml
 
@@ -76,15 +91,15 @@ plugin.yaml
 
 
 items.yaml
-~~~~~~~~~~
+----------
 
-Die Verknüfpung von SmartHomeNG-Items und Heizungsparametern ist vollständig flexibel und konfigurierbar. Mit den Item-Attributen kann das Verhalten des Plugins festgelegt werden. 
+Die Verknüfpung von SmartHomeNG-Items und Heizungsparametern ist vollständig flexibel und konfigurierbar. Mit den Item-Attributen kann das Verhalten des Plugins festgelegt werden.
 
 Die folgenden Attribute werden unterstützt:
 
 
 viess\_read
-^^^^^^^^^^^
+~~~~~~~~~~~
 
 Der Wert des angegebenen Parameters wird gelesen und dem Item zugewiesen.
 
@@ -95,7 +110,7 @@ Der Wert des angegebenen Parameters wird gelesen und dem Item zugewiesen.
 
 
 viess\_send
-^^^^^^^^^^^
+~~~~~~~~~~~
 
 Der angegebene Parameter wird bei Änderungen an diesem Item an die Heizung gesendet.
 
@@ -114,7 +129,7 @@ Sofern das Item sowohl zum Lesen als auch zum Schreiben eines Parameters konfigu
 
 
 viess\_read\_afterwrite
-^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Wenn dieses Attribut mit einer Dauer in Sekunden angegeben ist, wird nach eine Schreibvorgang die angegebene Anzahl an Sekunden gewartet und ein erneuter Lesevorgang ausgelöst.
 
@@ -129,7 +144,7 @@ Damit dieses Attribut verwendet werden kann, muss das Item sowohl die Attribute 
 
 
 viess\_read\_cycle
-^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~
 
 Mit einer Angabe in Sekunden wird ein periodisches Lesen angefordert. ``viess_read`` muss zusätzlich konfiguriert sein.
 
@@ -141,9 +156,9 @@ Mit einer Angabe in Sekunden wird ein periodisches Lesen angefordert. ``viess_re
 
 
 viess\_init
-^^^^^^^^^^^
+~~~~~~~~~~~
 
-Wenn dieses Attribut vorhanden und auf ``true`` gesetzt ist, wird das Item nach dem Start von SmartHomeNG einmalig gelesen. 
+Wenn dieses Attribut vorhanden und auf ``true`` gesetzt ist, wird das Item nach dem Start von SmartHomeNG einmalig gelesen.
 ``viess_read`` muss zusätzlich konfiguriert sein.
 
 .. code:: yaml
@@ -154,7 +169,7 @@ Wenn dieses Attribut vorhanden und auf ``true`` gesetzt ist, wird das Item nach 
 
 
 viess\_trigger
-^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~
 
 Enthält eine Liste von Parametern. Wenn dieses Item aktualisiert wird, wird ein Lesevorgang für jeden Eintrag in der Liste angestoßen. ``viess_send`` muss zusätzlich konfiguriert sein.
 
@@ -172,7 +187,7 @@ Beispiel: wenn der Betriebsmodus geändert wird, können neue Sollwerte für Rau
 
 
 viess\_trigger\_afterwrite
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Wenn ein ``viess_trigger`` konfiguriert ist, kann mit diesem Attribut die Verzögerung zwischen Schreib- und Lesevorgang verändert werden.
 
@@ -189,7 +204,7 @@ Standardmäßig beträgt diese Verzögerung 5 Sekunden.
 
 
 viess\_update
-^^^^^^^^^^^^^
+~~~~~~~~~~~~~
 Das Zuweisen von ``true`` an ein Item mit diesem Attribut löst den Lesevorgang aller konfigurierter Items mit ``viess_read`` aus.
 
 Der in der Itemkonfiguration angegebene Wert wird nicht ausgewertet.
@@ -201,7 +216,7 @@ Der in der Itemkonfiguration angegebene Wert wird nicht ausgewertet.
 
 
 viess\_timer
-^^^^^^^^^^^^
+~~~~~~~~~~~~
 Das Item mit diesem Attribut übergibt als Attributwert den Namen einer Anwendung, z.B. Heizkreis_A1M1, und das Plugin gibt ein UZSU-formatiertes dict mit allen zugehörigen Timern der Heizung zurück
 Beim Schreiben wird das UZSU-dict in die einzelnen Tagestimer aufgeteilt und an die Heizung gesendet.
 
@@ -212,7 +227,7 @@ Beim Schreiben wird das UZSU-dict in die einzelnen Tagestimer aufgeteilt und an 
 
 
 viess\_ba\_list
-^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~
 Das Item mit diesem Attribut erhält einmalig beim Start des Plugins die Liste der für den konfigurierten Heizungstyp gültigen Betriebsarten.
 
 Diese kann z.B. in SmartVISU wie folgt eingebunden werden:
@@ -230,7 +245,7 @@ Dies erzeugt eine ("Menü"-) Auswahlliste, aus der die Betriebsart ausgewählt w
 
 
 Beispiel
-^^^^^^^^
+--------
 
 Here you can find a configuration sample using the commands for
 V200KO1B:
@@ -262,7 +277,7 @@ V200KO1B:
                 viess_read_cycle: 300
                 viess_init: true
                 database: true
-     
+
         kessel:
             kesseltemperatur_ist:
                 name: Kesseltemperatur_Ist
@@ -283,7 +298,7 @@ V200KO1B:
                 viess_read: Abgastemperatur
                 viess_read_cycle: 180
                 viess_init: true
-                database: init        
+                database: init
         heizkreis_a1m1:
            betriebsart:
                 betriebsart_aktuell:
@@ -311,7 +326,7 @@ V200KO1B:
                     viess_read: Sparbetrieb_A1M1
                     viess_send: true
                     viess_read_afterwrite: 5
-                    viess_trigger: 
+                    viess_trigger:
                       - Betriebsart_A1M1
                       - Aktuelle_Betriebsart_A1M1
                     viess_init: true
@@ -362,30 +377,30 @@ V200KO1B:
 
 
 Funktionen
-----------
+==========
 
 update\_all\_read\_items()
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
-Diese Funktion stößt den Lesevorgang aller konfigurierten Items mit ``viess_read``-Attribut an. 
+Diese Funktion stößt den Lesevorgang aller konfigurierten Items mit ``viess_read``-Attribut an.
 
 
 read\_addr(addr)
-~~~~~~~~~~~~~~~~
+----------------
 
 Diese Funktion löst das Lesen des Parameters mit der übergebenen Adresse ``addr`` aus. Die Adresse muss als vierstellige Hex-Zahl im String-Format übergeben werden. Es können nur Adressen ausgelesen werden, die im Befehlssatz für den aktiven Heizungstyp enthalten sind. Unabhängig von der Itemkonfiguration werden durch ``read_addr()`` keine Werte an Items zugewiesen.
 Der Rückgabewert ist das Ergebnis des Lesevorgangs oder None, wenn ein Fehler aufgetreten ist.
 
 
 read\_temp\_addr(addr, length, unit)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------
 
 Diese Funktion versucht, den Parameter an der Adresse ``addr`` zu lesen und einen Wert von ``length`` Bytes in die Einheit ``unit`` zu konvertieren. Die Adresse muss als vierstellige Hex-Zahl im String-Format übergeben werden, im Gegensatz zu ``read_addr()`` aber nicht im Befehlssatz definiert sein. ``length`` ist auf Werte zwischen 1 und 8 (Bytes) beschränkt. ``unit`` muss im aktuellen Befehlssatz definiert sein.
 Der Rückgabewert ist das Ergebnis des Lesevorgangs oder None, wenn ein Fehler aufgetreten ist.
 
 
 write\_addr(addr, value)
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 Diese Funktion versucht, den Wert ``value`` an die angegebene Adresse zu schreiben. Die Adresse muss als vierstellige Hex-Zahl im String-Format übergeben werden. Es können nur Adressen beschrieben werden, die im Befehlssatz für den aktiven Heizungstyp enthalten sind. Durch ``write_addr`` werden Itemwerte nicht direkt geändert; wenn die geschriebenen Werte von der Heizung wieder ausgelesen werden (z.B. durch zyklisches Lesen), werden die geänderten Werte in die entsprechenden Items übernommen.
 
@@ -400,20 +415,20 @@ Diese Funktion versucht, den Wert ``value`` an die angegebene Adresse zu schreib
     result = sh.plugins.return_plugin('viessmann').read_temp_addr('00f8', 2, 'DT')
 
 
-Web-Interface
--------------
+Web Interface
+=============
 
 Im Web-Interface gibt es neben den allgemeinen Statusinformationen zum Plugin zwei Seiten.
 
 Auf einer Seite werden die Items aufgelistet, die Plugin-Attributen konfiguriert haben. Damit kann eine schnelle Übersicht über die Konfiguration und die aktuellen Werte geboten werden.
 
-Auf der zweiten Seite werden alle im aktuellen Befehlssatz enthaltenen Parameter aufgelistet. Dabei besteht für jeden Wert einzeln die Möglichkeit, einen Lesevorgang auszulösen. Die Rückgabewerte werden in die jeweilige Tabellenzeile eingetragen. Dieser entspricht der Funktion ``read_addr()``, d.h. es werden keine Item-Werte aktualisiert. 
+Auf der zweiten Seite werden alle im aktuellen Befehlssatz enthaltenen Parameter aufgelistet. Dabei besteht für jeden Wert einzeln die Möglichkeit, einen Lesevorgang auszulösen. Die Rückgabewerte werden in die jeweilige Tabellenzeile eingetragen. Dieser entspricht der Funktion ``read_addr()``, d.h. es werden keine Item-Werte aktualisiert.
 
 Weiterhin kann in der Zeile für den Parameter "_Custom" eine freie Adresse angegeben werden, die analog zur Funktion ``read_temp_addr()`` einen Lesevorgang auf beliebigen Adressen erlaubt. Auch hier wird der Rückgabewert in die jeweilige Tabellenzeile eingetragen. Damit wird ermöglicht, ohne großen Aufwand Datenpunkte und deren Konfiguration (Einheit und Datenlänge) zu testen.
 
 
 Standalone-Modus
-----------------
+================
 
 Wenn der Heizungstyp nicht bekannt ist, kann das Plugin im Standalone-Modus (also ohne SmartHomeNG zu starten) genutzt werden. Es versucht dann, mit der Heizung zu kommunizieren und den Gerätetyp zu identizifieren.
 

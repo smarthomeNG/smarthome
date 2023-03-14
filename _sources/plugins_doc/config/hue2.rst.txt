@@ -163,13 +163,13 @@ Anzusteuernde Funktion für die gewählte Resource/ID
  - Mögliche Werte:
 
    -  |_| - |_| <noch keine Funktion gewählt>
-   - **dict** |_| - |_| Mehrere Funktionen auf einmal -> dict, r/w (resource: light, group)
-   - **on** |_| - |_| Ein-/Ausschalten -> bool, r/w (resource: light, group)
-   - **bri** |_| - |_| Helligkeit, 0 … 255 -> num, r/w (resource: light, group)
-   - **bri_inc** |_| - |_| Relative Helligkeitsveränderung 0 … 254, w/o (resource: light, group)
-   - **hue** |_| - |_| Farbton, 0 … 65535 -> num, r/w (resource: light), group
-   - **sat** |_| - |_| Sättigung, 0 … 255 -> num, r/w (resource: light, group)
-   - **ct** |_| - |_| ct Wert -> num, r/w (resource: light, group)
+   - **on** |_| - |_| Mehrere Funktionen auf einmal -> dict, r/w (resource: light, group)
+   - **bri** |_| - |_| Ein-/Ausschalten -> bool, r/w (resource: light, group)
+   - **bri_inc** |_| - |_| Helligkeit, 0 … 255 -> num, r/w (resource: light, group)
+   - **hue** |_| - |_| Relative Helligkeitsveränderung 0 … 254, w/o (resource: light, group)
+   - **sat** |_| - |_| Farbton, 0 … 65535 -> num, r/w (resource: light), group
+   - **ct** |_| - |_| Sättigung, 0 … 255 -> num, r/w (resource: light, group)
+   - **dict** |_| - |_| ct Wert -> num, r/w (resource: light, group)
    - **name** |_| - |_| Name -> str, r/w (resource: light, group, scene, sensor)
    - **reachable** |_| - |_| Erreichbar -> bool, r/o (resource: light)
    - **colormode** |_| - |_| Farb-Mode -> str (Werte: ct, hs, xy), r/o (resource: light, group)
@@ -178,8 +178,16 @@ Anzusteuernde Funktion für die gewählte Resource/ID
    - **modelid** |_| - |_| Model Id des Leuchtmittels -> str, r/o (resource: light)
    - **swversion** |_| - |_| Software Version des Leuchtmittels -> str, r/o (resource: light)
    - **activate_scene** |_| - |_| Aktivieren einer Szene für Leuchten in der selektierten Gruppe (hue2_id) -> str w/o (resource: group)
+   - **modify_scene** |_| - |_| Anpassen einer Szene für Leuchten in der selektierten Gruppe (hue2_id) -> str w/o (resource: group)
    - **alert** |_| - |_| Benachrichtigung -> str (Werte: none, select, lselect) (resource: light, group)
    - **effect** |_| - |_| Lichteffekt -> str (Werte: none, colorloop) (resource: light, group)
+   - **daylight** |_| - |_| Tageslicht -> bool, r/o (resource: sensor)
+   - **sunriseoffset** |_| - |_| Tageslicht: sunriseoffset -> num r/o (resource: sensor)
+   - **sunsetoffset** |_| - |_| Tageslicht: sunsetoffset -> num r/o (resource: sensor)
+   - **temperature** |_| - |_| Temperatur -> num r/o (resource: sensor)
+   - **presence** |_| - |_| Präsenz -> bool, r/o (resource: sensor)
+   - **lightlevel** |_| - |_| Sensor 'lightlevel' -> num r/o (resource: sensor)
+   - **status** |_| - |_| Sensor 'status' -> num, r/o (resource: sensor)
 
 
 hue2_id
@@ -191,8 +199,8 @@ ID der anzusteuernden resouce. Der Typ der resource wird mit 'hue2_recource' fes
  - Datentyp: **str**
 
 
-hue2_refence_light_id
-=====================
+hue2_reference_light_id
+=======================
 
 
 ID der des referenzwert gebenden Lichtes. Nur möglich wenn resource == group

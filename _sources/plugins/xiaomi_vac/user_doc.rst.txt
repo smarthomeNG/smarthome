@@ -1,8 +1,16 @@
-.. index:: Plugins; xiamo_vac
-.. index:: xiamo_vac
+.. index:: Plugins; xiaomi_vac
+.. index:: xiaomi_vac
 
-xiamo_vac
-#########
+==========
+xiaomi_vac
+==========
+
+.. image:: webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 303px
+   :height: 166px
+   :scale: 100 %
+   :align: left
 
 Konfiguration
 =============
@@ -13,6 +21,7 @@ Konfiguration
 
 
 Das Plugin basiert auf der `python-miio <https://github.com/rytilahti/python-miio>`_ Bibliothek. Zuerst muss gemäß `Anleitung auf der github Seite <https://python-miio.readthedocs.io/en/latest/discovery.html#installation>`_ des python-miio Moduls das Token eures Roboters eruiert werden.
+Folgender Befehl via SSH auf dem Staubsauger selbst offenbart das unverschlüsselte Token: ``printf $(cat /mnt/data/miio/device.token)``. Dieses muss schließlich noch umgewandelt werden: ``printf "<TOKEN>" | xxd -p``.
 Im Anschluss macht es Sinn, die Kommunikation mit dem Roboter in der Kommandozeile eures Rechners zu testen:
 
 .. code-block:: console
@@ -49,11 +58,11 @@ Folgende Werte/Funktionen können vom Saugroboter ausgelesen bzw. gestartet werd
 
 - Spotreinigung
 
-- Lüftergesschwindigkeit ändern
+- Lüftergeschwindigkeit ändern
 
 - Lautstärke ansage ändern
 
-- gerenigte Fläche
+- gereinigte Fläche
 
 - Reinigungszeit
 
@@ -62,7 +71,14 @@ Folgende Werte/Funktionen können vom Saugroboter ausgelesen bzw. gestartet werd
 und viele mehr. Es wird empfohlen, die Items durch das ``struct`` Template **saugroboter** des Plugins automatisch zu implementieren.
 
 
-Webinterface
-============
+Web Interface
+=============
 
-Das Webinterface bietet einen schnelle und einfachen Überblick über die Statusinformationen des Roboters.
+Das Webinterface bietet einen schnellen und einfachen Überblick über die Statusinformationen des Roboters.
+
+.. image:: assets/webif_xiaomi.png
+   :height: 1652px
+   :width: 3326px
+   :scale: 25%
+   :alt: Web Interface
+   :align: center

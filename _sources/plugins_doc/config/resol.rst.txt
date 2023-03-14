@@ -8,8 +8,8 @@ Plugin 'resol' Konfiguration
 
 .. index:: Plugins; resol Konfiguration
 
-.. image:: /_static/img/interface.svg
-   :alt: plugin type logo
+.. image:: /plugins/resol/webif/static/img/plugin_logo.png
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %

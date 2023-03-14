@@ -1,0 +1,273 @@
+.. |_| unicode:: 0xA0
+
+
+==================================
+Plugin 'indego4shng' Konfiguration
+==================================
+
+
+.. index:: Plugins; indego4shng Konfiguration
+
+.. image:: /_static/img/web.svg
+   :alt: plugin type logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **indego4shng** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+
+
+Beschreibung
+============
+
+Indego Plugin zum Auslesen und steuern von Bosch Indego Mährobotern mit Connect Ausstattung
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.6**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **indego4shng** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+cycle
+=====
+
+
+Zeitlicher Abstand zwischen zwei Verbindungen zur Website
+
+ - Datentyp: **int**
+ - Standardwert: **30**
+
+
+img_pfad
+========
+
+
+Pfad und Dateiname, wo die Kartendatei gespeichert werden soll. Es müssen Schreibrechte für SmartHomeNG bestehen
+
+ - Datentyp: **str**
+ - Standardwert: **/tmp/garden.svg**
+
+
+indego_credentials
+==================
+
+
+Zugangsdaten base64 encoded im Format user:passwort
+
+ - Datentyp: **str**
+
+
+indego_url
+==========
+
+
+Indego Webseite für den Servicezugriff
+
+ - Datentyp: **str**
+ - Standardwert: **https://api.indego.iot.bosch-si.com/api/v1/**
+
+
+parent_item
+===========
+
+
+Das Eltern Item für alle Kinditems, die diese Instanz betreffen
+
+ - Datentyp: **str**
+ - Standardwert: **indego**
+
+
+path_2_weather_pics
+===================
+
+
+Pfad zu den Wetter-PNG-Dateien - default =/smartVISU/lib/weather/pics/
+
+ - Datentyp: **str**
+ - Standardwert: **/smartVISU/lib/weather/pics/**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+indego_add_key
+==============
+
+
+Eine interne Funktion des Indego4ShNG-Plugins
+
+ - Datentyp: **str**
+
+
+indego_attr_name
+================
+
+
+Eine interne Funktion des Indego4ShNG-Plugins
+
+ - Datentyp: **str**
+
+
+indego_attr_type
+================
+
+
+Eine interne Funktion des Indego4ShNG-Plugins
+
+ - Datentyp: **str**
+
+
+indego_command
+==============
+
+
+Eine interne Funktion des Indego4ShNG-Plugins
+
+ - Datentyp: **str**
+
+
+indego_config
+=============
+
+
+Eine interne Funktion des Indego4ShNG-Plugins
+
+ - Datentyp: **str**
+
+
+indego_config_url
+=================
+
+
+Eine interne Funktion des Indego4ShNG-Plugins
+
+ - Datentyp: **str**
+
+
+indego_function_4_all
+=====================
+
+
+Eine interne Funktion des Indego4ShNG-Plugins
+
+ - Datentyp: **str**
+
+
+indego_function_4_visu
+======================
+
+
+Eine interne Funktion des Indego4ShNG-Plugins
+
+ - Datentyp: **str**
+
+
+indego_parse_2_attr
+===================
+
+
+Eine interne Funktion des Indego4ShNG-Plugins
+
+ - Datentyp: **str**
+
+
+indego_plugin_handled
+=====================
+
+
+Eine interne Funktion des Indego4ShNG-Plugins
+
+ - Datentyp: **str**
+
+
+indego_smart
+============
+
+
+Eine interne Funktion des Indego4ShNG-Plugins
+
+ - Datentyp: **str**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+send_command(payload= '{"state":"mow"}', trigger= 'Logic')
+==========================================================
+
+
+sendet ein Kommando an den Bosch-Server
+
+ - Ergebnistyp der Funktion: **str**
+
+
+payload
+-------
+
+Payload für das zu sendende Kommando
+
+ - Datentyp: **str**
+ - Standardwert: **{"state":"mow"}**
+
+ - Mögliche Werte:
+
+   - **{"state":"mow"}**
+   - **{"state":"pause"}**
+   - **{"state":"returnToDock"}**
+
+
+trigger
+-------
+
+Trigger der die Funktion ausgelöst hat
+
+ - Datentyp: **str**
+ - Standardwert: **Logic**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/indego4shng/README>` des Plugins zugreifen.

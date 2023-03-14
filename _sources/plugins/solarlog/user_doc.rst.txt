@@ -1,4 +1,9 @@
-Solarlog
+
+.. index:: Plugins; solarlog
+.. index:: solarlog
+
+========
+solarlog
 ========
 
 Dieses Plugin kann eine Webseite vom SolarLog-Protokolliergerät lesen und Werte zurückgeben.
@@ -7,20 +12,24 @@ Es wurde 2017 von klab für SolarLog-Geräte mit Firmware >= 3.x neu geschrieben
 Christian Michels in das alte Plugin integriert.
 
 Requirements
-------------
+============
 
 Dieses Plugin hat keine Anforderungen oder Abhängigkeiten.
 
 Todo
-----
+====
 
 Webinterface mit den geparsten Daten aufbereiten
 
 Konfiguration
--------------
+=============
+
+Diese Plugin Parameter und die Informationen zur Item-spezifischen Konfiguration des Plugins sind
+unter :doc:`/plugins_doc/config/solarlog` beschrieben.
+
 
 plugin.yaml
-~~~~~~~~~~~
+-----------
 
 .. code-block:: yaml
     :caption: logic.yaml
@@ -30,14 +39,14 @@ plugin.yaml
        host: http://solarlog.fritz.box/
 
 Attribute
-^^^^^^^^^
+~~~~~~~~~
 
 - ``fw2x``: Gibt an, ob Firmware <= 2.x ist.
 - ``host``: Gibt den Hostnamen des SolarLog an.
 - ``cycle``: Bestimmt den Zyklus für die Abfrage des SolarLog.
 
 items.yaml
-~~~~~~~~~~
+----------
 
 Die Format Details des SolarLog müssen bekannt sein, um die gültigen Werte für dieses Plugin zu definieren.
 Das Plugin fordert lediglich die JavaScript-Dateien vom Gerät an und analysiert sie.
@@ -46,12 +55,12 @@ Eine Beschreibung des Formats und der entsprechenden Variablen findet sich hier:
 https://www.photonensammler.de/wiki/doku.php?id=solarlog_datenformat
 
 solarlog
-^^^^^^^^
+~~~~~~~~
 
 Dies ist das einzige Attribut für Items. Um Werte aus dem SolarLog-Datenformat abzurufen,
 müssen lediglich die Variablennamen wie auf der oben beschriebenen Site verwendet werden.
 
-Wenn Werte aus einer Array-Struktur wie den PDC-Wert aus dem Sekundenstring des ersten Inverters verwendet 
+Wenn Werte aus einer Array-Struktur wie den PDC-Wert aus dem Sekundenstring des ersten Inverters verwendet
 werden soll, muss der Variablenname underscore inverter-1 underscore string-1 verwendet werden:
 
 ``var [\_ inverter [\_ string]]``
@@ -154,11 +163,11 @@ Das ``database: yes`` impliziert, dass auch ein Datenbank-Plugin konfiguriert is
 Dienst zur Anzeige von Messwerten innerhalb einer Visu.
 
 logic.yaml
-~~~~~~~~~~
+----------
 
 Derzeit gibt es keine Logik Konfiguration für dieses Plugin.
 
 Funktionen
-----------
+==========
 
 Momentan werden von diesem Plugin keine Funktionen bereitgestellt.

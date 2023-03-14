@@ -1,0 +1,248 @@
+.. |_| unicode:: 0xA0
+
+
+==============================
+Plugin 'webpush' Konfiguration
+==============================
+
+
+.. index:: Plugins; webpush Konfiguration
+
+.. image:: /plugins/webpush/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **webpush** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **web Plugin**.
+
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
+
+
+Beschreibung
+============
+
+Plugin zum Versenden von web push Nachrichten an Clients
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.8**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **webpush** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+grouplist
+=========
+
+
+Nachrichten-Gruppen
+
+ - Datentyp: **list**
+ - Standardwert: **['alarm', 'info']**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+webpush_communication
+=====================
+
+
+Benötigte Items zur Kommunikation zwischen Visu und Plugin
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **fromclient**
+
+
+webpush_config
+==============
+
+
+Benötigte Items zur Konfiguration der Visu und des Plugins
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **grouplist**
+   - **publickey**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+
+sendPushNotification(msg, group, title= '', url= '', requireInteraction=, icon= '', badge= '', image= '', silent=False, vibrate=[], ttl=604800, highpriority=True, returnval=True, timestamp=True)
+==================================================================================================================================================================================================
+
+
+Sendet die Nachricht in msg als web push an die entsprechende Gruppe in group
+
+ - Die Funktion liefert kein Ergebnis
+
+
+msg
+---
+
+Zu sendende Nachricht
+
+ - Datentyp: **str**
+
+
+group
+-----
+
+Gruppe an die die Nachricht geschrieben werden soll
+
+ - Datentyp: **str**
+
+
+title
+-----
+
+Titel der web push Nachricht
+
+ - Datentyp: **str**
+
+
+url
+---
+
+Webadresse die bei Klick auf die Nachricht geöffnet werden soll
+
+ - Datentyp: **str**
+
+
+requireInteraction
+------------------
+
+Verhindern, dass bei Desktop-Browsern Meldung nach ca 20sek ausgeblendet wird
+
+ - Datentyp: **bool**
+
+
+icon
+----
+
+URL zu einem icon das als Benachrichtigungs Icon verwendet wird
+
+ - Datentyp: **str**
+
+
+badge
+-----
+
+URL zu einem Bild das als Voransicht angezeigt wird wenn der Bildschirm zu klein ist, wie z.B. in der Android Statusleiste
+
+ - Datentyp: **str**
+
+
+image
+-----
+
+URL zu einem Bild das im Nachrichteninhalt angezeigt werden soll
+
+ - Datentyp: **str**
+
+
+silent
+------
+
+Benachrichtigung ohne Ton und Vibration anzeigen
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+vibrate
+-------
+
+Vibrationsmuster das bei Nachrichteneingang abgespielt wird. Z.B. [300, 100, 400] vibriert 300ms, pausiert 100ms, und vibriert 400ms.
+
+ - Datentyp: **list**
+ - Standardwert: **[]**
+
+
+ttl
+---
+
+Time To Live. Wenn das Client-Gerät offline oder nicht verfügbar ist, wird solange versucht die Nachricht zuzustellen. Angabe in Sekunden, Standard eine Woche. 0 bedeutet, dass der Server nur einmal versucht eine Nachricht zuzustellen.
+
+ - Datentyp: **int**
+ - Standardwert: **604800**
+
+
+highpriority
+------------
+
+Durch setzten des headers Urgency auf high steigt die Priorität am Server und Client mit der die Nachricht bearbeitet wird.
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+returnval
+---------
+
+Wert der von der Funktion zurückgegeben werden soll, damit ist es möglich die Funktion auch in eval ausdrücken zu verwenden und dennoch die Änderung auf 'value' des Items zu übernehmen.
+
+ - Datentyp: **any**
+ - Standardwert: **True**
+
+
+timestamp
+---------
+
+Legt fest ob zu Beginn der Nachricht ein Zeitstempel angefügt werden soll
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

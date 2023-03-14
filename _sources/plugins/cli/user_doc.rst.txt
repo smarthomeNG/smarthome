@@ -1,8 +1,22 @@
 .. index:: Plugins; cli (CommandLine Interface)
 .. index:: cli
 
+===
 cli
-###
+===
+
+.. image:: webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+Dieses Plugin bietet einen Zugriff über Telnet auf SmartHomeNG.
+
+Über das Plugin können diverse Befehle an SmartHomeNG zur Auflistung, Debugging und Manipulation
+von Items, Logiken, Plugins und internen Objekten geschickt werden.
+
 
 Konfiguration
 =============
@@ -10,19 +24,10 @@ Konfiguration
 Die Informationen zur Konfiguration des Plugins sind unter :doc:`/plugins_doc/config/cli` beschrieben.
 
 
-Weiterführende Informationen
-============================
-
-Das CLI Plugin bietet einen Zugriff über Telnet auf SmartHomeNG.
-
-Über das Plugin können diverse Befehle an SmartHomeNG zur Auflistung, Debugging und Manipulation
-von Items, Logiken, Plugins und internen Objekten geschickt werden.
-
-
 Plugin Konfigurationsparameter
-==============================
+------------------------------
 
-Das Plugin kann über die folgende Konfiguration in der Datei etc/plugins.conf akitviert werden:
+Das Plugin kann über die folgende Konfiguration in der Datei etc/plugins.yaml akitviert werden:
 
 .. code-block: yaml
    cli:
@@ -129,3 +134,7 @@ CLI Befehle
 | quit, q                  | Beendet die CLI Session                                                                      |
 +--------------------------+----------------------------------------------------------------------------------------------+
 
+Web Interface
+=============
+
+Das Webinterface zeigt nur die ingestellten Parameter des Plugins an und bietet darüber hinaus keine Funktionalität.

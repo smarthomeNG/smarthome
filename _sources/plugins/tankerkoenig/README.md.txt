@@ -1,7 +1,5 @@
 # TankerKoenig
 
-Version 0.1
-
 ## Requirements
 
 This plugin requires lib requests. You can install this lib with:
@@ -89,8 +87,8 @@ Returned is an array of petrol station data, with the following available keys:
 'place', 'brand', 'houseNumber', 'street', 'id', 'lng', 'name', 'lat', 'price', 'dist', 'isOpen', 'postCode'
 Note: Take care with too high rad values, as this also increases load on tankerkoenig interface.
 
-### get_petrol_station_detail(id)
-This funktion gets the details of one petrol station, identified by its internal TankerKoenig ID.
+### get_petrol_station_detail_full(id)
+This function gets the details (incl. prices) of one petrol station, identified by its internal TankerKoenig ID.
 
 ```python
 detail = sh.tankerkoenig.get_petrol_station_detail(sh.petrol_station.DemoBavariaPetrol.conf['tankerkoenig_id'])
@@ -116,7 +114,7 @@ sh.petrol_station.DemoBavariaPetrol.isOpen(detail['isOpen'])
 sh.petrol_station.DemoBavariaPetrol.diesel(detail['diesel'])
 ```
 
-### Get prices of two petrol stations
+### Get prices of one petrol stations
 ```python
 prices = sh.tankerkoenig.get_petrol_station_prices([sh.petrol_station.DemoBavariaPetrol.conf['tankerkoenig_id']])
 ```

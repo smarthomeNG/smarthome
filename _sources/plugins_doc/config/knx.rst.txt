@@ -117,7 +117,7 @@ loglevel_knxd_cache_problems
 ============================
 
 
-Beim Start von SmartHomeNG werden Items mit dem Attribut knx_cache direkt vom knxd eingelesen.  Wenn die Werte der Gruppenadressen nicht verfügbar sind, liefert der knxd ein fehlerhaftes Paket.  Mit dem hier festgelegten Loglevel wird dieses Paket protokolliert.
+Beim Start von SmartHomeNG werden Items mit dem Attribut knx_cache direkt vom knxd eingelesen. Wenn die Werte der Gruppenadressen nicht verfügbar sind, liefert der knxd ein fehlerhaftes Paket. Mit dem hier festgelegten Loglevel wird dieses Paket protokolliert.
 
  - Datentyp: **str**
  - Standardwert: **INFO**
@@ -230,7 +230,7 @@ knx_cache
 =========
 
 
-Gruppenadresse für die Initialisierung des Items. Der Wert wird aus dem Cache von KNXD/EIBD gelesen. Wenn kein Cache-Wert vorhanden ist, wird der KNX-Bus nach dem Wert abgefragt. Die Angabe impliziert knx_listen, also muss knx_listen nicht für diese Gruppenadresse angegeben werden. Wie bei knx_listen kann eine Liste von GAs angegeben werden. Dann wird der erste Eintrag der Liste für die Initialisierung verwendet.
+Gruppenadresse für die Initialisierung des Items. Der Wert wird aus dem Cache von KNXD/EIBD gelesen. Wenn kein Cache-Wert vorhanden ist, wird der KNX-Bus nach dem Wert abgefragt. Die Angabe impliziert knx_listen, also muss knx_listen nicht für diese Gruppenadresse angegeben werden.
 
  - Datentyp: **knx_ga**
 
@@ -286,7 +286,7 @@ knx_init
 ========
 
 
-Gruppenadresse für die Initialisierung des Items. Der KNX-Bus wird nach dem Wert abgefragt. Die Angabe impliziert knx_listen, also muss knx_listen nicht für diese Gruppenadresse angegeben werden. Wie bei knx_listen kann eine Liste von GAs angegeben werden. Dann wird der erste Eintrag der Liste für die Initialisierung verwendet.
+Gruppenadresse für die Initialisierung des Items. Der KNX-Bus wird nach dem Wert abgefragt. Die Angabe impliziert knx_listen, also muss knx_listen nicht für diese Gruppenadresse angegeben werden.
 
  - Datentyp: **knx_ga**
 

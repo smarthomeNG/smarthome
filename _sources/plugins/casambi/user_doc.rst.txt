@@ -1,9 +1,16 @@
-.. index:: Plugins; casambi (Casambi REST API Unterstützung)
+.. index:: Plugins; casambi
 .. index:: casambi
 
 =======
 casambi
 =======
+
+.. image:: webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
 
 Dieses Plugin unterstützt Casambi und Occhio Lichter durch die Verwendung des Casambi Backend API.
 Die Kommunikation erfolgt über Bluetooth Low Energy (BLE) und die Casambi Produkte sind in vielen
@@ -20,14 +27,13 @@ Die Informationen zur Konfiguration des Plugins sind unter :doc:`/plugins_doc/co
 Gateway Hardware
 ================
 
-According to the Casambi concept, a mobile device (cell phone or tablet) is used as hardware gateway between local
-BLE network and Casambi backend.
+Das Casambi Konzept sieht vor, ein Mobilgerät (z.B. Handy oder Tablett) als Hardwaregateway zwischen dem lokalen BLE Netzwerk und dem Casambi Backend
+enzusetzen.
 
-Requirements
+Anforderungen
 ============
-
-The plugin needs a valid Casambi API key which can be obtained from Casambi under:
-support@casambi.com
+Das Casambi Plugin benötigt einen validen Casambi API key, der hier beantragt werden kann:
+``support@casambi.com``
 
 
 Beispiele
@@ -134,3 +140,22 @@ Im ersten Tab werden die Items angezeigt, die das Casambi Plugin nutzen:
 
 .. image:: assets/webif1.jpg
    :class: screenshot
+
+
+Changelog
+=========
+
+V1.7.5
+    improved webinterface
+    improved command sending, if connection is no longer available (broken pipe). Resent once immediately.
+
+V1.7.4
+    added backend online status parsing to item
+    removed unjustified warning messages
+
+V1.7.3
+    added support for tunable white devices
+
+V1.7.1
+    Initial release
+

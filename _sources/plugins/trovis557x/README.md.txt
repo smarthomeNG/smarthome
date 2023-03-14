@@ -15,3 +15,4 @@ The plugin supports all Modbus models (5571, 5573, 5576, 5578, 5579).
 Some parts of the project can also be used to connect the controller to Trovis View.
 
 Further details can be found in the [Wiki](https://github.com/Tom-Bom-badil/samson_trovis_557x/wiki) (German).
+

@@ -101,7 +101,43 @@ ksem_0
  - Datentyp: **num**
 
 
+ksem_16
+=======
+
+
+
+
+ - Datentyp: **num**
+
+
+ksem_18
+=======
+
+
+
+
+ - Datentyp: **num**
+
+
 ksem_2
+======
+
+
+
+
+ - Datentyp: **num**
+
+
+ksem_24
+=======
+
+
+
+
+ - Datentyp: **num**
+
+
+ksem_4
 ======
 
 
@@ -121,6 +157,51 @@ ksem_512
 
 ksem_516
 ========
+
+
+
+
+ - Datentyp: **num**
+
+
+ksem_520
+========
+
+
+
+
+ - Datentyp: **num**
+
+
+ksem_524
+========
+
+
+
+
+ - Datentyp: **num**
+
+
+ksem_544
+========
+
+
+
+
+ - Datentyp: **num**
+
+
+ksem_548
+========
+
+
+
+
+ - Datentyp: **num**
+
+
+ksem_6
+======
 
 
 

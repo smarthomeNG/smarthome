@@ -130,26 +130,6 @@ Cron-Angabe, wann für die UZSU Einträge mit Sonnenstandbezug die errechnete Uh
  - Standardwert: **0 0 * ***
 
 
-webif_pagelength
-================
-
-
-Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
-Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.
-Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.
-
- - Datentyp: **int**
- - Standardwert: **100**
-
- - Mögliche Werte:
-
-   - **-1**
-   - **0**
-   - **25**
-   - **50**
-   - **100**
-
-
 ==============
 Item Attribute
 ==============
@@ -286,4 +266,4 @@ Fortsetzen der UZSU Evaluierung: Aktivieren des Items und Setzen des zuletzt fes
  - Ergebnistyp der Funktion: **foo**
 
 
-.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt. Für den Fall, dass diese Seite nicht alle benötigten Informationen enthält, bitte auf die englischsprachige :doc:`README Datei <../../plugins/uzsu/README>` des Plugins zugreifen.
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

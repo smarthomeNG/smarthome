@@ -82,6 +82,114 @@ Item Attribute
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
 
+e0
+==
+
+
+Kein Fehler, Anlage arbeitet normal
+
+ - Datentyp: **str**
+
+
+e1
+==
+
+
+Nicht dokumentierter Fehler 1
+
+ - Datentyp: **str**
+
+
+e10
+===
+
+
+Fortluftsensor defekt
+
+ - Datentyp: **str**
+
+
+e2
+==
+
+
+Nicht dokumentierter Fehler 2
+
+ - Datentyp: **str**
+
+
+e3
+==
+
+
+Nicht dokumentierter Fehler 3
+
+ - Datentyp: **str**
+
+
+e4
+==
+
+
+Nicht dokumentierter Fehler 4
+
+ - Datentyp: **str**
+
+
+e5
+==
+
+
+5:Zuluftsensor defekt
+
+ - Datentyp: **str**
+
+
+e6
+==
+
+
+CO2-Alarm
+
+ - Datentyp: **str**
+
+
+e7
+==
+
+
+Außenluftsensor defekt
+
+ - Datentyp: **str**
+
+
+e8
+==
+
+
+Abluftsensor defekt
+
+ - Datentyp: **str**
+
+
+e9
+==
+
+
+Frostwarnung - Außenluft <0°C
+
+ - Datentyp: **str**
+
+
+filter_warning
+==============
+
+
+Filter wechseln
+
+ - Datentyp: **str**
+
+
 helios_var
 ==========
 

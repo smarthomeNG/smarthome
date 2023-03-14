@@ -8,8 +8,8 @@ Plugin 'executor' Konfiguration
 
 .. index:: Plugins; executor Konfiguration
 
-.. image:: /_static/img/system.svg
-   :alt: plugin type logo
+.. image:: /plugins/executor/webif/static/img/plugin_logo.svg
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %
@@ -37,7 +37,8 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.4**
+ - Minimum SmartHomeNG Version: **1.9**
+ - Minimum Python Version: **3.8**
 
 Konfiguration
 =============
@@ -53,7 +54,28 @@ Parameter
 
 Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
 
-**Keine**
+
+script_entries
+==============
+
+
+Maximale Anzahl der Zeilen in der Listbox für Skripte. Bei Angabe von 0 wird die Listbox zur Dropdown Liste.
+
+ - Datentyp: **int**
+ - Standardwert: **6**
+
+ - Minimalwert: **0**
+ - Maximalwert: **50**
+
+scripts
+=======
+
+
+relative Pfadangabe unterhalb *var* wo im Bedarfsfall die Skripte für das Executor Plugin abgelegt werden
+
+ - Datentyp: **str**
+ - Standardwert: **executor_scripts**
+
 
 ==============
 Item Attribute

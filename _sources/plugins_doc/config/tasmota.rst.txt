@@ -37,8 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.7.2**
- - Minimum Python Version: **3.6**
+ - Minimum SmartHomeNG Version: **1.9.3**
 
 Konfiguration
 =============
@@ -77,29 +76,26 @@ Zeitabstand in Sekunden in dem die Tasmota Devices Telemetrie Daten senden solle
  - Minimalwert: **10**
  - Maximalwert: **3600**
 
-webif_pagelength
-================
-
-
-Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden
-
- - Datentyp: **int**
- - Standardwert: **100**
-
- - Mögliche Werte:
-
-   - **-1**
-   - **25**
-   - **50**
-   - **100**
-
-
 ==============
 Item Attribute
 ==============
 
 
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+tasmota_admin
+=============
+
+
+
+
+ - Datentyp: **str**
+ - Standardwert: **delete_retained_messages**
+
+ - Mögliche Werte:
+
+   - **delete_retained_messages**
 
 
 tasmota_attr
@@ -111,6 +107,40 @@ Zu lesendes/schreibendes Attribut des Tasmota Devices. Achtung: Nicht jedes Attr
  - Datentyp: **str**
  - Standardwert: **relay**
 
+ - Mögliche Werte:
+
+   - **relay** |_| - |_| Schalten des Relais -> bool, r/w
+   - **online** |_| - |_| Online Status des Tasmota Devices -> bool, r/o
+   - **voltage** |_| - |_| Spannung in Volt bei Tasmota Devices mit ENERGY Sensor -> num, r/o
+   - **current** |_| - |_| Strom in Ampere bei Tasmota Devices mit ENERGY Sensor -> num, r/o
+   - **power** |_| - |_| Leistung in Watt bei Tasmota Devices mit ENERGY Sensor -> num, r/o
+   - **power_total** |_| - |_| Verbrauch (gesamt) in kWh bei Tasmota Devices mit ENERGY Sensor -> num, r/o
+   - **power_yesterday** |_| - |_| Verbrauch (gestern) in kWh bei Tasmota Devices mit ENERGY Sensor -> num, r/o
+   - **power_today** |_| - |_| Verbrauch (heute) in kWh bei Tasmota Devices mit ENERGY Sensor -> num, r/o
+   - **temp** |_| - |_| Temperatur in °C bei Tasmota Devices mit TEMP Sensor (DS18B20, AM2301) -> num, r/o
+   - **hum** |_| - |_| Luftfeuchtigkeit in %rH bei Tasmota Devices mit HUM Sensor (AM2301) -> num, r/o
+   - **dewpoint** |_| - |_| Taupunkt in °C bei Tasmota Devices mit HUM und TEMP Sensor (AM2301) -> num, r/o
+   - **hsb** |_| - |_| Hue, Saturation, Brightness (HSB) bei RGBW Tasmota Devices (H801) -> list, r/w
+   - **white** |_| - |_| Color Temperature in Kelvin bei RGBW Tasmota Devices (H801) -> num, r/w
+   - **ct** |_| - |_| Color Temperature in Kelvin bei RGBW Tasmota Devices (H801) -> num, r/w
+   - **dimmer** |_| - |_| Dimmwert in % Tasmota Devices -> num, r/w
+   - **rf_recv** |_| - |_| Empfangene RF Daten bei Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> dict, r/o
+   - **rf_send** |_| - |_| Zu sendende RF Daten bei Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> dict {'RfSync': 12220, 'RfLow': 440, 'RfHigh': 1210, 'RfCode':'#F06104'}, r/w
+   - **rf_key_send** |_| - |_| Zu sendender RF-Key Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> num [1-16], r/w
+   - **rf_key_recv** |_| - |_| Zu empfangender RF-Key Tasmota Device mit RF Sendemöglichkeit (SONOFF RF Bridge) -> num [1-16], r/w
+   - **rf_key** |_| - |_| RF Key
+   - **zb_permit_join** |_| - |_| Schaltet das Pairing an der ZigBee Bridge ein/aus -> bool, r/w
+   - **zb_forget** |_| - |_| Löscht das Zigbee-Gerät aus dem Item Wert aus der Liste bekannter Geräte in der Zigbee-Bridge -> str, r/w
+   - **zb_ping** |_| - |_| Sendet ein Ping zum Zigbee-Gerät aus dem Item Wert -> str, r/w
+   - **power_total** |_| - |_| Gemessener Gesamtenergieverbrauch
+   - **power_today** |_| - |_| Gemessener Energieverbrauch heute
+   - **power_yesterday** |_| - |_| Gemessener Energieverbrauch gestern
+   - **analog_temp** |_| - |_| Temperatur am Analogeingang
+   - **analog_temp1** |_| - |_| Temperatur am Analogeingang1
+   - **analog_a0** |_| - |_| ADC-Eingang eines ESPs
+   - **analog_range** |_| - |_| ADC-Eingang eines ESPs
+   - **esp32_temp** |_| - |_| Temperatur des ESP32
+
 
 tasmota_relay
 =============
@@ -118,15 +148,38 @@ tasmota_relay
 
 Nummer des zu schaltenden Relais im Tasmota Device
 
+ - Datentyp: **int**
+ - Standardwert: **1**
+
+ - Minimalwert: **1**
+ - Maximalwert: **4**
+
+tasmota_rf_details
+==================
+
+
+Nummer des auszulösenden RF Keys im Tasmota Device=Aktion bei Empfang
+
  - Datentyp: **str**
  - Standardwert: **1**
 
- - Mögliche Werte:
 
-   - **1**
-   - **2**
-   - **3**
-   - **4**
+tasmota_sml_attr
+================
+
+
+Smartmeter Attribut; muss dem Key des Dictionary dem SML Devices entsprechen
+
+ - Datentyp: **str**
+
+
+tasmota_sml_device
+==================
+
+
+Name des Smartmeter (SML Device)
+
+ - Datentyp: **str**
 
 
 tasmota_topic
@@ -142,9 +195,19 @@ tasmota_zb_attr
 ===============
 
 
-Schlüssel der Json-Dict, der vom Zigbee-Device bereitgestellt wird; Key aus dem sub-dict 'data' des tasmota_zb_device
+Schlüssel der Json-Dict, der vom Zigbee-Device bereitgestellt wird; Key aus dem dict des tasmota_zb_device
 
  - Datentyp: **str**
+
+
+tasmota_zb_cluster
+==================
+
+
+Ergänzung des Sendebefehls um entsprechendes Zigbee-Cluster
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
 
 
 tasmota_zb_device
@@ -154,6 +217,15 @@ tasmota_zb_device
 Friendly Name oder Kurzname des Zigbee Devices. ACHTUNG: Wird der Kurzname verwendet und beginnt dieser mit 0x, muss die Schreibweise '0x9CB9' verwendet werden
 
  - Datentyp: **str**
+
+
+tasmota_zb_group
+================
+
+
+Zigbee Control Group: Werte werden an diese Gruppe gesendet. Gruppennachrichten werden nicht empfangen. https://tasmota.github.io/docs/Device-Groups/#zigbee
+
+ - Datentyp: **num**
 
 
 ===============

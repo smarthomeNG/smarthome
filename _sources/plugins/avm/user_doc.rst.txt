@@ -1,80 +1,6 @@
 
-AVM
+avm
 ===
-
-Changelog
----------
-
-1.6.8
-~~~~~
-- HKR: Allow set temperature to be set directly to value 126.5 (off=frost protection mode). Until now, a bug mapped value off (=126.5) to maximum heating (=127).
-
-1.6.7
-~~~~~
-- Implement plugin configuration "avm_home_automation" to use AHA (AVM HomeAutomation) Interface (Default: False)
-- correct typo "temperatur" to "temperature" in struct
-- add method "get_device_log_from_lua_separated" to get log already as list of list
-- limit Log entries shown on WebIF to recent 200
-- Update WebIF with possibility to adapt table size to screen
-- Debugging for 'button' e.g. DECT440
-- Minor code correction / debugging
-- Adapt user_doc.rst
-- feature provided by plugin avm_smarthome are completely integrated. Therefore tat plugin is marked as deprecated.
-
-1.6.6
-~~~~~
-
-- Methode get_color_defaults implementiert, welche die aktuell von AVM unterstützen diskreten RGB Farben ausliest.
-- Methode set_color und color auf diskrete RGB farben umgestellt. Beliebige RGB Farbwerte werden erst ab Q2 2022 von AVM unterstützt.
-
-1.6.5
-~~~~~
-
-- Session_ID wird nur noch bei Bedarf erzeugt (bleibt nach Erstellung 20min gültig und verlängert sich bei erfolgreichem Login)
-- Update auf PBKDF2 zur Absicherung der Anmeldung; MD5 als Backup
-- Methoden "_get_sid", "_get_login_infos_from_http_request", "_http_logout_request", "_check_sid", "_calculate_pbkdf2_response", "_calculate_md5_response" hinzu
-- Bugfixing, Verbesserung der Logausgaben
-- Codevereinfachung und Korrektur
-- Plugin Parameter für WebIF Page Length hinzu
-- Plugin Parameter für Aktivierung der Nutzung des AHA-HTTP Interfaces hinzu
-
-1.6.4
-~~~~~
-
-- Attribut 'ain' deprecated gesetzt; Verwendung von 'avm_ain', so dass alle avm Plugin Attribute auch mit 'avm' beginnen
-- Überprüfung aller unterstützen Attributwerte avm_data_type
-- Anpassung der update_black_list
-- Verbesserung des Handling von avm_data_type für r/o, w/o und r/w Items
-- Vereinfachung des Code bei _update_x methods
-- Ergänzung weiterer Attributwerte bei avm_data_type
-
-1.6.3
-~~~~~
-
-- Debug des Attributs set_hkr_boost und hkr_boost
-- Update der Datatables im WebIF
-- Update des automatischen Update im WebIF
-- Information zu Attributwerten von 'avm_data_type' ergänzt
-- Beispiel für Anwendung der structs mit Instanz erstellt
-- Änderung von 'temperatur' auf 'temperature' im struct
-- Verbesserung der LogAusgabe, wenn AbfrageAttribut vorhanden aber Wert nicht vorhanden ist
-
-1.6.2
-~~~~~
-- Bugfixing der neuen Funktionen in 1.6.0
-
-1.6.1
-~~~~~
-- Bugfixing der neuen Funktionen in 1.6.0
-
-1.6.0
-~~~~~
-
-- Anbindung der Smarthome Devices über AHA-Interface hinzugefügt (getestet mit Fritz 440, Comet Dect)
-- Funktionen für Rufumleitungen hinzugefügt (getestet mit Fritzbox 7530)
-- Plugin Parameter "index" in "avm_tam_index" umbenannt
-- Code Cleanup (add new functions to minimize code repetitions)
-- Verbesserung der Fehlerbehandlung (insbesondere bei Zugriffsfehlern auf des FritzDevice)
 
 Allgemeine Informationen
 ------------------------
@@ -119,10 +45,9 @@ Dafür stehen die folgenden Einstellungen zur Verfügung:
 - `ssl`: True or False => True will add "https", False "http" to the URLs in the plugin
 - `verify`: True or False => Turns certificate verification on or off. Typically False
 - `call_monitor`: True or False => Activates or deactivates the MonitoringService, which connects to the FritzDevice's call monitor
-- 'call_monitor_incoming_filter': Filter only specific numbers to be watched by call monitor
-- 'avm_home_automation': True or False => Activates or deactivates the AHA Interface to communicate with HomeAutomation Devices,
-- 'log_entry_count': Number of Log-Messages, which will be displayed.
-- 'webif_pagelength': Number of items being listed in a web interface table per page by default.
+- `call_monitor_incoming_filter`: Filter only specific numbers to be watched by call monitor
+- `avm_home_automation`: True or False => Activates or deactivates the AHA Interface to communicate with HomeAutomation Devices,
+- `log_entry_count`: Number of Log-Messages, which will be displayed.
 - `instance`: Unique identifier for each FritzDevice / each instance of the plugin
 
 Alternativ kann das Plugin auch manuell konfiguriert werden.
@@ -131,39 +56,35 @@ Alternativ kann das Plugin auch manuell konfiguriert werden.
 .. code-block:: yaml
 
     fb1:
-        class_name: AVM
-        class_path: plugins.avm
+        plugin_name: avm
         username: ...    # optional
         password: '...'
         host: fritz.box
         port: 49443
         cycle: 300
-        ssl: True    # use https or not
-        verify: False    # verify ssl certificate
+        ssl: True
+        verify: False
         call_monitor: 'True'
         call_monitor_incoming_filter: "...    ## optional, don't set if you don't want to watch only one specific number with your call monitor"
         avm_home_automation: 'True'
         instance: fritzbox_7490
 
     fb2:
-        class_name: AVM
-        class_path: plugins.avm
+        plugin_name: avm
         username: ...    # optional
         password: '...'
         host: '...'
         port: 49443
         cycle: 300
-        ssl: True    # use https or not
-        verify: False    # verify ssl certificate
+        ssl: True
+        verify: False
         call_monitor: 'True'
         avm_home_automation: 'False'
         instance: wlan_repeater_1750
 
-.. note::
-
-    Kürzere Updatezyklen können abhängig vm Fritzdevice aufgrund von CPU Auslastung und damit zu Problemen (u.a.
-    zu Nichterreichbarkeit des Webservice) führen. Wird ein kürzerer Updatezyklus benötigt, sollte das shNG Log
-    beobachtet werden. Dort werden entsprechende Fehlermeldungen hinterlegt.
+.. note:: Kürzere Updatezyklen können abhängig vm Fritzdevice aufgrund von CPU Auslastung und damit zu Problemen (u.a.
+zu Nichterreichbarkeit des Webservice) führen. Wird ein kürzerer Updatezyklus benötigt, sollte das shNG Log beobachtet
+werden. Dort werden entsprechende Fehlermeldungen hinterlegt.
 
 
 Konfiguration des Items
@@ -218,12 +139,12 @@ Zur Vereinfachung der Einrichtung von Items sind für folgende Item-structs vord
 - ``wan``  -  WAN Items
 - ``wlan``  -  Wireless Lan Items
 - ``device``  -  Items eines verbundenen Gerätes
-- ``smarthome_general``  -  Allgemeine Informationen eines AVM HomeAutomation Devices
-- ``smarthome_hkr``  -  spezifische Informationen eines AVM HomeAutomation Thermostat Devices
-- ``smarthome_temperatur_sensor``  -  spezifische Informationen eines AVM HomeAutomation Devices mit Temperatursensor
-- ``smarthome_alert``  -  spezifische Informationen eines AVM HomeAutomation Devices mit Alarmfunktion
-- ``smarthome_switch``  -  spezifische Informationen eines AVM HomeAutomation Devices mit Schalter
-- ``smarthome_powermeter``  -  spezifische Informationen eines AVM HomeAutomation Devices mit Strommessung
+- ``aha_general``  -  Allgemeine Informationen eines AVM HomeAutomation Devices
+- ``aha_hkr``  -  spezifische Informationen eines AVM HomeAutomation Thermostat Devices
+- ``aha_temperatur_sensor``  -  spezifische Informationen eines AVM HomeAutomation Devices mit Temperatursensor
+- ``aha_alert``  -  spezifische Informationen eines AVM HomeAutomation Devices mit Alarmfunktion
+- ``aha_switch``  -  spezifische Informationen eines AVM HomeAutomation Devices mit Schalter
+- ``aha_powermeter``  -  spezifische Informationen eines AVM HomeAutomation Devices mit Strommessung
 
 
 Item Beispiel mit Verwendung der structs ohne Instanz
@@ -274,9 +195,9 @@ Item Beispiel mit Verwendung der structs ohne Instanz
                 type: foo
                 avm_ain: 'xxxxx xxxxxxx'
                 struct:
-                  - avm.smarthome_general
-                  - avm.smarthome_hkr
-                  - avm.smarthome_temperatur_sensor
+                  - avm.aha_general
+                  - avm.aha_thermostat
+                  - avm.aha_temperatur_sensor
 
 
 Item Beispiel mit Verwendung der structs mit Instanz
@@ -290,10 +211,10 @@ Item Beispiel mit Verwendung der structs mit Instanz
             ain@fritzbox_1: 'xxxxx xxxxxxx'
             instance: fritzbox_1
             struct:
-              - avm.smarthome_general
-              - avm.smarthome_switch
-              - avm.smarthome_powermeter
-              - avm.smarthome_temperature_sensor
+              - avm.aha_general
+              - avm.aha_switch
+              - avm.aha_powermeter
+              - avm.aha_temperature_sensor
             temperature:
                 database: 'yes'
             power:
@@ -495,30 +416,30 @@ Es werden nur die Tabs angezeigt, deren Funktionen im Plugin aktiviert sind bzw.
 
 Im WebIF stehen folgende Reiter zur Verfügung:
 
-AVM Items
-~~~~~~~~~
+AVM AVM TR-064 Items
+~~~~~~~~~~~~~~~~~~~~
 
 Tabellarische Auflistung aller Items, die mit dem TR-064 Protokoll ausgelesen werden
 
 .. image:: user_doc/assets/webif_tab1.jpg
    :class: screenshot
 
-AVM Smarthome Items
-~~~~~~~~~~~~~~~~~~~
+AVM AHA Items
+~~~~~~~~~~~~~
 Tabellarische Auflistung aller Items, die mit dem AHA Protokoll ausgelesen werden (Items der AVM HomeAutomation Geräte)
 
 .. image:: user_doc/assets/webif_tab2.jpg
    :class: screenshot
 
-AVM Smarthome Devices
-~~~~~~~~~~~~~~~~~~~~~
+AVM AHA Devices
+~~~~~~~~~~~~~~~
 
 Auflistung der mit der Fritzbox verbundenen AVM HomeAutomation Geräte
 
 .. image:: user_doc/assets/webif_tab3.jpg
    :class: screenshot
 
-Call Monitor Items
+AVM Call Monitor Items
 ~~~~~~~~~~~~~~~~~~
 
 Tabellarische Auflistung des Anrufmonitors (nur wenn dieser konfiguriert ist)
@@ -526,7 +447,7 @@ Tabellarische Auflistung des Anrufmonitors (nur wenn dieser konfiguriert ist)
 .. image:: user_doc/assets/webif_tab4.jpg
    :class: screenshot
 
-Log-Einträge
+AVM Log-Einträge
 ~~~~~~~~~~~~
 
 Listung der Logeinträge der Fritzbox
@@ -534,11 +455,10 @@ Listung der Logeinträge der Fritzbox
 .. image:: user_doc/assets/webif_tab5.jpg
    :class: screenshot
 
-Plugin-API
+AVM Plugin-API
 ~~~~~~~~~~
 
 Beschreibung der Plugin-API
 
 .. image:: user_doc/assets/webif_tab6.jpg
    :class: screenshot
-

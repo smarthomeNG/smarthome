@@ -8,8 +8,8 @@ Plugin 'ical' Konfiguration
 
 .. index:: Plugins; ical Konfiguration
 
-.. image:: /_static/img/web.svg
-   :alt: plugin type logo
+.. image:: /plugins/ical/webif/static/img/plugin_logo.png
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %

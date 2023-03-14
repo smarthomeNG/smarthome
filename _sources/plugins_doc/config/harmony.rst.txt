@@ -98,7 +98,33 @@ Item Attribute
 
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
-**Keine**
+
+harmony_command_0
+=================
+
+
+All plugin attributes are only valid for items with the type 'bool'. You have to set at least one of the attributes 'harmony_command_0' or 'harmony_command_1', both values together are valid too. If the item value is 'True', the command defined for harmony_command_1 will be triggered, harmony_command_0 vice versa.
+
+ - Datentyp: **str**
+
+
+harmony_command_1
+=================
+
+
+All plugin attributes are only valid for items with the type 'bool'. You have to set at least one of the attributes 'harmony_command_0' or 'harmony_command_1', both values together are valid too. If the item value is 'True', the command defined for harmony_command_1 will be triggered, harmony_command_0 vice versa.
+
+ - Datentyp: **str**
+
+
+harmony_item
+============
+
+
+To retrieve name of the current activated activity in the Harmony Hub, your item has to be type 'str' and must implement the attribute **harmony_item: current_activity_name**
+
+ - Datentyp: **str**
+
 
 ===============
 Logik Parameter

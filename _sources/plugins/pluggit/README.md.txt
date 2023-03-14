@@ -24,6 +24,9 @@ struct: pluggit.pluggit
 
 ## Änderungen:
 
+V2.0.4 - 13.11.2022
+- Verbesserungen zur Versionsprüfung "pymodbus"
+
 V2.0.3 - 25.10.2022
 - Support für pymodbus 3.0
 

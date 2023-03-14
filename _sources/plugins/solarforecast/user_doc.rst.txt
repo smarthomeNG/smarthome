@@ -5,6 +5,13 @@
 solarforecast
 =============
 
+.. image:: webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
 Dieses Plugin unterstützt Solare.forecast Vorhersagen von Solaretrag (Leistung).
 
 Für weitere Informationen empfiehlt sich die Lektüre der offiziellen
@@ -56,11 +63,6 @@ Web Interface
 
 Das solarforecast Plugin verfügt über ein Webinterface.
 
-.. important::
-
-    Das Webinterface des Plugins kann mit SmartHomeNG v1.4.2 und davor **nicht** genutzt werden.
-    Es wird dann nicht geladen. Diese Einschränkung gilt nur für das Webinterface. Ansonsten gilt
-    für das Plugin die in den Metadaten angegebene minimale SmartHomeNG Version.
 
 
 Aufruf des Webinterfaces

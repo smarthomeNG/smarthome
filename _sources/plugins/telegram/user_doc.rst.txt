@@ -263,6 +263,65 @@ Ein John Doe ergäbe also ``John Doe: xxxxxxx: Hello world!``
 Mit einer Logik kann basierend darauf ein Menu und entsprechende Abfragen an shNG gestellt werden.
 Siehe dazu ein Beispiel weiter unten.
 
+telegram_control
+-------------
+
+Für alle Items mit diesem Attribut wird eine Liste mit Kommandos für den Bot erstellt. Der Listeneintrag muss mit ``name`` spezifiziert werden.
+Wird das Kommando ``/control`` an den Bot gesendet, so erstellt der Bot ein Tastaturmenü, dass jedes Attribut als Kommando enthält.
+Dabei werden auch alle aktuellen Werte der Items ausgegeben.
+Bei Auswahl eines dieser Kommandos im Telegram Client kann dann ein Item vom Type bool geschalten werden (on/off) oder beim Type 'num' kein eine Zahl zum SH-Item gesendet werden.
+
+``name``    Item wird mit diesem Namen im Bot als Kommando dargestellt
+``type``    Möglichkeiten: on, off, onoff, toggle, num
+    on          * nur Einschalten ist möglich
+    off         * nur Ausschalten ist möglich
+    onoff       * das Ein- und Ausschalten muss mit einen weiteren Kommando vom Tastaturmenu ausgewählt werden 
+                [On] [Off] (nach einem Timeout ohne Antwort wird der Befehl abgebrochen)
+    toggle      * der Wert des Items wird umgeschltet (0 zu 1; 1 zu 0)
+    num         * es kann eine Zahl an SH gesendet werden und das entsprechende Item wird damit geschrieben. (nach einem Timeout ohne Antwort wird der Befehl abgebrochen)
+``question``Sicherheitsabfrage vor dem Schalten des Items (verwendbar bei type:on/off/toggle - nach einem Timeout ohne Antwort wird der Befehl abgebrochen) 
+            [Yes] [No]
+``min``     Minimalwert (verwendbar bei type:num)
+``max``     Maximalwert (verwendbar bei type:num)
+``timeout`` Zeit nach welcher der Befehl mit Antwort(onoff/question/num) abgebrochen wird (default 20Sekunden)
+
+
+Beispiel
+''''''''
+
+.. code:: yaml
+
+    BeregnungZone1:
+        type: bool
+        cache: True
+        telegram_control: "name:BeregnungZ1, type:onoff"
+    BeregnungZone2:
+        type: bool
+        cache: True
+        telegram_control: "name:BeregnungZ2, type:toggle, question:Ventil wirklich umschalten?"
+    Gartentor:
+        type: bool
+        cache: True
+        telegram_control: "name:Gartentor, type:on, question:Gartentor wirklich öffnen?"
+    Dachfenster:
+        type: num
+        cache: True
+        telegram_control: "name:Dachfenster, type:num, min:0, max:100, timeout:30"
+     Kamera:
+        type: bool
+        cache: True
+        telegram_control: "name:Kamera, type:toggle"
+        eval: sh.plugins.return_plugin("telegram").photo_broadcast("http://192.168.0.78/snapshot/view0.jpg", datetime.datetime.now().strftime("%H:%M %d.%m.%Y"))
+
+
+Das Kommando ``/control`` veranlasst den Bot zu antworten mit
+
+.. code::
+
+   [/BeregnungZ1] [/BeregnungZ2] [/Gartentor]
+   [/Dachfenster] [/Kamera]
+
+
 
 Funktionen
 ==========

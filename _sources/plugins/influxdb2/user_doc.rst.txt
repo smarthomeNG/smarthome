@@ -1,5 +1,6 @@
 
 .. index:: Plugins; influxdb2
+.. index:: influxdb2
 .. index:: InfluxDB; influxdb2 Plugin
 
 =========

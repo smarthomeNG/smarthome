@@ -1,11 +1,13 @@
 # Modbus Plugin for Kostal inverters
 
-#### Version 1.0.0
+#### Version 1.6.2
 
 This plugin connects your Kostal inverter (https://www.kostal-solar-electric.com/) via ModBus with SmarthomeNG.
 - read out all inverter data
 
 ## Change history
+
+- work with newer versions of pymodbus too
 
 ### Changes Since version 1.x.x
 
@@ -27,7 +29,7 @@ This plugin connects your Kostal inverter (https://www.kostal-solar-electric.com
 | PLENTICORE plus 5.5 | yes          | no      |
 | PLENTICORE plus 7.0 | yes          | yes     |
 | PLENTICORE plus 8.5 | yes          | yes     |
-| PLENTICORE plus 10  | yes          | no      |
+| PLENTICORE plus 10  | yes          | yes     |
 | PIKO IQ 4.2         | yes          | no      |
 | PIKO IQ 5.5         | yes          | no      |
 | PIKO IQ 7.0         | yes          | no      |
@@ -68,17 +70,21 @@ For example:
 
 ```
 
-
 #### The following data are stored in the respective items:
 
 | Addr (dec)        | Description                                       | Format | Unit    |
 |-------------------|---------------------------------------------------|--------|---------|
+| kostal_06         | Inverter article number                           | String | -       |
+| kostal_14         | Inverter serial number                            | String | -       |
 | kostal_30         | Number of bidirectional converter                 | U16    | -       |
 | kostal_32         | Number of AC phases                               | U16    | -       |
 | kostal_34         | Number of PV strings                              | U16    | -       |
 | kostal_36         | Hardware-Version                                  | U16    | -       |
+| kostal_38         | Software-Version Maincontroller (MC)              | String | -       |
+| kostal_46         | Software-Version IO-Controller (IOC)              | String | -       |
 | kostal_54         | Power-ID                                          | U16    | -       |
 | kostal_56         | Inverter state2                                   | U16    | -       |
+| kostal_98         | Temperature of controller PCB                     | Float  | °C      |
 | kostal_100        | Total DC power W                                  | Float  | W       |
 | kostal_104        | State of energy manager3                          | U32    | -       |
 | kostal_106        | Home own consumption from battery                 | Float  | W       |
@@ -147,19 +153,31 @@ For example:
 | kostal_322        | Daily yield                                       | Float  | Wh      |
 | kostal_324        | Yearly yield                                      | Float  | Wh      |
 | kostal_326        | Monthly yield                                     | Float  | Wh      |
+| kostal_384        | Inverter network name                             | String | -       |
+| kostal_420        | IP-address                                        | String | -       |
+| kostal_428        | IP-subnetmask                                     | String | -       |
+| kostal_436        | IP-gateway                                        | String | -       |
+| kostal_446        | IP-DNS1                                           | String | -       |
+| kostal_454        | IP-DNS2                                           | String | -       |
 | kostal_512        | Battery gross capacity                            | U32    | Ah      |
 | kostal_514        | Battery actual SOC                                | U16    | %       |
 | kostal_515        | Firmware Maincontroller (MC)                      | U32    | -       |
+| kostal_517        | Battery Manufacturer                              | String | -       |
 | kostal_525        | Battery Model ID                                  | U32    | -       |
 | kostal_529        | Work Capacity                                     | U32    | Wh      |
 | kostal_531        | Inverter Max Power                                | U16    | W       |
+| kostal_535        | Inverter Manufacturer                             | String | -       |
+| kostal_559        | Inverter Serial Number                            | String | -       |
 | kostal_575        | Inverter Generation Power (actual)                | S16    | W       |
 | kostal_577        | Generation Energy                                 | U32    | Wh      |
 | kostal_582        | Actual battery charge/discharge power             | S16    | W       |
 | kostal_586        | Battery Firmware                                  | U32    | -       |
 | kostal_588        | Battery Type6                                     | U16    | -       |
-
-
-
-
-
+| kostal_768        | Productname                                       | String | -       |
+| kostal_800        | Power class                                       | String | -       |
+| kostal_1056       | Total DC PV energy (sum of all PV inputs)         | Float  | Wh	   |
+| kostal_1058       | Total DC energy from PV1 				            | Float  | Wh	   |
+| kostal_1060       | Total DC energy from PV2 				            | Float  | Wh	   |
+| kostal_1062       | Total DC energy from PV3 				            | Float  | Wh	   |
+| kostal_1064       | Total energy AC-side to grid 			            | Float  | Wh	   |
+| kostal_1066       | Total DC power (sum of all PV inputs)	            | Float  | W	   |

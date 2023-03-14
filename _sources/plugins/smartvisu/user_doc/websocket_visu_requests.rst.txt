@@ -274,6 +274,38 @@ Das Plugin antwortet mit einer einer Liste von Messages, die folgendermaßen aus
   }
 
 
+log_cancel
+~~~~~~~~~~~~~
+
+Mit dem ``log_cancel`` Befehl kann ein Client die Updates eines Logs, welches er vorher aboniert hat, beenden.
+Dieser Befehl ist ab Protokoll Version 4.1 verfügbar.
+
+.. code-block:: JSON
+
+  {
+   "cmd":"log_cancel",
+   "item":"env.core.log",
+  }
+
+Das Plugin antwortet mit:
+
+.. code-block:: JSON
+
+  {
+   "cmd":"log_cancel",
+   "result": "..."
+  }
+
+oder
+
+.. code-block:: JSON
+
+  {
+   "cmd":"log_cancel",
+   "error": "..."
+  }
+
+
 proto
 ~~~~~
 

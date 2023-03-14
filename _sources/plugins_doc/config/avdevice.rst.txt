@@ -28,7 +28,7 @@ Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 Beschreibung
 ============
 
-Steuerung von diversen AV Geräten über TCP/IP und RS232 Schnittstelle. Das Plugin unterstützt eine Vielzahl von AV-Geräten und wurde mit folgenden Geräten getestet: - Pioneer AV Receiver < 2016 - Denon AV Receiver > 2016 - Epson Projektor < 2010 - Oppo UHD Player
+Steuerung eines AV Gerätes über TCP/IP oder RS232 Schnittstelle. Das Plugin unterstützt eine Vielzahl von AV-Geräten und wurde mit folgenden Geräten getestet: - Pioneer AV Receiver < 2016 - Denon AV Receiver > 2016 - Epson Projektor < 2010 - Oppo UHD Player
 
 
 Anforderungen
@@ -307,26 +307,6 @@ update_exclude
 Caller, bei denen kein Itemupdate vollzogen werden soll. Dies ist hilfreich, um beispielsweise mittels on_change Items abhängig von einem anderen Item zu aktualisieren, ohne dass die Updatefunktion des Plugins getriggert wird (z.B. für play/stop/pause). Es können mehrere durch Komma getrennte Einträge definiert werden.
 
  - Datentyp: **str**
-
-
-webif_pagelength
-================
-
-
-Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
-Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.
-Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.
-
- - Datentyp: **int**
- - Standardwert: **0**
-
- - Mögliche Werte:
-
-   - **-1**
-   - **0**
-   - **25**
-   - **50**
-   - **100**
 
 
 ==============

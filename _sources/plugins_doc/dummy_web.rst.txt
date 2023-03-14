@@ -13,6 +13,7 @@
    /plugins/alexarc4shng/README.md
    /plugins/homeconnect/README.md
    /plugins/ical/README.md
+   /plugins/indego4shng/README.md
    /plugins/join/README.md
    /plugins/mailrcv/README.md
    /plugins/mailsend/README.md

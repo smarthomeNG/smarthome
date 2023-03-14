@@ -1,0 +1,276 @@
+.. |_| unicode:: 0xA0
+
+
+===========================
+Plugin 'sml2' Konfiguration
+===========================
+
+
+.. index:: Plugins; sml2 Konfiguration
+
+.. image:: /plugins/sml2/webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+.. |br| raw:: html
+
+   <br />
+
+Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **sml2** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
+
+Es handelt sich bei diesem Plugin um ein **gateway Plugin**.
+
+
+
+Beschreibung
+============
+
+Auslesen von Stromzählern mit SML-Protokoll
+
+
+Anforderungen
+=============
+
+
+
+
+ - Minimum SmartHomeNG Version: **1.4.2**
+
+Konfiguration
+=============
+
+
+Im folgenden ist beschrieben, wie das Plugin **sml2** konfiguriert wird. Außerdem ist im folgenden beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann.
+
+
+=========
+Parameter
+=========
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/plugin.yaml`` konfiguriert werden:
+
+
+buffersize
+==========
+
+
+Größe des Lesepuffers. Mindestens doppelte Größe der maximalen Nachrichtenlänge in Bytes
+
+ - Datentyp: **int**
+ - Standardwert: **1024**
+
+
+cycle
+=====
+
+
+Zeitlicher Abstand in Sekunden zwischen zwei Abfragen des Smartmeters
+
+ - Datentyp: **int**
+ - Standardwert: **60**
+
+
+date_offset
+===========
+
+
+Unix timestamp der Smartmeter Inbetriebnahme
+
+ - Datentyp: **int**
+ - Standardwert: **0**
+
+
+device
+======
+
+
+Name des Gerätes
+
+ - Datentyp: **str**
+ - Standardwert: **raw**
+
+
+host
+====
+
+
+Host der eine IP Schnittstelle bereitstellt
+
+ - Datentyp: **str**
+
+
+poly
+====
+
+
+Polynom für die crc Berechnung
+
+ - Datentyp: **int**
+ - Standardwert: **4129**
+
+
+port
+====
+
+
+Port für die Kommunikation
+
+ - Datentyp: **int**
+
+
+reflect_in
+==========
+
+
+Umkehren der Bitreihenfolge für die Eingabe
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+reflect_out
+===========
+
+
+Umkehren der Bitreihenfolge der Checksumme vor der Anwendung des XOR Wertes
+
+ - Datentyp: **bool**
+ - Standardwert: **True**
+
+
+serialport
+==========
+
+
+Serieller Port an dem der Smartmeter angeschlossen ist
+
+ - Datentyp: **str**
+
+
+swap_crc_bytes
+==============
+
+
+Bytereihenfolge der berechneten Checksumme vor dem Vergleich mit der vorgegeben Checksumme tauschen
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+timeout
+=======
+
+
+Maximale Wartezeit bis serielles Lesen abgebrochen wird
+
+ - Datentyp: **int**
+ - Standardwert: **8**
+
+
+use_polling
+===========
+
+
+Soll polling statt async IO genutzt werden?
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
+
+
+xor_in
+======
+
+
+Initialer Wert für XOR Berechnung
+
+ - Datentyp: **int**
+ - Standardwert: **65535**
+
+
+xor_out
+=======
+
+
+XOR Berechnung der CRC mit diesem Wert
+
+ - Datentyp: **int**
+ - Standardwert: **65535**
+
+
+==============
+Item Attribute
+==============
+
+
+Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+sml_obis
+========
+
+
+Wert des angegebenen OBIS codes einem Item zuweisen
+
+ - Datentyp: **str**
+
+
+sml_prop
+========
+
+
+Andere Eigenschaft des Obis Codes nutzen, z.B. unitName
+
+ - Datentyp: **str**
+ - Standardwert: **valueReal**
+
+ - Mögliche Werte:
+
+   - **valueReal**
+   - **unitName**
+   - **actualTime**
+   - **statRun**
+   - **statFraudMagnet**
+   - **statFraudCover**
+   - **statEnergyTotal**
+   - **statEnergyL1**
+   - **statEnergyL2**
+   - **statEnergyL3**
+   - **statRotaryField**
+   - **statBackstop**
+   - **statCalFault**
+   - **statVoltageL1**
+   - **statVoltageL2**
+   - **statVoltageL3**
+   - **obis**
+   - **objName**
+   - **status**
+   - **valTime**
+   - **unit**
+   - **scaler**
+   - **value**
+   - **signature**
+
+
+===============
+Logik Parameter
+===============
+
+
+Das Plugin verfügt über folgende Parameter, die in der Datei ``../etc/logic.yaml`` konfiguriert werden:
+
+Keine Logik Parameter in den Metadaten beschrieben - **Bitte in der README nachsehen** (siehe Fußnote)
+
+================
+Plugin Functions
+================
+
+
+Das Plugin verfügt über folgende öffentliche Funktionen, die z.B. in Logiken aufgerufen werden können.
+
+**Keine**
+
+.. [#f1] Diese Seite wurde aus den Metadaten des Plugins erzeugt.

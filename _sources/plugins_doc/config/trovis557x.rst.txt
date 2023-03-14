@@ -23,8 +23,6 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
-
 
 
 Beschreibung
@@ -80,7 +78,7 @@ modbus_mode
 ===========
 
 
-Wie die Modbus-Kommunikation duchgeführt wird (zur Zeit auf rtu belassen)
+Wie die Modbus-Kommunikation duchgeführt wird (rtu oder tcp)
 
  - Datentyp: **str**
  - Standardwert: **rtu**
@@ -90,7 +88,7 @@ modbus_port
 ===========
 
 
-Modbus-Port, über den die Trovis verbunden ist
+Modbus Verbindung, z.B. /dev/ttyUSB0 (rtu mit socat/mbusd) oder 192.168.178.52:502 (tcp)
 
  - Datentyp: **str**
  - Standardwert: **/dev/ttytrovis**
@@ -120,30 +118,10 @@ modbus_trovis_address
 =====================
 
 
-Modbus-Adresse der Trovis (Trovis: PA6 - Modbus, ST.-NR)
+Stationsadresse der Trovis (Trovis: PA6 - Modbus, ST.-NR <=247!)
 
  - Datentyp: **int**
  - Standardwert: **247**
-
-
-model
-=====
-
-
-Modell des Heizungsreglers (5573, 5576, 5578, 5579)
-
- - Datentyp: **int**
- - Standardwert: **5576**
-
-
-revision
-========
-
-
-Baureihe des Heizungsreglers (001, 002, 003 usw)
-
- - Datentyp: **int**
- - Standardwert: **3**
 
 
 ==============
@@ -161,6 +139,15 @@ desc
 Beschreibung des Items
 
  - Datentyp: **str**
+
+
+invalid_to_zero
+===============
+
+
+Setzt 32767 (=NaN, nicht verfügbar) auf 0 fuer ausgeschaltete oder nicht verfuegbare Register
+
+ - Datentyp: **bool**
 
 
 liste
@@ -190,13 +177,13 @@ Den Typ aller verwendeten Items vorerst auf list setzen (wird noch geändert)
  - Datentyp: **str**
 
 
-visu_acl
-========
+werte
+=====
 
 
-Alle Items sollten für die Visu auf nur lesen gesetzt werden
+Für Register, die stufenweise mit Werten belegt sind
 
- - Datentyp: **str**
+ - Datentyp: **list**
 
 
 ===============

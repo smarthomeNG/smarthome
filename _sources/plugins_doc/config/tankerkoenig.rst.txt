@@ -8,8 +8,8 @@ Plugin 'tankerkoenig' Konfiguration
 
 .. index:: Plugins; tankerkoenig Konfiguration
 
-.. image:: /_static/img/web.svg
-   :alt: plugin type logo
+.. image:: /plugins/tankerkoenig/webif/static/img/plugin_logo.png
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %
@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.4**
+ - Minimum SmartHomeNG Version: **1.9**
 
 Konfiguration
 =============
@@ -63,12 +63,73 @@ Persönlicher API Key für TankerKoenig. Registrierung unter https://creativecom
  - Datentyp: **str**
 
 
+details_update_cycle
+====================
+
+
+(optional) Zeit zwischen zwei Aktualisierung der Tankstellen Details.
+
+ - Datentyp: **str**
+ - Standardwert: **weekly**
+
+ - Mögliche Werte:
+
+   - **daily**
+   - **weekly**
+   - **monthly**
+
+
+price_update_cycle
+==================
+
+
+(optional) Zeit zwischen zwei Preisaktualisierungen.
+
+ - Datentyp: **int**
+ - Standardwert: **900**
+
+ - Minimalwert: **60**
+
 ==============
 Item Attribute
 ==============
 
 
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
+
+
+tankerkoenig_admin
+==================
+
+
+Admin-Funktionen des Plugins
+
+ - Datentyp: **str**
+
+
+tankerkoenig_attr
+=================
+
+
+
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **E5**
+   - **E10**
+   - **Diesel**
+   - **Open**
+   - **street**
+   - **houseNumber**
+   - **postCode**
+   - **place**
+   - **address**
+   - **brand**
+   - **name**
+   - **lng**
+   - **lat**
 
 
 tankerkoenig_id
@@ -114,11 +175,28 @@ UUID für die anzufragende Tankstelle.
  - Datentyp: **str**
 
 
+get_petrol_station_detail_reduced(id)
+=====================================
+
+
+Diese Funktion gibt Details über eine Tankstelle als DICT mit folgenden Keys zurück: 'street', 'houseNumber', 'postCode', 'place', 'brand', 'id', 'lng', 'name', 'lat'
+
+ - Ergebnistyp der Funktion: **dict**
+
+
+id
+--
+
+UUID für die anzufragende Tankstelle.
+
+ - Datentyp: **str**
+
+
 get_petrol_station_prices(ids)
 ==============================
 
 
-Gibt ein DICT mit Preisen für ein Array an Tankstellen-IDs zurück. Benutzung wird vom Tankerkoenig Team aus Performanzgründen empfeohlen!!!
+Gibt ein DICT mit Preisen für ein Array an Tankstellen-IDs zurück. Benutzung wird vom Tankerkoenig Team aus Performanzgründen empfohlen!!!
 
  - Ergebnistyp der Funktion: **dict**
 

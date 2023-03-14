@@ -18,7 +18,6 @@
    avdevice.rst
    avm.rst
    avm_smarthome.rst
-   backend.rst
    beolink.rst
    blockly.rst
    bose_soundtouch.rst
@@ -32,6 +31,7 @@
    dashbutton.rst
    database.rst
    datalog.rst
+   db_addon.rst
    deebot_ozmo.rst
    dlms.rst
    dmx.rst
@@ -58,6 +58,7 @@
    iaqstick.rst
    ical.rst
    indego.rst
+   indego4shng.rst
    influxdata.rst
    influxdb.rst
    influxdb2.rst
@@ -94,6 +95,7 @@
    openweathermap.rst
    operationlog.rst
    philips_tv.rst
+   piratewthr.rst
    plex.rst
    pluggit.rst
    prowl.rst
@@ -101,6 +103,7 @@
    pushover.rst
    raumfeld.rst
    raumfeld_ng.rst
+   rcs1000n.rst
    rcswitch.rst
    resol.rst
    robonect.rst
@@ -121,6 +124,7 @@
    smarttv.rst
    smartvisu.rst
    sml.rst
+   sml2.rst
    smlx.rst
    snap7_logo.rst
    snmp.rst
@@ -150,6 +154,7 @@
    volkszaehler.rst
    vr100.rst
    waterkotte.rst
+   webpush.rst
    webservices.rst
    wettercom.rst
    withings_health.rst

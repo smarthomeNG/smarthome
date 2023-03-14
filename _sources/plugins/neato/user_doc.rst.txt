@@ -1,5 +1,5 @@
-.. index:: Plugins; Neato (Neato und Vorwerk Unterstützung)
-.. index:: Neato
+.. index:: Plugins; neato
+.. index:: neato
 
 =====
 neato
@@ -19,7 +19,7 @@ Konfiguration
 
 Die Informationen zur Konfiguration des Plugins sind unter :doc:`/plugins_doc/config/neato` beschrieben.
 
-Requirements
+Anforderungen
 =============
 - locale en_US.utf8 must be installed (sudo dpkg-reconfigure locales)
 
@@ -42,7 +42,7 @@ Web Interface
 =============
 
 Das neato Plugin verfügt über ein Webinterface, um  für Vorwerk Saugroboter das OAuth2 Authentifizierungsverfahren direkt durchzuführen und bei Bedarf
-den erhaltenen Token direkt in die Konfiguration (plugin.yaml) zu uebernehmen.
+den erhaltenen Token direkt in die Konfiguration (plugin.yaml) zu übernehmen.
 
 .. important::
 
@@ -65,7 +65,7 @@ Beispiele
 
 Folgende Informationen können im Webinterface angezeigt werden:
 
-Im ersten Tab Vorwerk OAuth2 findet sich direkt die Schritt fuer Schritt Anleitung zur OAuth2 Authentifizierung. Achtung: Diese wird aktuell nur von Vorwerk Robotern unterstuetzt:
+Im ersten Tab Vorwerk OAuth2 findet sich direkt die Schritt für Schritt Anleitung zur OAuth2 Authentifizierung. Achtung: Diese wird aktuell nur von Vorwerk Robotern unterstützt:
 
 .. image:: assets/webif1.jpg
    :class: screenshot
@@ -73,7 +73,7 @@ Im ersten Tab Vorwerk OAuth2 findet sich direkt die Schritt fuer Schritt Anleitu
 Changelog
 ---------
 V1.6.8     added decoding of command availability status, e.g. "start" command available
-           If start command with persisten map is rejected due to "not_on_charge_base" error, retry start with non-persistent map.
+           If start command with persistent map is rejected due to "not_on_charge_base" error, retry start with non-persistent map.
 
 V1.6.6     added option to clear errors/alarms in neato/vorwerk backend via plugin's webif
 

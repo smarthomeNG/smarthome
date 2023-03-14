@@ -1,15 +1,35 @@
 .. index:: Plugins; avdevice
 .. index:: avdevice
 
+========
 avdevice
-########
+========
+
+.. image:: webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
+Steuerung eines AV Gerätes über TCP/IP oder RS232 Schnittstelle.
+
+Das Plugin unterstützt eine Vielzahl von AV-Geräten und wurde mit folgenden Geräten getestet:
+- Pioneer AV Receiver < 2016
+- Denon AV Receiver > 2016
+- Epson Projektor < 2010
+- Oppo UHD Player
+
 
 Konfiguration
 =============
 
-.. important::
+Diese Plugin Parameter und die Informationen zur Item-spezifischen Konfiguration des Plugins sind
+unter :doc:`/plugins_doc/config/avdevice` beschrieben.
 
-    Die Informationen zur Konfiguration des Plugins sind unter :doc:`/plugins_doc/config/avdevice` beschrieben.
+
+plugin.yaml
+-----------
 
 .. code-block:: yaml
 
@@ -428,8 +448,8 @@ die richtige Zuordnung eine Rolle spielt (außer bei der Angabe von {str}).
 Dieses Feature befindet sich immer noch in der Entwicklung. Erfahrungen bitte im Support Thread
 im KNX-Forum teilen.
 
-Webinterface
-============
+Web Interface
+=============
 
 Das Webinterface kann genutzt werden, um die Items und deren Werte auf einen Blick zu sehen,
 die dem Plugin zugeordner sind. Außerdem können Historien von Kommandos und Abfragen

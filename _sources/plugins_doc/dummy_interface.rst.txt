@@ -21,7 +21,6 @@
    /plugins/easymeter/README.md
    /plugins/enigma2/README.md
    /plugins/eta_pu/README.md
-   /plugins/gpio/README.md
    /plugins/harmony/README.md
    /plugins/helios/README.md
    /plugins/indego/README.md

@@ -1,8 +1,17 @@
 .. index:: Plugins; ical
 .. index:: ical
 
+====
 ical
-####
+====
+
+.. image:: webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
+
 
 Einführung
 ==========

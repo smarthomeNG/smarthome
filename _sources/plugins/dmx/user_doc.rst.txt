@@ -1,8 +1,13 @@
-DMX
+
+.. index:: Plugins; dmx
+.. index:: dmx
+
+===
+dmx
 ===
 
 Vorbedingungen
---------------
+==============
 
 Dieses Plugin benötigt eine der folgenden unterstützten DMX-Schnittstellen:
 
@@ -14,10 +19,13 @@ Daher ist auch ein serieller Python-Treiber erforderlich. Eine requirements Date
 bereitgestellt, um die Installation zu erleichtern.
 
 Konfiguration
--------------
+=============
+
+Diese Plugin Parameter und die Informationen zur Item-spezifischen Konfiguration des Plugins sind
+unter :doc:`/plugins_doc/config/dmx` beschrieben.
 
 plugin.yaml
-~~~~~~~~~~~
+-----------
 
 .. code :: yaml
 
@@ -42,16 +50,16 @@ notwendig, um eine udev-Regel zu erstellen. Für ein NanoDMX-Gerät bereitgestel
 In der Online-Hilfe für Linux kann die Erstellung von udev Regeln nachgelesen werden.
 
 items.yaml
-~~~~~~~~~~
+----------
 
 dmx_ch
-^^^^^^
+~~~~~~
 
 Mit diesem Attribut können ein oder mehrere DMX-Kanäle als Integer angegeben werden
 angegeben
 
 Beispiel
-~~~~~~~~
+--------
 
 .. code:: yaml
 
@@ -72,8 +80,9 @@ In einer Logik führt ein Ausdruck wie ``sh.living_room.dimlight(80)`` dazu das
 Entsprechend sendet der Ausdruck ``sh.living_room.dimlightreading(50)`` eine `50`` an den Kanal
 ``23``, um das Leselicht im Wohnzimmer zu dimmen.
 
-Methoden
---------
+
+Funktionen
+----------
 
 send(Kanal, Wert)
 ~~~~~~~~~~~~~~~~~

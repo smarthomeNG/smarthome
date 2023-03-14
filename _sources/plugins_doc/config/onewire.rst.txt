@@ -8,8 +8,8 @@ Plugin 'onewire' Konfiguration
 
 .. index:: Plugins; onewire Konfiguration
 
-.. image:: /_static/img/gateway.svg
-   :alt: plugin type logo
+.. image:: /plugins/onewire/webif/static/img/plugin_logo.png
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %
@@ -37,7 +37,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.4**
+ - Minimum SmartHomeNG Version: **1.9.3.5**
 
 Konfiguration
 =============
@@ -142,6 +142,16 @@ owserver Port
 
  - Datentyp: **int**
  - Standardwert: **4304**
+
+
+warn_after
+==========
+
+
+Warnung nach dieser Anzahl aufeinanderfolgender Lesefehler für einen Sensor
+
+ - Datentyp: **int**
+ - Standardwert: **10**
 
 
 ==============

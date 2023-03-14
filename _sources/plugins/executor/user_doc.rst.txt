@@ -1,44 +1,59 @@
 .. index:: Plugins; executor
 .. index:: executor
 
+========
 executor
-########
+========
+
+
+.. image:: webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
 
 Einführung
-==========
+~~~~~~~~~~
 
-Das executor plugin kann genutzt werden, um **eval Ausdrücke** und **Python Code** (z.B. für **Logiken**) zu testen.
+Das executor plugin kann genutzt werden, um **Python Code** (z.B. für **Logiken**) und **eval Ausdrücke** zu testen.
 
 .. important::
 
-  Seien Sie sich bewusst, dass die Aktivierung dieses Plugins ein Sicherheitsrisiko darstellen könnte. Wenn andere Personen Zugriff auf die Web-Schnittstelle erhalten,
+  Seien Sie sich bewusst, dass die Aktivierung dieses Plugins ein Sicherheitsrisiko darstellen könnte.
+  Wenn andere Personen Zugriff auf die Web-Schnittstelle erhalten,
   kann man das ganze SmartHomeNG-Biest kontrollieren. Seien Sie also vorsichtig!!!
 
 
 Konfiguration
 =============
 
-Das Aktivieren des Plugins ist ausreichend.
+Das Aktivieren des Plugins ist ausreichend. Optional kann noch ein Verzeichnis für Skripte konfiguriert werden
+über das Attribut ``executor_scripts`` in der ``plugin.yaml``.
+Damit wird dem Plugin eine relative Pfadangabe unterhalb *var* angegeben wo Skripte für das Executor Plugin abgelegt werden.
 
-Beispiele für Eval
-==================
+Webinterface
+============
 
-.. code-block:: python
+Im Webinterface findet sich eine Listbox mit den auf dem Rechner gespeicherten Skripten. 
+Um das Skript in den Editor zu laden entweder ein Skript in der Liste einfach anklicken und auf *aus Datei laden* klicken oder
+direkt in der Liste einen Doppelklick auf die gewünschte Datei ausführen.
 
-    12 if 23 % 3 == 5 else None
+Der Dateiname wird entsprechend der gewählten Datei gesetzt. Mit Klick auf *aktuellen Code speichern* wird der Code im konfigurierten
+Skript Verzeichnis unter dem aktuell in der Eingabebox vorgegebenem Dateinamen abgespeichert.
 
-Würde im Ergebnis **None** resultieren.
+Mit einem Klick auf *Code ausführen!* oder der Kombination Ctrl+Return wird der Code an SmartHomeNG gesendet und ausgeführt.
+Das kann gerade bei Datenbank Abfragen recht lange dauern. Es kann keine Rückmeldung von SmartHomeNG abgefragt werden wie weit der Code derzeit ist.
+Das Ergebnis wird unten angezeigt. Solange kein Ergebnis vorliegt, steht im Ergebniskasten **... processing ...**
 
-.. code-block:: python
-
-    sh..child() + 4
-
-Da sich im Evalausdruck ein relatives Item befindet, ist es notwendig im Feld "Itempfad" das Item anzugeben, dem das im Code angegebene Unteritem zugewiesen ist.
+Mit einem Klick auf Datei löschen wird versucht die unter Dateiname angezeigte Datei ohne Rückfrage zu löschen. 
+Anschliessend wird die Liste der Skripte aktualisiert.
 
 Beispiel Python Code
 ====================
 
-Sowohl``logger`` als auch ``print`` funktionieren für die Ausgabe von Ergebnissen. Die Idee ist, dass Logiken mehr oder weniger 1:1 kopiert und getestet werden können.
+Sowohl ``logger`` als auch ``print`` funktionieren für die Ausgabe von Ergebnissen.
+Die Idee ist, dass Logiken mehr oder weniger 1:1 kopiert und getestet werden können.
 
 Loggertest
 
@@ -67,7 +82,7 @@ Abfragen von Daten aus dem database plugin für ein spezifisches Item:
     print(pretty)
 
 
-würde in folgendem Ergebnis münden.
+würde in folgendem Ergebnis münden:
 
 .. code-block:: json
 
@@ -95,3 +110,5 @@ würde in folgendem Ergebnis münden.
         ]
       ]
     }
+
+Damit die Nutzung

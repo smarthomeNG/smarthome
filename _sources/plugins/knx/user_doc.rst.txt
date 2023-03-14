@@ -1,8 +1,16 @@
 .. index:: Plugins; knx (KNX Bus Unterstützung)
 .. index:: knx
 
+===
 knx
-###
+===
+
+.. image:: webif/static/img/plugin_logo.svg
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
 
 Konfiguration
 =============
@@ -126,21 +134,21 @@ Umwandlungen der Datentypen in Itemwerte
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Die Umwandlungen der Werte vom KNX in einen Itemwert und von Itemwerte zum KNX entsprechen den Festlegungen
-des Dokumentes **03_07_02_Datapoint Types v02.01.02 AS** der **KNX System specifications**.
+des Dokuments **03_07_02_Datapoint Types v02.01.02 AS** der **KNX System specifications**.
 
 Es gibt Situationen wo der KNX Werte liefern kann die nicht als Itemwert zugelassen sind.
-Ein Beispiel dafür ist der Datenpunkt Typ 14 der eine 4 Byte umfassende Fliesskommazahl codiert.
+Ein Beispiel dafür ist der Datenpunkt Typ 14 der eine 4 Byte umfassende Fließkommazahl codiert.
 Werte die ungültig sind und vom KNX geliefert werden entsprechen in Python einem Wert ``NaN``.
 Da dieser Wert (Not a Number) in Items von SmartHomeNG nicht zugelassen ist wird die Zuweisung auf ein Item unterdrückt
 und eine Warnung in das entsprechende Logfile geschrieben (wenn konfiguriert)
 
 Beispiele
----------
+=========
 
 **ToDo ...**
 
 Statistiken
------------
+===========
 
 Die Statistikfunktionen wurden eingebaut um zu sehen, was dauerhaft am KNX passiert.
 Es wird aufgezeichnet welches Gerät (physikalische Adresse) Gruppenadresse als Leseanforderung abfragt oder als Schreibanforderung einen neuen Wert sendet.
@@ -153,7 +161,7 @@ Auf diese Weise werden folgende Fragestellungen beantwortet:
 
 
 Web Interface
--------------
+=============
 
 Das Plugin Webinterface kann aus dem Admin Interface aufgerufen werden. Dazu auf der Seite Plugins in der entsprechenden
 Zeile das Icon in der Spalte **Web Interface** anklicken.
@@ -174,14 +182,14 @@ Der zweite Tab zeigt Statistiken zu den Gruppenadressen:
 
    Wenn es Items gibt, die mit dem Attribut ``knx_cache`` und einer Gruppenadresse konfiguriert wurden wird SmartHomeNG beim Start
    diese Gruppenadressen vom knxd abfragen.
-   Wenn die Werte der Gruppenadressen zu diesem Zeitpunkt nicht im knxd vorliegen wird dieser eine Leseanforderung absetzten um die Werte zubekoammen.
+   Wenn die Werte der Gruppenadressen zu diesem Zeitpunkt nicht im knxd vorliegen wird dieser eine Leseanforderung absetzten um die Werte zu bekommen.
    Schlägt der Versuch fehl oder sind aus anderem Grund keine Werte im Cache des knxd vorhanden dann sendet dieser ein fehlerhaftes Datenpaket
-   in dem nur Absender und Empfängeradresse enthalten sind. Die weiteren 2 Bytes mit Kontroll und Dateninformationen fehlen jedoch.
+   in dem nur Absender und Empfängeradresse enthalten sind. Die weiteren 2 Bytes mit Kontroll- und Dateninformationen fehlen jedoch.
    Daraus lässt sich auch nicht feststellen, ob die Empfängeradresse eine physikalische Adresse oder eine Gruppenadresse ist.
    Das Plugin merkt sich diese Empfängeradresse, interpretiert sie als Gruppenadresse und speichert sie in einer internen Liste.
    Im Webinterface werden alle Items mit ``knx_cache`` und der zugeordneten Gruppenadresse mit dieser Liste verglichen.
    Taucht die Gruppenadresse dort auf, wird der Eintrag rot eingefärbt als Hinweis das die Konfiguration überprüft werden sollte.
-   Oftmals haben knx Geräte für eine Gruppenadresse die mit knx_cache ausgelesenwerden soll kein Leseflag in der ETS gesetzt bekommen.
+   Oftmals haben knx Geräte für eine Gruppenadresse die mit knx_cache ausgelesen werden soll kein Leseflag in der ETS gesetzt bekommen.
    Es ist möglich den Loglevel mit dem diese fehlerhaften Rückmeldungen geloggt werden in der Plugin Konfiguration festzulegen.
 
 Der dritte Tab zeigt Statistiken zu den physikalischen Adressen:

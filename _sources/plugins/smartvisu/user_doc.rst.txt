@@ -1,7 +1,7 @@
 :tocdepth: 5
 
 .. index:: Plugins; smartvisu (smartVISU Unterstützung)
-.. index:: smartVISU; smartvisu Plugin
+.. index:: smartvisu; smartvisu Plugin
 
 =========
 smartvisu
@@ -56,6 +56,58 @@ Konfiguration
 
 Die Informationen zur Konfiguration des Plugins sind unter :doc:`/plugins_doc/config/smartvisu` beschrieben.
 
+
+|
+
+Web Interface
+=============
+
+Das smartvisu Plugin verfügt über ein Webinterface, mit dessen Hilfe Informationen über Clients und die mit dem Plugin
+verbundenen Items übersichtlich dargestellt werden.
+
+
+Aufruf des Webinterfaces
+------------------------
+
+Das Plugin kann aus der Admin GUI (von der Seite Plugins/Plugin Liste aus) aufgerufen werden. Dazu auf der Seite
+in der entsprechenden Zeile das Icon in der Spalte **Web Interface** anklicken.
+
+Außerdem kann das Webinterface direkt über ``http://smarthome.local:8383/plugin/smartvisu`` aufgerufen werden.
+
+|
+
+Beispiele
+---------
+
+Folgende Informationen können im Webinterface angezeigt werden:
+
+Oben rechts werden allgemeine Parameter zum Plugin angezeigt. Die weiteren Informationen werden in den
+verschiedenen Tabs des Webinterface angezeigt.
+
+Im ersten Tab werden die Clients mit den wichtigsten Informationen angezeigt.
+
+.. image:: assets/webif_tab1.jpg
+   :class: screenshot
+
+
+|
+|
+
+Im zweiten Tab werden die mit dem Plugin verbundenen Items angezeigt angezeigt:
+
+.. image:: assets/webif_tab2.jpg
+   :class: screenshot
+
+|
+|
+
+Im dritten Tab werden Logiken angezeigt und ob es einem Cleint erlaubt ist die Logiken zu triggern:
+
+.. image:: assets/webif_tab3.jpg
+   :class: screenshot
+
+|
+|
 
 Weiterführende Informationen
 ============================

@@ -1,6 +1,19 @@
+
+.. index:: Plugins; openweathermap (openweathermap.org Wetterdaten)
+.. index:: openweathermap
+.. index:: Wetter; openweathermap
+.. index:: struct; openweathermap
+
 ==============
 openweathermap
 ==============
+
+.. image:: webif/static/img/plugin_logo.png
+   :alt: plugin logo
+   :width: 300px
+   :height: 300px
+   :scale: 50 %
+   :align: left
 
 Dieses Plugin stellt die Wetterinformationen via OpenWeatherMap (https://openweathermap.org/) zur Verfügung.
 Die folgenden APIs von OpenWeatherMap werden unterstützt:
@@ -15,7 +28,7 @@ Die folgenden APIs von OpenWeatherMap werden unterstützt:
 
 
 Requirements
-=============
+============
 
 Zur Verwendung des Plugins wird ein API Key von OpenWeatherMap benötigt, der kostenfrei bei https://openweathermap.org zu erstellen ist.
 
@@ -104,7 +117,7 @@ Der Beginn des "Matchstring" definiert die zu verwendende Daten-Quelle (API):
   - ``weather/0/main`` Gruppenname der Wetter-Parameter (Rain, Snow, Extreme etc.)
   - ``weather/0/description`` Wetterbeschreibung innerhalb der Gruppe
   - ``weather/0/icon`` Wetter-Icon-ID
-    
+
 
 - beginnt mit ``day/N/`` wobei N [0..6] die Anzahl der Tage von heute in die Zukunft ist bzw. [-4..-0] die Anzahl der Tage von heute in die Vergangenheit ist. Achtung: -0 and 0 ergeben verschiedene Werte! Datenquelle ist onecall-API; Beispiel: day/1/feels_like/night um die morgige gefühlte Nachttemperatur zu bekommen; (Bemerkung: Der prefix "day/" wird durch "daily/" ersetzt, wenn entsprechende Items in der Datenquelle vorhanden sind) Die folgende Liste enthält alle verfügbaren Datenpunkte:
 
@@ -159,7 +172,7 @@ Der Beginn des "Matchstring" definiert die zu verwendende Daten-Quelle (API):
   - ``airpollution/components/pm2_5`` Partikel 2-5µm
   - ``airpollution/components/pm10`` Partikel 10µm
   - ``airpollution/components/nh3`` NH3 Wert
-		
+
   Ergänzt man ``/day/-1/hour/11/`` zwischen airpollution und main oder component, mit day [-1 .. -4] und hour [0 .. 23] erhält man die Daten für eine definierte Stunde am definierten Tag in der Vergangenheit.
 
   Ergänzt man ``/hour/11`` (ohne Tag) mit hour [0 .. 72] erhält man die Vorhersage-Daten für die definierte Stunde von jetzt ab.
@@ -178,7 +191,7 @@ Der Beginn des "Matchstring" definiert die zu verwendende Daten-Quelle (API):
   - ``wind_new``
   - ``temp_new``
 
-- bei allen anderen Werten wird versucht, diese gegen die weather-API zu prüfen. 
+- bei allen anderen Werten wird versucht, diese gegen die weather-API zu prüfen.
 
   - ``base`` / ``cod`` / ``sys/id`` / ``sys/type`` um einige interne Parameter zu bekommen.
   - ``coord/lon`` / ``coord/lat`` / ``id`` / ``name`` / ``sys/country`` / ``timezone`` für OWMs Interpretation deiner Ortsdaten.
@@ -200,8 +213,8 @@ Zugriff auf Listen
 ------------------
 Die Wetterkonditionen sind als Liste gespeichert und können mit ``current/weather/0/description`` adressiert werden. Da der Datentyp "list" nicht offensichtlich ist, setzt das Plugin automatisch "/0/" ein, um auf das erste Element der Liste zuzugreifen.
 Deshalb führt ``current/weather/description`` zum entsprechenden Wert und einer WARNING im Log bei jedem Update. Diese Umsetzung soll dazu dienen, Probleme leicht zu identifizieren und durch ein Update des Matchstrings in der Konfiguration zu beheben.
-Dynamischen Listen wie bspw. bei ``alerts`` beinhalten eine unbekannte Anzahl von Elementen in der Liste. Mit ``@count`` kann die Anzahl der Listenelemente ermittelt werden. 
-Beispiele: ``current/weather/@count`` (immer 1) oder ``alerts/@count`` 
+Dynamischen Listen wie bspw. bei ``alerts`` beinhalten eine unbekannte Anzahl von Elementen in der Liste. Mit ``@count`` kann die Anzahl der Listenelemente ermittelt werden.
+Beispiele: ``current/weather/@count`` (immer 1) oder ``alerts/@count``
 
 
 Virtuelle Matchstrings
@@ -260,7 +273,7 @@ Hier ein Beispiel für die Verwendung der virtuellen Matchstrings mit dem smartV
 
     {% import "widgets_openweathermap.html" as owm %}
     {{ owm.rain_overview('visual_id', 'weather.rain_past_12h', 'weather.rain_next_12h', 'weather.as_of') }}
-	
+
 
 Tagesvorhersage (berechnet)
 ---------------------------
@@ -306,7 +319,7 @@ Wetteralarme
 ------------
 
 Wetteralarme werden von der entsprechenden Behörde wie bspw. der Deutscher Wetterdienst bereitgestellt und entsprechend weitergeleitet. Im Falle eines Alarmes, werden 2 Einträge (einer in Landessprache und einer in Englisch) in der Liste zugefügt.
-Liegt kein realer Alarm vor, ist der Alarm-Knoten der API-Antwort nicht vorhanden und führt zu einem Fehler bzw ERROR im Log. Um dies zu verhindern, stellt das Plugin sicher, dass immer mindestens ein Alarm, der "Placebo-Alarm" mit der Beschreibung "No Alert" ein. vorliegt. 
+Liegt kein realer Alarm vor, ist der Alarm-Knoten der API-Antwort nicht vorhanden und führt zu einem Fehler bzw ERROR im Log. Um dies zu verhindern, stellt das Plugin sicher, dass immer mindestens ein Alarm, der "Placebo-Alarm" mit der Beschreibung "No Alert" ein. vorliegt.
 So wird sichergestellt, dass der Matchstring ``alerts/0/event`` immer einen Wert zugewiesen bekommt.
 Durch die Verwendung von ``alerts/@count`` kann die Anzahl der vorliegenden Alarme ermittelt werden. Liegt nur der "Placebo-Alarm" vor, ist die Antwort der numerische Wert "0".
 
@@ -1024,8 +1037,8 @@ Das Beispiel, passend zur YAML von oben:
 
     {% import "widgets_openweathermap.html" as owm %}
     {{ owm.irrigation_weekly('valve_2', 'Lawn in the backyard', 'garden.irrigation_valve2') }}
-	
-	
+
+
 Funktionen des Plugins
 ======================
 
@@ -1042,8 +1055,8 @@ Berechnet aus der Windgeschwindigkeit die Beschreibung der Windstärke nach Beau
 
 
 
-Web Interface des Plugins
-=========================
+Web Interface
+=============
 
 
 OWM Items

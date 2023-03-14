@@ -11,7 +11,7 @@ SmarthomeNG plugin, zum Lesen von Register über ModBusTCP
 Anforderungen
 -------------
 * Python > 3.6
-* pymodbus >= 1.4.0
+* pymodbus >= 2.5.3
 * SmarthomeNG >= 1.8.0
 
 pymodbus
@@ -155,6 +155,8 @@ siehe auch example.yaml
 
 Changelog
 ---------
+V1.0.8  work with newer versions of pymodbus too, minimum pymodbus now 2.5.3
+
 V1.0.7  keep connection open and use locking to ensure thread safety (CaeruleusAqua and bmxp)
         Fehler behoben: nicht deklarierte Variable "TypeStr" und "bitstr"
 

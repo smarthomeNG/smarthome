@@ -23,6 +23,8 @@ Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. 
 
 Es handelt sich bei diesem Plugin um ein **interface Plugin**.
 
+**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
+
 
 
 Beschreibung
@@ -37,7 +39,7 @@ Anforderungen
 
 
 
- - Minimum SmartHomeNG Version: **1.6**
+ - Minimum SmartHomeNG Version: **1.8**
 
 Konfiguration
 =============
@@ -58,7 +60,7 @@ avm_home_automation
 ===================
 
 
-(optional) Aktiviert oder deaktiviert den Zugriff auf AVM HomeAutomation Geräte mit dem AHA HTTP Interface.
+(optional) Aktiviert oder deaktiviert den Zugriff auf AVM Smarthome Geräte mit dem AHA HTTP Interface.
 
  - Datentyp: **bool**
  - Standardwert: **False**
@@ -87,13 +89,11 @@ cycle
 =====
 
 
-(optional) Zeit zwischen zwei Updateläufen. Default ist 300 Sekunden.
+(optional) Zeit zwischen zwei Runs. Default ist 300 Sekunden.
 
  - Datentyp: **int**
  - Standardwert: **300**
 
- - Minimalwert: **30**
- - Maximalwert: **1080**
 
 host
 ====
@@ -128,7 +128,7 @@ port
 ====
 
 
-(optional) Port des FritzDevice, normalerweise 49433 für https oder 49000 für http
+(optional) Port des FritzDevice, normalerweise 49443 für https oder 49000 für http
 
  - Datentyp: **int**
  - Standardwert: **49443**
@@ -163,26 +163,6 @@ verify
  - Standardwert: **False**
 
 
-webif_pagelength
-================
-
-
-Anzahl an Items, die standardmäßig in einer Web Interface Tabelle pro Seite angezeigt werden.
-Bei 0 wird die Tabelle automatisch an die Höhe des Browserfensters angepasst.
-Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.
-
- - Datentyp: **int**
- - Standardwert: **0**
-
- - Mögliche Werte:
-
-   - **-1**
-   - **0**
-   - **25**
-   - **50**
-   - **100**
-
-
 ==============
 Item Attribute
 ==============
@@ -191,22 +171,22 @@ Item Attribute
 Das Plugin unterstützt folgende Item Attribute, die in den Dateien im Verzeichnis  ``../items`` verwendet werden:
 
 
-ain
-===
-
-
-Definition der AktorIdentifikationsnummer (AIN) Items vom avm_data_type `aha_device`. Nur für diese Items mandatory!
-
- - Datentyp: **str**
-
-
 avm_ain
 =======
 
 
-Definition der AktorIdentifikationsNummer (AIN) Items vom avm_data_types für `AHA-Interface`. Nur für diese Items mandatory!
+(optional) Definition der AktorIdentifikationsNummer (AIN) Items vom avm_data_types für `AHA-Interface`. Nur für diese Items mandatory!
 
  - Datentyp: **str**
+
+
+avm_data_cycle
+==============
+
+
+Poll-Zyklus des AVM Datentypes des jeweiligen Items. 0-Nur beim Initialisieren Lesen; 10+ - Zyklisch Lesen
+
+ - Datentyp: **int**
 
 
 avm_data_type
@@ -265,11 +245,19 @@ AVM Datentyp des jeweiligen Items.
    - **wlanconfig**
    - **wlanconfig_ssid**
    - **wlan_guest_time_remaining**
+   - **wlan_associates**
+   - **wps_active**
+   - **wps_status**
+   - **wps_mode**
+   - **wlan_total_associates**
    - **network_device**
    - **device_ip**
    - **device_connection_type**
    - **device_hostname**
    - **connection_status**
+   - **hosts_count**
+   - **hosts_info**
+   - **mesh_topology**
    - **aha_device**
    - **hkr_device**
    - **set_temperature**
@@ -306,6 +294,7 @@ AVM Datentyp des jeweiligen Items.
    - **windowopenactiveendtime**
    - **set_hkr_boost**
    - **hkr_boost**
+   - **boost_active**
    - **boostactiveendtime**
    - **summer_active**
    - **holiday_active**
@@ -340,7 +329,7 @@ avm_deflection_index
 ====================
 
 
-Index für die Rufumleitung, normalerweise für die erste eine "1".
+(optional) Index für die Rufumleitung, normalerweise für die erste eine "1".
 
  - Datentyp: **int**
 
@@ -360,7 +349,7 @@ avm_mac
 =======
 
 
-Definition der MAC Adresse für Items vom avm_data_type `network_device`. Nur für diese Items mandatory!
+(optional) Definition der MAC Adresse für Items vom avm_data_type `network_device`. Nur für diese Items mandatory!
 
  - Datentyp: **mac**
 
@@ -369,7 +358,7 @@ avm_read_after_write
 ====================
 
 
-Konfiguriert eine Verzögerung in Sekunden nachdem ein Lesekommando nach einem Schreibkommando gesendet wird.
+(optional) Konfiguriert eine Verzögerung in Sekunden nachdem ein Lesekommando nach einem Schreibkommando gesendet wird.
 
  - Datentyp: **int**
 
@@ -378,7 +367,7 @@ avm_tam_index
 =============
 
 
-Index für den Anrufbeantworter, normalerweise für den ersten eine "1". Es werden bis zu 5 Anrufbeantworter vom Gerät unterstützt.
+(optional) Index für den Anrufbeantworter, normalerweise für den ersten eine "1". Es werden bis zu 5 Anrufbeantworter vom Gerät unterstützt.
 
  - Datentyp: **int**
 
@@ -570,6 +559,24 @@ True, wenn nur aktuell aktive Hosts zurückgegeben werden sollen.
  - Datentyp: **bool**
 
 
+get_hosts_dict()
+================
+
+
+Liefert Informationen aller Hosts als Dictionary
+
+ - Ergebnistyp der Funktion: **dict**
+
+
+get_mesh_topology()
+===================
+
+
+Liefert die Mesh-Topologie als Dictionary
+
+ - Ergebnistyp der Funktion: **dict**
+
+
 get_number_of_deflections()
 ===========================
 
@@ -669,7 +676,7 @@ Setzt den 'call origin', bspw. vor dem Aufruf von 'start_call'.
 phone_name
 ----------
 
-Identifikator des Telefons, dass als 'call origin' gesetzt werden soll. Bspw. zwei Sterne gefolgt von '610' für ein internes Gerät.
+Identifikator des Telefons, dass als 'call origin' gesetzt werden soll. bspw. zwei Sterne gefolgt von '610' für ein internes Gerät.
 
  - Datentyp: **mac**
 

@@ -8,8 +8,8 @@ Plugin 'philips_tv' Konfiguration
 
 .. index:: Plugins; philips_tv Konfiguration
 
-.. image:: /_static/img/protocol.svg
-   :alt: plugin type logo
+.. image:: /plugins/philips_tv/webif/static/img/plugin_logo.png
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %
@@ -22,8 +22,6 @@ Plugin 'philips_tv' Konfiguration
 Im folgenden sind etwaige Anforderungen und unterstützte Hardware beschrieben. Danach folgt die               Beschreibung, wie das Plugin **philips_tv** konfiguriert wird. Außerdem ist im folgenden               beschrieben, wie das Plugin in den Item Definitionen genutzt werden kann. [#f1]_ 
 
 Es handelt sich bei diesem Plugin um ein **protocol Plugin**.
-
-**ACHTUNG**: Dieses Plugin ist als develop gekennzeichnet. Es kann daher sein, dass es                  noch nicht Feature-Complete oder noch fehlerhaft ist.
 
 
 

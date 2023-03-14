@@ -8,8 +8,8 @@ Plugin 'sonos' Konfiguration
 
 .. index:: Plugins; sonos Konfiguration
 
-.. image:: /_static/img/gateway.svg
-   :alt: plugin type logo
+.. image:: /plugins/sonos/webif/static/img/plugin_logo.png
+   :alt: plugin logo
    :width: 300px
    :height: 300px
    :scale: 50 %
@@ -38,7 +38,7 @@ Anforderungen
 
 
  - Minimum SmartHomeNG Version: **1.5.1**
- - Minimum Python Version: **3.5**
+ - Minimum Python Version: **3.8**
 
 Konfiguration
 =============
@@ -70,16 +70,20 @@ local_webservice_path
 =====================
 
 
-(optional) In dieses Verzeichnis werden alle TTS-Dateien automatisch gespeichert. Is die Option 'tts' aktiviert, dann muss diese Option gesetzt sein.
+(optional) In dieses Verzeichnis werden alle TTS-Dateien automatisch gespeichert. 
+Ist die Option "tts" aktiviert, dann muss diese Option gesetzt sein.
 
  - Datentyp: **str**
+ - Standardwert: **/tmp/tts**
 
 
 local_webservice_path_snippet
 =============================
 
 
-(optional) Die eigenen Audio-Snippet Dateien können beim Setzen dieser Option getrennt von den autmotisch generierten TTS-Dateien gespeichert werden. Wird diese Option nicht gesetzt und 'tts' ist aktiviert, so wird der Wert von 'local_webservice_path' für Snippets benutzt.
+(optional) Die eigenen Audio-Snippet Dateien können beim Setzen dieser Option getrennt von den automatisch generierten 
+TTS-Dateien gespeichert werden. Wird diese Option nicht gesetzt und "tts" ist aktiviert, so wird der Wert 
+von "local_webservice_path" für Snippets benutzt.
 
  - Datentyp: **str**
 
@@ -118,7 +122,8 @@ webservice_ip
 =============
 
 
-(optional) Für TTS und die Audio-Snippet-Funktionalität wird ein simpler Webservice gestartet. Die IP-Adresse wird per default automatisch ermittelt, kann hier aber manuell gesetzt werden.
+(optional) Für TTS und die Audio-Snippet-Funktionalität wird ein simpler Webservice gestartet. 
+Die IP-Adresse wird per default automatisch ermittelt, kann hier aber manuell gesetzt werden.
 
  - Datentyp: **ip**
 
@@ -127,11 +132,13 @@ webservice_port
 ===============
 
 
-(optional) Webservice-Port
+(optional) Für TTS und die Audio-Snippet-Funktionalität wird ein simpler Webservice gestartet. Der Webservice-Port dafür wird hier definiert
 
  - Datentyp: **int**
  - Standardwert: **23500**
 
+ - Minimalwert: **1024**
+ - Maximalwert: **65535**
 
 ==============
 Item Attribute
@@ -145,7 +152,7 @@ sonos_attrib
 ============
 
 
-Empfangsattribut
+ergänzende Attribute, die immer Child-Items des sendenden Items sein müssen
 
  - Datentyp: **str**
 
@@ -187,7 +194,7 @@ sonos_recv
 ==========
 
 
-Empfangsattribut
+Sonos Zonen/Speaker Attribut für den Emfang von Daten/Ergebnissen
 
  - Datentyp: **str**
 
@@ -242,13 +249,15 @@ Empfangsattribut
    - **sonos_playlists**
    - **stream_content**
    - **current_track_duration**
+   - **sonos_favorites**
+   - **favorite_radio_stations**
 
 
 sonos_send
 ==========
 
 
-Sendeattribut
+Sonos Zonen/Speaker Attribut für das Senden von Daten/Kommandos
 
  - Datentyp: **str**
 
@@ -266,6 +275,7 @@ Sendeattribut
    - **previous**
    - **play_tunein**
    - **play_url**
+   - **play_sharelink**
    - **load_sonos_playlist**
    - **play_snippet**
    - **play_tts**
@@ -291,13 +301,18 @@ Sendeattribut
    - **status_light**
    - **switch_linein**
    - **switch_tv**
+   - **play_favorite_title**
+   - **play_favorite_number**
+   - **play_favorite_radio_title**
+   - **play_favorite_radio_number**
+   - **play_sonos_radio**
 
 
 sonos_uid
 =========
 
 
-Sonos unique device ID
+Sonos eindeutige Geräte/Zone Identifikation (Unique Device ID)
 
  - Datentyp: **str**
 

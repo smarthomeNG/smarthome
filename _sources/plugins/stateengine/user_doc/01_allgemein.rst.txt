@@ -53,8 +53,8 @@ Die folgenden Bedingungen können Teil der Bedingungsgruppen sein:
 Zusätzlich können beliebige Items (z.B. Temperatur) als Bedingungen geprüft werden
 (Minimum, Maximum oder Wert)
 
-Umstieg von Autblind
---------------------
+Umstieg von Autoblind
+---------------------
 
 Das `Autoblind Plugin <https://github.com/i-am-offline/smarthome.plugin.autoblind>`__
 von i-am-offline wurde für SmarthomeNG 1.6 ins offizielle Repo übernommen und
@@ -69,7 +69,7 @@ Webinterface
 Über das Webinterface lässt sich auf einen Blick erkennen, welche State Engine sich
 in welchem Zustand befindet. Zusätzlich ist es möglich, durch Klick auf einen Eintrag
 die komplette State Engine visuell zu betrachten. Dabei ist folgende Farbkodierung zu beachten:
-- grau: wurde nicht evaluiert (weil bereits ein höher rangiger Zustand eingenommen wurde)
+- grau: wurde nicht evaluiert (weil bereits ein höherrangiger Zustand eingenommen wurde)
 - grün: aktueller Zustand / ausgeführte Aktion
 - rot: Bedingungen nicht erfüllt
 

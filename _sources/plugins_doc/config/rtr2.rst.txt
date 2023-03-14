@@ -62,7 +62,16 @@ comfort_temp
 Standard Vorgabe für die Temperatur im Komfort Modus
 
  - Datentyp: **num**
- - Standardwert: **22.0**
+ - Standardwert: **21.0**
+
+
+default_Kd
+==========
+
+
+[Zukünftige Erweiterung] Wird noch nicht verwendet, ist ein Parameter für den noch nicht implementierten PID Regler
+
+ - Datentyp: **num**
 
 
 default_Ki
@@ -109,7 +118,7 @@ hvac_mode
 =========
 
 
-Modus Standard Vorgabe: 1=Komfort, 2=Standby, 3=Nacht, 4=Frostschutz
+hvac Modus Standard Vorgabe: 1=Komfort, 2=Standby, 3=Nacht, 4=Frostschutz
 
  - Datentyp: **int**
  - Standardwert: **2**
@@ -145,7 +154,7 @@ night_reduction
 ===============
 
 
-Standard Vorgabe für die Temperatur im Nacht Modus (bei Nachtabsenkung)
+Standard Vorgabe für die Temperaturreduktion im Nacht Modus (bei Nachtabsenkung)
 
  - Datentyp: **num**
  - Standardwert: **3.0**
@@ -155,10 +164,10 @@ standby_reduction
 =================
 
 
-Standard Vorgabe für die Temperatur im Standby Modus
+Standard Vorgabe für die Temperaturreduktion im Standby Modus
 
  - Datentyp: **num**
- - Standardwert: **1.0**
+ - Standardwert: **1.5**
 
 
 valve_protect
@@ -183,7 +192,7 @@ rtr2_controller_settings
 ========================
 
 
-Initale Einstellungen für den Controller, falls abweichend von den Plugin Standardwerten
+Initale Einstellungen für den Controller, falls abweichend von den Plugin Standardwerten     [<Kp>, <Ki>]
 
  - Datentyp: **list**
 
@@ -233,7 +242,7 @@ rtr2_settings
 =============
 
 
-Initale Einstellungen für den Rtr
+Initale Einstellungen für den Rtr. Bitte beachten: Wenn die Werte über dieses Attribut gesetzt werdeen, werden sie bei jedem Neustart von SmartHomeNG wieder gesetzt.     [<comfort_temp>, <night_reduction>, <standby_reduction>, <fixed_reduction>, <hvac_mode>, <frost_temp>]
 
  - Datentyp: **list**
 
