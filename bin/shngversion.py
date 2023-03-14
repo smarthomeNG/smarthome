@@ -93,9 +93,11 @@ from lib.utils import Version
 # Update auf 1.9.3.4  wg. Änderungen an SmartPlugin: device_command -> mapping
 # Update auf 1.9.3.5  wg. Veränderungen am websocket Modul
 
-shNG_version = '1.9.3.5'
-shNG_branch = 'develop'
-shNG_releasedate = '31. Oktober 2022'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
+# Update auf 1.9.4    wg. Release
+
+shNG_version = '1.9.4'
+shNG_branch = 'master'
+shNG_releasedate = '14. März 2023'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
 
 # ---------------------------------------------------------------------------------
 FileBASE = None

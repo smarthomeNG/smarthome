@@ -241,7 +241,7 @@ Allgmein
   * Added Github actions workflow to successfully test pull requests
 
 
-.. _release_neue_plugins:
+.. _release194_neue_plugins:
 
 Neue Plugins
 ------------
