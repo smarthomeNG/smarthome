@@ -23,6 +23,7 @@ $(window).bind('datatables_defaults', function() {
 	try
 		{
 			top_offset = $('#webif-navbar').outerHeight() + $('#webif-tabs').outerHeight();
+			initialized = false;
 			// Set datatable useful defaults
 			$.extend( $.fn.dataTable.ext.classes, { "sTable": "table table-striped table-hover pluginList display dataTable dataTableAdditional" });
 			$.extend( $.fn.dataTable.defaults, {
@@ -33,43 +34,92 @@ $(window).bind('datatables_defaults', function() {
 				pageLength: 100, // default to "100"
 				pagingType: "full_numbers", // include first and last in pagination menu
 				colReorder: true, // enable colomn reorder by drag and drop
-				columnDefs: [{ targets: '_all', className: 'truncate' }],
+				columnDefs: [{className: 'dtr-control datatable-responsive', orderable: false, targets: 0}, { targets: '_all', className: 'truncate' }],
+				order: [[1, 'asc']],
 				fixedHeader: {header: true, // header will always be visible on top of page when scrolling
 				 						 headerOffset: top_offset},
 				autoWidth: false,
-				initComplete: function () {$(this).show();
+				initComplete: function () {
+					// update content on ordering - if activated
+					$(this).on( 'click', 'thead tr th', function () {
+						if ($(this).hasClass( "sorting" ) && window.initial_update == 'true'){
+							console.log("Instant value update after sorting");
+							shngGetUpdatedData();
+						}
+					});
+					// slightly change resize_wrapper when expanding/collapsing responsive rows to fix some issues
+					$(this).on( 'click', 'tbody tr td', function () {
+						if ($(this).hasClass( "datatable-responsive" )){
+							window.toggle = window.toggle * -1
+							$('#resize_wrapper').css('height', $(window).height() - $('#webif-navbar').outerHeight() - $('#webif-tabs').outerHeight() - additional - $('.dataTables_info').outerHeight() - 5 - window.toggle);
+							$(this).parent().parent().parent().DataTable().responsive.recalc();
+						}
+					});
+					// update content on searching - if activated
+					$(".dataTables_filter").change( function () {
+						if (window.initial_update == 'true'){
+							console.log("Instant value update after search filter");
+							shngGetUpdatedData();
+						}
+					});
+					// Warning if first column is not empty (for responsive + sign)
+					td_content = $(this).find('tbody').find('td:first-child').html();
+					if (td_content != '' && td_content != 'No data available in table')
+						console.warn("First column has to be empty! The plugin author has to add an empty first column in thead and tbody of " + $(this).attr('id'));
+
 					this.api().columns.adjust();
 					this.api().responsive.recalc();
+					initialized = true;
+					$(this).show();
+					if (typeof window.row_count !== 'undefined' && window.row_count !== 'false') {
+						setTimeout(function() { window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count(); console.log("Row count after init is " + window.row_count);}, 200);
+					}
+					console.log("Instant value update is " + window.initial_update);
+					if (window.initial_update == 'true') {
+						setTimeout(function() { shngGetUpdatedData(); }, 200);
+					}
 					setTimeout(function() { $(window).resize();  }, 2000);// show table (only) after init, adjust height of wrapper after 2s
 				},
-        responsive: {details: {renderer: $.fn.dataTable.Responsive.renderer.listHidden()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
+        responsive: {details: {type: 'column', renderer: $.fn.dataTable.Responsive.renderer.listHidden()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
 				preDrawCallback: function (oSettings) {
 
         	pageScrollPos = $(oSettings.nTableWrapper).find('.dataTables_scrollBody').scrollTop();
 					bodyScrollPos = $('html, body').scrollTop();
+
     		},
 				drawCallback: function(oSettings) { // hide pagination if not needed
 					$(window).resize();
+					console.log("draw datatable " + this.attr('id'));
 					if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay() || oSettings._iDisplayLength == -1) {
 						 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
 					} else {
 							$(oSettings.nTableWrapper).find('.dataTables_paginate').show();
 							$(oSettings.nTableWrapper).find('.paginate_button').on('click', function(){
 								// scroll to top on page change
-								  $('html, body').animate({
-									  scrollTop: $('#'+oSettings.sTableId).offset().top - top_offset
-								  }, 'slow');
+							  $('html, body').animate({
+								  scrollTop: $('#'+oSettings.sTableId).offset().top - top_offset - $(oSettings.nTableWrapper).find('.dataTables_filter').outerHeight() - 10
+							  }, 'slow');
+	 							 console.log("Instant value update is " + window.initial_update);
+	 							 if (window.initial_update == 'true') {
+									 setTimeout(function() { shngGetUpdatedData(); }, 200);
+	 							 }
 							});
 					}
+					$('html, body').scrollTop(bodyScrollPos);
 					this.api().fixedHeader.enable( false );
 					this.api().fixedHeader.enable( true );
 					this.api().fixedHeader.adjust();
-
-					$('html, body').scrollTop(bodyScrollPos);
+					this.api().responsive.recalc();
 					$(this).addClass( "display" );
-					if (typeof window.row_count !== 'undefined') {
-						window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count();
+					/*
+					if (initialized == true) {
+						$(this).find('tbody').find('tr:nth-child(3)').find('td:first-child').click();
 					}
+					*/
+					if (typeof window.row_count !== 'undefined' && window.row_count !== 'false' && initialized == true) {
+						setTimeout(function() { window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count(); console.log("Row count after draw is " + window.row_count);initialized = false;}, 200);
+					}
+
 				},
 				createdRow: function (row, data, index) {
 					$(row).hide().fadeIn('slow');
@@ -77,8 +127,8 @@ $(window).bind('datatables_defaults', function() {
 					this.api().columns.adjust();
 					this.api().fixedHeader.adjust();
 					this.api().responsive.recalc();
-					if (typeof window.row_count !== 'undefined') {
-						window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count();
+					if (typeof window.row_count !== 'undefined' && window.row_count !== 'false' && initialized == true) {
+						setTimeout(function() { window.row_count = $.fn.dataTable.tables({ visible: true, api: true }).rows( {page:'current'} ).count(); console.log("Row count after row creation is " + window.row_count);}, 200);
 					}
 				}
 
@@ -86,12 +136,24 @@ $(window).bind('datatables_defaults', function() {
 			// Set date format for correct sorting of columns containing date strings
 			$.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss');
 			$.fn.dataTable.moment('YYYY-MM-DD HH:mm:ss');
+			$.fn.dataTable.moment('MM/DD/YYYY HH:mm:ss');
+			$.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss.SSSS');
+			$.fn.dataTable.moment('YYYY-MM-DD HH:mm:ss.SSSS');
+			$.fn.dataTable.moment('MM/DD/YYYY HH:mm:ss.SSSS');
 			$.fn.dataTable.moment('DD.MM.');
 			$.fn.dataTable.moment('DD.MM.YY');
+			$.fn.dataTable.moment('DD.MM.YYYY');
+			$.fn.dataTable.moment('MM/DD/YYYY');
+			$.fn.dataTable.moment('MM/DD/YY');
 			$.fn.dataTable.moment('HH:mm');
+			$.fn.dataTable.moment('HH:mm:ss');
+			$.fn.dataTable.moment('HH:mm:ss.SSSS');
+			$.fn.dataTable.moment('HH:mm DD.MM.YYYY');
+			$.fn.dataTable.moment('HH:mm:ss DD.MM.YYYY');
+			$.fn.dataTable.moment('HH:mm:ss.SSSS DD.MM.YYYY');
 
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
-
+				window.activeTab = $(this).attr("href").replace("#", "") ;
 				$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 				$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
 				$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();

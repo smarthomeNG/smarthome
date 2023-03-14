@@ -4,6 +4,33 @@
 
 <!-- set update_interval to a value > 0 (in milliseconds) to enable periodic data updates -->
 {% set update_interval = 0 %}
+<!-- for data-heavy plugins it might be useful to set the update interval based on the amount of data -->
+{% set update_interval = (200 * (log_array | length)) %}
+
+<!-- set dataSet if you need specific data to be updated automatically. Also see init.py in plugin webif!-->
+{% set dataSet = 'devices_info' %}
+
+<!-- set update_params if you need to provide additional parameters for the auto-update function-->
+{% set update_params = item_id %}
+
+<!-- if you don't need any buttons in the header, disable them completely-->
+{% set buttons = false %}
+
+<!-- if you don't need any auto-refresh elements in the header, disable them-->
+{% set autorefresh_buttons = false %}
+
+<!-- if you don't need the reload_button in the header, disable it-->
+{% set reload_button = false %}
+
+<!-- if you don't need the close in the header, disable it-->
+{% set close_button = false %}
+
+<!-- for some situations it might be useful to know the number of datatable rows shown on the current page.
+Activate that function if needed, otherwise just remove the line to increase performance -->
+{% set row_count = true %}
+
+<!-- if new values should be retrieved using automatic page update right in the beginning and on page changes -->
+{% set initial_update = true %}
 
 <!--
 	Additional styles go into this block. Examples are for datatables
@@ -13,6 +40,7 @@
   table th.value {
     width: 100px;
   }
+  /*
   These are used for highligt effect in web interface when a value changes. If you don't want to overwrite the
   default color, you can remove the entries here as the classes are already defined in smarthomeng.css
   */
@@ -44,6 +72,8 @@
 				shngInsertText (item+'_value', objResponse[item]['value'], 'maintable', 5);
 				*/
 			}
+      // Redraw datatable after cell updates
+      // $('#maintable').DataTable().draw(false);
 		}
 	}
 </script>
@@ -53,46 +83,38 @@
 -->
 <script>
     $(document).ready( function () {
+		/*
+		loading defaults from /modules/http/webif/gstatic/datatables/datatables.defaults.js
+		You can copy that file, put it in your plugin directory, rename the "bind" function and
+		trigger that function here instead of datatables_defaults if you want to change the behaviour.
+		Of course you can also overwrite defaults by putting the option declarations in {} below.
+		*/
+		$(window).trigger('datatables_defaults');
+		{% if webif_pagelength is defined %}webif_pagelength = {{ webif_pagelength|int }};{% endif %}
+		if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
+			resize = true;
+			webif_pagelength = -1;
+			console.log('Activating automatic table resize ' + webif_pagelength);
+		}
+		else {
+			resize = false;
+		}
+		try {
 			/*
-			loading defaults from /modules/http/webif/gstatic/datatables/datatables.defaults.js
-			You can copy that file, put it in your plugin directory, rename the "bind" function and
-			trigger that function here instead of datatables_defaults if you want to change the behaviour.
-			Of course you can also overwrite defaults by putting the option declarations in {} below.
+			Copy this part for every datatable on your page. Adjust options if necessary.
+			pageLength and pageResize should be included as they are to adjust it based on the plugin settings
 			*/
-			$(window).trigger('datatables_defaults');
-      try {
-        /* get pagelength from plugin. Also see hidden span element in headtable block! */
-        webif_pagelength = parseInt(document.getElementById('webif_pagelength').innerHTML);
-        if (isNaN(parseFloat(webif_pagelength)) || webif_pagelength == 0) {
-          resize = true;
-          webif_pagelength = -1;
-  				console.log('Activating automatic table resize');
-        }
-        else {
-          resize = false;
-        }
-      }
-      catch (e) {
-        webif_pagelength = 100;
-        resize = false;
-        console.log("Using default values for page length " + webif_pagelength + ", pageResize: " + resize);
-      }
-      try {
-        /*
-        Copy this part for every datatable on your page. Adjust options if necessary.
-        pageLength and pageResize should be included as they are to adjust it based on the plugin settings
-        */
-        table = $('#maintable').DataTable( {
-          /* If you want to define your own columnDefs options (e.g. for hiding a column by default), use the concat function shown here.
-          columnDefs: [{ "targets": [8], "className": "none"}].concat($.fn.dataTable.defaults.columnDefs),
-          */
-          pageLength: webif_pagelength,
-          pageResize: resize});
-      }
-      catch (e) {
-        console.warn("Datatable JS not loaded, showing standard table without reorder option " + e);
-      }
-    });
+			maintable = $('#maintable').DataTable( {
+			  /* If you want to define your own columnDefs options (e.g. for hiding a column by default), use the concat function shown here.
+			  */
+			  columnDefs: [{ "targets": [2], "className": "value"}].concat($.fn.dataTable.defaults.columnDefs),
+			  pageLength: webif_pagelength,
+			  pageResize: resize});
+		}
+		catch (e) {
+			console.warn("Datatable JS not loaded, showing standard table without reorder option " + e);
+		}
+	});
 </script>
 <!--
 This is an example on how to update the page refresh method. You can set the dataSet, update interval, special parameters or (de)activate the auto refresh
@@ -109,11 +131,7 @@ In the example the update is deactivated on the 12th of December 2022 (what migh
 
 
 {% block headtable %}
-<!--
-	This span needs to be put somewhere on the page to read the table pagelength from the plugin / users' plugin.yaml
--->
-<span id='webif_pagelength' style="display:none">{{ webif_pagelength }}</span>
-
+<!-- add a style="min-width:..px;" if you want to define a minimum width for responsive behaviour -->
 <table class="table table-striped table-hover">
 	<tbody>
 		<tr>
@@ -176,12 +194,17 @@ In the example the update is deactivated on the 12th of December 2022 (what migh
 {% set tab1title = "<strong>" ~ p.get_shortname() ~ " Items</strong> (" ~ item_count ~ ")" %}
 {% block bodytab1 %}
 <div class="container-fluid m-2 table-resize">
-	{{ _('Hier kommt der Inhalt des Webinterfaces hin.') }}
+  <!-- remove this div if not needed -->
+  <div class="mb-2">
+    {{ _('Hier kommt der Inhalt des Webinterfaces hin.') }} (optional)
+  </div>
 
 	<!-- set id accordingly -->
-	<table id="maintable">
+	<table id="maintable" class="dataTableAdditional">
 		<thead>
 			<tr>
+        <!-- You HAVE to add an empty th here for correct implementation of the responsive plugin -->
+        <th></th>
 			  <th>{{ _('Item') }}</th>
 			  <th class="value">{{ _('Wert') }}</th>
 			</tr>
@@ -190,6 +213,8 @@ In the example the update is deactivated on the 12th of December 2022 (what migh
 			{% for item in items %}
 			  {% if p.has_iattr(item.conf, '<plugin_attribute>') %}
 				<tr>
+          <!-- You HAVE to add an empty td here for correct implementation of the responsive plugin -->
+          <td></td>
 				  <td class="py-1" id="{{ item._path }}">{{ item._path }}</td>
 				  <td class="py-1" id="{{ item._path }}_value">{{ item() }}</td>
 				</tr>
@@ -197,7 +222,10 @@ In the example the update is deactivated on the 12th of December 2022 (what migh
 			{% endfor %}
 		</tbody>
 	</table>
-
+  <!-- remove this div if not needed -->
+  <div class="mb-2">
+    Etwaige Informationen unterhalb der Tabelle (optional)
+  </div>
 </div>
 {% endblock bodytab1 %}
 

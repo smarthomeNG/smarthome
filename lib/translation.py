@@ -118,13 +118,19 @@ def load_translations(translation_type='global', from_dir='bin', translation_id=
     relative_filename = os.path.join(from_dir, 'locale' + YAML_FILE)
     filename = os.path.join(_base_dir, relative_filename)
     trans_dict = shyaml.yaml_load(filename, ordered=False, ignore_notfound=True)
+
     if trans_dict != None:
+        logger.info(f"load_translations: translation_type={translation_type}, translation_id={translation_id} ")
         if translation_type == 'global':
             for translation_section in trans_dict.keys():
                 if translation_section.endswith('_translations'):
                     trans_id = translation_section.split('_')[0].replace('.', '/')
                     trans = trans_dict.get(translation_section, {})
                     _translations[trans_id] = trans
+                    #if translation_id == 'global':
+                    #    _translations[trans_id] = trans
+                    #else:
+                    #    _translations[trans_id].update(trans)
                     logger.info("Loading {} translations (id={}) from {}".format(translation_type, trans_id, relative_filename))
                     logger.debug(" - translations = {}".format(trans))
         else:
@@ -146,7 +152,7 @@ def reload_translations():
     """
     Reload translations for existing translation_ids - to test new translations without having to restart SmartHomeNG
     """
-    logger.info("reload_translations")
+    logger.notice("Reloading translations")
     for id in _translation_files:
         translation_type = _translation_files[id]['type']
         filename = _translation_files[id]['filename']
@@ -163,26 +169,33 @@ def reload_translations():
                 trans = trans_dict.get(translation_type+'_translations', {})
                 logger.info("Reloading {} translations (id={}) from {}".format(translation_type, id, filename))
                 _translations[id] = trans
-    return
+    return True
 
 
-def _get_translation(translation_lang, txt, additional_translations=None):
+def _get_translation(translation_lang, txt, plugin_translations=None, module_translations=None):
     """
-    Returns translated text from for a specified language from additional_translations or global_translations
+    Returns translated text from for a specified language from plugin_translations or global_translations
 
     :param translation_lang: Language to be used for translation
     :param txt: Text to be translated
-    :param additional_translations: Additional translation definitions (e.g. for plugins)
+    :param plugin_translations: Additional translation definitions
     :return: translated text or '' if translation is not found
     """
 
     translations = {}
-    if additional_translations is not None:
-        #translations = additional_translations.get(txt, {})
-        if additional_translations in _translations.keys():
-            translations = _translations[additional_translations].get(txt, {})
+    if plugin_translations is not None:
+        #translations = plugin_translations.get(txt, {})
+        if plugin_translations in _translations.keys():
+            translations = _translations[plugin_translations].get(txt, {})
         else:
-            logger.warning("Trying to use undefined aditional_translations '{}'".format(additional_translations))
+            logger.warning("Trying to use undefined additional_translations '{}'".format(plugin_translations))
+
+    if translations == {} and module_translations is not None:
+        #translations = module_translations.get(txt, {})
+        if module_translations in _translations.keys():
+            translations = _translations[module_translations].get(txt, {})
+        else:
+            logger.warning("Trying to use undefined additional_translations '{}'".format(plugin_translations))
 
     if translations == {}:
         if 'global' in _translations.keys():
@@ -195,25 +208,26 @@ def _get_translation(translation_lang, txt, additional_translations=None):
     return translations.get(translation_lang, None)
 
 
-def translate(txt, vars= None, additional_translations=None):
+def translate(txt, vars=None, plugin_translations=None, module_translations=None):
     """
     Returns translated text
 
     :param txt: TEXT TO TRANSLATE
     :param vars: dict with variables to replace in the translated text
-    :param additional_translations: ID for additional translations (if None, only global translations are used)
+    :param plugin_translations: ID for additional translations (if None, only global translations are used)
+    :param module_translations: ID for additional translations (if None, only global and plugin translations are used)
 
     :return: Translated text
     """
     global _fallback_language_order
     txt = str(txt)
 
-    translated_txt = _get_translation(_default_language, txt, additional_translations=additional_translations)
+    translated_txt = _get_translation(_default_language, txt, plugin_translations=plugin_translations, module_translations=module_translations)
     if translated_txt is None:
         logger.debug("translation of '{}' to language '{}' not found -> using fallback languages".format(txt, _default_language))
         if len(_fallback_language_order) > 0:
             for fallback_language in _fallback_language_order:
-                translated_txt = _get_translation(fallback_language, txt, additional_translations=additional_translations)
+                translated_txt = _get_translation(fallback_language, txt, plugin_translations=plugin_translations, module_translations=module_translations)
                 if translated_txt is None:
                     logger.debug(" - No translation found for fallback_language '{}'".format(fallback_language))
                 else:
@@ -227,8 +241,8 @@ def translate(txt, vars= None, additional_translations=None):
         translated_txt = txt
     logger.debug("Translation '{}' to '{}' -> '{}'".format(txt, _default_language, translated_txt))
 
+    # if variable parameters are given, replace them in the translated text
     if vars is not None:
-        # replace parameters in the translated text
         if isinstance(vars, dict):
             logger.info("translate: Trying to use parameters {} for string '{}'".format(vars, translated_txt))
             try:

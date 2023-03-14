@@ -59,7 +59,7 @@ import lib.config
 import lib.translation as translation
 import lib.shyaml as shyaml
 from lib.model.smartplugin import SmartPlugin
-from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE,YAML_FILE,CONF_FILE)
+from lib.constants import (KEY_CLASS_NAME, KEY_CLASS_PATH, KEY_INSTANCE, KEY_WEBIF_PAGELENGTH, YAML_FILE,CONF_FILE)
 #from lib.utils import Utils
 from lib.metadata import Metadata
 #import lib.item
@@ -68,6 +68,7 @@ logger = logging.getLogger(__name__)
 
 
 _plugins_instance = None    # Pointer to the initialized instance of the Plugins class (for use by static methods)
+_SH = None
 
 def namestr(obj, namespace):
     return [name for name in namespace if namespace[name] is obj]
@@ -112,6 +113,8 @@ class Plugins():
             return
 
         logger.info('Load plugins')
+        threads_early = []
+        threads_late = []
 
         # for every section (plugin) in the plugin.yaml file
         for plugin in _conf:
@@ -157,22 +160,39 @@ class Plugins():
                     args = self._get_conf_args(_conf[plugin])
 #                    logger.warning("Plugin '{}' from section '{}': classname = {}, classpath = {}".format( str(classpath).split('.')[1], plugin, classname, classpath ) )
                     instance = self._get_instancename(_conf[plugin]).lower()
+                    try:
+                        plugin_version = self.meta.pluginsettings.get('version', 'ersion unknown')
+                        plugin_version = 'v' + plugin_version
+                    except Exception as e:
+                        plugin_version = 'version unknown'
                     dummy = self._test_duplicate_pluginconfiguration(plugin, classname, instance)
                     try:
                         plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance, self.meta, self._configfile)
                         if plugin_thread._init_complete == True:
                             try:
+                                try:
+                                    startorder = self.meta.pluginsettings.get('startorder', 'normal').lower()
+                                except Exception as e:
+                                    logger.warning(f"Plugin {str(classpath).split('.')[1]} error on getting startorder: {e}")
+                                    startorder = 'normal'
                                 self._plugins.append(plugin_thread.plugin)
-                                self._threads.append(plugin_thread)
-                                if instance == '':
-                                    logger.info("Initialized plugin '{}' from section '{}'".format( str(classpath).split('.')[1], plugin ) )
+                                if startorder == 'early':
+                                    threads_early.append(plugin_thread)
+                                elif startorder == 'late':
+                                    threads_late.append(plugin_thread)
                                 else:
-                                    logger.info("Initialized plugin '{}' instance '{}' from section '{}'".format( str(classpath).split('.')[1], instance, plugin ) )
-                            except:
-                                logger.warning("Plugin '{}' from section '{}' not loaded".format( str(classpath).split('.')[1], plugin ) )
+                                    self._threads.append(plugin_thread)
+                                if instance == '':
+                                    logger.info(f"Initialized plugin '{str(classpath).split('.')[1]}' from section '{plugin}'")
+                                else:
+                                    logger.info(f"Initialized plugin '{str(classpath).split('.')[1]}' instance '{instance}' from section '{plugin}'")
+                            except Exception as e:
+                                logger.warning(f"Plugin '{str(classpath).split('.')[1]}' from section '{plugin}' not loaded - exception {e}" )
                     except Exception as e:
-                        logger.exception("Plugin '{}' from section '{}' exception: {}".format(str(classpath).split('.')[1], plugin, e))
+                        logger.exception(f"Plugin '{str(classpath).split('.')[1]}' {plugin_version} from section '{plugin}'\nException: {e}\nrunning SmartHomeNG {self._sh.version} / plugins {self._sh.plugins_version}")
 
+        # join the start_early and start_late lists with the main thread list
+        self._threads = threads_early + self._threads + threads_late
         logger.info('Load of plugins finished')
         del(_conf)  # clean up
 
@@ -246,10 +266,11 @@ class Plugins():
         """
         args = {}
         for arg in plg_conf:
+            # ignore class_name, class_path and instance - those parameters ar not handed to the PluginWrapper
             if arg != KEY_CLASS_NAME and arg != KEY_CLASS_PATH and arg != KEY_INSTANCE:
                 value = plg_conf[arg]
                 if isinstance(value, str):
-                    value = "'{0}'".format(value)
+                    value = f"'{value}'"
                 args[arg] = value
         return args
 
@@ -486,14 +507,14 @@ class Plugins():
 
     def stop(self):
         logger.info('Stop plugins')
-        for plugin in self._threads:
+        for plugin in list(reversed(self._threads)):
             try:
                 instance = plugin.get_implementation().get_instance_name()
                 if instance != '':
                     instance = ", instance '"+instance+"'"
-                logger.debug("Stopping plugin '{}'{}".format(plugin.get_implementation().get_shortname(), instance))
+                logger.debug(f"Stopping plugin '{plugin.get_implementation().get_shortname()}'{instance}")
             except:
-                logger.debug("Stopping classic-plugin from section '{}'".format(plugin.name))
+                logger.debug(f"Stopping classic-plugin from section '{plugin.name}'")
             try:
                 plugin.stop()
             except:
@@ -538,9 +559,10 @@ class PluginWrapper(threading.Thread):
         """
         Initialization of wrapper class
         """
-        logger.debug('PluginWrapper __init__: Section {}, classname {}, classpath {}'.format( name, classname, classpath ))
+        logger.debug("PluginWrapper __init__: Section {name}, classname {classname}, classpath {classpath}")
         threading.Thread.__init__(self, name=name)
 
+        self._sh = smarthome
         self._init_complete = False
         self.meta = meta
         # Load an instance of the plugin
@@ -583,6 +605,10 @@ class PluginWrapper(threading.Thread):
                 self.get_implementation()._set_instance_name(instance)
 #           addition by smai
             # Customized logger instance for plugin to append name of plugin instance to log text
+            # addition by msinn
+            global _SH
+            _SH = self._sh
+            # end addition by msinn
             self.get_implementation().logger = PluginLoggingAdapter(logging.getLogger(classpath), {'plugininstance': self.get_implementation().get_loginstance()})
 #           end addition by smai
             self.get_implementation()._set_sh(smarthome)
@@ -724,7 +750,35 @@ class PluginLoggingAdapter(logging.LoggerAdapter):
 
     This class is used by PluginWrapper to set up a logger for the SmartPlugin class
     """
+    from lib.log import Logs
+
+    def __init__(self, logger, extra):
+        logging.LoggerAdapter.__init__(self, logger, extra)
+        self.logger = logger
+
+        logging.addLevelName(_SH.logs.NOTICE_level, "NOTICE")
+        logging.addLevelName(_SH.logs.DBGHIGH_level, "DBGHIGH")
+        logging.addLevelName(_SH.logs.DBGMED_level, "DBGMED")
+        logging.addLevelName(_SH.logs.DBGLOW_level, "DBGLOW")
+        return
+
+    def notice(self, msg, *args, **kwargs):
+        self.logger.log(_SH.logs.NOTICE_level, f"{self.extra['plugininstance']}{msg}", *args, **kwargs)
+        return
+
+    def dbghigh(self, msg, *args, **kwargs):
+        self.logger.log(_SH.logs.DBGHIGH_level, f"{self.extra['plugininstance']}{msg}", *args, **kwargs)
+        return
+
+    def dbgmed(self, msg, *args, **kwargs):
+        self.logger.log(_SH.logs.DBGMED_level, f"{self.extra['plugininstance']}{msg}", *args, **kwargs)
+        return
+
+    def dbglow(self, msg, *args, **kwargs):
+        self.logger.log(_SH.logs.DBGLOW_level, f"{self.extra['plugininstance']}{msg}", *args, **kwargs)
+        return
+
     def process(self, msg, kwargs):
         kwargs['extra'] = self.extra
-        return '{}{}'.format(self.extra['plugininstance'], msg), kwargs
+        return f"{self.extra['plugininstance']}{msg}", kwargs
 # end addition von smai

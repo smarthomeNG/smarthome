@@ -238,7 +238,7 @@ class ItemData:
                          'trigger_condition': self.disp_str(item._trigger_condition),
                          'trigger_condition_raw': self.disp_str(self._trigger_condition_raw),
                          'on_update': html.escape(self.list_to_displaystring(on_update_list)),
-                         'on_change': html.escape(self.list_to_displaystring(on_change_list)),
+                         'on_change': html.escape(self.list_to_displaystring(str(on_change_list))),
                          'log_change': self.disp_str(item._log_change),
                          'log_level': self.disp_str(item._log_level_name),
                          'log_text': self.disp_str(item._log_text),

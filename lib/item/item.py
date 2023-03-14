@@ -127,8 +127,8 @@ class Item():
         self._trigger_condition = None
         self._on_update = None				# -> KEY_ON_UPDATE eval expression
         self._on_change = None				# -> KEY_ON_CHANGE eval expression
-        self._on_update_dest_var = None		# -> KEY_ON_UPDATE destination var
-        self._on_change_dest_var = None		# -> KEY_ON_CHANGE destination var
+        self._on_update_dest_var = None		# -> KEY_ON_UPDATE destination var (list: only filled if '=' syntax is used)
+        self._on_change_dest_var = None		# -> KEY_ON_CHANGE destination var (list: only filled if '=' syntax is used)
         self._on_update_unexpanded = [] 	# -> KEY_ON_UPDATE eval expression (with unexpanded item references)
         self._on_change_unexpanded = [] 	# -> KEY_ON_CHANGE eval expression (with unexpanded item references)
         self._on_update_dest_var_unexp = []	# -> KEY_ON_UPDATE destination var (with unexpanded item reference)
@@ -341,8 +341,9 @@ class Item():
 
                     # Test if the plugin-specific attribute contains a valid value
                     # and set the default value, if needed
-                    value = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], value, self._filename)
-                    self.conf[attr] = value
+                    if hasattr(self.plugins, 'meta'):
+                        value = self.plugins.meta.check_itemattribute(self, attr.split('@')[0], value, self._filename)
+                        self.conf[attr] = value
 
         self.property.init_dynamic_properties()
 
@@ -398,7 +399,7 @@ class Item():
         # Cache
         #############################################################
         if self._cache:
-            self._cache = self._sh._cache_dir + self._path
+            self._cache = os.path.join(self._sh._cache_dir, self._path)
             try:
                 self.__changed_by = 'Init:Cache'
                 self.__last_change, self._value = cache_read(self._cache, self.shtime.tzinfo())
@@ -412,9 +413,13 @@ class Item():
                 self._log_on_change(self._value, self.__changed_by, 'Cache', None)
             except Exception as e:
                 if str(e).startswith('[Errno 2]'):
-                    logger.info("Item {}: No cached value: {}".format(self._path, e))
+                    logger.info(f"Item {self._path}: No cached value: {e}")
                 else:
-                    logger.warning("Item {}: Problem reading cache: {}".format(self._path, e))
+                    if os.stat(self._cache).st_size == 0:
+                        logger.warning(f"Item {self._path}: Problem reading cache: Filesize is 0 bytes. Deleting invalid cache file")
+                        os.remove(self._cache)
+                    else:
+                        logger.warning(f"Item {self._path}: Problem reading cache: {e}")
 
         #############################################################
         # Cache write/init
@@ -422,7 +427,7 @@ class Item():
         if self._cache:
             if not os.path.isfile(self._cache):
                 cache_write(self._cache, self._value)
-                logger.notice("Created cache for item: {} in file {}".format(self._cache, self._cache))
+                logger.notice(f"Created cache for item {self._cache} in file {self._cache}")
 
         #############################################################
         # Plugins
@@ -433,7 +438,7 @@ class Item():
                 update = plugin.parse_item(self)
                 if update:
                     try:
-                        plugin._append_to_itemlist(self)
+                        plugin.add_item(self, updating=True)
                     except:
                         pass
                     self.add_method_trigger(update)
@@ -592,7 +597,7 @@ class Item():
         else:
             self._eval_unexpanded = value
             value = self.get_stringwithabsolutepathes(value, 'sh.', '(', KEY_EVAL)
-            value = self.get_stringwithabsolutepathes(value, 'sh.', '.property', KEY_EVAL)
+            #value = self.get_stringwithabsolutepathes(value, 'sh.', '.property', KEY_EVAL)
             self._eval = value
 
 
@@ -618,13 +623,16 @@ class Item():
         for val in value:
             # separate destination item (if it exists)
             dest_item, val = self._split_destitem_from_value(val)
-            dest_var_list_unexp.append(dest_item)
+            dest_item = dest_item.strip()
+            if dest_item.startswith('sh.'):
+                dest_item = dest_item[3:]
+            dest_var_list_unexp.append(dest_item.strip())
             # expand relative item paths
-            dest_item = self.get_absolutepath(dest_item, KEY_ON_CHANGE).strip()
+            dest_item = self.get_absolutepath(dest_item.strip()).strip()
             #                        val = 'sh.'+dest_item+'( '+ self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE) +' )'
             val_list_unexpanded.append(val)
             val = self.get_stringwithabsolutepathes(val, 'sh.', '(', KEY_ON_CHANGE)
-            val = self.get_stringwithabsolutepathes(val, 'sh.', '.property', KEY_ON_CHANGE)
+            #val = self.get_stringwithabsolutepathes(val, 'sh.', '.property', KEY_ON_CHANGE)
             #                        logger.warning("Item __init__: {}: for attr '{}', dest_item '{}', val '{}'".format(self._path, attr, dest_item, val))
             val_list.append(val)
             dest_var_list.append(dest_item)
@@ -633,7 +641,7 @@ class Item():
         setattr(self, '_' + attr + '_dest_var', dest_var_list)
         setattr(self, '_' + attr + '_dest_var_unexp', dest_var_list_unexp)
         return
-
+#### ms
 
     def _get_last_change(self):
         return self.__last_change
@@ -996,6 +1004,7 @@ class Item():
         :return: string with the statement containing absolute item paths
         """
         def __checkfortags(evalstr, begintag, endtag):
+
             pref = ''
             rest = evalstr
             while (rest.find(begintag+'.') != -1):
@@ -1008,11 +1017,15 @@ class Item():
                     rel = rest[:rest.find(endtag)]
                 rest = rest[rest.find(endtag):]
                 pref += self.get_absolutepath(rel, attribute)
+                # Re-combine string for next loop
+                rest = pref+rest
+                pref = ''
 
             pref += rest
             logger.debug("{}.get_stringwithabsolutepathes('{}') with begintag = '{}', endtag = '{}': result = '{}'".format(
                 self._path, evalstr, begintag, endtag, pref))
-            return pref
+            return pref # end of __checkfortags(...)
+
 
         if not isinstance(evalstr, str):
             return evalstr
@@ -1106,7 +1119,7 @@ class Item():
 
                         # expand relative item paths
                         wrk = self.get_stringwithabsolutepathes(wrk, 'sh.', '(', KEY_CONDITION)
-                        wrk = self.get_stringwithabsolutepathes(wrk, 'sh.', '.property', KEY_CONDITION)
+                        #wrk = self.get_stringwithabsolutepathes(wrk, 'sh.', '.property', KEY_CONDITION)
 
                         and_cond.append(wrk)
 

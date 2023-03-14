@@ -225,6 +225,7 @@ class RESTResource:
     with the post with the slug 'my-first-post' that is owned by bob.
 
     """
+    REST_dispatch_execute_warnlevel = 'WARNING'
 
     # default method mapping. ie, if a GET request is made for
     # the resource's url, it will try to call an index() method (if it exists);
@@ -344,7 +345,11 @@ class RESTResource:
             try:
                 return m(resource, **params)
             except Exception as e:
-                self.logger.warning("REST_dispatch_execute: {}: {}".format(resource, e))
+                if self.REST_dispatch_execute_warnlevel == 'WARNING':
+                    self.logger.warning("REST_dispatch_execute: {}: {}".format(resource, e))
+                else:
+                    self.logger.notice("The following exception is thrown, due to the configuration in etc/module.yaml:")
+                    self.logger.exception("REST_dispatch_execute: {}: {}".format(resource, e))
                 response = {'result': 'error', 'description': format(e)}
                 return json.dumps(response)
         return None

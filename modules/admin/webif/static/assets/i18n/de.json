@@ -336,7 +336,6 @@
     "PARAMETERS": "Parameter",
     "PARAMETER": "Parameter",
     "VALUE": "Wert",
-    "DESCRIPTION_INSTANCE_ATTRIBUTE": "Falls mehrere Instanzen eines Multi-Instance Plugins konfiguriert sind, muss hier ein eindeutiger Instanz-Name angegeben werden (eine Instanz darf ohnen Namen bleiben). Falls nur eine Instanz konfiguriert ist, sollte hier kein Name vergeben werden.",
     "ITEM ATTRIBUTES": "Item Attribute",
     "UPDATES TRIGGERED BY": "Plugin Updates werden durch {{count}} Items getriggered",
     "PLUGIN METADATA": "Plugin Metadata",
@@ -367,6 +366,7 @@
     "OPEN_WEBIF": "Webinterface öffnen",
     "OPEN_CONFIGINFO": "Konfigurationsdokumentation öffnen",
     "OPEN_DOC": "Plugin-Dokumentation öffnen",
+    "OPEN_ADDITIONAL": "zusätzliche Plugin-Dokumentation öffnen",
     "OPEN_SUPPORT_THREAD": "Support Thread aufrufen",
     "OPEN_BLOGS": "Blog Artikel öffnen"
   },

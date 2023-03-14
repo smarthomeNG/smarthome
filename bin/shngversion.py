@@ -87,10 +87,17 @@ from lib.utils import Version
 # Update auf 1.9.2.2  wg. Globals innerhalb von Logiken"
 
 # Update auf 1.9.3    wg. Release
+# Update auf 1.9.3.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.9.3 Release"
+# Update auf 1.9.3.2  wg. weitere Loglevel für Plugins; Nutzung Überstzungen für module/http"
+# Update auf 1.9.3.3  wg. Änderungen an SmartPlugin
+# Update auf 1.9.3.4  wg. Änderungen an SmartPlugin: device_command -> mapping
+# Update auf 1.9.3.5  wg. Veränderungen am websocket Modul
 
-shNG_version = '1.9.3'
+# Update auf 1.9.4    wg. Release
+
+shNG_version = '1.9.4'
 shNG_branch = 'master'
-shNG_releasedate = '31. Oktober 2022'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
+shNG_releasedate = '14. März 2023'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
 
 # ---------------------------------------------------------------------------------
 FileBASE = None
@@ -133,6 +140,9 @@ def get_shng_main_version():
 def get_shng_plugins_version():
     plgversion = get_plugins_version().split('-')[0]
     return Version.format( plgversion )
+
+def get_shng_version():
+    return shNG_branch
 
 def get_shng_version():
     commit, commit_short, branch, describe = _get_git_data()

@@ -20,11 +20,19 @@
 		// Make refresh variable, dataSet and update_params available for plugins html files.
 		window.refresh = new timer();
 		window.dataSet = null;
+		window.activeTab = 1;
 		window.update_params = null;
 		window.update_interval = 0;
 		window.update_active = false;
 		window.update_blocked = false;
-		// window.row_count = 0; If you want to get the row count on the current page, put this line in the resepctive plugin index.html
+		window.toggle = 1;
+		window.initial_update = false;
+		{%- if row_count is defined %}
+		  window.row_count = '{{ row_count|lower }}';
+		{%- endif %}
+		{%- if initial_update is defined %}
+		  window.initial_update = '{{ initial_update|lower }}';
+		{%- endif %}
 		{%- if dataSet is defined %}
 		  window.dataSet = '{{ dataSet }}';
 		{%- endif %}
@@ -75,13 +83,13 @@
 {% block content -%}
 
 {% if scroll_heading is not defined %}
-<div id="webif-navbar" style="position: fixed; top: 0; width: 100%; height: 180px; background: RGB(255, 255, 255); z-index: 10;">
+<div id="webif-navbar" style="position: fixed; top: 0; width: 100%; background: RGB(255, 255, 255); z-index: 10; display: none;">
 {% endif %}
 
 <div class="container-fluid m-3" id="webif-top">
-	<div style="margin-right: 2px;" class="row">
+	<div class="row" id="webif-toprow">
 
-		<div class="{% if logo_frame %}card {% endif %} col-sm-2" style="height:150px;">
+		<div class="{% if logo_frame %}card {% endif %} col-sm-2" style="height:150px;" id="webif-pluginlogo">
 		    {% if isfile("static/img/plugin_logo.png") %}
 				<img src="static/img/plugin_logo.png" alt="plugin_logo" style="object-fit:contain; width:100%; height:100%; margin-left: auto; margin-right: auto; display: block;">
 		    {% elif isfile("static/img/plugin_logo.jpg") %}
@@ -97,8 +105,8 @@
 				{% endif %}
 			{% endif %}
 		</div>
-		<div class="col-sm-3">
-			<h3 id="webif_plugin_logo"><img src="/gstatic/img/logo_long.png" alt="shng_logo_long" height="40" valign="top" align="left" style="align: left; display: block;"></h3>
+		<div class="col-sm-3" id="webif-plugininfo">
+			<h3 id="webif_shng_logo"><img src="/gstatic/img/logo_long.png" alt="shng_logo_long" height="40" valign="top" align="left" style="align: left; display: block;"></h3>
 			<div class="m-3">
 			<br>
 			</div>
@@ -111,28 +119,41 @@
 			<h6>{{ _('Plugin') }} &nbsp; &nbsp; : <span id="webif_plugin_state">{% if p.alive %}{{ _('Aktiv') }}{% else %}{{ _('Gestoppt') }}{% endif %}</span></h6>
 		</div>
 
-		<div class="col-sm-7">
+		<div id="webif-headtable" class="col-sm-7">
 
 			{% block headtable %}
 			{% endblock %}
+			{%- if buttons is not defined or buttons == true %}
+				<div id="webif-allbuttons" style="margin-left: 10px; margin-right: 10px; float:right; white-space: nowrap;">
+					{%- if update_interval is defined and (autorefresh_buttons is not defined or autorefresh_buttons == true) %}
+						<span id="webif-autorefresh" style="white-space: nowrap;">
+							{{ _('Autom. Aktualisierung') }}
+							<input title="{{ _('(De)Aktiviere automatische Seitenaktualisierung') }}" type="checkbox" id="update_active" name="update_active" value="active" oninput="set_update_interval()">
+							&nbsp;&nbsp;
+							<input title="{{ _('Aktualisierungsintervall in Sekunden') }}" style="width:60px; text-align:right;" type="number" id="update_interval" name="update_interval" min="0" oninput="set_update_interval()">
+						</span>
+						<span id="webif-seconds"> {{ _('Sek.') }}</span>
+						<span id="webif-seconds_orig" style="display:none"> {{ _('Sek.') }}</span>
+						&nbsp;
+					{%- endif %}
 
-			<table style="width:100%" id="webif-buttons">
-				<tr>
-					<td colspan="3">
-						{% block buttons %}
-						{% endblock buttons %}
-					</td>
-					<td colspan="2" align="right">
-							<span id="autorefresh">
-								{{ _('Autom. Aktualisierung') }}
-								<input title="{{ _('(De)Aktiviere automatische Seitenaktualisierung') }}" type="checkbox" id="update_active" name="update_active" value="active" oninput="set_update_interval()">
-								<input title="{{ _('Aktualisierungsintervall in Sekunden') }}" style="width:60px" type="number" id="update_interval" name="update_interval" min="0" oninput="set_update_interval()"> {{ _('Sekunden') }}
-							</span>
-						<button id="reload" class="btn btn-shng btn-sm" onclick="window.location.reload();"><i class="fas fa-redo"></i>&nbsp;&nbsp;&nbsp;{{ _('Aktualisieren') }}&nbsp;</button>
-						<button id="close" class="btn btn-shng btn-sm" title="{{ _('Schließen') }}" onclick="window.close();" ><i class="fas fa-times"></i>&nbsp;&nbsp;&nbsp;{{ _('Schließen') }}&nbsp;</button>
-					</td>
-				</tr>
-			</table>
+					<span id="webif-refreshbuttons" style="white-space: nowrap;">
+						{%- if reload_button is not defined or reload_button == true %}
+							<button id="reload" class="btn btn-shng btn-sm" onclick="window.location.reload();"><i class="fas fa-redo"></i><span id="webif-reload"> &nbsp;&nbsp;&nbsp;{{ _('Aktualisieren') }}</span></button>
+							<span id="webif-reload_orig" style="display:none"> {{ _('Aktualisieren') }}</span>
+						{%- endif %}
+						{%- if close_button is not defined or close_button == true %}
+							<button id="close" class="btn btn-shng btn-sm" title="{{ _('Schließen') }}" onclick="window.close();" ><i class="fas fa-times"></i><span id="webif-close">&nbsp;&nbsp;&nbsp;{{ _('Schließen') }}&nbsp;</span></button>
+							<span id="webif-close_orig" style="display:none"> {{ _('Schließen') }}</span>
+						{%- endif %}
+					</span>
+				</div>
+				<div style="float:right; white-space: nowrap;" id="webif-custombuttons">
+					{% block buttons %}
+					{% endblock buttons %}
+				</div>
+			{%- endif %}
+
 		</div>
 	</div>
 </div>
@@ -140,7 +161,7 @@
 {% if scroll_heading is not defined %}
 </div>
 
-<div style="margin: 180px auto 0; z-index: 9;">
+<div style="margin: 180px auto 0; z-index: 9;" id="webif-lowercontent">
 {% endif %}
 
 {% if tabcount is not defined %}
@@ -153,7 +174,9 @@
 {% if start_tab > tabcount %}
 	{% set start_tab = tabcount %}
 {% endif %}
-
+<script>
+window.activeTab = "bodytab_" + {{ start_tab }};
+</script>
 {% if tabcount > 6 %}
 	{% set tabcount = 6 %}
 {% endif %}
@@ -211,7 +234,6 @@
 </div>
 
 <div style="margin-left: 10px; margin-right: 10px;" class="tab-content" id="resize_wrapper">
-
 	<div id="bodytab_1" class="table-resize tab-pane {% if start_tab==1 %}in active{% endif %}" role="tabpanel">
 		{% block bodytab1 %}
 		{% endblock bodytab1 %}

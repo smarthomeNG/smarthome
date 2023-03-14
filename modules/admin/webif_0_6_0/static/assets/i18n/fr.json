@@ -2,6 +2,7 @@
   "MENU": {
     "SYSTEM": "Système",
     "SYSTEM_PROPERTIES": "Propriétés du système",
+    "SYSTEM_CONFIGURATION": "Configuration du système",
     "SERVICES": "Services",
     "ITEMS": "Objets",
     "ITEM_TREE": "Arborescence des objets",
@@ -15,10 +16,12 @@
     "SCENES": "Scènes",
     "SCENE_LIST": "Liste des scènes",
     "SCENE_CONFIGURATION": "Configuration des scènes",
+    "FUNCTION_CONFIGURATION": "Configuration des fonctions utilisateur",
     "THREADS": "Tâches",
     "LOGS": "Journaux",
     "LOGS_DISPLAY": "Afficher les journaux",
     "LOGGER_LIST": "Liste des générateurs de journaux",
+    "LOGGING_CONFIGURATION": "Configuration des journaux",
     "CONFIGURATION": "Configuration",
     "LOGIN": "s'identifier"
   },
@@ -30,6 +33,7 @@
     "SHNG_VERSION": "Version de SmartHomeNG",
     "IN": "dans",
     "SHNG_PLG_VERSION": "Version des extensions",
+    "SHNG_ADMIN_GUI": "Interface d'administration",
     "HOST": "Hôte",
     "OS": "Système d'exploitation",
     "ARCHITECTURE": "architecture",
@@ -446,6 +450,11 @@
     "NEW_DEFINITION_FILE": "Nouveau fichier",
     "NEW_LOGIC": "Nouvelle logique",
     "NEW_SCENE": "Nouvelle scène",
+    "RELOAD_SCENES": "Szenen neu laden",
+    "RELOAD_SCENE": "Charge",
+    "NEW_FUNCTION": "Nouvelle bibliothèque",
+    "RELOAD_FUNCTIONS": "Tout recharger",
+    "RELOAD_FUNCTION": "Charger",
     "LINE_WRAPPING": "Renvoie à la ligne",
     "TRIGGER": "Déclencher"
   },
@@ -500,6 +509,7 @@
 
   "CONFIGURATION": "Configuration",
   "RESTART FOR CHANGES": "Les changements deviennent seulement actifs après un redémarrage de SmartHomeNG",
+  "RELOAD FOR CHANGES": "Les modifications ne prennent effet qu'après rechargement du fichier ou redémarrage de SmartHomeNG",
   "RESTART LOGIC FOR CHANGES": "Les changements deviennent seulement actifs après un redémarrage de la logique",
 
   "LINEBREAK": "Saut de ligne"

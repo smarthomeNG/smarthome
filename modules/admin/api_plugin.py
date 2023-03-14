@@ -117,7 +117,7 @@ class PluginController(RESTResource):
         if id is not None:
             for confplg in _conf:
                 if (confplg == id) or (id == None):
-                    self.logger.info("PluginController(): index('{}') - confplg {}".format(id, confplg))
+                    self.logger.info(f"PluginController(): index('{id}') - confplg {confplg}")
                     info['config'] = _conf[confplg]
                     plg_found = True
 

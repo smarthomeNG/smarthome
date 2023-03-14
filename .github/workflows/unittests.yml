@@ -2,9 +2,6 @@ name: "Unittests Core"
 #on: [workflow_dispatch, push]
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - 'develop'
   push:
     branches:
       - '*'
@@ -16,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ '3.7', '3.8', '3.9', '3.10' ]
+        python-version: [ '3.7', '3.8', '3.9', '3.10', '3.11' ]
     name: Python ${{ matrix.python-version }}
     steps:
       - name: Setup OS (Ubuntu)
@@ -37,7 +34,8 @@ jobs:
         with:
           repository: smarthomeNG/smarthome
           ref: ${{steps.extract_branch.outputs.branch}}
-      - name: Checkout plugins from ${{steps.extract_branch.outputs.branch}} branch
+
+      - name: Checkout plugins from ${{steps.extract_branch.outputs.branch}} branch (${{ github.event.pull_request.base.ref }})
         uses: actions/checkout@v3
         with:
           repository: smarthomeNG/plugins

@@ -84,7 +84,7 @@
       "en": "Commandline interface for SmartHomeNG - Works with SmartHomeNG v1.4 and up"
     },
     "documentation": "http://smarthomeng.de/user/plugins/cli/user_doc.html",
-    "multi_instance": false,
+    "multi_instance": true,
     "state": "qa-passed",
     "type": "system",
     "version": "1.4.2"

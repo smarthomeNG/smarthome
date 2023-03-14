@@ -56,13 +56,14 @@ class LoggersController(RESTResource):
         return
 
 
-    def save_logging_config(self):
+    def save_logging_config(self, create_backup=False):
         """
         Save dict to logging.yaml
         """
         if self.logging_config is not None:
+            self.logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
             conf_filename = os.path.join(self.etc_dir, 'logging')
-            shyaml.yaml_save_roundtrip(conf_filename, self.logging_config, create_backup=False)
+            shyaml.yaml_save_roundtrip(conf_filename, self.logging_config, create_backup=create_backup)
         return
 
 
@@ -86,12 +87,12 @@ class LoggersController(RESTResource):
         """
         conf_filename = os.path.join(self.etc_dir, 'logging')
         self.logging_config = shyaml.yaml_load_roundtrip(conf_filename)
-        self.logger.notice("load_logging_config: shng_version={}".format(self.logging_config.get('shng_version', None)))
+        self.logger.info("load_logging_config: shng_version={}".format(self.logging_config.get('shng_version', None)))
 
         if self.logging_config.get('shng_version', None) is None:
-            self.create_backupfile(conf_filename)
-            self.logging_config['shng_version'] = 'x'
-            self.save_logging_config()
+            self.logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
+            #self.create_backupfile(conf_filename)
+            self.save_logging_config(create_backup=True)
 
         return
 
@@ -129,11 +130,12 @@ class LoggersController(RESTResource):
     def set_active_logger_level(self, logger, level):
 
         if level is not None:
-            self.logger.notice("set_active_logger_level(): logger={}, level={}".format(logger, level))
             lg = logging.getLogger(logger)
             lglevel = logging.getLevelName(level)
-            self.logger.notice("set_active_logger_level(): lg={}, lglevel={}".format(lg, lglevel))
+            oldlevel = logging.getLevelName(lg.level)
+
             lg.setLevel(lglevel)
+            self.logger.notice(f"Logger '{logger}' changed from {oldlevel} to {level}")
 
             self.load_logging_config_for_edit()
             try:
@@ -141,9 +143,9 @@ class LoggersController(RESTResource):
             except:
                 oldlevel = None
             if oldlevel != None:
-                self.logger.notice(" - old level={}".format(oldlevel))
                 self.logging_config['loggers'][logger]['level'] = level
                 self.save_logging_config()
+                #self.logger.info("Saved changed logger configuration to ../etc/logging.yaml}")
                 return True
         return False
 

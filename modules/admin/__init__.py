@@ -108,6 +108,7 @@ class Admin(Module):
             self.websocket_port = self._parameters['websocket_port']
             self.log_chunksize = self._parameters['log_chunksize']
             self.developer_mode = self._parameters['developer_mode']
+            self.rest_dispatch_force_exception = self._parameters['rest_dispatch_force_exception']
             self.click_dropdown_header = self._parameters['click_dropdown_header']
         except:
             self.logger.critical(
@@ -334,7 +335,7 @@ class WebInterface(SystemData, ItemData, PluginData):
         self.shng_url_root = shng_url_root
         self.url_root = url_root
 
-        SystemData.__init__(self)
+        SystemData.__init__(self, self._sh)
         ItemData.__init__(self)
         PluginData.__init__(self)
 

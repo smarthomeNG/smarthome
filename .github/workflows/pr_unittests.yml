@@ -1,0 +1,63 @@
+name: "Unittests Core"
+#on: [workflow_dispatch, push]
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - 'develop'
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04 #latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ '3.7', '3.8', '3.9', '3.10', '3.11' ]
+    name: Python ${{ matrix.python-version }}
+    steps:
+      - name: Setup OS (Ubuntu)
+        run: |
+          sudo apt-get update
+          sudo apt-get install libudev-dev
+          sudo apt-get install librrd-dev libpython3-dev
+          sudo apt-get install gcc --only-upgrade
+
+      - name: Get branch name
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo ${GITHUB_REF#refs/heads/}
+        id: extract_branch
+
+      - name: Checkout core from ${{steps.extract_branch.outputs.branch}} branch
+        uses: actions/checkout@v3
+        with:
+          repository: smarthomeNG/smarthome
+          ref: ${{steps.extract_branch.outputs.branch}}
+
+      - name: Checkout plugins from develop branch
+        uses: actions/checkout@v3
+        with:
+          repository: smarthomeNG/plugins
+          ref: develop
+          path: plugins
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
+      - run: python3 -m pip install --upgrade pip
+
+      - name: Install requirements for unit testing
+        run: pip install -r tests/requirements.txt
+      - name: Build Requirements for SmartHomeNG
+        run: python3 tools/build_requirements.py
+      - name: Install SmartHomeNG base requirements
+        # base requirements are needed for pytest to run
+        run: pip install -r requirements/base.txt
+
+      # ---  up to here, the workflow is identical for CORE and PLUGINS  ---
+
+      - name: '>>> Run Python Unittests for CORE <<<'
+        working-directory: ./tests
+        run: pytest

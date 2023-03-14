@@ -1,0 +1,21 @@
+#!/bin/bash
+cd "$(dirname "$0")"
+cd ..
+
+chmod +x bin/smarthome.py
+
+chmod +x tools/build_requirements.py
+chmod +x tools/check_plugin.py
+chmod +x tools/conf_to_yaml_converter.py
+chmod +x tools/getshngpid
+chmod +x tools/measure_cpu_speed.py
+chmod +x tools/plugin_metadata_checker.py
+chmod +x tools/test_running
+
+#echo `pwd`
+#find . -type d -exec chmod g+rwsx {} +
+#find . -type f -exec chmod g+r {} +
+#find . -name '*.ini' -exec chmod g+rw {} +
+#find . -name '*.var' -exec chmod g+rw {} +
+
+

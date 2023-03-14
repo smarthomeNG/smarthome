@@ -2,6 +2,7 @@
   "MENU": {
     "SYSTEM": "System",
     "SYSTEM_PROPERTIES": "System Properties",
+    "SYSTEM_CONFIGURATION": "System Configuration",
     "SERVICES": "Services",
     "ITEMS": "Items",
     "ITEM_TREE": "Item Tree",
@@ -15,10 +16,12 @@
     "SCENES": "Scenes",
     "SCENE_LIST": "Scene List",
     "SCENE_CONFIGURATION": "Scene Configuration",
+    "FUNCTION_CONFIGURATION": "User functions",
     "THREADS": "Threads",
     "LOGS": "Logs",
     "LOGS_DISPLAY": "Display Logs",
     "LOGGER_LIST": "Logger List",
+    "LOGGING_CONFIGURATION": "Logging Configuration",
     "CONFIGURATION": "Configuration",
     "LOGIN": "Login"
   },
@@ -30,6 +33,7 @@
     "SHNG_VERSION": "SmartHomeNG Version",
     "IN": "in",
     "SHNG_PLG_VERSION": "SmartHomeNG Plugins Version",
+    "SHNG_ADMIN_GUI": "Administration-GUI",
     "HOST": "Host",
     "OS": "Operating System",
     "PID": "Process ID",
@@ -448,6 +452,11 @@
     "NEW_DEFINITION_FILE": "New File",
     "NEW_LOGIC": "New Logic",
     "NEW_SCENE": "New Scene",
+    "RELOAD_SCENES": "Reload scenes",
+    "RELOAD_SCENE": "Load",
+    "NEW_FUNCTION": "New library",
+    "RELOAD_FUNCTIONS": "Reload all",
+    "RELOAD_FUNCTION": "Load",
     "LINE_WRAPPING": "Line Wrapping",
     "TRIGGER": "Trigger"
   },
@@ -502,6 +511,7 @@
 
   "CONFIGURATION": "Configuration",
   "RESTART FOR CHANGES": "Restart SmartHomeNG for changes to take effect - Reload Admin GUI after restart",
+  "RELOAD FOR CHANGES": "Reload file(s) or restart SmartHomeNG for changes to take effect.",
   "RESTART LOGIC FOR CHANGES": "Restart the logic for changes to take effect",
 
   "LINEBREAK": "Line Break"

@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
-#  Copyright 2020-     <AUTHOR>                                   <EMAIL>
+#  Copyright 2023-     <AUTHOR>                                   <EMAIL>
 #########################################################################
 #  This file is part of SmartHomeNG.
 #  https://www.smarthomeNG.de
 #  https://knx-user-forum.de/forum/supportforen/smarthome-py
 #
-#  Sample plugin for new plugins to run with SmartHomeNG version 1.5 and
-#  upwards.
+#  This file implements the web interface for the Sample plugin.
 #
 #  SmartHomeNG is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -28,6 +27,7 @@
 import datetime
 import time
 import os
+import json
 
 from lib.item import Items
 from lib.model.mqttplugin import SmartPluginWebIf
@@ -71,11 +71,8 @@ class WebInterface(SmartPluginWebIf):
         :return: contents of the template after beeing rendered
         """
         self.plugin.get_broker_info()
-        # Setting pagelength (max. number of table entries per page) for web interface
-        try:
-            pagelength = self.plugin.webif_pagelength
-        except Exception:
-            pagelength = 100
+        # try to get the webif pagelength from the module.yaml configuration
+        pagelength = self.plugin.get_parameter_value('webif_pagelength')
         tmpl = self.tplenv.get_template('index.html')
         # add values to be passed to the Jinja2 template eg: tmpl.render(p=self.plugin, interface=interface, ...)
         return tmpl.render(p=self.plugin,
@@ -109,4 +106,4 @@ class WebInterface(SmartPluginWebIf):
                 self.logger.error("get_data_html exception: {}".format(e))
                 return {}
 
-        return
+        return {}

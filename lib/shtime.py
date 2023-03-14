@@ -123,7 +123,7 @@ class Shtime:
         """
         txt = str(txt)
 
-        return lib_translate(txt, vars, additional_translations='lib/shtime')
+        return lib_translate(txt, vars, plugin_translations='lib/shtime')
 
 
     def set_tz(self, tzone):
@@ -654,6 +654,47 @@ class Shtime:
         :rtype: int
         """
         return (self.today() + dateutil.relativedelta.relativedelta(months=offset)).month
+
+
+    def current_monthname(self, offset=0):
+        """
+        Return the name of the current month for a given date
+
+        :param offset: negative number for previous months, positive for future ones
+        :type offset: int
+
+        :return: monthname NAME
+        :rtype: str
+        """
+        month = self.current_month(offset)
+        if month == 1:
+            monthname = "Januar"
+        elif month == 2:
+            monthname = "Februar"
+        elif month == 3:
+            monthname = "März"
+        elif month == 4:
+            monthname = "April"
+        elif month == 5:
+            monthname = "Mai"
+        elif month == 6:
+            monthname = "Juni"
+        elif month == 7:
+            monthname = "Juli"
+        elif month == 8:
+            monthname = "August"
+        elif month == 9:
+            monthname = "September"
+        elif month == 10:
+            monthname = "Oktober"
+        elif month == 11:
+            monthname = "November"
+        elif month == 12:
+            monthname = "Dezember"
+        else:
+            monthname = "?"
+
+        return self.translate(monthname)
 
 
     def current_day(self, offset=0):

@@ -82,7 +82,7 @@ class LogsController(RESTResource):
         logs = {}
         for fn in self.files:
             fnl = fn.split('.')
-            if (fnl[1] == 'log') and (len(fnl) == 2):
+            if (len(fnl) == 2) and (fnl[1] == 'log'):
                 log_name = fnl[0]
 
                 logfiles = self.get_files_of_log(log_name)

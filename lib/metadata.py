@@ -30,6 +30,7 @@ import lib.shyaml as shyaml
 from lib.constants import (YAML_FILE, FOO, META_DATA_TYPES, META_DATA_DEFAULTS)
 
 META_MODULE_PARAMETER_SECTION = 'parameters'
+META_PLUGIN_SECTION = 'plugin'
 META_PLUGIN_PARAMETER_SECTION = 'parameters'
 META_PLUGIN_ITEMATTRIBUTE_SECTION = 'item_attributes'
 META_PLUGIN_ITEMATTRIBUTEPREFIX_SECTION = 'item_attribute_prefixes'
@@ -125,7 +126,13 @@ class Metadata():
                 self.parameters = self.meta.get(META_MODULE_PARAMETER_SECTION)
                 self.itemstructs = self.meta.get(META_STRUCT_SECTION)
             else:
-                self.parameters = self.meta.get(META_PLUGIN_PARAMETER_SECTION)
+                self.global_parameters = self.get_global_plugin_parameters()
+                self.parameters = self.meta.get(META_PLUGIN_PARAMETER_SECTION, {})
+                if isinstance(self.parameters, str):
+                    # if plugin parameter section is declared as NONE
+                    self.parameters = self.global_parameters
+                else:
+                    self.parameters.update(self.global_parameters)
                 self.itemdefinitions = self.meta.get(META_PLUGIN_ITEMATTRIBUTE_SECTION)
                 self.itemprefixdefinitions = self.meta.get(META_PLUGIN_ITEMATTRIBUTEPREFIX_SECTION)
                 self.itemstructs = self.meta.get(META_STRUCT_SECTION)
@@ -247,6 +254,38 @@ class Metadata():
             self.addon_metadata = None
 
         return
+
+
+    def get_global_plugin_parameters(self):
+
+        result = {}
+
+        if self._sh.modules.get_module('http') is not None:
+            # only if http module is loaded:
+            # global plugin parameter 'webif_pagelength'
+            result['webif_pagelength'] = {}
+            result['webif_pagelength']['type'] = 'int'
+            result['webif_pagelength']['valid_list'] = [-1, 0, 25, 50, 100]
+            result['webif_pagelength']['description'] = {}
+            # get description of webif_pagelength-parameter in all available laguages
+            result['webif_pagelength']['description'] = self._sh.modules.get_module('http')._metadata.meta['parameters']['webif_pagelength'].get('description', {'en': 'No description found!'})
+            try:
+                result['webif_pagelength']['default'] = self._sh.modules.get_module('http')._webif_pagelength
+            except:
+                result['webif_pagelength']['default'] = 0
+
+        self.pluginsettings = self.meta.get(META_PLUGIN_SECTION)
+        if self.pluginsettings.get('multi_instance', False):
+            # only for multi-instance Plugins:
+            # global plugin parameter 'instance'
+            result['instance'] = {}
+            result['instance']['type'] = 'str'
+            result['instance']['description'] = {}
+            result['instance']['description']['de'] = "Falls mehrere Instanzen eines Multi-Instance Plugins konfiguriert sind, muss hier ein eindeutiger Instanz-Name angegeben werden (eine Instanz darf ohnen Namen bleiben). Falls nur eine Instanz konfiguriert ist, sollte hier kein Name vergeben werden."
+            result['instance']['description']['en'] = "If several instances of a multi-instance plugin are configured, a unique instance name must be specified here (one instance may remain without a name). If only one instance is configured, no name should be assigned here."
+            result['instance']['description']['fr'] = "Si plusieurs instances d'un plug-in multi-instance sont configurées, un nom d'instance unique doit être spécifié ici (une instance peut rester sans nom). Si une seule instance est configurée, aucun nom ne doit être attribué ici."
+
+        return result
 
 
     def get_plugin_function_defstrings(self, with_type=False, with_default=True):

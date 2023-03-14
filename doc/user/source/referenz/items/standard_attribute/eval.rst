@@ -138,6 +138,17 @@ auf andere Items beziehen.
    weitere ausführliche Beispiele zu finden.
 
 
+Nutzung von Userfunctions
+-------------------------
+
+Bei komplexeren Berechnungen kann es sinnvoll sein, diese in eine :doc:`Userfunction </referenz/userfunctions/userfunctions>`
+auszulagern und im eval Ausdruck nur die :doc:`Userfunction </referenz/userfunctions/userfunctions>` aufzurufen.
+Das bietet sich besonders an, wenn die gleiche Berechnung in mehreren Items durchgeführt werden soll.
+
+Ein weiterer Vorteil von Userfunctions ist, dass Userfunctions modifiziert und neu geladen werden können, ohne SmartHomeNG
+komplett neu starten zu müssen. Das hilft besonders während der Entwicklung.
+
+
 Eval Syntax
 -----------
 

@@ -187,7 +187,7 @@ def yaml_save(filename, data):
     :type filename: str
     :param data: configuration data to to save
     :type filename: str
-    :type data: OrderedDict
+    :type data: OrderedDict, dict
 
     :returns: Nothing
     """
