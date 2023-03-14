@@ -335,7 +335,7 @@ class WebInterface(SystemData, ItemData, PluginData):
         self.shng_url_root = shng_url_root
         self.url_root = url_root
 
-        SystemData.__init__(self)
+        SystemData.__init__(self, self._sh)
         ItemData.__init__(self)
         PluginData.__init__(self)
 

@@ -126,6 +126,7 @@ class Http(Module):
             self._showtraceback = self._parameters['showtraceback']
 
             self._starturl = self._parameters['starturl']
+            self._connectionretries = self._parameters['connectionretries']
             self._webif_pagelength = self._parameters['webif_pagelength']
         except:
             self.logger.critical("Inconsistent module (invalid metadata definition)")
@@ -475,12 +476,13 @@ class Http(Module):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         connected = False
         count = 0
-        while (not connected) and (count < 5):
+        while (not connected) and (count < self._connectionretries):
             try:
                 s.connect(("10.10.10.10", 80))
                 connected = True
             except:
                 count += 1
+                self.logger.debug(f"Network access issue. Retry {count}/{self._connectionretries}")
                 time.sleep(5)
         if connected:
             return s.getsockname()[0]

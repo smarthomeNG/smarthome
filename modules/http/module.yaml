@@ -12,6 +12,15 @@ module:
 
 parameters:
     # Definition of parameters to be configured in etc/module.yaml
+    connectionretries:
+        type: int
+        valid_min: 0
+        valid_max: 100
+        default: 5
+        description:
+            de: Maximale Anzahl an Verbindungsversuchen zum Start von smarthomeNG, um die lokale IP zu eruieren.
+            en: Maximum number of connection retries to retrieve local IP address
+            fr: Nombre maximum de tentatives de connexion pour récupérer l'adresse IP locale
     user:
         type: str
         default: 'admin'
@@ -177,5 +186,5 @@ parameters:
                  Bei -1 werden alle Tabelleneinträge auf einer Seite angezeigt.'
             en: 'Amount of table lines being listed in a web interface table per page by default.\n
                  0 adjusts the table height automatically based on the height of the browser windows.\n
-   
+
                  -1 shows all table entries on one page.'

@@ -75,6 +75,15 @@ Es werden die Speicherstrukturen für das Memory-Log initialisiert. Diese Strukt
 benötigt.
 
 
+3 - Initialisierung: Prüfung der Prozessor-Geschwindigkeit
+----------------------------------------------------------
+
+SmartHomeNG prüft die CPU Geschwindigkeit. Dieses dient zur Optimierung einzelner Abläufe.
+
+Die gemessene Geschwindigkeit wird persistent gespeichert, so dass die Messung bei einem Neustart nicht erneut
+durchgeführt wird, es sei denn die Hardware hat sich geändert.
+
+
 10 - Startet
 ------------
 

@@ -1,5 +1,5 @@
 =============================
-Release 1.9.x - tt. März 2023
+Release 1.9.4 - 14. März 2023
 =============================
 
 Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
@@ -9,15 +9,17 @@ sowie einige neue Plugins.
 
     Dieses Release ist ein Feature-Release. Es gibt eine Menge neuer Features im Core von SmartHomeNG und den Plugins.
 
+|
 
-.. note::
+.. only: develop
+    .. note::
 
-    Diese Release Notes sind ein Arbeitsstand.
+        Diese Release Notes sind ein Arbeitsstand.
 
-     - Berücksichtigt sind Commits im smarthome Repository bis incl. 5. März 2023
-       (shmgadmin: Fix for displaying on_update and on_change in item details)
-     - Berücksichtigt sind Commits im plugins Repository bis incl. 4. März 2023
-       (smartvisu: Support for darkmode handling of smartvisu 3.3 and above added)
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 13. März 2023
+           (http module: introduce ...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 11. März 2023
+           (telegram plugin: fix webif_pagelength, bump version to 1.7.1)
 
 
 Überblick
@@ -33,9 +35,10 @@ Minimum Python Version
 Die absolute Minimum Python Version ist in der Dokumentation unter
 :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Python Versionen** dokumentiert.
 
-Für das SmartHomeNG Release 1.10 wird die absolute Minimum Python Version evtl. auf **Python 3.8** angehoben.
+Für das SmartHomeNG Release 1.10 wird die absolute Minimum Python Version evtl. auf **Python 3.8** angehoben, zumal
+der Security support für Pyton 3.7 im Juni 2023 endet.
 
-Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python Versionen (3.9 oder 3.10) aufzusetzen.
+Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python Versionen (3.9, 3.10 oder 3.11) aufzusetzen.
 
 
 Unterstützte Python Versionen
@@ -51,28 +54,20 @@ zu unterstützten Python Versionen)
 Änderungen am Core
 ==================
 
-Bugfixes in the CORE
---------------------
+Allgmein
+--------
 
-* ...
+* Workflows:
+
+  * Added Github actions workflow to successfully test pull requests
 
 
 Updates in the CORE
 -------------------
 
-* Added Python 3.11 to unit tests
-
 * Configuration:
 
   * logging.yaml.default: Modified LEVEL for plugins: to NOTICE to reflect the ability of plugins to log NOTICEs
-
-* Items:
-
-  * ...
-
-* Logics:
-
-  * ...
 
 * Libs:
 
@@ -103,7 +98,6 @@ Updates in the CORE
     * Preparing SmartPlugin for editable items
     * Minor fixes
     * Fix to create local _plg_item_dict and _item_lookup_dict for each plugin (that calls super().__init__)
-    * Adjusted core version to 1.9.3.3
     * Adjust add_item functionality
     * add_item(): Updating parameter
     * add_item(): Prevent default parameters from being changed in method
@@ -111,7 +105,6 @@ Updates in the CORE
     * add_item() corrected, get_device_commands() added and get_items() renamed to get_item_list()
     * Changed 'device_command' to 'mapping'
     * added get_item_mapping()
-    * bumped core version to 1.9.3.4
     * Added filter_key and filter_value as arguments for get_item_list() and get_item_path_list()
     * Renamed get_items_for_command() to get_items_for_mapping()
     * Updated inline documentation
@@ -125,11 +118,13 @@ Updates in the CORE
     * Implemented extended logging levels (NOTICE, DBGHIGH, DBGMED, DBGLOW) for plugins too
     * Added plugin parameter 'startorder'
     * Reversed stop order of plugins. Now they are stopped in the oposite order they were started
+    * Info added to plugin exception log entries
 
   * lib.scheduler:
 
     * Catch more exceptions outside scheduler to prevent thread end
     * Adjusted logging on leaving run method
+    * Added set_worker_warn_count() method
 
   * lib.shpypi:
 
@@ -143,6 +138,18 @@ Updates in the CORE
 
     * Added reload_translations() to smarthome object to enable reload of translations during runtime through
       eval syntax-checker (evaluate: sh.reload_translations())
+    * Info added to log entires of not catched exceptions
+    * Modifications to use lib.systeminfo
+    * Added call lib.systeminfo to measure cpu speed and set worker-warn-count in scheduler acordingly
+    * Adjusted startorder
+
+  * lib.systeminfo:
+
+    * New library to get info about the system, SmartHomeNG is running on
+
+  * lib.triggertimes:
+
+    * Added info to error log message
 
   * lib.translation:
 
@@ -164,6 +171,10 @@ Updates in the CORE
     * Updated shngAdmin to v0.6.3
     * Fix for displaying on_update and on_change in item details
     * Updated shngAdmin to v0.6.4
+    * Fixed issue #522: Warning after changing plugin loglevel
+    * shngadmin: Modifications to system ovwerview (show if running in virtual environment, ...)
+    * Updated shngAdmin to v0.6.5
+    * Modified to use systeminfo from smarthome object
 
   * http:
 
@@ -191,6 +202,7 @@ Updates in the CORE
     * Webinterfaces: Included javascript file for codemirror
     * Webinterfaces: When creating an icon on the homescreen on iPhones and iPads, the created icon is the plugin logo
       if the plugin logo is an png file
+    * Introduce connectionretries parameter, improve datatables handling
 
   * mqtt:
 
@@ -202,19 +214,55 @@ Updates in the CORE
     * Adjusted log levels for lost connections
     * Added cancel_log to sv payload protocol
     * Bumped sv payload protocol version to 4.1
-    * Bumped module version to 1.0.6
     * Fixed bug trying do cancel a log, when no logs are monitored for that client
     * Seperated example protocol 'sync example' to it's own class
     * Improved handling in cancel_log, if log subscription is not found
     * Some code streamlining
-    * Bumped to v1.0.7
     * Completed isolation of payload protocols
     * Bumped to v1.0.9
-    * Bumped core version to 1.9.3.5
     * Improved handling in cancel_log, if log subscription is not found
 
 
-* Plugins:
+* tests:
+
+  * Updated core mockup for extended log levels for plugins
+
+|
+
+Änderungen bei Plugins
+======================
+
+Allgmein
+--------
+
+* Workflows:
+
+  * Added Python 3.11 to unit tests
+  * Added Github actions workflow to successfully test pull requests
+
+
+.. _release194_neue_plugins:
+
+Neue Plugins
+------------
+
+Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* indego4shng: Plugin, the original indego-plugin is deprecated
+* piratewthr: Weather plugin as a replacement for the darksky plugin. It is (almost) a dropin replacement
+* rcs1000n: Plugin for 433 MHz wireless sockets e.g. for Brennenstuhl RCS 1000 N
+* sml2: Plugin to read out smartmeter information with SML protocol
+* webpush: Plugin to send web push messages to clients
+* db_addon: Add-On for the database plugin for data evaluation
+
+|
+
+Plugin Updates
+--------------
+
+Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
+http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * avdevice:
 
@@ -237,6 +285,11 @@ Updates in the CORE
   * beolink:
 
     * Bugfix in webinterface
+
+  * blockly:
+
+    * Fix for failing unittests. The unittests imported tests from the (now retired) backend plugin instead of
+      defining the tests localy.
 
   * casambi:
 
@@ -393,6 +446,7 @@ Updates in the CORE
     * Log only one error if robot is not reachable via backend
     * Seperated WebInterface into separate file
     * Cleaned-up user_doc
+    * Added warning message for server return code 500
 
   * network:
 
@@ -458,15 +512,17 @@ Updates in the CORE
 
     * Updates to documentation
     * Implemented auto refresh for clients tab in web interface;
-    * Bumped version to 1.8.7
     * Extended protocol documentation (log_cancel)
     * Modified to work with websocket module 1.0.9
     * Set sh_minversion to 1.9.3.5
-    * Bumped version to 1.8.8
     * Fixed bug 'error reading deprecated.yaml' from issue #670
     * Simplify webif_pagelength in index.html
     * Support for darkmode handling of smartvisu 3.3 and above added
     * Bumped version to 1.8.9
+
+  * sml:
+
+    * Added missing requirement for pyserial
 
   * smlx:
 
@@ -537,10 +593,12 @@ Updates in the CORE
 
   * telegram:
 
-    * v1.7.0 - control SH-item in the bot
+    * Control SH-item in the bot
     * Example in readme.rst.off
     * Bak to control-menu after "on" or "off"
     * Small optical cosmetics
+    * Adjust web interface, include webif_pagelength
+    * Bump version to 1.7.1
 
   * trovis557x:
 
@@ -552,6 +610,7 @@ Updates in the CORE
     * Bump to v1.6.4
     * Adjusted requirements.txt for scipy to run unit tests under Python 3.11
     * Adjust webif_pagelength handling to new parameter handling
+    * Removed deprecated required_package check for scipy module
 
   * xiaomi_vac:
 
@@ -559,36 +618,7 @@ Updates in the CORE
     * Adjust webif_pagelength handling
     * Fix docu
 
-
-* tests:
-
-  * Updated core mockup for extended log levels for plugins
-
 |
-
-Änderungen bei Plugins
-======================
-
-Neue Plugins
-------------
-
-Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
-http://www.smarthomeng.de/user/plugins_all.html konsultieren.
-
-* piratewthr: ew weather plugin as a replacement for the darksky plugin. It is (almost) a dropin replacement
-* indego4shng: New plugin, the original indego-plugin is deprecated
-
-
-Plugin Updates
---------------
-
-Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
-http://www.smarthomeng.de/user/plugins_all.html konsultieren.
-
-* <name>:
-
-  * ...
-
 
 Outdated Plugins
 ----------------
@@ -600,16 +630,16 @@ wechseln.
 
 * System Plugins
 
-  * backend - use the administration interface instead
   * sqlite_visu2_8 - switch to the **database** plugin
 
 * Web Plugins
 
-  * wunderground - the free API is not provided anymore by Wunderground
+  * wunderground - The free API is not provided anymore by Wunderground
+  * darksky - The api will stop working on end of march 2023 - switch to **piratewthr** plugin
 
 
 Die folgenden Plugins wurden in v1.7 als *deprecated* (veraltet) markiert, weil kein Nutzer oder Tester
-dieser Plugins gefunden werden konnte:
+dieser Plugins gefunden werden konnte. Falls sich kein Nutzer findet, werden sie mit **SmartHomeNG v1.10** retired:
 
 * Gateway Plugins
 
@@ -633,6 +663,7 @@ Weiterhin wurde das bisherige mqtt Plugin zu mqtt1 umbenannt und als *deprecated
 Plugin diese Funktionalität übernimmt. Das neue mqtt Plugin nutzt dazu das mqtt Modul des aktuellen Cores
 von SmartHomeNG.
 
+|
 
 Retired Plugins
 ---------------
@@ -642,7 +673,7 @@ Releases von SmartHomeNG als *deprecated* markiert worden. Diese Plugins wurden 
 entfernt, stehen jedoch als Referenz weiterhin zur Verfügung. Diese Plugins wurden in das **plugin_archive**
 Repositiory aufgenommen.
 
-* ...
+* backend: Since there is a security flaw in the depricated plugin, it has been retired
 
 |
 
@@ -665,6 +696,11 @@ Tools
 
   * New tool to set permissions after checkout from github
 
+* measure_cpu_speed.py:
+
+  * New tool to set permissions after checkout from github
+
+|
 
 Dokumentation
 -------------
