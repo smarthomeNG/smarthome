@@ -149,9 +149,9 @@ class Systeminfo:
 
         output = subprocess.Popen(["sw_vers", ], stdout=subprocess.PIPE).communicate()
         ostype, vers, build, extra = output[0].decode().split('\n')
-        ostype = ostype.split('\t')[2]
-        vers = vers.split('\t')[2]
-        build = build.split('\t')[2]
+        ostype = ostype.split('\t')[-1]
+        vers = vers.split('\t')[-1]
+        build = build.split('\t')[-1]
         os_release = ostype + ' ' + vers + ' (build ' + build + ')'
         return os_release
 
