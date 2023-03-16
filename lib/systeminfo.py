@@ -310,7 +310,7 @@ class Systeminfo:
 
         import timeit
 
-        _logger.notice(f"Testing cpu speed...")
+        _logger.notice(f"Testing cpu speed... (could take several minutes on slow computers)")
 
         #cpu_speed = round(timeit.timeit('"|".join(str(i) for i in range(99999))', number=1000), 2)
         cpu_duration = round(timeit.timeit('"|".join(str(i) for i in range(50000))', number=1000), 2)
