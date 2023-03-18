@@ -6,6 +6,9 @@ on:
     branches:
       - '*'
       - '!release_doc'
+  pull_request:
+    branches:
+      - 'develop'
 
 jobs:
   build:
@@ -27,17 +30,26 @@ jobs:
         run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
         id: extract_branch
 
-      - name: Checkout core from ${{steps.extract_branch.outputs.branch}} branch
+      - name: Checkout core from branch '${{steps.extract_branch.outputs.branch}} branch'
         uses: actions/checkout@v3
         with:
           repository: smarthomeNG/smarthome
           ref: ${{steps.extract_branch.outputs.branch}}
 
-      - name: Checkout plugins from ${{steps.extract_branch.outputs.branch}} branch (${{ github.event.pull_request.base.ref }})
+      - name: Checkout plugins from branch '${{steps.extract_branch.outputs.branch}}' (for push)
+        if: github.event_name != 'pull_request'
         uses: actions/checkout@v3
         with:
           repository: smarthomeNG/plugins
           ref: ${{steps.extract_branch.outputs.branch}}
+          path: plugins
+
+      - name: Checkout plugins from branch 'develop' (for pull request)
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v3
+        with:
+          repository: smarthomeNG/plugins
+          ref: develop
           path: plugins
 
       - name: Set up Python
