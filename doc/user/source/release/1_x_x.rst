@@ -16,9 +16,9 @@ sowie einige neue Plugins.
         Diese Release Notes sind ein Arbeitsstand.
 
          - Berücksichtigt sind Commits im smarthome Repository bis incl. 18. März 2023
-           (Workflows: Replaced deprecated 'set-output'...)
+           (modules.websocket: Added setting for protocol_over_reverseproxy...)
          - Berücksichtigt sind Commits im plugins Repository bis incl. 18. März 2023
-           (onewire: Fixed another debug message)
+           (smartvisu: New parameter 'protocol_over_reverseproxy'...)
 
 
 Überblick
@@ -59,20 +59,13 @@ Allgmein
 
   * Replaced deprecated 'set-output'
   * (re)joined pr_unittests into unittests.yml
+  * Disabled seperate pr_unittests workflow
 
 
 Updates in the CORE
 -------------------
 
 * ...
-
-* Items:
-
-  * ...
-
-* Logics:
-
-  * ...
 
 * Libs:
 
@@ -101,6 +94,7 @@ Updates in the CORE
 
     * Changed read_macosinfo() to be compatible with more MacOS versions
     * Added text, that testing cpu speed could take several minutes on slow machines
+    * Ensure initialization of cpu_speed_class for display in shngadmin
 
   * lib.triggertimes:
 
@@ -108,13 +102,19 @@ Updates in the CORE
 
 * Modules:
 
-  * websocket: Fixed bug for wss protocol handling
+  * admin:
 
-    * ...
+    * Removed old shngadmin version
+    * Update shngadmin to v0.6.6:
 
-* Plugins:
+      * Added new loglevels to list of loggers
+      * Fixed translation glitch in SmartHomeNG status display; Displays info, if running in virtual environment
 
-  * ...
+  * websocket:
+
+    * Fixed bug for wss protocol handling
+    * Added setting for protocol_over_reverseproxy to smartvisu payload protocol handling
+    * Bumped version to v1.1.1
 
 * tests:
 
@@ -132,6 +132,7 @@ Allgmein
 
   * Replaced deprecated 'set-output'
   * (re)joined pr_unittests into unittests.yml
+  * Disabled seperate pr_unittests workflow
 
 
 Neue Plugins
@@ -161,6 +162,11 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * onewire:
 
   * Fixed debug messages
+
+* smartvisu:
+
+  * New parameter 'protocol_over_reverseproxy'
+  * Bumped version to 1.8.10
 
 * webpush:
 
