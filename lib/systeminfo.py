@@ -262,12 +262,12 @@ class Systeminfo:
         if yaml_support:
             # read previous results from yaml file
             cls._systeminfo_dict = shyaml.yaml_load(os.path.join(var_dir, 'systeminfo.yaml'), ignore_notfound=True)
-            pass
             try:
-                cpu_speed_class = cls._systeminfo_dict['systeminfo']['cpu_speed_class']
+                cls.cpu_speed_class = cls._systeminfo_dict['systeminfo']['cpu_speed_class']
+                cls.cpu_measured_time = cls._systeminfo_dict['systeminfo']['cpu_measured_time']
                 if cls.get_cpubrand() == cls._systeminfo_dict['systeminfo']['cpu_brand']:
                     # return time, if cpu brand has not changed since stored measurement
-                    return cpu_speed_class
+                    return cls.cpu_speed_class
             except:
                 return None
         return None     # None = No previous measurement stored
