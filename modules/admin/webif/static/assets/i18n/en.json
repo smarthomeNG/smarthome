@@ -88,6 +88,11 @@
     "SHOW_PASSWORDS": "Show passwords",
     "REMEMBER TO SAVE CHANGES": "Remember to save changes after setting a new password"
   },
+  "SPEEDCLASS": {
+    "slow": "Slow",
+    "medium": "Medium",
+    "fast": "Fast"
+  },
   "SERVICES": {
     "SERVICES": "Services",
     "LANGUAGE_UI": "Language of the user interface",
@@ -135,9 +140,10 @@
     "Initalizing": "Initalizing",
     "Initalizing: Logging initalized": "Initalizing: Logging initalized",
     "Initalizing: Requirements checked": "Initalizing: Requirements checked",
+    "Checking processor speed": "Checking processor speed...",
     "Starting": "Starting",
-    "Starting: Initalizing and starting loadable modules": "Starting: Initalizing and starting loadable modules",
-    "Starting: Initalizing plugins": "Starting: Initalizing plugins",
+    "Starting: Initializing and starting loadable modules": "Starting: Initalizing and starting loadable modules",
+    "Starting: Initializing plugins": "Starting: Initalizing plugins",
     "Starting: Loading item definitions": "Starting: Loading item definitions",
     "Starting: Preparing loaded items": "Starting: Preparing loaded items",
     "Starting: Initializing logics": "Starting: Initializing logics",
@@ -157,9 +163,10 @@
     "Initalizing": "0",
     "Initalizing: Logging initalized": "1",
     "Initalizing: Requirements checked": "2",
+    "Checking processor speed": 3,
     "Starting": "10",
-    "Starting: Initalizing and starting loadable modules": "11",
-    "Starting: Initalizing plugins": "12",
+    "Starting: Initializing and starting loadable modules": "11",
+    "Starting: Initializing plugins": "12",
     "Starting: Loading item definitions": "13",
     "Starting: Preparing loaded items": "14",
     "Starting: Initializing logics": "15",

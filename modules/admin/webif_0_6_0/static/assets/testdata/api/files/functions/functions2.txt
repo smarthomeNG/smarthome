@@ -1,7 +1,0 @@
-
-_VERSION   = '0.1.2'
-_DESCRIPTION = 'My user-defined functions 2'
-
-def _version():
-
-    return (_VERSION, _DESCRIPTION)
