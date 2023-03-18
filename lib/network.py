@@ -37,11 +37,12 @@ These classes, functions and methods are mainly meant to be used by plugin devel
 from lib.utils import Utils
 import sys
 import traceback
+from inspect import signature
 import re
 import asyncio
 import logging
 import requests
-from iowait import IOWait   # BMX
+from iowait import IOWait
 import socket
 import struct
 import subprocess
@@ -621,10 +622,22 @@ class Tcp_client(object):
         :type data_received: function
         :type disconnected: function
         """
-        self._connected_callback = connected
-        self._receiving_callback = receiving
-        self._disconnected_callback = disconnected
-        self._data_received_callback = data_received
+        if connected:
+            params = len(signature(connected).parameters)
+            self.logger.debug(f"connected_callback for {self._id} is {connected.__qualname__} and it expects {params} arguments")
+            self._connected_callback = connected
+        if receiving:
+            params = len(signature(receiving).parameters)
+            self.logger.debug(f"connected_callback for {self._id} is {receiving.__qualname__} and it expects {params} arguments")
+            self._receiving_callback = receiving
+        if disconnected:
+            params = len(signature(disconnected).parameters)
+            self.logger.debug(f"connected_callback for {self._id} is {disconnected.__qualname__} and it expects {params} arguments")
+            self._disconnected_callback = disconnected
+        if data_received:
+            params = len(signature(data_received).parameters)
+            self.logger.debug(f"connected_callback for {self._id} is {data_received.__qualname__} and it expects {params} arguments")
+            self._data_received_callback = data_received
 
     def connect(self):
         """
@@ -646,8 +659,11 @@ class Tcp_client(object):
         if not self.__connect_thread or not self.__connect_thread.is_alive():
             self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name=f'TCP_Connect {self._id}')
             self.__connect_thread.daemon = True
+        self.logger.debug(f'connect() to {self._host}:{self._port}: self.__running={self.__running}, self.__connect_thread.is_alive()={self.__connect_thread.is_alive()}')
         if not self.__running or not self.__connect_thread.is_alive():
+            self.logger.debug(f'connect() to {self._host}:{self._port}: calling __connect_thread.start()')
             self.__connect_thread.start()
+        self.logger.debug(f'leaving connect() to {self._host}:{self._port}')
         return True
 
     def connected(self):
@@ -741,8 +757,11 @@ class Tcp_client(object):
                         self.__receive_thread.daemon = True
                         self.__receive_thread.start()
                     except Exception:
+                        self.logger.error(f"could not start __receive_thread_worker for {name}")
                         raise
                     return True
+                else:
+                    self.logger.warning(f"self._connect() for {name} did not work")
                 if self.__running:
                     self._sleep(self._connect_cycle)
 
@@ -754,6 +773,7 @@ class Tcp_client(object):
         try:
             self.__connect_threadlock.release()
         except Exception:
+            self.logger.debug(f'{self._id} exception while trying self.__connect_threadlock.release()')
             pass
 
     def _connect(self):
@@ -873,7 +893,7 @@ class Tcp_client(object):
                                 return
         except Exception as ex:
             if not self.__running:
-                self.logger.debug('{self._id} receive thread shutting down')
+                self.logger.debug(f'{self._id} receive thread shutting down')
                 self._is_receiving = False
                 return
             else:
