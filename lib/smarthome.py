@@ -147,7 +147,7 @@ class SmartHome():
         self._smarthome_conf_basename = None
         self.__event_listeners = {}
         self.__all_listeners = []
-        self.modules = []
+        self.modules = None
         self.__children = []
 
 
@@ -227,7 +227,7 @@ class SmartHome():
         # VERSION = shngversion.get_shng_version()
         # self.branch = shngversion.get_shng_branch()
         # self.version = shngversion.get_shng_version()
-        self.connections = []
+        self.connections = None
 
         self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
         self._items_dir = os.path.join(self._extern_conf_dir, 'items'+os.path.sep)
@@ -644,6 +644,7 @@ class SmartHome():
         # Init Plugins
         #############################################################
         self.shng_status = {'code': 12, 'text': 'Starting: Initializing plugins'}
+        os.chdir(self._base_dir)
 
         self._logger.info("Init Plugins")
         self.plugins = lib.plugin.Plugins(self, configfile=self._plugin_conf_basename)
@@ -723,13 +724,16 @@ class SmartHome():
         self.alive = False
         self._logger.info(f"stop: Number of Threads: {threading.activeCount()}")
 
-        self.items.stop()
-        self.scheduler.stop()
+        if self.items is not None:
+            self.items.stop()
+        if self.scheduler is not None:
+            self.scheduler.stop()
         if self.plugins is not None:
             self.plugins.stop()
         if self.modules is not None:
             self.modules.stop()
-        self.connections.close()
+        if self.connections is not None:
+            self.connections.close()
 
         self.shng_status = {'code': 32, 'text': 'Stopping: Stopping threads'}
 
