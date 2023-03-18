@@ -15,10 +15,10 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. ...
-           (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. ...
-           (...)
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 18. März 2023
+           (Workflows: Replaced deprecated 'set-output'...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 18. März 2023
+           (onewire: Fixed another debug message)
 
 
 Überblick
@@ -57,13 +57,8 @@ Allgmein
 
 * Workflows:
 
-  * ...
-
-
-Bugfixes in the CORE
---------------------
-
-* ...
+  * Replaced deprecated 'set-output'
+  * (re)joined pr_unittests into unittests.yml
 
 
 Updates in the CORE
@@ -81,11 +76,39 @@ Updates in the CORE
 
 * Libs:
 
-  * lib. ...:
+  * lib.metadata:
+
+    * Fix for empty plugin parameter sectionand section not declared NONE
+
+  * lib.network:
+
+    * Log some more for insights on wrong parameter passing from plugins on callbacks
+
+  * lib.plugin:
+
+    * Fix for wrong cwd on Plugin load
+
+  * lib.shpypi:
+
+    * Adressing requirements file with absolute path to fix bug, when current working directory is not
+      the SmartHomeNG base directory
+
+  * lib.smarthome:
+
+    * Fix in stop(), if SmartHomeNG is killed during initialization
+
+  * lib.systeminfo:
+
+    * Changed read_macosinfo() to be compatible with more MacOS versions
+    * Added text, that testing cpu speed could take several minutes on slow machines
+
+  * lib.triggertimes:
+
+    * Catch a possible error with event related calculations, resulting now in invalid time
 
 * Modules:
 
-  * ...:
+  * websocket: Fixed bug for wss protocol handling
 
     * ...
 
@@ -107,7 +130,8 @@ Allgmein
 
 * Workflows:
 
-  * ...
+  * Replaced deprecated 'set-output'
+  * (re)joined pr_unittests into unittests.yml
 
 
 Neue Plugins
@@ -126,9 +150,23 @@ Plugin Updates
 Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
-* <name>:
+* database:
 
-  * ...
+  * Added info to 'Could not connect to the database' log entry
+
+* modbus_tcp:
+
+  * Corrected version number in __init__.py
+
+* onewire:
+
+  * Fixed debug messages
+
+* webpush:
+
+  * Added shng varpath to parameters
+  * Changed to correct doc link
+  * Re-removed superfluous doc link
 
 
 Outdated Plugins
