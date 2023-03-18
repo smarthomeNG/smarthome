@@ -24,9 +24,7 @@ jobs:
           sudo apt-get install gcc --only-upgrade
 
       - name: Get branch name
-        run: |
-          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-          echo ${GITHUB_REF#refs/heads/}
+        run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
         id: extract_branch
 
       - name: Checkout core from ${{steps.extract_branch.outputs.branch}} branch
