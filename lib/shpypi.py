@@ -392,13 +392,16 @@ class Shpypi:
             self.logger.notice("> using PIP command: '{}'".format(pip_command))
         except:
             self.logger.warning("> using PIP command: '{}'".format(pip_command))
-        if logging:
-            self.logger.info('> '+pip_command+' install -r requirements/'+req_type+'.txt --user --no-warn-script-location')
-        else:
-            #print('> ' + pip_command + ' install -r requirements/' + req_type + '.txt --user --no-warn-script-location')
-            pass
 
-        stdout, stderr = Utils.execute_subprocess(pip_command+' install -r requirements/'+req_type+'.txt --user --no-warn-script-location')
+        req_filepath = os.path.join(self._sh_dir, 'requirements', req_type+'.txt')
+        command_line = pip_command +' install -r ' + req_filepath + ' --user --no-warn-script-location'
+        if logging:
+            self.logger.info('> '+command_line)
+        else:
+            #print('> ' + command_line)
+            pass
+        stdout, stderr = Utils.execute_subprocess(command_line)
+
         # ToDo
         # create_directories is available in lib.smarthome.py but shpypi.py might be started prior to SH object creation
         # thus it is needed to create the var/log directory here
@@ -422,7 +425,7 @@ class Shpypi:
                     print()
                     print("Running in a virtualenv environment,")
                     print("installing "+req_type_display+" requirements only to actual virtualenv, please wait...")
-                stdout, stderr = Utils.execute_subprocess('pip3 install -r requirements/'+req_type+'.txt')
+                stdout, stderr = Utils.execute_subprocess('pip3 install -r '+req_filepath)
         if logging:
             self.logger.debug("stdout = 'Output from PIP command:\n{}'".format(stdout))
         if not logging:
@@ -1396,8 +1399,9 @@ class Requirements_files():
                                       1])
                             packagelist_consolidated.append(p)
                     elif p['req'][0][0] == '==':
-                        print("p Gleichheit p['key']=" + p['key'] + ': >' + package_consolidated['req'][0][1] + '< / >' + p['req'][0][1] + '<')
-                        print('p=' + p)
+                        # p Gleichheit p['key']=py-vapid+: >< / >1.8.2<
+                        print(f"p Gleichheit p['key']='{p['key']}': package_consolidated >{package_consolidated['req'][0][1]}< / p['req'] >{p['req'][0][1]}<")
+                        print(f"p = {p}")
                     elif package_consolidated['req'][0][0] == '':
                         # if consolidated version has no special requirements
                         self.logger.debug("_consolidate_requirements: package_consolidated requirement w/o version - pkg={}".format(package_consolidated['pkg']))

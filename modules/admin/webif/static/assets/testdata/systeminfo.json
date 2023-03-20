@@ -12,7 +12,7 @@
   "arch": "x86_64",
   "user": "smarthome",
   "hardware": "\nIntel(R) Celeron(R) CPU J3455 @ 1.50GHz",
-  "hwspeed": "Hier fehlt die Geschwindigkeitsangabe",
+  "hwspeed": "medium",
   "rasppi": "",
   "freespace": 90249.54296875,
   "uptime": 4680364.345,

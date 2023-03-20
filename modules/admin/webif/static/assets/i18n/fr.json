@@ -87,6 +87,11 @@
     "SHOW_PASSWORDS": "Afficher mots de passe",
     "REMEMBER TO SAVE CHANGES": "Ne pas oublier de sauvegarder les modification après avoir défini un nouveau mot de passe"
   },
+  "SPEEDCLASS": {
+    "slow": "Lent",
+    "medium": "Moyen",
+    "fast": "Rapide"
+  },
   "SERVICES": {
     "SERVICES": "Services",
     "LANGUAGE_UI": "Langue de l'interface graphique",

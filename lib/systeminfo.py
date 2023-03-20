@@ -148,11 +148,11 @@ class Systeminfo:
     def read_macosinfo(cls):
 
         output = subprocess.Popen(["sw_vers", ], stdout=subprocess.PIPE).communicate()
-        os, vers, build, extra = output[0].decode().split('\n')
-        os = os.split('\t')[2]
-        vers = vers.split('\t')[2]
-        build = build.split('\t')[2]
-        os_release = os + ' ' + vers + ' (build ' + build + ')'
+        ostype, vers, build, extra = output[0].decode().split('\n')
+        ostype = ostype.split('\t')[-1]
+        vers = vers.split('\t')[-1]
+        build = build.split('\t')[-1]
+        os_release = ostype + ' ' + vers + ' (build ' + build + ')'
         return os_release
 
     # ---------
@@ -262,12 +262,12 @@ class Systeminfo:
         if yaml_support:
             # read previous results from yaml file
             cls._systeminfo_dict = shyaml.yaml_load(os.path.join(var_dir, 'systeminfo.yaml'), ignore_notfound=True)
-            pass
             try:
-                cpu_speed_class = cls._systeminfo_dict['systeminfo']['cpu_speed_class']
+                cls.cpu_speed_class = cls._systeminfo_dict['systeminfo']['cpu_speed_class']
+                cls.cpu_measured_time = cls._systeminfo_dict['systeminfo']['cpu_measured_time']
                 if cls.get_cpubrand() == cls._systeminfo_dict['systeminfo']['cpu_brand']:
                     # return time, if cpu brand has not changed since stored measurement
-                    return cpu_speed_class
+                    return cls.cpu_speed_class
             except:
                 return None
         return None     # None = No previous measurement stored
@@ -287,28 +287,30 @@ class Systeminfo:
 
         measured data for 50000 calculations: slow > 120sec > medium > 50sec > fast
 
-        computer / cpu                              seconds         measured by     Python version
-        ------------------------------------------  -----------     -----------     --------------
-        Raspi 2, ARMv7 rev 5 (v7l)                  181.47          morg42          3.7.3
+        computer / cpu                                  seconds         measured by     Python version
+        ----------------------------------------------- -----------     -----------     --------------
+        Raspi 1, ARMv6-compatible processor rev 7 (v6l) 607,28          wvhn
+        Raspi 2, ARMv7 Processor rev 5 (v7l)            262.46          wvhn
+        Raspi 2, ARMv7 rev 5 (v7l)                      181.47          morg42          3.7.3
 
-        Raspberry Pi 3                              119.83          sisamiwe        3.8.6
-        Raspberry Pi 3                              108.04          onkelandy       3.9.2
-        Raspberry Pi 3 ARMv7 Processor rev 4 (v7l)  99.65           msinn           3.7.3
-        Raspi  3B+, ARMv7 rev4 (v7l)                87.8            morg42          3.7.3
+        Raspberry Pi 3                                  119.83          sisamiwe        3.8.6
+        Raspberry Pi 3                                  108.04          onkelandy       3.9.2
+        Raspberry Pi 3 ARMv7 Processor rev 4 (v7l)      99.65           msinn           3.7.3
+        Raspi  3B+, ARMv7 rev4 (v7l)                    87.8            morg42          3.7.3
 
-        Raspberry Pi 4                              41.09           onkelandy       3.9.2
-        Raspberry Pi 4                              36.61           sisamiwe        3.9.2
-        NUC mit Celeron(R) CPU  N2820  @ 2.13GHz    36.05           bmxp            3.9.2
-        NUC mit Celeron(R) CPU  N2830  @ 2.16GHz    34.88           bmxp            3.9.2
-        Intel(R) Celeron(R) CPU J3455 @ 1.50GHz     23.49-26.35     msinn           3.8.3
-        NUC mit Celeron(R) J4005 CPU @ 2.00GHz      17.96           bmxp            3.9.2
-        E31265L                                     10.39           morg42          3.9.2
-        i5-8600K                                    9.78            morg42          3.9.7
+        Raspberry Pi 4                                  41.09           onkelandy       3.9.2
+        Raspberry Pi 4                                  36.61           sisamiwe        3.9.2
+        NUC mit Celeron(R) CPU  N2820  @ 2.13GHz        36.05           bmxp            3.9.2
+        NUC mit Celeron(R) CPU  N2830  @ 2.16GHz        34.88           bmxp            3.9.2
+        Intel(R) Celeron(R) CPU J3455 @ 1.50GHz         23.49-26.35     msinn           3.8.3
+        NUC mit Celeron(R) J4005 CPU @ 2.00GHz          17.96           bmxp            3.9.2
+        E31265L                                         10.39           morg42          3.9.2
+        i5-8600K                                        9.78            morg42          3.9.7
         """
 
         import timeit
 
-        _logger.notice(f"Testing cpu speed...")
+        _logger.notice(f"Testing cpu speed... (could take several minutes on slow computers)")
 
         #cpu_speed = round(timeit.timeit('"|".join(str(i) for i in range(99999))', number=1000), 2)
         cpu_duration = round(timeit.timeit('"|".join(str(i) for i in range(50000))', number=1000), 2)

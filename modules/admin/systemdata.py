@@ -126,6 +126,7 @@ class SystemData:
             response['hardware'] = self._sh.systeminfo.get_cpubrand()
         response['rasppi'] = self._sh.systeminfo.running_on_rasppi()
         #response['hwspeed'] = ''
+
         if self._sh.systeminfo.cpu_speed_class is not None:
             response['hwspeed'] = self._sh.systeminfo.cpu_speed_class
 

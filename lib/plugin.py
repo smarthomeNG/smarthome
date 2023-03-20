@@ -166,6 +166,7 @@ class Plugins():
                     except Exception as e:
                         plugin_version = 'version unknown'
                     dummy = self._test_duplicate_pluginconfiguration(plugin, classname, instance)
+                    os.chdir((self._sh._base_dir))
                     try:
                         plugin_thread = PluginWrapper(smarthome, plugin, classname, classpath, args, instance, self.meta, self._configfile)
                         if plugin_thread._init_complete == True:
@@ -195,7 +196,7 @@ class Plugins():
         self._threads = threads_early + self._threads + threads_late
         logger.info('Load of plugins finished')
         del(_conf)  # clean up
-
+        os.chdir((self._sh._base_dir))
 
         # Tests für logic-Parameter Metadaten
         self.logic_parameters = {}
