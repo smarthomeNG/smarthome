@@ -79,7 +79,7 @@ benötigt.
 ------------
 
 Es wird der Scheduler initialisiert und gestartet.
-Es wird die Class für lib.connections initialisiert.
+Es wird die Class für lib.network initialisiert.
 
 
 11 - Startet: Initialisiert und startet ladbare Module
@@ -131,7 +131,7 @@ Es werden die parse_logic() Methoden aller geladenen Plugins aufgerufen und es w
 die in **watch_items** definierten Trigger gesetzt.
 
 Anschließend werden die Szenen initialisiert.
-Weiterhin wird der **Connections** Scheduler für lib.connection gestartet.
+Weiterhin wird der **Connections** Scheduler für lib.network gestartet.
 
 
 16 - Startet: Startet Plugins
