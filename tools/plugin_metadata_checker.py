@@ -32,7 +32,7 @@ The result is printed to stdout
 import os
 import argparse
 
-VERSION = '1.8.2'
+VERSION = '1.8.3'
 
 start_dir = os.getcwd()
 
@@ -679,6 +679,9 @@ def check_metadata(plg, with_description, check_quiet=False, only_inc=False, lis
                 disp_error('An invalid development state is given for the plugin', "Set'state:' to one of the followind valid values ['develop', 'ready', 'qa-passed', 'deprecated']", "The state'qa-passed' should only be set by the shNG core team")
 
             doc_url = metadata['plugin'].get('documentation', '')
+            if doc_url is None:
+                    disp_error("The 'documentation' parameter in section 'plugin' is explicitly declared as None - That is not allowed",
+                               "The parameter has to be an empty string or has to be omitted, if no documentation link should be configured.")
             if (doc_url is not None) and (doc_url != ''):
                 if doc_url.endswith(f"plugins/{plg}/user_doc.html"):
                     disp_hint("The 'documentation' parameter in section 'plugin' should not contain an url to the SmartHomeNG documentation (user_doc)",
