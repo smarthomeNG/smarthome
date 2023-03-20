@@ -233,46 +233,44 @@ Wie weiter unten beschrieben, ist für jeden Button, der auf diese Weise impleme
 eine eigene Handler-Routine erforderlich.
 
 Wenn mehrere Buttons dieser Art vorgesehen sind, oder z.B. in einer Wertetabelle ein Button
-in jeder Zeile stehen soll, dann bietet es sich an, statt einzelnen Button-Elementen eine Formularkonstruktion zu nutzen:
+in jeder Zeile stehen soll, dann bietet es sich an, statt einzelnen Button-Elementen eine Formularkonstruktion zu nutzen. Um das automatische Skalieren von Tabellen zu gewährleisten,
+sollte das ``form`` Element NACH der Tabelle deklariert werden
 
 .. code-block:: html+jinja
 
     {% block bodytab1 %}
       <div class="container-fluid m-2 table-resize">
-
-          <form id="button_pressed" action="" method="post">
-
-              <input type="hidden" id="button" name="button" value="" />
-              <table id="maintable">
-                  <thead>
+          <table id="maintable">
+              <thead>
+                  <tr>
+                      <th></th>
+                      <th>{{ _('Attribut 1') }}</th>
+                      <th>{{ _('Attribut 2') }}</th>
+                      <th>{{ _('aktualisieren') }}</th>
+                      <th>{{ _('Wert') }}</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for elem in data %}
                       <tr>
-                          <th></th>
-                          <th>{{ _('Attribut 1') }}</th>
-                          <th>{{ _('Attribut 2') }}</th>
-                          <th>{{ _('aktualisieren') }}</th>
-                          <th>{{ _('Wert') }}</th>
+                          <td></td>
+                          <td>{{ data[elem]['attr1'] }}</td>
+                          <td>{{ data[elem]['attr2'] }}</td>
+                          <td>
+                              <button
+                                  class="btn btn-shng btn-sm"
+                                  type="button"
+                                  onclick="$('#button').val('{{ elem }}');$('#button_pressed').submit();"
+                              >lesen
+                              </button>
+                          </td>
+                          <td id="{{ elem }}_value">{{ data[elem]['wert']</td>
                       </tr>
-                  </thead>
-                  <tbody>
-                      {% for elem in data %}
-                          <tr>
-                              <td></td>
-                              <td>{{ data[elem]['attr1'] }}</td>
-                              <td>{{ data[elem]['attr2'] }}</td>
-                              <td>
-                                  <button
-                                      class="btn btn-shng btn-sm"
-                                      type="button"
-                                      onclick="$('#button').val('{{ elem }}');$('#button_pressed').submit();"
-                                  >lesen
-                                  </button>
-                              </td>
-                              <td id="{{ elem }}_value">{{ data[elem]['wert']</td>
-                          </tr>
-                      {% endfor %}
-                  </tbody>
-              </table>
-
+                  {% endfor %}
+              </tbody>
+          </table>
+          <form id="button_pressed" action="" method="post">
+              <input type="hidden" id="button" name="button" value="" />
           </form>
 
       </div>
