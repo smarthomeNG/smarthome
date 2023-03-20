@@ -15,10 +15,10 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. ...
-           (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. ...
-           (...)
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 18. März 2023
+           (modules.websocket: Added setting for protocol_over_reverseproxy...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 18. März 2023
+           (smartvisu: New parameter 'protocol_over_reverseproxy'...)
 
 
 Überblick
@@ -57,13 +57,9 @@ Allgmein
 
 * Workflows:
 
-  * ...
-
-
-Bugfixes in the CORE
---------------------
-
-* ...
+  * Replaced deprecated 'set-output'
+  * (re)joined pr_unittests into unittests.yml
+  * Disabled seperate pr_unittests workflow
 
 
 Updates in the CORE
@@ -71,27 +67,54 @@ Updates in the CORE
 
 * ...
 
-* Items:
-
-  * ...
-
-* Logics:
-
-  * ...
-
 * Libs:
 
-  * lib. ...:
+  * lib.metadata:
+
+    * Fix for empty plugin parameter sectionand section not declared NONE
+
+  * lib.network:
+
+    * Log some more for insights on wrong parameter passing from plugins on callbacks
+
+  * lib.plugin:
+
+    * Fix for wrong cwd on Plugin load
+
+  * lib.shpypi:
+
+    * Adressing requirements file with absolute path to fix bug, when current working directory is not
+      the SmartHomeNG base directory
+
+  * lib.smarthome:
+
+    * Fix in stop(), if SmartHomeNG is killed during initialization
+
+  * lib.systeminfo:
+
+    * Changed read_macosinfo() to be compatible with more MacOS versions
+    * Added text, that testing cpu speed could take several minutes on slow machines
+    * Ensure initialization of cpu_speed_class for display in shngadmin
+
+  * lib.triggertimes:
+
+    * Catch a possible error with event related calculations, resulting now in invalid time
 
 * Modules:
 
-  * ...:
+  * admin:
 
-    * ...
+    * Removed old shngadmin version
+    * Update shngadmin to v0.6.6:
 
-* Plugins:
+      * Added new loglevels to list of loggers
+      * Fixed translation glitch in SmartHomeNG status display; Displays info, if running in virtual environment
 
-  * ...
+  * websocket:
+
+    * Fixed bug for wss protocol handling
+    * Added setting for protocol_over_reverseproxy to smartvisu payload protocol handling
+    * Bumped version to v1.1.1
 
 * tests:
 
@@ -107,7 +130,9 @@ Allgmein
 
 * Workflows:
 
-  * ...
+  * Replaced deprecated 'set-output'
+  * (re)joined pr_unittests into unittests.yml
+  * Disabled seperate pr_unittests workflow
 
 
 Neue Plugins
@@ -126,9 +151,28 @@ Plugin Updates
 Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
-* <name>:
+* database:
 
-  * ...
+  * Added info to 'Could not connect to the database' log entry
+
+* modbus_tcp:
+
+  * Corrected version number in __init__.py
+
+* onewire:
+
+  * Fixed debug messages
+
+* smartvisu:
+
+  * New parameter 'protocol_over_reverseproxy'
+  * Bumped version to 1.8.10
+
+* webpush:
+
+  * Added shng varpath to parameters
+  * Changed to correct doc link
+  * Re-removed superfluous doc link
 
 
 Outdated Plugins
