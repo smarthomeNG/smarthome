@@ -133,7 +133,7 @@ Tabellen in einem ``bodytab?`` können mit einer Schleife befüllt werden, das i
     {% block **bodytab1** %}
 
         <div class="container-fluid m-2 table-resize">
-            <table id="maintable">
+            <table id="maintable" class="dataTableAdditional">
                 <thead>
                     <tr>
                         <th></th>
@@ -184,7 +184,7 @@ Damit die IDs in den Wertetabellen eindeutig sind, verwenden wir die Variable au
 
     {% block **bodytab1** %}
         <div class="container-fluid m-2 table-resize">
-            <table id="maintable">
+            <table id="maintable" class="dataTableAdditional">
                 <thead>
                     <tr>
                         <th></th>
@@ -240,7 +240,7 @@ sollte das ``form`` Element NACH der Tabelle deklariert werden
 
     {% block bodytab1 %}
       <div class="container-fluid m-2 table-resize">
-          <table id="maintable">
+          <table id="maintable" class="dataTableAdditional">
               <thead>
                   <tr>
                       <th></th>
