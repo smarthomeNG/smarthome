@@ -79,7 +79,7 @@ PIDFILE= os.path.join(BASE,'var','run','smarthome.pid')
 # Import SmartHomeNG Modules
 #####################################################################
 import lib.config
-# import lib.connection
+import lib.connection
 import lib.daemon
 import lib.item
 import lib.log
@@ -617,8 +617,9 @@ class SmartHome():
         #############################################################
         # Init Connections
         #############################################################
-        # self.connections = lib.connection.Connections()
-        self.connections = lib.network.Connections()
+        self.connections = lib.connection.Connections()
+        # self.connections = lib.network.Connections()
+        # switch on removing lib.connection
 
         #############################################################
         # Init and start loadable Modules
@@ -677,8 +678,7 @@ class SmartHome():
         #############################################################
         # Start Connections - remove with lib.connection
         #############################################################
-        # self.scheduler.add('sh.connections', self.connections.check, cycle=10, offset=0)
-# TODO - needed?
+        self.scheduler.add('sh.connections', self.connections.check, cycle=10, offset=0)
         self._export_threadinfo()
 
         #############################################################
@@ -692,7 +692,7 @@ class SmartHome():
         #############################################################
         # Start connection monitoring - enable on removing lib.connection
         #############################################################
-        self.scheduler.add('sh.connection_monitor', self.connections.check, cycle=10, offset=0)
+        # self.scheduler.add('sh.connection_monitor', self.connections.check, cycle=10, offset=0)
 
         #############################################################
         # Execute Maintenance Method
@@ -709,14 +709,10 @@ class SmartHome():
 
         # modify/replace on removing lib.connection
         while self.alive:
-            # do something to not block CPU...
-            pass
-
-            # lib.network.connections doesn't support polling, just connection monitoring
-            # try:
-            #     self.connections.poll()
-            # except Exception as e:
-            #     self._logger.exception("Connection polling failed: {}".format(e))
+            try:
+                self.connections.poll()
+            except Exception as e:
+                self._logger.exception("Connection polling failed: {}".format(e))
 
 
     def stop(self, signum=None, frame=None):

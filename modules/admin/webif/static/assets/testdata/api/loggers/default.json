@@ -315,6 +315,23 @@
       ]
     }
   },
+  "lib.connection": {
+    "handlers": [
+      "shng_develop_file"
+    ],
+    "level": "WARNING",
+    "active": {
+      "disabled": false,
+      "level": "WARNING",
+      "filters": [],
+      "handlers": [
+        "TimedRotatingFileHandler"
+      ],
+      "logfiles": [
+        "/usr/local/shng_dev/var/log/smarthome-develop.log"
+      ]
+    }
+  },
   "lib.daemon": {
     "handlers": [
       "shng_develop_file"
