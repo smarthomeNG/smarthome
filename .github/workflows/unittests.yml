@@ -41,7 +41,7 @@ jobs:
           echo github.base_ref          '${{ github.base_ref }}'
           echo github.head_ref          '${{ github.head_ref }}'
           echo github.pull_request.base.ref  '${{ github.pull_request.base.ref }}'
-          echo steps.extract_branch_new.outputs.branch '${{ steps.extract_branch_new.outputs.branch }}'
+          echo steps.extract_branch.outputs.branch '${{ steps.extract_branch.outputs.branch }}'
 
       - name: Checkout core from branch '${{steps.extract_branch.outputs.branch}} branch'
         uses: actions/checkout@v3
