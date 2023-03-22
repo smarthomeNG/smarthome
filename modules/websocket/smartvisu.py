@@ -51,13 +51,13 @@ from lib.shtime import Shtime
 
 class Protocol():
 
-    version = '1.0.1'
+    version = '1.0.2'
 
     protocol_id = 'sv'
     protocol_name = 'smartvisu'
     protocol_path = '/'
     protocol_enabled = False
-    protocol_over_reverseproxy = False
+    #protocol_over_reverseproxy = False
 
 
     def __init__(self, ws_server, logger_name):
@@ -163,7 +163,7 @@ class Protocol():
         self.sv_querydef = query_definitions
         self.sv_ser_upd_cycle = int(series_updatecycle)
         self.protocol_enabled = protocol_enabled
-        self.protocol_over_reverseproxy = protocol_over_reverseproxy
+        #self.protocol_over_reverseproxy = protocol_over_reverseproxy
         if self.protocol_enabled:
             self.logger.info(f"Payload protocol '{self.protocol_name}' enabled")
             self.logger.info(f"smartvisu support: default_acl={default_acl}, query_definitions={query_definitions}, series_updatecycle={series_updatecycle}")
@@ -332,7 +332,7 @@ class Protocol():
             if str(e).startswith(('no close frame received or sent', 'received 1005', 'code = 1005')):
                 self.logger.info(logmsg)
             elif str(e).startswith(('code = 1006')) or str(e).endswith('keepalive ping timeout; no close frame received'):
-                if str(e).find('1011 (unexpected error)') >= 0 and self.protocol_over_reverseproxy:
+                if str(e).find('1011 (unexpected error)') >= 0:
                     self.logger.info(logmsg)
                 else:
                     self.logger.warning(logmsg)
