@@ -786,7 +786,7 @@ class Protocol():
                     websocket = self.sv_clients[client_addr]['websocket']
                     try:
                         await websocket.send(command)
-                        self.logger.warning(f"visu >command: '{command}'   -   to {client_addr}")
+                        self.logger.info(f"Sending command: '{command}'   -   to {client_addr}")
                     # except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                     except Exception as e:
                         self.logger.error(f"Exception in 'await websocket.send(url-command)': {e}")
