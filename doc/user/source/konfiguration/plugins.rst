@@ -83,7 +83,7 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 |                  | pro Seite angezeigt werden sollen. Bei **-1** werden alle Einträge auf einer Seite  |
 |                  | gezeigt, bei **0** so viele, dass sie genau auf die Seite ohne Scrolling passen.    |
 |                  | Weitere mögliche Werte sind 25, 50, 100. Der hier angegebene Wert überschreibt den  |
-|                  | für das **http Modul** im /etc/module.yaml File über den gleichnamigen Parameter    |                                                                            |
+|                  | für das **http Modul** im /etc/module.yaml File über den gleichnamigen Parameter    |
 |                  | definierten globalen Wert.                                                          |
 +------------------+-------------------------------------------------------------------------------------+
 
