@@ -1,6 +1,6 @@
-============================
-Release 1.x.x - tt. mmm 2023
-============================
+=============================
+Release 1.9.x - tt. März 2023
+=============================
 
 Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
 sowie einige neue Plugins.
@@ -15,10 +15,10 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 18. März 2023
-           (modules.websocket: Added setting for protocol_over_reverseproxy...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 18. März 2023
-           (smartvisu: New parameter 'protocol_over_reverseproxy'...)
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 23. März 2023
+           (modules.websocket: Changed loglevel in sv payload protocol ...)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 23. März 2023
+           (smartvisu: Removed old documentation link from metadata)
 
 
 Überblick
@@ -69,6 +69,10 @@ Updates in the CORE
 
 * Libs:
 
+  * lib.connection:
+
+    * Added extended deprecation warning (lib will be removed in SmartHomeNG v1.10.0)
+
   * lib.metadata:
 
     * Fix for empty plugin parameter sectionand section not declared NONE
@@ -85,6 +89,7 @@ Updates in the CORE
 
     * Adressing requirements file with absolute path to fix bug, when current working directory is not
       the SmartHomeNG base directory
+    * Added warning, if plugin_name: is not in lowercase
 
   * lib.smarthome:
 
@@ -110,11 +115,15 @@ Updates in the CORE
       * Added new loglevels to list of loggers
       * Fixed translation glitch in SmartHomeNG status display; Displays info, if running in virtual environment
 
+    * Added handling, if 'documentation' in plugin metadata is explicitly se to None
+
   * websocket:
 
     * Fixed bug for wss protocol handling
     * Added setting for protocol_over_reverseproxy to smartvisu payload protocol handling
     * Bumped version to v1.1.1
+    * Changed loglevel for error 1011 on ping timeout in sv payload protocol
+    * Changed loglevel in sv payload protocol when sending (url-)command to visu
 
 * tests:
 
@@ -151,9 +160,22 @@ Plugin Updates
 Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
+* avm:
+
+  * Larger rework of plugin
+  * Bumed version to 2.0.1
+  * Added version 1.6.8 from SmartHomeNG v1.9.3 master as 'previous version'
+  * Fix for RGB lightbulb (fritzdect 500): set on/off state to off and dim level to 0 if device is not
+    connected (same behavior as in plugin version 1.6.8)
+
 * database:
 
   * Added info to 'Could not connect to the database' log entry
+
+* enocean:
+
+  * Catch exception that occurs, if Tx Enocean item is defined without tx_id_offset attribute.
+    Output error log in this case.
 
 * modbus_tcp:
 
@@ -162,11 +184,18 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * onewire:
 
   * Fixed debug messages
+  * Added a "sleep-time" for testing to improve sensor reading for parasite powered sensors
 
 * smartvisu:
 
   * New parameter 'protocol_over_reverseproxy'
   * Bumped version to 1.8.10
+  * Removed parameter 'protocol_over_reverseproxy'
+  * Removed old documentation link from metadata
+
+* uzsu:
+
+  * Changed requirements for numpy
 
 * webpush:
 
@@ -236,13 +265,16 @@ Weitere Änderungen
 Tools
 -----
 
-* ...
+* plugin_metadata_checker:
+
+  * Added handling, if 'documentation' in plugin metadata is explicitly se to None
+
 
 
 Dokumentation
 -------------
 
-* ...
+* Added description for using virtual environemnts
 * ...
 
 
