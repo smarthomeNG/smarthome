@@ -77,7 +77,7 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
       return text;
     }
 
-    if (typeof text == 'undefined') {
+    if (text == null || typeof text == 'undefined') {
       console.log("Text for id " + id + " is undefined. Doing nothing.");
       return;
     }
