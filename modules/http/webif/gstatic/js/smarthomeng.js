@@ -19,7 +19,6 @@ function resizeCodeMirror(codeMirrorInstance, bottomSpace) {
  * @param {object} params the paramiters to add to the url
  * @param {string} [method=post] the method to use on the form
  */
-
 function shngPost(path, params, method='post') {
 
   // The rest of this code assumes you are not using a library.
@@ -47,7 +46,7 @@ function shngPost(path, params, method='post') {
  * Creates a highlight effect by transitioning from one CSS class to another.
  * Needs jquery ui effect "switchClass"
  * @param {string} $element dom element
- * @param {string} highlight duration of effect (fade off)
+ * @param {number} highlight duration of effect in seconds (fade off)
  */
  function startAnimation($element, highlight) {
     $element.stop(true, false);
@@ -63,6 +62,8 @@ function shngPost(path, params, method='post') {
   * inserts text into a dom element. To be used for ajax updates
   * @param {string} id of the dom element
   * @param {string} text to insert
+  * @param {string} table id of datatable
+  * @param {number} duration of highlight effect in seconds (integer)
   */
 function shngInsertText (id, text, table_id=null, highlight=0) {
 
@@ -130,6 +131,7 @@ function shngInsertText (id, text, table_id=null, highlight=0) {
 /**
  * fires an ajax request to get actual data from the plugin
  * @param {string} optional name of dataset to get. Only needed, if the webinterface gets multiple different datasets from the plugin
+ * @param {undefined} optional set of parameters. Has to be handled in get_data_html function of web interface init.py. Can be any type, e.g. an item name, date, dict with multiple values, etc.
  */
 function shngGetUpdatedData(dataSet=null, update_params=null) {
     if (dataSet == null) dataSet = window.dataSet;
@@ -183,8 +185,8 @@ function shngGetUpdatedData(dataSet=null, update_params=null) {
 }
 
 /**
- * calculates the optimal width of the headtable if no min-width css attribute is defined
- */
+* calculates the optimal width of the headtable if no min-width css attribute is defined
+*/
 function calculateHeadtable() {
   // try to get min-width from style attribute. If not available, calculate it
   let headminwidth = parseFloat($( "#webif-headtable > table:first" ).css('min-width'));
@@ -237,7 +239,7 @@ function calculateHeadtable() {
 
 
 /**
- * make the top navigation bar as responsive as possible
+ * makes the top navigation bar as responsive as possible
  */
 function responsiveHeader() {
   // remove the display:none attribute to show the element on the page after everything else is rendered
@@ -296,6 +298,9 @@ function responsiveHeader() {
   $.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.headerOffset( topheight );
 }
 
+/**
+ * initializes the responsive calculation of the header
+*/
 function initHeader() {
   $( "#webif-navbar" ).show();
   calculateHeadtable();
@@ -313,7 +318,6 @@ addEventListener('resize', responsiveHeader, false);
  * start parameters: function, interval, start directly, repeat
  * set_interval parameters: interval, start directly
 */
-
 function timer() {
   var timer = {
       running: false,
