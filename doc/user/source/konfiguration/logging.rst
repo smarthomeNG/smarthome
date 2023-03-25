@@ -48,7 +48,7 @@ Die Log Level in der Übersicht, absteigend in der Bedeutung für den Programmab
    * - NOTICE
      - 29
      - Ein Hinweis der zur grundlegenden Information dient und nicht als Warnung verstanden werden soll.
-     - Dieser Log Level ist spezifisch für SmartHomeNG und ist im Standard Logging von Python nicht vordefiniert.
+       Dieser Log Level ist spezifisch für SmartHomeNG und ist im Standard Logging von Python nicht vordefiniert.
    * - INFO
      - 20
      - Eine Ablaufinformation, die nicht unbedingt wichtig ist
