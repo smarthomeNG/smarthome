@@ -47,6 +47,8 @@ Die Log Level in der Übersicht, absteigend in der Bedeutung für den Programmab
      - Warnung, dass etwas Unerwartetes passiert ist aber trotzdem weitergearbeitet werden kann.
    * - NOTICE
      - 29
+
+       (31 falls der Level des FileHandler des root Loggers nicht auf NOTICE sondern WARNING konfiguriert ist.)
      - Ein Hinweis der zur grundlegenden Information dient und nicht als Warnung verstanden werden soll.
        Dieser Log Level ist spezifisch für SmartHomeNG und ist im Standard Logging von Python nicht vordefiniert.
    * - INFO
@@ -56,10 +58,10 @@ Die Log Level in der Übersicht, absteigend in der Bedeutung für den Programmab
      - 13
      - Informationen für die Fehlersuche, die normalerweise nicht benötigt werden
    * - DBGMED
-     - 13
+     - 12
      - Informationen für die Fehlersuche, die normalerweise nicht benötigt werden
    * - DBGLOW
-     - 13
+     - 11
      - Informationen für die Fehlersuche, die normalerweise nicht benötigt werden
    * - DEBUG
      - 10

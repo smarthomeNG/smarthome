@@ -1,5 +1,5 @@
 =============================
-Release 1.9.x - tt. März 2023
+Release 1.9.5 - tt. März 2023
 =============================
 
 Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
@@ -15,8 +15,8 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 23. März 2023
-           (modules.websocket: Changed loglevel in sv payload protocol ...)
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 25. März 2023
+           (documentation: fix for table introduced with latest commit)
          - Berücksichtigt sind Commits im plugins Repository bis incl. 23. März 2023
            (smartvisu: Removed old documentation link from metadata)
 
@@ -117,6 +117,10 @@ Updates in the CORE
 
     * Added handling, if 'documentation' in plugin metadata is explicitly se to None
 
+  * http:
+
+    * Webinterfaces: fix docstring and issue when text is None/Null
+
   * websocket:
 
     * Fixed bug for wss protocol handling
@@ -167,6 +171,8 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Added version 1.6.8 from SmartHomeNG v1.9.3 master as 'previous version'
   * Fix for RGB lightbulb (fritzdect 500): set on/off state to off and dim level to 0 if device is not
     connected (same behavior as in plugin version 1.6.8)
+  * Multiple fixes
+  * Bumed version to 2.0.1
 
 * database:
 
@@ -174,8 +180,14 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
 * enocean:
 
-  * Catch exception that occurs, if Tx Enocean item is defined without tx_id_offset attribute.
-    Output error log in this case.
+  * Catch exception that occurs, if Tx Enocean item is defined without tx_id_offset attribute
+    Output error log in this case
+  * small improvements in comments and status info
+
+* lirc:
+
+  * Introduce web interface
+  * Bump version to 1.5.1
 
 * modbus_tcp:
 
@@ -185,6 +197,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Fixed debug messages
   * Added a "sleep-time" for testing to improve sensor reading for parasite powered sensors
+
+* piratewthr:
+
+  * Bugfix
 
 * smartvisu:
 
@@ -202,6 +218,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Added shng varpath to parameters
   * Changed to correct doc link
   * Re-removed superfluous doc link
+
+* Diverse Plugins:
+
+  * Changed readme.md class_path/class_name -> plugin_name
 
 
 Outdated Plugins
@@ -275,6 +295,7 @@ Dokumentation
 -------------
 
 * Added description for using virtual environemnts
-* ...
+* Added new log levels to user documentation
+
 
 
