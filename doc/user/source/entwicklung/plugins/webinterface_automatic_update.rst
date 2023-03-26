@@ -107,8 +107,7 @@ Bei Tabellen im bodytab werden die einzelnen Datenzeilen beim Rendern durch die 
 .. code-block:: html+jinja
 
     {% block **bodytab1** %}
-        <div class="container-fluid m-2 table-resize">
-            <table id="maintable">
+            <table id="maintable" class="dataTableAdditional">
                 <thead>
                     <tr>
                         <th></th>
@@ -130,7 +129,6 @@ Bei Tabellen im bodytab werden die einzelnen Datenzeilen beim Rendern durch die 
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
     {% endblock **bodytab1** %}
 
 
@@ -157,8 +155,7 @@ pro Zeile eine leere Zelle einzufügen! Bei headtables sollten leere Spalten ver
     ...
 
     {% block **bodytab1** %}
-        <div class="container-fluid m-2 table-resize">
-            <table id="maintable">
+            <table id="maintable" class="dataTableAdditional">
                 <thead>
                     <tr>
                         <th></th>
@@ -176,7 +173,6 @@ pro Zeile eine leere Zelle einzufügen! Bei headtables sollten leere Spalten ver
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
     {% endblock **bodytab1** %}
 
 Jetzt können die DOM-Elemente über die IDs ``fromip`` und ``<item>_value`` angesprochen werden.
@@ -184,10 +180,9 @@ Jetzt können die DOM-Elemente über die IDs ``fromip`` und ``<item>_value`` ang
 .. warning::
 
     Damit die Anzeige und Adaption der Datatables einwandfrei funktioniert, ist es elementar, den
-    Aufbau sauber und exakt aus dem Sampleplugin zu übernehmen. So muss beispielsweise die Tabelle
-    selbst in ein div gepackt werden, dem die Klasse ``table-resize`` zugewiesen ist. Außerdem
-    müssen leere Zellen am Anfang jeder Zeile eingefügt werden. Ein Angabe von Klassen ist nicht nötig,
-    da dies automatisch passiert.
+    Aufbau sauber und exakt aus dem Sampleplugin zu übernehmen. So müssen leere Zellen am Anfang jeder Zeile eingefügt werden. Eine Angabe von Klassen ist nicht nötig,
+    da dies automatisch passiert, wobei die Klasse ``dataTableAdditional`` gegebenenfalls
+    zu einem schnelleren Laden führen kann.
 
 
 Erweitern der JavaScript-Funktion handleUpdatedData()

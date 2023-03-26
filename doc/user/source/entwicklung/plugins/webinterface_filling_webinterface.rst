@@ -88,18 +88,15 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
       sowie der jeweiligen End-Tags. Außerdem muss jeder Tabelle eine einzigartige ID vergeben werden.
       Sowohl im Tablehead als auch Tablebody ist eine leere erste Spalte einzufügen, die für das responsive
       Feature der Datatables genutzt wird.
-      Die Klasse``table-resize`` ist zwingend dem ``<div>`` Tag, in dem sich die Tabelle befindet, hinzuzufügen,
-      um die automatische Anpassung der Datentabelle an die Fensterhöhe zu ermöglichen
-      (siehe auch index.html im Example-Plugin). Sollen ober- oder unterhalb der Tabelle zusätzliche Informationen
+      Sollen ober- oder unterhalb der Tabelle zusätzliche Informationen
       angezeigt werden, müssen diese in einem ``<div class="mb-2">`` Tag stehen.
 
       .. code-block:: html+jinja
 
-        <div class="container-fluid m-2 table-resize">
            <div class="mb-2">
                Informationen oberhalb der Tabelle
            </div>
-           <table id="maintable">
+           <table id="maintable" class="dataTableAdditional">
                <thead>
                    <tr>
                        <th></th>
@@ -122,7 +119,6 @@ Die folgenden Schritte dienen dazu, das Webinterface mit Leben zu füllen:
            <div class="mb-2">
                Informationen unterhalb der Tabelle
            </div>
-        </div>
 
 
 
