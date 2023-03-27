@@ -109,12 +109,13 @@ class SDPProtocol(SDPConnection):
     def _get_connection(self, use_callbacks=False, name=None):
         conn_params = self._params.copy()
 
+        cb_data = self.on_data_received if use_callbacks else None
         cb_connect = self.on_connect if use_callbacks else None
         cb_disconnect = self.on_disconnect if use_callbacks else None
         conn_params.update({PLUGIN_ATTR_CB_ON_CONNECT: cb_connect, PLUGIN_ATTR_CB_ON_DISCONNECT: cb_disconnect})
 
         conn_cls = self._get_connection_class(**conn_params)
-        self._connection = conn_cls(None, name=name, **conn_params)
+        self._connection = conn_cls(cb_data, name=name, **conn_params)
 
 
 class SDPProtocolJsonrpc(SDPProtocol):

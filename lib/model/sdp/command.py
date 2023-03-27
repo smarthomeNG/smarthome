@@ -28,7 +28,10 @@ import logging
 import re
 from copy import deepcopy
 
-from lib.model.sdp.globals import (CMD_ATTR_PARAMS, CMD_STR_VAL_RAW, CMD_STR_VAL_UPP, CMD_STR_VAL_LOW, CMD_STR_VAL_CAP, CMD_STR_VALUE, CMD_STR_OPCODE, CMD_STR_PARAM, CMD_STR_CUSTOM, COMMAND_PARAMS, MINMAXKEYS)
+from lib.model.sdp.globals import (
+    CMD_ATTR_PARAMS, CMD_STR_VAL_RAW, CMD_STR_VAL_UPP, CMD_STR_VAL_LOW,
+    CMD_STR_VAL_CAP, CMD_STR_VALUE, CMD_STR_OPCODE, CMD_STR_PARAM,
+    CMD_STR_CUSTOM, COMMAND_PARAMS, MINMAXKEYS)
 import lib.model.sdp.datatypes as DT
 
 
@@ -495,8 +498,9 @@ class SDPCommandJSON(SDPCommand):
 
         if not hasattr(self, CMD_ATTR_PARAMS):
             return None
-
-        params = deepcopy(self._plugin_params)
+# TODO: why plugin_params? why not command-params in self.params (after checking for it!)?
+        # params = deepcopy(self._plugin_params)
+        params = deepcopy(getattr(self, CMD_ATTR_PARAMS))
 
         if isinstance(params, list):
 
@@ -513,7 +517,7 @@ class SDPCommandJSON(SDPCommand):
             for key in params:
                 params[key] = check_value(params[key], data)
 
-            if 'playerid' in params and 'playerid' in kwargs:
+            if 'playerid' in kwargs:
                 params['playerid'] = kwargs['playerid']
         else:
             raise ValueError('invalid data: params not in dict or list format')

@@ -28,7 +28,13 @@ import logging
 import re
 from pydoc import locate
 
-from lib.model.sdp.globals import (update, CommandsError, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_DEV_TYPE, CMD_ATTR_ITEM_ATTRS, CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE, CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_REPLY_PATTERN, CMD_ATTR_WRITE, CMD_ATTR_WRITE_CMD, COMMAND_PARAMS, COMMAND_SEP, INDEX_GENERIC, PATTERN_LOOKUP, PATTERN_VALID_LIST, PATTERN_VALID_LIST_CI, PATTERN_CUSTOM_PATTERN, PLUGIN_PATH)
+from lib.model.sdp.globals import (
+    update, CommandsError, CMD_ATTR_CMD_SETTINGS, CMD_ATTR_DEV_TYPE,
+    CMD_ATTR_ITEM_ATTRS, CMD_ATTR_ITEM_TYPE, CMD_ATTR_LOOKUP, CMD_ATTR_OPCODE,
+    CMD_ATTR_READ, CMD_ATTR_READ_CMD, CMD_ATTR_REPLY_PATTERN, CMD_ATTR_WRITE,
+    CMD_ATTR_WRITE_CMD, COMMAND_PARAMS, COMMAND_SEP, INDEX_GENERIC,
+    PATTERN_LOOKUP, PATTERN_VALID_LIST, PATTERN_VALID_LIST_CI,
+    PATTERN_CUSTOM_PATTERN, PLUGIN_PATH)
 from lib.model.sdp.command import SDPCommand
 import lib.model.sdp.datatypes as DT
 
@@ -354,37 +360,36 @@ class SDPCommands(object):
             # 'control' is only a section, and the only valid 'content' apart from sections or commands is 'item_attrs' to provide
             # for read triggers or other extensions. If 'item_attrs' is defined, it is syntactically identical to the following
             # commands, so the identifier 'item_attrs' is read as command name.
-            if cmd[-len(CMD_ATTR_ITEM_ATTRS) - len(COMMAND_SEP):] == COMMAND_SEP + CMD_ATTR_ITEM_ATTRS:
+# TODO: unnecessary complicated? check for cmd == CMD_ATTR_ITEM_ATTRS
+            # if cmd[-len(CMD_ATTR_ITEM_ATTRS) - len(COMMAND_SEP):] == COMMAND_SEP + CMD_ATTR_ITEM_ATTRS:
+            if cmd == CMD_ATTR_ITEM_ATTRS:
                 continue
 
             cmd_dict = commands[cmd]
 
             # preset default values
-            kw = {CMD_ATTR_READ: True, CMD_ATTR_WRITE: False, CMD_ATTR_OPCODE: '', CMD_ATTR_ITEM_TYPE: 'bool', CMD_ATTR_DEV_TYPE: 'raw'}
+            cmd_params = {CMD_ATTR_READ: True, CMD_ATTR_WRITE: False, CMD_ATTR_OPCODE: '', CMD_ATTR_ITEM_TYPE: 'bool', CMD_ATTR_DEV_TYPE: 'raw'}
 
             # update with command attributes
-            for arg in COMMAND_PARAMS:
-                if arg in cmd_dict:
-                    kw[arg] = cmd_dict[arg]
+            cmd_params.update({arg: cmd_dict[arg] for arg in COMMAND_PARAMS if arg in cmd_dict})
 
             # if valid_list_ci is present in settings, convert all str elements to lowercase only once
-            if CMD_ATTR_CMD_SETTINGS in kw:
-                if 'valid_list_ci' in kw[CMD_ATTR_CMD_SETTINGS]:
-                    kw[CMD_ATTR_CMD_SETTINGS]['valid_list_ci'] = [entry.lower() if isinstance(entry, str) else entry for entry in kw[CMD_ATTR_CMD_SETTINGS]['valid_list_ci']]
+            if CMD_ATTR_CMD_SETTINGS in cmd_params and 'valid_list_ci' in cmd_params[CMD_ATTR_CMD_SETTINGS]:
+                cmd_params[CMD_ATTR_CMD_SETTINGS]['valid_list_ci'] = [entry.lower() if isinstance(entry, str) else entry for entry in cmd_params[CMD_ATTR_CMD_SETTINGS]['valid_list_ci']]
 
             dt_class = None
-            dev_datatype = kw.get(CMD_ATTR_DEV_TYPE, '')
+            dev_datatype = cmd_params.get(CMD_ATTR_DEV_TYPE, '')
             if dev_datatype:
                 class_name = '' if dev_datatype[:2] == 'DT_' else 'DT_' + dev_datatype
                 dt_class = self._dt.get(class_name)
 
             # process pattern substitution
-            if CMD_ATTR_REPLY_PATTERN in kw:
-                if not isinstance(kw[CMD_ATTR_REPLY_PATTERN], list):
-                    kw[CMD_ATTR_REPLY_PATTERN] = [kw[CMD_ATTR_REPLY_PATTERN]]
+            if CMD_ATTR_REPLY_PATTERN in cmd_params:
+                if not isinstance(cmd_params[CMD_ATTR_REPLY_PATTERN], list):
+                    cmd_params[CMD_ATTR_REPLY_PATTERN] = [cmd_params[CMD_ATTR_REPLY_PATTERN]]
                 processed_patterns = []
 
-                for pattern in kw[CMD_ATTR_REPLY_PATTERN]:
+                for pattern in cmd_params[CMD_ATTR_REPLY_PATTERN]:
 
                     if pattern == '*':
                         pattern = cmd_dict.get(CMD_ATTR_READ_CMD, cmd_dict.get(CMD_ATTR_OPCODE, ''))
@@ -411,16 +416,16 @@ class SDPCommands(object):
                     processed_patterns.append(pattern)
 
                 # store processed patterns
-                kw[CMD_ATTR_REPLY_PATTERN] = processed_patterns
+                cmd_params[CMD_ATTR_REPLY_PATTERN] = processed_patterns
 
-            if kw.get(CMD_ATTR_READ, False) and kw.get(CMD_ATTR_OPCODE, '') == '' and kw.get(CMD_ATTR_READ_CMD, '') == '':
+            if cmd_params.get(CMD_ATTR_READ, False) and cmd_params.get(CMD_ATTR_OPCODE, '') == '' and cmd_params.get(CMD_ATTR_READ_CMD, '') == '':
                 self.logger.info(f'command {cmd} will not create a command for reading values. Check commands.py configuration...')
-            if kw.get(CMD_ATTR_WRITE, False) and kw.get(CMD_ATTR_OPCODE, '') == '' and kw.get(CMD_ATTR_WRITE_CMD, '') == '':
+            if cmd_params.get(CMD_ATTR_WRITE, False) and cmd_params.get(CMD_ATTR_OPCODE, '') == '' and cmd_params.get(CMD_ATTR_WRITE_CMD, '') == '':
                 self.logger.info(f'command {cmd} will not create a command for writing values. Check commands.py configuration...')
             if not dt_class:
                 self.logger.error(f'importing command {cmd} found invalid datatype "{dev_datatype}", replacing with DT_raw. Check function of device')
                 dt_class = DT.DT_raw
-            self._commands[cmd] = self._cmd_class(cmd, dt_class, **{'cmd': kw, 'plugin': self._params})
+            self._commands[cmd] = self._cmd_class(cmd, dt_class, **{'cmd': cmd_params, 'plugin': self._params})
 
     def _parse_lookups(self, lookups):
         """
