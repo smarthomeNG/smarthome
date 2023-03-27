@@ -885,11 +885,11 @@ class Tcp_client(object):
                                     self.logger.debug(f'{self._id} autoreconnect enabled')
                                     self.connect()
                                 if self._is_connected:
-                                    self.logger.debug('{self._id} set read watch on socket again')
+                                    self.logger.debug(f'{self._id} set read watch on socket again')
                                     waitobj.watch(self._socket, read=True)
                             else:
                                 # socket shut down by self.close, no error
-                                self.logger.debug('{self._id} connection shut down by call to close method')
+                                self.logger.debug(f'{self._id} connection shut down by call to close method')
                                 return
         except Exception as ex:
             if not self.__running:
