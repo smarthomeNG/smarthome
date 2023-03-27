@@ -148,7 +148,7 @@ class SmartDevicePlugin(SmartPlugin):
         self._custom_values = {1: [], 2: [], 3: []}
 
         self._command_class = None
-        
+
         # by default, discard data not assignable to known command
         self._discard_unknown_command = True
         # if not discarding data, set this command instead
@@ -634,7 +634,7 @@ class SmartDevicePlugin(SmartPlugin):
                     self.logger.debug(f'data "{data}" did not identify a known command, forwarding it anyway for {self._unknown_command}')
                     self._dispatch_callback(self._unknown_command, data, by)
 
-        # TODO: remove later?
+# TODO: remove later?
         assert(isinstance(commands, list))
 
         # process all commands
@@ -1467,95 +1467,89 @@ class Standalone:
         top_level_entries = list(commands.keys())
 
         self.item_templates = getattr(cmd_module, 'item_templates', {})
-        err = None
 
+        file = os.path.join(self.plugin_path, 'plugin.yaml')
         try:
-            file = os.path.join(self.plugin_path, 'plugin.yaml')
             self.yaml = shyaml.yaml_load(file, ordered=True)
-            self.yaml['item_structs'] = OrderedDict()
-
-            # this means the commands dict has 'ALL' and model names at the top
-            # level otherwise, these be commands or sections
-            cmds_has_models = INDEX_GENERIC in top_level_entries
-
-            if cmds_has_models:
-
-                for model in top_level_entries:
-
-                    # create model-specific commands dict
-                    m_commands = deepcopy(commands.get(INDEX_GENERIC))
-                    update(m_commands, deepcopy(commands.get(model)))
-
-                    # create work obj for entry
-                    obj = {model: m_commands}
-
-                    self.item_tree = {}
-
-                    # create item tree
-                    self.walk(obj[model], '', None, self.create_item, '', 0, model, [model], True)
-
-                    jdata = json.dumps(self.item_tree)
-                    self.yaml['item_structs'][model] = json.loads(jdata, object_pairs_hook=OrderedDict)
-
-            else:
-
-                # create flat commands, 'valid command' needs full cmd path
-                flat_commands = deepcopy(commands)
-                SDPCommands._flatten_cmds(None, flat_commands)
-
-                # output sections separately and unchanged
-                for section in top_level_entries:
-
-                    self.item_tree = {}
-
-                    obj = {section: commands[section]}
-
-                    # create item tree
-                    self.walk(obj[section], section, None, self.create_item, section, 0, '', [], True)
-
-                    jdata = json.dumps(self.item_tree)
-                    self.yaml['item_structs'][section] = json.loads(jdata, object_pairs_hook=OrderedDict)[section]
-
-                # get model definitions
-                # if not present, fake it to include all sections
-                models = getattr(cmd_module, 'models', [])
-                if not models:
-                    models = {'ALL': list(commands.keys())}
-
-                for model in models:
-
-                    self.item_tree = {}
-
-                    # create list of valid commands
-                    self.cmdlist = models[model]
-                    if model != INDEX_GENERIC:
-                        self.cmdlist += models.get(INDEX_GENERIC, [])
-                    self.cmdlist = SDPCommands._get_cmdlist(None, flat_commands, self.cmdlist)
-
-                    # create new obj for model m, include m['ALL']
-                    # as we modify obj, we need to copy this
-                    obj = {model: deepcopy(commands)}
-
-                    # remove all items with model-invalid 'xx_command'
-                    self.walk(obj[model], model, obj, self.remove_items_undef_cmd, '', 0, model, [model], True, False)
-
-                    # remove all empty items from obj
-                    self.walk(obj[model], model, obj, self.remove_empty_items, '', 0, model, [model], True, False)
-
-                    # create item tree
-                    self.walk(obj[model], model, obj, self.create_item, model, 0, '', [], False, cut_levels=1)
-
-                    jdata = json.dumps(self.item_tree)
-                    self.yaml['item_structs'][model] = json.loads(jdata, object_pairs_hook=OrderedDict)[model]
-
         except OSError as e:
-            err = f'Error: file {file} could not be opened. Original error: {e}'
-        except Exception as e:
-            err = f'Unknown error occured while processing. Original error: {e}'
+            print(f'Error: file {file} could not be opened. Original error: {e}')
+            return
+
+        self.yaml['item_structs'] = OrderedDict()
+
+        # this means the commands dict has 'ALL' and model names at the top
+        # level otherwise, these be commands or sections
+        cmds_has_models = INDEX_GENERIC in top_level_entries
+
+        if cmds_has_models:
+
+            for model in top_level_entries:
+
+                # create model-specific commands dict
+                m_commands = deepcopy(commands.get(INDEX_GENERIC))
+                update(m_commands, deepcopy(commands.get(model)))
+
+                # create work obj for entry
+                obj = {model: m_commands}
+
+                self.item_tree = {}
+
+                # create item tree
+                self.walk(obj[model], '', None, self.create_item, '', 0, model, [model], True)
+
+                jdata = json.dumps(self.item_tree)
+                self.yaml['item_structs'][model] = json.loads(jdata, object_pairs_hook=OrderedDict)
+
+        else:
+
+            # create flat commands, 'valid command' needs full cmd path
+            flat_commands = deepcopy(commands)
+            SDPCommands._flatten_cmds(None, flat_commands)
+
+            # output sections separately and unchanged
+            for section in top_level_entries:
+
+                self.item_tree = {}
+
+                obj = {section: commands[section]}
+
+                # create item tree
+                self.walk(obj[section], section, None, self.create_item, section, 0, '', [], True)
+
+                jdata = json.dumps(self.item_tree)
+                self.yaml['item_structs'][section] = json.loads(jdata, object_pairs_hook=OrderedDict)[section]
+
+            # get model definitions
+            # if not present, fake it to include all sections
+            models = getattr(cmd_module, 'models', [])
+            if not models:
+                models = {'ALL': list(commands.keys())}
+
+            for model in models:
+
+                self.item_tree = {}
+
+                # create list of valid commands
+                self.cmdlist = models[model]
+                if model != INDEX_GENERIC:
+                    self.cmdlist += models.get(INDEX_GENERIC, [])
+                self.cmdlist = SDPCommands._get_cmdlist(None, flat_commands, self.cmdlist)
+
+                # create new obj for model m, include m['ALL']
+                # as we modify obj, we need to copy this
+                obj = {model: deepcopy(commands)}
+
+                # remove all items with model-invalid 'xx_command'
+                self.walk(obj[model], model, obj, self.remove_items_undef_cmd, '', 0, model, [model], True, False)
+
+                # remove all empty items from obj
+                self.walk(obj[model], model, obj, self.remove_empty_items, '', 0, model, [model], True, False)
+
+                # create item tree
+                self.walk(obj[model], model, obj, self.create_item, model, 0, '', [], False, cut_levels=1)
+
+                jdata = json.dumps(self.item_tree)
+                self.yaml['item_structs'][model] = json.loads(jdata, object_pairs_hook=OrderedDict)[model]
 
         shyaml.yaml_save(file, self.yaml)
-
-        if err:
-            print(err)
-        else:
-            print(f'Updated file {file}')
+        print(f'Updated file {file}')

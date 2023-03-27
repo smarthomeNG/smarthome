@@ -78,10 +78,9 @@ class SDPCommand(object):
         else:
             self.name = command
 
-        kw = kwargs['cmd']
         self._plugin_params = kwargs['plugin']
 
-        self._get_kwargs(COMMAND_PARAMS, **kw)
+        self._get_kwargs(COMMAND_PARAMS, **(kwargs.get('cmd', {})))
 
         try:
             self._DT = dt_class()

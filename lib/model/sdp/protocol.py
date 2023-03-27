@@ -26,7 +26,12 @@
 
 import logging
 
-from lib.model.sdp.globals import (CONN_NET_TCP_CLI, JSON_MOVE_KEYS, PLUGIN_ATTR_CB_ON_CONNECT, PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONNECTION, PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES, PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_MSG_REPEAT, PLUGIN_ATTR_MSG_TIMEOUT, PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT)
+from lib.model.sdp.globals import (
+    CONN_NET_TCP_CLI, JSON_MOVE_KEYS, PLUGIN_ATTR_CB_ON_CONNECT,
+    PLUGIN_ATTR_CB_ON_DISCONNECT, PLUGIN_ATTR_CONNECTION,
+    PLUGIN_ATTR_CONN_AUTO_CONN, PLUGIN_ATTR_CONN_CYCLE, PLUGIN_ATTR_CONN_RETRIES,
+    PLUGIN_ATTR_CONN_TIMEOUT, PLUGIN_ATTR_MSG_REPEAT, PLUGIN_ATTR_MSG_TIMEOUT,
+    PLUGIN_ATTR_NET_HOST, PLUGIN_ATTR_NET_PORT)
 from lib.model.sdp.connection import SDPConnection
 
 from collections import OrderedDict
@@ -347,7 +352,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
 
         # create message packet
         new_data = {'jsonrpc': '2.0', 'id': message_id, 'method': method}
-        
+
         if 'data' in ddict and ddict['data']:
 
             # ddict already contains 'data', we either have an old "ready" packet or new data
@@ -358,7 +363,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
             else:
                 # jsonrpc header present, keep packet as is
                 new_data = ddict['data']
-    
+
         # set packet data
         ddict['data'] = new_data
 
@@ -376,7 +381,7 @@ class SDPProtocolJsonrpc(SDPProtocol):
                 # if 'payload' in ddict:
                 #     ddict['payload'] += json.dumps(ddict['data'])
                 # else:
-                ddict['payload'] = json.dumps(ddict['data'])                    
+                ddict['payload'] = json.dumps(ddict['data'])
             except Exception as e:
                 raise ValueError(f'data {ddict["data"]} not convertible to JSON, aborting. Error was: {e}')
 
