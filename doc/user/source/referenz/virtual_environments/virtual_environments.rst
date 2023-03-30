@@ -6,9 +6,9 @@
 .. role:: greensup
 .. role:: redsup
 
-==================================
-Virtual Environments :redsup:`Neu`
-==================================
+====================================
+Virtuelle Environments :redsup:`Neu`
+====================================
 
 Virtual Environments sind isolierte und unabhängige Umgebungen, die den Code und die Abhängigkeiten eines Projekts
 enthalten. Mit virtuellen Environments kann man parallel Umgebungen schaffen, in denen zum Beispiel Python Packages in
@@ -105,7 +105,8 @@ Nun kann mit dem Aufruf von
 
 das Environment aktiviert werden. Das **source** ist wichtig, weil das Environment sonst bei Beendigung der
 Skriptes **act_39** wieder beendet wird. Der geänderte Prompt zeigt an, dass das Virtual Environment **py_39**
-aktiv ist. Bitte daran denken, den Pfad mit anzugeben, falls das aktuelle Verzeichnis nicht **environments ist:
+aktiv ist. Bitte daran denken, den Pfad mit anzugeben, falls das aktuelle Verzeichnis nicht **environments ist (oder
+alternativ das Verzeichnis mit in den Pfad aufzunehmen):
 
 .. code-block:: bash
 

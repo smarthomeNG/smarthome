@@ -42,6 +42,71 @@ from iowait import IOWait
 
 logger = logging.getLogger(__name__)
 
+# =====================================================================================
+
+import lib.utils
+import sys
+
+dep_id_list = []
+
+#####################################################################
+# Diplay DEPRECATED warning
+#####################################################################
+def _deprecated_warning(n_func='', o_func=''):
+    """
+    Display function deprecated warning
+    """
+    # if hasattr(self, '_deprecated_warnings'):
+    #     if lib.utils.Utils.to_bool(self._deprecated_warnings) == False:
+    #         return
+    # else:
+    #     return # if parameter is not defined
+
+    if o_func != '':
+        d_func = 'lib.connection'+' '+o_func
+    else:
+        d_func = 'lib.connection'+'.'+str(sys._getframe(1).f_code.co_name)+'()'
+    if n_func != '':
+        n_func = '- use the '+n_func+' instead'
+    try:
+        d_test = ' (' + str(sys._getframe(2).f_locals['self'].__module__) + ')'
+    except:
+        d_test = ''
+
+    called_by = str(sys._getframe(2).f_code.co_name)
+    in_class = ''
+    try:
+        in_class = 'class ' + str(sys._getframe(2).f_locals['self'].__class__.__name__) + d_test
+    except:
+        in_class = 'a logic?' + d_test
+    if called_by == '<module>':
+        called_by = str(sys._getframe(3).f_code.co_name)
+        level = 3
+        while True:
+            level += 1
+            try:
+                c_b = str(sys._getframe(level).f_code.co_name)
+            except ValueError:
+                c_b = ''
+            if c_b == '':
+                break
+            called_by += ' -> ' + c_b
+
+#            called_by = str(sys._getframe(3).f_code.co_name)
+
+#    if not hasattr(self, 'dep_id_list'):
+#        self.dep_id_list = []
+    id_str = d_func + '|' + in_class + '|' + called_by
+    if not id_str in dep_id_list:
+        if in_class.find('lib.smarthome') == -1 :
+            logger.warning(f"DEPRECATED: lib.connection is deprecated and will be removed in SmartHommeNG v1.10")
+            logger.warning(f"DEPRECATED: Used '{d_func}', called in '{in_class}' by '{called_by}' {n_func}")
+        dep_id_list.append(id_str)
+    return
+
+# =====================================================================================
+
+
 
 class Base():
     """
@@ -61,6 +126,7 @@ class Base():
         self._name = self.__class__.__name__
         if monitor:
             self._monitor.append(self)
+
 
     def _create_socket(self, flags=None):
         family, type, proto, canonname, sockaddr = socket.getaddrinfo(self._host, self._port, family=self._family[self._proto], type=self._type[self._proto])[0]
@@ -135,6 +201,7 @@ class Connections(Base):
     def __init__(self):
         Base.__init__(self)
         Base._poller = self
+        _deprecated_warning('', 'class Connections')
         if hasattr(select, 'epoll'):
             self._epoll = select.epoll()
         elif hasattr(select, 'kqueue'):
@@ -403,7 +470,8 @@ class Server(Base):
         self._proto = proto
         self.address = "{}:{}".format(host, port)
         self.connected = False
-        self._deprecated_warning('lib.network.Tcp_server() class')
+        #self._deprecated_warning('lib.network.Tcp_server() class')
+        _deprecated_warning('lib.network.Tcp_server() class', 'class Server')
 
     def connect(self):
         try:
@@ -631,7 +699,8 @@ class Client(Stream):
         self._connection_attempts = 0
         self._connection_errorlog = 60
         self._connection_lock = threading.Lock()
-        self._deprecated_warning('lib.network.Tcp_client() class')
+        #self._deprecated_warning('lib.network.Tcp_client() class')
+        _deprecated_warning('lib.network.Tcp_client() class', 'class Client')
 
     def connect(self):
         self._connection_lock.acquire()
@@ -655,3 +724,5 @@ class Client(Stream):
             self._connected()
         finally:
             self._connection_lock.release()
+
+

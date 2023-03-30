@@ -308,6 +308,14 @@ class Shpypi:
                     plugin = plugin_name
 
                 filename = os.path.join(plugins_dir, plugin, 'requirements.txt')
+
+                if not os.path.isdir(os.path.join(plugins_dir, plugin)):
+                    if plugin != plugin.lower():
+                        self.logger.warning(f"There is no plugin '{plugin}' - Change the configuration parameter 'plugin_name: {plugin}' to lowercase 'plugin_name: {plugin.lower()}'")
+                        filename = os.path.join(plugins_dir, plugin.lower(), 'requirements.txt')
+                    else:
+                        self.logger.error(f"There is no plugin {plugin}")
+
                 if not os.path.isfile(filename):
                     filename = ''
                 else:

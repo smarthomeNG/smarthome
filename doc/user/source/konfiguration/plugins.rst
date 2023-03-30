@@ -51,6 +51,9 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 | plugin_name      | Der Kurzname des Plugins, das eingebunden werden soll (Name des Verzeichnisses      |
 |                  | im **../plugins** Verzeichnis). Statt des Parameters **plugin_name** konnten bisher |
 |                  | auch die Parameter **class_name** und **class_path** angegeben werden.              |
+|                  |                                                                                     |
+|                  | **WICHTIG**: Bitte darauf achten, dass der Plugin Name Case-sensitive ist und der   |
+|                  | Schreibweise des Verzeichnisnamens des Plugin entsprechen muss.                     |
 +------------------+-------------------------------------------------------------------------------------+
 | plugin_enabled   | Optional: Wenn dieser Parameter auf **False** gesetzt wird, wird das Plugin nicht   |
 |                  | geladen, die Konfiguration bleibt jedoch erhalten und die Verwendung von Item-      |
@@ -64,6 +67,11 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 |                  | Dokumentation zum jeweiligen Plugin. Stattdessen ist die Konfiguration  über den    |
 |                  | Parameter **plugin_name** vorzunehmen.                                              |
 +------------------+-------------------------------------------------------------------------------------+
+| plugin_version   | Optional: Wenn im Plugin Repository mehrere Versionen eines Plugins zur Verfügung   |
+|                  | stehen, kann über diesen Parameter eine andere als die neueste Version des Plugins  |
+|                  | geladen werden. Dazu muss die Versionsnummer des Plugins angegeben werden.          |
+|                  | (z.B.  **plugin_version: 1.4.9**)                                                   |
++------------------+-------------------------------------------------------------------------------------+
 | instance         | Optional: Dieser Parameter muss nur verwendet werden, wenn mehrere Instanzen des    |
 |                  | selben Plugins geladen werden sollen. Das Plugin selbst muss dazu **Multiinstance** |
 |                  | fähig sein. Damit die Items der richtigen Plugin-Instanz zugeordnet werden, muss    |
@@ -71,16 +79,11 @@ Es gibt folgende allgemeine Parameter im Abschnitt eines Plugins:
 |                  | die Angabe der Instanz ergänzt werden. Also z.B.: Statt **avm_data_type: uptime**   |
 |                  | muss **avm_data_type@<instance>: uptime** geschrieben werden.                       |
 +------------------+-------------------------------------------------------------------------------------+
-| plugin_version   | Optional: Wenn im Plugin Repository mehrere Versionen eines Plugins zur Verfügung   |
-|                  | stehen, kann über diesen Parameter eine andere als die neueste Version des Plugins  |
-|                  | geladen werden. Dazu muss die Versionsnummer des Plugins angegeben werden.          |
-|                  | (z.B.  **plugin_version: 1.4.9**)                                                   |
-+------------------+-------------------------------------------------------------------------------------+
 | webif_pagelength | Optional: Anzahl an Tabellenreihen, die im Plugin Webinterface standardmäßig        |
 |                  | pro Seite angezeigt werden sollen. Bei **-1** werden alle Einträge auf einer Seite  |
 |                  | gezeigt, bei **0** so viele, dass sie genau auf die Seite ohne Scrolling passen.    |
 |                  | Weitere mögliche Werte sind 25, 50, 100. Der hier angegebene Wert überschreibt den  |
-|                  | für das **http Modul** im /etc/module.yaml File über den gleichnamigen Parameter    |                                                                            |
+|                  | für das **http Modul** im /etc/module.yaml File über den gleichnamigen Parameter    |
 |                  | definierten globalen Wert.                                                          |
 +------------------+-------------------------------------------------------------------------------------+
 
