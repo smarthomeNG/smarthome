@@ -78,7 +78,7 @@ items = Items.get_instance()
 problems_found = 0
 problems_fixed = 0
 
-for one in items.return_items(sorted=True):
+for one in items.return_items(ordered=True):
     # get the items full path
     path = one.id()
     try:
