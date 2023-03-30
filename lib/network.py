@@ -656,14 +656,17 @@ class Tcp_client(object):
             return False
 
         self.logger.debug(f'Starting connect to {self._host}:{self._port}')
-        if not self.__connect_thread or not self.__connect_thread.is_alive():
-            self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name=f'TCP_Connect {self._id}')
-            self.__connect_thread.daemon = True
-        self.logger.debug(f'connect() to {self._host}:{self._port}: self.__running={self.__running}, self.__connect_thread.is_alive()={self.__connect_thread.is_alive()}')
-        if not self.__running or not self.__connect_thread.is_alive():
-            self.logger.debug(f'connect() to {self._host}:{self._port}: calling __connect_thread.start()')
-            self.__connect_thread.start()
-        self.logger.debug(f'leaving connect() to {self._host}:{self._port}')
+        if self.__connect_threadlock.acquire():
+            if not self.__connect_thread:
+                self.__connect_thread = threading.Thread(target=self._connect_thread_worker, name=f'TCP_Connect {self._id}')
+                self.__connect_thread.daemon = True
+            self.logger.debug(f'connect() to {self._host}:{self._port}: self.__running={self.__running}, self.__connect_thread.is_alive()={self.__connect_thread.is_alive()}')
+            if not self.__running or not self.__connect_thread.is_alive():
+                self.logger.debug(f'connect() to {self._host}:{self._port}: calling __connect_thread.start()')
+                self.__connect_thread.start()
+            else:
+                self.__connect_threadlock.release()
+            self.logger.debug(f'leaving connect() to {self._host}:{self._port}')
         return True
 
     def connected(self):
@@ -734,9 +737,6 @@ class Tcp_client(object):
         """
         Thread worker to handle connection.
         """
-        if not self.__connect_threadlock.acquire(blocking=False):
-            self.logger.info(f'{self._id} connection attempt already in progress, ignoring new request')
-            return
         if self._is_connected:
             self.logger.info(f'{self._id} already connected, ignoring new request')
             return
@@ -750,9 +750,13 @@ class Tcp_client(object):
                 if self._is_connected:
                     try:
                         self.__connect_threadlock.release()
-                        if self._connected_callback:
-                            self._connected_callback(self)
-                        name = f'TCP_Client {self._id}'
+                    except RuntimeError:
+                        pass
+                    self.__running = False
+                    if self._connected_callback:
+                        self._connected_callback(self)
+                    name = f'TCP_Client {self._id}'
+                    try:
                         self.__receive_thread = threading.Thread(target=self.__receive_thread_worker, name=name)
                         self.__receive_thread.daemon = True
                         self.__receive_thread.start()
@@ -772,9 +776,8 @@ class Tcp_client(object):
                 break
         try:
             self.__connect_threadlock.release()
-        except Exception:
-            self.logger.debug(f'{self._id} exception while trying self.__connect_threadlock.release()')
-            pass
+        except RuntimeError:
+            self.logger.debug(f'{self._id} exception while trying self.__connect_threadlock.release(), already released?')
 
     def _connect(self):
         """
@@ -885,11 +888,11 @@ class Tcp_client(object):
                                     self.logger.debug(f'{self._id} autoreconnect enabled')
                                     self.connect()
                                 if self._is_connected:
-                                    self.logger.debug(f'{self._id} set read watch on socket again')
+                                    self.logger.debug('{self._id} set read watch on socket again')
                                     waitobj.watch(self._socket, read=True)
                             else:
                                 # socket shut down by self.close, no error
-                                self.logger.debug(f'{self._id} connection shut down by call to close method')
+                                self.logger.debug('{self._id} connection shut down by call to close method')
                                 return
         except Exception as ex:
             if not self.__running:
