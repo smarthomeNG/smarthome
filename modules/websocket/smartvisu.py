@@ -51,7 +51,7 @@ from lib.shtime import Shtime
 
 class Protocol():
 
-    version = '1.0.2'
+    version = '1.0.3'
 
     protocol_id = 'sv'
     protocol_name = 'smartvisu'
@@ -795,12 +795,12 @@ class Protocol():
 
     async def update_item(self, item_name, item_value, source):
         """
-        send JSON data with new value of an item
+        send JSON data with new value of an item (for items that are monitored by a smartVISU)
         """
-        items = []
         # self.logger.warning("update_item: self.monitor['item']")
         items_list = list(self.sv_monitor_items.keys())
         for client_addr in items_list:
+            items = []
             websocket = self.sv_clients[client_addr]['websocket']
             for candidate in self.sv_monitor_items[client_addr]:
 
