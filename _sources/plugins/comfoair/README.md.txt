@@ -23,8 +23,7 @@ This plugin has no requirements or dependencies.
 
 ```
 comfoair:
-    class_name: ComfoAir
-    class_path: plugins.comfoair
+    plugin_name: comfoair
     kwltype: comfoair350       # Currently supported: comfoair350 and comfoair500
     host: 192.168.123.6        # Provide host and port if you want to use TCP connection (for a TCP to serial converter)
     port: 5555                 # Port

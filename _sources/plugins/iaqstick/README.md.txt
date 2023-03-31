@@ -1,4 +1,4 @@
-# iAQ Stick
+# iaqstick
 
 ## Requirements
 
@@ -28,8 +28,7 @@ udevadm trigger
 
 ```yaml
 iaqstick:
-    class_name: iAQ_Stick
-    class_path: plugins.iaqstick
+    plugin_name: iaqstick
 #    update_cycle: 10
 ```
 

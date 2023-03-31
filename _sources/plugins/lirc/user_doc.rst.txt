@@ -51,4 +51,21 @@ Beispiel:
             lirc_key@instancename: "POWER"
 
 Wird DVDLIVINGROOM_POWER auf 5 gesetzt, wird der "POWER" Befehl 5 Mal gesendet.
-Bekommt das Item den Wert 1, wird der Befehl ein Mal gesendet.
+Bekommt das Item den Wert 0 oder 1, wird der Befehl ein Mal gesendet.
+
+
+Web Interface
+=============
+
+.. image:: assets/lirc_webif.png
+   :class: screenshot
+
+Das Webinterface bietet folgende Informationen:
+
+-  **Allgemeines**: Oben rechts wird die Pluginkonfiguration angezeigt
+-  **Letzte Antwort**: Oben rechts wird die letzte Rückmeldung des Plugins angezeigt
+-  **Senden**: Es wird der hinterlegte Befehl für das Item gesendet
+-  **Remote**: Name der Fernbedienung
+-  **Key**: Name des Keys
+-  **Letztes Update**: Zeitpunkt, wann das Item zuletzt aktualisiert wurde
+-  **Letzte Änderung**: Zeitpunkt, wann das Item zuletzt geändert wurde

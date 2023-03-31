@@ -1,4 +1,4 @@
-# Join
+# join
 
 Version 1.0
 
@@ -21,8 +21,7 @@ sudo pip3 install requests --upgrade
 
 ```yaml
 join:
-    class_name: Join
-    class_path: plugins.join
+    plugin_name: join
     device_id: <your deviceid>
     api_key: <your apikey>
 ```

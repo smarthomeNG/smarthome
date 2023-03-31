@@ -26,8 +26,7 @@ The samples use multi-instance feature of SmartHomeNG.
 
 ```yaml
 vusolo4k:
-    class_name: Enigma2
-    class_path: plugins.enigma2
+    plugin_name: enigma2
     host: xxx.xxx.xxx.xxx
     port: 81    # 81 for "vu"-boxes, it may be port 80 for a dreambox
     cycle: 240
@@ -37,8 +36,7 @@ vusolo4k:
     instance: vusolo4k
 
 vusolo2:
-    class_name: Enigma2
-    class_path: plugins.enigma2
+    plugin_name: enigma2
     host: xxx.xxx.xxx.xxx
     port: 81    # 81 for "vu"-boxes, it may be port 80 for a dreambox
     cycle: 240

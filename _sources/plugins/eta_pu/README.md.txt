@@ -1,4 +1,4 @@
-# ETA Pellet Unit PU
+# eta_pu - ETA Pellet Unit PU
 
 ## Requirements
 
@@ -12,8 +12,7 @@
 
 ```yaml
 eta_pu:
-    class_name: ETA_PU
-    class_path: plugins.eta_pu
+    plugin_name: eta_pu
     address: 192.168.179.15
     port: 8080
     setpath: /user/vars

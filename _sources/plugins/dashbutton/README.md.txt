@@ -1,4 +1,4 @@
-# Amazon Dashbutton Plugin
+# Dashbutton Plugin
 
 ## Setup your Amazon Dashbutton
 
@@ -44,8 +44,7 @@ Activate plugin via plugin.yaml:
 
 ```yaml
 dashbutton:
-    class_name: Dashbutton
-    class_path: plugins.dashbutton
+    plugin_name: dashbutton
 ```
 
 ### Item attributes

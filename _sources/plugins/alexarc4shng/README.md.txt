@@ -1,6 +1,6 @@
 # AlexaRc4shNG
 
-#### Version 1.0.2
+#### Version 1.0.3
 
 The plugin gives the possibilty to control an Alexa-Echo-Device remote by smartHomeNG. So its possible to switch on an TuneIn-Radio Channel, send some messages via Text2Speech when an event happens on the knx-bus or on the Visu. On the Web-Interface you can define your own commandlets (functions). The follwing functions are available on the Web-Interface :
 
@@ -38,7 +38,7 @@ Special thanks to Jonofe from the [Edomi-Forum](https://knx-user-forum.de/forum/
 - Pause (pauses the actual media)
 - Text2Speech (sends a Text to the echo, echo will speak it)
 - StartTuneInStation (starts a TuneInRadiostation with the guideID you send)
-- SSML (Speak to Text with[Speech Synthesis Markup Language](https://developer.amazon.com/docs/custom-skills/speech-synthesis-markup-language-ssml-reference.html))
+- SSML (Speak to Text with [Speech Synthesis Markup Language](https://developer.amazon.com/docs/custom-skills/speech-synthesis-markup-language-ssml-reference.html))
 - VolumeAdj (adjusts the volume during playing some media not working from webinterface test functions)
 - VolumeSet (sets the volume to value from 0-100 percent)
 
@@ -47,7 +47,7 @@ Special thanks to Jonofe from the [Edomi-Forum](https://knx-user-forum.de/forum/
 ```yaml
 <mValue>                = Value to send as alpha
 <nValue>                = Value to send as numeric
-#item.path/#            = item-path of the value that should be inserted into text or ssml
+"#item.path/#"          = item-path of the value that should be inserted into text or ssml
 <serialNumber>          = SerialNo. of the device where the command should go to
 <familiy>               = device family
 <deviceType>            = deviceType
@@ -56,6 +56,14 @@ Special thanks to Jonofe from the [Edomi-Forum](https://knx-user-forum.de/forum/
 #### <strong>!! Please keep in mind to use the "<", ">", "#" and "/#" to qualify the placeholders !!</strong>
 
 ## ChangeLog<a name="changelog"/>
+
+#### 2021.02.10 Version 1.0.3
+
+- added MFA for Auto-Login
+- <strong>added new Parameter (mfa_secret) in the etc/plugin.yaml</strong>
+- added Step by Step Setup in Web-IF for MFA  
+- added public function to get the ToDo-List
+- added public function to get the Shopping-List
 
 #### 2020.03.20 Version 1.0.2
 
@@ -160,7 +168,7 @@ Item2EnableAlexaRC->Item controlled by UZSU or something else which enables the 
 alexa_credentials-> user:pwd (base64 encoded)<br>
 item_2_enable_alexa_rc -> Item to allow smarthomeNG to send Commands to Echo's<br>
 login_update_cycle->seconds to wait for automatic Login in to refresh the cookie 
-
+mfa_secret-> The MFA-Secret you got from Amazon-Website (fill it out with the Web-Interface)
 
 
 ```yaml
@@ -171,6 +179,7 @@ AlexaRc4shNG:
     item_2_enable_alexa_rc: Item_to_enable_Alexaremote
     alexa_credentials: <USER>:<PWD>
     login_update_cycle: 432000
+    mfa_secret: <YOUR MFA-Secret>
 ```
 
 
@@ -203,12 +212,15 @@ alexa_cmd_01: True:EchoDotKueche:StartTuneInStation:s96141
 Value           = <20.0 - send command when value of the item becomes less then 20.0
 EchodotKueche   = Devicename where the Command should be send to
 Text2Speech     = Name of the Commandlet
-Value_to_Send   = Die Temperatur in der Kueche ist niedriger als 20 Grad Die Temperatur ist jetzt #test.testzimmer.temperature.actual/# Grad #test.testzimmer.temperature.actual/# = item-path of the value that should be inserted
+Value_to_Send   = Die Temperatur in der Kueche ist niedriger als 20 Grad Die Temperatur ist jetzt #test.testzimmer.temperature.actual/# Grad 
 ```
 
+```yaml
+#test.testzimmer.temperature.actual/# = item-path of the value that should be inserted
+```
 <strong>example:<br></strong>
 `
-alexa_cmd_01: <20.0:EchoDotKueche:Text2Speech:Die Temperatur in der Kueche ist niedriger als 20 Grad Die Temperatur ist jetzt \#test.testzimmer.temperature.actual/\# Grad
+alexa_cmd_01: <20.0:EchoDotKueche:Text2Speech:Die Temperatur in der Kueche ist niedriger als 20 Grad Die Temperatur ist jetzt #test.testzimmer.temperature.actual/# Grad
 `
 
 You can find the paths of the items on the backend-WebInterface - section items.
@@ -266,12 +278,13 @@ Example for settings in an item.conf file :
         alexa_cmd_01 = '"True:EchoDotKueche:StartTuneInStation:s96141"
         alexa_cmd_02 ="True:EchoDotKueche:Text2Speech:Hallo das Licht im Buero ist eingeschalten"
         alexa_cmd_03 = "False:EchoDotKueche:Text2Speech:Hallo das Licht im Buero ist aus"
-        alexa_cmd_04 = "False:EchoDotKueche:Pause: "
+        alexa_cmd_04 = "False:EchoDotKueche:Pause:"
         visu_acl = rw
         knx_dpt = 1
         knx_listen = 1/1/105
         knx_send = 1/1/105
-        enforce_updates = truey_attr: setting
+        enforce_updates = true
+        
 ```
 
 ### logic.yaml
@@ -282,7 +295,7 @@ Right now no logics are implemented. But you can trigger the functions by your o
 
 The plugin provides the following publich functions. You can use it for example in logics.
 
-### send_cmd(dvName, cmdName, mValue)
+### send_cmd(dvName:str, cmdName:str, mValue:str)
 
 example how to use in logics:
 
@@ -293,7 +306,7 @@ sh.AlexaRc4shNG.send_cmd('Kueche','Text2Speech','Der Sensor der Hebenlage signal
 ```
 Sends a command to the device. "dvName" is the name of the device,  "cmdName" is the name of the CommandLet, mValue is the value you would send.
 You can find all this informations on the Web-Interface.
-You can also user the [placeholders](#placeholders)
+You can also use the [placeholders](#placeholders)
 
 - the result will be the HTTP-Status of the request as string (str)
 
@@ -305,11 +318,68 @@ This function returns the Device-Name of the last Echo Device which got a voice 
 myLastDevice = sh.AlexaRc4shNG.get_last_alexa()
 
 ```
+
+### get_list(type:str)
+
+This function returns the ToDo or the Shopping list - depending on "type" as dict<br>
+
+valid types are :
+```yaml
+  'SHOPPING_LIST'
+  'TO_DO'
+```
+
+
+```yaml
+sh.AlexaRc4shNG.get_list(type:str)
+```
+## Example logic to fill Items with List-Infos
+
+<pre>
+<code>
+from datetime import datetime
+# get the Todo-List
+myList=sh.AlexaRc4shNG.get_list('TO_DO')
+for entry in myList:
+  if entry['completed'] == True:
+    entry['icon'] = 'control_clear'
+  else:
+    entry['icon'] = 'control_home'
+  entry['date'] = datetime.fromtimestamp((entry['updatedDateTime']/1000)).strftime("%d.%m.%Y, %H:%M:%S")
+# Write list to Item - type should be list
+sh.Alexa_Lists.list.todo(myList)
+# get the shopping-List
+myList=sh.AlexaRc4shNG.get_list('SHOPPING_LIST')
+for entry in myList:
+  if entry['completed'] == True:
+    entry['icon'] = 'control_clear'
+  else:
+    entry['icon'] = 'jquery_shop'
+  entry['date'] = datetime.fromtimestamp((entry['updatedDateTime']/1000)).strftime("%d.%m.%Y, %H:%M:%S")
+# Write list to Item - type should be list
+sh.Alexa_Lists.list.shopping(myList)
+</code>
+</pre>
+
+## Example to show lists in smartVisu with status.activelist
+<pre>
+<code>
+status.activelist('','Alexa_Lists.list.todo','value','date','value','info')
+
+status.activelist('','Alexa_Lists.list.shopping','value','date','value','info')
+</code>
+</pre>
+
+### Ergebnis :
+![PlaceHolder](./assets/Alexa_lists.jpg  "jpg")
+
+
+
 # Web-Interface <a name="webinterface"/></a>
 
 The Webinterface is reachable on you smarthomeNG server here :<br>
 
-<strong>yourserver:8383/alexarc4shng/</strong>
+<strong>http://yourserver:8383/plugins/alexarc4shng/</strong>
 
 ## Cookie-Handling
 

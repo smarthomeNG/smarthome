@@ -19,6 +19,7 @@
    /plugins/homematic/README.md
    /plugins/hue/README.md
    /plugins/iaqstick/README.md
+   /plugins/mieleathome/README.md
    /plugins/milight/README.md
    /plugins/mlgw/README.md
    /plugins/raumfeld/README.md

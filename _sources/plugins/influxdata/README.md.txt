@@ -48,8 +48,7 @@ For more information on buffers and how to setup high performance UDP listener s
 
 ```yaml
 influxdata:
-    class_name: InfluxData
-    class_path: plugins.influxdata
+    plugin_name: influxdata
     # influx_host = localhost
     # influx_port = 8089
     influx_keyword: influx

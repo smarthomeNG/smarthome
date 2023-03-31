@@ -33,16 +33,14 @@ Sample configuration file for two instances of the logo plugin.
 
 ```yaml
 logo1:
-    class_name: LOGO
-    class_path: plugins.logo
+    plugin_name: logo
     host: 10.10.10.99
     instance: logo1
     # port: 102
     # io_wait: 5
     # version: 0BA8
 logo2:
-    class_name: LOGO
-    class_path: plugins.logo
+    plugin_name: logo
     host: 10.10.10.100
     version: 0BA8
     instance: logo2

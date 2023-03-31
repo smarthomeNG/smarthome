@@ -78,8 +78,7 @@ Beispiele für die plugin.yaml
 .. code:: yaml
 
    dlms:
-       class_name: DLMS
-       class_path: plugins.dlms
+       plugin_name: dlms
        serialport: /dev/dlms0
        update_cycle: 900
 

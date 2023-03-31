@@ -6,8 +6,7 @@
 
 ```
 cli:
-    class_name: CLI
-    class_path: plugins.cli
+    plugin_name: cli
     # ip = 127.0.0.1
     # port = 2323
     # update = false

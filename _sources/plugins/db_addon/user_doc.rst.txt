@@ -21,10 +21,13 @@ Diese Auswertungen werden zyklisch zum Tageswechsel, Wochenwechsel, Monatswechse
 der Funktion erzeugt.
 Um die Zugriffe auf die Datenbank zu minimieren, werden diverse Daten zwischengespeichert.
 
-Die Items mit einem DatabaseAddon-Attribut müssen im gleichen Pfad sein, wie das Item, für das das Database Attribut
-konfiguriert ist.
-Bedeutet: Die Items mit dem DatabaseAddon-Attribute müssen Kinder oder Kindeskinder oder Kindeskinderkinder des Items
-sein, für das das Database Attribut konfiguriert ist
+Sind Items mit einem DatabaseAddon-Attribut im gleichen Pfad, wie das Item, für das das Database Attribut
+konfiguriert ist, wird dieses Item automatisch ermittelt. Bedeutet: Sind die Items mit dem DatabaseAddon-Attribute Kinder
+oder Kindeskinder oder Kindeskinderkinder des Items, für das das Database Attribut konfiguriert ist, wird dieses automatisch
+ermittelt.
+
+Alternativ kann mit dem Attribute "db_addon_database_item"  auch der absolute Pfad des Items angegeben werden,  für das
+das Database Attribut konfiguriert ist.
 
 Bsp:
 
@@ -45,6 +48,12 @@ Bsp:
             gestern_max:
                 type: num
                 db_addon_fct: heute_minus1_max
+
+
+    tagesmitteltemperatur_gestern:
+        type: num
+        db_addon_fct: heute_minus1_avg
+        db_addon_database_item: 'temperatur'
 
 |
 
@@ -182,3 +191,87 @@ db_addon Maintenance
 
 Das Webinterface zeigt detaillierte Informationen über die im Plugin verfügbaren Daten an.
 Dies dient der Maintenance bzw. Fehlersuche. Dieser Tab ist nur bei Log-Level "Debug" verfügbar.
+
+
+Erläuterungen zu Temperatursummen
+=================================
+
+
+Grünlandtemperatursumme
+-----------------------
+
+Beim Grünland wird die Wärmesumme nach Ernst und Loeper benutzt, um den Vegetationsbeginn und somit den Termin von Düngungsmaßnahmen zu bestimmen. 
+Dabei erfolgt die Aufsummierung der Tagesmitteltemperaturen über 0 °C, wobei der Januar mit 0.5 und der Februar mit 0.75 gewichtet wird. 
+Bei einer Wärmesumme von 200 Grad ist eine Düngung angesagt.
+
+siehe: https://de.wikipedia.org/wiki/Gr%C3%BCnlandtemperatursumme
+
+Folgende Parameter sind möglich / notwendig:
+
+.. code-block:: yaml
+    db_addon_params: "year=current"
+
+- year: Jahreszahl (str oder int), für das die Berechnung ausgeführt werden soll oder "current" für aktuelles Jahr  (default: 'current')
+
+
+Wachstumsgradtag
+----------------
+Der Begriff Wachstumsgradtage (WGT) ist ein Überbegriff für verschiedene Größen. 
+Gemeinsam ist ihnen, daß zur Berechnung eine Lufttemperatur von einem Schwellenwert subtrahiert wird. 
+Je nach Fragestellung und Pflanzenart werden der Schwellenwert unterschiedlich gewählt und die Temperatur unterschiedlich bestimmt. 
+Verfügbar sind die Berechnung über 0) "einfachen Durchschnitt der Tagestemperaturen", 1) "modifizierten Durchschnitt der Tagestemperaturen" 
+und 2) Anzahl der Tage, deren Mitteltempertatur oberhalb der Schwellentemperatur lag.
+
+siehe https://de.wikipedia.org/wiki/Wachstumsgradtag
+
+Folgende Parameter sind möglich / notwendig:
+
+.. code-block:: yaml
+    db_addon_params: "year=current, method=1, threshold=10"
+
+- year: Jahreszahl (str oder int), für das die Berechnung ausgeführt werden soll oder "current" für aktuelles Jahr  (default: 'current')
+- method: 0-Berechnung über "einfachen Durchschnitt der Tagestemperaturen", 1-Berechnung über "modifizierten Durchschnitt (default: 0)
+der Tagestemperaturen" 2-Anzahl der Tage, mit Mitteltempertatur oberhalb Schwellentemperatur// 10, 11 Ausgabe aus Zeitserie
+- threshold: Schwellentemperatur in °C (int) (default: 10)
+
+
+Wärmesumme
+----------
+
+Die Wärmesumme soll eine Aussage über den Sommer und die Pflanzenreife liefern. Es gibt keine eindeutige Definition der Größe "Wärmesumme".
+Berechnet wird die Wärmesumme als Summe aller Tagesmitteltemperaturen über einem Schwellenwert ab dem 1.1. des Jahres. 
+
+siehe https://de.wikipedia.org/wiki/W%C3%A4rmesumme
+
+Folgende Parameter sind möglich / notwendig:
+
+.. code-block:: yaml
+    db_addon_params: "year=current, month=1, threshold=10"
+
+- year: Jahreszahl (str oder int), für das die Berechnung ausgeführt werden soll oder "current" für aktuelles Jahr (default: 'current')
+- month: Monat (int) des Jahres, für das die Berechnung ausgeführt werden soll (optional) (default: None)
+- threshold: Schwellentemperatur in °C (int) (default: 10)
+
+
+Kältesumme
+----------
+
+Die Kältesumme soll eine Aussage über die Härte des Winters liefern. 
+Berechnet wird die Kältesumme als Summe aller negativen Tagesmitteltemperaturen ab dem 21.9. des Jahres bis 31.3. des Folgejahres.
+
+siehe https://de.wikipedia.org/wiki/K%C3%A4ltesumme
+
+Folgende Parameter sind möglich / notwendig:
+
+.. code-block:: yaml
+    db_addon_params: "year=current, month=1"
+
+- year: Jahreszahl (str oder int), für das die Berechnung ausgeführt werden soll oder "current" für aktuelles Jahr (default: 'current')
+- month: Monat (int) des Jahres, für das die Berechnung ausgeführt werden soll (optional) (default: None)
+
+
+Tagesmitteltemperatur
+---------------------
+
+Die Tagesmitteltemperatur wird auf Basis der stündlichen Durchschnittswerte eines Tages (aller in der DB enthaltenen Datensätze)
+für die angegebene Anzahl von Tagen (days=optional) berechnet.

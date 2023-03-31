@@ -1,4 +1,4 @@
-# Kathrein
+# kathrein
 
 ## Requirements
 This plugin has no requirements or dependencies.
@@ -13,8 +13,7 @@ The webinterface needs to be implemented
 
 ```yaml
 kathrein:
-    class_name: Kathrein
-    class_path: plugins.kathrein
+    plugin_name: kathrein
     host: 192.168.0.149
 #    port: 9000
 #    kathreinid: 1

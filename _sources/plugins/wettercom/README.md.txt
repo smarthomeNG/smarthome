@@ -1,4 +1,4 @@
-# wetter.com
+# wettercom Plugin
 
 ## Requirements
 
@@ -11,8 +11,7 @@ wetter.com account with project, recommended: 3 days, all data transmitted
 
 ```yaml
 wettercom:
-    class_name: wettercom
-    class_path: plugins.wettercom
+    plugin_name: wettercom
     # apikey: <enter your api code here>
     # project: <enter your project name here>
 ```

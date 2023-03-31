@@ -23,8 +23,7 @@ This plugin is designed to work with SHNG v1.5. It runs on current develop versi
 
 ```yaml
 appletv:
-    class_name: AppleTV
-    class_path: plugins.appletv
+    plugin_name: appletv
     #instance: wohnzimmer
     #ip: 192.168.2.103
     #login_id: 00000000-0580-3568-6c73-86bd9b834320

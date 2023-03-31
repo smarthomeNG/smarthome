@@ -79,6 +79,7 @@
    mailrcv.rst
    mailsend.rst
    memlog.rst
+   mieleathome.rst
    miflora.rst
    milight.rst
    mlgw.rst

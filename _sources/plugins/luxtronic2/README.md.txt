@@ -1,4 +1,4 @@
-# Luxtronic2
+# luxtronic2
 
 ## Requirements
 This plugin has no requirements or dependencies.
@@ -9,8 +9,7 @@ This plugin has no requirements or dependencies.
 
 ```yaml
 luxtronic2:
-    class_name: Luxtronic2
-    class_path: plugins.luxtronic2
+    plugin_name: luxtronic2
     host: 192.168.0.123
     # port: 8888
 ```

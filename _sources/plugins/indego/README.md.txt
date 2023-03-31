@@ -1,4 +1,4 @@
-# Indego Plugin
+# indego Plugin
 
 #### Version 1.x.y
 
@@ -60,8 +60,7 @@ Please refer to the documentation generated from plugin.yaml metadata.
 
 ```yaml
 MyIndego:
-    class_name: Indego
-    class_path: plugins.indego
+    plugin_name: indego
     user: 'NUTZERNAME' # -> you need to use the name that you used on your Indego App
     password: 'PASSWORT' # -> you need to use the password that you used on your Indego App
     cycle: 30 # frequency of when how often the status is updated, is working without a problem with 30seconds, not sure when the server will start to be annoyed by your requests 

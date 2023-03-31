@@ -18,8 +18,7 @@ The plugin can be configured using the following settings:
 
 ```
 datalog:
-    class_name: DataLog
-    class_path: plugins.datalog
+    plugin_name: datalog
 #    path: var/log/data
 #    filepatterns:
 #      - default:{log}-{year}-{month}-{day}.csv
@@ -56,8 +55,7 @@ Example:
 
 ```yaml
 datalog:
-   class_name = DataLog
-   class_path = plugins.datalog
+   plugin_name = datalog
    filepatterns = default:{log}-{year}-{month}-{day}.csv | custom:{log}-{year}-{month}-{day}.txt
    logpatterns = csv:{time};{item};{value}\n
 ```

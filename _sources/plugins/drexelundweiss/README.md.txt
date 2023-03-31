@@ -54,8 +54,7 @@ The plugin detects the connected device type automatically:
 
 ```yaml
 DuW:
-    class_name: DuW
-    class_path: plugins.drexelundweiss
+    plugin_name: drexelundweiss
     tty: /dev/ttyUSB0
     # Busmonitor: 1
     # LU_ID: 130

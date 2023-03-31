@@ -14,8 +14,7 @@ The plugin needs the username and password of the AMI and a IP and port address 
 
 ```yaml
 ast:
-    class_name: Asterisk
-    class_path: plugins.asterisk
+    plugin_name: asterisk
     username: admin
     password: secret
     host: 127.0.0.1    # default

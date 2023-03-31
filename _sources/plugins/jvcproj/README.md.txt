@@ -1,4 +1,4 @@
-# JVC D-ILA Control
+# jvcproj - JVC D-ILA Control
 
 With this plugin you can control JVC D-ILA projectors over TCP by using the "JVC External Control Command Communication Specification" and transfer gammatables generated with jvcprojectortools.
 
@@ -17,8 +17,7 @@ Please use [this thread for support, questions, feedback etc.](https://knx-user-
 
 ```yaml
 jvcproj:
-    class_name: JVC_DILA_Control
-    class_path: plugins.jvcproj
+    plugin_name: jvcproj
     host: 1.1.1.1 # host address of the projector
     gammaconf_dir: ... # optional, location gamma table configuration files
 ```

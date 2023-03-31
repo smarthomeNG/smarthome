@@ -42,8 +42,7 @@ The main module will use the ``manufacturer.yaml`` if it's existing to output mo
 
 ```
 dlms:
-    class_name: DLMS
-    class_path: plugins.dlms
+    plugin_name: dlms
     serialport: /dev/dlms0
     update_cycle: 900
     # SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"10c4\", ATTRS{idProduct}==\"ea60\", ATTRS{serial}==\"0092C9FE\", MODE=\"0666\", GROUP=\"dialout\", SYMLINK+=\"dlms0\"

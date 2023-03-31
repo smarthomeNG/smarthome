@@ -66,6 +66,16 @@ Nachrichten-Gruppen
  - Standardwert: **['alarm', 'info']**
 
 
+varpath
+=======
+
+
+Pfad zum SmarthomeNG var Verzeichnis (z.B. /usr/local/smarthome/var)
+
+ - Datentyp: **str**
+ - Standardwert: **/usr/local/smarthome/var**
+
+
 ==============
 Item Attribute
 ==============

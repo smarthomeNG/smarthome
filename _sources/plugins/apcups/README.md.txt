@@ -25,8 +25,7 @@ Add the following lines to activate the plugin:
 
 ```yaml
 ApcUps:
-    class_name: APCUPS
-    class_path: plugins.apcups
+    plugin_name: apcups
     host: localhost
     port: 3551
 ```

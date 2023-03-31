@@ -1,4 +1,4 @@
-# Milight
+# milight
 
 #### Version 1.6.0
 
@@ -41,8 +41,7 @@ Typical configuration
 
 ```yaml
 milight:
-  class_name: milight
-  class_path = plugins.milight
+  plugin_name: milight
   #udp_ip:  192.168.123.147
   #udp_port: 8899
   #bri: yes

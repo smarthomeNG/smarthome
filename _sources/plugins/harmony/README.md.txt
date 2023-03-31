@@ -103,8 +103,7 @@ for a Harmony Hub activity the activity id.
 
 ```yaml
     harmony:
-        class_name: Harmony
-        class_path: plugins.harmony
+        plugin_name: harmony
         harmony_ip: 192.168.178.78
         #harmony_port: 5222 # [default: 5222, int]
         #sleekxmpp_debug: false  #[default:false, bool]

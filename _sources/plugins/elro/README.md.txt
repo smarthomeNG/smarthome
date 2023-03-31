@@ -20,8 +20,7 @@ You have to just simply copy the following into your plugin.yaml file. The ip-ad
 
 ```yaml
 elro:
-    class_name: Elro
-    class_path: plugins.elro
+    plugin_name: elro
 ```
 
 ### items.yaml

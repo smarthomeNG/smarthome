@@ -12,14 +12,13 @@ Die Lüftungsanlage ...
 - ... ist mit dem lokalen Netzwerk verbunden
 - ... hat "Modbus" unter Konfiguration --> Gerät aktiviert
 
-  
+
 Einrichtung
 -----------
 pymodbus3 muss installiert sein. Weiterhin ist das Plugin in der plugin.yml zu aktivieren::
 
   helios_tcp:
-      class_name: HeliosTCP
-      class_path: plugins.helios_tcp
+      plugin_name: helios_tcp
       helios_ip: < IP-Adresse des Lüftungsgeräts >
       update_cycle: < Abstand in Sekunden, nachdem die Werte aktualisiert werden sollen >
 
@@ -42,58 +41,58 @@ Die folgenden Variablen stehen zur Verfügung und können abgefragt werden.
 Einige Werte stehen je nach Systemkonfiguration nicht in jeder Lüftungsanlage zur Verfügung.
 
 ======================== ============================================== ========    ==========  =====   =====
-Variable                 Beschreibung                                   Datentyp    Schreibbar  Min     Max    
+Variable                 Beschreibung                                   Datentyp    Schreibbar  Min     Max
 ======================== ============================================== ========    ==========  =====   =====
-outside_temp             Temperatur Außenluft                           float    
-exhaust_temp             Temperatur Abluft                              float    
-inside_temp              Temperatur Fortluft                            float    
-incoming_temp            Temperatur Zuluft                              float    
-pre_heating_temp         VHZ Kanalfüler (-Außenluft- T5)                float    
-post_heating_temp        NHZ Kanalfühler (-Zuluft- T6)                  float    
-post_heating_reflux_temp NHZ Rücklauffühler (-Warmwasser-Register- T7)  float    
-error_count              Anzahl der Fehler                              int      
-warning_count            Anzahl der Warnungenint                        int      
-info_count               Anzahl der Infos                               int      
-fan_in_rpm               Zuluft rpm                                     int      
-fan_out_rpm              Abluft rpm                                     int      
-internal_humidity        Interner Luftfeuchtigkeitsfühler               int      
-sensor1_humidity         Externer Fühler KWL-FTF Feuchte 1              int      
-sensor2_humidity         Externer Fühler KWL-FTF Feuchte 2              int      
-sensor3_humidity         Externer Fühler KWL-FTF Feuchte 3              int      
-sensor4_humidity         Externer Fühler KWL-FTF Feuchte 4              int      
-sensor5_humidity         Externer Fühler KWL-FTF Feuchte 5              int      
-sensor6_humidity         Externer Fühler KWL-FTF Feuchte 6              int      
-sensor7_humidity         Externer Fühler KWL-FTF Feuchte 7              int      
-sensor8_humidity         Externer Fühler KWL-FTF Feuchte 8              int      
-sensor1_temperature      Externer Fühler KWL-FTF Temp 1                 float    
-sensor2_temperature      Externer Fühler KWL-FTF Temp 2                 float    
-sensor3_temperature      Externer Fühler KWL-FTF Temp 3                 float    
-sensor4_temperature      Externer Fühler KWL-FTF Temp 4                 float    
-sensor5_temperature      Externer Fühler KWL-FTF Temp 5                 float    
-sensor6_temperature      Externer Fühler KWL-FTF Temp 6                 float    
-sensor7_temperature      Externer Fühler KWL-FTF Temp 7                 float    
-sensor8_temperature      Externer Fühler KWL-FTF Temp 8                 float    
-sensor1_co2              Externer Fühler KWL-CO2 1                      float    
-sensor2_co2              Externer Fühler KWL-CO2 2                      float    
-sensor3_co2              Externer Fühler KWL-CO2 3                      float    
-sensor4_co2              Externer Fühler KWL-CO2 4                      float    
-sensor5_co2              Externer Fühler KWL-CO2 5                      float    
-sensor6_co2              Externer Fühler KWL-CO2 6                      float    
-sensor7_co2              Externer Fühler KWL-CO2 7                      float    
-sensor8_co2              Externer Fühler KWL-CO2 8                      float    
-sensor1_voc              Externer Fühler KWL-VOC 1                      float    
-sensor2_voc              Externer Fühler KWL-VOC 2                      float    
-sensor3_voc              Externer Fühler KWL-VOC 3                      float    
-sensor4_voc              Externer Fühler KWL-VOC 4                      float    
-sensor5_voc              Externer Fühler KWL-VOC 5                      float    
-sensor6_voc              Externer Fühler KWL-VOC 6                      float    
-sensor7_voc              Externer Fühler KWL-VOC 7                      float    
-sensor8_voc              Externer Fühler KWL-VOC 8                      float    
-filter_remaining         Restlaufzeit                                   int      
-boost_remaining          Partybetrieb Restzeit                          int      
-sleep_remaining          Ruhebetrieb Restzeit                           int      
-fan_level_percent        Prozentuale Lüfterstufe                        int      
-bypass_open              Bypass geöffnet                                bool     
+outside_temp             Temperatur Außenluft                           float
+exhaust_temp             Temperatur Abluft                              float
+inside_temp              Temperatur Fortluft                            float
+incoming_temp            Temperatur Zuluft                              float
+pre_heating_temp         VHZ Kanalfüler (-Außenluft- T5)                float
+post_heating_temp        NHZ Kanalfühler (-Zuluft- T6)                  float
+post_heating_reflux_temp NHZ Rücklauffühler (-Warmwasser-Register- T7)  float
+error_count              Anzahl der Fehler                              int
+warning_count            Anzahl der Warnungenint                        int
+info_count               Anzahl der Infos                               int
+fan_in_rpm               Zuluft rpm                                     int
+fan_out_rpm              Abluft rpm                                     int
+internal_humidity        Interner Luftfeuchtigkeitsfühler               int
+sensor1_humidity         Externer Fühler KWL-FTF Feuchte 1              int
+sensor2_humidity         Externer Fühler KWL-FTF Feuchte 2              int
+sensor3_humidity         Externer Fühler KWL-FTF Feuchte 3              int
+sensor4_humidity         Externer Fühler KWL-FTF Feuchte 4              int
+sensor5_humidity         Externer Fühler KWL-FTF Feuchte 5              int
+sensor6_humidity         Externer Fühler KWL-FTF Feuchte 6              int
+sensor7_humidity         Externer Fühler KWL-FTF Feuchte 7              int
+sensor8_humidity         Externer Fühler KWL-FTF Feuchte 8              int
+sensor1_temperature      Externer Fühler KWL-FTF Temp 1                 float
+sensor2_temperature      Externer Fühler KWL-FTF Temp 2                 float
+sensor3_temperature      Externer Fühler KWL-FTF Temp 3                 float
+sensor4_temperature      Externer Fühler KWL-FTF Temp 4                 float
+sensor5_temperature      Externer Fühler KWL-FTF Temp 5                 float
+sensor6_temperature      Externer Fühler KWL-FTF Temp 6                 float
+sensor7_temperature      Externer Fühler KWL-FTF Temp 7                 float
+sensor8_temperature      Externer Fühler KWL-FTF Temp 8                 float
+sensor1_co2              Externer Fühler KWL-CO2 1                      float
+sensor2_co2              Externer Fühler KWL-CO2 2                      float
+sensor3_co2              Externer Fühler KWL-CO2 3                      float
+sensor4_co2              Externer Fühler KWL-CO2 4                      float
+sensor5_co2              Externer Fühler KWL-CO2 5                      float
+sensor6_co2              Externer Fühler KWL-CO2 6                      float
+sensor7_co2              Externer Fühler KWL-CO2 7                      float
+sensor8_co2              Externer Fühler KWL-CO2 8                      float
+sensor1_voc              Externer Fühler KWL-VOC 1                      float
+sensor2_voc              Externer Fühler KWL-VOC 2                      float
+sensor3_voc              Externer Fühler KWL-VOC 3                      float
+sensor4_voc              Externer Fühler KWL-VOC 4                      float
+sensor5_voc              Externer Fühler KWL-VOC 5                      float
+sensor6_voc              Externer Fühler KWL-VOC 6                      float
+sensor7_voc              Externer Fühler KWL-VOC 7                      float
+sensor8_voc              Externer Fühler KWL-VOC 8                      float
+filter_remaining         Restlaufzeit                                   int
+boost_remaining          Partybetrieb Restzeit                          int
+sleep_remaining          Ruhebetrieb Restzeit                           int
+fan_level_percent        Prozentuale Lüfterstufe                        int
+bypass_open              Bypass geöffnet                                bool
 humidity_control_status  Feuchte-Steuerung Status                       int         X           0       2
 humidity_control_target  Feuchte-Steuerung Sollwert                     int         X           20      80
 co2_control_status       CO2-Steuerung Status                           int         X           0       2

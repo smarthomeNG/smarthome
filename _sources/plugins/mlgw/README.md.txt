@@ -1,4 +1,4 @@
-# Bang & Olufsen Masterlink Gateway
+# mlgw Plugin - Bang & Olufsen Masterlink Gateway
 
 ## Changelog
 
@@ -43,8 +43,7 @@ This plugin need a Bang & Olufsen Masterlink Gateway and can connect to it via T
 
 ```yaml
 mlgw:
-    class_name: Mlgw
-    class_path: plugins.mlgw
+    plugin_name: mlgw
     host: mlgw.local
     # port: 9000
     # username: mlgw

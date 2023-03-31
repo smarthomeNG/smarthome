@@ -1,4 +1,4 @@
-# KOSTAL
+# kostal
 
 ### Version: 1.3.1.2
 
@@ -55,8 +55,7 @@ The plugin can be configured like this:
 
 ```yaml
 Kostal_PV:
-    class_name: Kostal
-    class_path: plugins.kostal
+    plugin_name: kostal
     ip: 192.168.1.21
     user: pvserver
     passwd: pvwr

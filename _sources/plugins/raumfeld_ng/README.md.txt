@@ -1,4 +1,4 @@
-# Sample Plugin <- put the name of your plugin here
+# raumfeld_ng Plugin
 
 #### Version 1.x.y
 
@@ -26,8 +26,7 @@ The plugin needs a running node-raumserver instance on the same or another host.
 
 ```yaml
 raumfeld_ng:
-    class_name: raumfeld_ng
-    class_path: plugins.raumfeld_ng
+    plugin_name: raumfeld_ng
     rf_HostIP: '127.0.0.1'
     rf_HostPort: '8080'
 ```

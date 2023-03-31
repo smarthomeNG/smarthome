@@ -80,7 +80,7 @@ call_monitor_incoming_filter
 ============================
 
 
-(optional) Spezielle Rufnummern ausfiltern, die vom Callmonitor ignoriert werden sollen.
+(optional) Filter, auf welche eigenen Rufnummern (oder Teile davon) der Callmonitor reagieren soll. Ist der Filter leer, werden alle eigenen Rufnummern überwacht. Wird ein Filterstring bspw. "12234" angegeben, werden nur die eigenen Anschlussnummern, die "12234" enthalten, vom CallMonitor verarbeitet.
 
  - Datentyp: **str**
 
@@ -142,6 +142,16 @@ ssl
 
  - Datentyp: **bool**
  - Standardwert: **True**
+
+
+tr064_item_blacklist
+====================
+
+
+(optional) Wenn aktiv, werden TR064 Items, deren Abfrageergebnis 2x zu einen Fehler geführt hat, blacklisted und anschließend nicht mehr abgefragt.
+
+ - Datentyp: **bool**
+ - Standardwert: **False**
 
 
 username
@@ -309,12 +319,19 @@ AVM Datentyp des jeweiligen Items.
    - **level**
    - **set_levelpercentage**
    - **levelpercentage**
+   - **None**
    - **set_hue**
    - **hue**
    - **set_saturation**
    - **saturation**
    - **set_colortemperature**
    - **colortemperature**
+   - **unmapped_hue**
+   - **unmapped_saturation**
+   - **color_mode**
+   - **supported_color_mode**
+   - **fullcolorsupport**
+   - **mapped**
    - **switch_state**
    - **switch_mode**
    - **switch_toggle**
@@ -323,6 +340,8 @@ AVM Datentyp des jeweiligen Items.
    - **voltage**
    - **humidity**
    - **alert_state**
+   - **blind_mode**
+   - **endpositionsset**
 
 
 avm_deflection_index

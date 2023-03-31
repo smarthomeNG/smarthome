@@ -28,8 +28,7 @@ plugin.yaml
 .. code:: yaml
 
    nw:
-       class_name: Network
-       class_path: plugins.network
+       plugin_name: network
        # ip: 0.0.0.0
        # port: 2727
        tcp: yes

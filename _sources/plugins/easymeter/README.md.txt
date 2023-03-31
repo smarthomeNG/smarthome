@@ -30,8 +30,7 @@ If you like, you can also give the serial port a descriptive name with this.
 
 ```yaml
 easymeter:
-    class_name: easymeter
-    class_path: plugins.easymeter
+    plugin_name: easymeter
 ```
 
 Parameter for serial device are currently set to fix 9600/7E1.

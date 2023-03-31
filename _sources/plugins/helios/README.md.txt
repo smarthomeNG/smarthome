@@ -1,4 +1,4 @@
-# Helios ECx00Pro / Vallox xx SE Plugin
+# helios - Helios ECx00Pro / Vallox xx SE Plugin
 
 Detailed documentation can be found on the Wiki:
 https://github.com/Tom-Bom-badil/helios/wiki
@@ -17,8 +17,7 @@ Add the following lines to ``plugin.yaml``:
 
 ```yaml
 helios:
-    class_name: helios
-    class_path: plugins.helios
+    plugin_name: helios
     tty: /dev/ttyUSB0    # put your serial port here (usually /dev/ttyUSB0 or /dev/ttyAMA0)
     cycle: 60            # update interval in seconds; ex-default: 300
 ```

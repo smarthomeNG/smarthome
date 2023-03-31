@@ -1,4 +1,4 @@
-# ECMD
+# ecmd
 
 ## Requirements
 
@@ -23,8 +23,7 @@ You can specify the host ip of your ethersex device.
 
 ```yaml
 ecmd:
-    class_name: ECMD
-    class_path: plugins.ecmd
+    plugin_name: ecmd
     host: 10.10.10.10
     # port: 2701
 ```

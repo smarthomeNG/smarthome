@@ -16,8 +16,7 @@ A requirements file is provided to easy the installation.
 
 ```yaml
 dmx:
-    class_name: DMX
-    class_path: plugins.dmx
+    plugin_name: dmx
     serialport: /dev/usbtty...
     # interface = nanodmx
 ```

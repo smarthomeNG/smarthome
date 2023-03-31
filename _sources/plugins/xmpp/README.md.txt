@@ -52,8 +52,7 @@ loggers:
 
 ```yaml
 xmpp:
-    class_name: XMPP
-    class_path: plugins.xmpp
+    plugin_name: xmpp
     jid: 'user account eg skender@somexmppserver.com'
     password: your xmpp server password
     #server: 127.0.0.1:5222

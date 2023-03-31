@@ -18,8 +18,7 @@ The code was adapted from the CO2Meter project Copyright 2017 by Michael Heinema
 ### plugin.yaml
 ```yaml
 co2meter:
-    class_name: CO2Meter
-    class_path: plugins.co2meter
+    plugin_name: co2meter
     device: '/dev/hidraw0'
     time_sleep: 5
 ```

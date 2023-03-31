@@ -39,8 +39,6 @@ The plugin can be configured with the following parameters:
 
 | Parameter  | Description | Required
 | ------------- | ------------- | ------------- |
-| class_name  | Must be set to `Buderus`  | Yes  |
-| class_path  | Must be set to `plugins.buderus`  | Yes  |
 | host  | IP address of the KM200 gateway. e.g. `192.168.2.28`  | Yes  |
 | key  | Security key which must be created beforehand from your device password (printed on the KM200) and your user defined password (set in the EasyControl App): https://ssl-account.com/km200.andreashahn.info/  | Yes  |
 | cycle_time  | Information will be fetched from KM200 every X seconds. Defaults to 900, meaning an update will be pulled every 15 minutes.  | - |
@@ -49,8 +47,7 @@ The following example can be used to setup a device:
 
 ```yaml
 buderus:
-    class_name: Buderus
-    class_path: plugins.buderus
+    plugin_name: buderus
     host: 192.168.2.28
     key: 90ad52660ce1234551234579d89e25b70b5331ce0e82c5fd1254a317574ec807
 ```

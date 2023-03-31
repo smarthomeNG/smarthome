@@ -18,8 +18,7 @@ For specifications of the Art-Net look at https://art-net.org.uk/resources/art-n
 
 ```yaml
 artnet1:
-    class_name: ArtNet
-    class_path: plugins.artnet
+    plugin_name: artnet
     artnet_universe: 0
     artnet_net: 0
     artnet_subnet: 0

@@ -1,4 +1,4 @@
-# Miflora
+# miflora
 
 ## Requirements
 This plugin requires lib miflora in version 0.4 or above. You can install this lib with:
@@ -26,8 +26,7 @@ Forum thread to the plugin: https://knx-user-forum.de/forum/supportforen/smartho
 
 ```yaml
 miflora:
-    class_name: Miflora
-    class_path: miflora
+    plugin_name: miflora
     bt_library: bluepy
     bt_addr: C4:7C:7E:21:F3:2B
     cycle: 300

@@ -1,4 +1,4 @@
-# Influxdb
+# influxdb
 
 ## Logging to InfluxDB over UDP or HTTP
 
@@ -43,8 +43,7 @@ you can setup global tags and fields (JSON encoded)
 
 ```yaml
 influxdb:
-    class_name: InfluxDB
-    class_path: plugins.influxdb
+    plugin_name: influxdb
     # host: localhost
     # udp_port: 8089
     # keyword: influxdb

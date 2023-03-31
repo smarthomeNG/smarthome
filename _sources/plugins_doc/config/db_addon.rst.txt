@@ -118,6 +118,15 @@ Admin-Funktion des DB-Addon Plugins
    - **clean_cache_values**
 
 
+db_addon_database_item
+======================
+
+
+Optional: Pfad des zu verwendenden Items mit Database Attribut
+
+ - Datentyp: **str**
+
+
 db_addon_fct
 ============
 
@@ -158,6 +167,8 @@ Auswertefunktion des DB-Addon Plugins
    - **verbrauch_jahreszeitraum_minus2**
    - **verbrauch_jahreszeitraum_minus3**
    - **zaehlerstand_heute_minus1**
+   - **zaehlerstand_heute_minus2**
+   - **zaehlerstand_heute_minus3**
    - **zaehlerstand_woche_minus1**
    - **zaehlerstand_woche_minus2**
    - **zaehlerstand_woche_minus3**
@@ -205,6 +216,10 @@ Auswertefunktion des DB-Addon Plugins
    - **minmax_jahr_minus1_min**
    - **minmax_jahr_minus1_max**
    - **minmax_jahr_minus1_avg**
+   - **tagesmitteltemperatur_heute**
+   - **tagesmitteltemperatur_heute_minus1**
+   - **tagesmitteltemperatur_heute_minus2**
+   - **tagesmitteltemperatur_heute_minus3**
    - **serie_minmax_monat_min_15m**
    - **serie_minmax_monat_max_15m**
    - **serie_minmax_monat_avg_15m**
@@ -230,6 +245,7 @@ Auswertefunktion des DB-Addon Plugins
    - **waermesumme**
    - **gruenlandtempsumme**
    - **tagesmitteltemperatur**
+   - **wachstumsgradtage**
    - **db_request**
 
 

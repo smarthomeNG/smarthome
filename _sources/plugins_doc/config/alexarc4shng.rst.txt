@@ -103,6 +103,15 @@ Sekunden bis zum automatischen refreshen des Cookie-files
  - Standardwert: **432000**
 
 
+mfa_secret
+==========
+
+
+Das OTP MFA Secret welches auf der Amazon-Login-Seite angegben wird
+
+ - Datentyp: **str**
+
+
 ==============
 Item Attribute
 ==============
@@ -136,6 +145,28 @@ get_last_alexa()
 Liefert die Geräte-ID des zuletzt verwendeten Alexa-Gerätes zurück
 
  - Ergebnistyp der Funktion: **str**
+
+
+get_list(type)
+==============
+
+
+Liefert die Alexa-Shopping-Liste als dict-zurück
+
+ - Ergebnistyp der Funktion: **str**
+
+
+type
+----
+
+Art der Liste 'SHOPPING_LIST' oder 'TO_DO'
+
+ - Datentyp: **str**
+
+ - Mögliche Werte:
+
+   - **SHOPPING_LIST**
+   - **TO_DO**
 
 
 send_cmd(dvName, cmdName, mValue)

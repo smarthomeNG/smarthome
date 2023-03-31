@@ -134,6 +134,18 @@ Anzahl der Messungen der tatsächlichen Abfragezeit für IO. Der Zähler wird he
  - Standardwert: **10**
 
 
+parasitic_power_wait
+====================
+
+
+Wartezeit in Sekunden, um pei parasitärer Spannungsversorgung der Sensoren die Busspannung zu regenerieren
+
+ - Datentyp: **num**
+ - Standardwert: **0.5**
+
+ - Minimalwert: **0.1**
+ - Maximalwert: **1.5**
+
 port
 ====
 

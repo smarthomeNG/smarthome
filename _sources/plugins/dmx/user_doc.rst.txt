@@ -30,8 +30,7 @@ plugin.yaml
 .. code :: yaml
 
    dmx:
-       class_name: DMX
-       class_path: plugins.dmx
+       plugin_name: dmx
        serialport: /dev/usbtty...
        # interface = nanodmx
 

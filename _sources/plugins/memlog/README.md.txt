@@ -1,4 +1,4 @@
-# MemLog
+# memlog
 
 This plugins can be used to create in-memory logs which can be used by items or other
 plugins.
@@ -15,8 +15,7 @@ Use the plugin configuration to configure the in-memory logs.
 
 ```
 memlog:
-    class_name: MemLog
-    class_path: plugins.memlog
+    plugin_name: memlog
     name: alert
     mappings: 
       - time

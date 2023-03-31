@@ -1,4 +1,4 @@
-# MVG Live
+# mvg_live - MVG Live
 
 ## Requirements
 This plugin requires lib PyMVGLive. You can install this lib with:
@@ -19,8 +19,7 @@ Forum thread to the plugin: https://knx-user-forum.de/forum/supportforen/smartho
 
 ```yaml
 mvg_live:
-    class_name: MVG_Live
-    class_path: plugins.mvg_live
+    plugin_name: mvg_live
 ```
 
 ### items.yaml

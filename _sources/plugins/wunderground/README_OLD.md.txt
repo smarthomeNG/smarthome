@@ -52,8 +52,7 @@ You can configure multiple instances of the wunderground plugin to collect data 
 ```yaml
 # for etc/plugin.yaml configuration file:
 weather_somewhere:
-    class_name: Wunderground
-    class_path: plugins.wunderground
+    plugin_name: wunderground
     apikey: xxxxyyyyxxxxyyyy
     # language: de
     location: Germany/Hamburg
