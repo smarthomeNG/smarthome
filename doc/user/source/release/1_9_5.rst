@@ -1,5 +1,5 @@
 =============================
-Release 1.9.5 - tt. März 2023
+Release 1.9.5 - 31. März 2023
 =============================
 
 Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
@@ -11,11 +11,13 @@ sowie einige neue Plugins.
 
 |
 
+.. only: comment
+
     .. note::
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 30. März 2023
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 31. März 2023
            (logics/check_items.py: fix naming)
          - Berücksichtigt sind Commits im plugins Repository bis incl. 31. März 2023
            (Merge pull request #716 from sisamiwe/z2m)
@@ -66,8 +68,6 @@ Allgmein
 Updates in the CORE
 -------------------
 
-* ...
-
 * Libs:
 
   * lib.connection:
@@ -86,7 +86,6 @@ Updates in the CORE
 
     * Log some more for insights on wrong parameter passing from plugins on callbacks
     * Fix logging
-    * Modify connect logics
 
   * lib.plugin:
 
@@ -143,10 +142,6 @@ Updates in the CORE
 
   * check_items.py: fix naming of parameter in return_items()
 
-* tests:
-
-  * ...
-
 |
 
 Änderungen bei Plugins
@@ -191,7 +186,6 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Fix for RGB lightbulb (fritzdect 500): set on/off state to off and dim level to 0 if device is not
     connected (same behavior as in plugin version 1.6.8)
   * Multiple fixes
-  * Bumed version to 2.0.1
   * Plugin Code cleanup
   * WebIF Update
   * Bumed version to 2.0.2
@@ -331,17 +325,6 @@ dieser Plugins gefunden werden konnte:
 Weiterhin wurde das bisherige mqtt Plugin zu mqtt1 umbenannt und als *deprecated* markiert, da das neue mqtt
 Plugin diese Funktionalität übernimmt. Das neue mqtt Plugin nutzt dazu das mqtt Modul des aktuellen Cores
 von SmartHomeNG.
-
-
-Retired Plugins
----------------
-
-Die folgenden Plugins wurden *retired* (in den RUhestand geschickt). Sie waren in einem der vorangegangenen
-Releases von SmartHomeNG als *deprecated* markiert worden. Diese Plugins wurden aus dem **plugins** Repository
-entfernt, stehen jedoch als Referenz weiterhin zur Verfügung. Diese Plugins wurden in das **plugin_archive**
-Repositiory aufgenommen.
-
-* ...
 
 |
 
