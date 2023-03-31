@@ -96,9 +96,11 @@ from lib.utils import Version
 # Update auf 1.9.4    wg. Release
 # Update auf 1.9.4.1  wg. Kennzeichnung des Repo Stands als "nach dem v1.9.4 Release"
 
-shNG_version = '1.9.4.1'
-shNG_branch = 'develop'
-shNG_releasedate = '14. März 2023'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
+# Update auf 1.9.5    wg. Release
+
+shNG_version = '1.9.5'
+shNG_branch = 'master'
+shNG_releasedate = '31. März 2023'   # Muss beim Release für den master branch auf das Release Datum gesetzt werden
 
 # ---------------------------------------------------------------------------------
 FileBASE = None

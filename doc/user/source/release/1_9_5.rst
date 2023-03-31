@@ -2,8 +2,8 @@
 Release 1.9.5 - 31. März 2023
 =============================
 
-Dieses Release ist ein Wartungs-Release. Außer Bugfixes gibt es einige neue Features im Core von SmartHomeNG,
-sowie einige neue Plugins.
+Dieses Release ist ein Wartungs-Release. Außer Bugfixes im Core gibt es einige neue Features und Bugfixes in Plugins
+von SmartHomeNG, sowie ein neues Plugins.
 
 .. only: comment
 
@@ -206,7 +206,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
     Output error log in this case
   * small improvements in comments and status info
 
-husky2:
+* husky2:
 
   * Catch exception on plugin shutdown
   * Moved to actual aioautomower version
