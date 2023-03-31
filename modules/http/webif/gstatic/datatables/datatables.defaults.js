@@ -27,10 +27,10 @@ $(window).bind('datatables_defaults', function() {
 			// Set datatable useful defaults
 			$.extend( $.fn.dataTable.ext.classes, { "sTable": "table table-striped table-hover pluginList display dataTable dataTableAdditional" });
 			$.extend( $.fn.dataTable.defaults, {
-				lengthMenu: [ [25, 50, 100, -1], [25, 50, 100, "All"] ], // pagination menu
-				pageResize: false,
+				lengthMenu: [ [100000, 25, 50, 100, -1], ["Auto", 25, 50, 100, "All"] ], // pagination menu
 				lengthChange: true,
 				paging: true,
+				stateSave: true,
 				pageLength: 100, // default to "100"
 				pagingType: "full_numbers", // include first and last in pagination menu
 				colReorder: true, // enable colomn reorder by drag and drop
@@ -39,7 +39,7 @@ $(window).bind('datatables_defaults', function() {
 				fixedHeader: {header: true, // header will always be visible on top of page when scrolling
 				 						 headerOffset: top_offset},
 				autoWidth: false,
-				initComplete: function () {
+				initComplete: function (oSettings) {
 					// update content on ordering - if activated
 					$(this).on( 'click', 'thead tr th', function () {
 						if ($(this).hasClass( "sorting" ) && window.initial_update == 'true'){
@@ -50,8 +50,9 @@ $(window).bind('datatables_defaults', function() {
 					// slightly change resize_wrapper when expanding/collapsing responsive rows to fix some issues
 					$(this).on( 'click', 'tbody tr td', function () {
 						if ($(this).hasClass( "datatable-responsive" )){
-							window.toggle = window.toggle * -1
-							$('#resize_wrapper').css('height', $(window).height() - $('#webif-navbar').outerHeight() - $('#webif-tabs').outerHeight() - additional - $('.dataTables_info').outerHeight() - 5 - window.toggle);
+							window.toggle = window.toggle * -1 + 0.1;
+							console.log("click responsive, resize");
+							$(window).resize();
 							$(this).parent().parent().parent().DataTable().responsive.recalc();
 						}
 					});
@@ -78,7 +79,11 @@ $(window).bind('datatables_defaults', function() {
 					if (window.initial_update == 'true') {
 						setTimeout(function() { shngGetUpdatedData(); }, 200);
 					}
-					setTimeout(function() { $(window).resize();  }, 2000);// show table (only) after init, adjust height of wrapper after 2s
+					if (oSettings.oInit.pageResize == true);
+					{
+						setTimeout(function() { $(window).resize();  }, 2000);
+					}
+
 				},
         responsive: {details: {type: 'column', renderer: $.fn.dataTable.Responsive.renderer.listHidden()}}, //makes it possible to update columns even if they are not shown as columns (but as collapsable items)
 				preDrawCallback: function (oSettings) {
@@ -88,8 +93,16 @@ $(window).bind('datatables_defaults', function() {
 
     		},
 				drawCallback: function(oSettings) { // hide pagination if not needed
-					$(window).resize();
-					console.log("draw datatable " + this.attr('id'));
+					if (this.api().page.len() == 0 || this.api().page.len() == 100000)
+					{
+						console.log("resize datatable");
+
+						$(window).resize();
+						window.toggle = window.toggle * -1;
+						setTimeout(function() { $(window).resize();  }, 500);
+					}
+
+					console.log("draw datatable " + this.attr('id') + " with pagelength " + this.api().page.len());
 					if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay() || oSettings._iDisplayLength == -1) {
 						 $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
 					} else {
@@ -158,6 +171,7 @@ $(window).bind('datatables_defaults', function() {
 				$.fn.dataTable.tables({ visible: true, api: true }).fixedHeader.adjust();
 				$.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
 				$(function () {
+						console.log("resize datatable after tab change");
 						$(window).resize();
 						setTimeout(function() { $(window).resize(); }, 300); // necessary for Safari
 				});

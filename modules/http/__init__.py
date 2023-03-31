@@ -275,7 +275,8 @@ class Http(Module):
         self._build_hostmaps()
 
         globaltemplates = self.gtemplates_dir
-        self.tplenv = Environment(loader=FileSystemLoader([os.path.join( self.webif_dir, 'templates' ), globaltemplates] ))
+        #self.tplenv = Environment(loader=FileSystemLoader([os.path.join( self.webif_dir, 'templates' ), globaltemplates] ))
+        self.tplenv = self.init_template_environment()
 
         self._gstatic_dir = self.webif_dir + '/gstatic'
 
@@ -372,6 +373,45 @@ class Http(Module):
 #                                  pluginclass='', instance='', description='', servicename='')
 
         return
+
+
+    def init_template_environment(self):
+        """
+        Initialize the Jinja2 template engine environment
+
+        :return: Jinja2 template engine environment
+        :rtype: object
+        """
+        mytemplates = os.path.join(self.webif_dir, 'templates')
+        globaltemplates = self.gtemplates_dir
+        tplenv = Environment(loader=FileSystemLoader([mytemplates, globaltemplates]))
+
+        tplenv.globals['isfile'] = self.is_staticfile
+        tplenv.globals['_'] = self.translate        # use translate method of webinterface class
+        tplenv.globals['len'] = len
+        return tplenv
+
+
+    def is_staticfile(self, path):
+        """
+        Method tests, if the given pathname points to an existing file in the webif's static
+        directory or the global static directory gstatic in the http module
+
+        This method extends the jinja2 template engine
+
+        :param path: path to test
+        :param type: str
+
+        :return: True if the file exists
+        :rtype: bool
+        """
+        if path.startswith('/gstatic/'):
+            complete_path = os.path.join(self.gstatic_dir, path[len('/gstatic/'):])
+        else:
+            complete_path = os.path.join(self.webif_dir, path)
+        from os.path import isfile as isfile
+        return isfile(complete_path)
+
 
     def is_port_in_use(self, port):
         import socket
@@ -579,6 +619,7 @@ class Http(Module):
         self.dom1 = self.get_local_ip_address()+':'+str(self._port)
         self.dom2 = self.get_local_hostname()+':'+str(self._port)
         self.dom3 = self.get_local_hostname().split('.')[0]+'.local'+':'+str(self._port)
+
         self.dom4 = self.get_local_ip_address()+':'+str(self._servicesport)
         self.dom5 = self.get_local_hostname()+':'+str(self._servicesport)
         self.dom6 = self.get_local_hostname().split('.')[0]+'.local'+':'+str(self._servicesport)

@@ -39,7 +39,7 @@ from lib.utils import Utils
 
 
 class Websocket(Module):
-    version = '1.0.9'
+    version = '1.1.2'
     longname = 'Websocket module for SmartHomeNG'
     port = 0
 
@@ -353,6 +353,8 @@ class Websocket(Module):
 
 
     def client_address(self, websocket):
+        if websocket.remote_address is None:
+            return 'unknown (wss)'
         return websocket.remote_address[0] + ':' + str(websocket.remote_address[1])
 
 

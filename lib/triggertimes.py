@@ -917,7 +917,13 @@ class Skytime(TriggerTime):
                             # the day, month and weekday is correct with searchtime
                             # now get the skyevent time and see if it fits for this day.
                             if self.event in mappings:
-                                eventtime = mappings[self.event](self.doff, self.moff, dt=searchtime)
+                                try:
+                                    eventtime = mappings[self.event](self.doff, self.moff, dt=searchtime)
+                                except:
+                                    eventtime = None
+                                if eventtime is None:
+                                    eventtime = get_invalid_time()
+                                    logger.error(f"skyevent {self.event} could not be calculated, setting to invalid eventtime '{eventtime}' and try to continue")
                                 # time in next_time will be in utctime. So we need to adjust it
                                 if eventtime.tzinfo == tzutc():
                                     eventtime = eventtime.astimezone(Skytime.sh.shtime.tzinfo())

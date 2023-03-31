@@ -466,6 +466,8 @@ class PluginsInfoController(RESTResource):
             plugin['metadata']['keywords'] = x._metadata.get_string('keywords')
             # documentation link from metadata
             plugin['metadata']['documentation'] = x._metadata.get_string('documentation')
+            if plugin['metadata']['documentation'] is None:
+                plugin['metadata']['documentation'] = ''
             if plugin['metadata']['documentation'].endswith(f"plugins/{plugin['pluginname']}/user_doc.html"):
                 plugin['metadata']['documentation'] = ''
             elif plugin['metadata']['documentation'].endswith(f"plugins_doc/config/{plugin['pluginname']}.html"):

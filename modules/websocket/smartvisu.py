@@ -51,12 +51,13 @@ from lib.shtime import Shtime
 
 class Protocol():
 
-    version = '1.0.0'
+    version = '1.0.3'
 
     protocol_id = 'sv'
     protocol_name = 'smartvisu'
     protocol_path = '/'
     protocol_enabled = False
+    #protocol_over_reverseproxy = False
 
 
     def __init__(self, ws_server, logger_name):
@@ -150,7 +151,7 @@ class Protocol():
 # ---------------------------------
 
 
-    def set_smartvisu_support(self, protocol_enabled=False, default_acl='ro', query_definitions=False, series_updatecycle=0):
+    def set_smartvisu_support(self, protocol_enabled=False, default_acl='ro', query_definitions=False, series_updatecycle=0, protocol_over_reverseproxy=False):
         """
         Set state of smartvisu support
 
@@ -162,6 +163,7 @@ class Protocol():
         self.sv_querydef = query_definitions
         self.sv_ser_upd_cycle = int(series_updatecycle)
         self.protocol_enabled = protocol_enabled
+        #self.protocol_over_reverseproxy = protocol_over_reverseproxy
         if self.protocol_enabled:
             self.logger.info(f"Payload protocol '{self.protocol_name}' enabled")
             self.logger.info(f"smartvisu support: default_acl={default_acl}, query_definitions={query_definitions}, series_updatecycle={series_updatecycle}")
@@ -330,7 +332,10 @@ class Protocol():
             if str(e).startswith(('no close frame received or sent', 'received 1005', 'code = 1005')):
                 self.logger.info(logmsg)
             elif str(e).startswith(('code = 1006')) or str(e).endswith('keepalive ping timeout; no close frame received'):
-                self.logger.warning(logmsg)
+                if str(e).find('1011 (unexpected error)') >= 0:
+                    self.logger.info(logmsg)
+                else:
+                    self.logger.warning(logmsg)
             else:
                 self.logger.error(logmsg)
 
@@ -781,7 +786,7 @@ class Protocol():
                     websocket = self.sv_clients[client_addr]['websocket']
                     try:
                         await websocket.send(command)
-                        self.logger.warning(f"visu >command: '{command}'   -   to {client_addr}")
+                        self.logger.info(f"Sending command: '{command}'   -   to {client_addr}")
                     # except (asyncio.IncompleteReadError, asyncio.connection_closed) as e:
                     except Exception as e:
                         self.logger.error(f"Exception in 'await websocket.send(url-command)': {e}")
@@ -790,12 +795,12 @@ class Protocol():
 
     async def update_item(self, item_name, item_value, source):
         """
-        send JSON data with new value of an item
+        send JSON data with new value of an item (for items that are monitored by a smartVISU)
         """
-        items = []
         # self.logger.warning("update_item: self.monitor['item']")
         items_list = list(self.sv_monitor_items.keys())
         for client_addr in items_list:
+            items = []
             websocket = self.sv_clients[client_addr]['websocket']
             for candidate in self.sv_monitor_items[client_addr]:
 

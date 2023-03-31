@@ -128,8 +128,8 @@ class Metadata():
             else:
                 self.global_parameters = self.get_global_plugin_parameters()
                 self.parameters = self.meta.get(META_PLUGIN_PARAMETER_SECTION, {})
-                if isinstance(self.parameters, str):
-                    # if plugin parameter section is declared as NONE
+                if self.parameters is None or isinstance(self.parameters, str):
+                    # if plugin parameter section is empty or is declared as NONE
                     self.parameters = self.global_parameters
                 else:
                     self.parameters.update(self.global_parameters)
