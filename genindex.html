@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stichwortverzeichnis &mdash; Dokumentation v1.9.4 v1.9.4 (Stand 14. März 2023) Dokumentation</title>
+  <title>Stichwortverzeichnis &mdash; Dokumentation v1.9.5 v1.9.5 (Stand 31. März 2023) Dokumentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -35,7 +35,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            Dokumentation v1.9.4
+            Dokumentation v1.9.5
               <img src="_static/logo_long_inverse3.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -3254,8 +3254,14 @@
 <li class="toctree-l5"><a class="reference internal" href="entwicklung/plugins/plugin_in5minutes.html#zusammenfassung">Zusammenfassung</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="entwicklung/plugins/smartplugin.html">Class SmartPlugin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="entwicklung/plugins/mqttplugin.html">Class MqttPlugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="entwicklung/plugins/smartplugin.html">Class SmartPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="entwicklung/plugins/mqttplugin.html">Class MqttPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="entwicklung/plugins/mqttplugin.html#lib.model.mqttplugin.MqttPlugin"><code class="docutils literal notranslate"><span class="pre">MqttPlugin</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="entwicklung/plugins/plugin_metadata.html">Plugin-Metadata <span class="bluesup">update</span></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="entwicklung/plugins/plugin_metadata.html#detaillierte-beschreibung">Detaillierte Beschreibung</a></li>
 <li class="toctree-l5"><a class="reference internal" href="entwicklung/plugins/plugin_metadata.html#plugin">plugin</a></li>
@@ -3340,8 +3346,19 @@
 <li class="toctree-l3"><a class="reference internal" href="referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#metadaten">Metadaten</a></li>
@@ -3373,7 +3390,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="entwicklung/core/core.html">Entwicklung des Core</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="entwicklung/core/core_shng.html">Der Core von SmartHomeNG</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome"><code class="docutils literal notranslate"><span class="pre">SmartHome</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="entwicklung/core/core_libraries.html">Programm Module</a><ul>
@@ -3402,7 +3422,15 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="lib/constants.html">lib.constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lib/daemon.html">lib.daemon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lib/daemon.html">lib.daemon</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/daemon.html#lib.daemon.check_sh_is_running"><code class="docutils literal notranslate"><span class="pre">check_sh_is_running()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/daemon.html#lib.daemon.daemonize"><code class="docutils literal notranslate"><span class="pre">daemonize()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/daemon.html#lib.daemon.kill"><code class="docutils literal notranslate"><span class="pre">kill()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/daemon.html#lib.daemon.read_pidfile"><code class="docutils literal notranslate"><span class="pre">read_pidfile()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/daemon.html#lib.daemon.remove_pidfile"><code class="docutils literal notranslate"><span class="pre">remove_pidfile()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/daemon.html#lib.daemon.write_pidfile"><code class="docutils literal notranslate"><span class="pre">write_pidfile()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="lib/item_conversion.html">lib.item_conversion</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="lib/item_conversion.html#lib.item_conversion.convert_yaml"><code class="docutils literal notranslate"><span class="pre">convert_yaml()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="lib/item_conversion.html#lib.item_conversion.is_ruamelyaml_installed"><code class="docutils literal notranslate"><span class="pre">is_ruamelyaml_installed()</span></code></a></li>
@@ -3425,7 +3453,10 @@
 <li class="toctree-l5"><a class="reference internal" href="lib/module.html#lib.module.Modules"><code class="docutils literal notranslate"><span class="pre">Modules</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="lib/scene.html">lib.scene</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lib/scene.html">lib.scene</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/scene.html#lib.scene.Scenes"><code class="docutils literal notranslate"><span class="pre">Scenes</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="lib/shyaml.html">lib.shyaml</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="lib/shyaml.html#lib.shyaml.convert_linenumber"><code class="docutils literal notranslate"><span class="pre">convert_linenumber()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="lib/shyaml.html#lib.shyaml.editing_is_enabled"><code class="docutils literal notranslate"><span class="pre">editing_is_enabled()</span></code></a></li>
@@ -3462,8 +3493,20 @@
 <li class="toctree-l5"><a class="reference internal" href="lib/logutils.html#lib.logutils.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="lib/network.html">lib.network</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lib/orb.html">lib.orb</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lib/network.html">lib.network</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Connections"><code class="docutils literal notranslate"><span class="pre">Connections</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_client"><code class="docutils literal notranslate"><span class="pre">Tcp_client</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.ConnectionClient"><code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_server"><code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lib/orb.html">lib.orb</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="lib/tools.html">lib.tools</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="lib/tools.html#lib.tools.Tools"><code class="docutils literal notranslate"><span class="pre">Tools</span></code></a></li>
 </ul>
@@ -3745,7 +3788,12 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="referenz/module/module.html">Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="referenz/module/module_http.html">Modul http</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="referenz/module/module_http.html#api-des-moduls">API des Moduls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="referenz/module/module_http.html#module-modules.http">API des Moduls</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_http.html#modules.http.CherryPyFilter"><code class="docutils literal notranslate"><span class="pre">CherryPyFilter</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_http.html#modules.http.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_http.html#modules.http.ModuleApp"><code class="docutils literal notranslate"><span class="pre">ModuleApp</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_http.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_http.html#metadaten">Metadaten</a></li>
 </ul>
@@ -3753,15 +3801,29 @@
 <li class="toctree-l3"><a class="reference internal" href="referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_admin.html#metadaten">Metadaten</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="referenz/module/module_mqtt.html">Modul mqtt</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="referenz/module/module_mqtt.html#api-des-moduls">API des Moduls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="referenz/module/module_mqtt.html#module-modules.mqtt">API des Moduls</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt"><code class="docutils literal notranslate"><span class="pre">Mqtt</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_mqtt.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="referenz/module/module_mqtt.html#metadaten">Metadaten</a></li>
 </ul>
@@ -3880,6 +3942,12 @@
 <li class="toctree-l3"><a class="reference internal" href="referenz/userfunctions/userfunctions.html#reload-von-userfunctions">Reload von Userfunctions</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="referenz/virtual_environments/virtual_environments.html">Virtuelle Environments <span class="redsup">Neu</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="referenz/virtual_environments/virtual_environments.html#installation-von-virtualenv">Installation von virtualenv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="referenz/virtual_environments/virtual_environments.html#erstellung-von-virtuellen-environments">Erstellung von virtuellen Environments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="referenz/virtual_environments/virtual_environments.html#virtuelle-environements-als-dienst">Virtuelle Environements als Dienst</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lib/db.html">lib.db</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lib/db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a><ul>
@@ -3911,8 +3979,87 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="lib/network.html">lib.network</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lib/orb.html">lib.orb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lib/network.html">lib.network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lib/network.html#lib.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Network.ip_port_to_socket"><code class="docutils literal notranslate"><span class="pre">Network.ip_port_to_socket()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Network.family_to_string"><code class="docutils literal notranslate"><span class="pre">Network.family_to_string()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Network.ping"><code class="docutils literal notranslate"><span class="pre">Network.ping()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Network.ping_port"><code class="docutils literal notranslate"><span class="pre">Network.ping_port()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Network.send_wol"><code class="docutils literal notranslate"><span class="pre">Network.send_wol()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Network.validate_inet_addr"><code class="docutils literal notranslate"><span class="pre">Network.validate_inet_addr()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Network.clean_uri"><code class="docutils literal notranslate"><span class="pre">Network.clean_uri()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lib/network.html#lib.network.Connections"><code class="docutils literal notranslate"><span class="pre">Connections</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Connections.monitor"><code class="docutils literal notranslate"><span class="pre">Connections.monitor()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Connections.unmonitor"><code class="docutils literal notranslate"><span class="pre">Connections.unmonitor()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Connections.check"><code class="docutils literal notranslate"><span class="pre">Connections.check()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lib/network.html#lib.network.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Http.HTTPDigestAuth"><code class="docutils literal notranslate"><span class="pre">Http.HTTPDigestAuth()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Http.post_json"><code class="docutils literal notranslate"><span class="pre">Http.post_json()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Http.get_json"><code class="docutils literal notranslate"><span class="pre">Http.get_json()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Http.get_text"><code class="docutils literal notranslate"><span class="pre">Http.get_text()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Http.download"><code class="docutils literal notranslate"><span class="pre">Http.download()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Http.get_binary"><code class="docutils literal notranslate"><span class="pre">Http.get_binary()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Http.response_status"><code class="docutils literal notranslate"><span class="pre">Http.response_status()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Http.response_headers"><code class="docutils literal notranslate"><span class="pre">Http.response_headers()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Http.response_cookies"><code class="docutils literal notranslate"><span class="pre">Http.response_cookies()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Http.response_object"><code class="docutils literal notranslate"><span class="pre">Http.response_object()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lib/network.html#lib.network.Tcp_client"><code class="docutils literal notranslate"><span class="pre">Tcp_client</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_client.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Tcp_client.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_client.connect"><code class="docutils literal notranslate"><span class="pre">Tcp_client.connect()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_client.connected"><code class="docutils literal notranslate"><span class="pre">Tcp_client.connected()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_client.send"><code class="docutils literal notranslate"><span class="pre">Tcp_client.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_client.close"><code class="docutils literal notranslate"><span class="pre">Tcp_client.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lib/network.html#lib.network.ConnectionClient"><code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.ConnectionClient.socket"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.socket</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.ConnectionClient.set_callbacks"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.ConnectionClient.send"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.ConnectionClient.send_echo_off"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send_echo_off()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.ConnectionClient.send_echo_on"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send_echo_on()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.ConnectionClient.close"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lib/network.html#lib.network.Tcp_server"><code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_server.MODE_TEXT"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_TEXT</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_server.MODE_TEXT_LINE"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_TEXT_LINE</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_server.MODE_BINARY"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_BINARY</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_server.MODE_FIXED_LENGTH"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_FIXED_LENGTH</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_server.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Tcp_server.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_server.start"><code class="docutils literal notranslate"><span class="pre">Tcp_server.start()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_server.listening"><code class="docutils literal notranslate"><span class="pre">Tcp_server.listening()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_server.send"><code class="docutils literal notranslate"><span class="pre">Tcp_server.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_server.disconnect"><code class="docutils literal notranslate"><span class="pre">Tcp_server.disconnect()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Tcp_server.close"><code class="docutils literal notranslate"><span class="pre">Tcp_server.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lib/network.html#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Udp_server.start"><code class="docutils literal notranslate"><span class="pre">Udp_server.start()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Udp_server.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Udp_server.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Udp_server.listening"><code class="docutils literal notranslate"><span class="pre">Udp_server.listening()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/network.html#lib.network.Udp_server.close"><code class="docutils literal notranslate"><span class="pre">Udp_server.close()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lib/orb.html">lib.orb</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lib/orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/orb.html#lib.orb.Orb.get_observer_and_orb"><code class="docutils literal notranslate"><span class="pre">Orb.get_observer_and_orb()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/orb.html#lib.orb.Orb.midnight"><code class="docutils literal notranslate"><span class="pre">Orb.midnight()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/orb.html#lib.orb.Orb.noon"><code class="docutils literal notranslate"><span class="pre">Orb.noon()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/orb.html#lib.orb.Orb.pos"><code class="docutils literal notranslate"><span class="pre">Orb.pos()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/orb.html#lib.orb.Orb.rise"><code class="docutils literal notranslate"><span class="pre">Orb.rise()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/orb.html#lib.orb.Orb.set"><code class="docutils literal notranslate"><span class="pre">Orb.set()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="lib/tools.html">lib.tools</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lib/tools.html#lib.tools.Tools"><code class="docutils literal notranslate"><span class="pre">Tools</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="lib/tools.html#lib.tools.Tools.abs2rel"><code class="docutils literal notranslate"><span class="pre">Tools.abs2rel()</span></code></a></li>
@@ -3970,7 +4117,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="referenz/APIs.html">APIs von SmartHomeNG</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lib/item.html">Items-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lib/item.html#lib-item">lib.item</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lib/item.html#module-lib.item">lib.item</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="lib/item_class_item.html">Class Item</a></li>
 <li class="toctree-l5"><a class="reference internal" href="lib/item_class_items.html">Class Items</a></li>
 <li class="toctree-l5"><a class="reference internal" href="lib/item.html#class-item">class Item</a></li>
@@ -3980,7 +4127,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lib/plugin.html">Plugins-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lib/plugin.html#module-lib.plugin">lib.plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lib/plugin.html#lib-plugin">lib.plugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="lib/plugin_class_pluginwrapper.html">Class PluginWrapper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="lib/plugin_class_plugins.html">Class Plugins</a></li>
 <li class="toctree-l5"><a class="reference internal" href="lib/plugin.html#class-pluginwrapper">class PluginWrapper</a></li>
@@ -3990,15 +4137,26 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lib/shtime.html">Shtime-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lib/shtime.html#lib-shtime">lib.shtime</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lib/shtime.html#module-lib.shtime">lib.shtime</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/shtime.html#lib.shtime.Shtime"><code class="docutils literal notranslate"><span class="pre">Shtime</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lib/logic.html">Logics-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lib/logic.html#lib-logic">lib.logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lib/logic.html#module-lib.logic">lib.logic</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/logic.html#lib.logic.Logics"><code class="docutils literal notranslate"><span class="pre">Logics</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/logic.html#lib.logic.Logic"><code class="docutils literal notranslate"><span class="pre">Logic</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lib/scheduler.html">Scheduler-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lib/scheduler.html#lib-scheduler">lib.scheduler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lib/scheduler.html#module-lib.scheduler">lib.scheduler</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lib/scheduler.html#lib.scheduler.LeaveLogic"><code class="docutils literal notranslate"><span class="pre">LeaveLogic</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lib/scheduler.html#lib.scheduler.Scheduler"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -4007,6 +4165,31 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ - Häufig gestellte Fragen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="release/release.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="release/1_9_5.html">Release 1.9.5 - 31. März 2023</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="release/1_9_5.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="release/1_9_5.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="release/1_9_5.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="release/1_9_5.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="release/1_9_5.html#allgmein">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="release/1_9_5.html#updates-in-the-core">Updates in the CORE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="release/1_9_5.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="release/1_9_5.html#id1">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="release/1_9_5.html#neue-plugins">Neue Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="release/1_9_5.html#plugin-updates">Plugin Updates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="release/1_9_5.html#outdated-plugins">Outdated Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="release/1_9_5.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="release/1_9_5.html#tools">Tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="release/1_9_5.html#dokumentation">Dokumentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="release/1_9_4.html">Release 1.9.4 - 14. März 2023</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="release/1_9_4.html#uberblick">Überblick</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="release/1_9_4.html#minimum-python-version">Minimum Python Version</a></li>
@@ -4293,7 +4476,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Dokumentation v1.9.4</a>
+          <a href="index.html">Dokumentation v1.9.5</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -4323,6 +4506,7 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -4347,13 +4531,51 @@
 </li>
       <li><a href="lib/tools.html#lib.tools.Tools.abs2rel">abs2rel() (Methode von lib.tools.Tools)</a>
 </li>
-      <li><a href="lib/log.html#lib.log.Log.add">add() (Methode von lib.log.Log)</a>
+      <li><a href="lib/connection.html#lib.connection.Server.accept">accept() (Methode von lib.connection.Server)</a>
 </li>
+      <li><a href="lib/log.html#lib.log.Log.add">add() (Methode von lib.log.Log)</a>
+
+      <ul>
+        <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.add">(Methode von lib.scheduler.Scheduler)</a>
+</li>
+        <li><a href="referenz/module/module_admin.html#modules.admin.api_plugin.PluginController.add">(Methode von modules.admin.api_plugin.PluginController)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.add_custom_holiday">add_custom_holiday() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.add_custom_holiday_range">add_custom_holiday_range() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.add_event_listener">add_event_listener() (Methode von lib.smarthome.SmartHome)</a>
+</li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.add_item">add_item() (Methode von lib.item.Items)</a>
+
+      <ul>
+        <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.add_item">(Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.add_item">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
       <li><a href="lib/log.html#lib.log.Logs.add_log">add_log() (Methode von lib.log.Logs)</a>
 </li>
       <li><a href="lib/log.html#lib.log.Logs.add_logging_level">add_logging_level() (Methode von lib.log.Logs)</a>
 </li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.add_logic_trigger">add_logic_trigger() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.add_method_trigger">add_method_trigger() (Methode von lib.item.item.Item)</a>
+
+      <ul>
+        <li><a href="lib/logic.html#lib.logic.Logic.add_method_trigger">(Methode von lib.logic.Logic)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.add_plugin_attribute">add_plugin_attribute() (Methode von lib.item.Items)</a>
+</li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.add_plugin_attribute_prefix">add_plugin_attribute_prefix() (Methode von lib.item.Items)</a>
+</li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.add_struct_definition">add_struct_definition() (Methode von lib.item.Items)</a>
+</li>
       <li><a href="lib/config.html#lib.config.add_struct_to_item_template">add_struct_to_item_template() (im Modul lib.config)</a>
+</li>
+      <li><a href="entwicklung/plugins/mqttplugin.html#lib.model.mqttplugin.MqttPlugin.add_subscription">add_subscription() (Methode von lib.model.mqttplugin.MqttPlugin)</a>
 </li>
       <li>
     admin
@@ -4362,6 +4584,8 @@
         <li><a href="konfiguration/module/module_admin.html#index-0">Modul</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     Admin GUI
 
@@ -4378,8 +4602,6 @@
         <li><a href="konfiguration/module/module_admin.html#index-2">Konfigurationsdatei</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     admin Modul
 
@@ -4402,6 +4624,8 @@
       </ul></li>
       <li><a href="admin/admin.html#index-1">Administrations-Interface</a>
 </li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.age">age() (Methode von lib.item.item.Item)</a>
+</li>
       <li>
     Alexa
 
@@ -4411,9 +4635,15 @@
         <li><a href="plugins/alexarc4shng/user_doc.html#index-1">alexarc4shng Plugin</a>
 </li>
       </ul></li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.alive">alive (Attribut von lib.model.smartplugin.SmartPlugin)</a>
+</li>
       <li><a href="admin/system.html#index-9">allgemein</a>
 </li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.ALLOW_MULTIINSTANCE">ALLOW_MULTIINSTANCE (Attribut von lib.model.smartplugin.SmartPlugin)</a>
+</li>
       <li><a href="referenz/items/standard_attribute/autotimer.html#index-1">autotimer</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.autotimer">autotimer() (Methode von lib.item.item.Item)</a>
 </li>
       <li><a href="plugins/avdevice/user_doc.html#index-1">avdevice</a>
 </li>
@@ -4436,6 +4666,18 @@
       </ul></li>
       <li><a href="tools/tools_backup_restore.html#index-0">Backup und Restore Tool</a>
 </li>
+      <li><a href="lib/connection.html#lib.connection.Stream.balance">balance() (Methode von lib.connection.Stream)</a>
+</li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.BASE">BASE (Attribut von lib.smarthome.SmartHome)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Base">Base (Klasse in lib.connection)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.beginning_of_month">beginning_of_month() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.beginning_of_week">beginning_of_week() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.beginning_of_year">beginning_of_year() (Methode von lib.shtime.Shtime)</a>
+</li>
       <li>
     Beispiele
 
@@ -4453,8 +4695,20 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController.blog_urls">blog_urls (Attribut von modules.admin.api_plugins.PluginsInfoController)</a>
+</li>
       <li><a href="plugins/bose_soundtouch/user_doc.html#index-1">bose_soundtouch</a>
 </li>
+      <li><a href="entwicklung/plugins/mqttplugin.html#lib.model.mqttplugin.MqttPlugin.broker_config">broker_config (Attribut von lib.model.mqttplugin.MqttPlugin)</a>
+</li>
+      <li><a href="entwicklung/plugins/mqttplugin.html#lib.model.mqttplugin.MqttPlugin.broker_monitoring">broker_monitoring (Attribut von lib.model.mqttplugin.MqttPlugin)</a>
+</li>
+      <li><a href="entwicklung/plugins/mqttplugin.html#lib.model.mqttplugin.MqttPlugin.broker_uptime">broker_uptime() (Methode von lib.model.mqttplugin.MqttPlugin)</a>
+
+      <ul>
+        <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt.broker_uptime">(Methode von modules.mqtt.Mqtt)</a>
+</li>
+      </ul></li>
       <li><a href="tools/tools_build_requirements.html#index-0">Build Tool für Python Requirements</a>
 </li>
   </ul></td>
@@ -4467,7 +4721,25 @@
 </li>
       <li><a href="admin/dienste.html#index-13">Cache Prüfung</a>
 </li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.calendar_week">calendar_week() (Methode von lib.shtime.Shtime)</a>
+</li>
       <li><a href="plugins/casambi/user_doc.html#index-1">casambi</a>
+</li>
+      <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt.cast_from_mqtt">cast_from_mqtt() (Methode von modules.mqtt.Mqtt)</a>
+</li>
+      <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt.cast_to_mqtt">cast_to_mqtt() (Methode von modules.mqtt.Mqtt)</a>
+</li>
+      <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.change">change() (Methode von lib.scheduler.Scheduler)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.changed_by">changed_by() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Connections.check">check() (Methode von lib.connection.Connections)</a>
+
+      <ul>
+        <li><a href="lib/network.html#lib.network.Connections.check">(Methode von lib.network.Connections)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.check_caller">check_caller() (Methode von lib.scheduler.Scheduler)</a>
 </li>
       <li><a href="lib/utils.html#lib.utils.Utils.check_hashed_password">check_hashed_password() (statische Methode von lib.utils.Utils)</a>
 </li>
@@ -4478,6 +4750,12 @@
       <li><a href="lib/metadata.html#lib.metadata.Metadata.check_parameters">check_parameters() (Methode von lib.metadata.Metadata)</a>
 </li>
       <li><a href="entwicklung/plugins/plugin_checker.html#index-2">check_plugin.py</a>
+</li>
+      <li><a href="lib/daemon.html#lib.daemon.check_sh_is_running">check_sh_is_running() (im Modul lib.daemon)</a>
+</li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.checkConfigFiles">checkConfigFiles() (Methode von lib.smarthome.SmartHome)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.CherryPyFilter">CherryPyFilter (Klasse in modules.http)</a>
 </li>
       <li>
     Class
@@ -4490,15 +4768,37 @@
       </ul></li>
       <li><a href="lib/log.html#lib.log.Log.clean">clean() (Methode von lib.log.Log)</a>
 </li>
+      <li><a href="lib/network.html#lib.network.Network.clean_uri">clean_uri() (statische Methode von lib.network.Network)</a>
+</li>
       <li><a href="plugins/cli/user_doc.html#index-1">cli</a>
 </li>
+      <li><a href="lib/connection.html#lib.connection.Client">Client (Klasse in lib.connection)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Connections.close">close() (Methode von lib.connection.Connections)</a>
+
+      <ul>
+        <li><a href="lib/connection.html#lib.connection.Server.close">(Methode von lib.connection.Server)</a>
+</li>
+        <li><a href="lib/connection.html#lib.connection.Stream.close">(Methode von lib.connection.Stream)</a>
+</li>
+        <li><a href="lib/db.html#lib.db.Database.close">(Methode von lib.db.Database)</a>
+</li>
+        <li><a href="lib/network.html#lib.network.ConnectionClient.close">(Methode von lib.network.ConnectionClient)</a>
+</li>
+        <li><a href="lib/network.html#lib.network.Tcp_client.close">(Methode von lib.network.Tcp_client)</a>
+</li>
+        <li><a href="lib/network.html#lib.network.Tcp_server.close">(Methode von lib.network.Tcp_server)</a>
+</li>
+        <li><a href="lib/network.html#lib.network.Udp_server.close">(Methode von lib.network.Udp_server)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="lib/db.html#lib.db.Database.close">close() (Methode von lib.db.Database)</a>
-</li>
       <li><a href="lib/db.html#lib.db.Database.commit">commit() (Methode von lib.db.Database)</a>
 </li>
       <li><a href="lib/utils.html#lib.utils.Version.compare">compare() (Klassenmethode von lib.utils.Version)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logic.conf">conf (lib.logic.Logic property)</a>
 </li>
       <li><a href="tools/tools_conf_to_yaml_converter.html#index-0">CONF zu YAML Konverter</a>
 </li>
@@ -4506,28 +4806,68 @@
 </li>
       <li><a href="lib/log.html#lib.log.Logs.configure_logging">configure_logging() (Methode von lib.log.Logs)</a>
 </li>
-      <li><a href="lib/db.html#lib.db.Database.connect">connect() (Methode von lib.db.Database)</a>
+      <li><a href="lib/connection.html#lib.connection.Client.connect">connect() (Methode von lib.connection.Client)</a>
+
+      <ul>
+        <li><a href="lib/connection.html#lib.connection.Server.connect">(Methode von lib.connection.Server)</a>
 </li>
+        <li><a href="lib/db.html#lib.db.Database.connect">(Methode von lib.db.Database)</a>
+</li>
+        <li><a href="lib/network.html#lib.network.Tcp_client.connect">(Methode von lib.network.Tcp_client)</a>
+</li>
+      </ul></li>
       <li><a href="lib/db.html#lib.db.Database.connected">connected() (Methode von lib.db.Database)</a>
+
+      <ul>
+        <li><a href="lib/network.html#lib.network.Tcp_client.connected">(Methode von lib.network.Tcp_client)</a>
 </li>
+      </ul></li>
+      <li><a href="lib/network.html#lib.network.ConnectionClient">ConnectionClient (Klasse in lib.network)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Connections">Connections (Klasse in lib.connection)</a>
+
+      <ul>
+        <li><a href="lib/network.html#lib.network.Connections">(Klasse in lib.network)</a>
+</li>
+      </ul></li>
       <li><a href="lib/shyaml.html#lib.shyaml.convert_linenumber">convert_linenumber() (im Modul lib.shyaml)</a>
 </li>
       <li><a href="lib/item_conversion.html#lib.item_conversion.convert_yaml">convert_yaml() (im Modul lib.item_conversion)</a>
 </li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.create_directories">create_directories() (Methode von lib.smarthome.SmartHome)</a>
+</li>
       <li><a href="lib/utils.html#lib.utils.Utils.create_hash">create_hash() (statische Methode von lib.utils.Utils)</a>
 </li>
       <li><a href="referenz/items/standard_attribute/crontab.html#index-1">crontab</a>
+
+      <ul>
+        <li><a href="lib/logic.html#lib.logic.Logic.crontab">(lib.logic.Logic property)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.current_day">current_day() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.current_month">current_month() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.current_monthname">current_monthname() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.current_year">current_year() (Methode von lib.shtime.Shtime)</a>
 </li>
       <li><a href="lib/db.html#lib.db.Database.cursor">cursor() (Methode von lib.db.Database)</a>
 </li>
       <li><a href="referenz/items/standard_attribute/cycle.html#index-1">cycle</a>
+
+      <ul>
+        <li><a href="lib/logic.html#lib.logic.Logic.cycle">(lib.logic.Logic property)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/daemon.html#lib.daemon.daemonize">daemonize() (im Modul lib.daemon)</a>
+</li>
       <li><a href="plugins/darksky/user_doc.html#index-1">darksky</a>
 </li>
       <li><a href="lib/shyaml.html#lib.shyaml.yamlfile.data">data (Attribut von lib.shyaml.yamlfile)</a>
@@ -4536,7 +4876,13 @@
 </li>
       <li><a href="lib/db.html#lib.db.Database">Database (Klasse in lib.db)</a>
 </li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.date_transform">date_transform() (Methode von lib.shtime.Shtime)</a>
+</li>
       <li><a href="referenz/items/standard_attribute/type.html#index-3">Datentypen</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.datetime_transform">datetime_transform() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.day_of_year">day_of_year() (Methode von lib.shtime.Shtime)</a>
 </li>
       <li><a href="plugins/db_addon/user_doc.html#index-1">db_addon</a>
 </li>
@@ -4545,6 +4891,12 @@
       <li><a href="lib/log.html#lib.log.Logs.DBGLOW_level">DBGLOW_level (Attribut von lib.log.Logs)</a>
 </li>
       <li><a href="lib/log.html#lib.log.Logs.DBGMED_level">DBGMED_level (Attribut von lib.log.Logs)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.deinit">deinit() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugin.PluginController.delete">delete() (Methode von modules.admin.api_plugin.PluginController)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.delete_logic">delete_logic() (Methode von lib.logic.Logics)</a>
 </li>
       <li><a href="lib/tools.html#lib.tools.Tools.dewpoint">dewpoint() (Methode von lib.tools.Tools)</a>
 </li>
@@ -4562,6 +4914,14 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/logic.html#lib.logic.Logic.disable">disable() (Methode von lib.logic.Logic)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.disable_logic">disable_logic() (Methode von lib.logic.Logics)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Stream.discard_buffers">discard_buffers() (Methode von lib.connection.Stream)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Tcp_server.disconnect">disconnect() (Methode von lib.network.Tcp_server)</a>
+</li>
       <li><a href="plugins/dlms/user_doc.html#index-1">dlms</a>
 </li>
       <li><a href="plugins/dmx/user_doc.html#index-1">dmx</a>
@@ -4576,6 +4936,8 @@
 </li>
       </ul></li>
       <li><a href="lib/log.html#lib.log.ShngTimedRotatingFileHandler.doRollover">doRollover() (Methode von lib.log.ShngTimedRotatingFileHandler)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Http.download">download() (Methode von lib.network.Http)</a>
 </li>
       <li><a href="plugins/drexelundweiss/user_doc.html#index-1">drexelundweiss</a>
 </li>
@@ -4594,6 +4956,10 @@
       <li><a href="lib/shyaml.html#lib.shyaml.editing_is_enabled">editing_is_enabled() (im Modul lib.shyaml)</a>
 </li>
       <li><a href="lib/log.html#lib.log.ShngMemLogHandler.emit">emit() (Methode von lib.log.ShngMemLogHandler)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logic.enable">enable() (Methode von lib.logic.Logic)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.enable_logic">enable_logic() (Methode von lib.logic.Logics)</a>
 </li>
       <li><a href="referenz/items/standard_attribute/enforce_change.html#index-2">enforce_change</a>
 </li>
@@ -4639,6 +5005,8 @@
       </ul></li>
       <li><a href="plugins/executor/user_doc.html#index-1">executor</a>
 </li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.expand_relativepathes">expand_relativepathes() (Methode von lib.item.item.Item)</a>
+</li>
       <li><a href="lib/log.html#lib.log.Log.export">export() (Methode von lib.log.Log)</a>
 </li>
   </ul></td>
@@ -4647,6 +5015,10 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.fade">fade() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Network.family_to_string">family_to_string() (statische Methode von lib.network.Network)</a>
+</li>
       <li><a href="fehlersuche.html#index-0">Fehlersuche</a>
 
       <ul>
@@ -4678,16 +5050,20 @@
         <li><a href="plugins/vacations/user_doc.html#index-2">vactions</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lib/tools.html#lib.tools.Tools.fetch_url">fetch_url() (Methode von lib.tools.Tools)</a>
 </li>
       <li><a href="lib/db.html#lib.db.Database.fetchall">fetchall() (Methode von lib.db.Database)</a>
 </li>
       <li><a href="lib/db.html#lib.db.Database.fetchone">fetchone() (Methode von lib.db.Database)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lib/shyaml.html#lib.shyaml.yamlfile.filename">filename (Attribut von lib.shyaml.yamlfile)</a>
+
+      <ul>
+        <li><a href="lib/logic.html#lib.logic.Logic.filename">(lib.logic.Logic property)</a>
 </li>
+      </ul></li>
       <li><a href="lib/logutils.html#lib.logutils.Filter">Filter (Klasse in lib.logutils)</a>
 </li>
       <li><a href="lib/logutils.html#lib.logutils.DuplicateFilter.filter">filter() (Methode von lib.logutils.DuplicateFilter)</a>
@@ -4695,8 +5071,26 @@
       <ul>
         <li><a href="lib/logutils.html#lib.logutils.Filter.filter">(Methode von lib.logutils.Filter)</a>
 </li>
+        <li><a href="referenz/module/module_http.html#modules.http.CherryPyFilter.filter">(Methode von modules.http.CherryPyFilter)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.find_children">find_children() (Methode von lib.item.Items)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.find_children">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.find_items">find_items() (Methode von lib.item.Items)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.find_items">(Methode von lib.smarthome.SmartHome)</a>
+</li>
       </ul></li>
       <li><a href="lib/utils.html#lib.utils.Version.format">format() (Klassenmethode von lib.utils.Version)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Stream.found_balance">found_balance() (Methode von lib.connection.Stream)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Stream.found_terminator">found_terminator() (Methode von lib.connection.Stream)</a>
 </li>
       <li>
     Funktionen
@@ -4717,15 +5111,83 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.get">get() (Methode von lib.scheduler.Scheduler)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.get_absolutepath">get_absolutepath() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.get_basedir">get_basedir() (Methode von lib.smarthome.SmartHome)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Http.get_binary">get_binary() (Methode von lib.network.Http)</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugin.PluginController.get_body">get_body() (Methode von modules.admin.api_plugin.PluginController)</a>
+</li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_bool">get_bool() (Methode von lib.metadata.Metadata)</a>
+</li>
+      <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt.get_broker_config">get_broker_config() (Methode von modules.mqtt.Mqtt)</a>
+</li>
+      <li><a href="entwicklung/plugins/mqttplugin.html#lib.model.mqttplugin.MqttPlugin.get_broker_info">get_broker_info() (Methode von lib.model.mqttplugin.MqttPlugin)</a>
+
+      <ul>
+        <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt.get_broker_info">(Methode von modules.mqtt.Mqtt)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.get_children_path">get_children_path() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_classname">get_classname() (Methode von lib.model.smartplugin.SmartPlugin)</a>
 </li>
       <li><a href="lib/shyaml.html#lib.shyaml.get_commentedseq">get_commentedseq() (im Modul lib.shyaml)</a>
 </li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.get_confdir">get_confdir() (Methode von lib.smarthome.SmartHome)</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugin.PluginController.get_config_filename">get_config_filename() (Methode von modules.admin.api_plugin.PluginController)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_configname">get_configname() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.get_defaultlanguage">get_defaultlanguage() (Methode von lib.smarthome.SmartHome)</a>
+</li>
       <li><a href="lib/shyaml.html#lib.shyaml.get_emptynode">get_emptynode() (im Modul lib.shyaml)</a>
+</li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.get_etcdir">get_etcdir() (Methode von lib.smarthome.SmartHome)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_fullname">get_fullname() (Methode von lib.model.smartplugin.SmartPlugin)</a>
 </li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_global_plugin_parameters">get_global_plugin_parameters() (Methode von lib.metadata.Metadata)</a>
 </li>
-      <li><a href="lib/module.html#lib.module.Modules.get_instance">get_instance() (statische Methode von lib.module.Modules)</a>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_iattr_value">get_iattr_value() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="lib/plugin_class_pluginwrapper.html#lib.plugin.PluginWrapper.get_ident">get_ident() (Methode von lib.plugin.PluginWrapper)</a>
+</li>
+      <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.get_idle_worker_count">get_idle_worker_count() (Methode von lib.scheduler.Scheduler)</a>
+</li>
+      <li><a href="lib/plugin_class_pluginwrapper.html#lib.plugin.PluginWrapper.get_implementation">get_implementation() (Methode von lib.plugin.PluginWrapper)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_info">get_info() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.get_instance">get_instance() (statische Methode von lib.item.Items)</a>
+
+      <ul>
+        <li><a href="lib/logic.html#lib.logic.Logics.get_instance">(statische Methode von lib.logic.Logics)</a>
+</li>
+        <li><a href="lib/module.html#lib.module.Modules.get_instance">(statische Methode von lib.module.Modules)</a>
+</li>
+        <li><a href="lib/plugin_class_plugins.html#lib.plugin.Plugins.get_instance">(statische Methode von lib.plugin.Plugins)</a>
+</li>
+        <li><a href="lib/scene.html#lib.scene.Scenes.get_instance">(statische Methode von lib.scene.Scenes)</a>
+</li>
+        <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.get_instance">(statische Methode von lib.scheduler.Scheduler)</a>
+</li>
+        <li><a href="lib/shtime.html#lib.shtime.Shtime.get_instance">(statische Methode von lib.shtime.Shtime)</a>
+</li>
+      </ul></li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_instance_name">get_instance_name() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_item_config">get_item_config() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_item_list">get_item_list() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_item_mapping">get_item_mapping() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_item_path_list">get_item_path_list() (Methode von lib.model.smartplugin.SmartPlugin)</a>
 </li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_itemdefinition">get_itemdefinition() (Methode von lib.metadata.Metadata)</a>
 </li>
@@ -4739,27 +5201,75 @@
 </li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_itemdefinitionlist">get_itemdefinitionlist() (Methode von lib.metadata.Metadata)</a>
 </li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_items_for_mapping">get_items_for_mapping() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Http.get_json">get_json() (Methode von lib.network.Http)</a>
+</li>
       <li><a href="lib/shyaml.html#lib.shyaml.get_key">get_key() (im Modul lib.shyaml)</a>
+</li>
+      <li><a href="lib/scene.html#lib.scene.Scenes.get_loaded_scenes">get_loaded_scenes() (Methode von lib.scene.Scenes)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.get_local_hostname">get_local_hostname() (Methode von modules.http.Http)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.get_local_ip_address">get_local_ip_address() (Methode von modules.http.Http)</a>
 </li>
       <li><a href="lib/utils.html#lib.utils.Utils.get_local_ipv4_address">get_local_ipv4_address() (statische Methode von lib.utils.Utils)</a>
 </li>
       <li><a href="lib/utils.html#lib.utils.Utils.get_local_ipv6_address">get_local_ipv6_address() (statische Methode von lib.utils.Utils)</a>
 </li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.get_local_port">get_local_port() (Methode von modules.http.Http)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.get_local_servicesport">get_local_servicesport() (Methode von modules.http.Http)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.get_logic_info">get_logic_info() (Methode von lib.logic.Logics)</a>
+</li>
+      <li><a href="lib/plugin_class_plugins.html#lib.plugin.Plugins.get_logic_parameters">get_logic_parameters() (Methode von lib.plugin.Plugins)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.get_logic_triggers">get_logic_triggers() (Methode von lib.item.item.Item)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/logic.html#lib.logic.Logics.get_logiccrontab">get_logiccrontab() (Methode von lib.logic.Logics)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.get_logics_dir">get_logics_dir() (Methode von lib.logic.Logics)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_loginstance">get_loginstance() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_mappings">get_mappings() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.get_method_triggers">get_method_triggers() (Methode von lib.item.item.Item)</a>
+
+      <ul>
+        <li><a href="lib/logic.html#lib.logic.Logic.get_method_triggers">(Methode von lib.logic.Logic)</a>
+</li>
+      </ul></li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_mlstring">get_mlstring() (Methode von lib.metadata.Metadata)</a>
 </li>
-      <li><a href="lib/module.html#lib.module.Modules.get_module">get_module() (Methode von lib.module.Modules)</a>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_module">get_module() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+
+      <ul>
+        <li><a href="lib/module.html#lib.module.Modules.get_module">(Methode von lib.module.Modules)</a>
+</li>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.get_module">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/plugin_class_pluginwrapper.html#lib.plugin.PluginWrapper.get_name">get_name() (Methode von lib.plugin.PluginWrapper)</a>
+</li>
+      <li><a href="lib/orb.html#lib.orb.Orb.get_observer_and_orb">get_observer_and_orb() (Methode von lib.orb.Orb)</a>
 </li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_parameter_defaultvalue">get_parameter_defaultvalue() (Methode von lib.metadata.Metadata)</a>
 </li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_parameter_listlen">get_parameter_listlen() (Methode von lib.metadata.Metadata)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_parameter_subtype">get_parameter_subtype() (Methode von lib.metadata.Metadata)</a>
 </li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_parameter_type">get_parameter_type() (Methode von lib.metadata.Metadata)</a>
 </li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_parameter_type_with_subtype">get_parameter_type_with_subtype() (Methode von lib.metadata.Metadata)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_parameter_value">get_parameter_value() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_parameter_value_for_display">get_parameter_value_for_display() (Methode von lib.model.smartplugin.SmartPlugin)</a>
 </li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_parameterdefinition">get_parameterdefinition() (Methode von lib.metadata.Metadata)</a>
 </li>
@@ -4767,15 +5277,59 @@
 </li>
       <li><a href="lib/shyaml.html#lib.shyaml.get_parent">get_parent() (im Modul lib.shyaml)</a>
 </li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.get_plugin_attribute_type">get_plugin_attribute_type() (Methode von lib.item.Items)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_plugin_dir">get_plugin_dir() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_plugin_function_defstrings">get_plugin_function_defstrings() (Methode von lib.metadata.Metadata)</a>
+</li>
+      <li><a href="lib/plugin_class_plugins.html#lib.plugin.Plugins.get_pluginthread">get_pluginthread() (Methode von lib.plugin.Plugins)</a>
 </li>
       <li><a href="lib/utils.html#lib.utils.get_python_version">get_python_version() (im Modul lib.utils)</a>
 </li>
+      <li><a href="lib/scene.html#lib.scene.Scenes.get_scene_action_name">get_scene_action_name() (Methode von lib.scene.Scenes)</a>
+</li>
+      <li><a href="lib/scene.html#lib.scene.Scenes.get_scene_actions">get_scene_actions() (Methode von lib.scene.Scenes)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.get_service_password">get_service_password() (Methode von modules.http.Http)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.get_service_user">get_service_user() (Methode von modules.http.Http)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.get_services_for_plugin">get_services_for_plugin() (Methode von modules.http.Http)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_sh">get_sh() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_shortname">get_shortname() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_string">get_string() (Methode von lib.metadata.Metadata)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.get_stringwithabsolutepathes">get_stringwithabsolutepathes() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Http.get_text">get_text() (Methode von lib.network.Http)</a>
+</li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.get_toplevel_items">get_toplevel_items() (Methode von lib.item.Items)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_trigger_items">get_trigger_items() (Methode von lib.model.smartplugin.SmartPlugin)</a>
 </li>
       <li><a href="lib/utils.html#lib.utils.Utils.get_type">get_type() (statische Methode von lib.utils.Utils)</a>
 </li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.get_user_dict">get_user_dict() (Methode von modules.http.Http)</a>
+</li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.get_vardir">get_vardir() (Methode von lib.smarthome.SmartHome)</a>
+</li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.get_version">get_version() (Methode von lib.metadata.Metadata)</a>
+
+      <ul>
+        <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.get_version">(Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      </ul></li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.get_webifs_for_plugin">get_webifs_for_plugin() (Methode von modules.http.Http)</a>
+</li>
+      <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.get_worker_count">get_worker_count() (Methode von lib.scheduler.Scheduler)</a>
+</li>
+      <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.get_worker_names">get_worker_names() (Methode von lib.scheduler.Scheduler)</a>
+</li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.getBaseDir">getBaseDir() (Methode von lib.smarthome.SmartHome)</a>
 </li>
       <li><a href="lib/log.html#lib.log.ShngTimedRotatingFileHandler.getFilesToDelete">getFilesToDelete() (Methode von lib.log.ShngTimedRotatingFileHandler)</a>
 </li>
@@ -4791,13 +5345,31 @@
 </li>
       <li><a href="plugins/gpio/user_doc.html#index-1">gpio</a>
 </li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.gstatic_dir">gstatic_dir (Attribut von modules.http.Http)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.gtemplates_dir">gtemplates_dir (Attribut von modules.http.Http)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/connection.html#lib.connection.Stream.handle_close">handle_close() (Methode von lib.connection.Stream)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Stream.handle_connect">handle_connect() (Methode von lib.connection.Stream)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Server.handle_connection">handle_connection() (Methode von lib.connection.Server)</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugin.PluginController.handle_plugin_action">handle_plugin_action() (Methode von modules.admin.api_plugin.PluginController)</a>
+</li>
       <li><a href="installation/anforderungen.html#index-1">Hardware Anforderungen</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.has_iattr">has_iattr() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.holiday_list">holiday_list() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.holiday_name">holiday_name() (Methode von lib.shtime.Shtime)</a>
 </li>
       <li>
     holidays
@@ -4810,6 +5382,10 @@
         <li><a href="referenz/logiken/logiken_smarthomeng_methoden.html#index-5">Logiken</a>, <a href="referenz/smarthomeng/feiertage_datum_zeit.html#index-3">[1]</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.holidays">holidays (Attribut von lib.shtime.Shtime)</a>
+</li>
       <li><a href="plugins/homematic/user_doc.html#index-1">homematic HomeMaticIP</a>
 </li>
       <li>
@@ -4825,8 +5401,12 @@
         <li><a href="konfiguration/module/module_http.html#index-0">Modul</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/network.html#lib.network.Http">Http (Klasse in lib.network)</a>
+
+      <ul>
+        <li><a href="referenz/module/module_http.html#modules.http.Http">(Klasse in modules.http)</a>
+</li>
+      </ul></li>
       <li>
     http Modul
 
@@ -4834,6 +5414,8 @@
         <li><a href="admin/system.html#index-11">Konfiguration (Admin GUI)</a>
 </li>
       </ul></li>
+      <li><a href="lib/network.html#lib.network.Http.HTTPDigestAuth">HTTPDigestAuth() (Methode von lib.network.Http)</a>
+</li>
       <li><a href="plugins/hue2/user_doc.html#index-1">hue2 hue</a>
 </li>
   </ul></td>
@@ -4844,7 +5426,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="plugins/ical/user_doc.html#index-1">ical</a>
 </li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.id">id() (Methode von lib.item.item.Item)</a>
+
+      <ul>
+        <li><a href="lib/logic.html#lib.logic.Logic.id">(Methode von lib.logic.Logic)</a>
+</li>
+      </ul></li>
       <li><a href="plugins/indego4shng/user_doc.html#index-1">Indego4shNG</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.ModuleApp.index">index() (Methode von modules.http.ModuleApp)</a>
 </li>
       <li>
     InfluxDB
@@ -4859,15 +5449,31 @@
       </ul></li>
       <li><a href="plugins/influxdb2/user_doc.html#index-1">influxdb2</a>
 </li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.init_logging">init_logging() (Methode von lib.smarthome.SmartHome)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.init_template_environment">init_template_environment() (Methode von modules.http.Http)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.init_webinterface">init_webinterface() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
       <li><a href="referenz/items/standard_attribute/standard_attribute.html#index-5">initial_value</a>
+</li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.initialize_dir_vars">initialize_dir_vars() (Methode von lib.smarthome.SmartHome)</a>
 </li>
       <li><a href="lib/translation.html#lib.translation.initialize_translations">initialize_translations() (im Modul lib.translation)</a>
 </li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.initialize_vars">initialize_vars() (Methode von lib.smarthome.SmartHome)</a>
+</li>
       <li><a href="lib/log.html#lib.log.Logs.initMemLog">initMemLog() (Methode von lib.log.Logs)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Network.ip_port_to_socket">ip_port_to_socket() (statische Methode von lib.network.Network)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logic.is_enabled">is_enabled() (Methode von lib.logic.Logic)</a>
 </li>
       <li><a href="lib/utils.html#lib.utils.Utils.is_float">is_float() (statische Methode von lib.utils.Utils)</a>
 </li>
       <li><a href="lib/utils.html#lib.utils.Utils.is_hash">is_hash() (statische Methode von lib.utils.Utils)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.is_holiday">is_holiday() (Methode von lib.shtime.Shtime)</a>
 </li>
       <li><a href="lib/utils.html#lib.utils.Utils.is_hostname">is_hostname() (statische Methode von lib.utils.Utils)</a>
 </li>
@@ -4881,11 +5487,31 @@
 </li>
       <li><a href="lib/utils.html#lib.utils.Utils.is_knx_groupaddress">is_knx_groupaddress() (statische Methode von lib.utils.Utils)</a>
 </li>
+      <li><a href="lib/logic.html#lib.logic.Logics.is_logic_enabled">is_logic_enabled() (Methode von lib.logic.Logics)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.is_logic_loaded">is_logic_loaded() (Methode von lib.logic.Logics)</a>
+</li>
       <li><a href="lib/utils.html#lib.utils.Utils.is_mac">is_mac() (statische Methode von lib.utils.Utils)</a>
 </li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.is_multi_instance_capable">is_multi_instance_capable() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.is_port_in_use">is_port_in_use() (Methode von modules.http.Http)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.is_public_holiday">is_public_holiday() (Methode von lib.shtime.Shtime)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lib/item_conversion.html#lib.item_conversion.is_ruamelyaml_installed">is_ruamelyaml_installed() (im Modul lib.item_conversion)</a>
 </li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.is_staticfile">is_staticfile() (Methode von modules.http.Http)</a>
+</li>
       <li><a href="lib/utils.html#lib.utils.Utils.is_timeframe">is_timeframe() (statische Methode von lib.utils.Utils)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.is_userlogic">is_userlogic() (Methode von lib.logic.Logics)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.is_weekend">is_weekend() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item">Item (Klasse in lib.item.item)</a>
 </li>
       <li>
     Item Wert
@@ -4896,8 +5522,6 @@
       </ul></li>
       <li><a href="referenz/items/standard_attribute/struct.html#index-5">Item-Struktur Template</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     item_attribute_prefixes
 
@@ -4912,6 +5536,8 @@
         <li><a href="entwicklung/plugins/plugin_metadata.html#index-9">Plugin Metadaten</a>, <a href="referenz/metadata/item_attributes.html#index-0">[1]</a>
 </li>
       </ul></li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.item_count">item_count() (Methode von lib.item.Items)</a>
+</li>
       <li>
     item_structs
 
@@ -4955,7 +5581,17 @@
         <li><a href="referenz/items/standard_attribute/struct.html#index-4">Template</a>
 </li>
       </ul></li>
+      <li><a href="lib/item_class_items.html#lib.item.Items">Items (Klasse in lib.item)</a>
+</li>
       <li><a href="admin/items.html#index-1">Itemtree</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.jsonvars">jsonvars() (Methode von lib.item.item.Item)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -4963,6 +5599,8 @@
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/daemon.html#lib.daemon.kill">kill() (im Modul lib.daemon)</a>
+</li>
       <li>
     Klassen
 
@@ -5054,11 +5692,32 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lib/log.html#lib.log.Log.last">last() (Methode von lib.log.Log)</a>
 </li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.last_change">last_change() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logic.last_run">last_run() (Methode von lib.logic.Logic)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.last_trigger">last_trigger() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.last_update">last_update() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/scheduler.html#lib.scheduler.LeaveLogic">LeaveLogic</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.length_of_month">length_of_month() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.length_of_year">length_of_year() (Methode von lib.shtime.Shtime)</a>
+</li>
       <li>
     lib.config
 
       <ul>
         <li><a href="lib/config.html#module-lib.config">Modul</a>
+</li>
+      </ul></li>
+      <li>
+    lib.connection
+
+      <ul>
+        <li><a href="lib/connection.html#module-lib.connection">Modul</a>
 </li>
       </ul></li>
       <li>
@@ -5069,10 +5728,24 @@
 </li>
       </ul></li>
       <li>
+    lib.daemon
+
+      <ul>
+        <li><a href="lib/daemon.html#module-lib.daemon">Modul</a>
+</li>
+      </ul></li>
+      <li>
     lib.db
 
       <ul>
         <li><a href="lib/db.html#module-lib.db">Modul</a>
+</li>
+      </ul></li>
+      <li>
+    lib.item
+
+      <ul>
+        <li><a href="lib/item.html#module-lib.item">Modul</a>
 </li>
       </ul></li>
       <li>
@@ -5087,6 +5760,13 @@
 
       <ul>
         <li><a href="lib/log.html#module-lib.log">Modul</a>
+</li>
+      </ul></li>
+      <li>
+    lib.logic
+
+      <ul>
+        <li><a href="lib/logic.html#module-lib.logic">Modul</a>
 </li>
       </ul></li>
       <li>
@@ -5111,10 +5791,45 @@
 </li>
       </ul></li>
       <li>
+    lib.network
+
+      <ul>
+        <li><a href="lib/network.html#module-lib.network">Modul</a>
+</li>
+      </ul></li>
+      <li>
+    lib.orb
+
+      <ul>
+        <li><a href="lib/orb.html#module-lib.orb">Modul</a>
+</li>
+      </ul></li>
+      <li>
     lib.plugin
 
       <ul>
         <li><a href="lib/plugin.html#module-lib.plugin">Modul</a>
+</li>
+      </ul></li>
+      <li>
+    lib.scene
+
+      <ul>
+        <li><a href="lib/scene.html#module-lib.scene">Modul</a>
+</li>
+      </ul></li>
+      <li>
+    lib.scheduler
+
+      <ul>
+        <li><a href="lib/scheduler.html#module-lib.scheduler">Modul</a>
+</li>
+      </ul></li>
+      <li>
+    lib.shtime
+
+      <ul>
+        <li><a href="lib/shtime.html#module-lib.shtime">Modul</a>
 </li>
       </ul></li>
       <li>
@@ -5160,7 +5875,23 @@
       </ul></li>
       <li><a href="plugins/lirc/user_doc.html#index-1">lirc</a>
 </li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.list_threads">list_threads() (Methode von lib.smarthome.SmartHome)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Tcp_server.listening">listening() (Methode von lib.network.Tcp_server)</a>
+
+      <ul>
+        <li><a href="lib/network.html#lib.network.Udp_server.listening">(Methode von lib.network.Udp_server)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/logic.html#lib.logic.Logic.lname">lname (lib.logic.Logic property)</a>
+</li>
       <li><a href="lib/shyaml.html#lib.shyaml.yamlfile.load">load() (Methode von lib.shyaml.yamlfile)</a>
+</li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.load_itemdefinitions">load_itemdefinitions() (Methode von lib.item.Items)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.load_logic">load_logic() (Methode von lib.logic.Logics)</a>
 </li>
       <li><a href="lib/translation.html#lib.translation.load_translations">load_translations() (im Modul lib.translation)</a>
 </li>
@@ -5172,7 +5903,11 @@
 </li>
       <li><a href="referenz/items/standard_attribute/standard_attribute.html#index-11">log_level</a>
 </li>
+      <li><a href="lib/logic.html#lib.logic.Logic.log_readonly_warning">log_readonly_warning() (Methode von lib.logic.Logic)</a>
+</li>
       <li><a href="referenz/items/standard_attribute/standard_attribute.html#index-13">log_text</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.logger">logger (Attribut von lib.model.smartplugin.SmartPlugin)</a>
 </li>
       <li><a href="admin/logs.html#index-1">Logging</a>, <a href="konfiguration/logging.html#index-0">[1]</a>, <a href="referenz/logging/logging_textformatierung.html#index-1">[2]</a>
 
@@ -5188,8 +5923,6 @@
         <li><a href="referenz/logging/logging.html#index-1">Referenz</a>, <a href="referenz/logging/logging_handler.html#index-1">[1]</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     Logging Filter
 
@@ -5204,6 +5937,8 @@
         <li><a href="referenz/logging/logging_formatter.html#index-1">Referenz</a>
 </li>
       </ul></li>
+      <li><a href="lib/logic.html#lib.logic.Logic">Logic (Klasse in lib.logic)</a>
+</li>
       <li>
     logic Objekt
 
@@ -5218,6 +5953,8 @@
         <li><a href="entwicklung/plugins/plugin_metadata.html#index-15">Plugin Metadaten</a>, <a href="referenz/metadata/logic_parameters.html#index-0">[1]</a>
 </li>
       </ul></li>
+      <li><a href="lib/logic.html#lib.logic.Logics">Logics (Klasse in lib.logic)</a>
+</li>
       <li>
     logics Objekt
 
@@ -5285,6 +6022,8 @@
         <li><a href="lib/log.html#lib.log.Logs">(Klasse in lib.log)</a>
 </li>
       </ul></li>
+      <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt.longname">longname (Attribut von modules.mqtt.Mqtt)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -5293,6 +6032,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="installation/anforderungen.html#index-0">MacOS</a>
 </li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.match_items">match_items() (Methode von lib.item.Items)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.match_items">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
       <li><a href="lib/config.html#lib.config.merge">merge() (im Modul lib.config)</a>
 </li>
       <li><a href="lib/config.html#lib.config.merge_structlists">merge_structlists() (im Modul lib.config)</a>
@@ -5316,7 +6061,17 @@
         <li><a href="referenz/metadata/metadata.html#index-1">Referenz</a>
 </li>
       </ul></li>
+      <li><a href="lib/orb.html#lib.orb.Orb.midnight">midnight() (Methode von lib.orb.Orb)</a>
+</li>
       <li><a href="plugins/modbus_tcp/user_doc.html#index-0">modbus_tcp plugin</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Tcp_server.MODE_BINARY">MODE_BINARY (Attribut von lib.network.Tcp_server)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Tcp_server.MODE_FIXED_LENGTH">MODE_FIXED_LENGTH (Attribut von lib.network.Tcp_server)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Tcp_server.MODE_TEXT">MODE_TEXT (Attribut von lib.network.Tcp_server)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Tcp_server.MODE_TEXT_LINE">MODE_TEXT_LINE (Attribut von lib.network.Tcp_server)</a>
 </li>
       <li>
     Modul
@@ -5324,13 +6079,21 @@
       <ul>
         <li><a href="lib/config.html#module-lib.config">lib.config</a>
 </li>
+        <li><a href="lib/connection.html#module-lib.connection">lib.connection</a>
+</li>
         <li><a href="lib/constants.html#module-lib.constants">lib.constants</a>
 </li>
+        <li><a href="lib/daemon.html#module-lib.daemon">lib.daemon</a>
+</li>
         <li><a href="lib/db.html#module-lib.db">lib.db</a>
+</li>
+        <li><a href="lib/item.html#module-lib.item">lib.item</a>
 </li>
         <li><a href="lib/item_conversion.html#module-lib.item_conversion">lib.item_conversion</a>
 </li>
         <li><a href="lib/log.html#module-lib.log">lib.log</a>
+</li>
+        <li><a href="lib/logic.html#module-lib.logic">lib.logic</a>
 </li>
         <li><a href="lib/logutils.html#module-lib.logutils">lib.logutils</a>
 </li>
@@ -5338,7 +6101,17 @@
 </li>
         <li><a href="lib/module.html#module-lib.module">lib.module</a>
 </li>
+        <li><a href="lib/network.html#module-lib.network">lib.network</a>
+</li>
+        <li><a href="lib/orb.html#module-lib.orb">lib.orb</a>
+</li>
         <li><a href="lib/plugin.html#module-lib.plugin">lib.plugin</a>
+</li>
+        <li><a href="lib/scene.html#module-lib.scene">lib.scene</a>
+</li>
+        <li><a href="lib/scheduler.html#module-lib.scheduler">lib.scheduler</a>
+</li>
+        <li><a href="lib/shtime.html#module-lib.shtime">lib.shtime</a>
 </li>
         <li><a href="lib/shyaml.html#module-lib.shyaml">lib.shyaml</a>
 </li>
@@ -5350,6 +6123,14 @@
 </li>
         <li><a href="lib/utils.html#module-lib.utils">lib.utils</a>
 </li>
+        <li><a href="referenz/module/module_admin.html#module-modules.admin.api_plugin">modules.admin.api_plugin</a>
+</li>
+        <li><a href="referenz/module/module_admin.html#module-modules.admin.api_plugins">modules.admin.api_plugins</a>
+</li>
+        <li><a href="referenz/module/module_http.html#module-modules.http">modules.http</a>
+</li>
+        <li><a href="referenz/module/module_mqtt.html#module-modules.mqtt">modules.mqtt</a>
+</li>
       </ul></li>
       <li><a href="entwicklung/module/module.html#index-1">Modul Metadaten</a>, <a href="referenz/metadata/module_global.html#index-0">[1]</a>
 
@@ -5359,6 +6140,8 @@
         <li><a href="entwicklung/module/module.html#index-5">Parameter</a>, <a href="entwicklung/plugins/plugin_metadata.html#index-6">[1]</a>, <a href="referenz/metadata/parameters.html#index-1">[2]</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     Module
 
@@ -5378,8 +6161,8 @@
         <li><a href="konfiguration/module/module_websocket.html#index-1">websocket</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="referenz/module/module_http.html#modules.http.ModuleApp">ModuleApp (Klasse in modules.http)</a>
+</li>
       <li>
     Modules
 
@@ -5395,6 +6178,40 @@
 </li>
       <li><a href="referenz/module/module_mqtt.html#index-0">Modules mqtt</a>
 </li>
+      <li>
+    modules.admin.api_plugin
+
+      <ul>
+        <li><a href="referenz/module/module_admin.html#module-modules.admin.api_plugin">Modul</a>
+</li>
+      </ul></li>
+      <li>
+    modules.admin.api_plugins
+
+      <ul>
+        <li><a href="referenz/module/module_admin.html#module-modules.admin.api_plugins">Modul</a>
+</li>
+      </ul></li>
+      <li>
+    modules.http
+
+      <ul>
+        <li><a href="referenz/module/module_http.html#module-modules.http">Modul</a>
+</li>
+      </ul></li>
+      <li>
+    modules.mqtt
+
+      <ul>
+        <li><a href="referenz/module/module_mqtt.html#module-modules.mqtt">Modul</a>
+</li>
+      </ul></li>
+      <li><a href="lib/connection.html#lib.connection.Connections.monitor">monitor() (Methode von lib.connection.Connections)</a>
+
+      <ul>
+        <li><a href="lib/network.html#lib.network.Connections.monitor">(Methode von lib.network.Connections)</a>
+</li>
+      </ul></li>
       <li><a href="installation/komplettanleitung/03_mosquitto.html#index-1">Mosquitto installieren</a>
 </li>
       <li>
@@ -5427,6 +6244,8 @@
         <li><a href="plugins/tasmota/user_doc.html#index-2">tasmota Plugin</a>
 </li>
       </ul></li>
+      <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt">Mqtt (Klasse in modules.mqtt)</a>
+</li>
       <li><a href="installation/komplettanleitung/03_mosquitto.html#index-0">MQTT Broker installieren</a>
 </li>
       <li>
@@ -5436,6 +6255,10 @@
         <li><a href="admin/system.html#index-15">Konfiguration</a>
 </li>
       </ul></li>
+      <li><a href="entwicklung/plugins/mqttplugin.html#lib.model.mqttplugin.MqttPlugin.mqtt_init">mqtt_init() (Methode von lib.model.mqttplugin.MqttPlugin)</a>
+</li>
+      <li><a href="entwicklung/plugins/mqttplugin.html#lib.model.mqttplugin.MqttPlugin">MqttPlugin (Klasse in lib.model.mqttplugin)</a>
+</li>
       <li><a href="entwicklung/plugins/multilanguage.html#index-0">Multi-Language Support</a>
 </li>
   </ul></td>
@@ -5445,7 +6268,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="referenz/items/standard_attribute/standard_attribute.html#index-15">name</a>
+
+      <ul>
+        <li><a href="lib/logic.html#lib.logic.Logic.name">(lib.logic.Logic property)</a>
 </li>
+      </ul></li>
       <li><a href="plugins/neato/user_doc.html#index-1">neato</a>
 </li>
       <li><a href="lib/config.html#lib.config.nested_get">nested_get() (im Modul lib.config)</a>
@@ -5453,6 +6280,8 @@
       <li><a href="lib/config.html#lib.config.nested_put">nested_put() (im Modul lib.config)</a>
 </li>
       <li><a href="plugins/network/user_doc.html#index-1">network</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Network">Network (Klasse in lib.network)</a>
 </li>
       <li>
     Netzwerk
@@ -5474,14 +6303,26 @@
       </ul></li>
       <li><a href="visualisierung/reverse_proxy.html#index-0">NGINX als ReverseProxy</a>
 </li>
+      <li><a href="lib/orb.html#lib.orb.Orb.noon">noon() (Methode von lib.orb.Orb)</a>
+</li>
       <li><a href="lib/log.html#lib.log.Logs.NOTICE_level">NOTICE_level (Attribut von lib.log.Logs)</a>
 </li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.now">now() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+
+      <ul>
+        <li><a href="lib/shtime.html#lib.shtime.Shtime.now">(Methode von lib.shtime.Shtime)</a>
+</li>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.now">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.object_refcount">object_refcount() (Methode von lib.smarthome.SmartHome)</a>
+</li>
       <li><a href="referenz/items/standard_attribute/on_update.html#index-3">on_change</a>
 </li>
       <li><a href="referenz/items/standard_attribute/on_update.html#index-1">on_update</a>
@@ -5493,6 +6334,8 @@
       <li><a href="installation/komplettanleitung/06_onewire.html#index-0">Onewire installieren</a>
 </li>
       <li><a href="plugins/openweathermap/user_doc.html#index-1">openweathermap</a>
+</li>
+      <li><a href="lib/orb.html#lib.orb.Orb">Orb (Klasse in lib.orb)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -5517,9 +6360,19 @@
 </li>
       <li><a href="lib/item_conversion.html#lib.item_conversion.parse_for_convert">parse_for_convert() (im Modul lib.item_conversion)</a>
 </li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.parse_item">parse_item() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
       <li><a href="lib/config.html#lib.config.parse_itemsdir">parse_itemsdir() (im Modul lib.config)</a>
 </li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.parse_logic">parse_logic() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
       <li><a href="lib/config.html#lib.config.parse_yaml">parse_yaml() (im Modul lib.config)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.path">path() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.path_join">path_join() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logic.pathname">pathname (lib.logic.Logic property)</a>
 </li>
       <li>
     Persistente Variablen
@@ -5531,6 +6384,12 @@
       <li><a href="plugins/philips_tv/user_doc.html#index-1">philips_tv</a>
 </li>
       <li><a href="lib/tools.html#lib.tools.Tools.ping">ping() (Methode von lib.tools.Tools)</a>
+
+      <ul>
+        <li><a href="lib/network.html#lib.network.Network.ping">(statische Methode von lib.network.Network)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/network.html#lib.network.Network.ping_port">ping_port() (statische Methode von lib.network.Network)</a>
 </li>
       <li><a href="plugins/piratewthr/user_doc.html#index-2">pirateweather.net</a>
 </li>
@@ -5606,6 +6465,12 @@
 </li>
       <li><a href="referenz/items/plugin_attribute.html#index-1">plugin-spezifische Attribute</a>
 </li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.plugin_attribute_exists">plugin_attribute_exists() (Methode von lib.item.Items)</a>
+</li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.plugin_attribute_prefixes">plugin_attribute_prefixes (Attribut von lib.item.Items)</a>
+</li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.plugin_attributes">plugin_attributes (Attribut von lib.item.Items)</a>
+</li>
       <li>
     plugin_functions
 
@@ -5613,6 +6478,12 @@
         <li><a href="entwicklung/plugins/plugin_metadata.html#index-17">Plugin Metadaten</a>, <a href="referenz/metadata/plugin_functions.html#index-0">[1]</a>
 </li>
       </ul></li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.plugin_prefixes_tuple">plugin_prefixes_tuple (Attribut von lib.item.Items)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.PLUGIN_VERSION">PLUGIN_VERSION (Attribut von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugin.PluginController">PluginController (Klasse in modules.admin.api_plugin)</a>
+</li>
       <li><a href="admin/plugins.html#index-0">Plugins</a>
 
       <ul>
@@ -6065,13 +6936,65 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/logic.html#lib.logic.Logics.plugins">plugins (Attribut von lib.logic.Logics)</a>
+</li>
+      <li><a href="lib/plugin_class_plugins.html#lib.plugin.Plugins">Plugins (Klasse in lib.plugin)</a>
+</li>
       <li><a href="referenz/plugins/plugins.html#index-1">Plugins Referenz</a>
+</li>
+      <li><a href="lib/plugin_class_plugins.html#lib.plugin.Plugins.PyObject">Plugins.PyObject (Klasse in lib.plugin)</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController">PluginsAPIController (Klasse in modules.admin.api_plugins)</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController">PluginsConfigController (Klasse in modules.admin.api_plugins)</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController">PluginsController (Klasse in modules.admin.api_plugins)</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController">PluginsInfoController (Klasse in modules.admin.api_plugins)</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController">PluginsInstalledController (Klasse in modules.admin.api_plugins)</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController">PluginsLogicParametersController (Klasse in modules.admin.api_plugins)</a>
+</li>
+      <li><a href="lib/plugin_class_pluginwrapper.html#lib.plugin.PluginWrapper">PluginWrapper (Klasse in lib.plugin)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Connections.poll">poll() (Methode von lib.connection.Connections)</a>
+</li>
+      <li><a href="lib/orb.html#lib.orb.Orb.pos">pos() (Methode von lib.orb.Orb)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Http.post_json">post_json() (Methode von lib.network.Http)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.prev_age">prev_age() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.prev_change">prev_change() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.prev_trigger">prev_trigger() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.prev_trigger_age">prev_trigger_age() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.prev_update">prev_update() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.prev_update_age">prev_update_age() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.prev_value">prev_value() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logic.prio">prio (lib.logic.Logic property)</a>
 </li>
       <li>
     Properties
 
       <ul>
         <li><a href="referenz/items/properties.html#index-1">Items</a>, <a href="referenz/logiken/logiken_items.html#index-5">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.public_holiday_list">public_holiday_list() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.public_holidays">public_holidays (Attribut von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="entwicklung/plugins/mqttplugin.html#lib.model.mqttplugin.MqttPlugin.publish_topic">publish_topic() (Methode von lib.model.mqttplugin.MqttPlugin)</a>
+
+      <ul>
+        <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt.publish_topic">(Methode von modules.mqtt.Mqtt)</a>
 </li>
       </ul></li>
       <li><a href="admin/system.html#index-4">PyPI Check</a>
@@ -6090,6 +7013,28 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="plugins/rcs1000n/user_doc.html#index-1">rcs1000n</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugin.PluginController.read">read() (Methode von modules.admin.api_plugin.PluginController)</a>
+
+      <ul>
+        <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController.read">(Methode von modules.admin.api_plugins.PluginsAPIController)</a>
+</li>
+        <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController.read">(Methode von modules.admin.api_plugins.PluginsConfigController)</a>
+</li>
+        <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController.read">(Methode von modules.admin.api_plugins.PluginsController)</a>
+</li>
+        <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController.read">(Methode von modules.admin.api_plugins.PluginsInfoController)</a>
+</li>
+        <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController.read">(Methode von modules.admin.api_plugins.PluginsInstalledController)</a>
+</li>
+        <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController.read">(Methode von modules.admin.api_plugins.PluginsLogicParametersController)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/logic.html#lib.logic.Logics.read_config_section">read_config_section() (Methode von lib.logic.Logics)</a>
+</li>
+      <li><a href="lib/daemon.html#lib.daemon.read_pidfile">read_pidfile() (im Modul lib.daemon)</a>
+</li>
+      <li><a href="lib/plugin_class_plugins.html#lib.plugin.Plugins.PyObject.refcnt">refcnt (Attribut von lib.plugin.Plugins.PyObject)</a>
 </li>
       <li><a href="referenz/referenz.html#index-0">Referenz</a>
 
@@ -6115,39 +7060,79 @@
         <li><a href="referenz/smarthomeng/smarthomeng.html#index-0">SmartHomeNG</a>
 </li>
       </ul></li>
+      <li><a href="lib/connection.html#lib.connection.Connections.register_connection">register_connection() (Methode von lib.connection.Connections)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Connections.register_server">register_server() (Methode von lib.connection.Connections)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.register_service">register_service() (Methode von modules.http.Http)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.register_updating">register_updating() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.register_webif">register_webif() (Methode von modules.http.Http)</a>
+</li>
       <li><a href="lib/tools.html#lib.tools.Tools.rel2abs">rel2abs() (Methode von lib.tools.Tools)</a>
 </li>
       <li><a href="referenz/items/attributes_relative_referenzen.html#index-1">relative Referenzen</a>
 </li>
       <li><a href="lib/db.html#lib.db.Database.release">release() (Methode von lib.db.Database)</a>
 </li>
+      <li><a href="lib/logic.html#lib.logic.Logics.reload_logics">reload_logics() (Methode von lib.logic.Logics)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.reload_logics">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/scene.html#lib.scene.Scenes.reload_scenes">reload_scenes() (Methode von lib.scene.Scenes)</a>
+</li>
       <li><a href="lib/translation.html#lib.translation.reload_translations">reload_translations() (im Modul lib.translation)</a>
 </li>
       <li><a href="referenz/items/standard_attribute/standard_attribute.html#index-17">remark</a>
+</li>
+      <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.remove">remove() (Methode von lib.scheduler.Scheduler)</a>
 </li>
       <li><a href="lib/config.html#lib.config.remove_comments">remove_comments() (im Modul lib.config)</a>
 </li>
       <li><a href="lib/config.html#lib.config.remove_digits">remove_digits() (im Modul lib.config)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lib/config.html#lib.config.remove_invalid">remove_invalid() (im Modul lib.config)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.remove_item">remove_item() (Methode von lib.model.smartplugin.SmartPlugin)</a>
 </li>
       <li><a href="lib/config.html#lib.config.remove_keys">remove_keys() (im Modul lib.config)</a>
 </li>
       <li><a href="lib/config.html#lib.config.remove_keyword">remove_keyword() (im Modul lib.config)</a>
 </li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.remove_logic_trigger">remove_logic_trigger() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.remove_method_trigger">remove_method_trigger() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/daemon.html#lib.daemon.remove_pidfile">remove_pidfile() (im Modul lib.daemon)</a>
+</li>
       <li><a href="lib/config.html#lib.config.remove_reserved">remove_reserved() (im Modul lib.config)</a>
 </li>
       <li><a href="lib/config.html#lib.config.remove_special_listentries">remove_special_listentries() (im Modul lib.config)</a>
 </li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.remove_timer">remove_timer() (Methode von lib.item.item.Item)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lib/config.html#lib.config.replace_struct_instance">replace_struct_instance() (im Modul lib.config)</a>
 </li>
       <li><a href="plugins/resol/user_doc.html#index-1">resol</a>
 </li>
+      <li><a href="lib/network.html#lib.network.Http.response_cookies">response_cookies() (Methode von lib.network.Http)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Http.response_headers">response_headers() (Methode von lib.network.Http)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Http.response_object">response_object() (Methode von lib.network.Http)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Http.response_status">response_status() (Methode von lib.network.Http)</a>
+</li>
       <li><a href="admin/system.html#index-2">Ressource Graphen</a>
 </li>
       <li><a href="plugins/webservices/user_doc.html#index-2">REST Interface</a>
+</li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.restart">restart() (Methode von lib.smarthome.SmartHome)</a>
 </li>
       <li>
     Restore
@@ -6158,9 +7143,67 @@
         <li><a href="konfiguration/konfiguration_backup_restore.html#index-4">Kommandozeile</a>
 </li>
       </ul></li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.return_children">return_children() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.return_config_type">return_config_type() (Methode von lib.logic.Logics)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.return_defined_logics">return_defined_logics() (Methode von lib.logic.Logics)</a>
+</li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.return_event_listeners">return_event_listeners() (Methode von lib.smarthome.SmartHome)</a>
+</li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.return_item">return_item() (Methode von lib.item.Items)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.return_item">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.return_items">return_items() (Methode von lib.item.Items)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.return_items">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/logic.html#lib.logic.Logics.return_loaded_logics">return_loaded_logics() (Methode von lib.logic.Logics)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.return_logic">return_logic() (Methode von lib.logic.Logics)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.return_logic">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/logic.html#lib.logic.Logics.return_logics">return_logics() (Methode von lib.logic.Logics)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.return_logics">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/logic.html#lib.logic.Logics.return_logictype">return_logictype() (Methode von lib.logic.Logics)</a>
+</li>
       <li><a href="lib/log.html#lib.log.Logs.return_logs">return_logs() (Methode von lib.log.Logs)</a>
 </li>
       <li><a href="lib/module.html#lib.module.Modules.return_modules">return_modules() (Methode von lib.module.Modules)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.return_modules">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.return_next">return_next() (Methode von lib.scheduler.Scheduler)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.return_parent">return_parent() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/plugin_class_plugins.html#lib.plugin.Plugins.return_plugin">return_plugin() (Methode von lib.plugin.Plugins)</a>
+</li>
+      <li><a href="lib/plugin_class_plugins.html#lib.plugin.Plugins.return_plugins">return_plugins() (Methode von lib.plugin.Plugins)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.return_plugins">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/scene.html#lib.scene.Scenes.return_scene_value_actions">return_scene_value_actions() (Methode von lib.scene.Scenes)</a>
+</li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.return_struct_definitions">return_struct_definitions() (Methode von lib.item.Items)</a>
+</li>
+      <li><a href="lib/orb.html#lib.orb.Orb.rise">rise() (Methode von lib.orb.Orb)</a>
 </li>
       <li><a href="lib/db.html#lib.db.Database.rollback">rollback() (Methode von lib.db.Database)</a>
 </li>
@@ -6170,9 +7213,25 @@
 </li>
       <li><a href="plugins/rtr2/user_doc.html#index-1">rtr2 rtr</a>
 </li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.run">run() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+
+      <ul>
+        <li><a href="lib/plugin_class_pluginwrapper.html#lib.plugin.PluginWrapper.run">(Methode von lib.plugin.PluginWrapper)</a>
+</li>
+        <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.run">(Methode von lib.scheduler.Scheduler)</a>
+</li>
+      </ul></li>
       <li><a href="lib/utils.html#lib.utils.running_virtual">running_virtual() (im Modul lib.utils)</a>
 </li>
-      <li><a href="lib/tools.html#lib.tools.Tools.runtime">runtime() (Methode von lib.tools.Tools)</a>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.runtime">runtime() (Methode von lib.shtime.Shtime)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.runtime">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+        <li><a href="lib/tools.html#lib.tools.Tools.runtime">(Methode von lib.tools.Tools)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.runtime_as_dict">runtime_as_dict() (Methode von lib.shtime.Shtime)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -6192,15 +7251,99 @@
 </li>
       <li><a href="lib/shyaml.html#lib.shyaml.yamlfile.save">save() (Methode von lib.shyaml.yamlfile)</a>
 </li>
+      <li><a href="lib/scene.html#lib.scene.Scenes">Scenes (Klasse in lib.scene)</a>
+</li>
       <li><a href="admin/scheduler.html#index-0">Scheduler</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.scheduler">scheduler (Attribut von lib.logic.Logics)</a>
+
+      <ul>
+        <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt.scheduler">(Attribut von modules.mqtt.Mqtt)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/scheduler.html#lib.scheduler.Scheduler">Scheduler (Klasse in lib.scheduler)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.scheduler_add">scheduler_add() (Methode von lib.logic.Logics)</a>
+
+      <ul>
+        <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.scheduler_add">(Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/logic.html#lib.logic.Logics.scheduler_change">scheduler_change() (Methode von lib.logic.Logics)</a>
+
+      <ul>
+        <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.scheduler_change">(Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      </ul></li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.scheduler_get">scheduler_get() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.scheduler_remove">scheduler_remove() (Methode von lib.logic.Logics)</a>
+
+      <ul>
+        <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.scheduler_remove">(Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      </ul></li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.scheduler_return_next">scheduler_return_next() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.scheduler_trigger">scheduler_trigger() (Methode von lib.model.smartplugin.SmartPlugin)</a>
 </li>
       <li><a href="lib/config.html#lib.config.search_for_struct_in_items">search_for_struct_in_items() (im Modul lib.config)</a>
 </li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.seconds_to_displaystring">seconds_to_displaystring() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Stream.send">send() (Methode von lib.connection.Stream)</a>
+
+      <ul>
+        <li><a href="lib/network.html#lib.network.ConnectionClient.send">(Methode von lib.network.ConnectionClient)</a>
+</li>
+        <li><a href="lib/network.html#lib.network.Tcp_client.send">(Methode von lib.network.Tcp_client)</a>
+</li>
+        <li><a href="lib/network.html#lib.network.Tcp_server.send">(Methode von lib.network.Tcp_server)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/network.html#lib.network.ConnectionClient.send_echo_off">send_echo_off() (Methode von lib.network.ConnectionClient)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.ConnectionClient.send_echo_on">send_echo_on() (Methode von lib.network.ConnectionClient)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Network.send_wol">send_wol() (statische Methode von lib.network.Network)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Server">Server (Klasse in lib.connection)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.set">set() (Methode von lib.item.item.Item)</a>
+
+      <ul>
+        <li><a href="lib/orb.html#lib.orb.Orb.set">(Methode von lib.orb.Orb)</a>
+</li>
+      </ul></li>
       <li><a href="lib/config.html#lib.config.set_attr_for_subtree">set_attr_for_subtree() (im Modul lib.config)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.set_attr_value">set_attr_value() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.ConnectionClient.set_callbacks">set_callbacks() (Methode von lib.network.ConnectionClient)</a>
+
+      <ul>
+        <li><a href="lib/network.html#lib.network.Tcp_client.set_callbacks">(Methode von lib.network.Tcp_client)</a>
+</li>
+        <li><a href="lib/network.html#lib.network.Tcp_server.set_callbacks">(Methode von lib.network.Tcp_server)</a>
+</li>
+        <li><a href="lib/network.html#lib.network.Udp_server.set_callbacks">(Methode von lib.network.Udp_server)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/logic.html#lib.logic.Logics.set_config_section_key">set_config_section_key() (Methode von lib.logic.Logics)</a>
 </li>
       <li><a href="lib/translation.html#lib.translation.set_default_language">set_default_language() (im Modul lib.translation)</a>
 </li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.set_defaultlanguage">set_defaultlanguage() (Methode von lib.smarthome.SmartHome)</a>
+</li>
       <li><a href="lib/translation.html#lib.translation.set_fallback_language_order">set_fallback_language_order() (im Modul lib.translation)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logic.set_last_run">set_last_run() (Methode von lib.logic.Logic)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.set_tz">set_tz() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.set_tzinfo">set_tzinfo() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.set_worker_warn_count">set_worker_warn_count() (Methode von lib.scheduler.Scheduler)</a>
 </li>
       <li><a href="lib/shyaml.html#lib.shyaml.setInDict">setInDict() (im Modul lib.shyaml)</a>
 </li>
@@ -6218,6 +7361,10 @@
 </li>
       <li><a href="lib/log.html#lib.log.ShngTimedRotatingFileHandler">ShngTimedRotatingFileHandler (Klasse in lib.log)</a>
 </li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.shtime">shtime (Attribut von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime">Shtime (Klasse in lib.shtime)</a>
+</li>
       <li>
     Sichern
 
@@ -6230,6 +7377,8 @@
       <li><a href="plugins/simulation/user_doc.html#index-1">simulation</a>
 </li>
       <li><a href="plugins/sma_mb/user_doc.html#index-1">sma_mb</a>
+</li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome">SmartHome (Klasse in lib.smarthome)</a>
 </li>
       <li>
     SmartHomeNG
@@ -6252,6 +7401,8 @@
 </li>
       </ul></li>
       <li><a href="referenz/smarthomeng/ablauf_startup%20%232.html#index-3">SmartHomeNG Status</a>, <a href="referenz/smarthomeng/ablauf_startup.html#index-3">[1]</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin">SmartPlugin (Klasse in lib.model.smartplugin)</a>
 </li>
       <li>
     smartVISU
@@ -6309,6 +7460,10 @@
 </li>
       </ul></li>
       <li><a href="plugins/sml2/user_doc.html#index-1">sml2</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/network.html#lib.network.ConnectionClient.socket">socket (lib.network.ConnectionClient property)</a>
 </li>
       <li><a href="installation/anforderungen.html#index-2">Software Anforderungen</a>
 </li>
@@ -6369,8 +7524,6 @@
         <li><a href="referenz/items/standard_attribute/standard_attribute.html#index-6">value</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     Standardparameter
 
@@ -6379,6 +7532,22 @@
 </li>
       </ul></li>
       <li><a href="lib/module.html#lib.module.Modules.start">start() (Methode von lib.module.Modules)</a>
+
+      <ul>
+        <li><a href="lib/network.html#lib.network.Tcp_server.start">(Methode von lib.network.Tcp_server)</a>
+</li>
+        <li><a href="lib/network.html#lib.network.Udp_server.start">(Methode von lib.network.Udp_server)</a>
+</li>
+        <li><a href="lib/plugin_class_plugins.html#lib.plugin.Plugins.start">(Methode von lib.plugin.Plugins)</a>
+</li>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.start">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+        <li><a href="referenz/module/module_http.html#modules.http.Http.start">(Methode von modules.http.Http)</a>
+</li>
+        <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt.start">(Methode von modules.mqtt.Mqtt)</a>
+</li>
+      </ul></li>
+      <li><a href="entwicklung/plugins/mqttplugin.html#lib.model.mqttplugin.MqttPlugin.start_subscriptions">start_subscriptions() (Methode von lib.model.mqttplugin.MqttPlugin)</a>
 </li>
       <li>
     Stateengine
@@ -6413,7 +7582,33 @@
       </ul></li>
       <li><a href="plugins/stateengine/user_doc.html#index-1">stateengine</a>
 </li>
-      <li><a href="lib/module.html#lib.module.Modules.stop">stop() (Methode von lib.module.Modules)</a>
+      <li><a href="lib/item_class_items.html#lib.item.Items.stop">stop() (Methode von lib.item.Items)</a>
+
+      <ul>
+        <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.stop">(Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+        <li><a href="lib/module.html#lib.module.Modules.stop">(Methode von lib.module.Modules)</a>
+</li>
+        <li><a href="lib/plugin_class_plugins.html#lib.plugin.Plugins.stop">(Methode von lib.plugin.Plugins)</a>
+</li>
+        <li><a href="lib/plugin_class_pluginwrapper.html#lib.plugin.PluginWrapper.stop">(Methode von lib.plugin.PluginWrapper)</a>
+</li>
+        <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.stop">(Methode von lib.scheduler.Scheduler)</a>
+</li>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.stop">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+        <li><a href="referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController.stop">(Methode von modules.admin.api_plugins.PluginsInfoController)</a>
+</li>
+        <li><a href="referenz/module/module_http.html#modules.http.Http.stop">(Methode von modules.http.Http)</a>
+</li>
+        <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt.stop">(Methode von modules.mqtt.Mqtt)</a>
+</li>
+      </ul></li>
+      <li><a href="entwicklung/plugins/mqttplugin.html#lib.model.mqttplugin.MqttPlugin.stop_subscriptions">stop_subscriptions() (Methode von lib.model.mqttplugin.MqttPlugin)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Stream">Stream (Klasse in lib.connection)</a>
+</li>
+      <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.string2bool">string2bool() (Methode von lib.smarthome.SmartHome)</a>
 </li>
       <li><a href="lib/utils.html#lib.utils.Utils.string_to_list">string_to_list() (statische Methode von lib.utils.Utils)</a>
 </li>
@@ -6450,6 +7645,8 @@
         <li><a href="konfiguration/konfigurationsdateien/struct.html#index-0">struct.yaml</a>
 </li>
       </ul></li>
+      <li><a href="lib/item_class_items.html#lib.item.Items.structs">structs (Attribut von lib.item.Items)</a>
+</li>
       <li>
     Struktur
 
@@ -6458,6 +7655,8 @@
 </li>
       </ul></li>
       <li><a href="admin/items.html#index-4">Struktur Templates</a>
+</li>
+      <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt.subscribe_topic">subscribe_topic() (Methode von modules.mqtt.Mqtt)</a>
 </li>
       <li><a href="admin/system.html#index-0">System</a>
 </li>
@@ -6495,7 +7694,13 @@
 </li>
       <li><a href="plugins/tasmota/user_doc.html#index-0">tasmota</a>
 </li>
+      <li><a href="lib/network.html#lib.network.Tcp_client">Tcp_client (Klasse in lib.network)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Tcp_server">Tcp_server (Klasse in lib.network)</a>
+</li>
       <li><a href="plugins/telegram/user_doc.html#index-1">telegram</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugin.PluginController.test_for_old_config">test_for_old_config() (Methode von modules.admin.api_plugin.PluginController)</a>
 </li>
       <li><a href="lib/metadata.html#lib.metadata.Metadata.test_pythoncompatibility">test_pythoncompatibility() (Methode von lib.metadata.Metadata)</a>
 </li>
@@ -6513,17 +7718,31 @@
 </li>
       <li><a href="referenz/items/standard_attribute/standard_attribute.html#index-19">threshold</a>
 </li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.time_diff">time_diff() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.time_since">time_since() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.time_until">time_until() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.timer">timer() (Methode von lib.item.item.Item)</a>
+</li>
       <li><a href="beispiele/items_tipps_und_tricks.html#index-1">Tipps &amp; Tricks</a>
 </li>
       <li><a href="lib/utils.html#lib.utils.Utils.to_bool">to_bool() (statische Methode von lib.utils.Utils)</a>
 </li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.to_json">to_json() (Methode von lib.item.item.Item)</a>
+</li>
       <li><a href="lib/utils.html#lib.utils.Version.to_list">to_list() (Klassenmethode von lib.utils.Version)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lib/utils.html#lib.utils.Version.to_string">to_string() (Klassenmethode von lib.utils.Version)</a>
 </li>
       <li><a href="lib/utils.html#lib.utils.Utils.to_timeframe">to_timeframe() (statische Methode von lib.utils.Utils)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.today">today() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.toggle_logic">toggle_logic() (Methode von lib.logic.Logics)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.tomorrow">tomorrow() (Methode von lib.shtime.Shtime)</a>
 </li>
       <li>
     Tools
@@ -6540,10 +7759,18 @@
         <li><a href="tools/tools_plugin_metadata_checker.html#index-2">Metadata Checker</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lib/tools.html#lib.tools.Tools">Tools (Klasse in lib.tools)</a>
 </li>
       <li><a href="lib/translation.html#lib.translation.translate">translate() (im Modul lib.translation)</a>
+
+      <ul>
+        <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.translate">(Methode von lib.model.smartplugin.SmartPlugin)</a>
 </li>
+        <li><a href="lib/shtime.html#lib.shtime.Shtime.translate">(Methode von lib.shtime.Shtime)</a>
+</li>
+      </ul></li>
       <li><a href="entwicklung/plugins/multilanguage.html#index-1">translations</a>
 </li>
       <li>
@@ -6553,7 +7780,41 @@
         <li><a href="referenz/logiken/logiken_logic_objekt.html#index-2">Logiken</a>
 </li>
       </ul></li>
+      <li><a href="lib/connection.html#lib.connection.Connections.trigger">trigger() (Methode von lib.connection.Connections)</a>
+
+      <ul>
+        <li><a href="lib/logic.html#lib.logic.Logic.trigger">(Methode von lib.logic.Logic)</a>
+</li>
+        <li><a href="lib/scheduler.html#lib.scheduler.Scheduler.trigger">(Methode von lib.scheduler.Scheduler)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.trigger_age">trigger_age() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logic.trigger_dict">trigger_dict (lib.logic.Logic property)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.trigger_logic">trigger_logic() (Methode von lib.logic.Logics)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.triggered_by">triggered_by() (Methode von lib.item.item.Item)</a>
+</li>
       <li><a href="referenz/items/standard_attribute/type.html#index-1">type</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.type">type() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.tz">tz() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.tzinfo">tzinfo() (Methode von lib.shtime.Shtime)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.tzinfo">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.tzlocal">tzlocal() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.tzname">tzname() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.tznameDST">tznameDST() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.tznameST">tznameST() (Methode von lib.shtime.Shtime)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -6561,7 +7822,37 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/network.html#lib.network.Udp_server">Udp_server (Klasse in lib.network)</a>
+</li>
       <li><a href="installation/anforderungen.html#index-0">Unix</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.unload_logic">unload_logic() (Methode von lib.logic.Logics)</a>
+</li>
+      <li><a href="lib/plugin_class_plugins.html#lib.plugin.Plugins.unload_plugin">unload_plugin() (Methode von lib.plugin.Plugins)</a>
+</li>
+      <li><a href="lib/network.html#lib.network.Connections.unmonitor">unmonitor() (Methode von lib.network.Connections)</a>
+</li>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.unparse_item">unparse_item() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="lib/connection.html#lib.connection.Connections.unregister_connection">unregister_connection() (Methode von lib.connection.Connections)</a>
+</li>
+      <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt.unsubscribe_topic">unsubscribe_topic() (Methode von modules.mqtt.Mqtt)</a>
+</li>
+      <li><a href="referenz/module/module_admin.html#modules.admin.api_plugin.PluginController.update">update() (Methode von modules.admin.api_plugin.PluginController)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.update_age">update_age() (Methode von lib.item.item.Item)</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.update_config_section">update_config_section() (Methode von lib.logic.Logics)</a>
+
+      <ul>
+        <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.update_config_section">(Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin.update_item">update_item() (Methode von lib.model.smartplugin.SmartPlugin)</a>
+</li>
+      <li><a href="lib/item_class_item.html#lib.item.item.Item.updated_by">updated_by() (Methode von lib.item.item.Item)</a>
 </li>
       <li><a href="admin/system.html#index-6">Urheberrechtshinweise</a>
 </li>
@@ -6572,8 +7863,18 @@
         <li><a href="konfiguration/userfunctions.html#index-3">Konfiguration</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.utcinfo">utcinfo() (Methode von lib.shtime.Shtime)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.utcinfo">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.utcnow">utcnow() (Methode von lib.shtime.Shtime)</a>
+
+      <ul>
+        <li><a href="entwicklung/core/core_shng.html#lib.smarthome.SmartHome.utcnow">(Methode von lib.smarthome.SmartHome)</a>
+</li>
+      </ul></li>
       <li><a href="lib/utils.html#lib.utils.Utils">Utils (Klasse in lib.utils)</a>
 </li>
       <li><a href="plugins/uzsu/user_doc.html#index-1">uzsu</a>
@@ -6586,17 +7887,37 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="plugins/vacations/user_doc.html#index-1">vacations</a>
 </li>
+      <li><a href="lib/network.html#lib.network.Network.validate_inet_addr">validate_inet_addr() (statische Methode von lib.network.Network)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.validate_password">validate_password() (Methode von modules.http.Http)</a>
+</li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.validate_service_password">validate_service_password() (Methode von modules.http.Http)</a>
+</li>
       <li><a href="referenz/items/standard_attribute/standard_attribute.html#index-7">value</a>
 </li>
       <li><a href="referenz/items/plugin_attribute.html#index-2">Vererbung von Attributen</a>
 </li>
       <li><a href="lib/db.html#lib.db.Database.verify">verify() (Methode von lib.db.Database)</a>
 </li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.version">version (Attribut von modules.http.Http)</a>
+
+      <ul>
+        <li><a href="referenz/module/module_mqtt.html#modules.mqtt.Mqtt.version">(Attribut von modules.mqtt.Mqtt)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lib/utils.html#lib.utils.Version">Version (Klasse in lib.utils)</a>
 </li>
       <li><a href="plugins/viessmann/user_doc.html#index-1">viessmann</a>
+</li>
+      <li><a href="referenz/virtual_environments/virtual_environments.html#index-0">Virtual Environments</a>
+</li>
+      <li><a href="referenz/virtual_environments/virtual_environments.html#index-2">Virtuelle Environements als Dienst</a>
+</li>
+      <li><a href="referenz/virtual_environments/virtual_environments.html#index-1">Virtuelle Umgebungen</a>
+</li>
+      <li><a href="lib/logic.html#lib.logic.Logics.visu_access">visu_access() (Methode von lib.logic.Logics)</a>
 </li>
       <li><a href="plugins/visu_smartvisu/user_doc.html#index-1">visu_smartvisu</a>
 </li>
@@ -6610,6 +7931,8 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/logic.html#lib.logic.Logic.watch_item">watch_item (lib.logic.Logic property)</a>
+</li>
       <li><a href="entwicklung/plugins/webinterface_extend_plugin.html#index-0">Web Interface</a>, <a href="entwicklung/plugins/webinterface_filling_webinterface.html#index-0">[1]</a>
 
       <ul>
@@ -6620,6 +7943,8 @@
         <li><a href="entwicklung/plugins/webinterface_plugin_interaction.html#index-0">Interaktion mit dem Plugin</a>
 </li>
       </ul></li>
+      <li><a href="referenz/module/module_http.html#modules.http.Http.webif_mount_prefix">webif_mount_prefix (Attribut von modules.http.Http)</a>
+</li>
       <li>
     Webinterfaces
 
@@ -6656,6 +7981,10 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.weekday">weekday() (Methode von lib.shtime.Shtime)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.weekday_name">weekday_name() (Methode von lib.shtime.Shtime)</a>
+</li>
       <li>
     Wetter
 
@@ -6681,6 +8010,8 @@
       <li><a href="installation/anforderungen.html#index-0">Windows</a>
 </li>
       <li><a href="plugins/wol/user_doc.html#index-1">wol</a>
+</li>
+      <li><a href="lib/daemon.html#lib.daemon.write_pidfile">write_pidfile() (im Modul lib.daemon)</a>
 </li>
       <li><a href="lib/shyaml.html#lib.shyaml.writeBackToFile">writeBackToFile() (im Modul lib.shyaml)</a>
 </li>
@@ -6715,10 +8046,10 @@
 </li>
       <li><a href="lib/shyaml.html#lib.shyaml.yaml_dump_roundtrip">yaml_dump_roundtrip() (im Modul lib.shyaml)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lib/shyaml.html#lib.shyaml.yaml_load">yaml_load() (im Modul lib.shyaml)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lib/shyaml.html#lib.shyaml.yaml_load_fromstring">yaml_load_fromstring() (im Modul lib.shyaml)</a>
 </li>
       <li><a href="lib/shyaml.html#lib.shyaml.yaml_load_roundtrip">yaml_load_roundtrip() (im Modul lib.shyaml)</a>
@@ -6732,6 +8063,8 @@
       <li><a href="lib/shyaml.html#lib.shyaml.yaml_save_roundtrip">yaml_save_roundtrip() (im Modul lib.shyaml)</a>
 </li>
       <li><a href="lib/shyaml.html#lib.shyaml.yamlfile">yamlfile (Klasse in lib.shyaml)</a>
+</li>
+      <li><a href="lib/shtime.html#lib.shtime.Shtime.yesterday">yesterday() (Methode von lib.shtime.Shtime)</a>
 </li>
   </ul></td>
 </tr></table>

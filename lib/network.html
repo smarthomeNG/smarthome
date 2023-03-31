@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lib.network &mdash; Dokumentation v1.9.4 v1.9.4 (Stand 14. März 2023) Dokumentation</title>
+  <title>lib.network &mdash; Dokumentation v1.9.5 v1.9.5 (Stand 31. März 2023) Dokumentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            Dokumentation v1.9.4
+            Dokumentation v1.9.5
               <img src="../_static/logo_long_inverse3.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -3256,8 +3256,14 @@
 <li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_in5minutes.html#zusammenfassung">Zusammenfassung</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/smartplugin.html">Class SmartPlugin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/mqttplugin.html">Class MqttPlugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/smartplugin.html">Class SmartPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/smartplugin.html#lib.model.smartplugin.SmartPlugin"><code class="docutils literal notranslate"><span class="pre">SmartPlugin</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/mqttplugin.html">Class MqttPlugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/mqttplugin.html#lib.model.mqttplugin.MqttPlugin"><code class="docutils literal notranslate"><span class="pre">MqttPlugin</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../entwicklung/plugins/plugin_metadata.html">Plugin-Metadata <span class="bluesup">update</span></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_metadata.html#detaillierte-beschreibung">Detaillierte Beschreibung</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../entwicklung/plugins/plugin_metadata.html#plugin">plugin</a></li>
@@ -3342,8 +3348,19 @@
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
@@ -3375,7 +3392,10 @@
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../entwicklung/core/core.html">Entwicklung des Core</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../entwicklung/core/core_shng.html">Der Core von SmartHomeNG</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../entwicklung/core/core_shng.html#smarthome-py">smarthome.py</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../entwicklung/core/core_shng.html#lib.smarthome.SmartHome"><code class="docutils literal notranslate"><span class="pre">SmartHome</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="../entwicklung/core/core_libraries.html">Programm Module</a><ul class="current">
@@ -3404,7 +3424,15 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="constants.html">lib.constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="daemon.html">lib.daemon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="daemon.html">lib.daemon</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.check_sh_is_running"><code class="docutils literal notranslate"><span class="pre">check_sh_is_running()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.daemonize"><code class="docutils literal notranslate"><span class="pre">daemonize()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.kill"><code class="docutils literal notranslate"><span class="pre">kill()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.read_pidfile"><code class="docutils literal notranslate"><span class="pre">read_pidfile()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.remove_pidfile"><code class="docutils literal notranslate"><span class="pre">remove_pidfile()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="daemon.html#lib.daemon.write_pidfile"><code class="docutils literal notranslate"><span class="pre">write_pidfile()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="item_conversion.html">lib.item_conversion</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="item_conversion.html#lib.item_conversion.convert_yaml"><code class="docutils literal notranslate"><span class="pre">convert_yaml()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="item_conversion.html#lib.item_conversion.is_ruamelyaml_installed"><code class="docutils literal notranslate"><span class="pre">is_ruamelyaml_installed()</span></code></a></li>
@@ -3427,7 +3455,10 @@
 <li class="toctree-l5"><a class="reference internal" href="module.html#lib.module.Modules"><code class="docutils literal notranslate"><span class="pre">Modules</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="scene.html">lib.scene</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scene.html">lib.scene</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="scene.html#lib.scene.Scenes"><code class="docutils literal notranslate"><span class="pre">Scenes</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="shyaml.html">lib.shyaml</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="shyaml.html#lib.shyaml.convert_linenumber"><code class="docutils literal notranslate"><span class="pre">convert_linenumber()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="shyaml.html#lib.shyaml.editing_is_enabled"><code class="docutils literal notranslate"><span class="pre">editing_is_enabled()</span></code></a></li>
@@ -3464,8 +3495,20 @@
 <li class="toctree-l5"><a class="reference internal" href="logutils.html#lib.logutils.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">lib.network</a></li>
-<li class="toctree-l4"><a class="reference internal" href="orb.html">lib.orb</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">lib.network</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Connections"><code class="docutils literal notranslate"><span class="pre">Connections</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_client"><code class="docutils literal notranslate"><span class="pre">Tcp_client</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.ConnectionClient"><code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_server"><code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="orb.html">lib.orb</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="tools.html">lib.tools</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="tools.html#lib.tools.Tools"><code class="docutils literal notranslate"><span class="pre">Tools</span></code></a></li>
 </ul>
@@ -3747,7 +3790,12 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../referenz/module/module.html">Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_http.html">Modul http</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#api-des-moduls">API des Moduls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#module-modules.http">API des Moduls</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_http.html#modules.http.CherryPyFilter"><code class="docutils literal notranslate"><span class="pre">CherryPyFilter</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_http.html#modules.http.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_http.html#modules.http.ModuleApp"><code class="docutils literal notranslate"><span class="pre">ModuleApp</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_http.html#metadaten">Metadaten</a></li>
 </ul>
@@ -3755,15 +3803,29 @@
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_admin.html">Modul admin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls">API des Moduls</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-admin-rest">API des Moduls admin.rest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugins">API des Moduls api_plugins</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-api-plugin">API des Moduls api_plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugins">API des Moduls api_plugins</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsController"><code class="docutils literal notranslate"><span class="pre">PluginsController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInstalledController"><code class="docutils literal notranslate"><span class="pre">PluginsInstalledController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsConfigController"><code class="docutils literal notranslate"><span class="pre">PluginsConfigController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsInfoController"><code class="docutils literal notranslate"><span class="pre">PluginsInfoController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsAPIController"><code class="docutils literal notranslate"><span class="pre">PluginsAPIController</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugins.PluginsLogicParametersController"><code class="docutils literal notranslate"><span class="pre">PluginsLogicParametersController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#module-modules.admin.api_plugin">API des Moduls api_plugin</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_admin.html#modules.admin.api_plugin.PluginController"><code class="docutils literal notranslate"><span class="pre">PluginController</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#api-des-moduls-webapi">API des Moduls (WebApi)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_admin.html#metadaten">Metadaten</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../referenz/module/module_mqtt.html">Modul mqtt</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#api-des-moduls">API des Moduls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#module-modules.mqtt">API des Moduls</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../referenz/module/module_mqtt.html#modules.mqtt.Mqtt"><code class="docutils literal notranslate"><span class="pre">Mqtt</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#readme">README</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../referenz/module/module_mqtt.html#metadaten">Metadaten</a></li>
 </ul>
@@ -3882,6 +3944,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../referenz/userfunctions/userfunctions.html#reload-von-userfunctions">Reload von Userfunctions</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../referenz/virtual_environments/virtual_environments.html">Virtuelle Environments <span class="redsup">Neu</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../referenz/virtual_environments/virtual_environments.html#installation-von-virtualenv">Installation von virtualenv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../referenz/virtual_environments/virtual_environments.html#erstellung-von-virtuellen-environments">Erstellung von virtuellen Environments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../referenz/virtual_environments/virtual_environments.html#virtuelle-environements-als-dienst">Virtuelle Environements als Dienst</a></li>
+</ul>
+</li>
 <li class="toctree-l2 current"><a class="reference internal" href="../referenz/libraries_plugins_logics.html">Libraries für Plugins und Logiken</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="db.html">lib.db</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="db.html#lib.db.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a><ul>
@@ -3913,8 +3981,87 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">lib.network</a></li>
-<li class="toctree-l3"><a class="reference internal" href="orb.html">lib.orb</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">lib.network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lib.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Network.ip_port_to_socket"><code class="docutils literal notranslate"><span class="pre">Network.ip_port_to_socket()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Network.family_to_string"><code class="docutils literal notranslate"><span class="pre">Network.family_to_string()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Network.ping"><code class="docutils literal notranslate"><span class="pre">Network.ping()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Network.ping_port"><code class="docutils literal notranslate"><span class="pre">Network.ping_port()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Network.send_wol"><code class="docutils literal notranslate"><span class="pre">Network.send_wol()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Network.validate_inet_addr"><code class="docutils literal notranslate"><span class="pre">Network.validate_inet_addr()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Network.clean_uri"><code class="docutils literal notranslate"><span class="pre">Network.clean_uri()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#lib.network.Connections"><code class="docutils literal notranslate"><span class="pre">Connections</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Connections.monitor"><code class="docutils literal notranslate"><span class="pre">Connections.monitor()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Connections.unmonitor"><code class="docutils literal notranslate"><span class="pre">Connections.unmonitor()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Connections.check"><code class="docutils literal notranslate"><span class="pre">Connections.check()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#lib.network.Http"><code class="docutils literal notranslate"><span class="pre">Http</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Http.HTTPDigestAuth"><code class="docutils literal notranslate"><span class="pre">Http.HTTPDigestAuth()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Http.post_json"><code class="docutils literal notranslate"><span class="pre">Http.post_json()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Http.get_json"><code class="docutils literal notranslate"><span class="pre">Http.get_json()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Http.get_text"><code class="docutils literal notranslate"><span class="pre">Http.get_text()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Http.download"><code class="docutils literal notranslate"><span class="pre">Http.download()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Http.get_binary"><code class="docutils literal notranslate"><span class="pre">Http.get_binary()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Http.response_status"><code class="docutils literal notranslate"><span class="pre">Http.response_status()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Http.response_headers"><code class="docutils literal notranslate"><span class="pre">Http.response_headers()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Http.response_cookies"><code class="docutils literal notranslate"><span class="pre">Http.response_cookies()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Http.response_object"><code class="docutils literal notranslate"><span class="pre">Http.response_object()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#lib.network.Tcp_client"><code class="docutils literal notranslate"><span class="pre">Tcp_client</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_client.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Tcp_client.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_client.connect"><code class="docutils literal notranslate"><span class="pre">Tcp_client.connect()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_client.connected"><code class="docutils literal notranslate"><span class="pre">Tcp_client.connected()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_client.send"><code class="docutils literal notranslate"><span class="pre">Tcp_client.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_client.close"><code class="docutils literal notranslate"><span class="pre">Tcp_client.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#lib.network.ConnectionClient"><code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.ConnectionClient.socket"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.socket</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.ConnectionClient.set_callbacks"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.ConnectionClient.send"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.ConnectionClient.send_echo_off"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send_echo_off()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.ConnectionClient.send_echo_on"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.send_echo_on()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.ConnectionClient.close"><code class="docutils literal notranslate"><span class="pre">ConnectionClient.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#lib.network.Tcp_server"><code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_server.MODE_TEXT"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_TEXT</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_server.MODE_TEXT_LINE"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_TEXT_LINE</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_server.MODE_BINARY"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_BINARY</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_server.MODE_FIXED_LENGTH"><code class="docutils literal notranslate"><span class="pre">Tcp_server.MODE_FIXED_LENGTH</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_server.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Tcp_server.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_server.start"><code class="docutils literal notranslate"><span class="pre">Tcp_server.start()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_server.listening"><code class="docutils literal notranslate"><span class="pre">Tcp_server.listening()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_server.send"><code class="docutils literal notranslate"><span class="pre">Tcp_server.send()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_server.disconnect"><code class="docutils literal notranslate"><span class="pre">Tcp_server.disconnect()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Tcp_server.close"><code class="docutils literal notranslate"><span class="pre">Tcp_server.close()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#lib.network.Udp_server"><code class="docutils literal notranslate"><span class="pre">Udp_server</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Udp_server.start"><code class="docutils literal notranslate"><span class="pre">Udp_server.start()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Udp_server.set_callbacks"><code class="docutils literal notranslate"><span class="pre">Udp_server.set_callbacks()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Udp_server.listening"><code class="docutils literal notranslate"><span class="pre">Udp_server.listening()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lib.network.Udp_server.close"><code class="docutils literal notranslate"><span class="pre">Udp_server.close()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="orb.html">lib.orb</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="orb.html#lib.orb.Orb"><code class="docutils literal notranslate"><span class="pre">Orb</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.get_observer_and_orb"><code class="docutils literal notranslate"><span class="pre">Orb.get_observer_and_orb()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.midnight"><code class="docutils literal notranslate"><span class="pre">Orb.midnight()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.noon"><code class="docutils literal notranslate"><span class="pre">Orb.noon()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.pos"><code class="docutils literal notranslate"><span class="pre">Orb.pos()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.rise"><code class="docutils literal notranslate"><span class="pre">Orb.rise()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="orb.html#lib.orb.Orb.set"><code class="docutils literal notranslate"><span class="pre">Orb.set()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="tools.html">lib.tools</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="tools.html#lib.tools.Tools"><code class="docutils literal notranslate"><span class="pre">Tools</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="tools.html#lib.tools.Tools.abs2rel"><code class="docutils literal notranslate"><span class="pre">Tools.abs2rel()</span></code></a></li>
@@ -3972,7 +4119,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../referenz/APIs.html">APIs von SmartHomeNG</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="item.html">Items-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="item.html#lib-item">lib.item</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="item.html#module-lib.item">lib.item</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="item_class_item.html">Class Item</a></li>
 <li class="toctree-l5"><a class="reference internal" href="item_class_items.html">Class Items</a></li>
 <li class="toctree-l5"><a class="reference internal" href="item.html#class-item">class Item</a></li>
@@ -3982,7 +4129,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="plugin.html">Plugins-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="plugin.html#module-lib.plugin">lib.plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="plugin.html#lib-plugin">lib.plugin</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="plugin_class_pluginwrapper.html">Class PluginWrapper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="plugin_class_plugins.html">Class Plugins</a></li>
 <li class="toctree-l5"><a class="reference internal" href="plugin.html#class-pluginwrapper">class PluginWrapper</a></li>
@@ -3992,15 +4139,26 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="shtime.html">Shtime-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="shtime.html#lib-shtime">lib.shtime</a></li>
+<li class="toctree-l4"><a class="reference internal" href="shtime.html#module-lib.shtime">lib.shtime</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="shtime.html#lib.shtime.Shtime"><code class="docutils literal notranslate"><span class="pre">Shtime</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="logic.html">Logics-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="logic.html#lib-logic">lib.logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="logic.html#module-lib.logic">lib.logic</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="logic.html#lib.logic.Logics"><code class="docutils literal notranslate"><span class="pre">Logics</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="logic.html#lib.logic.Logic"><code class="docutils literal notranslate"><span class="pre">Logic</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler-API</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.html#lib-scheduler">lib.scheduler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-lib.scheduler">lib.scheduler</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="scheduler.html#lib.scheduler.LeaveLogic"><code class="docutils literal notranslate"><span class="pre">LeaveLogic</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="scheduler.html#lib.scheduler.Scheduler"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -4009,6 +4167,31 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ - Häufig gestellte Fragen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../release/release.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../release/1_9_5.html">Release 1.9.5 - 31. März 2023</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_9_5.html#uberblick">Überblick</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#minimum-python-version">Minimum Python Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#unterstutzte-python-versionen">Unterstützte Python Versionen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_9_5.html#anderungen-am-core">Änderungen am Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#allgmein">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#updates-in-the-core">Updates in the CORE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_9_5.html#anderungen-bei-plugins">Änderungen bei Plugins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#id1">Allgmein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#neue-plugins">Neue Plugins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#plugin-updates">Plugin Updates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#outdated-plugins">Outdated Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../release/1_9_5.html#weitere-anderungen">Weitere Änderungen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#tools">Tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../release/1_9_5.html#dokumentation">Dokumentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../release/1_9_4.html">Release 1.9.4 - 14. März 2023</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../release/1_9_4.html#uberblick">Überblick</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../release/1_9_4.html#minimum-python-version">Minimum Python Version</a></li>
@@ -4295,7 +4478,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Dokumentation v1.9.4</a>
+          <a href="../index.html">Dokumentation v1.9.5</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -4316,8 +4499,728 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="lib-network">
-<h1>lib.network<a class="headerlink" href="#lib-network" title="Permalink to this heading"></a></h1>
+  <section id="module-lib.network">
+<span id="lib-network"></span><h1>lib.network<a class="headerlink" href="#module-lib.network" title="Permalink to this heading"></a></h1>
+<p>This library contains the network classes for SmartHomeNG.</p>
+<p>New network functions and utilities are going to be implemented in this library.
+These classes, functions and methods are mainly meant to be used by plugin developers</p>
+<ul class="simple">
+<li><p>class Network provides utility methods for network-related tasks</p></li>
+<li><p>class Html provides methods for communication with resp. requests to a HTTP server</p></li>
+<li><p>class Tcp_client provides a two-way TCP client implementation</p></li>
+<li><p>class Tcp_server provides a TCP listener with connection / data callbacks</p></li>
+<li><p>class Udp_server provides a UDP listener with data callbacks</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="lib.network.Network">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lib.network.</span></span><span class="sig-name descname"><span class="pre">Network</span></span><a class="reference internal" href="../_modules/lib/network.html#Network"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Network" title="Link zu dieser Definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Provide useful static methods that you can use in your projects.</p>
+<p>NOTE: Some format check routines were duplicate with lib.utils. As these primarily check string formats and are used for metadata parsing, they were removed here to prevent duplicates.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Network.ip_port_to_socket">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ip_port_to_socket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Network.ip_port_to_socket"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Network.ip_port_to_socket" title="Link zu dieser Definition"></a></dt>
+<dd><p>Return an ip address plus port to a socket string.</p>
+<p>Format is ‚ip:port‘ for IPv4 or ‚[ip]:port‘ for IPv6</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Socket address / IP endpoint as string</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Network.family_to_string">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">family_to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">family</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Network.family_to_string"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Network.family_to_string" title="Link zu dieser Definition"></a></dt>
+<dd><p>Convert a socket address family to an ip version string ‚IPv4‘ or ‚IPv6‘.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>family</strong> (<em>socket.AF_INET</em><em> or </em><em>socket.AF_INET6</em>) – Socket family</p>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>‚IPv4‘ or ‚IPv6‘</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Network.ping">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Network.ping"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Network.ping" title="Link zu dieser Definition"></a></dt>
+<dd><p>Try to ICMP ping a host using external OS utilities. IPv4 only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ip</strong> (<em>string</em>) – IPv4 address as a string</p>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if a reachable, false otherwise.</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Network.ping_port">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ping_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">80</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Network.ping_port"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Network.ping_port" title="Link zu dieser Definition"></a></dt>
+<dd><p>Try to reach a given TCP port. IPv4 only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip</strong> (<em>string</em>) – IPv4 address</p></li>
+<li><p><strong>port</strong> (<em>int</em>) – Port number</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if reachable, false otherwise.</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Network.send_wol">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">send_wol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'255.255.255.255'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Network.send_wol"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Network.send_wol" title="Link zu dieser Definition"></a></dt>
+<dd><p>Send a wake on lan packet to the given mac address using ipv4 broadcast (or directed to specific ip).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mac</strong> (<em>string</em>) – Mac address to wake up (pure numbers or with any separator)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Network.validate_inet_addr">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_inet_addr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Network.validate_inet_addr"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Network.validate_inet_addr" title="Link zu dieser Definition"></a></dt>
+<dd><p>Validate that addr:port resolve properly and return resolved IP address and port.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>addr</strong> (<em>str</em>) – hostname or ip address under test</p></li>
+<li><p><strong>port</strong> (<em>num</em>) – port number under test</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>(ip_address, port, family) or (None, 0, None) if error occurs</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Network.clean_uri">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clean_uri</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'show'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Network.clean_uri"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Network.clean_uri" title="Link zu dieser Definition"></a></dt>
+<dd><p>Check URIs for embedded http/https login data (<a class="reference external" href="http://user:pass&#64;domain.tld">http://user:pass&#64;domain.tld</a>…) and clean it.</p>
+<p>Possible modes are:</p>
+<ul class="simple">
+<li><p>‚show‘: don’t change URI (default) -&gt; <code class="docutils literal notranslate"><span class="pre">http://user:pass&#64;domain.tld...</span></code></p></li>
+<li><p>‚mask‘: replace login data with <code class="docutils literal notranslate"><span class="pre">***</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">http://***:***&#64;domain.tld...</span></code></p></li>
+<li><p>‚strip‘: remove login data part -&gt; <code class="docutils literal notranslate"><span class="pre">http://domain.tld...</span></code></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uri</strong> (<em>str</em>) – full URI to check and process</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – handling mode, one of ‚show‘, ‚strip‘, ‚mask‘</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>resulting URI string</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lib.network.Connections">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lib.network.</span></span><span class="sig-name descname"><span class="pre">Connections</span></span><a class="reference internal" href="../_modules/lib/network.html#Connections"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Connections" title="Link zu dieser Definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Within SmartHome.py there is one instance of this class</p>
+<p>The monitoring feature enables autoconnecting and auto-
+reconnecting by checking &lt;plugin&gt;.connected and calling
+&lt;plugin&gt;.connect()</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Connections.monitor">
+<span class="sig-name descname"><span class="pre">monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Connections.monitor"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Connections.monitor" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Connections.unmonitor">
+<span class="sig-name descname"><span class="pre">unmonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Connections.unmonitor"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Connections.unmonitor" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Connections.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Connections.check"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Connections.check" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lib.network.Http">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lib.network.</span></span><span class="sig-name descname"><span class="pre">Http</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baseurl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hide_login</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'show'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Http"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Http" title="Link zu dieser Definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Provide methods to simplify HTTP connections, especially to talk to HTTP servers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>baseurl</strong> (<em>str</em>) – base URL used everywhere in this instance (example: <a class="reference external" href="http://www.myserver.tld">http://www.myserver.tld</a>)</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – Set a maximum amount of seconds the class should try to establish a connection</p></li>
+<li><p><strong>hide_login</strong> (<em>str</em>) – Hide or mask login data in logged http(s) requests (see <code class="docutils literal notranslate"><span class="pre">Network.clean_uri()</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Http.HTTPDigestAuth">
+<span class="sig-name descname"><span class="pre">HTTPDigestAuth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Http.HTTPDigestAuth"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Http.HTTPDigestAuth" title="Link zu dieser Definition"></a></dt>
+<dd><p>Create a HTTPDigestAuth instance and returns it to the caller.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user</strong> (<em>str</em>) – Username</p></li>
+<li><p><strong>password</strong> (<em>str</em>) – Password</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>HTTPDigestAuth object</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HTTPDigestAuth</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Http.post_json">
+<span class="sig-name descname"><span class="pre">post_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Http.post_json"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Http.post_json" title="Link zu dieser Definition"></a></dt>
+<dd><p>Launch a POST request and return JSON answer as a dict or None on error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – Optional URL to fetch from. If None (default) use baseurl given on init.</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – Optional dict of parameters to add to URL query string.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em>) – Set to false to ignore SSL certificate verification errors (for self-signed for example)</p></li>
+<li><p><strong>auth</strong> (<em>HTTPBasicAuth</em><em> | </em><em>HTTPDigestAuth</em><em> | </em><em>...</em>) – Optional authentication object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>JSON answer decoded into a dict or None on whatever error occured</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Http.get_json">
+<span class="sig-name descname"><span class="pre">get_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Http.get_json"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Http.get_json" title="Link zu dieser Definition"></a></dt>
+<dd><p>Launch a GET request and return JSON answer as a dict or None on error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – Optional URL to fetch from. If None (default) use baseurl given on init.</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – Optional dict of parameters to add to URL query string.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em>) – Set to false to ignore SSL certificate verification errors (for self-signed for example)</p></li>
+<li><p><strong>auth</strong> (<em>HTTPBasicAuth</em><em> | </em><em>HTTPDigestAuth</em><em> | </em><em>...</em>) – Optional authentication object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>JSON answer decoded into a dict or None on whatever error occured</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Http.get_text">
+<span class="sig-name descname"><span class="pre">get_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Http.get_text"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Http.get_text" title="Link zu dieser Definition"></a></dt>
+<dd><p>Launch a GET request and return answer as string or None on error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – Optional URL to fetch from. Default is to use baseurl given to constructor.</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – Optional dict of parameters to add to URL query string.</p></li>
+<li><p><strong>encoding</strong> (<em>str</em>) – Optional encoding of the received text. Default is to let the lib try to figure out the right encoding.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>Answer decoded into a string or None on whatever error occured</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Http.download">
+<span class="sig-name descname"><span class="pre">download</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Http.download"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Http.download" title="Link zu dieser Definition"></a></dt>
+<dd><p>Download a binary file to a local path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – Remote file to download. Attention: Must be full url. ‚baseurl‘ is NOT prefixed here.</p></li>
+<li><p><strong>local</strong> (<em>str</em>) – Local file to save</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – Optional dict of parameters to add to URL query string.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em>) – Set to false to ignore SSL certificate verification errors (for self-signed for example)</p></li>
+<li><p><strong>auth</strong> (<em>HTTPBasicAuth</em><em> | </em><em>HTTPDigestAuth</em><em> | </em><em>...</em>) – Optional authentication object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns true on success, else false</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Http.get_binary">
+<span class="sig-name descname"><span class="pre">get_binary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Http.get_binary"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Http.get_binary" title="Link zu dieser Definition"></a></dt>
+<dd><p>Launch a GET request and return answer as raw binary data or None on error.</p>
+<p>This is useful for downloading binary objects / files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – Optional URL to fetch from. Default is to use baseurl given to constructor.</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – Optional dict of parameters to add to URL query string.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>Answer as raw binary objector None on whatever error occured</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bytes | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Http.response_status">
+<span class="sig-name descname"><span class="pre">response_status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Http.response_status"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Http.response_status" title="Link zu dieser Definition"></a></dt>
+<dd><p>Return the status code (200, 404, …) of the last executed request.</p>
+<p>If GET request was not possible and thus no HTTP statuscode is available,
+the returned status code is 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Status code and text of last request</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(int, str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Http.response_headers">
+<span class="sig-name descname"><span class="pre">response_headers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Http.response_headers"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Http.response_headers" title="Link zu dieser Definition"></a></dt>
+<dd><p>Return a dictionary with the server return headers of the last executed request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Headers returned by server</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Http.response_cookies">
+<span class="sig-name descname"><span class="pre">response_cookies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Http.response_cookies"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Http.response_cookies" title="Link zu dieser Definition"></a></dt>
+<dd><p>Return a dictionary with the cookies the server may have sent on the last executed request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Cookies returned by server</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Http.response_object">
+<span class="sig-name descname"><span class="pre">response_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Http.response_object"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Http.response_object" title="Link zu dieser Definition"></a></dt>
+<dd><p>Return the raw response object for advanced ussage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Reponse object as returned by underlying requests library</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="http://docs.python-requests.org/en/master/user/quickstart/#response-content">requests.Response</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lib.network.Tcp_client">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lib.network.</span></span><span class="sig-name descname"><span class="pre">Tcp_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autoreconnect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect_retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect_cycle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_cycle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autoconnect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Tcp_client"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Tcp_client" title="Link zu dieser Definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Structured class to handle locally initiated TCP connections with two-way communication.</p>
+<p>The callbacks need to be defined as follows:</p>
+<p>def connected_callback(Tcp_client_instance)
+def receiving_callback(Tcp_client_instance)
+def disconnected_callback(Tcp_client_instance)
+def data_received_callback(Tcp_client_instance, message)</p>
+<p>(Class members need the additional first <cite>self</cite> parameter)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> (<em>str</em>) – Remote host name or ip address (v4 or v6)</p></li>
+<li><p><strong>port</strong> (<em>int</em>) – Remote host port to connect to</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of this connection (mainly for logging purposes). Try to keep the name short.</p></li>
+<li><p><strong>autoreconnect</strong> (<em>bool</em>) – Should the socket try to reconnect on lost connection (or finished connect cycle)</p></li>
+<li><p><strong>connect_retries</strong> (<em>int</em>) – Number of connect retries per cycle</p></li>
+<li><p><strong>connect_cycle</strong> (<em>int</em>) – Time between retries inside a connect cycle</p></li>
+<li><p><strong>retry_cycle</strong> (<em>int</em>) – Time between cycles if :param:autoreconnect is True</p></li>
+<li><p><strong>binary</strong> (<em>bool</em>) – Switch between binary and text mode. Text will be encoded / decoded using encoding parameter.</p></li>
+<li><p><strong>terminator</strong> (<em>int</em><em> | </em><em>bytes</em><em> | </em><em>str</em>) – Terminator to use to split received data into chunks (split lines &lt;cr&gt; for example). If integer then split into n bytes. Default is None means process chunks as received.</p></li>
+<li><p><strong>autoconnect</strong> (<em>bool</em>) – automatically connect on send. Copies autoreconnect if None</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Tcp_client.set_callbacks">
+<span class="sig-name descname"><span class="pre">set_callbacks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">receiving</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_received</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disconnected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Tcp_client.set_callbacks"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Tcp_client.set_callbacks" title="Link zu dieser Definition"></a></dt>
+<dd><p>Set callbacks to caller for different socket events.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connected</strong> (<em>function</em>) – Called whenever a connection is established successfully</p></li>
+<li><p><strong>data_received</strong> (<em>function</em>) – Called when data is received</p></li>
+<li><p><strong>disconnected</strong> (<em>function</em>) – Called when a connection has been dropped for whatever reason</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Tcp_client.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Tcp_client.connect"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Tcp_client.connect" title="Link zu dieser Definition"></a></dt>
+<dd><p>Connect the socket.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>False if an error prevented us from launching a connection thread. True if a connection thread has been started.</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Tcp_client.connected">
+<span class="sig-name descname"><span class="pre">connected</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Tcp_client.connected"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Tcp_client.connected" title="Link zu dieser Definition"></a></dt>
+<dd><p>Return the current connection state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if an active connection exists,else False.</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Tcp_client.send">
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Tcp_client.send"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Tcp_client.send" title="Link zu dieser Definition"></a></dt>
+<dd><p>Send a message to the server. Can be a string, bytes or a bytes array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if message has been successfully sent, else False.</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Tcp_client.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Tcp_client.close"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Tcp_client.close" title="Link zu dieser Definition"></a></dt>
+<dd><p>Close the current client socket.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lib.network.ConnectionClient">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lib.network.</span></span><span class="sig-name descname"><span class="pre">ConnectionClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">server</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">socket</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#ConnectionClient"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.ConnectionClient" title="Link zu dieser Definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Client object that represents a connected client returned by a Tcp_server instance on incoming connection.</p>
+<p>This class should normally <strong>not be instantiated manually</strong>, but is provided by the Tcp_server via the callbacks</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>server</strong> (<em>tcp_server</em>) – The tcp_server passes a reference to itself to access parent methods</p></li>
+<li><p><strong>socket</strong> (<em>function</em>) – socket.Socket class used by the Client object</p></li>
+<li><p><strong>fd</strong> (<em>int</em>) – File descriptor of socket used by the Client object</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="lib.network.ConnectionClient.socket">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">socket</span></span><a class="headerlink" href="#lib.network.ConnectionClient.socket" title="Link zu dieser Definition"></a></dt>
+<dd><p>Socket getter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.ConnectionClient.set_callbacks">
+<span class="sig-name descname"><span class="pre">set_callbacks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_received</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">will_close</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#ConnectionClient.set_callbacks"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.ConnectionClient.set_callbacks" title="Link zu dieser Definition"></a></dt>
+<dd><p>Set callbacks for different socket events (client based).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_received</strong> (<em>function</em>) – Called when data is received</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.ConnectionClient.send">
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#ConnectionClient.send"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.ConnectionClient.send" title="Link zu dieser Definition"></a></dt>
+<dd><p>Send a string to connected client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>string</em><em> | </em><em>bytes</em><em> | </em><em>bytearray</em>) – Message to send</p>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if message has been queued successfully.</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.ConnectionClient.send_echo_off">
+<span class="sig-name descname"><span class="pre">send_echo_off</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#ConnectionClient.send_echo_off"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.ConnectionClient.send_echo_off" title="Link zu dieser Definition"></a></dt>
+<dd><p>Send an IAC telnet command to ask client to turn its echo off.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.ConnectionClient.send_echo_on">
+<span class="sig-name descname"><span class="pre">send_echo_on</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#ConnectionClient.send_echo_on"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.ConnectionClient.send_echo_on" title="Link zu dieser Definition"></a></dt>
+<dd><p>Send an IAC telnet command to ask client to turn its echo on again.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.ConnectionClient.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#ConnectionClient.close"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.ConnectionClient.close" title="Link zu dieser Definition"></a></dt>
+<dd><p>Close client socket.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lib.network.Tcp_server">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lib.network.</span></span><span class="sig-name descname"><span class="pre">Tcp_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Tcp_server"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Tcp_server" title="Link zu dieser Definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Threaded TCP listener which dispatches connections (and possibly received data) via callbacks.</p>
+<p>NOTE: The callbacks need to expect the following arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">incoming_connection(server,</span> <span class="pre">client)</span></code> where <code class="docutils literal notranslate"><span class="pre">server</span></code> ist the <code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code> instance and <code class="docutils literal notranslate"><span class="pre">client</span></code> is a <code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code> for the current connection</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data_received(server,</span> <span class="pre">client,</span> <span class="pre">data)</span></code> where <code class="docutils literal notranslate"><span class="pre">server</span></code> ist the <code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code> instance, <code class="docutils literal notranslate"><span class="pre">client</span></code> is a <code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code> for the current connection, and <code class="docutils literal notranslate"><span class="pre">data</span></code> is a string containing received data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">disconnected(server,</span> <span class="pre">client)</span></code> where <code class="docutils literal notranslate"><span class="pre">server</span></code> ist the <code class="docutils literal notranslate"><span class="pre">Tcp_server</span></code> instance and <code class="docutils literal notranslate"><span class="pre">client</span></code> is a <code class="docutils literal notranslate"><span class="pre">ConnectionClient</span></code> for the closed connection</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> (<em>str</em>) – Local host name or ip address (v4 or v6). Default is ‚::‘ which listens on all IPv4 and all IPv6 addresses available.</p></li>
+<li><p><strong>port</strong> (<em>int</em>) – Local port to connect to</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of this connection (mainly for logging purposes)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lib.network.Tcp_server.MODE_TEXT">
+<span class="sig-name descname"><span class="pre">MODE_TEXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#lib.network.Tcp_server.MODE_TEXT" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lib.network.Tcp_server.MODE_TEXT_LINE">
+<span class="sig-name descname"><span class="pre">MODE_TEXT_LINE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#lib.network.Tcp_server.MODE_TEXT_LINE" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lib.network.Tcp_server.MODE_BINARY">
+<span class="sig-name descname"><span class="pre">MODE_BINARY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#lib.network.Tcp_server.MODE_BINARY" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lib.network.Tcp_server.MODE_FIXED_LENGTH">
+<span class="sig-name descname"><span class="pre">MODE_FIXED_LENGTH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#lib.network.Tcp_server.MODE_FIXED_LENGTH" title="Link zu dieser Definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Tcp_server.set_callbacks">
+<span class="sig-name descname"><span class="pre">set_callbacks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incoming_connection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disconnected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_received</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Tcp_server.set_callbacks"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Tcp_server.set_callbacks" title="Link zu dieser Definition"></a></dt>
+<dd><p>Set callbacks to caller for different socket events.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connected</strong> (<em>function</em>) – Called whenever a connection is established successfully</p></li>
+<li><p><strong>data_received</strong> (<em>function</em>) – Called when data is received</p></li>
+<li><p><strong>disconnected</strong> (<em>function</em>) – Called when a connection has been dropped for whatever reason</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Tcp_server.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Tcp_server.start"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Tcp_server.start" title="Link zu dieser Definition"></a></dt>
+<dd><p>Start the server socket.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>False if an error prevented us from launching a connection thread. True if a connection thread has been started.</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Tcp_server.listening">
+<span class="sig-name descname"><span class="pre">listening</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Tcp_server.listening"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Tcp_server.listening" title="Link zu dieser Definition"></a></dt>
+<dd><p>Return the current listening state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the server socket is actually listening, else False.</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Tcp_server.send">
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Tcp_server.send"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Tcp_server.send" title="Link zu dieser Definition"></a></dt>
+<dd><p>Send a string to connected client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<a class="reference internal" href="#lib.network.ConnectionClient" title="lib.network.ConnectionClient"><em>lib.network.ConnectionClient</em></a>) – Client Object to send message to</p></li>
+<li><p><strong>msg</strong> (<em>string</em><em> | </em><em>bytes</em><em> | </em><em>bytearray</em>) – Message to send</p></li>
+</ul>
+</dd>
+<dt class="field-even">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if message has been queued successfully.</p>
+</dd>
+<dt class="field-odd">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Tcp_server.disconnect">
+<span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Tcp_server.disconnect"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Tcp_server.disconnect" title="Link zu dieser Definition"></a></dt>
+<dd><p>Disconnect a specific client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>client</strong> (<a class="reference internal" href="#lib.network.ConnectionClient" title="lib.network.ConnectionClient"><em>lib.network.ConnectionClient</em></a>) – Client Object to disconnect</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Tcp_server.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Tcp_server.close"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Tcp_server.close" title="Link zu dieser Definition"></a></dt>
+<dd><p>Close running listening socket.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lib.network.Udp_server">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lib.network.</span></span><span class="sig-name descname"><span class="pre">Udp_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Udp_server"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Udp_server" title="Link zu dieser Definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Threaded UDP listener which dispatches received data via callbacks.</p>
+<p>NOTE: The callbacks need to expect the following arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data_received(addr,</span> <span class="pre">data)</span></code> where <code class="docutils literal notranslate"><span class="pre">addr</span></code> is a tuple with <code class="docutils literal notranslate"><span class="pre">('&lt;remote_ip&gt;',</span> <span class="pre">remote_port)</span></code> and <code class="docutils literal notranslate"><span class="pre">data</span></code> is the received data as string</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> (<em>str</em>) – Local hostname or ip address (v4 or v6). Default is ‚‘ which listens on all IPv4 addresses available.</p></li>
+<li><p><strong>port</strong> (<em>int</em>) – Local port to connect to</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of this connection (mainly for logging purposes)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Udp_server.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Udp_server.start"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Udp_server.start" title="Link zu dieser Definition"></a></dt>
+<dd><p>Start the server socket.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>False if an error prevented us from launching a connection thread. True if a connection thread has been started.</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Udp_server.set_callbacks">
+<span class="sig-name descname"><span class="pre">set_callbacks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_received</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Udp_server.set_callbacks"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Udp_server.set_callbacks" title="Link zu dieser Definition"></a></dt>
+<dd><p>Set callbacks to caller for different socket events.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameter<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_received</strong> (<em>function</em>) – Called when data is received</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Udp_server.listening">
+<span class="sig-name descname"><span class="pre">listening</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Udp_server.listening"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Udp_server.listening" title="Link zu dieser Definition"></a></dt>
+<dd><p>Return the current listening state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rückgabe<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the server socket is actually listening, else False.</p>
+</dd>
+<dt class="field-even">Rückgabetyp<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lib.network.Udp_server.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lib/network.html#Udp_server.close"><span class="viewcode-link"><span class="pre">[Quellcode]</span></span></a><a class="headerlink" href="#lib.network.Udp_server.close" title="Link zu dieser Definition"></a></dt>
+<dd><p>Close running listening socket.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
