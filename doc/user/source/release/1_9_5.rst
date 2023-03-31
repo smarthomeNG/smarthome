@@ -15,10 +15,10 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 25. März 2023
-           (documentation: fix for table introduced with latest commit)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 23. März 2023
-           (smartvisu: Removed old documentation link from metadata)
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 30. März 2023
+           (logics/check_items.py: fix naming)
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 31. März 2023
+           (Merge pull request #716 from sisamiwe/z2m)
 
 
 Überblick
@@ -60,6 +60,7 @@ Allgmein
   * Replaced deprecated 'set-output'
   * (re)joined pr_unittests into unittests.yml
   * Disabled seperate pr_unittests workflow
+  * Updates to unittests.yml
 
 
 Updates in the CORE
@@ -73,6 +74,10 @@ Updates in the CORE
 
     * Added extended deprecation warning (lib will be removed in SmartHomeNG v1.10.0)
 
+  * lib.items:
+
+    * Fix name clash parameter "sorted" conflicting with function name sorted
+
   * lib.metadata:
 
     * Fix for empty plugin parameter sectionand section not declared NONE
@@ -80,6 +85,8 @@ Updates in the CORE
   * lib.network:
 
     * Log some more for insights on wrong parameter passing from plugins on callbacks
+    * Fix logging
+    * Modify connect logics
 
   * lib.plugin:
 
@@ -125,9 +132,16 @@ Updates in the CORE
 
     * Fixed bug for wss protocol handling
     * Added setting for protocol_over_reverseproxy to smartvisu payload protocol handling
-    * Bumped version to v1.1.1
     * Changed loglevel for error 1011 on ping timeout in sv payload protocol
     * Changed loglevel in sv payload protocol when sending (url-)command to visu
+    * Update datatables, colreorder, fixedheader and responsive
+    * Introduce option to re-choose automatic resize of tables, minor fixes
+    * Corrected method in smartvisu payload protocol which sends updates for monitored items
+    * Bumped version to 1.1.2
+
+* logics:
+
+  * check_items.py: fix naming of parameter in return_items()
 
 * tests:
 
@@ -146,6 +160,7 @@ Allgmein
   * Replaced deprecated 'set-output'
   * (re)joined pr_unittests into unittests.yml
   * Disabled seperate pr_unittests workflow
+  * Update to unittests.yml
 
 
 Neue Plugins
@@ -154,7 +169,7 @@ Neue Plugins
 Für Details zu den neuen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
-* <Name>: ...
+* mieleathome: Connect Miele@Home (state 'develop')
 
 
 
@@ -163,6 +178,10 @@ Plugin Updates
 
 Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
+
+* alexarc4shng:
+
+  * Updates; Bumped version to 1.0.3
 
 * avm:
 
@@ -173,16 +192,42 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
     connected (same behavior as in plugin version 1.6.8)
   * Multiple fixes
   * Bumed version to 2.0.1
+  * Plugin Code cleanup
+  * WebIF Update
+  * Bumed version to 2.0.2
+  * Changed requirement from lxml==4.9.2 to lxml>=4.9.2
 
 * database:
 
   * Added info to 'Could not connect to the database' log entry
+
+* db_addon:
+
+  * Various fixes and enhancements
+  * Bumped version to 1.1.0
 
 * enocean:
 
   * Catch exception that occurs, if Tx Enocean item is defined without tx_id_offset attribute
     Output error log in this case
   * small improvements in comments and status info
+
+husky2:
+
+  * Catch exception on plugin shutdown
+  * Moved to actual aioautomower version
+  * Cleanup
+  * Imroved/fixed webif tables
+
+* ical:
+
+  * It is logged as level INFO, if no dtend is found
+  * Bumped version to 1.6.2
+
+* indego4shng:
+
+  * Updates
+  * Bumped version to 4.0.0
 
 * lirc:
 
@@ -193,10 +238,17 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Corrected version number in __init__.py
 
+* neato:
+
+  * Added additional debug log in case that a command cannot be executed
+
 * onewire:
 
   * Fixed debug messages
   * Added a "sleep-time" for testing to improve sensor reading for parasite powered sensors
+  * Added _parasitic_power_wait to webinterface and added unit to values in headtable
+  * Added a "sleep-time" for testing to improve io_cycle reading for parasite powered devices
+  * Bumped version to 1.9.4
 
 * piratewthr:
 
@@ -208,6 +260,16 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Bumped version to 1.8.10
   * Removed parameter 'protocol_over_reverseproxy'
   * Removed old documentation link from metadata
+  * Fix some webinterface issues with datatables init, clearing and ordering options
+
+* snmp:
+
+  * Changed requirement from puresnmp >=1.7.2 to puresnmp >=1.7.2,<2.0.0 because v2 implements breaking changes
+
+* sonos:
+
+  * Fix major bug introduced with PR #699, causing the av_transport to stop working after some time
+  * Upgraded to SoCo version 0.29.1
 
 * uzsu:
 
@@ -218,6 +280,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Added shng varpath to parameters
   * Changed to correct doc link
   * Re-removed superfluous doc link
+
+* zigbee2mqtt:
+
+  * Updated/corrected metadata
 
 * Diverse Plugins:
 
@@ -296,6 +362,5 @@ Dokumentation
 
 * Added description for using virtual environemnts
 * Added new log levels to user documentation
-
-
+* build documentation: Added Error output to build_plugin_config_files.py
 
