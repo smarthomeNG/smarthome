@@ -233,7 +233,11 @@ def build_pluginlist( plugin_type='all' ):
             else:
                 plugin_yaml = ''
             if plugin_yaml != '':
-                section_dict = plugin_yaml.get('plugin')
+                try:
+                    section_dict = plugin_yaml.get('plugin')
+                except Exception as e:
+                    print(f"Exception {e}")
+                    print(f"during processing of plugin metadata file '{metafile}'")
                 if section_dict != None:
                     if section_dict.get('type') != None:
                         if section_dict.get('type').lower() in plugin_types:
