@@ -35,6 +35,7 @@ logs_instance = None
 class Logs():
 
     _logs = {}
+    logging_levels = {}
     root_handler_name = ''
 
     NOTICE_level = 29
@@ -77,6 +78,20 @@ class Logs():
         #  - DBGHIGH      13   Debug high level
         #  - DBGMED       12   Debug medium level
         #  - DBGLOW       11   Debug low level
+
+        self.logging_levels = {}
+        self.logging_levels[50] = 'CRITICAL'
+        self.logging_levels[40] = 'ERROR'
+        self.logging_levels[30] = 'WARNING'
+        self.logging_levels[20] = 'INFO'
+        self.logging_levels[10] = 'DEBUG'
+        self.logging_levels[0]  = 'NOTSET'
+
+        # # self.logging_levels[31] = 'NOTICE'
+        # self.logging_levels[29] = 'NOTICE'
+        # self.logging_levels[13] = 'DBGHIGH'
+        # self.logging_levels[12] = 'DBGMED'
+        # self.logging_levels[11] = 'DBGLOW'
 
         # adjust config dict from logging.yaml:
         # if logger 'lib.smarthome' is not defined or no level is defined for it,
@@ -151,7 +166,19 @@ class Logs():
         setattr(logging, description, value)
         setattr(logging.getLoggerClass(), description.lower(), logForLevel)
         setattr(logging, description.lower(), logToRoot)
+        self.logging_levels[value] = description
         return
+
+
+    def get_shng_logging_levels(self):
+        """
+        Returns a dict of the logging levels, that are defined in SmartHomeNG (key=numeric log level, value=name od loa level)
+
+        It is used e.g. by the admin module
+
+        :return: dict
+        """
+        return self.logging_levels
 
 
     def initMemLog(self):

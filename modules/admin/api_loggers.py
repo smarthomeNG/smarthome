@@ -42,16 +42,6 @@ class LoggersController(RESTResource):
         self.logger = logging.getLogger(__name__)
 
         self.etc_dir = self._sh._etc_dir
-        # self.log_dir = os.path.join(self.base_dir, 'var', 'log')
-
-        self.logging_levels = {}
-        self.logging_levels[50] = 'CRITICAL'
-        self.logging_levels[40] = 'ERROR'
-        self.logging_levels[30] = 'WARNING'
-        self.logging_levels[29] = 'NOTICE'
-        self.logging_levels[20] = 'INFO'
-        self.logging_levels[10] = 'DEBUG'
-        self.logging_levels[0] = 'NOTSET'
 
         return
 
@@ -91,7 +81,6 @@ class LoggersController(RESTResource):
 
         if self.logging_config.get('shng_version', None) is None:
             self.logging_config['shng_version'] = self._sh.version.split('-')[0][1:]
-            #self.create_backupfile(conf_filename)
             self.save_logging_config(create_backup=True)
 
         return
@@ -157,8 +146,7 @@ class LoggersController(RESTResource):
         active = {}
         active_logger = logging.getLogger(loggername)
         active['disabled'] = active_logger.disabled
-        #active['level'] = self.logging_levels[active_logger.level]
-        active['level'] = self.logging_levels.get(active_logger.level, 'UNKNOWN_'+str(active_logger.level))
+        active['level'] = self._sh.logs.get_shng_logging_levels().get(active_logger.level, 'UNKNOWN_'+str(active_logger.level))
         active['filters'] = active_logger.filters
 
         hl = []
