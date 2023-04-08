@@ -409,10 +409,12 @@
     "LOADCHUNK": "Chargement une section du fichier journal"
   },
   "LOGGERS": {
-    "STANDARD": "Enregistreurs standard",
+    "LOGICS": "Enregistreurs des Logiques",
     "PLUGINS": "Enregistreurs des extensions",
+    "ITEMS": "Enregistreurs des Objets",
     "ADVANCED": "Enregistreurs avancés",
     "CUSTOM": "Enregistreurs personnalisés",
+    "ACTION": "Action",
 
     "LOGGER_NAME": "Nom de l'enregistreure",
     "DISABLED": "Désactivé",
@@ -421,7 +423,13 @@
     "FILTERS": "Filtre(s)",
     "HANDLERS": "Gestionnaire(s)",
     "HANDLER_TYPES": "Type(s) de gestionnaire(s)",
-    "LOGFILES": "Fichiers journaux"
+    "LOGFILES": "Fichiers journaux",
+
+    "CREATE_LOGGER": "Créer un enregistreur",
+    "CREATE_LOGIC_TEXT": "Entrer un nom unique pour la logique (ne doit pas encore exister) ainsi qu'un nom unique pour le nom de fichier du code de la logique (sans l'extension .py)",
+    "NO_LOGGER_TO_ADD": "Plus d'enregistreur disponible à ajouter",
+    "DELETE_LOGGER": "Confirmer la suppression de l'enregistreur",
+    "DELETE_LOGGER_TEXT": "Confirmer la suppression de l'enregistreur '{{config}}' ?"
   },
   "LOGGING": {
     "CONFIG_FILE": "Fichier de configuration",
@@ -454,6 +462,7 @@
     "CLEAR_FILTER": "Supprimer fultre",
     "NEW_DEFINITION_FILE": "Nouveau fichier",
     "NEW_LOGIC": "Nouvelle logique",
+    "NEW_LOGGER": "Nouvelle générateur",
     "NEW_SCENE": "Nouvelle scène",
     "RELOAD_SCENES": "Szenen neu laden",
     "RELOAD_SCENE": "Charge",

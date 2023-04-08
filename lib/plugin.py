@@ -362,6 +362,39 @@ class Plugins():
         for plugin in self._plugins:
             yield plugin
 
+
+    def get_loaded_plugins(self):
+        """
+        Returns a list with the names of all loaded plugins
+
+        if multiple instances of a plugin are loaded, the plugin name is returned only once
+
+        :return: list of plugin names
+        :rtype: list
+        """
+        plgs = []
+        for plugin in self._plugins:
+            plgname = plugin.get_shortname()
+            if not plgname in plgs:
+                plgs.append(plgname)
+        return sorted(plgs)
+
+
+    def get_loaded_plugin_instances(self):
+        """
+        Returns a list of tuples of all loaded plugins with the plugin name and the instance name
+
+        :return: list of (plugin name, instance name)
+        :rtype: list of tuples
+        """
+        plgs = []
+        for plugin in self._plugins:
+            plgname = plugin.get_shortname()
+            insname = plugin.get_instance_name()
+            plgs.append((plgname, insname))
+        return sorted(plgs)
+
+
     # ------------------------------------------------------------------------------------
     #   Following (static) methods of the class Plugins implement the API for plugins in shNG
     # ------------------------------------------------------------------------------------

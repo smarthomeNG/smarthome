@@ -425,10 +425,12 @@
     "LOADCHUNK": "Lade einen Abschnitt der Log-Datei"
   },
   "LOGGERS": {
-    "STANDARD": "Standard Logger",
+    "LOGICS": "Logik Logger",
     "PLUGINS": "Plugin Logger",
+    "ITEMS": "Item Logger",
     "ADVANCED": "Advanced Logger",
     "CUSTOM": "Custom Logger",
+    "ACTION": "Aktion",
 
     "LOGGER_NAME": "Logger Name",
     "DISABLED": "Disabled",
@@ -437,7 +439,13 @@
     "FILTERS": "Filter(s)",
     "HANDLERS": "Handler(s)",
     "HANDLER_TYPES": "Handler-Type(s)",
-    "LOGFILES": "Logfile(s)"
+    "LOGFILES": "Logfile(s)",
+
+    "CREATE_LOGGER": "Logger erstellen",
+    "CREATE_LOGGER_TEXT": "Wähle einen Logger aus, um die Definition für ihn zu erstellen",
+    "NO_LOGGER_TO_ADD": "Kein weiterer Logger zum hinzufügen verfügbar",
+    "DELETE_LOGGER": "Löschen des Loggers bestätigen",
+    "DELETE_LOGGER_TEXT": "Soll der Logger '{{config}}' wirklich gelöscht werden?"
   },
   "LOGGING": {
     "CONFIG_FILE": "Konfigurationsdatei",
@@ -470,6 +478,7 @@
     "CLEAR_FILTER": "Filter Löschen",
     "NEW_DEFINITION_FILE": "Neue Datei",
     "NEW_LOGIC": "Neue Logik",
+    "NEW_LOGGER": "weiterer Logger",
     "NEW_SCENE": "Neue Szene",
     "RELOAD_SCENES": "Szenen neu laden",
     "RELOAD_SCENE": "Laden",

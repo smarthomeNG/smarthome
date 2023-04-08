@@ -39,8 +39,7 @@ class LoggersController(RESTResource):
         self._sh = module._sh
         self.module = module
         self.base_dir = self._sh.get_basedir()
-        self.logger = logging.getLogger(__name__)
-
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
         self.etc_dir = self._sh._etc_dir
 
         return
@@ -171,7 +170,7 @@ class LoggersController(RESTResource):
         """
         Handle GET requests for loggers API
         """
-        self.logger.info("LoggersController.read()")
+        self.logger.info(f"LoggersController.read('{id}')")
 
         config = self.load_logging_config()
         loggers = config['loggers']
@@ -193,14 +192,21 @@ class LoggersController(RESTResource):
 
         self.logger.info("loggers = {}".format(loggers))
 
-        return json.dumps(loggers)
+        response = {}
+        response['loggers'] = loggers
+        response['active_plugins'] = self._sh.plugins.get_loaded_plugins()
+        response['active_logics'] = []
+        return json.dumps(response)
 
     read.expose_resource = True
     read.authentication_needed = False
 
 
     def update(self, id=None, level=None):
-        self.logger.info("LoggersController.update('{}'), level='{}'".format(id, level))
+        """
+        Handle PUT requests for loggers API
+        """
+        self.logger.info(f"LoggersController.update('{id}'), level='{level}'")
 
         if self.set_active_logger_level(id, level):
             response = {'result': 'ok'}
@@ -211,3 +217,60 @@ class LoggersController(RESTResource):
 
     update.expose_resource = True
     update.authentication_needed = True
+
+
+    def add(self, id=None, level=None):
+        """
+        Handle DELETE requests for loggers API
+        """
+        self.logger.info(f"LoggersController.add('{id}', level='{level}'")
+
+        default_level = 'NOTICE'
+        response = {'result': 'ok', 'description': ''}
+        # add logger to active loggers
+        lg = logging.getLogger(id)
+        lg.setLevel(default_level)
+
+        # add logger definition to logging.yaml
+        self.load_logging_config_for_edit()
+        self.logger.notice(f"from yaml: {self.logging_config['loggers']}")
+        self.logging_config['loggers'][id] = {'level': default_level}
+        self.logger.notice(f"afted add: {self.logging_config['loggers']}")
+        self.save_logging_config(create_backup=True)
+
+        self.logger.notice(f"Logger '{id}' added")
+
+        return json.dumps(response)
+
+    add.expose_resource = True
+    add.authentication_needed = True
+
+
+    def delete(self, id=None, level=None):
+        """
+        Handle DELETE requests for loggers API
+        """
+        self.logger.info("LoggersController.delete('{}', level='{}'".format(id, level))
+
+        response = {'result': 'ok', 'description': ''}
+        # delete active logger
+        active_logger = logging.root.manager.loggerDict.get(id, None)
+        if active_logger is None:
+             response = {'result': 'error', 'description': 'active logger not found'}
+        else:
+            active_logger.setLevel(active_logger.parent.level)
+            for hdlr in active_logger.handlers:
+                active_logger.removeHandler(hdlr)
+
+        # delete logger definition from logging.yaml
+        self.load_logging_config_for_edit()
+        del self.logging_config['loggers'][id]
+        self.save_logging_config(create_backup=True)
+
+        self.logger.notice(f"Logger '{id}' removed")
+
+        return json.dumps(response)
+
+    delete.expose_resource = True
+    delete.authentication_needed = True
+
