@@ -58,6 +58,7 @@ except:
 
 
 logger = logging.getLogger(__name__)
+tasks_logger = logging.getLogger(__name__ + '.tasks')
 
 _scheduler_instance = None    # Pointer to the initialized instance of the scheduler class  (for use by static methods)
 
@@ -667,7 +668,7 @@ class Scheduler(threading.Thread):
 
     def _task(self, name, obj, by, source, dest, value):
         threading.current_thread().name = name
-        logger = logging.getLogger(name)
+        #logger = logging.getLogger('_task.' + name)
         if obj.__class__.__name__ == 'Logic':
             self._execute_logic_task(obj, by, source, dest, value)
 
@@ -682,7 +683,7 @@ class Scheduler(threading.Thread):
                 if value is not None:
                     obj(value, caller=("Scheduler"+scheduler_source))
             except Exception as e:
-                logger.exception(f"Item {name} exception: {e}")
+                tasks_logger.exception(f"Item {name} exception: {e}")
 
         else:  # method
             try:
@@ -691,7 +692,7 @@ class Scheduler(threading.Thread):
                 else:
                     obj(**value)
             except Exception as e:
-                logger.exception(f"Method {name} exception: {e}")
+                tasks_logger.exception(f"Method {name} exception: {e}")
 
         threading.current_thread().name = 'idle'
 
@@ -703,8 +704,10 @@ class Scheduler(threading.Thread):
         :param logic:
         :return:
         """
+        # get logger for the logic
         name = 'logics.' + logic.name
         logger = logging.getLogger(name)
+
         source_details = None
         if isinstance(source, dict):
             source_details = source.get('details', '')
