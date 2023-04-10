@@ -51,7 +51,7 @@ from lib.shtime import Shtime
 
 class Protocol():
 
-    version = '1.0.3'
+    version = '1.0.4'
 
     protocol_id = 'sv'
     protocol_name = 'smartvisu'
@@ -636,14 +636,20 @@ class Protocol():
                             self.logger.exception(f"Problem updating series for {series['params']}: {e}")
                             remove.append(sid)
                             continue
-                        self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
-                        del (reply['update'])
-                        del (reply['params'])
-                        if reply['series'] is not None:
-                            series_replys.append(reply)
+                        try:
+                            self.sv_update_series[client_addr][reply['sid']] = {'update': reply['update'], 'params': reply['params']}
+                            del (reply['update'])
+                            del (reply['params'])
+                            if reply['series'] is not None:
+                                series_replys.append(reply)
+                        except KeyError:
+                            pass  # do nothing, the client connection has been terminated
 
                 for sid in remove:
-                    del (self.sv_update_series[client_addr][sid])
+                    try:
+                        del (self.sv_update_series[client_addr][sid])
+                    except KeyError:
+                        pass  # do nothing, the client connection has been terminated
 
         return series_replys
 
