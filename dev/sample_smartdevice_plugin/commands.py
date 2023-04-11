@@ -66,6 +66,9 @@ commands = {
         #
         # you can use the following tokens to have them replaced by their respective values:
         # - ``{LOOKUP}`` to replace with a regex which matches on all values from the command lookup table
+        #   Note: keep in mind that the generated pattern is not bounded, so a lookup containing 
+        #         e.g. 'foo' and 'foobar' will find 'foo' even if 'foobar' is returned
+        #         Consider bounding the pattern like ``{LOOKUP}$`` or similar
         # - ``{VALID_LIST}`` to replace with all valid values according to the cmd_settings
         # - ``{VALID_LIST_CI}`` ditto, with case-insensitive flag set
         # - ``{CUSTOM_PATTERN1}``...``{CUSTOM_PATTERN3}`` to replace with the respective
