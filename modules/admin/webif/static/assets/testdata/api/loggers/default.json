@@ -54,14 +54,14 @@
         ]
       }
     },
-    "modules.http": {
+    "modules": {
       "handlers": [
         "shng_details_file"
       ],
-      "level": "WARNING",
+      "level": "NOTICE",
       "active": {
         "disabled": false,
-        "level": "WARNING",
+        "level": "NOTICE",
         "filters": [],
         "handlers": [
           "TimedRotatingFileHandler"
@@ -73,8 +73,7 @@
     },
     "modules.admin": {
       "handlers": [
-        "shng_admin_file",
-        "shng_details_file"
+        "shng_admin_file"
       ],
       "level": "INFO",
       "active": {
@@ -82,13 +81,41 @@
         "level": "INFO",
         "filters": [],
         "handlers": [
-          "TimedRotatingFileHandler",
           "TimedRotatingFileHandler"
         ],
         "logfiles": [
-          "/usr/local/shng_dev/var/log/smarthome-admin-module.log",
-          "/usr/local/shng_dev/var/log/smarthome-details.log"
+          "/usr/local/shng_dev/var/log/smarthome-admin-module.log"
         ]
+      }
+    },
+    "modules.http": {
+      "handlers": [],
+      "level": "WARNING",
+      "active": {
+        "disabled": false,
+        "level": "WARNING",
+        "filters": [],
+        "logfiles": []
+      }
+    },
+    "modules.websocket": {
+      "level": "INFO",
+      "active": {
+        "disabled": false,
+        "level": "INFO",
+        "filters": [],
+        "handlers": [],
+        "logfiles": []
+      }
+    },
+    "modules.websocket.sv": {
+      "level": "INFO",
+      "active": {
+        "disabled": false,
+        "level": "INFO",
+        "filters": [],
+        "handlers": [],
+        "logfiles": []
       }
     },
     "plugins": {
@@ -282,6 +309,25 @@
         ]
       }
     },
+    "functions": {
+      "handlers": [
+        "shng_details_file"
+      ],
+      "level": "NOTICE",
+      "active": {
+        "disabled": false,
+        "level": "NOTICE",
+        "filters": [],
+        "handlers": [
+          "TimedRotatingFileHandler"
+        ],
+        "logfiles": [
+          "/usr/local/shng_dev/var/log/smarthome-details.log"
+        ]
+      }
+    },
+    "functions.anhalter": {
+    },
     "lib": {
       "handlers": [
         "shng_details_file"
@@ -366,6 +412,10 @@
           "/usr/local/shng_dev/var/log/smarthome-develop.log"
         ]
       }
+    },
+    "lib.item.helpers": {
+    },
+    "lib.item.item": {
     },
     "lib.logic": {
       "level": "WARNING",
@@ -475,6 +525,23 @@
         "filters": [],
         "handlers": [],
         "logfiles": []
+      }
+    },
+    "items": {
+      "handlers": [
+        "shng_items_file"
+      ],
+      "level": "NOTICE",
+      "active": {
+        "disabled": false,
+        "level": "NOTICE",
+        "filters": [],
+        "handlers": [
+          "TimedRotatingFileHandler"
+        ],
+        "logfiles": [
+          "/usr/local/shng_dev/var/log/smarthome-items.log"
+        ]
       }
     },
     "logics": {
@@ -810,7 +877,9 @@
     "smartvisu"
   ],
   "active_logics": [
-
+    "abluft",
+    "abwesenheit",
+    "mysunmoon"
   ]
 
 }

@@ -201,6 +201,21 @@ class Logics():
         for logic in self:
             yield logic
 
+
+    def get_loaded_logics(self):
+        """
+        Returns a list with the names of all loaded logics
+
+        :return: list of logic names
+        :rtype: list
+        """
+        logics = []
+        for logic in self:
+            logics.append(logic)
+        return sorted(logics)
+
+
+
     # ------------------------------------------------------------------------------------
     #   Following (static) methods of the class Logics implement the API for logics in shNG
     # ------------------------------------------------------------------------------------

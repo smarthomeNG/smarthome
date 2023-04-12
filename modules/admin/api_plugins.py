@@ -96,7 +96,7 @@ class PluginsInstalledController(RESTResource):
         self._sh = module._sh
         self.base_dir = self._sh.get_basedir()
         self.plugins_dir = os.path.join(self.base_dir, 'plugins')
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.plugin_data = {}
         return
@@ -165,7 +165,7 @@ class PluginsConfigController(RESTResource):
         self._sh = module._sh
         self.base_dir = self._sh.get_basedir()
         self.plugins_dir = os.path.join(self.base_dir, 'plugins')
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.plugins = Plugins.get_instance()
 
@@ -283,7 +283,7 @@ class PluginsInfoController(RESTResource):
 
         self.base_dir = self._sh.get_basedir()
         self.plugins_dir = os.path.join(self.base_dir, 'plugins')
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.plugins = Plugins.get_instance()
 
@@ -511,7 +511,7 @@ class PluginsAPIController(RESTResource):
 
         self.base_dir = self._sh.get_basedir()
         self.plugins_dir = os.path.join(self.base_dir, 'plugins')
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.plugins = Plugins.get_instance()
 
@@ -554,7 +554,7 @@ class PluginsLogicParametersController(RESTResource):
 
         self.base_dir = self._sh.get_basedir()
         self.plugins_dir = os.path.join(self.base_dir, 'plugins')
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__.split('.')[0] + '.' + __name__.split('.')[1] + '.' + __name__.split('.')[2][4:])
 
         self.plugins = Plugins.get_instance()
 

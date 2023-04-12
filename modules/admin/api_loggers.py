@@ -90,25 +90,40 @@ class LoggersController(RESTResource):
         loggerlist = []
         try:
             wrk_loggerDict = logging.Logger.manager.loggerDict
-            for l in wrk_loggerDict:
+            for l in dict(wrk_loggerDict):
                 lg = logging.Logger.manager.loggerDict[l]
-
                 try:
-                    h = lg.handlers
+                    not_conf = lg.not_conf
                 except:
-                    h = []
-                if len(h) > 0:
-                    if (len(h) > 1) or (len(h) == 1 and str(h[0]) != '<NullHandler (NOTSET)>'):
-                        loggerlist.append(l)
-                        # self.logger.info("ld Handler = {} h = {} -> {}".format(l, h, lg))
+                    not_conf = False
+                if not_conf:
+                    self.logger.info(f"get_active_loggers: not_conf {l=} - {lg=}")
                 else:
                     try:
-                        lv = lg.level
+                        h = lg.handlers
                     except:
-                        lv = 0
-                    if lv > 0:
-                        loggerlist.append(l)
-                        # self.logger.info("ld Level   = {}, lv = {} -> {}".format(l, lv, lg))
+                        h = []
+                    if len(h) > 0:
+                        # handlers do exist
+                        if (len(h) > 1) or (len(h) == 1 and str(h[0]) != '<NullHandler (NOTSET)>'):
+                            loggerlist.append(l)
+                            # self.logger.info("ld Handler = {} h = {} -> {}".format(l, h, lg))
+                        else:
+                            pass
+                            #self.logger.info(f"get_active_loggers: {l} - Not len(h) > 1) or (len(h) == 1 and str(h[0])")
+                    else:
+                        # no handlers exist
+                        try:
+                            lv = lg.level
+                        except:
+                            lv = 0
+                        if lv > 0:
+                            loggerlist.append(l)
+                            # self.logger.info("ld Level   = {}, lv = {} -> {}".format(l, lv, lg))
+                        else:
+                            pass
+                            loggerlist.append(l)
+                            #self.logger.info(f"get_active_loggers: {l} - {lv=} - {wrk_loggerDict[l]}")
         except Exception as e:
             self.logger.exception("Logger Exception: {}".format(e))
 
@@ -188,14 +203,14 @@ class LoggersController(RESTResource):
 
             loggers[logger]['active'] = self.get_logger_active_configuration(logger)
 
-        self.logger.info("logger = {} -> {}".format(logger, loggers[logger]))
+        self.logger.info("read: logger = {} -> {}".format(logger, loggers[logger]))
 
-        self.logger.info("loggers = {}".format(loggers))
+        self.logger.info("read: loggers = {}".format(loggers))
 
         response = {}
         response['loggers'] = loggers
         response['active_plugins'] = self._sh.plugins.get_loaded_plugins()
-        response['active_logics'] = []
+        response['active_logics'] = self._sh.logics.get_loaded_logics()
         return json.dumps(response)
 
     read.expose_resource = True
@@ -225,17 +240,14 @@ class LoggersController(RESTResource):
         """
         self.logger.info(f"LoggersController.add('{id}', level='{level}'")
 
-        default_level = 'NOTICE'
         response = {'result': 'ok', 'description': ''}
         # add logger to active loggers
         lg = logging.getLogger(id)
-        lg.setLevel(default_level)
+        lg.setLevel(lg.parent.level)
 
         # add logger definition to logging.yaml
         self.load_logging_config_for_edit()
-        self.logger.notice(f"from yaml: {self.logging_config['loggers']}")
         self.logging_config['loggers'][id] = {'level': default_level}
-        self.logger.notice(f"afted add: {self.logging_config['loggers']}")
         self.save_logging_config(create_backup=True)
 
         self.logger.notice(f"Logger '{id}' added")
