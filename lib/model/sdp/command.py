@@ -516,7 +516,7 @@ class SDPCommandJSON(SDPCommand):
             for key in params:
                 params[key] = check_value(params[key], data)
 
-            if 'playerid' in kwargs:
+            if 'playerid' in params and 'playerid' in kwargs:
                 params['playerid'] = kwargs['playerid']
         else:
             raise ValueError('invalid data: params not in dict or list format')
