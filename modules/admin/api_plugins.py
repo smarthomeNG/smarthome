@@ -118,7 +118,7 @@ class PluginsInstalledController(RESTResource):
 
         if self.plugin_data == {}:
             plugins_list = sorted(os.listdir(self.plugins_dir))
-            self.logger.warning("PluginsInstalledController.read(): plugin_list (sollte sortiert sein) = '{}'".format(plugins_list))
+            self.logger.info("PluginsInstalledController.read(): plugin_list (sollte sortiert sein) = '{}'".format(plugins_list))
 
             self.logger.info("- plugins_list_sorted = {}".format(plugins_list))
             for p in plugins_list:
@@ -152,7 +152,7 @@ class PluginsInstalledController(RESTResource):
                                 self.plugin_data[p]['configuration_needed'] = plg_data.get('configuration_needed', True)
                     else:
                         self.logger.info("- no plugin.yaml: {}".format(p))
-        self.logger.warning("PluginsInstalledController.read(): Plugin Liste (sollte sortiert sein), json.dumps(self.plugin_data) = '{}'".format(json.dumps(self.plugin_data)))
+        self.logger.info("PluginsInstalledController.read(): Plugin Liste (sollte sortiert sein), json.dumps(self.plugin_data) = '{}'".format(json.dumps(self.plugin_data)))
         return json.dumps(self.plugin_data, sort_keys=True)
 
     read.expose_resource = True

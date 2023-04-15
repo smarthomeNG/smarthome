@@ -197,7 +197,6 @@ class SmartHome():
         self.shng_status = {'code': 0, 'text': 'Initializing'}
         self._logger = logging.getLogger(__name__)
         self._logger_main = logging.getLogger(__name__)
-        self.logs = lib.log.Logs(self)   # initialize object for memory logs
 
         # keep for checking on restart command
         self._mode = MODE
@@ -205,6 +204,8 @@ class SmartHome():
         self.initialize_vars()
         self.initialize_dir_vars()
         self.create_directories()
+
+        self.logs = lib.log.Logs(self)   # initialize object for memory logs
 
         os.chdir(self._base_dir)
 
@@ -229,6 +230,7 @@ class SmartHome():
         # self.version = shngversion.get_shng_version()
         self.connections = None
 
+        #reinitialize dir vars with path to extern configuration directory
         self._etc_dir = os.path.join(self._extern_conf_dir, 'etc')
         self._items_dir = os.path.join(self._extern_conf_dir, 'items'+os.path.sep)
         self._functions_dir = os.path.join(self._extern_conf_dir, 'functions'+os.path.sep)
@@ -339,7 +341,7 @@ class SmartHome():
             self._logger.warning("Encoding should be UTF8 but is instead {}".format(default_encoding))
 
         if self._extern_conf_dir != BASE:
-            self._logger.warning("Using config dir {}".format(self._extern_conf_dir))
+            self._logger.notice("Using config dir {}".format(self._extern_conf_dir))
 
         #############################################################
         # Initialize multi-language support
@@ -551,15 +553,15 @@ class SmartHome():
         """
         if conf_basename == '':
             conf_basename = self._log_conf_basename
-        conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
+        #conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE, True)
 
-        if not self.logs.configure_logging(conf_dict):
-            #conf_basename = self._log_conf_basename + YAML_FILE + '.default'
+        if not self.logs.configure_logging():
+            conf_basename = self._log_conf_basename + YAML_FILE + '.default'
             print(f"       Trying default logging configuration from:")
             print(f"       {conf_basename + YAML_FILE + '.default'}")
             print()
-            conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE + '.default', True)
-            if not self.logs.configure_logging(conf_dict, 'logging.yaml.default'):
+            #conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE + '.default', True)
+            if not self.logs.configure_logging('logging.yaml.default'):
                 print("ABORTING")
                 print()
                 exit(1)

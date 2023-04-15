@@ -2,6 +2,7 @@
   "loggers": {
     "knx_busmonitor": {
       "level": "INFO",
+      "propagate": false,
       "handlers": [
         "shng_busmonitor_file"
       ],
@@ -128,10 +129,14 @@
         "level": "WARNING",
         "filters": [],
         "handlers": [
-          "TimedRotatingFileHandler"
+          "ShngTimedRotatingFileHandler"
         ],
         "logfiles": [
           "/usr/local/shng_dev/var/log/smarthome-details.log"
+        ],
+        "parent_handlers_names": [
+          "shng_warnings_file",
+          "_shng_root_memory"
         ]
       }
     },
@@ -142,7 +147,10 @@
         "level": "INFO",
         "filters": [],
         "handlers": [],
-        "logfiles": []
+        "logfiles": [],
+        "parent_handlers_names": [
+          "shng_details_file"
+        ]
       }
     },
     "plugins.backend": {
@@ -568,7 +576,10 @@
         "level": "INFO",
         "filters": [],
         "handlers": [],
-        "logfiles": []
+        "logfiles": [],
+        "parent_handlers_names": [
+          "shng_details_file"
+        ]
       }
     },
     "logics.a_testlogic3": {
@@ -585,6 +596,9 @@
         ],
         "logfiles": [
           "/usr/local/shng_dev/var/log/smarthome-details.log"
+        ],
+        "parent_handlers_names": [
+          "shng_details_file"
         ]
       }
     },
@@ -602,6 +616,9 @@
         ],
         "logfiles": [
           "/usr/local/shng_dev/var/log/smarthome-details.log"
+        ],
+        "parent_handlers_names": [
+          "shng_details_file"
         ]
       }
     },
@@ -880,6 +897,44 @@
     "abluft",
     "abwesenheit",
     "mysunmoon"
-  ]
+  ],
+
+  "defined_handlers": {
+    "shng_warnings_file": {
+      "()": "lib.log.ShngTimedRotatingFileHandler",
+      "backupCount": 7,
+      "encoding": "utf8",
+      "filename": "./var/log/smarthome-warnings.log",
+      "formatter": "shng_simple",
+      "level": "NOTICE",
+      "utc": false,
+      "when": "midnight"
+    },
+    "shng_details_file": {
+      "()": "lib.log.ShngTimedRotatingFileHandler",
+      "backupCount": 7,
+      "encoding": "utf8",
+      "filename": "./var/log/smarthome-details.log",
+      "filters": [
+        "cherrypy_filter"
+      ],
+      "formatter": "shng_simple",
+      "level": "DEBUG",
+      "utc": false,
+      "when": "midnight"
+    },
+    "shng_develop_file": {
+      "shng_warnings_file": {
+        "()": "lib.log.ShngTimedRotatingFileHandler",
+        "backupCount": 7,
+        "encoding": "utf8",
+        "filename": "./var/log/smarthome-develop.log",
+        "formatter": "shng_simple",
+        "level": "DEBUG",
+        "utc": false,
+        "when": "midnight"
+      }
+    }
+  }
 
 }

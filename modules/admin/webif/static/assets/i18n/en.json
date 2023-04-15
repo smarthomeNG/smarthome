@@ -13,16 +13,16 @@
     "SCHEDULERS": "Schedulers",
     "PLUGINS": "Plugins",
     "PLUGINS_LIST": "List of Plugins",
+    "PLUGINS_CONFIGURATION": "Configuration of plugins",
     "SCENES": "Scenes",
     "SCENE_LIST": "Scene List",
     "SCENE_CONFIGURATION": "Scene Configuration",
     "FUNCTION_CONFIGURATION": "User functions",
     "THREADS": "Threads",
-    "LOGS": "Logs",
+    "LOGS": "Logging",
     "LOGS_DISPLAY": "Display Logs",
-    "LOGGER_LIST": "Logger List",
-    "LOGGING_CONFIGURATION": "Logging Configuration",
-    "CONFIGURATION": "Configuration",
+    "LOGGER_CONFIGURATION": "Logger Configuration",
+    "LOGGING_CONFIGURATION": "Expert Logging Configuration",
     "LOGIN": "Login"
   },
   "SYSTEM": {
@@ -424,6 +424,8 @@
     "DISABLED": "Disabled",
     "LEVEL": "Level",
     "ACTIVE_LEVEL": "Active Level",
+    "NO_PROPAGATION": "No transfer to higher-level loggers",
+    "NO_PROPAGATION_2": "",
     "FILTERS": "Filters",
     "HANDLERS": "Handlers",
     "HANDLER_TYPES": "Handler-Types",
@@ -433,7 +435,14 @@
     "CREATE_LOGGER_TEXT": "Select a logger to create a definition for",
     "NO_LOGGER_TO_ADD": "No more logger available to add",
     "DELETE_LOGGER": "Confirm delete logger",
-    "DELETE_LOGGER_TEXT": "Please confirm, that you want to delete the logger '{{config}}'"
+    "DELETE_LOGGER_TEXT": "Please confirm, that you want to delete the logger '{{logger}}'",
+
+    "CHOOSE_HANDLERS": "Edit handler for logger '{{logger}}'",
+    "CHOOSE_HANDLERS_TEXT": "Select one or more handlers through which the logging should take place.",
+    "CHOOSE_HANDLERS_PROPAGATION_TEXT": "In addition, the logging is carried out by the handlers of higher-level loggers.",
+
+    "DELETE": "Delete logger",
+    "HANDLER": "Edit handlers"
   },
   "LOGGING": {
     "CONFIG_FILE": "Configuration file",
