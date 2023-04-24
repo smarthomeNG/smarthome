@@ -287,7 +287,7 @@ class SmartDevicePlugin(SmartPlugin):
         # start the devices
         self.alive = True
 
-        self._connection.open()
+        self.connect()
 
         if self._connection.connected():
             self._read_initial_values()
@@ -303,6 +303,18 @@ class SmartDevicePlugin(SmartPlugin):
 
         if self.scheduler_get(self.get_shortname() + '_cyclic'):
             self.scheduler_remove(self.get_shortname() + '_cyclic')
+        self._connection.close()
+
+    def connect(self):
+        """
+        Open connection
+        """
+        self._connection.open()
+
+    def disconnect(self):
+        """
+        Close connection
+        """
         self._connection.close()
 
     # def run_standalone(self):
