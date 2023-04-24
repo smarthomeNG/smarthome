@@ -757,11 +757,11 @@ class Tcp_client(object):
                         self.__receive_thread.daemon = True
                         self.__receive_thread.start()
                     except Exception:
-                        self.logger.error(f"could not start __receive_thread_worker for {name}")
+                        self.logger.error(f"could not start __receive_thread_worker for {self.name}")
                         raise
                     return True
                 else:
-                    self.logger.warning(f"self._connect() for {name} did not work")
+                    self.logger.warning(f"self._connect() for {self.name} did not work")
                 if self.__running:
                     self._sleep(self._connect_cycle)
 
