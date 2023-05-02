@@ -558,7 +558,7 @@ class SmartHome():
         if not self.logs.configure_logging():
             conf_basename = self._log_conf_basename + YAML_FILE + '.default'
             print(f"       Trying default logging configuration from:")
-            print(f"       {conf_basename + YAML_FILE + '.default'}")
+            print(f"       {conf_basename}")
             print()
             #conf_dict = lib.shyaml.yaml_load(conf_basename + YAML_FILE + '.default', True)
             if not self.logs.configure_logging('logging.yaml.default'):

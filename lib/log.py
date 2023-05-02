@@ -67,13 +67,13 @@ class Logs():
 
         config_dict = self.load_logging_config(config_filename, ignore_notfound=True)
 
-        config_dict = self.add_all_handlers_logger(config_dict)
-
         if config_dict == None:
             print()
             print(f"ERROR: Invalid logging configuration in file '{config_filename}'")
             print()
             exit(1)
+
+        config_dict = self.add_all_handlers_logger(config_dict)
 
         # Default loglevels are:
         #  - CRITICAL     50
@@ -137,7 +137,7 @@ class Logs():
         except Exception as e:
             #self._logger_main.error(f"Invalid logging configuration in file 'logging.yaml' - Exception: {e}")
             print()
-            print(f"ERROR: Invalid logging configuration in file '{config_filename}'")
+            print(f"ERROR: dictConfig: Invalid logging configuration in file '{config_filename}'")
             print(f"       Exception: {e}")
             print()
             return False
@@ -241,7 +241,7 @@ class Logs():
         If logging.yaml does not contain a 'shng_version' key, a backup is created
         """
         conf_filename = os.path.join(self.etc_dir, filename)
-        if not conf_filename.endswith('.yaml'):
+        if not conf_filename.endswith('.yaml') and not conf_filename.endswith('.default'):
             conf_filename += '.yaml'
         result = shyaml.yaml_load(conf_filename, ignore_notfound)
 
