@@ -87,6 +87,8 @@ class Plugins():
     _plugins = []
     _threads = []
 
+    _plugindict = {}
+
     def __init__(self, smarthome, configfile):
         self._sh = smarthome
         self._configfile = configfile
@@ -177,6 +179,10 @@ class Plugins():
                                     logger.warning(f"Plugin {str(classpath).split('.')[1]} error on getting startorder: {e}")
                                     startorder = 'normal'
                                 self._plugins.append(plugin_thread.plugin)
+                                # dict to get a handle to the plugin code by plugin name:
+                                if self._plugindict.get(classpath.split('.')[1], None) is None:
+                                    self._plugindict[classpath.split('.')[1]] = plugin_thread.plugin
+                                self._plugindict[classpath.split('.')[1]+'#'+instance] = plugin_thread.plugin
                                 if startorder == 'early':
                                     threads_early.append(plugin_thread)
                                 elif startorder == 'late':
@@ -210,6 +216,20 @@ class Plugins():
                     self.logic_parameters[param]['plugin'] = self._plugins[i]._shortname
 
         return
+
+
+    def get(self, plugin_name, instance=None):
+        """
+        Get plugin object by plugin name and instance (optional)
+
+        :param plugin_name: name of the plugin (not the plugin configuration)
+        :param instance: name of the instance of the plugin (optional)
+
+        :return: plugin object
+        """
+        if instance is None:
+            return self._plugindict.get(plugin_name, None)
+        return self._plugindict.get(plugin_name+'#'+instance, None)
 
 
     def get_logic_parameters(self):
