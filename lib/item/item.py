@@ -1300,13 +1300,13 @@ class Item():
         """
         evaluate the 'hysteresis' entry of the actual item
         """
-        logger.info(f"__run_hysteresis: {value=}, {caller=}, {source=}, {dest=}")
+        #logger.notice(f"__run_hysteresis: {value=}, {caller=}, {source=}, {dest=}")
         if value > self._hysteresis_upper_threshold:
             self.__update(True, caller, source, dest)
-            logger.info(f" - {value=} > {self._hysteresis_upper_threshold=} -> Update with True")
+            #logger.notice(f" - {value=} > {self._hysteresis_upper_threshold=} -> Update with True")
         if value < self._hysteresis_lower_threshold:
             self.__update(False, caller, source, dest)
-            logger.info(f" - {value=} < {self._hysteresis_lower_threshold=} -> Update with False")
+            #logger.notice(f" - {value=} < {self._hysteresis_lower_threshold=} -> Update with False")
         return
 
 

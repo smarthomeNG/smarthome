@@ -400,7 +400,7 @@ class Scheduler(threading.Thread):
         try:
             stack = inspect.stack()
         except Exception as e:
-            logger.exception(f"check_caller('{name}'): Exception in inspect.stack(): {e}")
+            logger.exception(f"check_caller('{name}') *1: Exception in inspect.stack(): {e}")
 
         try:
             obj = stack[2][0].f_locals["self"]
@@ -411,8 +411,9 @@ class Scheduler(threading.Thread):
                     if not from_smartplugin:
                         if not str(name).endswith('_' + iname):
                             name = name + '_' + obj.get_instance_name()
-        except:
+        except Exception as e:
             pass
+            logger.exception(f"check_caller('{name}') *2: Exception in inspect.stack(): {e}")
         return name
 
     def return_next(self, name, from_smartplugin=False):
