@@ -399,6 +399,8 @@ class Scheduler(threading.Thread):
         """
         try:
             stack = inspect.stack()
+        except IndexError:
+            return name
         except Exception as e:
             logger.exception(f"check_caller('{name}') *1: Exception in inspect.stack(): {e}")
 
