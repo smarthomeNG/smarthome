@@ -16,6 +16,7 @@ Hysterese
 
 Mit Hilfe der drei folgenden Attribute kann eine Hysterese konfiguriert werden.
 
+|
 
 `hysteresis_input`
 ==================
@@ -30,6 +31,7 @@ verglichen. Das hier angegebene Item muss als **num** definiert sein.
 Die Pfad Angabe kann als absoluter oder als relativer Itempfad erfolgen. Das Item, welches dieses Hysterese Attribut
 verwendet, muss als **bool** definiert sein
 
+|
 
 `hysteresis_upper_threshold`
 ============================
@@ -46,6 +48,7 @@ des Items auf **True** gesetzt wird.
 
 Das Item, welches dieses Hysterese Attribut verwendet, muss als **bool** definiert sein.
 
+|
 
 `hysteresis_lower_threshold`
 ============================
@@ -62,6 +65,7 @@ des Items auf **False** gesetzt wird.
 
 Das Item, welches dieses Hysterese Attribut verwendet, muss als **bool** definiert sein.
 
+|
 
 Beispiele
 =========

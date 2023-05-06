@@ -160,6 +160,7 @@ plugin-spezifischen Attribute ist in der Dokumentation des jeweiligen Plugins na
    enforce_updates
    enforce_change
    eval
+   hysteresis
    log_change
    on_update
    struct

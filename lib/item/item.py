@@ -257,16 +257,20 @@ class Item():
                     else:
                         threshold, __, timer = value.rpartition('%')
                         self._hysteresis_upper_threshold = float(threshold.strip())
-                        self._hysteresis_upper_timer = float(timer.strip())
-                        logger.notice(f"{self._path}: Timer for upper threshold is not yet implemented.")
+                        ti = float(timer.strip())
+                        if ti > 0:
+                            self._hysteresis_upper_timer = ti
+                            logger.notice(f"{self._path}: Timer for upper threshold is not yet implemented.")
                 elif attr in [KEY_HYSTERESIS_LOWER_THRESHOLD]:
                     if value.find('%') == -1:
                         self._hysteresis_lower_threshold = float(value.strip())
                     else:
                         threshold, __, timer = value.rpartition('%')
                         self._hysteresis_lower_threshold = float(threshold.strip())
-                        self._hysteresis_lower_timer = float(timer.strip())
-                        logger.notice(f"{self._path}: Timer for lower threshold is not yet implemented.")
+                        ti = float(timer.strip())
+                        if ti > 0:
+                            self._hysteresis_lower_timer = ti
+                            logger.notice(f"{self._path}: Timer for lower threshold is not yet implemented.")
 
                 elif attr in [KEY_ON_CHANGE, KEY_ON_UPDATE]:
                     self._process_on_xx_list(attr, value)
@@ -1254,7 +1258,9 @@ class Item():
             # Only if item has a hysteresis_input attribute
             triggering_item = _items_instance.return_item(self._hysteresis_input)
             if triggering_item is None: # triggering item was not found
-                logger.warning(f"item '{self._path}': trigger item '{self._hysteresis_input}' not found for function 'hysteresis'")
+                logger.error(f"item '{self._path}': trigger item '{self._hysteresis_input}' not found for function 'hysteresis'")
+            elif self._hysteresis_upper_threshold < self._hysteresis_lower_threshold:
+                logger.error(f"item '{self._path}': Hysteresis upper threshod is lower than lower threshod")
             else:
                 if triggering_item != self:  # prevent loop
                     triggering_item._hysteresis_items_to_trigger.append(self)
