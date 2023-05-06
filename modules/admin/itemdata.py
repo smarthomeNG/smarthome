@@ -204,6 +204,14 @@ class ItemData:
                 trig = trig[1:len(trig) - 27]
                 triggers.append(html.escape(format(trig.replace("<", ""))))
 
+            for trigger in item.get_item_triggers():
+                trig = "bound item '" + trigger._path + "' (eval)"
+                triggers.append(format(trig))
+
+            for trigger in item.get_hysteresis_item_triggers():
+                trig = "bound item '" + trigger._path + "' (hysteresis)"
+                triggers.append(format(trig))
+
             # build on_update and on_change data
             on_update_list = self.build_on_list(item._on_update_dest_var, item._on_update)
             on_change_list = self.build_on_list(item._on_change_dest_var, item._on_change)
@@ -211,6 +219,14 @@ class ItemData:
             self._trigger_condition_raw = item._trigger_condition_raw
             if self._trigger_condition_raw == []:
                 self._trigger_condition_raw = ''
+
+            hysteresis_upper_threshold =  str(item._hysteresis_upper_threshold)
+            if item._hysteresis_upper_timer is not None:
+                hysteresis_upper_threshold += ' % ' + str(item._hysteresis_upper_timer)
+
+            hysteresis_lower_threshold =  str(item._hysteresis_lower_threshold)
+            if item._hysteresis_lower_timer is not None:
+                hysteresis_lower_threshold += ' % ' + str(item._hysteresis_lower_timer)
 
             data_dict = {'path': item._path,
                          'name': item._name,
@@ -237,6 +253,9 @@ class ItemData:
                          'trigger': self.disp_str(item._trigger),
                          'trigger_condition': self.disp_str(item._trigger_condition),
                          'trigger_condition_raw': self.disp_str(self._trigger_condition_raw),
+                         'hysteresis_input': self.disp_str(item._hysteresis_input),
+                         'hysteresis_upper_threshold': self.disp_str(hysteresis_upper_threshold),
+                         'hysteresis_lower_threshold': self.disp_str(hysteresis_lower_threshold),
                          'on_update': html.escape(self.list_to_displaystring(on_update_list)),
                          'on_change': html.escape(self.list_to_displaystring(str(on_change_list))),
                          'log_change': self.disp_str(item._log_change),

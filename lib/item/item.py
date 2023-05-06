@@ -43,7 +43,9 @@ from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_
                            KEY_EVAL_TRIGGER, KEY_TRIGGER, KEY_CONDITION, KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_REMARK, KEY_INSTANCE,
                            KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM, KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE,
                            KEY_LOG_CHANGE, KEY_LOG_LEVEL, KEY_LOG_TEXT, KEY_LOG_MAPPING, KEY_LOG_RULES,
-                           KEY_THRESHOLD, KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST)
+                           KEY_THRESHOLD, KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST,
+                           KEY_HYSTERESIS_INPUT, KEY_HYSTERESIS_UPPER_THRESHOLD, KEY_HYSTERESIS_LOWER_THRESHOLD)
+
 from lib.utils import Utils
 
 from .property import Property
@@ -118,6 +120,7 @@ class Item():
         self._cycle = None
         self._enforce_updates = False
         self._enforce_change = False
+
         self._eval = None				    # -> KEY_EVAL
         self._eval_unexpanded = ''
         self._eval_trigger = False
@@ -125,6 +128,15 @@ class Item():
         self._trigger_unexpanded = []
         self._trigger_condition_raw = []
         self._trigger_condition = None
+
+        self._hysteresis_input = None
+        self._hysteresis_input_unexpanded = None
+        self._hysteresis_upper_threshold = None
+        self._hysteresis_lower_threshold = None
+        self._hysteresis_upper_timer = None
+        self._hysteresis_lower_timer = None
+        self._hysteresis_items_to_trigger = []
+
         self._on_update = None				# -> KEY_ON_UPDATE eval expression
         self._on_change = None				# -> KEY_ON_CHANGE eval expression
         self._on_update_dest_var = None		# -> KEY_ON_UPDATE destination var (list: only filled if '=' syntax is used)
@@ -212,8 +224,6 @@ class Item():
                     if attr == KEY_INITVALUE:
                         attr = KEY_VALUE
                     setattr(self, '_' + attr, value)
-                elif attr in [KEY_EVAL]:
-                    self._process_eval(value)
                 elif attr in [KEY_CACHE, KEY_ENFORCE_UPDATES, KEY_ENFORCE_CHANGE]:  # cast to bool
                     try:
                         setattr(self, '_' + attr, cast_bool(value))
@@ -224,6 +234,8 @@ class Item():
                     if isinstance(value, str):
                         value = [value, ]
                     setattr(self, '_' + attr, value)
+                elif attr in [KEY_EVAL]:
+                    self._process_eval(value)
                 elif attr in [KEY_EVAL_TRIGGER] or (self._use_conditional_triggers and attr in [KEY_TRIGGER]):  # cast to list
                     self._process_trigger_list(attr, value)
                 elif (attr in [KEY_CONDITION]) and self._use_conditional_triggers:  # cast to list
@@ -235,6 +247,27 @@ class Item():
                         self._trigger_condition_raw = cond_list
                     else:
                         logger.warning("Item __init__: {}: Invalid trigger_condition specified! Must be a list".format(self._path))
+
+                elif attr in [KEY_HYSTERESIS_INPUT]:
+                    self._hysteresis_input_unexpanded = value
+                    self._hysteresis_input = self.get_absolutepath(value, attr)
+                elif attr in [KEY_HYSTERESIS_UPPER_THRESHOLD]:
+                    if value.find('%') == -1:
+                        self._hysteresis_upper_threshold = float(value.strip())
+                    else:
+                        threshold, __, timer = value.rpartition('%')
+                        self._hysteresis_upper_threshold = float(threshold.strip())
+                        self._hysteresis_upper_timer = float(timer.strip())
+                        logger.notice(f"{self._path}: Timer for upper threshold is not yet implemented.")
+                elif attr in [KEY_HYSTERESIS_LOWER_THRESHOLD]:
+                    if value.find('%') == -1:
+                        self._hysteresis_lower_threshold = float(value.strip())
+                    else:
+                        threshold, __, timer = value.rpartition('%')
+                        self._hysteresis_lower_threshold = float(threshold.strip())
+                        self._hysteresis_lower_timer = float(timer.strip())
+                        logger.notice(f"{self._path}: Timer for lower threshold is not yet implemented.")
+
                 elif attr in [KEY_ON_CHANGE, KEY_ON_UPDATE]:
                     self._process_on_xx_list(attr, value)
 
@@ -1196,7 +1229,7 @@ class Item():
             _items = []
             for trigger in self._trigger:
                 if _items_instance.match_items(trigger) == [] and self._eval:
-                    logger.warning("item '{}': trigger item '{}' not found for function '{}'".format(self._path, trigger, self._eval))
+                    logger.warning(f"item '{self._path}': trigger item '{trigger}' not found for function '{self._eval}'")
                 _items.extend(_items_instance.match_items(trigger))
             for item in _items:
                 if item != self:  # prevent loop
@@ -1216,6 +1249,15 @@ class Item():
                     self._eval = 'max({0})'.format(','.join(items))
                 elif self._eval == 'min':
                     self._eval = 'min({0})'.format(','.join(items))
+
+        if self._hysteresis_input:
+            # Only if item has a hysteresis_input attribute
+            triggering_item = _items_instance.return_item(self._hysteresis_input)
+            if triggering_item is None: # triggering item was not found
+                logger.warning(f"item '{self._path}': trigger item '{self._hysteresis_input}' not found for function 'hysteresis'")
+            else:
+                if triggering_item != self:  # prevent loop
+                    triggering_item._hysteresis_items_to_trigger.append(self)
 
 
     def _init_start_scheduler(self):
@@ -1252,6 +1294,20 @@ class Item():
                 self._sh.trigger(name=self._path, obj=self.__run_eval, by='Init', value={'value': self._value, 'caller': 'Init:Eval'})
                 return True
         return False
+
+
+    def __run_hysteresis(self, value=None, caller='Hysteresis', source=None, dest=None):
+        """
+        evaluate the 'hysteresis' entry of the actual item
+        """
+        logger.info(f"__run_hysteresis: {value=}, {caller=}, {source=}, {dest=}")
+        if value > self._hysteresis_upper_threshold:
+            self.__update(True, caller, source, dest)
+            logger.info(f" - {value=} > {self._hysteresis_upper_threshold=} -> Update with True")
+        if value < self._hysteresis_lower_threshold:
+            self.__update(False, caller, source, dest)
+            logger.info(f" - {value=} < {self._hysteresis_lower_threshold=} -> Update with False")
+        return
 
 
     def __run_eval(self, value=None, caller='Eval', source=None, dest=None):
@@ -1598,6 +1654,9 @@ class Item():
             for item in self._items_to_trigger:
                 args = {'value': value, 'source': self._path}
                 self._sh.trigger(name='items.' + item.id(), obj=item.__run_eval, value=args, by=caller, source=source, dest=dest)
+            for item in self._hysteresis_items_to_trigger:
+                args = {'value': value, 'source': self._path}
+                self._sh.trigger(name='items.' + item.id(), obj=item.__run_hysteresis, value=args, by=caller, source=source, dest=dest)
             # ms: call run_on_change() from here - after eval is run
             self.__run_on_change(value)
 
@@ -1656,12 +1715,32 @@ class Item():
 
     def get_method_triggers(self):
         """
-        Returns a list of item methods to trigger, if this item gets changed
+        Returns a list of plugin methods to trigger, if this item gets changed
 
         :return: methods to trigger
         :rtype: list
         """
         return self.__methods_to_trigger
+
+
+    def get_item_triggers(self):
+        """
+        Returns a list of items to trigger, if this item gets changed
+
+        :return: methods to trigger
+        :rtype: list
+        """
+        return self._items_to_trigger
+
+
+    def get_hysteresis_item_triggers(self):
+        """
+        Returns a list of items to trigger, if this item gets changed
+
+        :return: methods to trigger
+        :rtype: list
+        """
+        return self._hysteresis_items_to_trigger
 
 
     def timer(self, time, value, auto=False, compat=ATTRIB_COMPAT_DEFAULT, caller=None, source=None):
