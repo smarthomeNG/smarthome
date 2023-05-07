@@ -41,9 +41,11 @@ anschließend weitere Werte oberhalb des oberen Schwellwertes annimmt, wird find
 zwischen den Schwellwerten
 --------------------------
 
-Wenn das des hysteresis_input-Item einen Wert zwischen den beiden Schwellwerten annimmt
-(also: unterer Schwellwert <= Itemwert <= oberer Schwellwert), findet beim Hysterese Item keine Änderung statt.
-Der Wert erhält also kein Update.
+Wenn das des hysteresis_input-Item einen Wert zwischen den beiden Schwellwerten annimmt,
+
+    also: unterer Schwellwert <= Itemwert <= oberer Schwellwert
+
+findet beim Hysterese Item keine Änderung statt. Der Wert erhält also kein Update.
 
 Unterhalb des unteren Schwellwertes
 -----------------------------------
@@ -88,37 +90,60 @@ Das Item, welches dieses Hysterese Attribut verwendet, muss als **bool** definie
 
 |
 
+Konfiguration
+=============
+
+.. code-block:: yaml
+
+    hysterese_input:
+        type: num
+        name: 'z.B. Helligkeit'
+        ...
+
+    hysterese_item:
+        type: bool
+        name: 'z.B. Beschattung an/aus'
+        hysteresis_input: ..hysterese_input
+        hysteresis_upper_threshold: <oberer Schwellwert> % <Mindestdauer in Sekunden>
+        hysteresis_lower_threshold: <unterer Schwellwert> % <Mindestdauer in Sekunden>
+
+Der obere Schwellwert und der untere Schwellwert können als Integer oder Float Werte angegeben werden.
+Die Angabe der Mindestdauer zu den Schwellwerten ist optional. Die Mindestdauer kann als Integer oder Float Wert
+angegeben werden.
+
+|
+
 Beispiele
 =========
 
-Das folgende Beispiel zeigt ein Item als Hysterese Glied mit oberem und unterem Schwellwert.
+Das folgende Beispiel zeigt ein Item als Hysterese Glied mit oberem und unterem Schwellwert und Werten für die
+jeweiligen Mindestdauern für das Zeitglied.
 
 .. code-block:: yaml
 
-   hysterese_item:
-       type: bool
-       hysteresis_input: ..hysterese_input
-       hysteresis_upper_threshold: 6
-       hysteresis_lower_threshold: 2.5
+    helligkeit:
+        type: num
+        ...
 
-   hysterese_input:
-       type: num
-       ...
+    beschattung:
+        type: bool
+        hysteresis_input: ..helligkeit
+        hysteresis_upper_threshold: 5000 % 60
+        hysteresis_lower_threshold: 900.5 % 120
 
 
-Das folgende Beispiel zeigt ein Item als Hysterese Glied mit oberem und unterem Schwellwert. Der obere Schwellwert
-ist hier um ein Zeitglied ergänzt, so dass das Item erst **True** wird, wenn der obere Schwellwert für 30 Sekungen
-überschritten wurde.
+Das folgende Beispiel zeigt ein Item als Hysterese Glied mit oberem und unterem Schwellwert, jedoch ohne konfigurierte
+Zeitglieder. Der TV-Status wechselt bei überschreiten eines Verbrauchs von 90 Watt auf True (eingeschaltet) und
+wechselt bei unterschreiten eines Verbrauchs von 10 Watt auf False (ausgeschaltet):
 
 .. code-block:: yaml
 
-   hysterese_item:
-       type: bool
-       hysteresis_input: ..hysterese_input
-       hysteresis_upper_threshold: 6 % 30
-       hysteresis_lower_threshold: 2.5
-
-   hysterese_input:
+   tv_verbrauch:
        type: num
        ...
 
+   tv_status:
+       type: bool
+       hysteresis_input: ..tv_verbrauch
+       hysteresis_upper_threshold: 90
+       hysteresis_lower_threshold: 10
