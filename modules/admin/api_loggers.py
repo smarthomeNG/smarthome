@@ -181,7 +181,10 @@ class LoggersController(RESTResource):
         active_logger = logging.getLogger(loggername)
         active['disabled'] = active_logger.disabled
         active['level'] = self._sh.logs.get_shng_logging_levels().get(active_logger.level, 'UNKNOWN_'+str(active_logger.level))
-        active['filters'] = active_logger.filters
+        filters = list(active_logger.filters)
+        active['filters'] = []
+        for filter in filters:
+            active['filters'].append(str(filter))
         active['parent_handlers_names'] = []
 
         hl = []

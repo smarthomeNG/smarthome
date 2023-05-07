@@ -131,6 +131,7 @@ jeweiligen Mindestdauern für das Zeitglied.
         hysteresis_upper_threshold: 5000 % 60
         hysteresis_lower_threshold: 900.5 % 120
 
+|
 
 Das folgende Beispiel zeigt ein Item als Hysterese Glied mit oberem und unterem Schwellwert, jedoch ohne konfigurierte
 Zeitglieder. Der TV-Status wechselt bei überschreiten eines Verbrauchs von 90 Watt auf True (eingeschaltet) und
