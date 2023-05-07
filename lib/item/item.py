@@ -135,6 +135,8 @@ class Item():
         self._hysteresis_lower_threshold = None
         self._hysteresis_upper_timer = None
         self._hysteresis_lower_timer = None
+        self._hysteresis_upper_timer_active = False
+        self._hysteresis_lower_timer_active = False
         self._hysteresis_items_to_trigger = []
 
         self._on_update = None				# -> KEY_ON_UPDATE eval expression
@@ -260,7 +262,6 @@ class Item():
                         ti = float(timer.strip())
                         if ti > 0:
                             self._hysteresis_upper_timer = ti
-                            logger.notice(f"{self._path}: Timer for upper threshold is not yet implemented.")
                 elif attr in [KEY_HYSTERESIS_LOWER_THRESHOLD]:
                     if value.find('%') == -1:
                         self._hysteresis_lower_threshold = float(value.strip())
@@ -270,7 +271,6 @@ class Item():
                         ti = float(timer.strip())
                         if ti > 0:
                             self._hysteresis_lower_timer = ti
-                            logger.notice(f"{self._path}: Timer for lower threshold is not yet implemented.")
 
                 elif attr in [KEY_ON_CHANGE, KEY_ON_UPDATE]:
                     self._process_on_xx_list(attr, value)
@@ -1307,12 +1307,30 @@ class Item():
         evaluate the 'hysteresis' entry of the actual item
         """
         #logger.notice(f"__run_hysteresis: {value=}, {caller=}, {source=}, {dest=}")
+        if self._hysteresis_upper_timer_active and (value <= self._hysteresis_upper_threshold):
+            self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-UpTimer')
+            self._hysteresis_upper_timer_active = False
+        if self._hysteresis_lower_timer_active and (value >= self._hysteresis_lower_threshold):
+            self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-LoTimer')
+            self._hysteresis_lower_timer_active = False
+
         if value > self._hysteresis_upper_threshold:
-            self.__update(True, caller, source, dest)
-            #logger.notice(f" - {value=} > {self._hysteresis_upper_threshold=} -> Update with True")
+            if self._hysteresis_upper_timer is None:
+                self.__update(True, caller, source, dest)
+            else:
+                if not self._hysteresis_upper_timer_active:
+                    next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_upper_timer)
+                    self._sh.scheduler.add(self._itemname_prefix+self.id() + '-UpTimer', self.__call__, value={'value': True, 'caller': 'Hysteresis'}, next=next)
+                    self._hysteresis_upper_timer_active = True
+
         if value < self._hysteresis_lower_threshold:
-            self.__update(False, caller, source, dest)
-            #logger.notice(f" - {value=} < {self._hysteresis_lower_threshold=} -> Update with False")
+            if self._hysteresis_lower_timer is None:
+                self.__update(False, caller, source, dest)
+            else:
+                if not self._hysteresis_lower_timer_active:
+                    next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_lower_timer)
+                    self._sh.scheduler.add(self._itemname_prefix + self.id() + '-LoTimer', self.__call__, value={'value': False, 'caller': 'Hysteresis'}, next=next)
+                    self._hysteresis_lower_timer_active = True
         return
 
 
