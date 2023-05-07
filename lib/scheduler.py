@@ -387,6 +387,7 @@ class Scheduler(threading.Thread):
         finally:
             self._lock.release()
 
+
     def check_caller(self, name, from_smartplugin=False):
         """
         Checks the calling stack if the calling function (one of get, change, remove, trigger) itself was called by
@@ -406,6 +407,13 @@ class Scheduler(threading.Thread):
 
         try:
             obj = stack[2][0].f_locals["self"]
+        except KeyError:
+            return name
+        except Exception as e:
+            pass
+            logger.exception(f"check_caller('{name}') *2: Exception in inspect.stack(): {e}")
+
+        try:
             if isinstance(obj, SmartPlugin):
                 iname = obj.get_instance_name()
                 if iname != '':
@@ -415,8 +423,9 @@ class Scheduler(threading.Thread):
                             name = name + '_' + obj.get_instance_name()
         except Exception as e:
             pass
-            logger.exception(f"check_caller('{name}') *2: Exception in inspect.stack(): {e}")
+            logger.exception(f"check_caller('{name}') *3: Exception in inspect.stack(): {e}")
         return name
+
 
     def return_next(self, name, from_smartplugin=False):
         # name = self.check_caller(name, from_smartplugin)   # ms
