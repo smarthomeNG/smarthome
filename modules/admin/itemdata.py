@@ -30,6 +30,8 @@ import cherrypy
 import lib.config
 from lib.item import Items
 
+from lib.constants import (ATTRIBUTE_SEPARATOR)
+
 
 class ItemData:
 
@@ -222,11 +224,11 @@ class ItemData:
 
             hysteresis_upper_threshold =  str(item._hysteresis_upper_threshold)
             if item._hysteresis_upper_timer is not None:
-                hysteresis_upper_threshold += ' % ' + str(item._hysteresis_upper_timer)
+                hysteresis_upper_threshold += ' ' + ATTRIBUTE_SEPARATOR + ' ' + str(item._hysteresis_upper_timer)
 
             hysteresis_lower_threshold =  str(item._hysteresis_lower_threshold)
             if item._hysteresis_lower_timer is not None:
-                hysteresis_lower_threshold += ' % ' + str(item._hysteresis_lower_timer)
+                hysteresis_lower_threshold += ' ' + ATTRIBUTE_SEPARATOR + ' ' + str(item._hysteresis_lower_timer)
 
             data_dict = {'path': item._path,
                          'name': item._name,

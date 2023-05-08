@@ -64,6 +64,8 @@ KEY_HYSTERESIS_INPUT = 'hysteresis_input'
 KEY_HYSTERESIS_UPPER_THRESHOLD = 'hysteresis_upper_threshold'
 KEY_HYSTERESIS_LOWER_THRESHOLD = 'hysteresis_lower_threshold'
 
+ATTRIBUTE_SEPARATOR = ';'
+
 KEY_STRUCT = 'struct'
 KEY_REMARK = 'remark'
 

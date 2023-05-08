@@ -51,8 +51,8 @@ Unterhalb des unteren Schwellwertes
 -----------------------------------
 
 Wenn der Wert des hysteresis_input-Items den untern Schwellwert unterschreitet, wird das Hysterese Item auf **False**
-gesetzt. Das bedeutet, dass das Item bei Unterschreitung von Ture auf False wechselt. Wenn das hysteresis_input-Item
-anschließend weitere Werte unterhalb des unteren Schwellwertes annimmt, wird findet ein Update des Wertes False statt.
+gesetzt. Das bedeutet, dass das Item bei Unterschreitung von True auf False wechselt. Wenn das hysteresis_input-Item
+anschließend weitere Werte unterhalb des unteren Schwellwertes annimmt, findet ein Update des Wertes False statt.
 
 |
 
@@ -104,8 +104,8 @@ Konfiguration
         type: bool
         name: 'z.B. Beschattung an/aus'
         hysteresis_input: ..hysterese_input
-        hysteresis_upper_threshold: <oberer Schwellwert> % <Mindestdauer in Sekunden>
-        hysteresis_lower_threshold: <unterer Schwellwert> % <Mindestdauer in Sekunden>
+        hysteresis_upper_threshold: <oberer Schwellwert> ; <Mindestdauer in Sekunden>
+        hysteresis_lower_threshold: <unterer Schwellwert> ; <Mindestdauer in Sekunden>
 
 Der obere Schwellwert und der untere Schwellwert können als Integer oder Float Werte angegeben werden.
 Die Angabe der Mindestdauer zu den Schwellwerten ist optional. Die Mindestdauer kann als Integer oder Float Wert
@@ -128,8 +128,8 @@ jeweiligen Mindestdauern für das Zeitglied.
     beschattung:
         type: bool
         hysteresis_input: ..helligkeit
-        hysteresis_upper_threshold: 5000 % 60
-        hysteresis_lower_threshold: 900.5 % 120
+        hysteresis_upper_threshold: 5000 ; 60
+        hysteresis_lower_threshold: 900.5 ; 120
 
 |
 

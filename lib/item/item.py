@@ -44,7 +44,8 @@ from lib.constants import (ITEM_DEFAULTS, FOO, KEY_ENFORCE_UPDATES, KEY_ENFORCE_
                            KEY_VALUE, KEY_INITVALUE, PLUGIN_PARSE_ITEM, KEY_AUTOTIMER, KEY_ON_UPDATE, KEY_ON_CHANGE,
                            KEY_LOG_CHANGE, KEY_LOG_LEVEL, KEY_LOG_TEXT, KEY_LOG_MAPPING, KEY_LOG_RULES,
                            KEY_THRESHOLD, KEY_ATTRIB_COMPAT, ATTRIB_COMPAT_V12, ATTRIB_COMPAT_LATEST,
-                           KEY_HYSTERESIS_INPUT, KEY_HYSTERESIS_UPPER_THRESHOLD, KEY_HYSTERESIS_LOWER_THRESHOLD)
+                           KEY_HYSTERESIS_INPUT, KEY_HYSTERESIS_UPPER_THRESHOLD, KEY_HYSTERESIS_LOWER_THRESHOLD,
+                           ATTRIBUTE_SEPARATOR)
 
 from lib.utils import Utils
 
@@ -254,19 +255,19 @@ class Item():
                     self._hysteresis_input_unexpanded = value
                     self._hysteresis_input = self.get_absolutepath(value, attr)
                 elif attr in [KEY_HYSTERESIS_UPPER_THRESHOLD]:
-                    if value.find('%') == -1:
+                    if value.find(ATTRIBUTE_SEPARATOR) == -1:
                         self._hysteresis_upper_threshold = float(value.strip())
                     else:
-                        threshold, __, timer = value.rpartition('%')
+                        threshold, __, timer = value.rpartition(ATTRIBUTE_SEPARATOR)
                         self._hysteresis_upper_threshold = float(threshold.strip())
                         ti = float(timer.strip())
                         if ti > 0:
                             self._hysteresis_upper_timer = ti
                 elif attr in [KEY_HYSTERESIS_LOWER_THRESHOLD]:
-                    if value.find('%') == -1:
+                    if value.find(ATTRIBUTE_SEPARATOR) == -1:
                         self._hysteresis_lower_threshold = float(value.strip())
                     else:
-                        threshold, __, timer = value.rpartition('%')
+                        threshold, __, timer = value.rpartition(ATTRIBUTE_SEPARATOR)
                         self._hysteresis_lower_threshold = float(threshold.strip())
                         ti = float(timer.strip())
                         if ti > 0:
