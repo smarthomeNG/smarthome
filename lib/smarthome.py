@@ -648,7 +648,7 @@ class SmartHome():
         self.shng_status = {'code': 12, 'text': 'Starting: Initializing plugins'}
         os.chdir(self._base_dir)
 
-        self._logger.info("Init Plugins")
+        self._logger.info("Start initialization of plugins")
         self.plugins = lib.plugin.Plugins(self, configfile=self._plugin_conf_basename)
         self.plugin_load_complete = True
 

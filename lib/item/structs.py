@@ -45,28 +45,122 @@ class Structs():
         self.logger = logging.getLogger(__name__)
 
 
-    def merge_structlists(self, l1, l2, key=''):
-        if not self.struct_merge_lists:
-            self.logger.warning("merge_structlists: Not merging lists, key '{}' value '{}' is ignored'".format(key, l2))
-            return l1       # First wins
+    def return_struct_definitions(self, all=True):
+        """
+        Return all loaded structure template definitions
+
+        :return:
+        :rtype: dict
+        """
+        result = {}
+        for struct in self._struct_definitions:
+            try:
+                plg_name, struct_name = struct.split('.')
+            except:
+                plg_name = ''
+                struct_name = struct
+            if struct_name.startswith('_'):
+                self.logger.info(f"return_struct_definitions: Internal struct {struct}")
+                if all:
+                    result[struct] = self._struct_definitions[struct]
+            else:
+                result[struct] = self._struct_definitions[struct]
+
+        return result
+
+
+    """
+    ==========================================================================
+    The following methods are used to read the struct definitions at startup
+    
+    """
+
+    def load_struct_definitions(self, etc_dir):
+        """
+        Read in all struct definitions before reading item definitions
+
+        structs are merged into the item tree in lib.config
+
+        - plugin-structs are read in from metadata file of plugins while loading plugins
+        - other structs are read in from ../etc/struct.yaml by this procedure
+        - further structs are read in from ../etc/struct_<prefix>.yaml by this procedure
+
+        :param etc_dir: path to etc directory of SmartHomeNG
+
+        """
+        self.load_struct_definitions_from_file(etc_dir, 'struct.yaml', '')
+
+        # look for further struct files
+        fl = os.listdir(etc_dir)
+        for fn in fl:
+            if fn.startswith('struct_') and fn.endswith('.yaml'):
+                key_prefix = 'my.' + fn[7:-5]
+                self.load_struct_definitions_from_file(etc_dir, fn, key_prefix)
+
+        # Now that all structs have been loaded,
+        # resolve struct references in structs and fill in the content of the struct
+
+        # TEST NEU
+        self.traverse_struct('my.test.test21')
+
+        do_resolve = True
+        while do_resolve:
+            do_resolve = self.resolve_nested_structs()
+
+        self.traverse_struct('my.test.test21')
+
+        # OLD
+#        self.fill_nested_structs()
+
+        # for Testing: Save structure of joined item structs
+        self.logger.info(f"load_itemdefinitions(): For testing the joined item structs are saved to {os.path.join(etc_dir, 'structs_joined.yaml')}")
+        shyaml.yaml_save(os.path.join(etc_dir, 'structs_joined.yaml'), self._struct_definitions)
+
+        return
+
+
+    def load_struct_definitions_from_file(self, etc_dir, fn, key_prefix):
+        """
+        Loads struct definitions from a file
+
+        :param etc_dir: path to etc directory of SmartHomeNG
+        :param fn: filename to load struct definition(s) from
+        :param key_prefix: prefix to be used when adding struct(s) to loaded definitions
+
+        """
+        if key_prefix == '':
+            self.logger.info(f"Loading struct file '{fn}' without key-prefix")
         else:
-            if not isinstance(l1, list):
-                l1 = [l1]
-            if not isinstance(l2, list):
-                l2 = [l2]
-            return l1 + l2
+            self.logger.info(f"Loading struct file '{fn}' with key-prefix '{key_prefix}'")
+
+        # Read in item structs from ../etc/<fn>.yaml
+        struct_definitions = shyaml.yaml_load(os.path.join(etc_dir, fn), ordered=True, ignore_notfound=True)
+
+        # if valid struct definition file etc/<fn>.yaml ist found
+        if struct_definitions is not None:
+            if isinstance(struct_definitions, collections.OrderedDict):
+                for key in struct_definitions:
+                    if fn == 'struct.yaml':
+                        struct_name = key
+                    else:
+                        struct_name = key_prefix + '.' + key
+                    self.add_struct_definition('', struct_name, struct_definitions[key])
+            else:
+                self.logger.error(f"load_itemdefinitions(): Invalid content in {fn}: struct_definitions = '{struct_definitions}'")
+
+        return
 
 
     def add_struct_definition(self, plugin_name, struct_name, struct):
         """
-        Add a struct definition
+        Add a single struct definition
 
-        called when reading in item structs from ../etc/struct.yaml
-        or from lib.plugin when reading in plugin-metadata
+        called from load_struct_definitions_from_file when reading in item structs from ../etc/<fn>>.yaml
+        or from lib.plugin when reading in plugin-metadata which contains structs
 
-        :param plugin_name:
-        :param struct_name:
-        :param struct:
+        :param plugin_name: Name of the plugin if called from lib.plugin else an empty string
+        :param struct_name: Name of the struct to add
+        :param struct: definition of the struct to add
         :return:
         """
         if plugin_name == '':
@@ -74,9 +168,247 @@ class Structs():
         else:
             name = plugin_name + '.' + struct_name
 
-        self.logger.info("add_struct_definition: struct '{}' = {}".format(name, struct))
+        #self.logger.debug(f"add_struct_definition: struct '{name}' = {dict(struct)}")
         self._struct_definitions[name] = struct
         return
+
+
+    """
+    ==========================================================================
+    The following methods are used to resolve nested struct definitions
+    after loading all struct definitions from file(s)
+
+    """
+
+    def struct_contains_substruct(self, struct_name):
+
+        struct = self._struct_definitions[struct_name]
+        substruct_names = struct.get('struct', None)
+        return substruct_names is not None
+
+    def substructs_contain_substruct(self, struct_name):
+
+        struct = self._struct_definitions[struct_name]
+        substruct_names = struct.get('struct', None)
+        nested_struct_found = False
+        if substruct_names is not None:
+            if isinstance(substruct_names, str):
+                substruct_names = [substruct_names]
+            for substruct_name in substruct_names:
+                if self.struct_contains_substruct(substruct_name):
+                    nested_struct_found = True
+        return nested_struct_found
+
+    def get_struct_names(self, struct_name):
+
+        struct = self._struct_definitions[struct_name]
+        struct_names = struct.get('struct', None)
+        return struct_names
+
+    def get_nested_struct_names(self, struct_name):
+
+        struct = self._struct_definitions[struct_name]
+        struct_names = struct.get('struct', [])
+        if isinstance(struct_names, str):
+            struct_names = [struct_names]
+        substruct_names_list = []
+        for struct_name in struct_names:
+            substruct_names = self.get_struct_names(struct_name)
+            substruct_names_list.append(substruct_names)
+        return substruct_names_list
+
+
+    def resolve_nested_structs(self):
+
+        #self.logger.info(f"resolve_nested_structs: self._struct_definitions={dict(self._struct_definitions)}")
+
+        additional_run_needed = False
+        for struct_name in self._struct_definitions:
+            if self.struct_contains_substruct(struct_name):
+                struct_names = self.get_struct_names(struct_name)
+                if isinstance(struct_names, str):
+                    struct_names = [struct_names]
+
+                self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} contains struct(s): {struct_names}")
+                if self.substructs_contain_substruct(struct_name):
+                    substruct_names = self.get_nested_struct_names(struct_name)
+                    additional_run_needed = True
+                    self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} contains nested struct(s): {substruct_names}")
+                else:
+                    self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} contains struct(s): {struct_names}")
+                    ###
+                    struct = self._struct_definitions.get(struct_name, None)
+                    if struct is not None:
+                        struct = self.resolve_structs(struct, struct_name, struct_names)
+                    else:
+                        self.logger.error(f"resolve_nested_structs: struct not found for struct_name {struct_name}")
+
+                    # NEW: mark struct(s) as resolved
+                    #struct['_struct'] = struct['struct']
+                    #del (struct['struct'])
+                    #self.logger.dbghigh(f"resolve_nested_structs: Done, changed 'struct' to '_struct'")
+
+                    # NEW: mark struct(s) as resolved
+                    #struct['_struct'] = struct['struct']
+                    del (struct['struct'])
+                    self.logger.dbghigh(f"resolve_nested_structs: Done, removed 'struct' attribute from struct '{struct_name}'")
+
+                    self._struct_definitions[struct_name] = struct
+                    ###
+            else:
+                pass
+                #self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} is ready")
+
+        if additional_run_needed:
+            self.logger.dbghigh(f"resolve_nested_structs: Additional run needed")
+        return additional_run_needed
+
+
+    def traverse_struct(self, struct_name):
+
+        struct = self._struct_definitions.get(struct_name, None)
+        if struct is None:
+            self.logger.warning(f"traverse_struct: struct {struct_name} not found")
+            return
+
+        self.logger.dbghigh(f"traverse_struct:")
+        self.logger.dbghigh(f"traverse_struct: struct {struct_name}")
+        self.process_struct_node(struct)
+        self.logger.dbghigh(f"traverse_struct:")
+        return
+
+
+    def process_struct_node(self, node, level=0):
+
+        spaces = " " * level
+        for element in node:
+            if isinstance(node[element], dict):
+                self.logger.dbghigh(f"process_struct_node: {spaces}node {element}:")
+                self.process_struct_node(node[element], level + 4)
+            elif element == 'struct':
+                self.logger.dbghigh(f"process_struct_node: {spaces}leaf {element} - 'struct' attribute found: {node[element]}")
+            else:
+                self.logger.dbghigh(f"process_struct_node: {spaces}leaf {element}={node[element]}")
+
+    """
+    ==========================================================================
+    The following methods are used to resolve nested struct definitions
+    after loading all struct definitions from file(s)
+
+    OLD VERSION
+    """
+
+    # def fill_nested_structs(self):
+    #     """
+    #     Resolve struct references in structs and fill in the content of the struct
+    #
+    #     :return:
+    #     """
+    #     for struct_name in self._struct_definitions:
+    #         # for every defined struct
+    #         struct = self._struct_definitions[struct_name]
+    #         substruct_names = struct.get('struct', None)
+    #         if substruct_names is not None:
+    #             # stuct has a sub-struct
+    #             if isinstance(substruct_names, str):
+    #                 substruct_names = [substruct_names]
+    #             struct = self.resolve_structs(struct, struct_name, substruct_names)
+    #
+    #             # NEW: mark struct(s) as resolved
+    #             struct['_struct'] = struct['struct']
+    #             del(struct['struct'])
+    #             self.logger.debug(f" - -> new_struct='{dict(struct)}'")
+    #
+    #             self._struct_definitions[struct_name] = struct
+    #
+    #
+    def resolve_structs(self, struct, struct_name, substruct_names):
+        """
+        Resolve a struct reference within a struct
+
+        if the struct definition that is to be inserted contains a struct reference, it is resolved first
+
+        :param struct:          struct that contains a struct reference
+        :param struct_name:     name of the struct that contains a struct reference
+        :param substruct_name:  name of the sub-struct definition that shall be inserted
+        """
+
+        self.logger.info("resolve_structs: struct_name='{}', substruct_names='{}'".format(struct_name, substruct_names))
+
+        new_struct = collections.OrderedDict()
+        structentry_list = list(struct.keys())
+        for structentry in structentry_list:
+            # copy all existing attributes and sub-entrys of the struct
+            if new_struct.get(structentry, None) is None:
+                self.logger.dbgmed(f"resolve_structs: - copy attribute structentry='{structentry}', value='{struct[structentry]}'")
+                new_struct[structentry] = copy.deepcopy(struct[structentry])
+            else:
+                self.logger.dbghigh(f"resolve_structs: - key='{structentry}', value is ignored'")
+            if structentry == 'struct':
+                for substruct_name in substruct_names:
+                    # for every substruct
+                    self.merge_substruct_to_struct(new_struct, substruct_name, struct_name)
+                    # self.logger.info("resolve_structs: ->substruct_name='{}'".format(substruct_name))
+                    # substruct = self._struct_definitions.get(substruct_name, None)
+                    # # merge in the sub-struct
+                    # for key in substruct:
+                    #     if new_struct.get(key, None) is None:
+                    #         self.logger.info \
+                    #             ("resolve_struct: - key='{}', value='{}' -> new_struct='{}'".format(key, substruct[key], new_struct))
+                    #         new_struct[key] = copy.deepcopy(substruct[key])
+                    #     elif isinstance(new_struct.get(key, None), dict):
+                    #         self.logger.info("resolve_struct: - merge key='{}', value='{}' -> new_struct='{}'".format(key, substruct
+                    #                                                                                                  [key], new_struct))
+                    #         self.merge(substruct[key], new_struct[key], key, struct_name +'. ' +key)
+                    #     elif isinstance(new_struct.get(key, None), list) or isinstance(substruct.get(key, None), list):
+                    #         new_struct[key] = self.merge_structlists(new_struct[key], substruct[key], key)
+                    #     else:
+                    #         self.logger.dbghigh("resolve_struct: - key='{}', value '{}' is ignored'".format(key, substruct[key]))
+
+        return new_struct
+
+
+    def merge_substruct_to_struct(self, main_struct, substruct_name, main_struct_name='?'):
+        """
+
+        :param main_struct:
+        :param substruct_name:
+        :param main_struct_name:
+        :return:
+        """
+
+        self.logger.dbglow(f"merge_substruct_to_struct: substruct_name='{substruct_name}' -> main_struct='{main_struct_name}'")
+        substruct = self._struct_definitions.get(substruct_name, None)
+        if substruct is None:
+            self.logger.error(f"struct '{substruct_name}' not found in structdefinitions (used in struct '{main_struct_name}')")
+        else:
+            # merge the sub-struct to the main-struct key by key
+            for key in substruct:
+                if main_struct.get(key, None) is None:
+                    self.logger.dbglow(f" - add key='{key}', value='{substruct[key]}' -> new_struct='{dict(main_struct)}'")
+                    main_struct[key] = copy.deepcopy(substruct[key])
+                elif isinstance(main_struct.get(key, None), dict):
+                    self.logger.dbglow(f" - merge key='{key}', value='{substruct[key]}' -> new_struct='{dict(main_struct)}'")
+                    self.merge(substruct[key], main_struct[key], substruct_name + '.' + key, main_struct_name + '.' + key)
+                elif isinstance(main_struct.get(key, None), list) or isinstance(substruct.get(key, None), list):
+                    self.logger.dbglow(f" - merge list(s) key='{key}', value='{substruct[key]}' -> new_struct='{dict(main_struct)}'")
+                    main_struct[key] = self.merge_structlists(main_struct[key], substruct[key], key)
+                else:
+                    self.logger.dbglow(f" - key='{key}', value '{substruct[key]}' is ignored'")
+
+        return
+
+
+    def merge_structlists(self, l1, l2, key=''):
+        if not self.struct_merge_lists:
+            self.logger.warning(f"merge_structlists: Not merging lists, key '{key}' value '{l2}' is ignored'")
+            return l1       # First wins
+        else:
+            if not isinstance(l1, list):
+                l1 = [l1]
+            if not isinstance(l2, list):
+                l2 = [l2]
+            return l1 + l2
 
 
     def merge(self, source, destination, source_name='', dest_name=''):
@@ -122,177 +454,4 @@ class Structs():
                         destination[key] = str(value).replace('\n', '')
         return destination
 
-
-    def resolve_structs(self, struct, struct_name, substruct_names):
-        """
-        Resolve a struct reference within a struct
-
-        if the struct definition that is to be inserted contains a struct reference, it is resolved first
-
-        :param struct:          struct that contains a struct reference
-        :param substruct:       sub-struct definition that shall be inserted
-        :param struct_name:     name of the struct that contains a struct reference
-        :param substruct_name:  name of the sub-struct definition that shall be inserted
-        """
-
-        self.logger.info("resolve_structs: struct_name='{}', substruct_names='{}'".format(struct_name, substruct_names))
-
-        new_struct = collections.OrderedDict()
-        structentry_list = list(struct.keys())
-        for structentry in structentry_list:
-            # copy all existing attributes and sub-entrys of the struct
-            if new_struct.get(structentry, None) is None:
-                self.logger.debug("resolve_struct: - copy attribute structentry='{}', value='{}'".format(structentry, struct[structentry]))
-                new_struct[structentry] = copy.deepcopy(struct[structentry])
-            else:
-                self.logger.debug("resolve_struct: - key='{}', value is ignored'".format(structentry))
-            if structentry == 'struct':
-                for substruct_name in substruct_names:
-                    # for every substruct
-                    self.merge_substruct_to_struct(new_struct, substruct_name, struct_name)
-                    # self.logger.info("resolve_struct: ->substruct_name='{}'".format(substruct_name))
-                    # substruct = self._struct_definitions.get(substruct_name, None)
-                    # # merge in the sub-struct
-                    # for key in substruct:
-                    #     if new_struct.get(key, None) is None:
-                    #         self.logger.info \
-                    #             ("resolve_struct: - key='{}', value='{}' -> new_struct='{}'".format(key, substruct[key], new_struct))
-                    #         new_struct[key] = copy.deepcopy(substruct[key])
-                    #     elif isinstance(new_struct.get(key, None), dict):
-                    #         self.logger.info("resolve_struct: - merge key='{}', value='{}' -> new_struct='{}'".format(key, substruct
-                    #                                                                                                  [key], new_struct))
-                    #         self.merge(substruct[key], new_struct[key], key, struct_name +'. ' +key)
-                    #     elif isinstance(new_struct.get(key, None), list) or isinstance(substruct.get(key, None), list):
-                    #         new_struct[key] = self.merge_structlists(new_struct[key], substruct[key], key)
-                    #     else:
-                    #         self.logger.debug("resolve_struct: - key='{}', value '{}' is ignored'".format(key, substruct[key]))
-
-        return new_struct
-
-
-    def merge_substruct_to_struct(self, main_struct, substruct_name, main_struct_name='?'):
-
-        if substruct_name.startswith('test_'):
-            self.logger.info("merge_substruct_to_struct: ->substruct_name='{}'".format(substruct_name))
-        substruct = self._struct_definitions.get(substruct_name, None)
-        if substruct is None:
-            self.logger.error("struct '{}' not found in structdefinitions (used in '{}')".format(substruct_name, main_struct_name))
-        else:
-            # merge in the sub-struct
-            for key in substruct:
-                if main_struct.get(key, None) is None:
-                    if substruct_name.startswith('test_'):
-                        self.logger.info("merge_substruct_to_struct: - key='{}', value='{}' -> new_struct='{}'".format(key, substruct[key], main_struct))
-                    main_struct[key] = copy.deepcopy(substruct[key])
-                elif isinstance(main_struct.get(key, None), dict):
-                    if substruct_name.startswith('test_'):
-                        self.logger.info("merge_substruct_to_struct: - merge key='{}', value='{}' -> new_struct='{}'".format(key, substruct
-                    [key], main_struct))
-                    self.merge(substruct[key], main_struct[key], substruct_name + '.' + key, main_struct_name + '.' + key)
-                elif isinstance(main_struct.get(key, None), list) or isinstance(substruct.get(key, None), list):
-                    main_struct[key] = self.merge_structlists(main_struct[key], substruct[key], key)
-                else:
-                    self.logger.debug("merge_substruct_to_struct: - key='{}', value '{}' is ignored'".format(key, substruct[key]))
-        return
-
-
-    def fill_nested_structs(self):
-        """
-        Resolve struct references in structs and fill in the content of the struct
-
-        :return:
-        """
-        for struct_name in self._struct_definitions:
-            # for every defined struct
-            struct = self._struct_definitions[struct_name]
-            substruct_names = struct.get('struct', None)
-            if substruct_names is not None:
-                # stuct has a sub-struct
-                if isinstance(substruct_names, str):
-                    substruct_names = [substruct_names]
-                struct = self.resolve_structs(struct, struct_name, substruct_names)
-                self._struct_definitions[struct_name] = struct
-
-
-    def return_struct_definitions(self, all=True):
-        """
-        Return all loaded structure template definitions
-
-        :return:
-        :rtype: dict
-        """
-        result = {}
-        for struct in self._struct_definitions:
-            try:
-                plg_name, struct_name = struct.split('.')
-            except:
-                plg_name = ''
-                struct_name = struct
-            if struct_name.startswith('_'):
-                self.logger.info(f"return_struct_definitions: Internal struct {struct}")
-                if all:
-                    result[struct] = self._struct_definitions[struct]
-            else:
-                result[struct] = self._struct_definitions[struct]
-
-        return result
-
-
-    def load_struct_definitions_from_file(self, etc_dir, fn, key_prefix):
-        """
-        Loads struct definitions from a file
-
-        :param etc_dir: path to etc directory of SmartHomeNG
-        :param fn: filename to load struct definition(s) from
-        :param key_prefix: prefix to be used when adding struct(s) to loaded definitions
-        """
-        if key_prefix == '':
-            self.logger.info(f"Loading struct file '{fn}' without key-prefix")
-        else:
-            self.logger.info(f"Loading struct file '{fn}' with key-prefix '{key_prefix}'")
-
-        # Read in item structs from ../etc/struct.yaml
-        struct_definitions = shyaml.yaml_load(os.path.join(etc_dir, fn), ordered=True, ignore_notfound=True)
-
-        # if valid struct definition file etc/struct.yaml ist found
-        if struct_definitions is not None:
-            if isinstance(struct_definitions, collections.OrderedDict):
-                for key in struct_definitions:
-                    if fn == 'struct.yaml':
-                        struct_name = key
-                    else:
-                        struct_name = key_prefix + '.' + key
-                    self.add_struct_definition('', struct_name, struct_definitions[key])
-            else:
-                self.logger.error(f"load_itemdefinitions(): Invalid content in {fn}: struct_definitions = '{struct_definitions}'")
-
-        return
-
-
-    def load_struct_definitions(self, etc_dir):
-
-        # --------------------------------------------------------------------
-        # Read in all struct definitions before reading item definitions
-        #
-        # structs are merged into the item tree in lib.config
-        #
-        # - plugin-structs are read in from metadata file of plugins while loading plugins
-        # - other structs are read in from ../etc/struct.yaml by this procedure
-        # - further structs are read in from ../etc/struct_<prefix>.yaml by this procedure
-        #
-        self.load_struct_definitions_from_file(etc_dir, 'struct.yaml', '')
-
-        # look for further struct files
-        fl = os.listdir(etc_dir)
-        for fn in fl:
-            if fn.startswith('struct_') and fn.endswith('.yaml'):
-                key_prefix = 'my.' + fn[7:-5]
-                self.load_struct_definitions_from_file(etc_dir, fn, key_prefix)
-
-        # Resolve struct references in structs and fill in the content of the struct
-        self.fill_nested_structs()
-
-        # for Testing: Save structure of joined item structs
-        self.logger.info("load_itemdefinitions(): For testing the joined item structs are saved to {}".format(os.path.join(etc_dir, 'structs_joined.yaml')))
-        shyaml.yaml_save(os.path.join(etc_dir, 'structs_joined.yaml'), self._struct_definitions)
 
