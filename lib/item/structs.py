@@ -40,6 +40,7 @@ class Structs():
     struct_merge_lists = True
 
     _struct_definitions = collections.OrderedDict()    # definitions of item structures
+    _finalized_structs = []
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
@@ -100,17 +101,24 @@ class Structs():
         # Now that all structs have been loaded,
         # resolve struct references in structs and fill in the content of the struct
 
-        # TEST NEU
-        self.traverse_struct('my.test.test21')
-
         do_resolve = True
+        run = 0
         while do_resolve:
-            do_resolve = self.resolve_nested_structs()
+            do_resolve = False
+            run += 1
+            self.logger.dbghigh(f"load_struct_definitions: {run}. run of struct resolve")
 
-        self.traverse_struct('my.test.test21')
+            for struct_name in self._struct_definitions:
+                if struct_name not in self._finalized_structs:
+                    #self.logger.dbghigh(f"- processing struct '{struct_name}'")
 
-        # OLD
-#        self.fill_nested_structs()
+                    #if struct_name == 'my.test.test21':
+                    if self.traverse_struct(struct_name):
+                        do_resolve = True
+                    else:
+                        self._finalized_structs.append(struct_name)
+                        self.logger.dbghigh(f"load_struct_definitions: Finalized struct '{struct_name}'")
+
 
         # for Testing: Save structure of joined item structs
         self.logger.info(f"load_itemdefinitions(): For testing the joined item structs are saved to {os.path.join(etc_dir, 'structs_joined.yaml')}")
@@ -218,50 +226,50 @@ class Structs():
         return substruct_names_list
 
 
-    def resolve_nested_structs(self):
-
-        #self.logger.info(f"resolve_nested_structs: self._struct_definitions={dict(self._struct_definitions)}")
-
-        additional_run_needed = False
-        for struct_name in self._struct_definitions:
-            if self.struct_contains_substruct(struct_name):
-                struct_names = self.get_struct_names(struct_name)
-                if isinstance(struct_names, str):
-                    struct_names = [struct_names]
-
-                self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} contains struct(s): {struct_names}")
-                if self.substructs_contain_substruct(struct_name):
-                    substruct_names = self.get_nested_struct_names(struct_name)
-                    additional_run_needed = True
-                    self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} contains nested struct(s): {substruct_names}")
-                else:
-                    self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} contains struct(s): {struct_names}")
-                    ###
-                    struct = self._struct_definitions.get(struct_name, None)
-                    if struct is not None:
-                        struct = self.resolve_structs(struct, struct_name, struct_names)
-                    else:
-                        self.logger.error(f"resolve_nested_structs: struct not found for struct_name {struct_name}")
-
-                    # NEW: mark struct(s) as resolved
-                    #struct['_struct'] = struct['struct']
-                    #del (struct['struct'])
-                    #self.logger.dbghigh(f"resolve_nested_structs: Done, changed 'struct' to '_struct'")
-
-                    # NEW: mark struct(s) as resolved
-                    #struct['_struct'] = struct['struct']
-                    del (struct['struct'])
-                    self.logger.dbghigh(f"resolve_nested_structs: Done, removed 'struct' attribute from struct '{struct_name}'")
-
-                    self._struct_definitions[struct_name] = struct
-                    ###
-            else:
-                pass
-                #self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} is ready")
-
-        if additional_run_needed:
-            self.logger.dbghigh(f"resolve_nested_structs: Additional run needed")
-        return additional_run_needed
+    # def resolve_nested_structs(self):
+    #
+    #     #self.logger.info(f"resolve_nested_structs: self._struct_definitions={dict(self._struct_definitions)}")
+    #
+    #     additional_run_needed = False
+    #     for struct_name in self._struct_definitions:
+    #         if self.struct_contains_substruct(struct_name) and struct_name != 'my.test.test21':
+    #             struct_names = self.get_struct_names(struct_name)
+    #             if isinstance(struct_names, str):
+    #                 struct_names = [struct_names]
+    #
+    #             self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} contains struct(s): {struct_names}")
+    #             if self.substructs_contain_substruct(struct_name):
+    #                 substruct_names = self.get_nested_struct_names(struct_name)
+    #                 additional_run_needed = True
+    #                 self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} contains nested struct(s): {substruct_names}")
+    #             else:
+    #                 self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} contains struct(s): {struct_names}")
+    #                 ###
+    #                 struct = self._struct_definitions.get(struct_name, None)
+    #                 if struct is not None:
+    #                     struct = self.resolve_structs(struct, struct_name, struct_names)
+    #                 else:
+    #                     self.logger.error(f"resolve_nested_structs: struct not found for struct_name {struct_name}")
+    #
+    #                 # NEW: mark struct(s) as resolved
+    #                 #struct['_struct'] = struct['struct']
+    #                 #del (struct['struct'])
+    #                 #self.logger.dbghigh(f"resolve_nested_structs: Done, changed 'struct' to '_struct'")
+    #
+    #                 # NEW: mark struct(s) as resolved
+    #                 #struct['_struct'] = struct['struct']
+    #                 del (struct['struct'])
+    #                 self.logger.dbghigh(f"resolve_nested_structs: Done, removed 'struct' attribute from struct '{struct_name}'")
+    #
+    #                 self._struct_definitions[struct_name] = struct
+    #                 ###
+    #         else:
+    #             pass
+    #             #self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} is ready")
+    #
+    #     if additional_run_needed:
+    #         self.logger.dbghigh(f"resolve_nested_structs: Additional run needed")
+    #     return additional_run_needed
 
 
     def traverse_struct(self, struct_name):
@@ -271,24 +279,48 @@ class Structs():
             self.logger.warning(f"traverse_struct: struct {struct_name} not found")
             return
 
-        self.logger.dbghigh(f"traverse_struct:")
         self.logger.dbghigh(f"traverse_struct: struct {struct_name}")
-        self.process_struct_node(struct)
-        self.logger.dbghigh(f"traverse_struct:")
-        return
+        new_struct = self.process_struct_node(struct, struct_name)
+        if new_struct is not None:
+            self.logger.dbghigh(f"traverse_struct: struct '{struct_name}' was updated")
+            self.logger.dbghigh(f"traverse_struct: new_struct {new_struct}")
+            self._struct_definitions[struct_name] = new_struct
+            return True
+
+        return False
 
 
-    def process_struct_node(self, node, level=0):
+
+    def process_struct_node(self, node, node_name='?', level=0):
 
         spaces = " " * level
-        for element in node:
+        structs_expanded = False
+        for element in dict(node):
             if isinstance(node[element], dict):
-                self.logger.dbghigh(f"process_struct_node: {spaces}node {element}:")
-                self.process_struct_node(node[element], level + 4)
+                #self.logger.dbghigh(f"process_struct_node: {spaces}node {element}:")
+                newnode = self.process_struct_node(node[element], node_name=element, level=level+4)
+                if newnode is not None:
+                    node[element] = newnode
+                    structs_expanded = True
             elif element == 'struct':
-                self.logger.dbghigh(f"process_struct_node: {spaces}leaf {element} - 'struct' attribute found: {node[element]}")
+                self.logger.dbghigh(f"process_struct_node: {spaces}{node_name}: 'struct' attribute found: {node[element]}")
+                #self.logger.dbghigh(f"process_struct_node: {spaces}node   = {dict(node)}")
+                substruct_names = node[element]
+                if isinstance(substruct_names, str):
+                    substruct_names = [substruct_names]
+                #struct = self.resolve_structs(struct, struct_name, struct_names)
+                node = self.resolve_structs(node, node_name, substruct_names)
+                structs_expanded = True
+                #self.logger.dbghigh(f"process_struct_node: {spaces}node   = {dict(node)}")
+                del (node['struct'])
+                self.logger.dbghigh(f"process_struct_node: Done, removed 'struct' attribute from struct '{node_name}'")
             else:
-                self.logger.dbghigh(f"process_struct_node: {spaces}leaf {element}={node[element]}")
+                pass
+                #self.logger.dbghigh(f"process_struct_node: {spaces}leaf {element}={node[element]}")
+
+        if structs_expanded:
+            return node
+
 
     """
     ==========================================================================
@@ -298,30 +330,6 @@ class Structs():
     OLD VERSION
     """
 
-    # def fill_nested_structs(self):
-    #     """
-    #     Resolve struct references in structs and fill in the content of the struct
-    #
-    #     :return:
-    #     """
-    #     for struct_name in self._struct_definitions:
-    #         # for every defined struct
-    #         struct = self._struct_definitions[struct_name]
-    #         substruct_names = struct.get('struct', None)
-    #         if substruct_names is not None:
-    #             # stuct has a sub-struct
-    #             if isinstance(substruct_names, str):
-    #                 substruct_names = [substruct_names]
-    #             struct = self.resolve_structs(struct, struct_name, substruct_names)
-    #
-    #             # NEW: mark struct(s) as resolved
-    #             struct['_struct'] = struct['struct']
-    #             del(struct['struct'])
-    #             self.logger.debug(f" - -> new_struct='{dict(struct)}'")
-    #
-    #             self._struct_definitions[struct_name] = struct
-    #
-    #
     def resolve_structs(self, struct, struct_name, substruct_names):
         """
         Resolve a struct reference within a struct
@@ -333,7 +341,7 @@ class Structs():
         :param substruct_name:  name of the sub-struct definition that shall be inserted
         """
 
-        self.logger.info("resolve_structs: struct_name='{}', substruct_names='{}'".format(struct_name, substruct_names))
+        self.logger.info(f"resolve_structs: struct_name='{struct_name}', substruct_names='{substruct_names}'")
 
         new_struct = collections.OrderedDict()
         structentry_list = list(struct.keys())
@@ -348,22 +356,6 @@ class Structs():
                 for substruct_name in substruct_names:
                     # for every substruct
                     self.merge_substruct_to_struct(new_struct, substruct_name, struct_name)
-                    # self.logger.info("resolve_structs: ->substruct_name='{}'".format(substruct_name))
-                    # substruct = self._struct_definitions.get(substruct_name, None)
-                    # # merge in the sub-struct
-                    # for key in substruct:
-                    #     if new_struct.get(key, None) is None:
-                    #         self.logger.info \
-                    #             ("resolve_struct: - key='{}', value='{}' -> new_struct='{}'".format(key, substruct[key], new_struct))
-                    #         new_struct[key] = copy.deepcopy(substruct[key])
-                    #     elif isinstance(new_struct.get(key, None), dict):
-                    #         self.logger.info("resolve_struct: - merge key='{}', value='{}' -> new_struct='{}'".format(key, substruct
-                    #                                                                                                  [key], new_struct))
-                    #         self.merge(substruct[key], new_struct[key], key, struct_name +'. ' +key)
-                    #     elif isinstance(new_struct.get(key, None), list) or isinstance(substruct.get(key, None), list):
-                    #         new_struct[key] = self.merge_structlists(new_struct[key], substruct[key], key)
-                    #     else:
-                    #         self.logger.dbghigh("resolve_struct: - key='{}', value '{}' is ignored'".format(key, substruct[key]))
 
         return new_struct
 
