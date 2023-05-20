@@ -68,3 +68,9 @@ SmartDevicePlugin
 =================
 
 ...
+.. toctree::
+   :maxdepth: 5
+   :titlesonly:
+
+   smartdeviceplugin_class
+

@@ -1,5 +1,6 @@
 .. index:: Class; MqttPlugin
 .. index:: Plugin; Class MqttPlugin
+.. index:: Entwicklung; Class MqttPlugin
 .. index:: MQTT; Class MqttPlugin
 
 .. role:: redsup

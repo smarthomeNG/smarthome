@@ -1,6 +1,6 @@
-.. index:: Class; SmartPlugin
-.. index:: Plugin; Class SmartPlugin
-.. index:: Entwicklung; Class SmartPlugin
+.. index:: Class; SmartDevicePlugin
+.. index:: Plugin; Class SmartDevicePlugin
+.. index:: Entwicklung; Class SmartDevicePlugin
 
 .. role:: redsup
 .. role:: bluesup
@@ -9,7 +9,7 @@ Class SmartPlugin
 =================
 
 
-Die Klasse ``SmartPlugin`` implementiert die Basisklasse aller SmartPlugins. Die vorhandenen Methoden sind im Folgenden beschrieben.
+Die Klasse ``SmartDevicePlugin`` implementiert die Basisklasse aller SmartPlugins. Die vorhandenen Methoden sind im Folgenden beschrieben.
 
 Zusätzlich werden die Methoden der Klasse ``lib.utils.Utils`` vererbt.
 
