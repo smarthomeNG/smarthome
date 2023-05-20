@@ -101,8 +101,9 @@ von ``SmartPlugin`` sind hier dokumentiert:
    :maxdepth: 5
    :titlesonly:
 
-   smartplugin
    /referenz/plugins/plugin_typen/smartplugin_class
+
+|
 
 Plugins welche MQTT nutzen, sollten stattdessen von ``class MqttPlugin`` abgeleitet werden. ``MqttPlugin`` ist
 eine Unterklasse von ``SmartPlugin``, die um Methoden zur MQTT-Nutzung erweitert ist. Die Methoden von
@@ -112,8 +113,22 @@ eine Unterklasse von ``SmartPlugin``, die um Methoden zur MQTT-Nutzung erweitert
    :maxdepth: 5
    :titlesonly:
 
-   mqttplugin
+   /referenz/plugins/plugin_typen/mqttplugin
 
+|
+
+Eine weitere, Möglichkeit Plugins zu erstellen, ist auf Basis der Klasse SmartDevicePlugin. Wie auch die Klasse MqttPlugin
+ist auch die Klasse SmartDevicePlugin von der Klasse SmartPlugin abgeleitet.
+``SmartDevicePlugin`` ist eine Unterklasse von ``SmartPlugin``, die um Methoden zur zur Device Ansteuerung erweitert ist.
+Die Methoden von ``SmartDevicePlugin`` sind hier dokumentiert:
+
+.. toctree::
+   :maxdepth: 5
+   :titlesonly:
+
+   /referenz/plugins/plugin_typen/smartdeviceplugin
+
+|
 
 .. toctree::
    :maxdepth: 5
@@ -127,16 +142,5 @@ eine Unterklasse von ``SmartPlugin``, die um Methoden zur MQTT-Nutzung erweitert
    sampleplugin
    samplemqttplugin
    libraries_plugins
-
-
-
-Weitergehende und sehr spezifische Informationen über einzelne Plugins sind hier verfügbar:
-
-.. toctree::
-   :maxdepth: 1
-   :titlesonly:
-
-   /plugins/visu_smartvisu/developer_doc
-   /plugins/visu_websocket/developer_doc
 
 
