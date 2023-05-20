@@ -171,14 +171,7 @@ class Items():
         #
         # Read in item structs from ../etc/struct.yaml
         self._sh.shng_status['details'] = 'Structs'
-        #self.structs.load_struct_definitions(etc_dir)
-
-        import time
-        start = time.perf_counter()
         self.structs.load_struct_definitions(etc_dir)
-        end = time.perf_counter()
-        duration = end - start
-        self.logger.notice(f"timeit structs.load_struct_definitions(): Duration={duration}")
 
 
         # --------------------------------------------------------------------

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # vim: set encoding=utf-8 tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 #########################################################################
-# Copyright 2018-2020   Martin Sinn                         m.sinn@gmx.de
+# Copyright 2018-2023   Martin Sinn                         m.sinn@gmx.de
 #########################################################################
 #  This file is part of SmartHomeNG.
 #
@@ -39,11 +39,13 @@ class Structs():
 
     struct_merge_lists = True
 
-    _struct_definitions = collections.OrderedDict()    # definitions of item structures
-    _finalized_structs = []
+    _struct_definitions = collections.OrderedDict()     # definitions of item structures
+    _finalized_structs = []                             # struct names are appended to this list, if they do not
+                                                        # contain any 'struct' attributes any more
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
+        self.save_joined_structs = False
 
 
     def return_struct_definitions(self, all=True):
@@ -89,6 +91,9 @@ class Structs():
         :param etc_dir: path to etc directory of SmartHomeNG
 
         """
+        import time
+        totalstart = time.perf_counter()
+        start = time.perf_counter()
         self.load_struct_definitions_from_file(etc_dir, 'struct.yaml', '')
 
         # look for further struct files
@@ -97,6 +102,10 @@ class Structs():
             if fn.startswith('struct_') and fn.endswith('.yaml'):
                 key_prefix = 'my.' + fn[7:-5]
                 self.load_struct_definitions_from_file(etc_dir, fn, key_prefix)
+
+        end = time.perf_counter()
+        duration = end - start
+        self.logger.notice(f"load_struct_definitions_from_file: Duration={duration}")
 
         # Now that all structs have been loaded,
         # resolve struct references in structs and fill in the content of the struct
@@ -108,21 +117,36 @@ class Structs():
             run += 1
             self.logger.dbghigh(f"load_struct_definitions: {run}. run of struct resolve")
 
+            import time
+            start = time.perf_counter()
             for struct_name in self._struct_definitions:
                 if struct_name not in self._finalized_structs:
                     #self.logger.dbghigh(f"- processing struct '{struct_name}'")
 
-                    #if struct_name == 'my.test.test21':
                     if self.traverse_struct(struct_name):
                         do_resolve = True
                     else:
                         self._finalized_structs.append(struct_name)
                         self.logger.dbghigh(f"load_struct_definitions: Finalized struct '{struct_name}'")
 
+            end = time.perf_counter()
+            duration = end - start
+            self.logger.notice(f"load_struct_definitions: traverse all structs: Duration={duration}")
+
 
         # for Testing: Save structure of joined item structs
-        self.logger.info(f"load_itemdefinitions(): For testing the joined item structs are saved to {os.path.join(etc_dir, 'structs_joined.yaml')}")
-        shyaml.yaml_save(os.path.join(etc_dir, 'structs_joined.yaml'), self._struct_definitions)
+        import time
+        if self.save_joined_structs:
+            start = time.perf_counter()
+            self.logger.info(f"load_itemdefinitions(): For testing the joined item structs are saved to {os.path.join(etc_dir, 'structs_joined.yaml')}")
+            shyaml.yaml_save(os.path.join(etc_dir, 'structs_joined.yaml'), self._struct_definitions)
+            end = time.perf_counter()
+            duration = end - start
+            self.logger.notice(f"load_struct_definitions: yaml_save: Duration={duration}")
+
+        totalend = time.perf_counter()
+        duration = totalend - totalstart
+        self.logger.notice(f"time load_struct_definitions(): Total duration={duration}")
 
         return
 
@@ -188,92 +212,14 @@ class Structs():
 
     """
 
-    def struct_contains_substruct(self, struct_name):
-
-        struct = self._struct_definitions[struct_name]
-        substruct_names = struct.get('struct', None)
-        return substruct_names is not None
-
-    def substructs_contain_substruct(self, struct_name):
-
-        struct = self._struct_definitions[struct_name]
-        substruct_names = struct.get('struct', None)
-        nested_struct_found = False
-        if substruct_names is not None:
-            if isinstance(substruct_names, str):
-                substruct_names = [substruct_names]
-            for substruct_name in substruct_names:
-                if self.struct_contains_substruct(substruct_name):
-                    nested_struct_found = True
-        return nested_struct_found
-
-    def get_struct_names(self, struct_name):
-
-        struct = self._struct_definitions[struct_name]
-        struct_names = struct.get('struct', None)
-        return struct_names
-
-    def get_nested_struct_names(self, struct_name):
-
-        struct = self._struct_definitions[struct_name]
-        struct_names = struct.get('struct', [])
-        if isinstance(struct_names, str):
-            struct_names = [struct_names]
-        substruct_names_list = []
-        for struct_name in struct_names:
-            substruct_names = self.get_struct_names(struct_name)
-            substruct_names_list.append(substruct_names)
-        return substruct_names_list
-
-
-    # def resolve_nested_structs(self):
-    #
-    #     #self.logger.info(f"resolve_nested_structs: self._struct_definitions={dict(self._struct_definitions)}")
-    #
-    #     additional_run_needed = False
-    #     for struct_name in self._struct_definitions:
-    #         if self.struct_contains_substruct(struct_name) and struct_name != 'my.test.test21':
-    #             struct_names = self.get_struct_names(struct_name)
-    #             if isinstance(struct_names, str):
-    #                 struct_names = [struct_names]
-    #
-    #             self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} contains struct(s): {struct_names}")
-    #             if self.substructs_contain_substruct(struct_name):
-    #                 substruct_names = self.get_nested_struct_names(struct_name)
-    #                 additional_run_needed = True
-    #                 self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} contains nested struct(s): {substruct_names}")
-    #             else:
-    #                 self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} contains struct(s): {struct_names}")
-    #                 ###
-    #                 struct = self._struct_definitions.get(struct_name, None)
-    #                 if struct is not None:
-    #                     struct = self.resolve_structs(struct, struct_name, struct_names)
-    #                 else:
-    #                     self.logger.error(f"resolve_nested_structs: struct not found for struct_name {struct_name}")
-    #
-    #                 # NEW: mark struct(s) as resolved
-    #                 #struct['_struct'] = struct['struct']
-    #                 #del (struct['struct'])
-    #                 #self.logger.dbghigh(f"resolve_nested_structs: Done, changed 'struct' to '_struct'")
-    #
-    #                 # NEW: mark struct(s) as resolved
-    #                 #struct['_struct'] = struct['struct']
-    #                 del (struct['struct'])
-    #                 self.logger.dbghigh(f"resolve_nested_structs: Done, removed 'struct' attribute from struct '{struct_name}'")
-    #
-    #                 self._struct_definitions[struct_name] = struct
-    #                 ###
-    #         else:
-    #             pass
-    #             #self.logger.dbghigh(f"resolve_nested_structs: struct {struct_name} is ready")
-    #
-    #     if additional_run_needed:
-    #         self.logger.dbghigh(f"resolve_nested_structs: Additional run needed")
-    #     return additional_run_needed
-
-
     def traverse_struct(self, struct_name):
+        """
+        Traverses through a struct to find struct-attributes and replace them with the references struct(s)
 
+        :param struct_name: Name of the struct to traverse
+
+        :return: True, if the struct has been modified (references have been replaces)
+        """
         struct = self._struct_definitions.get(struct_name, None)
         if struct is None:
             self.logger.warning(f"traverse_struct: struct {struct_name} not found")
@@ -288,7 +234,6 @@ class Structs():
             return True
 
         return False
-
 
 
     def process_struct_node(self, node, node_name='?', level=0):
@@ -308,7 +253,6 @@ class Structs():
                 substruct_names = node[element]
                 if isinstance(substruct_names, str):
                     substruct_names = [substruct_names]
-                #struct = self.resolve_structs(struct, struct_name, struct_names)
                 node = self.resolve_structs(node, node_name, substruct_names)
                 structs_expanded = True
                 #self.logger.dbghigh(f"process_struct_node: {spaces}node   = {dict(node)}")
@@ -321,14 +265,6 @@ class Structs():
         if structs_expanded:
             return node
 
-
-    """
-    ==========================================================================
-    The following methods are used to resolve nested struct definitions
-    after loading all struct definitions from file(s)
-
-    OLD VERSION
-    """
 
     def resolve_structs(self, struct, struct_name, substruct_names):
         """
@@ -392,15 +328,15 @@ class Structs():
 
 
     def merge_structlists(self, l1, l2, key=''):
-        if not self.struct_merge_lists:
-            self.logger.warning(f"merge_structlists: Not merging lists, key '{key}' value '{l2}' is ignored'")
-            return l1       # First wins
-        else:
-            if not isinstance(l1, list):
-                l1 = [l1]
-            if not isinstance(l2, list):
-                l2 = [l2]
-            return l1 + l2
+        #if not self.struct_merge_lists:
+        #    self.logger.warning(f"merge_structlists: Not merging lists, key '{key}' value '{l2}' is ignored'")
+        #    return l1       # First wins
+        #else:
+        if not isinstance(l1, list):
+            l1 = [l1]
+        if not isinstance(l2, list):
+            l2 = [l2]
+        return l1 + l2
 
 
     def merge(self, source, destination, source_name='', dest_name=''):
