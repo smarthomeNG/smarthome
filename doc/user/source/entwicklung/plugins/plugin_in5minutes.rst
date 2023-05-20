@@ -1,6 +1,6 @@
-==================================
-In 5 Minuten zum eigenen Plugin...
-==================================
+=====================================
+In wenigen Minuten zum eigenen Plugin
+=====================================
 
 
 Plugins sind Erweiterungen von SmartHomeNG mit zusätzlichen Funktionen. Sie sind in Python geschrieben.
@@ -25,7 +25,6 @@ Derzeit besteht ein Plugin mindestens aus drei Dateien, die alle im Plugin Ordne
   - ``user_doc.rst``
 
 Die Datei ``__init__.py`` enthält den Python-Code des Plugins.
-Ab Version v1.8.0 von SmartHomeNG wird mindestens Python 3.6 vorausgesetzt.
 
 Die Datei ``plugin.yaml`` enthält die Metadaten des Plugins.
 Diese geben eine formale Beschreibung des Plugins und werden verwendet, um die Dokumentation
@@ -35,6 +34,22 @@ Die Datei ``user_doc.rst`` beinhaltet zusätzliche Dokumentation zum Plugin,
 ausführlichere Beschreibungen, umfangreichere Beispiele oder Anwendungsmöglichkeiten
 über die ``plugin.yaml`` hinaus. Auch diese Datei wird verwendet,
 um die Dokumentation von SmartHomeNG zu erstellen.
+
+Optional werden im Unterverzeichnis ``webif`` die Dateien dabgelegt, welche das Webinterface implementieren. Das
+Verzeichnis hat folgenden Inhalt:
+
+  - ``__init__.py``
+  - Verzeichnis ``static``
+  - Verzeichnis ``templates``
+
+Die Datei ``__init__.py`` enthält den Python-Code des Webinterfaces des Plugins.
+
+Im Verzeichnis ``static`` werden Dateien abgelegt, die durch das Webinterface an den Browser ausgeliefert werden.
+Es gibt mindestens das Unterverzeichnis ``img``, in dem das Logo des Plugins under dem Namen ``plugin_logo.png``
+gespeichert wird. Zulässig als Plugin Logos sind auch ``plugin_logo.jpg`` und ``plugin_logo.svg``
+
+Weiterhin kann es ein Unterverzeichnis ``assets`` geben, in dem weitere Dateien (z.B. zur Dokumentation user_doc)
+abgelegt werden.
 
 .. hint::
 

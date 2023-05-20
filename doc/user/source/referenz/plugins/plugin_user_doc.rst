@@ -37,5 +37,5 @@ Case sensitive!)
 
 Aus dem Sample Plugin:
 
-.. include:: /dev/sample_plugin/user_doc.rst
-
+.. literalinclude:: /dev/sample_plugin/user_doc.rst
+    :caption: user_doc.rst

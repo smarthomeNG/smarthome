@@ -10,12 +10,12 @@
     ===============================
 
 
-.. image:: webif/static/img/plugin_logo.<png, jpg oder svg>
-   :alt: plugin logo
-   :width: 300px
-   :height: 300px
-   :scale: 50 %
-   :align: left
+    .. image:: webif/static/img/plugin_logo.<png, jpg oder svg>
+       :alt: plugin logo
+       :width: 300px
+       :height: 300px
+       :scale: 50 %
+       :align: left
 
     <Hier erfolgt die allgemeine Beschreibung des Zwecks des Plugins>
 
