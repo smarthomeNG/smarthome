@@ -11,7 +11,7 @@ sowie einige neue Plugins.
 
 |
 
-.. only: develop
+    .. only:: comment
 
     .. note::
 

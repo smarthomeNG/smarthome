@@ -3,8 +3,8 @@
 Neuerungen im Release v1.10
 ===========================
 
-Hier ist eine Kurzübersicht über größere Neuerungen im aktuellen Release.
-Eine vollständige Übersicht der Änderungen ist den den :doc:`Release Notes </release/release>` zu finden.
+Hier ist eine Kurzübersicht über größere Neuerungen im aktuellen Release. Eine vollständige Übersicht der Änderungen in
+diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/release>` zu finden.
 
   - **Structs**: Es ist jetzt eine beliebige Verschachtelung von structs möglich. stucts können auch auf Unterebenen
     einer stuct eingebunden werden.
@@ -17,7 +17,7 @@ bzw. :doc:`Referenz </referenz/referenz>` zu finden.
 
 |
 
-Die vollständigen Änderungen können in den :doc:`Release Notes </release/1_10>` nachgelesen werden.
+Die vollständigen Änderungen dieses Releases können in den :doc:`Release Notes v1.10  </release/1_10>` nachgelesen werden.
 
 |
 

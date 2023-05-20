@@ -27,5 +27,6 @@ Die möglichen Einträge für die Definition der Metadaten der Plugins sind hier
    :glob:
    :titlesonly:
 
+   plugin_typen/plugin_typen
    plugin_metadata
 

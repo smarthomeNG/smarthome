@@ -102,6 +102,7 @@ von ``SmartPlugin`` sind hier dokumentiert:
    :titlesonly:
 
    smartplugin
+   /referenz/plugins/plugin_typen/smartplugin_class
 
 Plugins welche MQTT nutzen, sollten stattdessen von ``class MqttPlugin`` abgeleitet werden. ``MqttPlugin`` ist
 eine Unterklasse von ``SmartPlugin``, die um Methoden zur MQTT-Nutzung erweitert ist. Die Methoden von
