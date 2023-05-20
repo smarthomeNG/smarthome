@@ -18,7 +18,7 @@ dokumentiert sind. Die Dokumentation wird aus dem Metadaten des jeweiligen Plugi
 eine Datei im restructured-Text Format (user_doc.rst) ergänzt werden.
 
 
-Classic-Plugin
+Classic Plugin
 ==============
 
 Das klassische Plugin aus smarthome.py wird zwar noch unterstützt, neue Plugins sollten jedoch aufgrund der geringeren
@@ -30,8 +30,8 @@ Funktionalität des des Classic Plugins nicht auf seiner Basis erstellt werden. 
 .. index:: Referenz; SmartPlugin
 .. Index:: SmartPlugin Referenz
 
-Smart-Plugin
-============
+SmartPlugin
+===========
 
 ...
 
@@ -50,8 +50,8 @@ von ``SmartPlugin`` sind hier dokumentiert:
 .. index:: Referenz; MqttPlugin
 .. Index:: MqttPlugin Referenz
 
-Mqtt-Plugin
-===========
+MqttPlugin
+==========
 
 ...
 
@@ -73,14 +73,18 @@ eine Unterklasse von ``SmartPlugin``, die um Methoden zur MQTT-Nutzung erweitert
 .. Index:: SmartDevicePlugin Referenz
 .. Index:: SDP Referenz
 
-Smart-DevicePlugin
-==================
+SmartDevicePlugin
+=================
 
-...
+Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und jedes neue Gerät aufs Neue das
+ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen (commands) und Kommunikation mit
+Netzwerk- oder seriellen Treibern oder Libraries.
+
 
 .. toctree::
    :maxdepth: 5
    :titlesonly:
 
+   smartdeviceplugin
    smartdeviceplugin_class
 
