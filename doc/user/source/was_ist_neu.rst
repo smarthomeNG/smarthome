@@ -10,7 +10,9 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     einer stuct eingebunden werden.
   - **Items**: Es gibt neue Attribute, die es ermöglichen ein Item als Hysterese-Glied mit optionalem Zeitlied
     zu konfigurieren.
-  - **SmartDevicePlugin**: <von Morg zu füllen>
+  - **SmartDevicePlugin**: Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und
+    jedes neue Gerät aufs Neue das ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen
+    (commands) und Kommunikation mit Netzwerk- oder seriellen Treibern oder Libraries.
 
 Details zu den genannten Punkten sind in den Abschnitten :doc:`Konfiguration </konfiguration/konfiguration>`
 bzw. :doc:`Referenz </referenz/referenz>` zu finden.

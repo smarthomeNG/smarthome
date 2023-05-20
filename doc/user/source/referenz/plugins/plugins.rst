@@ -29,4 +29,5 @@ Die möglichen Einträge für die Definition der Metadaten der Plugins sind hier
 
    plugin_typen/plugin_typen
    plugin_metadata
+   plugin_user_doc
 

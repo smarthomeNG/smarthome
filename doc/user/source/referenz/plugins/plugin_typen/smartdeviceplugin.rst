@@ -11,7 +11,7 @@ Hierzu bietet die sdp-Klasse ein fertiges Plugin, aus dem mit minimalem Aufwand 
 Dazu besteht sdp aus mehreren modularen Ebenen, die hier zusammen mit den jeweiligen ausgetauschten Daten dargestellt
 werden:
 
-- shng
+- SmartHomeNG
 - + Items
 - Plugin
 - + Kommandos
@@ -29,12 +29,15 @@ werden:
 - + gerätespezifisch transformierte Werte
 - Gerät
 
-Das Plugin besteht aus dem (vererbten) Plugin-Code in `__init__.py`, der commands-Definition in `commands.py`, ggf. pluginspezifischer Protokolldefinition in `protocol.py`, ggf. pluginspezifischen Datentypen in `datatypes.py` und den Standarddateien `plugin.yaml` und ggf. `user_doc.rst`.
+Das Plugin besteht aus dem (vererbten) Plugin-Code in `__init__.py`, der commands-Definition in `commands.py`, ggf.
+pluginspezifischer Protokolldefinition in `protocol.py`, ggf. pluginspezifischen Datentypen in `datatypes.py` und den
+Standarddateien `plugin.yaml` und ggf. `user_doc.rst`.
 
 Plugin
 ------
 
-Der folgende Code stellt ein minimales, uneingeschränkt lauffähiges Plugin dar (hier aus dem Beispielplugin sdp_viessmann entnommen):
+Der folgende Code stellt ein minimales, uneingeschränkt lauffähiges Plugin dar (hier aus dem Beispielplugin
+sdp_viessmann entnommen):
 
 .. code::
 
@@ -44,12 +47,16 @@ Der folgende Code stellt ein minimales, uneingeschränkt lauffähiges Plugin dar
     """ Device class for Viessmann heating systems."""
     PLUGIN_VERSION = '1.0.0'
 
-Nun wäre es naiv zu glauben, dass nur eine Codezeile ein beliebiges Plugin darstellen kann. Für ein nicht nur lauffähiges, sondern auf funktionales Plugin bedarf es noch der wesentlichen Konfiguration, die im Zusammenhang mit sdp benötigt wird - den commands in der `commands.py`.
+Nun wäre es naiv zu glauben, dass nur eine Codezeile ein beliebiges Plugin darstellen kann. Für ein nicht nur
+lauffähiges, sondern auf funktionales Plugin bedarf es noch der wesentlichen Konfiguration, die im Zusammenhang mit sdp benötigt wird - den commands in der `commands.py`.
 
 Kommandos
 ---------
 
-Hier wird nach einer vorgegebenen Struktur definiert, welche Befehle wie für das Gerät "übersetzt" werden müssen. Dabei gibt es eine Reihe von - zunehmend komplexen - Optionen, die in der Referenz im Detail behandelt werden. Im Wesentlichen wird in der `commands.py` das dict `commands` definiert, dessen Inhalte die Intelligenz des Plugins definieren. Der folgende Code ist ein Ausschnitt aus der commands-Definition des sdp_viessmann-Plugins:
+Hier wird nach einer vorgegebenen Struktur definiert, welche Befehle wie für das Gerät "übersetzt" werden müssen.
+Dabei gibt es eine Reihe von - zunehmend komplexen - Optionen, die in der Referenz im Detail behandelt werden. Im
+Wesentlichen wird in der `commands.py` das dict `commands` definiert, dessen Inhalte die Intelligenz des Plugins
+definieren. Der folgende Code ist ein Ausschnitt aus der commands-Definition des sdp_viessmann-Plugins:
 
 .. code::
 
@@ -111,7 +118,7 @@ Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:
     	'write': False, 		# Kommando kann Wert - nicht - auf Gerät schreiben
     	'opcode': '0101', 		# "Code", der an das Gerät gesendet wird
     	'reply_pattern': '*', 	# Identifier, um Antwort auf dieses Kommando zu erkennen
-		'item_type': 'num',		# Datentyp, der an shng gesendet wird
+		'item_type': 'num',		# Datentyp, der an SmartHomeNG gesendet wird
 		'dev_datatype': 'V', 	# Datentyp, der zur Kommunikation mit dem Gerät verwendet wird
 		'params': {'value': 'VAL', 'mult': 10, 'signed': True, 'len': 2}}
                                 # Werttransformation: signed int, 2 Bytes ("word")
@@ -119,37 +126,63 @@ Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:
 	}
 
 
-Die einzelnen Attribute der command-Definitionen sind in der Datei `./dev/sample_smartdevice_plugin/commands.py` im Detail erklärt.
+Die einzelnen Attribute der command-Definitionen sind in der Datei `./dev/sample_smartdevice_plugin/commands.py` im
+Detail erklärt.
 
 Protokoll
 ---------
 
-Standardmäßig wird kein Protokoll benötigt und somit nicht konfiguriert. Wenn Protokolle konfiguriert werden, so sind sie sowohl für das Plugin als auch für die konfigurierte Verbindung transparent.
+Standardmäßig wird kein Protokoll benötigt und somit nicht konfiguriert. Wenn Protokolle konfiguriert werden, so sind
+sie sowohl für das Plugin als auch für die konfigurierte Verbindung transparent.
 
-Zum Lieferumfang gehören die Protokollklassen `SDPProtocol` (keine gesonderte Funktion, Basisklasse, kann zum Testen verwendet werden) sowie `SDPProtocolJsonrpc` (stellt transparente Format- und Datenformatierung nach Json-RPC-Standard zur Verfügung).
+Zum Lieferumfang gehören die Protokollklassen `SDPProtocol` (keine gesonderte Funktion, Basisklasse, kann zum Testen
+verwendet werden) sowie `SDPProtocolJsonrpc` (stellt transparente Format- und Datenformatierung nach Json-RPC-Standard
+zur Verfügung).
 
-Eigene Protokolle können definiert werden - im Beispiel sdp_viessmann z.B. die binären Protokolltypen P300 und KW2, die einen Verbindungsaufbau mit Handshake benötigen.
+Eigene Protokolle können definiert werden - im Beispiel sdp_viessmann z.B. die binären Protokolltypen P300 und KW2,
+die einen Verbindungsaufbau mit Handshake benötigen.
 
 Verbindung
 ----------
 
-Die `SDPConnection`- sowie die davon abgeleiteten Klassen stellen die Verbindungsschicht zum Gerät dar. Durch die standardisierte Schnittstelle ist das Plugin unabhängig von der konkret gewählten Verbindung. So ist es z.B. kein Problem, wahlweise netzwerkbasierte oder serielle Verbindungen im selben Plugin zu nutzen, indem nur die Konfiguration in der plugin.yaml entsprechend angepasst wird.
+Die `SDPConnection`- sowie die davon abgeleiteten Klassen stellen die Verbindungsschicht zum Gerät dar. Durch die
+standardisierte Schnittstelle ist das Plugin unabhängig von der konkret gewählten Verbindung. So ist es z.B. kein
+Problem, wahlweise netzwerkbasierte oder serielle Verbindungen im selben Plugin zu nutzen, indem nur die Konfiguration
+in der plugin.yaml entsprechend angepasst wird.
 
-Zum Lieferumfang gehörten die Verbindungsklassen `SDPConnection` (keine Funktion, Basisklasse, kann zum Testen verwendet werde), `SDPConnectionNetTcpRequest` (Netzwerkverbindung mit HTTP-Requests und -Antworten über TCP), `SDPConnectionNetTcpClient` (direkte TCP-Verbindung mit persistenter Sendeverbindung und Listener zum asnychronen Datenempfang), `SDPConnectionNetUdpRequest` (wie SDPConnectionNetTcpRequest, aber mit zusätzlichem UDP-Listener, z.B. für Multicast), `SDPConnectionSerial` (Anfrage-Antwort-Verbindung über serielle Schnittstelle) sowie `SDPConnectionSerialAsync` (serielle Verbindung mit Listener, der eingehende Daten unabhängig von gesendeten Kommandos empfangen kann).
+Zum Lieferumfang gehörten die Verbindungsklassen `SDPConnection` (keine Funktion, Basisklasse, kann zum Testen
+verwendet werde), `SDPConnectionNetTcpRequest` (Netzwerkverbindung mit HTTP-Requests und -Antworten über TCP),
+`SDPConnectionNetTcpClient` (direkte TCP-Verbindung mit persistenter Sendeverbindung und Listener zum
+asnychronen Datenempfang), `SDPConnectionNetUdpRequest` (wie SDPConnectionNetTcpRequest, aber mit zusätzlichem
+UDP-Listener, z.B. für Multicast), `SDPConnectionSerial` (Anfrage-Antwort-Verbindung über serielle Schnittstelle)
+sowie `SDPConnectionSerialAsync` (serielle Verbindung mit Listener, der eingehende Daten unabhängig von gesendeten
+Kommandos empfangen kann).
 
 DataTypes
 ---------
 
-Die Basisklasse `DataType` und die davon abgeleiteten Klassen bieten eine Schnittstelle, Datenformate zwischen shng und Gerät zu konvertieren. Eine Reihe von vorgefertigten Datentypen werden bereits mitgeliefert, eigene Datentypen können zusätzlich definiert werden.
+Die Basisklasse `DataType` und die davon abgeleiteten Klassen bieten eine Schnittstelle, Datenformate zwischen
+SmartHomeNG und Gerät zu konvertieren. Eine Reihe von vorgefertigten Datentypen werden bereits mitgeliefert, eigene
+Datentypen können zusätzlich definiert werden.
 
-Zum Lieferumfang gehören neben der Basisklasse `DataType` die abgeleiteten Klassen `DT_none` (Testklasse, keine Datenweitergabe), `DT_raw`, `DT_bool`, `DT_int`, `DT_num`, `DT_str`, `DT_list`, `DT_dict`, `DT_tuple`, `DT_bytes`, `DT_bytearray`, `DT_json` und `DT_webservices`. Die meisten der gelisteten Klassen funktionieren wie ein einfaches typecast, JSON und Webservices sind spezielle Formate für JSON-RPC und das Webservices-Plugin.
+Zum Lieferumfang gehören neben der Basisklasse `DataType` die abgeleiteten Klassen `DT_none` (Testklasse, keine
+Datenweitergabe), `DT_raw`, `DT_bool`, `DT_int`, `DT_num`, `DT_str`, `DT_list`, `DT_dict`, `DT_tuple`, `DT_bytes`,
+`DT_bytearray`, `DT_json` und `DT_webservices`. Die meisten der gelisteten Klassen funktionieren wie ein einfaches
+typecast, JSON und Webservices sind spezielle Formate für JSON-RPC und das Webservices-Plugin.
 
 Commands
 --------
 
-Die Klasse `SDPCommands` ist ein "intelligentes" dict, das die `commands.py` liest und verarbeitet und strukturieren Zugriff auf die konfigurierten Kommandos ermöglicht.
+Die Klasse `SDPCommands` ist ein "intelligentes" dict, das die `commands.py` liest und verarbeitet und strukturieren
+Zugriff auf die konfigurierten Kommandos ermöglicht.
 
-Die Klasse `SDPCommand` stellt für jedes konfigurierte Kommando eine eigene Instanz dar, die die notwendigen Informationen und Methoden zum Zugriff und zur notwendigen Datentransformation bereitstellt. Die einzelnen Instanzen werden durch die `SDPCommands`-Klasse erstellt und entsprechend den Angaben in `commands.py`konfiguriert.
+Die Klasse `SDPCommand` stellt für jedes konfigurierte Kommando eine eigene Instanz dar, die die notwendigen
+Informationen und Methoden zum Zugriff und zur notwendigen Datentransformation bereitstellt. Die einzelnen Instanzen
+werden durch die `SDPCommands`-Klasse erstellt und entsprechend den Angaben in `commands.py`konfiguriert.
 
-Auf Plugin-Ebene kann festgelegt werden, ob die Standardklasse `SDPCommand` oder bei Bedarf eine abgeleitete Klasse verwendet werden soll. Die abgeleiteten Klassen umfassen `SDPCommandStr` für Kommandos, die textbasiert arbeiten (z.B. HTTP oder Textprotokolle), `SDPCommandParseStr` mit zusätzlichen Möglichkeiten zur Text- und Datenextraktion, SDPCommandJSON für JSON-RPC-Kommunikation sowie SDPCommandViessmann für die binären Datenformate der Viessmann-Heizungen.
+Auf Plugin-Ebene kann festgelegt werden, ob die Standardklasse `SDPCommand` oder bei Bedarf eine abgeleitete Klasse
+verwendet werden soll. Die abgeleiteten Klassen umfassen `SDPCommandStr` für Kommandos, die textbasiert arbeiten
+(z.B. HTTP oder Textprotokolle), `SDPCommandParseStr` mit zusätzlichen Möglichkeiten zur Text- und Datenextraktion,
+SDPCommandJSON für JSON-RPC-Kommunikation sowie SDPCommandViessmann für die binären Datenformate der
+Viessmann-Heizungen.
 

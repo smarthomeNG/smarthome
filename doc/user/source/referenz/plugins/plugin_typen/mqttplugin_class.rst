@@ -9,9 +9,8 @@
 Class MqttPlugin
 ================
 
-
-Die Klasse MqttPlugin implementiert die Basisklasse aller SmartPlugins die MQTT nutzen.
-Die vorhandenen Methoden sind im Folgenden beschrieben
+Die Klasse ``MqttPlugin`` implementiert die Basisklasse aller SmartPlugins die MQTT nutzen.
+Die vorhandenen Methoden sind im Folgenden beschrieben.
 
 
 Zusätzlich werden die Methoden der Klasse ``lib.utils.Utils`` vererbt.
