@@ -12,6 +12,7 @@ sowie einige neue Plugins.
 |
 
 .. only: develop
+
     .. note::
 
         Diese Release Notes sind ein Arbeitsstand.
@@ -43,7 +44,7 @@ Bei einer Neuinstallation wird jedoch empfohlen auf einer der neueren Python Ver
 Unterstützte Python Versionen
 -----------------------------
 
-Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.9.x ist **Python 3.7**.
+Die älteste offiziell unterstützte Python Version für SmartHomeNG Release 1.10.x ist **Python 3.8**.
 Automatisierte Tests von SmartHomeNG werden nur in den unterstützten Python Versionen durchgeführt.
 (Siehe auch :ref:`Hard- u. Software Anforderungen <python_versionen>` im Abschnitt **Installation**
 zu unterstützten Python Versionen)
@@ -61,8 +62,8 @@ Allgmein
   * ...
 
 
-Bugfixes in the CORE
---------------------
+Bugfixes im CORE
+----------------
 
 * ...
 

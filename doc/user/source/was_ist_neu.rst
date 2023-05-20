@@ -1,5 +1,27 @@
 :tocdepth: 1
 
+Neuerungen im Release v1.10
+===========================
+
+Hier ist eine Kurzübersicht über größere Neuerungen im aktuellen Release.
+Eine vollständige Übersicht der Änderungen ist den den :doc:`Release Notes </release/release>` zu finden.
+
+  - **Structs**: Es ist jetzt eine beliebige Verschachtelung von structs möglich. stucts können auch auf Unterebenen
+    einer stuct eingebunden werden.
+  - **Items**: Es gibt neue Attribute, die es ermöglichen ein Item als Hysterese-Glied mit optionalem Zeitlied
+    zu konfigurieren.
+  - **SmartDevicePlugin**: <von Morg zu füllen>
+
+Details zu den genannten Punkten sind in den Abschnitten :doc:`Konfiguration </konfiguration/konfiguration>`
+bzw. :doc:`Referenz </referenz/referenz>` zu finden.
+
+|
+
+Die vollständigen Änderungen können in den :doc:`Release Notes </release/1_10>` nachgelesen werden.
+
+|
+
+
 Neuerungen im Release v1.9
 ==========================
 
