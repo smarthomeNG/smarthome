@@ -5,15 +5,15 @@
 .. role:: redsup
 .. role:: bluesup
 
-Class SmartPlugin
-=================
+Class SmartDevicePlugin
+=======================
 
 
 Die Klasse ``SmartDevicePlugin`` implementiert die Basisklasse aller SmartPlugins. Die vorhandenen Methoden sind im Folgenden beschrieben.
 
 Zusätzlich werden die Methoden der Klasse ``lib.utils.Utils`` vererbt.
 
-.. autoclass:: lib.model.smartplugin.SmartPlugin
+.. autoclass:: lib.model.SmartDevicePlugin
     :members:
     :undoc-members:
     :show-inheritance:
