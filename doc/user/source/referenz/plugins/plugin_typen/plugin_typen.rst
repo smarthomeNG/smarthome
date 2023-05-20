@@ -18,11 +18,20 @@ dokumentiert sind. Die Dokumentation wird aus dem Metadaten des jeweiligen Plugi
 eine Datei im restructured-Text Format (user_doc.rst) ergänzt werden.
 
 
+Classic-Plugin
+==============
+
+Das klassische Plugin aus smarthome.py wird zwar noch unterstützt, neue Plugins sollten jedoch aufgrund der geringeren
+Funktionalität des des Classic Plugins nicht auf seiner Basis erstellt werden. Plugins, die nicht von der Klasse
+``SmartPlugin`` abgeleitet sind, werden nicht mehr in das Plugin Repo von SmartHomeNG aufgenommen.
+
+|
+
 .. index:: Referenz; SmartPlugin
 .. Index:: SmartPlugin Referenz
 
-SmartPlugin
-===========
+Smart-Plugin
+============
 
 ...
 
@@ -41,8 +50,8 @@ von ``SmartPlugin`` sind hier dokumentiert:
 .. index:: Referenz; MqttPlugin
 .. Index:: MqttPlugin Referenz
 
-MqttPlugin
-==========
+Mqtt-Plugin
+===========
 
 ...
 
@@ -64,8 +73,8 @@ eine Unterklasse von ``SmartPlugin``, die um Methoden zur MQTT-Nutzung erweitert
 .. Index:: SmartDevicePlugin Referenz
 .. Index:: SDP Referenz
 
-SmartDevicePlugin
-=================
+Smart-DevicePlugin
+==================
 
 ...
 

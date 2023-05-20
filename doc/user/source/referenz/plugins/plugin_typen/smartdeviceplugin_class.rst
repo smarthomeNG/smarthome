@@ -13,7 +13,7 @@ Die Klasse ``SmartDevicePlugin`` implementiert die Basisklasse aller SmartPlugin
 
 Zusätzlich werden die Methoden der Klasse ``lib.utils.Utils`` vererbt.
 
-.. autoclass:: lib.model.SmartDevicePlugin
+.. autoclass:: lib.model.smartdeviceplugin.SmartDevicePlugin
     :members:
     :undoc-members:
     :show-inheritance:
