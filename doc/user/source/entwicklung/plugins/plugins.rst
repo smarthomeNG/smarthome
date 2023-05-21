@@ -20,6 +20,7 @@ Abschnitt und den links in der Navigation verlinkten Seiten gefunden werden.
 
    vorueberlegungen.rst
    entwicklungsrichtlinien.rst
+   /dev/README.md
    plugin_checker.rst
    kurzanleitung/kurzanleitung.rst
 

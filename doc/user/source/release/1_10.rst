@@ -19,7 +19,7 @@ sowie einige neue Plugins.
 
          - Berücksichtigt sind Commits im smarthome Repository bis incl. 18. Mai 2023
            (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 16. Mai 2023
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 19. Mai 2023
            (...)
 
 
@@ -223,6 +223,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * gpio:
 
   * Fix user_doc reference to configuration
+
+* hue2:
+
+  * Adjusted requirements for zeroconf package
 
 * piratewthr:
 

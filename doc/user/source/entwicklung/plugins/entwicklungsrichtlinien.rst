@@ -9,19 +9,27 @@
 Entwicklungsrichtlinien :bluesup:`under construction`
 =====================================================
 
-...
+Im folgenden werden eine Hilfen und Richtlinien beschrieben, die wichtig sind, wenn das zu erstellende Plugin in
+das globale Repository von SmartHomeHG aufgenommen werden soll.
 
 |
 
 Nutzung von git und github
 ==========================
 
-For an git introduction to git see: [http://gitimmersion.com/](http://gitimmersion.com/)
+Eine recht umfassende Einführung (in englischer Sprache) in git ist auf `gitimmersion.com <https://gitimmersion.com>`_
+zu finden.
 
-It you want to publish your plugin, get an [github account](https://github.com/users) as soon as possible.
+Wenn das Plugin veröffentlicht werden soll, ist es sinnvoll so schnell wie möglich ein
+`Konto auf Github.com <https://github.com/users>`_ zu erstellen.
 
-If you don't get along with the commandline version of the git software, SourceTree by Atlassian is a good client software available free of charge.
+Falls die Kommandozeilenversion der Git-Software zu komplex erscheint, ist SourceTree von Atlassian eine gute Client
+Software mit graphischer Oberflächt. Alternativ kann auch auf github-Desktop zurück gegriffen werden. Beide Tools
+sind kostenlos erhältlich.
 
+
+Die Repositories von SmartHomeNG
+================================
 
 Repositories and Branches
 -------------------------
@@ -52,6 +60,7 @@ Getting the Source
 
 Coding style
 ============
+
 Your code should conform to [pep 8](http://www.python.org/dev/peps/pep-0008/). (I'm ignoring "E501 line too long".)
 
 |
@@ -68,17 +77,20 @@ Tools
 
 Have a look at the following tools to test your code:
 
+
 pep8
 ~~~~
 
    * Install pep8: `apt-get install pep8`
    * Test your code: `pep8 -qq --statistics yourcode.py`
 
+
 autopep8
 ~~~~~~~~
 
    * `pip3 install autopep8`
    * `autopep8 yourcode.py -i`
+
 
 flake8
 ~~~~~~
@@ -89,12 +101,16 @@ flake8
 It can be used as a vim plugin. It checks the code every time I save the file. Most usefull!
 
 
-Test and Document
------------------
+Testen und Dokumentieren
+------------------------
 
-Please test and document your code!
+Bitte den Code des Plugins ausgiebig testen und dokumentieren!
 
-In your plugin directory should be a __README.md__ (from the sample_plugin directory). Please fill it with the neccesary information. `vi plugins/myplugin/README.md`
+In Ihrem Plugin-Verzeichnis sollte sich eine Datei __user_doc.rst__ (aus dem Verzeichnis „sample_plugin“) befinden.
+Bitte diese Datei mit die notwendigen Informationen befüllen. ``viplugins/myplugin/user_doc.rst``
+
+Methoden und Funktionen sollten mit einem Docstring versehen werden, der den Zweck der Methode/Funktion, die
+Aufrufparameter und den Rückgabewert beschreibt.
 
 
 Basic Rules
@@ -150,27 +166,4 @@ If you have problems pushing, you could check the repo git config. Mine looks li
     merge = refs/heads/develop
 </pre>
 
-
-Working with the git commandline client
----------------------------------------
-
-Here are a few tips, if you are working with the commandline client of git:
-
-Useful git commands
-~~~~~~~~~~~~~~~~~~~
-
-   * __list changes__ since the release with the tag VERSIONTAG: `git log --pretty=format:"%s" <VERSIONTAG>..HEAD`
-   * __undo commit__ with the id XXXIDXXX: `git reset --hard XXXIDXXX && git push origin develop --force`
-   * __copy commit__ to current branch: `git cherry-pick <commit>`
-
-   Follow the [commit Atom Feed](https://github.com/smarthomeNG/smarthome/commits/develop.atom)
-
-
-Global settings
-~~~~~~~~~~~~~~~
-
-   * only push the current branch (not all): `git config --global push.default current`
-   * adapt your user settings:
-      * `git config --global user.name "Your Name"`
-      * `git config --global user.email you@example.com`
 
