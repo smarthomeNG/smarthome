@@ -19,6 +19,7 @@
 
     <Hier erfolgt die allgemeine Beschreibung des Zwecks des Plugins>
 
+
     Anforderungen
     =============
 
@@ -78,10 +79,14 @@
 
     <Hier können bei Bedarf ausführliche Beschreibungen zu den Funktionen dokumentiert werden.>
 
+    |
+
     Beispiele
     =========
 
     Hier können bei Bedarf Konfigurationsbeispiele dokumentiert werden.
+
+    |
 
     Web Interface
     =============
@@ -97,5 +102,24 @@
        :class: screenshot
 
     <Zu dem Tab ist ein Screenshot im Unterverzeichnis ``assets`` des Plugins abzulegen.
+
+    |
+
+Die Datei ``dev/sample_plugin/webif/templates/index.html`` sollte als Grundlage für Webinterfaces genutzt werden.
+Um Tabelleninhalte nach Spalten filtern und sortieren zu können, muss der entsprechende Code Block mit Referenz
+auf die relevante Table ID eingefügt werden (siehe Doku).
+
+SmartHomeNG liefert eine Reihe Komponenten von Drittherstellern mit, die für die Gestaltung des Webinterfaces
+genutzt werden können. Erweiterungen dieser Komponenten usw. finden sich im Ordner ``/modules/http/webif/gstatic``.
+
+Wenn das Plugin darüber hinaus noch Komponenten benötigt, werden diese im Ordner ``webif/static`` des Plugins abgelegt.
+
+
+
+    Version History
+    ===============
+
+    <In diesem Abschnitt kann die Versionshistorie dokumentiert werden, falls der Plugin Autor dieses möchte.
+    Diese Abschnitt ist optional.>
 
 

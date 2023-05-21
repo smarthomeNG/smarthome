@@ -51,6 +51,7 @@ gespeichert wird. Zulässig als Plugin Logos sind auch ``plugin_logo.jpg`` und `
 Weiterhin kann es ein Unterverzeichnis ``assets`` geben, in dem weitere Dateien (z.B. zur Dokumentation user_doc)
 abgelegt werden.
 
+
 .. hint::
 
    Das in früheren Versionen verwendete ``README``-Format für die Dokumentation von Plugins ist veraltet.
@@ -121,11 +122,16 @@ Die Dokumentation beginnt mit dem Titel, der dem Namen des Plugins entspricht.
    Dieser Eintrag wird als Einstiegspunkt für die Navigation in der Dokumentation genutzt.
    Ein anderer Eintrag als Überschrift sorgt für Inkonsistenzen in den Navigationselementen.
 
-Die Datei sollte die folgende Struktur haben. Dabei kann im Bereich Konfiguration auf die
-``plugin.yaml`` verwiesen werden, wenn keine zusätzliche Dokumentation vorgesehen ist.
+Die Datei sollte die folgende Struktur haben.
+
+Die Konfigurationsparameter selbst müssen in der user_doc.rst nicht beschrieben werden. Die Dokumentation der
+Konfigurationsparameter und der Item Attribute wird automatisch aus den Metadaten (aus der plugin.yaml) generiert.
+Falls gewünscht kann jeweils auf die (automatisch generierte) Seite mit der Konfigurationsdokumentation verwiesen
+werden.
 
 
-.. include:: /referenz/plugins/plugin_user_doc_template.rst
+.. literalinclude:: /dev/sample_plugin/user_doc.rst
+    :caption: user_doc.rst
 
 |
 
@@ -471,6 +477,20 @@ für das der Aufruf in ``parse_item()`` eingerichtet wurde. Sie erhält die folg
 `dest`
     …
 
+
+----
+
+Erstellung eines Webinterfaces
+------------------------------
+
+Die Datei ``dev/sample_plugin/webif/templates/index.html`` sollte als Grundlage für Webinterfaces genutzt werden.
+Um Tabelleninhalte nach Spalten filtern und sortieren zu können, muss der entsprechende Code Block mit Referenz
+auf die relevante Table ID eingefügt werden (siehe Doku).
+
+SmartHomeNG liefert eine Reihe Komponenten von Drittherstellern mit, die für die Gestaltung des Webinterfaces
+genutzt werden können. Erweiterungen dieser Komponenten usw. finden sich im Ordner ``/modules/http/webif/gstatic``.
+
+Wenn das Plugin darüber hinaus noch Komponenten benötigt, werden diese im Ordner ``webif/static`` des Plugins abgelegt.
 
 ----
 
