@@ -19,7 +19,7 @@ sowie einige neue Plugins.
 
          - Berücksichtigt sind Commits im smarthome Repository bis incl. 18. Mai 2023
            (...)
-         - Berücksichtigt sind Commits im plugins Repository bis incl. 22. April 2023
+         - Berücksichtigt sind Commits im plugins Repository bis incl. 16. Mai 2023
            (...)
 
 
@@ -166,6 +166,17 @@ Plugin Updates
 Für Details zu den Änderungen an den einzelnen Plugins, bitte die Dokumentation des jeweiligen Plugins unter
 http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
+* appletv:
+
+  * Use separate webif/init for web interface integration
+  * Integrate external webif file
+  * Introduce some error handling if no "real" AppleTV is found
+  * Introduce item attributes in metadata, fix struct (item should not be named type - renamed to media_type)
+  * Bump to version 1.6.2
+  * Replace README with user_doc
+  * Adjust requirements to work with Python 3.10
+  * Fix module imports for web interface
+
 * avm:
 
   * raise exception if no connection to fritzdevice, fritzhome or callmonitor is possible
@@ -177,6 +188,15 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Disable tab5 (Logs) for Devices without AHA-Interface
   * Improve stop of plugin
   * Bugfix setting Fritzdevice like start_call'
+  * Optimize "get_logs" to prevent older fritz-devices from timeout
+  * Use get_logs_from tr-064 as backup solution
+  * Increase request timeout if timeout occurred
+  * Trying to fix yet another regression in avm RGB support introduced with release v1.9.5
+  * Removed 'optional' text in mandatory plugin host attribute
+  * Automate creation of item_attributes.py and update of valid_list of avm_data_type in plugin.yaml by scripts
+    included in item_attributes_master.py
+  * Bugfix of update of valid_list of avm_data_type in plugin.yaml by
+  * Create valid_list_description in metadata
 
 * db_addon:
 
@@ -194,6 +214,11 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Bugfix in parse_item
   * Allow to define database_item_path to be defined up to 3 level above db_addon_item
   * Allow to define database_item_path to be defined up to 3 level above db_addon_item (bugfix)
+  * Add plugin parameter to enable/disable optimizing defined value filters
+
+* executor:
+
+  * Extending base_plugin.html instead of extending base.html in webinterface
 
 * gpio:
 
@@ -203,14 +228,33 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 
   * Adjusted log mesages
   * Bumped version to 1.1.2
+  * piratewthr: Improved log messages in case of piratewther server errors
+  * Added windDirectionString to struct
+  * Minimum core version is now 1.9.5.2
+  * Removed 'database_maxage: 731' from struct items to use default of database plugin
+  * Bumped version to 1.2.0
+  * Added locals.location to struct
 
 * rpi_info:
 
   * Update and fix web interface
 
+* smartvisu:
+
+  * Changed default value for generate_pages to False
+
+* stateengine:
+
+  * Keep variables after state evaluation so they can be used in enter Conditions
+  * Fix major problem with internal structs
+  * Temporarily set state_name and state_id on init
+  * Adjust docu accordingly regarding current.state_name variable
+  * Bump version to 1.9.6
+
 * tankerkoenig:
 
   * Fix for get_petrol_stations(), if tankerkoenig.de did not return any information
+  * Added check for Nonetype results
 
 * tasmota:
 
@@ -230,6 +274,10 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * New package, use async
   * Revised stop method
   * Bumped version to v1.8.0
+  * New_event_loop for multi-instance
+  * V2.0.0 Additions in locale; evaluate if debugging
+  * Retry sending in case of error (with parameters)
+  * Attempt to catch the exception in the updater
 
 
 Outdated Plugins
