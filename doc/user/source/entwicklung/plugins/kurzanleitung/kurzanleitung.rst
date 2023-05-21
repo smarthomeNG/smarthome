@@ -1,6 +1,12 @@
 
-Kurzanleitung
-=============
+.. role:: redsup
+.. role:: bluesup
+.. role:: greensup
+.. role:: blacksup
+
+================================
+Kurzanleitung  :bluesup:`update`
+================================
 
 Weitere Informationen über die zu erstellenden Methoden und ihre Parameter können in der folgenden Kurzanleitung
 gefunden werden. Die Libraries im Verzeichnis ``/lib`` stellen den Kern der Funktionalitäten von smarthomeng bereit.

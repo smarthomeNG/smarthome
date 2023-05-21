@@ -1,6 +1,6 @@
 
-SmartDevicePlugin
-=================
+.. comment SmartDevicePlugin
+.. comment =================
 
 Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und jedes neue Gerät aufs Neue das
 ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen (commands) und Kommunikation mit
@@ -33,6 +33,7 @@ Das Plugin besteht aus dem (vererbten) Plugin-Code in `__init__.py`, der command
 pluginspezifischer Protokolldefinition in `protocol.py`, ggf. pluginspezifischen Datentypen in `datatypes.py` und den
 Standarddateien `plugin.yaml` und ggf. `user_doc.rst`.
 
+
 Plugin
 ------
 
@@ -49,6 +50,7 @@ sdp_viessmann entnommen):
 
 Nun wäre es naiv zu glauben, dass nur eine Codezeile ein beliebiges Plugin darstellen kann. Für ein nicht nur
 lauffähiges, sondern auf funktionales Plugin bedarf es noch der wesentlichen Konfiguration, die im Zusammenhang mit sdp benötigt wird - den commands in der `commands.py`.
+
 
 Kommandos
 ---------
@@ -129,6 +131,7 @@ Hier soll am Beispiel einer Zeile der wesentliche Inhalt erläutert werden:
 Die einzelnen Attribute der command-Definitionen sind in der Datei `./dev/sample_smartdevice_plugin/commands.py` im
 Detail erklärt.
 
+
 Protokoll
 ---------
 
@@ -141,6 +144,7 @@ zur Verfügung).
 
 Eigene Protokolle können definiert werden - im Beispiel sdp_viessmann z.B. die binären Protokolltypen P300 und KW2,
 die einen Verbindungsaufbau mit Handshake benötigen.
+
 
 Verbindung
 ----------
@@ -158,6 +162,7 @@ UDP-Listener, z.B. für Multicast), `SDPConnectionSerial` (Anfrage-Antwort-Verbi
 sowie `SDPConnectionSerialAsync` (serielle Verbindung mit Listener, der eingehende Daten unabhängig von gesendeten
 Kommandos empfangen kann).
 
+
 DataTypes
 ---------
 
@@ -169,6 +174,7 @@ Zum Lieferumfang gehören neben der Basisklasse `DataType` die abgeleiteten Klas
 Datenweitergabe), `DT_raw`, `DT_bool`, `DT_int`, `DT_num`, `DT_str`, `DT_list`, `DT_dict`, `DT_tuple`, `DT_bytes`,
 `DT_bytearray`, `DT_json` und `DT_webservices`. Die meisten der gelisteten Klassen funktionieren wie ein einfaches
 typecast, JSON und Webservices sind spezielle Formate für JSON-RPC und das Webservices-Plugin.
+
 
 Commands
 --------

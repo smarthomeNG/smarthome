@@ -81,8 +81,8 @@ Die Methoden von ``MqttPlugin`` sind hier dokumentiert:
 .. Index:: SmartDevicePlugin Referenz
 .. Index:: SDP Referenz
 
-.. comment SmartDevicePlugin
-.. comment =================
+SmartDevicePlugin
+=================
 
 .. include:: smartdeviceplugin.rst
 

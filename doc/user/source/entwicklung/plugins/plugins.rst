@@ -7,9 +7,9 @@
 .. role:: blacksup
 
 
-=====================================
-Plugins :bluesup:`under construction`
-=====================================
+=========================
+Plugins :bluesup:`Update`
+=========================
 
 Informationen über das Schreiben von Plugins und wie sie in SmartHomeNG eingebunden werden, können in diesem
 Abschnitt und den links in der Navigation verlinkten Seiten gefunden werden.
@@ -19,7 +19,7 @@ Abschnitt und den links in der Navigation verlinkten Seiten gefunden werden.
    :hidden:
 
    vorueberlegungen.rst
-   /dev/README.md
+   entwicklungsrichtlinien.rst
    plugin_checker.rst
-   kurzanleitung.rst
+   kurzanleitung/kurzanleitung.rst
 

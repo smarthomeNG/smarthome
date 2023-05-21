@@ -264,7 +264,7 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
   * Improve RF-Bridge
   * Allow send of learned keys
   * Improve of using ZigbeeDevice Shortname
- * Improve handling of received messages and taking info from dicts
+  * Improve handling of received messages and taking info from dicts
   * Bugfix update item with relay
   * Improve exception handling
   * Improve clearing retained messages
