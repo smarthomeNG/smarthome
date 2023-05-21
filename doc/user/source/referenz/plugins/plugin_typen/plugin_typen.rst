@@ -33,10 +33,10 @@ Funktionalität des des Classic Plugins nicht auf seiner Basis erstellt werden. 
 SmartPlugin
 ===========
 
-...
+Ein Plugin implementiert im Code eine Klasse, welche von der ``class SmartPlugin`` abgeleitet ist. ``SmartPlugin``
+stellt alle grundsätzlichen Funktionalitäten bereit, die benötigt werden, um ein Plugin zu implementieren.
 
-Ein Plugin implementiert im Code eine Klasse, welche von der ``class SmartPlugin`` abgeleitet ist. Die Methoden
-von ``SmartPlugin`` sind hier dokumentiert:
+Die Methoden von ``SmartPlugin`` sind hier dokumentiert:
 
 .. toctree::
    :maxdepth: 5
@@ -53,11 +53,19 @@ von ``SmartPlugin`` sind hier dokumentiert:
 MqttPlugin
 ==========
 
-...
-
 Plugins welche MQTT nutzen, sollten stattdessen von ``class MqttPlugin`` abgeleitet werden. ``MqttPlugin`` ist
-eine Unterklasse von ``SmartPlugin``, die um Methoden zur MQTT-Nutzung erweitert ist. Die Methoden von
-``MqttPlugin`` sind hier dokumentiert:
+eine Unterklasse von ``SmartPlugin``, die um Methoden zur MQTT-Nutzung erweitert ist.
+
+Dabei handelt es sich um die Methoden
+
+    - add_subscription(topic, payload_type, bool_values=None, item=None, callback=None)
+    - start_subscriptions()
+    - stop_subscription()
+    - publish_topic(topic, payload, item=None, qos=None, retain=False, bool_values=None)
+    - get_broker_info()
+    - broker_uptime()
+
+Die Methoden von ``MqttPlugin`` sind hier dokumentiert:
 
 .. toctree::
    :maxdepth: 5
@@ -65,21 +73,18 @@ eine Unterklasse von ``SmartPlugin``, die um Methoden zur MQTT-Nutzung erweitert
 
    mqttplugin_class
 
-
 |
+
 
 .. index:: Referenz; SmartDevicePlugin
 .. index:: Referenz; SDP
 .. Index:: SmartDevicePlugin Referenz
 .. Index:: SDP Referenz
 
-SmartDevicePlugin
-=================
+.. comment SmartDevicePlugin
+.. comment =================
 
-Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und jedes neue Gerät aufs Neue das
-ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen (commands) und Kommunikation mit
-Netzwerk- oder seriellen Treibern oder Libraries.
-
+.. include:: /dev/sample_plugin/smartdeviceplugin.rst
 
 .. toctree::
    :maxdepth: 5

@@ -131,51 +131,9 @@ werden.
 
 
 .. literalinclude:: /dev/sample_plugin/user_doc.rst
-    :caption: user_doc.rst
+    :caption: user_doc.rst des Sampe Plugins
 
 |
-
-.. code-block:: rst
-
-    <Pluginname in Kleinbuchstaben>
-    ===============================
-
-    Anforderungen
-    -------------
-
-    Konfiguration
-    -------------
-
-    plugin.yaml
-    ~~~~~~~~~~~
-
-    Parameter
-    ^^^^^^^^^
-
-    items.yaml
-    ~~~~~~~~~~
-
-    Parameter
-    ^^^^^^^^^
-
-    logic.yaml
-    ~~~~~~~~~~
-
-    Parameter
-    ^^^^^^^^^
-
-    Funktionen
-    ~~~~~~~~~~
-
-    Parameter
-    ^^^^^^^^^
-
-    Beispiele
-    ---------
-
-    Web Interface
-    -------------
-
 
 
 Konfigurieren des Plugins in der Systemkonfiguration `/etc/plugin.yaml`
@@ -658,8 +616,3 @@ Der Wert, der dem Item zugewiesen werden soll. Für boolesche Items ist dies ``T
 ~~~~~~~~~~~~~~~
 Ein selbst gewählter Name, der denjenigen identifiziert, der das Item verändert hat. Dieses Argument wird an die Funktion ``update_item`` übergeben.
 
-
-Zusammenfassung
-===============
-
-![Summary](https://github.com/smarthomeNG/smarthome/wiki/assets/pluginsummary.png)

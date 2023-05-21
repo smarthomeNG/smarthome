@@ -10,7 +10,7 @@
 
 
 =========================
-Dokumentation für Plugins
+Dokumentation des Plugins
 =========================
 
 Die Dokumentation für Plugins wird in der Datei user_doc.rst abgelegt.
@@ -36,11 +36,5 @@ Case sensitive!)
 
 Die user_doc.rst sollte folgendes Format haben:
 
-.. include:: plugin_user_doc_template.rst
-
-|
-
-Aus dem Sample Plugin:
-
 .. literalinclude:: /dev/sample_plugin/user_doc.rst
-    :caption: user_doc.rst
+    :caption: user_doc.rst des Sample Plugins
