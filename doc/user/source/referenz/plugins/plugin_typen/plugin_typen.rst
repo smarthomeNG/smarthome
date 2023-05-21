@@ -84,7 +84,9 @@ Die Methoden von ``MqttPlugin`` sind hier dokumentiert:
 .. comment SmartDevicePlugin
 .. comment =================
 
-.. include:: /dev/sample_plugin/smartdeviceplugin.rst
+.. include:: smartdeviceplugin.rst
+
+Die Methoden von ``SmartDevicePlugin`` sind hier dokumentiert:
 
 .. toctree::
    :maxdepth: 5

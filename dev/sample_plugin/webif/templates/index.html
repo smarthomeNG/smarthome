@@ -194,12 +194,12 @@ In the example the update is deactivated on the 12th of December 2022 (what migh
 {% set tab1title = "<strong>" ~ p.get_shortname() ~ " Items</strong> (" ~ item_count ~ ")" %}
 {% block bodytab1 %}
   <!-- remove this div if not needed -->
-  <div class="mb-2">
-    {{ _('Hier kommt der Inhalt des Webinterfaces hin.') }} (optional)
+  <div class="m-2">
+    {{ _('Hier kommen bei Bedarf Informationen des Webinterfaces oberhalb der Tabelle hin.') }} (optional)
   </div>
 
 	<!-- set id accordingly -->
-	<table id="maintable" class="dataTableAdditional">
+	<table id="maintable" class="dataTableAdditional m-2">
 		<thead>
 			<tr>
         <!-- You HAVE to add an empty th here for correct implementation of the responsive plugin -->
@@ -211,18 +211,18 @@ In the example the update is deactivated on the 12th of December 2022 (what migh
 		<tbody>
 			{% for item in items %}
 			  {% if p.has_iattr(item.conf, '<plugin_attribute>') %}
-				<tr>
-          <!-- You HAVE to add an empty td here for correct implementation of the responsive plugin -->
-          <td></td>
-				  <td class="py-1" id="{{ item._path }}">{{ item._path }}</td>
-				  <td class="py-1" id="{{ item._path }}_value">{{ item() }}</td>
-				</tr>
+				 <tr>
+				   <!-- You HAVE to add an empty td here for correct implementation of the responsive plugin -->
+				   <td></td>
+				   <td class="py-1" id="{{ item._path }}">{{ item._path }}</td>
+				   <td class="py-1" id="{{ item._path }}_value">{{ item() }}</td>
+				 </tr>
 			  {% endif %}
 			{% endfor %}
 		</tbody>
 	</table>
   <!-- remove this div if not needed -->
-  <div class="mb-2">
+  <div class="m-2">
     Etwaige Informationen unterhalb der Tabelle (optional)
   </div>
 
