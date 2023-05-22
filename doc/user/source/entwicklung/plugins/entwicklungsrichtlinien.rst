@@ -53,14 +53,22 @@ Eine ausführliche Beschreibung zur Nutzung des Workflows für SmartHomeNG finde
 `[hier im Wiki <https://github.com/smarthomeNG/smarthome/wiki/Git-Workflow%28s%29-für-SmartHomeNG>`_
 
 
-Getting the Source
-------------------
+Die Quellen finden/installieren
+-------------------------------
 
-  * you could fork the repository on GitHub or
-  * get the repository: `git clone --recursive https://github.com/smarthomeNG/smarthome.git` (The --recursive option ensures, that a version of the plugins are checked out as well)
-  * create your own (local) branch (from develop) `git checkout -b myplugin develop`
+  * Sie können auf GitHub einen Fork der Repositories erstellen
+oder
+  * Sie holen sich das Repository direkt:
+
+    ``git clone https://github.com/smarthomeNG/smarthome.git .``
+    ``git clone https://github.com/smarthomeNG/plugins.git plugins``
+
+  * Sie erstellen Ihren eigenen (lokalen) Branch (von Develop):
+
+    ``git checkout -b myplugin Develop``
 
 |
+
 
 Code Stil
 =========
@@ -70,40 +78,41 @@ Der Code sollte `pep 8 <https://www.python.org/dev/peps/pep-0008/>`_ entsprechen
 
 |
 
-Start Coding
-============
 
-   * **copy** the sample plugin directory: `cp -r dev/sample_plugin plugins/myplugin`
-   * **edit** the main file: `vi plugins/myplugin/__init__.py`
+Programmieren beginnen
+======================
+
+  * **Kopieren** Sie das Beispiel-Plugin-Verzeichnis: ``cp -r dev/sample_pluginplugins/myplugin``
+  * **Bearbeiten** Sie die Hauptdatei: `vi plugins/myplugin/__init__.py`
 
 
 Tools
 -----
 
-Have a look at the following tools to test your code:
+Schauen Sie sich die folgenden Tools an, um Ihren Code zu testen:
 
 
 pep8
 ~~~~
 
-   * Install pep8: `apt-get install pep8`
-   * Test your code: `pep8 -qq --statistics yourcode.py`
+   * Pep8 installieren: ``apt-get install pep8``
+   * Testen Sie Ihren Code: ``pep8 -qq –statistics yourcode.py``
 
 
 autopep8
 ~~~~~~~~
 
-   * `pip3 install autopep8`
-   * `autopep8 yourcode.py -i`
+   * ``pip3 install autopep8``
+   * ``autopep8 yourcode.py -i``
 
 
 flake8
 ~~~~~~
 
-   * `pip3 install flake8`
-   * `flake8 yourcode.py`
+   * ``pip3 install flake8``
+   * ``flake8 yourcode.py`
 
-It can be used as a vim plugin. It checks the code every time I save the file. Most usefull!
+flake8 kann als Vim-Plugin verwendet werden. Der Code wird jedes Mal überprüft, wenn die Datei gespeichert wird.
 
 
 Testen und Dokumentieren
@@ -123,36 +132,35 @@ Weiterhin ist es sinnvoll **Unittests** für das Plugin zu erstellen.
 Basic Rules
 -----------
 
-   * **only push to the develop branch**
-   * changes to contents of the smarthomeNG/smarthome repository must be checked with the SmartHomeNG developer team.
-   * changes to plugins from other developers must be checked with the developer.
+   * Nur Pull Requests gegen den **develop Branch** des jeweiligen Repositories stellen
+   * Änderungen an Inhalten des smarthomeNG/smarthome-Repositorys müssen mit dem SmartHomeNG-Entwicklerteam
+     (möglichst vor der Entwicklung) abgeklärt werden.
+   * Änderungen an Plugins anderer Autoren/Maintainer müssen mit dem jeweiligen Autoren/Maintainer abgeklärt werden.
 
 
-Fork (description is deprecated, has to be updated)
----------------------------------------------------
+Fork erstellen
+--------------
 
-   * Goto [SmartHome Repo](https://github.com/smarthomeNG/smarthome) logged in with your username/password.
-   * Click on 'fork' in the right upper corner.
-   * Change to your Terminal and enter `git clone https://USER:PASSWORD@github.com/USER/smarthome`
-   * Checkout the develop branch `git checkout develop`
-   * Change/create a file.
-   * Add the file `git add FILE`
-   * Commit the changes with a usefull comment: 'git commit'
-   * Push your changes to your repository: `git pull && git push`
-   * Create a pull request on GitHub: base: smarthomeNG/develop  compare: USER/develop
+    * Gehen Sie aif GitHub zum `SmartHome Repo <https://github.com/smarthomeNG/smarthome/>`_ und melden Sie sich mit
+      Ihrem Benutzernamen/Passwort an
+    * Klicken Sie rechts oben auf „Fork“.
+    * Wechseln Sie zu Ihrem Terminal und geben Sie „git clone https://USER:PASSWORD@github.com/USER/smarthome“ ein
+    * Checken Sie den Entwicklungszweig „git checkout Develop“ aus
+    * Wiederholen Sie dieses für das `Plugin Repo <https://github.com/smarthomeNG/plugins/>`_
+
+    * Eine Datei ändern/erstellen.
+    * Fügen Sie die Datei „git add FILE“ hinzu
+    * Übernehmen Sie die Änderungen mit einem nützlichen Kommentar: „git commit“
+    * Übertragen Sie Ihre Änderungen in Ihr Repository: „git pull && git push“.
+    * Erstellen Sie eine Pull-Request auf GitHub: Basis: smarthomeNG/develop, Vergleich: USER/develop
 
 
 Merge (description is deprecated, has to be updated)
 ----------------------------------------------------
 
-If you think your code is ready for prime time send me a **pull request via github**
+Wenn Sie glauben, dass Ihr Code für die Hauptsendezeit bereit ist, senden Sie einen **Pull-Request über Github**
 
-Acitve commiters could merge the myplugin branch into develop with:
-
-   * **chang** the active branch to develop: `git checkout develop`
-   * **merge** your plugin into it: `git merge --no-ff myplugin`
-   * (delete your branch: `git branch -d myplugin`)
-   * **pusg** to github: `git push origin develop`
+Mitglieder des Core Teams von SmartHomeNG können dann den Pull-Request prüfen und in das Repository mergen.
 
 
 .git/config (description is deprecated, has to be updated)
@@ -187,27 +195,27 @@ Entwicklungsumgebung konfiguriert sein. In dem Fall gibt es noch die beiden folg
         signingkey = xxxxxxxxxxxxxxxx
 
 
-Working with the git commandline client
----------------------------------------
+Arbeiten mit dem Git-Befehlszeilen-Client
+-----------------------------------------
 
-Here are a few tips, if you are working with the commandline client of git:
+Hier ein paar Tipps, wenn Sie mit dem Kommandozeilen-Client von Git arbeiten:
+
+Nützliche Git-Befehle
+~~~~~~~~~~~~~~~~~~~~~
+
+  * **Liste der Änderungen** seit der Veröffentlichung mit dem Tag VERSIONTAG: git log –pretty=format:“%s“ <VERSIONTAG>..HEAD
+  * **Commit** mit der ID XXXIDXXX **rückgängig machen**: git reset –hard XXXIXXX && git push origin Develop –force
+  * **Commit** in den aktuellen Zweig **kopieren**: git Cherry-pick <commit>
+
+Folgen Sie dem `Commit Atom Feed <https://github.com/smarthomeNG/smarthome/commits/develop.atom>`_
 
 
-Useful git commands
-~~~~~~~~~~~~~~~~~~~
+Globale Einstellungen
+~~~~~~~~~~~~~~~~~~~~~
 
-   * **list changes** since the release with the tag VERSIONTAG: `git log --pretty=format:"%s" <VERSIONTAG>..HEAD`
-   * **undo commit** with the id XXXIDXXX: `git reset --hard XXXIDXXX && git push origin develop --force`
-   * **copy commit** to current branch: `git cherry-pick <commit>`
+  * Nur den aktuellen Zweig pushen (nicht alle): ``git config –global push.default current``
+  * Passen Sie Ihre Benutzereinstellungen an:
+    * ``git config –global user.name „Ihr Name“``
+    * ``git config –global user.email you@example.com``
 
-   Follow the [commit Atom Feed](https://github.com/smarthomeNG/smarthome/commits/develop.atom)
-
-
-Global settings
-~~~~~~~~~~~~~~~
-
-   * only push the current branch (not all): `git config --global push.default current`
-   * adapt your user settings:
-      * `git config --global user.name "Your Name"`
-      * `git config --global user.email you@example.com`
 
