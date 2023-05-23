@@ -71,6 +71,8 @@ des Items auf **True** gesetzt wird.
 
 Das Item, welches dieses Hysterese Attribut verwendet, muss als **bool** definiert sein.
 
+Die Definitionen für den Upper-Threshold und die optionale Dauer für den Upper-Threshold können statt absoluter
+Werte auch **eval**-Ausdrücke enthalten. Diese Ausdrücke dürfen auch relative Item Referenzen enthalten.
 |
 
 `hysteresis_lower_threshold`
@@ -87,6 +89,9 @@ Optional kann in diesem Attribut eine Dauer angegeben werden, welche die Untersc
 des Items auf **False** gesetzt wird.
 
 Das Item, welches dieses Hysterese Attribut verwendet, muss als **bool** definiert sein.
+
+Die Definitionen für den Lower-Threshold und die optionale Dauer für den Lower-Threshold können statt absoluter
+Werte auch **eval**-Ausdrücke enthalten. Diese Ausdrücke dürfen auch relative Item Referenzen enthalten.
 
 |
 
@@ -130,6 +135,20 @@ jeweiligen Mindestdauern für das Zeitglied.
         hysteresis_input: ..helligkeit
         hysteresis_upper_threshold: 5000 ; 60
         hysteresis_lower_threshold: 900.5 ; 120
+
+    beschattung_2:
+        type: bool
+        hysteresis_input: ..helligkeit
+        hysteresis_upper_threshold: sh...einschalthelligkeit() ; sh...einschaltverzögerung()
+        hysteresis_lower_threshold: 900.5 ; 2 * sh...einschaltverzögerung()
+
+    einschalthelligkeit:
+        type: num
+        initial_value: 5000
+
+    einschaltverzögerung:
+        type: num
+        initial_value: 60
 
 |
 

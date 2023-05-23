@@ -238,7 +238,7 @@ class Item():
                         value = [value, ]
                     setattr(self, '_' + attr, value)
                 elif attr in [KEY_EVAL]:
-                    self._process_eval(value)
+                    self._process_eval(attr, value)
                 elif attr in [KEY_EVAL_TRIGGER] or (self._use_conditional_triggers and attr in [KEY_TRIGGER]):  # cast to list
                     self._process_trigger_list(attr, value)
                 elif (attr in [KEY_CONDITION]) and self._use_conditional_triggers:  # cast to list
@@ -256,22 +256,18 @@ class Item():
                     self._hysteresis_input = self.get_absolutepath(value, attr)
                 elif attr in [KEY_HYSTERESIS_UPPER_THRESHOLD]:
                     if value.find(ATTRIBUTE_SEPARATOR) == -1:
-                        self._hysteresis_upper_threshold = float(value.strip())
+                        self._hysteresis_upper_threshold = self.get_stringwithabsolutepathes(value, 'sh.', '(', attr)
                     else:
                         threshold, __, timer = value.rpartition(ATTRIBUTE_SEPARATOR)
-                        self._hysteresis_upper_threshold = float(threshold.strip())
-                        ti = float(timer.strip())
-                        if ti > 0:
-                            self._hysteresis_upper_timer = ti
+                        self._hysteresis_upper_threshold = self.get_stringwithabsolutepathes(threshold.strip(), 'sh.', '(', attr)
+                        self._hysteresis_upper_timer = self.get_stringwithabsolutepathes(timer.strip(), 'sh.', '(', attr)
                 elif attr in [KEY_HYSTERESIS_LOWER_THRESHOLD]:
                     if value.find(ATTRIBUTE_SEPARATOR) == -1:
-                        self._hysteresis_lower_threshold = float(value.strip())
+                        self._hysteresis_lower_threshold = self.get_stringwithabsolutepathes(value, 'sh.', '(', attr)
                     else:
                         threshold, __, timer = value.rpartition(ATTRIBUTE_SEPARATOR)
-                        self._hysteresis_lower_threshold = float(threshold.strip())
-                        ti = float(timer.strip())
-                        if ti > 0:
-                            self._hysteresis_lower_timer = ti
+                        self._hysteresis_lower_threshold = self.get_stringwithabsolutepathes(threshold.strip(), 'sh.', '(', attr)
+                        self._hysteresis_lower_timer = self.get_stringwithabsolutepathes(timer.strip(), 'sh.', '(', attr)
 
                 elif attr in [KEY_ON_CHANGE, KEY_ON_UPDATE]:
                     self._process_on_xx_list(attr, value)
@@ -602,39 +598,29 @@ class Item():
         result = cycle
         return result
 
+
     """
+    --------------------------------------------------------------------------------------------
+    The following methods are used to process attributes during parsing of standard attributes
     --------------------------------------------------------------------------------------------
     """
 
-
-    def _build_on_xx_list(self, on_dest_list, on_eval_list):
+    def _process_eval(self, attribute_name, value):
         """
-        build on_xx data
+        Processing eval attribute during parsing of standard attributes
+
+        :param value: attribute from item configuration
+        :param attribute_name: attribute name from item configuration
+
+        :return: None
         """
-        on_list = []
-        if on_dest_list is not None:
-            if isinstance(on_dest_list, list):
-                for on_dest, on_eval in zip(on_dest_list, on_eval_list):
-                    if on_dest != '':
-                        on_list.append(on_dest.strip() + ' = ' + on_eval)
-                    else:
-                        on_list.append(on_eval)
-            else:
-                if on_dest_list != '':
-                    on_list.append(on_dest_list + ' = ' + on_eval_list)
-                else:
-                    on_list.append(on_eval_list)
-        return on_list
-
-
-    def _process_eval(self, value):
 
         if value == '':
             self._eval_unexpanded = ''
             self._eval = None
         else:
             self._eval_unexpanded = value
-            value = self.get_stringwithabsolutepathes(value, 'sh.', '(', KEY_EVAL)
+            value = self.get_stringwithabsolutepathes(value, 'sh.', '(', attribute_name)
             #value = self.get_stringwithabsolutepathes(value, 'sh.', '.property', KEY_EVAL)
             self._eval = value
 
@@ -679,7 +665,32 @@ class Item():
         setattr(self, '_' + attr + '_dest_var', dest_var_list)
         setattr(self, '_' + attr + '_dest_var_unexp', dest_var_list_unexp)
         return
-#### ms
+
+    """
+    --------------------------------------------------------------------------------------------
+    END of methods to process attributes during parsing of standard attributes
+    --------------------------------------------------------------------------------------------
+    """
+
+    def _build_on_xx_list(self, on_dest_list, on_eval_list):
+        """
+        build on_xx data   (seens to be never called???)
+        """
+        on_list = []
+        if on_dest_list is not None:
+            if isinstance(on_dest_list, list):
+                for on_dest, on_eval in zip(on_dest_list, on_eval_list):
+                    if on_dest != '':
+                        on_list.append(on_dest.strip() + ' = ' + on_eval)
+                    else:
+                        on_list.append(on_eval)
+            else:
+                if on_dest_list != '':
+                    on_list.append(on_dest_list + ' = ' + on_eval_list)
+                else:
+                    on_list.append(on_eval_list)
+        return on_list
+
 
     def _get_last_change(self):
         return self.__last_change
@@ -1260,8 +1271,8 @@ class Item():
             triggering_item = _items_instance.return_item(self._hysteresis_input)
             if triggering_item is None: # triggering item was not found
                 logger.error(f"item '{self._path}': trigger item '{self._hysteresis_input}' not found for function 'hysteresis'")
-            elif self._hysteresis_upper_threshold < self._hysteresis_lower_threshold:
-                logger.error(f"item '{self._path}': Hysteresis upper threshod is lower than lower threshod")
+            #elif self._hysteresis_upper_threshold < self._hysteresis_lower_threshold:
+            #    logger.error(f"item '{self._path}': Hysteresis upper threshod is lower than lower threshod")
             else:
                 if triggering_item != self:  # prevent loop
                     triggering_item._hysteresis_items_to_trigger.append(self)
@@ -1303,33 +1314,63 @@ class Item():
         return False
 
 
+    def __run_attribute_eval(self, eval_expression, result_type='num'):
+
+        # set up environment for calculating eval-expression
+        sh = self._sh
+        shtime = self.shtime
+        items = _items_instance
+        import math
+        import lib.userfunctions as uf
+
+        result = eval(str(eval_expression))
+        if result_type == 'num':
+            if not isinstance(result, (int, float)):
+                logger.error(f"Item '{self._path}': Attribute expression '{eval_expression}' evaluated to a non-numeric value '{result}', using 0 instead")
+                result = 0
+
+        return result
+
+
     def __run_hysteresis(self, value=None, caller='Hysteresis', source=None, dest=None):
         """
         evaluate the 'hysteresis' entry of the actual item
         """
-        #logger.notice(f"__run_hysteresis: {value=}, {caller=}, {source=}, {dest=}")
-        if self._hysteresis_upper_timer_active and (value <= self._hysteresis_upper_threshold):
+        upper = self.__run_attribute_eval(self._hysteresis_upper_threshold)
+        lower = self.__run_attribute_eval(self._hysteresis_lower_threshold)
+
+        if self._hysteresis_upper_timer_active and (value <= upper):
             self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-UpTimer')
             self._hysteresis_upper_timer_active = False
-        if self._hysteresis_lower_timer_active and (value >= self._hysteresis_lower_threshold):
+        if self._hysteresis_lower_timer_active and (value >= lower):
             self._sh.scheduler.remove(self._itemname_prefix + self.id() + '-LoTimer')
             self._hysteresis_lower_timer_active = False
 
-        if value > self._hysteresis_upper_threshold:
+        if value > upper:
             if self._hysteresis_upper_timer is None:
                 self.__update(True, caller, source, dest)
             else:
                 if not self._hysteresis_upper_timer_active:
-                    next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_upper_timer)
+                    timer = self.__run_attribute_eval(self._hysteresis_upper_timer)
+                    if timer < 0:
+                        logger.warning(f"Item '{self._path}': Hysteresis upper-timer evaluated to an value less than zero ({timer}), using 0 instead")
+                        timer = 0
+                    next = self.shtime.now() + datetime.timedelta(seconds=timer)
+                    #next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_upper_timer)
                     self._sh.scheduler.add(self._itemname_prefix+self.id() + '-UpTimer', self.__call__, value={'value': True, 'caller': 'Hysteresis'}, next=next)
                     self._hysteresis_upper_timer_active = True
 
-        if value < self._hysteresis_lower_threshold:
+        if value < lower:
             if self._hysteresis_lower_timer is None:
                 self.__update(False, caller, source, dest)
             else:
                 if not self._hysteresis_lower_timer_active:
-                    next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_lower_timer)
+                    timer = self.__run_attribute_eval(self._hysteresis_lower_timer)
+                    if timer < 0:
+                        logger.warning(f"Item '{self._path}': Hysteresis lower-timer evaluated to an value less than zero ({timer}), using 0 instead")
+                        timer = 0
+                    next = self.shtime.now() + datetime.timedelta(seconds=timer)
+                    #next = self.shtime.now() + datetime.timedelta(seconds=self._hysteresis_lower_timer)
                     self._sh.scheduler.add(self._itemname_prefix + self.id() + '-LoTimer', self.__call__, value={'value': False, 'caller': 'Hysteresis'}, next=next)
                     self._hysteresis_lower_timer_active = True
         return
@@ -1768,23 +1809,43 @@ class Item():
         return self._hysteresis_items_to_trigger
 
 
-    def timer(self, time, value, auto=False, compat=ATTRIB_COMPAT_DEFAULT, caller=None, source=None):
+    def timer(self, time, value, auto=False, caller=None, source=None, compat=ATTRIB_COMPAT_DEFAULT):
+        """
+
+        :param time: Duration till the value of the item is set
+        :param value: Value the item should be set to
+        :param auto: Optional: If False a single timer is started, else the duration/value information is set as autotimer
+        :param caller: Optional: The caller of this function
+        :param source: Optional: The source of the timer-request
+        :param compat: Optional: The attribute comatibility (only used if an autotimer is set)
+
+        :return: None
+
+        """
         time = self._cast_duration(time)
         value = self._castvalue_to_itemtype(value, compat)
-        if auto:
-            caller = 'Autotimer'
-            self._autotimer = [(time, value), compat, None, None]
-        else:
-            caller = 'Timer'
+        if caller is None:
+            if auto:
+                caller = 'Autotimer'
+                self._autotimer = [(time, value), compat, None, None]
+            else:
+                caller = 'Timer'
         next = self.shtime.now() + datetime.timedelta(seconds=time)
         if source is None:
             self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': value, 'caller': caller}, next=next)
         else:
             self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': value, 'caller': caller, 'source': source}, next=next)
+        return
 
 
     def remove_timer(self):
+        """
+        Remove a running timer
+
+        :return: None
+        """
         self._sh.scheduler.remove(self._itemname_prefix+self.id() + '-Timer')
+        return
 
 
     def autotimer(self, time=None, value=None, compat=ATTRIB_COMPAT_V12):

@@ -60,8 +60,8 @@ Die Quellen finden/installieren
 oder
   * Sie holen sich das Repository direkt:
 
-    ``git clone https://github.com/smarthomeNG/smarthome.git .``
-    ``git clone https://github.com/smarthomeNG/plugins.git plugins``
+    * ``git clone https://github.com/smarthomeNG/smarthome.git .``
+    * ``git clone https://github.com/smarthomeNG/plugins.git plugins``
 
   * Sie erstellen Ihren eigenen (lokalen) Branch (von Develop):
 
