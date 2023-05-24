@@ -230,6 +230,10 @@ class ItemData:
             if item._hysteresis_lower_timer is not None:
                 hysteresis_lower_threshold += ' ' + ATTRIBUTE_SEPARATOR + ' ' + str(item._hysteresis_lower_timer)
 
+            autotimer = str(item._autotimer_time)
+            if item._autotimer_value is not None:
+                autotimer += ' ' + ATTRIBUTE_SEPARATOR + ' ' + str(item._autotimer_value)
+
             data_dict = {'path': item._path,
                          'name': item._name,
                          'type': item.property.type,
@@ -267,7 +271,7 @@ class ItemData:
                          'log_rules': self.disp_str(item._log_rules),
                          'cycle': str(cycle),
                          'crontab': str(crontab),
-                         'autotimer': self.disp_str(item._autotimer),
+                         'autotimer': self.disp_str(autotimer),
                          'threshold': self.disp_str(item._threshold),
                          'threshold_crossed': '',
 #                         'config': json.dumps(item_conf_sorted),

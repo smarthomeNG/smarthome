@@ -55,7 +55,8 @@ from .helpers import *
 _items_instance = None
 
 
-ATTRIB_COMPAT_DEFAULT_FALLBACK = ATTRIB_COMPAT_V12
+#ATTRIB_COMPAT_DEFAULT_FALLBACK = ATTRIB_COMPAT_V12
+ATTRIB_COMPAT_DEFAULT_FALLBACK = ATTRIB_COMPAT_LATEST
 ATTRIB_COMPAT_DEFAULT = ''
 
 logger = logging.getLogger(__name__)
@@ -110,6 +111,8 @@ class Item():
 
         self._filename = None
         self._autotimer = False
+        self._autotimer_time = None
+        self._autotimer_value = None
         self._cache = False
         self.cast = cast_bool
         self.__changed_by = 'Init:None'
@@ -216,11 +219,23 @@ class Item():
             if ATTRIB_COMPAT_DEFAULT == '':
                 ATTRIB_COMPAT_DEFAULT = ATTRIB_COMPAT_DEFAULT_FALLBACK
 
+        self._filename = dict(config.items()).get('_filename', None)
+
+        #############################################################
+        # Item Attribute 'Type'
+        #############################################################
+        setattr(self, '_type', dict(config.items()).get(KEY_TYPE))
+        if self._type is None:
+            self._type = FOO  # Every item has a type, type is FOO, if not defined in item
+        #__defaults = {'num': 0, 'str': '', 'bool': False, 'list': [], 'dict': {}, 'foo': None, 'scene': 0}
+        if self._type not in ITEM_DEFAULTS:
+            logger.error(f"Item {self._path}: type '{self._type}' unknown. Please use one of: {', '.join(list(ITEM_DEFAULTS.keys()))}.")
+            raise AttributeError
+        self.cast = globals()['cast_' + self._type]
+
         #############################################################
         # Item Attributes
         #############################################################
-        self._filename = dict(config.items()).get('_filename', None)
-        setattr(self, '_type', dict(config.items()).get(KEY_TYPE))
         for attr, value in config.items():
             if not isinstance(value, dict):
                 if attr in [KEY_CYCLE, KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE]:
@@ -237,10 +252,12 @@ class Item():
                     if isinstance(value, str):
                         value = [value, ]
                     setattr(self, '_' + attr, value)
+
                 elif attr in [KEY_EVAL]:
-                    self._process_eval(attr, value)
+                    self._parse_eval_attribute(attr, value)
                 elif attr in [KEY_EVAL_TRIGGER] or (self._use_conditional_triggers and attr in [KEY_TRIGGER]):  # cast to list
-                    self._process_trigger_list(attr, value)
+                    self._parse_eval_trigger_list_attribute(attr, value)
+
                 elif (attr in [KEY_CONDITION]) and self._use_conditional_triggers:  # cast to list
                     if isinstance(value, list):
                         cond_list = []
@@ -252,25 +269,12 @@ class Item():
                         logger.warning("Item __init__: {}: Invalid trigger_condition specified! Must be a list".format(self._path))
 
                 elif attr in [KEY_HYSTERESIS_INPUT]:
-                    self._hysteresis_input_unexpanded = value
-                    self._hysteresis_input = self.get_absolutepath(value, attr)
-                elif attr in [KEY_HYSTERESIS_UPPER_THRESHOLD]:
-                    if value.find(ATTRIBUTE_SEPARATOR) == -1:
-                        self._hysteresis_upper_threshold = self.get_stringwithabsolutepathes(value, 'sh.', '(', attr)
-                    else:
-                        threshold, __, timer = value.rpartition(ATTRIBUTE_SEPARATOR)
-                        self._hysteresis_upper_threshold = self.get_stringwithabsolutepathes(threshold.strip(), 'sh.', '(', attr)
-                        self._hysteresis_upper_timer = self.get_stringwithabsolutepathes(timer.strip(), 'sh.', '(', attr)
-                elif attr in [KEY_HYSTERESIS_LOWER_THRESHOLD]:
-                    if value.find(ATTRIBUTE_SEPARATOR) == -1:
-                        self._hysteresis_lower_threshold = self.get_stringwithabsolutepathes(value, 'sh.', '(', attr)
-                    else:
-                        threshold, __, timer = value.rpartition(ATTRIBUTE_SEPARATOR)
-                        self._hysteresis_lower_threshold = self.get_stringwithabsolutepathes(threshold.strip(), 'sh.', '(', attr)
-                        self._hysteresis_lower_timer = self.get_stringwithabsolutepathes(timer.strip(), 'sh.', '(', attr)
+                    self._parse_hysteresis_input_attribute(attr, value)
+                elif attr in [KEY_HYSTERESIS_UPPER_THRESHOLD, KEY_HYSTERESIS_LOWER_THRESHOLD]:
+                    self._parse_hysteresis_xx_threshold_attribute(attr, value)
 
                 elif attr in [KEY_ON_CHANGE, KEY_ON_UPDATE]:
-                    self._process_on_xx_list(attr, value)
+                    self._parse_on_xx_list_attribute(attr, value)
 
                 elif attr in [KEY_LOG_LEVEL]:
                     if value != '':
@@ -318,17 +322,8 @@ class Item():
                         setattr(self, '_log_text', value)
 
                 elif attr == KEY_AUTOTIMER:
-                    time, value, compat = split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT)
-                    timeitem = None
-                    valueitem = None
-                    if time.lower().startswith('sh.') and time.endswith('()'):
-                        timeitem = self.get_absolutepath(time[3:-2], KEY_AUTOTIMER)
-                        time = 0
-                    if value.lower().startswith('sh.') and value.endswith('()'):
-                        valueitem = self.get_absolutepath(value[3:-2], KEY_AUTOTIMER)
-                        value = ''
-                    value = self._castvalue_to_itemtype(value, compat)
-                    self._autotimer = [ (self._cast_duration(time), value), compat, timeitem, valueitem]
+                    self._parse_autotimer_attribute(attr, value)
+
                 elif attr == KEY_THRESHOLD:
                     low, __, high = value.rpartition(':')
                     if not low:
@@ -395,17 +390,6 @@ class Item():
                     vars(self)[attr] = child
                     _items_instance.add_item(child_path, child)
                     self.__children.append(child)
-
-        #############################################################
-        # Type
-        #############################################################
-        #__defaults = {'num': 0, 'str': '', 'bool': False, 'list': [], 'dict': {}, 'foo': None, 'scene': 0}
-        if self._type is None:
-            self._type = FOO  # Every item has a type, type is FOO, if not defined in item
-        if self._type not in ITEM_DEFAULTS:
-            logger.error("Item {}: type '{}' unknown. Please use one of: {}.".format(self._path, self._type, ', '.join(list(ITEM_DEFAULTS.keys()))))
-            raise AttributeError
-        self.cast = globals()['cast_' + self._type]
 
         #############################################################
         # Value
@@ -524,7 +508,7 @@ class Item():
                 try:
                     value = mycast(value)
                 except:
-                    logger.warning("Item {}: Unable to cast '{}' to {}".format(self._path, str(value), self._type))
+                    logger.warning(f"Item {self._path}: Unable to cast '{str(value)}' to {self._type}")
                     if isinstance(value, list):
                         value = []
                     elif isinstance(value, dict):
@@ -532,7 +516,7 @@ class Item():
                     else:
                         value = mycast('')
             else:
-                logger.warning("Item {}: Unable to cast '{}' to {}".format(self._path, str(value), self._type))
+                logger.warning(f"Item {self._path}: Unable to cast '{str(value)}' to {self._type}")
         return value
 
 
@@ -605,9 +589,9 @@ class Item():
     --------------------------------------------------------------------------------------------
     """
 
-    def _process_eval(self, attribute_name, value):
+    def _parse_eval_attribute(self, attribute_name, value):
         """
-        Processing eval attribute during parsing of standard attributes
+        Parsing eval attribute during parsing of standard attributes
 
         :param value: attribute from item configuration
         :param attribute_name: attribute name from item configuration
@@ -625,18 +609,49 @@ class Item():
             self._eval = value
 
 
-    def _process_trigger_list(self, attr, value):
+    def _parse_eval_trigger_list_attribute(self, attribute_name, value):
+        """
+        Parsing eval_trigger attribute during parsing of standard attributes
 
+        :param value: attribute from item configuration
+        :param attribute_name: attribute name from item configuration
+
+        :return: None
+        """
         if isinstance(value, str):
             value = [value, ]
         self._trigger_unexpanded = value
         expandedvalue = []
         for path in value:
-            expandedvalue.append(self.get_absolutepath(path, attr))
+            expandedvalue.append(self.get_absolutepath(path, attribute_name))
         self._trigger = expandedvalue
 
 
-    def _process_on_xx_list(self, attr, value):
+    def _parse_hysteresis_input_attribute(self, attribute_name, value):
+
+        self._hysteresis_input_unexpanded = value
+        self._hysteresis_input = self.get_absolutepath(value, attribute_name)
+
+
+    def _parse_hysteresis_xx_threshold_attribute(self, attr, value):
+
+        if value.find(ATTRIBUTE_SEPARATOR) == -1:
+            threshold = self.get_stringwithabsolutepathes(value, 'sh.', '(', attr)
+            timer = None
+        else:
+            threshold_unex, __, timer_unex = value.rpartition(ATTRIBUTE_SEPARATOR)
+            threshold = self.get_stringwithabsolutepathes(threshold_unex.strip(), 'sh.', '(', attr)
+            timer = self.get_stringwithabsolutepathes(timer_unex.strip(), 'sh.', '(', attr)
+
+        if attr == KEY_HYSTERESIS_UPPER_THRESHOLD:
+            self._hysteresis_upper_threshold = threshold
+            self._hysteresis_upper_timer = timer
+        elif attr == KEY_HYSTERESIS_LOWER_THRESHOLD:
+            self._hysteresis_lower_threshold = threshold
+            self._hysteresis_lower_timer = timer
+
+
+    def _parse_on_xx_list_attribute(self, attr, value):
 
         if isinstance(value, str):
             value = [value]
@@ -665,6 +680,15 @@ class Item():
         setattr(self, '_' + attr + '_dest_var', dest_var_list)
         setattr(self, '_' + attr + '_dest_var_unexp', dest_var_list_unexp)
         return
+
+
+    def _parse_autotimer_attribute(self, attr, value):
+
+        auto_time, auto_value, compat = split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT)
+        self._autotimer_time = self.get_stringwithabsolutepathes(auto_time, 'sh.', '(', attr)
+        self._autotimer_value = self.get_stringwithabsolutepathes(auto_value, 'sh.', '(', attr)
+        #logger.notice(f"_parse_autotimer_attribute: {self._path} - value={value} -> _autotimer_time={self._autotimer_time}, _autotimer_value={self._autotimer_value}")
+
 
     """
     --------------------------------------------------------------------------------------------
@@ -1323,7 +1347,11 @@ class Item():
         import math
         import lib.userfunctions as uf
 
-        result = eval(str(eval_expression))
+        try:
+            result = eval(str(eval_expression))
+        except Exception as e:
+            logger.error(f"__run_attribute_eval: evel(str({eval_expression})) - Exception {e}")
+            result = ''
         if result_type == 'num':
             if not isinstance(result, (int, float)):
                 logger.error(f"Item '{self._path}': Attribute expression '{eval_expression}' evaluated to a non-numeric value '{result}', using 0 instead")
@@ -1674,7 +1702,7 @@ class Item():
             value = self.cast(value)
         except:
             try:
-                logger.warning('Item {}: value "{}" does not match type {}. Via {} {}'.format(self._path, value, self._type, caller, source))
+                logger.warning(f'Item {self._path}: value "{value}" does not match type {self._type}. Via caller {caller}, source {source}')
             except:
                 pass
             return
@@ -1731,21 +1759,13 @@ class Item():
                 cache_write(self._cache, self._value)
             except Exception as e:
                 logger.warning("Item: {}: could update cache {}".format(self._path, e))
-        if self._autotimer and caller != 'Autotimer' and not self._fading:
 
-            _time, _value = self._autotimer[0]
-            compat = self._autotimer[1]
-            if self._autotimer[2]:
-                try:
-                    _time = eval('self._sh.'+self._autotimer[2]+'()')
-                except:
-                    logger.warning("Item '{}': Attribute 'autotimer': Item '{}' does not exist".format(self._path, self._autotimer[2]))
-            if self._autotimer[3]:
-                try:
-                    _value = self._castvalue_to_itemtype(eval('self._sh.'+self._autotimer[3]+'()'), compat)
-                except:
-                    logger.warning("Item '{}': Attribute 'autotimer': Item '{}' does not exist".format(self._path, self._autotimer[3]))
-            self._autotimer[0] = (_time, _value)     # for display of active/last timer configuration in backend
+        if self._autotimer_time and caller != 'Autotimer' and not self._fading:
+            _time = self.__run_attribute_eval(self._cast_duration(self._autotimer_time))
+            if self._autotimer_value is None:
+                _value = self._value
+            else:
+                _value = self.__run_attribute_eval(self._autotimer_value)
 
             next = self.shtime.now() + datetime.timedelta(seconds=_time)
             self._sh.scheduler.add(self._itemname_prefix+self.id() + '-Timer', self.__call__, value={'value': _value, 'caller': 'Autotimer'}, next=next)
@@ -1827,7 +1847,8 @@ class Item():
         if caller is None:
             if auto:
                 caller = 'Autotimer'
-                self._autotimer = [(time, value), compat, None, None]
+                self._autotimer_time = time
+                self._autotimer_value = value
             else:
                 caller = 'Timer'
         next = self.shtime.now() + datetime.timedelta(seconds=time)
@@ -1851,7 +1872,8 @@ class Item():
     def autotimer(self, time=None, value=None, compat=ATTRIB_COMPAT_V12):
         if time is not None and value is not None:
             time = self._cast_duration(time)
-            self._autotimer = [(time, value), compat, None, None]
+            self._autotimer_time = time
+            self._autotimer_value = value
         else:
             self._autotimer = False
 
