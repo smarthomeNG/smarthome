@@ -231,11 +231,13 @@ class TestItem(unittest.TestCase):
         self.assertEqual(it._autotimer_value, 42)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item02")		# autotimer = 5s = = compat_1.2
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, '')
 
         it = self.sh.items.return_item("item_tree.timertests.test_item03")		# autotimer = 5s = None = compat_1.2
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, 'None')
@@ -243,16 +245,19 @@ class TestItem(unittest.TestCase):
 
         # Compatibility mode: No value casting for SmartHome v1.2 and older -> item-type ist str
         it = self.sh.items.return_item("item_tree.timertests.test_item11")		# autotimer = 5m = 42 = latest
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5m')
         self.assertEqual(it._autotimer_value, 42)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item12")		# autotimer = 5s = = latest
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, '')
 
         it = self.sh.items.return_item("item_tree.timertests.test_item13")		# autotimer = 5s = None = latest
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, 'None')
@@ -260,16 +265,19 @@ class TestItem(unittest.TestCase):
 
         # Compatibility mode: No value casting for SmartHome v1.2 and older -> item-type ist num
         it = self.sh.items.return_item("item_tree.timertests.test_item21")		# autotimer = 5m = 42 = latest
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5m')
         self.assertEqual(it._autotimer_value, 42)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item22")		# autotimer = 5s = = latest
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, 0)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item23")		# autotimer = 5s = None = latest
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, 0)
@@ -277,31 +285,37 @@ class TestItem(unittest.TestCase):
 
         # Compatibility mode: No value casting for SmartHome v1.2 and older -> item-type ist bool
         it = self.sh.items.return_item("item_tree.timertests.test_item31")		# autotimer = 5m = 42 = latest
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5m')
         self.assertEqual(it._autotimer_value, False)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item32")		# autotimer = 5s = = latest
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, False)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item33")		# autotimer = 5s = None = latest
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, False)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item33")		# autotimer = 5s = 1 = latest
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, False)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item34")		# autotimer = 5s = True = latest
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5m')
         self.assertEqual(it._autotimer_value, True)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item35")		# autotimer = 5s = true = latest
+        logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, False)
