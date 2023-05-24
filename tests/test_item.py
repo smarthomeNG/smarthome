@@ -232,78 +232,78 @@ class TestItem(unittest.TestCase):
 
         it = self.sh.items.return_item("item_tree.timertests.test_item02")		# autotimer = 5s = = compat_1.2
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 5)
+        self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, '')
 
         it = self.sh.items.return_item("item_tree.timertests.test_item03")		# autotimer = 5s = None = compat_1.2
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 5)
+        self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, 'None')
 
 
         # Compatibility mode: No value casting for SmartHome v1.2 and older -> item-type ist str
         it = self.sh.items.return_item("item_tree.timertests.test_item11")		# autotimer = 5m = 42 = latest
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 300)
+        self.assertEqual(it._autotimer_time, '5m')
         self.assertEqual(it._autotimer_value, '42')
 
         it = self.sh.items.return_item("item_tree.timertests.test_item12")		# autotimer = 5s = = latest
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 5)
+        self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, '')
 
         it = self.sh.items.return_item("item_tree.timertests.test_item13")		# autotimer = 5s = None = latest
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 5)
+        self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, 'None')
 
 
         # Compatibility mode: No value casting for SmartHome v1.2 and older -> item-type ist num
         it = self.sh.items.return_item("item_tree.timertests.test_item21")		# autotimer = 5m = 42 = latest
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 300)
+        self.assertEqual(it._autotimer_time, '5m')
         self.assertEqual(it._autotimer_value, 42)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item22")		# autotimer = 5s = = latest
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 5)
+        self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, 0)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item23")		# autotimer = 5s = None = latest
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 5)
+        self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, 0)
 
 
         # Compatibility mode: No value casting for SmartHome v1.2 and older -> item-type ist bool
         it = self.sh.items.return_item("item_tree.timertests.test_item31")		# autotimer = 5m = 42 = latest
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 300)
+        self.assertEqual(it._autotimer_time, '5m')
         self.assertEqual(it._autotimer_value, False)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item32")		# autotimer = 5s = = latest
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 5)
+        self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, False)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item33")		# autotimer = 5s = None = latest
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 5)
+        self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, False)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item33")		# autotimer = 5s = 1 = latest
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 5)
+        self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, False)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item34")		# autotimer = 5s = True = latest
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 300)
+        self.assertEqual(it._autotimer_time, '5m')
         self.assertEqual(it._autotimer_value, True)
 
         it = self.sh.items.return_item("item_tree.timertests.test_item35")		# autotimer = 5s = true = latest
         self.assertIsNotNone(it)
-        self.assertEqual(it._autotimer_time, 5)
+        self.assertEqual(it._autotimer_time, '5s')
         self.assertEqual(it._autotimer_value, False)
 
 
