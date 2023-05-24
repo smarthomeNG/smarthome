@@ -149,19 +149,23 @@ class ItemData:
                 prev_value = html.escape(prev_value)
                 last_value = html.escape(last_value)
 
-            cycle = ''
+            #cycle = ''
             crontab = ''
             for entry in self._sh.scheduler._scheduler:
                 if entry == "items." + item._path:
-                    if self._sh.scheduler._scheduler[entry]['cycle']:
-                        cycle = self._sh.scheduler._scheduler[entry]['cycle']
+            #        if self._sh.scheduler._scheduler[entry]['cycle']:
+            #            cycle = self._sh.scheduler._scheduler[entry]['cycle']
                     if self._sh.scheduler._scheduler[entry]['cron']:
                         crontab = html.escape(str(self._sh.scheduler._scheduler[entry]['cron']))
                     break
-            if cycle == '':
-                cycle = '-'
+            #if cycle == '':
+            #    cycle = '-'
             if crontab == '':
                 crontab = '-'
+
+            cycle = str(item._cycle_time)
+            if item._cycle_value is not None:
+                cycle += ' ' + ATTRIBUTE_SEPARATOR + ' ' + str(item._cycle_value)
 
             changed_by = item.property.last_change_by
             if changed_by[-5:] == ':None':

@@ -1,3 +1,4 @@
+
 .. index:: Standard-Attribute; autotimer
 .. index:: autotimer
 
@@ -10,18 +11,18 @@ beginnt der Timer erneut zu laufen. Damit lässt sich z.B. ein Treppenhauslicht 
 
 .. code-block:: yaml
 
-   item:
+   myitem:
        type: num
        autotimer: 5m ; 0
 
 setzt nach 5 Minuten den Wert des Items auf 0.
 
 
-Das allgemeine Format für die Angabe des **autotimer** Attributs ist:
+Das allgemeine Format für die Angabe des **autotimer** Attributes ist:
 
 .. code-block:: yaml
 
-   item:
+   myitem:
        autotimer: <Dauer> ; <Wert>
 
 Der Wert für **Dauer** kann auf folgende Weise angegeben werden:
@@ -35,8 +36,6 @@ Wert gesetzt, den es zum Zeitpunkt der auslösenden Wertänderung angenommen hat
 Der Trenner (Delimiter) zwischen **Dauer** und **Wert** ist ab SmartHomeNG v1.10 standardmäßig ein Semikolon.
 Es kann jedoch auch der alte Delimiter (das Gleichheitszeichen) verwendet werden.
 
-Bitte beachten: `Datentyp der
-Wertzuweisung <#datentyp-der-wertzuweisung>`__
 
 **Ab SmartHomeNG v1.10** werden die Konfigurationsmöglichkeiten erweitert:
 
@@ -45,7 +44,7 @@ Itemnamen (absolut oder relativ) möglich.
 
 .. code-block:: yaml
 
-   item:
+   myitem:
        type: num
        autotimer: sh.item.dauer() ; 1 + sh.item.wert()
        dauer:
@@ -53,8 +52,8 @@ Itemnamen (absolut oder relativ) möglich.
        wert:
            initial_value: 1
 
-setzt nach der in *item.dauer* angegebenen Dauer (41 Sekunden) plus 1 Sekunde aus dem Ausdruck
-den Wert des Items auf in *item.wert* (hier initial mit 1 angegebenen).
+setzt nach der in *myitem.dauer* angegebenen Dauer (41 Sekunden) plus 1 Sekunde aus dem Ausdruck
+den Wert des Items auf in *myitem.wert* (hier initial mit 1 angegebenen).
 Die Angabe der Items kann auch als relative Angabe erfolgen
 (bspw. *sh..dauer()*)
 

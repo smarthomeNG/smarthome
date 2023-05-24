@@ -110,9 +110,10 @@ class Item():
             self._sh.shng_status['details'] = str(items_count)  # Item Zähler übertragen
 
         self._filename = None
-        self._autotimer = False
         self._autotimer_time = None
         self._autotimer_value = None
+        self._cycle_time = None
+        self._cycle_value = None
         self._cache = False
         self.cast = cast_bool
         self.__changed_by = 'Init:None'
@@ -121,7 +122,6 @@ class Item():
         self.__children = []
         self.conf = {}
         self._crontab = None
-        self._cycle = None
         self._enforce_updates = False
         self._enforce_change = False
 
@@ -238,7 +238,7 @@ class Item():
         #############################################################
         for attr, value in config.items():
             if not isinstance(value, dict):
-                if attr in [KEY_CYCLE, KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE]:
+                if attr in [KEY_NAME, KEY_TYPE, KEY_STRUCT, KEY_VALUE, KEY_INITVALUE]:
                     if attr == KEY_INITVALUE:
                         attr = KEY_VALUE
                     setattr(self, '_' + attr, value)
@@ -323,6 +323,9 @@ class Item():
 
                 elif attr == KEY_AUTOTIMER:
                     self._parse_autotimer_attribute(attr, value)
+
+                elif attr == KEY_CYCLE:
+                    self._parse_cycle_attribute(attr, value)
 
                 elif attr == KEY_THRESHOLD:
                     low, __, high = value.rpartition(':')
@@ -680,6 +683,14 @@ class Item():
         setattr(self, '_' + attr + '_dest_var', dest_var_list)
         setattr(self, '_' + attr + '_dest_var_unexp', dest_var_list_unexp)
         return
+
+
+    def _parse_cycle_attribute(self, attr, value):
+
+        cycle_time, cycle_value, compat = split_duration_value_string(value, ATTRIB_COMPAT_DEFAULT)
+        self._cycle_time = self.get_stringwithabsolutepathes(cycle_time, 'sh.', '(', attr)
+        self._cycle_value = self.get_stringwithabsolutepathes(cycle_value, 'sh.', '(', attr)
+        #logger.notice(f"_parse_cycle_attribute: {self._path} - value={value} -> _cycle_time={self._cycle_time}, _cycle_value={self._cycle_value}")
 
 
     def _parse_autotimer_attribute(self, attr, value):
@@ -1314,10 +1325,14 @@ class Item():
         #############################################################
         # Crontab/Cycle
         #############################################################
-        if self._crontab is not None or self._cycle is not None:
-            cycle = self._cycle
-            if cycle is not None:
-                cycle = self._build_cycledict(cycle)
+        if self._crontab is not None or self._cycle_time is not None:
+            cycle = None
+            if self._cycle_time is not None:
+                #cycle = self._build_cycledict(cycle)
+                if self._cycle_value is None:
+                    cycle = {self._cast_duration(self._cycle_time): self._value}
+                else:
+                    cycle = {self._cast_duration(self._cycle_time): self._cycle_value}
             self._sh.scheduler.add(self._itemname_prefix+self._path, self, cron=self._crontab, cycle=cycle)
 
         return
@@ -1875,7 +1890,7 @@ class Item():
             self._autotimer_time = time
             self._autotimer_value = value
         else:
-            self._autotimer = False
+            self._autotimer_time = None
 
 
     def fade(self, dest, step=1, delta=1):
