@@ -228,7 +228,7 @@ class TestItem(unittest.TestCase):
         logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5m')
-        self.assertEqual(it._autotimer_value, 41)
+        self.assertEqual(it._autotimer_value, '41')
 
         it = self.sh.items.return_item("item_tree.timertests.test_item02")		# autotimer = 5s = = compat_1.2
         logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
@@ -248,7 +248,7 @@ class TestItem(unittest.TestCase):
         logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5m')
-        self.assertEqual(it._autotimer_value, 42)
+        self.assertEqual(it._autotimer_value, '42')
 
         it = self.sh.items.return_item("item_tree.timertests.test_item12")		# autotimer = 5s = = latest
         logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
@@ -268,7 +268,7 @@ class TestItem(unittest.TestCase):
         logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
         self.assertIsNotNone(it)
         self.assertEqual(it._autotimer_time, '5m')
-        self.assertEqual(it._autotimer_value, 43)
+        self.assertEqual(it._autotimer_value, '43')
 
         it = self.sh.items.return_item("item_tree.timertests.test_item22")		# autotimer = 5s = = latest
         logger.warning("test_item_autotimers: sh.items  it = {}".format(it))
