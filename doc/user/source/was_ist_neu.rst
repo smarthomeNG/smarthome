@@ -15,8 +15,6 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
   - **SmartDevicePlugin**: Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und
     jedes neue Gerät aufs Neue das ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen
     (commands) und Kommunikation mit Netzwerk- oder seriellen Treibern oder Libraries.
-  - **Plugin smartvisu**: Der Default Wert des Parameters **generate_pages** wurde auf **False** geändert. Zum
-    generieren von Seiten muss dieser Parameter nun aktive konfiguriert werden.
 
 Details zu den genannten Punkten sind in den Abschnitten :doc:`Konfiguration </konfiguration/konfiguration>`
 bzw. :doc:`Referenz </referenz/referenz>` zu finden.
@@ -25,8 +23,16 @@ Die vollständigen Änderungen dieses Releases können in den :doc:`Release Note
 werden.
 
 
-Es sind auch einige :ref:`neue Plugins <releasenotes_1_10_neue_plugins>` hinzugekommen.
-Außerdem hat es eine Reihe von :ref:`Updates zu bestehenden Plugins <releasenotes_1_10_updates_plugins>` gegeben.
+Neuerungen bei Plugins
+~~~~~~~~~~~~~~~~~~~~~~
+
+Bei den Plugins sind folgende Änderungen zu beachten:
+
+  - **Plugin smartvisu**: Der Default Wert des Parameters **generate_pages** wurde auf **False** geändert. Zum
+    generieren von Seiten muss dieser Parameter nun aktive konfiguriert werden.
+  - Es sind auch einige :ref:`neue Plugins <releasenotes_1_10_neue_plugins>` hinzugekommen.
+  - Außerdem hat es eine Reihe von :ref:`Updates zu bestehenden Plugins <releasenotes_1_10_updates_plugins>` gegeben.
+  - Es sind einige veraltete Plugins :ref:`retired <releasenotes_1_10_retired_plugins>` worden.
 |
 
 

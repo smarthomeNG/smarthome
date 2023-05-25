@@ -302,16 +302,29 @@ wechseln.
 
 * System Plugins
 
-  * backend - use the administration interface instead
   * sqlite_visu2_8 - switch to the **database** plugin
 
 * Web Plugins
 
-  * wunderground - the free API is not provided anymore by Wunderground
+  * wunderground - the free API is not provided anymore by Wunderground - switch to the **piratewthr** or
+    **openweathermap** plugin
+
+Außerdem wurden folgende Plugins als *deprecated* markiert:
+
+* Web Plugins
+
+  * darksky - the free API is not provided anymore - switch to the **piratewthr** or **openweathermap** plugin
 
 
-Die folgenden Plugins wurden in v1.7 als *deprecated* (veraltet) markiert, weil kein Nutzer oder Tester
-dieser Plugins gefunden werden konnte:
+.. _releasenotes_1_10_retired_plugins:
+
+Retired Plugins
+---------------
+
+Die folgenden Plugins wurden *retired* (in den RUhestand geschickt). Sie waren in einem der vorangegangenen
+Releases von SmartHomeNG als *deprecated* markiert worden. Diese Plugins wurden aus dem **plugins** Repository
+entfernt, stehen jedoch als Referenz weiterhin zur Verfügung. Diese Plugins wurden in das **plugin_archive**
+Repositiory aufgenommen.
 
 * Gateway Plugins
 
@@ -330,21 +343,6 @@ dieser Plugins gefunden werden konnte:
 * Web Plugins
 
   * nma
-
-Weiterhin wurde das bisherige mqtt Plugin zu mqtt1 umbenannt und als *deprecated* markiert, da das neue mqtt
-Plugin diese Funktionalität übernimmt. Das neue mqtt Plugin nutzt dazu das mqtt Modul des aktuellen Cores
-von SmartHomeNG.
-
-
-Retired Plugins
----------------
-
-Die folgenden Plugins wurden *retired* (in den RUhestand geschickt). Sie waren in einem der vorangegangenen
-Releases von SmartHomeNG als *deprecated* markiert worden. Diese Plugins wurden aus dem **plugins** Repository
-entfernt, stehen jedoch als Referenz weiterhin zur Verfügung. Diese Plugins wurden in das **plugin_archive**
-Repositiory aufgenommen.
-
-* ...
 
 |
 
