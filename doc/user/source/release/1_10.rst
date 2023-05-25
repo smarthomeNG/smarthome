@@ -17,7 +17,7 @@ sowie einige neue Plugins.
 
         Diese Release Notes sind ein Arbeitsstand.
 
-         - Berücksichtigt sind Commits im smarthome Repository bis incl. 18. Mai 2023
+         - Berücksichtigt sind Commits im smarthome Repository bis incl. 24. Mai 2023
            (...)
          - Berücksichtigt sind Commits im plugins Repository bis incl. 19. Mai 2023
            (...)
@@ -84,6 +84,10 @@ Updates im CORE
     * Implemented timer for hysteresis items
     * Implemented multi level nesting of structs, if they are included on the top level of a struct
     * Implemented multi level nesting of structs, even they are included on a deeper level of a struct
+    * Hysteresis Items can be configured with eval expressions instead of absolute numeric values or item references
+    * Attribute autotimer now supports eval expressions; Attribute autotimer is working without specification of
+      a value (again)
+    * Attribute cycle now supports eval expressions; Attribute cylce is working without specification of a value (again)
 
   * lib.log:
 
@@ -148,6 +152,8 @@ Allgmein
   * ...
 
 
+.. _releasenotes_1_10_neue_plugins:
+
 Neue Plugins
 ------------
 
@@ -159,6 +165,8 @@ http://www.smarthomeng.de/user/plugins_all.html konsultieren.
 * pioneer: for Pioneer AV Receivers, based on SmartDevicePlugin
 * oppo: First version of SmartDevicePlugin based plugin for Oppo UHD players
 
+
+.. _releasenotes_1_10_updates_plugins:
 
 Plugin Updates
 --------------

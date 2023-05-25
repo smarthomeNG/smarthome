@@ -109,8 +109,8 @@ Konfiguration
         type: bool
         name: 'z.B. Beschattung an/aus'
         hysteresis_input: ..hysterese_input
-        hysteresis_upper_threshold: <oberer Schwellwert> ; <Mindestdauer in Sekunden>
-        hysteresis_lower_threshold: <unterer Schwellwert> ; <Mindestdauer in Sekunden>
+        hysteresis_upper_threshold: <oberer Schwellwert> [; <Mindestdauer in Sekunden> ]
+        hysteresis_lower_threshold: <unterer Schwellwert> [; <Mindestdauer in Sekunden> ]
 
 Der obere Schwellwert und der untere Schwellwert können als Integer oder Float Werte angegeben werden.
 Die Angabe der Mindestdauer zu den Schwellwerten ist optional. Die Mindestdauer kann als Integer oder Float Wert

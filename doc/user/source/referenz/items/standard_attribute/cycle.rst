@@ -28,7 +28,7 @@ Das allgemeine Format für die Angabe des **cycle** Attributes ist:
 .. code-block:: yaml
 
    myitem:
-       cycle: <Dauer> ; <Wert>
+       cycle: <Dauer> [; <Wert>]
 
 Der Wert für **Dauer** kann auf folgende Weise angegeben werden:
 

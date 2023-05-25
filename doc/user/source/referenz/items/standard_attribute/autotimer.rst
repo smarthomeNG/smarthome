@@ -23,7 +23,7 @@ Das allgemeine Format für die Angabe des **autotimer** Attributes ist:
 .. code-block:: yaml
 
    myitem:
-       autotimer: <Dauer> ; <Wert>
+       autotimer: <Dauer> [; <Wert>]
 
 Der Wert für **Dauer** kann auf folgende Weise angegeben werden:
 

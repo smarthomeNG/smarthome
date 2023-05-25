@@ -10,6 +10,8 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     einer stuct eingebunden werden.
   - **Items**: Es gibt neue Attribute, die es ermöglichen ein Item als Hysterese-Glied mit optionalem Zeitlied
     zu konfigurieren.
+  - **Items**: In den Attributen **autotimer** und **cycle** können nun eval Ausdrücke in der Konfiguration genutzt
+    werden. Bisher waren nur konstante Werte und alternativ Item Referenzen möglich
   - **SmartDevicePlugin**: Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und
     jedes neue Gerät aufs Neue das ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen
     (commands) und Kommunikation mit Netzwerk- oder seriellen Treibern oder Libraries.
@@ -22,6 +24,9 @@ bzw. :doc:`Referenz </referenz/referenz>` zu finden.
 Die vollständigen Änderungen dieses Releases können in den :doc:`Release Notes v1.10  </release/1_10>` nachgelesen
 werden.
 
+
+Es sind auch einige :ref:`neue Plugins <releasenotes_1_10_neue_plugins>` hinzugekommen.
+Außerdem hat es eine Reihe von :ref:`Updates zu bestehenden Plugins <releasenotes_1_10_updates_plugins>` gegeben.
 |
 
 
