@@ -105,7 +105,7 @@ class Structs():
 
         end = time.perf_counter()
         duration = end - start
-        self.logger.notice(f"load_struct_definitions: time load_struct_definitions_from_file(): Duration={duration}")
+        self.logger.dbghigh(f"load_struct_definitions: time load_struct_definitions_from_file(): Duration={duration}")
 
         # Now that all structs have been loaded,
         # resolve struct references in structs and fill in the content of the struct
@@ -131,7 +131,7 @@ class Structs():
 
             end = time.perf_counter()
             duration = end - start
-            self.logger.notice(f"load_struct_definitions: time traverse all structs: Duration={duration}")
+            self.logger.dbghigh(f"load_struct_definitions: time traverse all structs: Duration={duration}")
 
 
         # for Testing: Save structure of joined item structs
@@ -142,11 +142,11 @@ class Structs():
             shyaml.yaml_save(os.path.join(etc_dir, 'structs_joined.yaml'), self._struct_definitions)
             end = time.perf_counter()
             duration = end - start
-            self.logger.notice(f"load_struct_definitions: time yaml_save(): Duration={duration}")
+            self.logger.dbghigh(f"load_struct_definitions: time yaml_save(): Duration={duration}")
 
         totalend = time.perf_counter()
         duration = totalend - totalstart
-        self.logger.notice(f"load_struct_definitions(): time Total duration={duration}")
+        self.logger.dbghigh(f"load_struct_definitions: time Total duration={duration}")
 
         return
 
