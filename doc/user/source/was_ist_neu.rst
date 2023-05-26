@@ -12,9 +12,6 @@ diesem und den vorangegangenen Releases ist den :doc:`Release Notes </release/re
     zu konfigurieren.
   - **Items**: In den Attributen **autotimer** und **cycle** können nun eval Ausdrücke in der Konfiguration genutzt
     werden. Bisher waren nur konstante Werte und alternativ Item Referenzen möglich
-  - **SmartDevicePlugin**: Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und
-    jedes neue Gerät aufs Neue das ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen
-    (commands) und Kommunikation mit Netzwerk- oder seriellen Treibern oder Libraries.
 
 Details zu den genannten Punkten sind in den Abschnitten :doc:`Konfiguration </konfiguration/konfiguration>`
 bzw. :doc:`Referenz </referenz/referenz>` zu finden.
@@ -33,6 +30,21 @@ Bei den Plugins sind folgende Änderungen zu beachten:
   - Es sind auch einige :ref:`neue Plugins <releasenotes_1_10_neue_plugins>` hinzugekommen.
   - Außerdem hat es eine Reihe von :ref:`Updates zu bestehenden Plugins <releasenotes_1_10_updates_plugins>` gegeben.
   - Es sind einige veraltete Plugins :ref:`retired <releasenotes_1_10_retired_plugins>` worden.
+
+
+Neuerungen für Plugin Entwickler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Für Entwickler von Plugins gibt es folgende Neuerungen:
+
+  - **SmartPlugin**: Die Klasse SmartPlugin ist in der Funktionalität erweitert worden
+  - **SmartDevicePlugin**: Das SmartDevicePlugin (sdp) ist aus der Notwendigkeit geboren, für jedes neue Plugin und
+    jedes neue Gerät aufs Neue das ganze Kern-Plugin neu zu erfinden - Item-Handling, Zuordnung von Items zu Befehlen
+    (commands) und Kommunikation mit Netzwerk- oder seriellen Treibern oder Libraries.
+
+Details zu den genannten Punkten sind in den Abschnitten :doc:`Entwicklung </entwicklung/entwicklung>`
+bzw. :doc:`Referenz </referenz/referenz>` zu finden.
+
 |
 
 
