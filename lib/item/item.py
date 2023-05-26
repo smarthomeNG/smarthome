@@ -266,7 +266,7 @@ class Item():
                         self._trigger_condition = self._build_trigger_condition_eval(cond_list)
                         self._trigger_condition_raw = cond_list
                     else:
-                        logger.warning("Item __init__: {}: Invalid trigger_condition specified! Must be a list".format(self._path))
+                        logger.warning(f"Item __init__: {self._path}: Invalid trigger_condition specified! Must be a list")
 
                 elif attr in [KEY_HYSTERESIS_INPUT]:
                     self._parse_hysteresis_input_attribute(attr, value)
@@ -493,7 +493,7 @@ class Item():
         return dest_item, value
 
 
-    def _castvalue_to_itemtype(self, value, compat):
+    def _castvalue_to_itemtype(self, value, compat=ATTRIB_COMPAT_LATEST):
         """
         casts the value to the type of the item, if backward compatibility
         to version 1.2 (ATTRIB_COMPAT_V12) is not enabled
@@ -1354,6 +1354,17 @@ class Item():
 
 
     def __run_attribute_eval(self, eval_expression, result_type='num'):
+        """
+        Evaluates an expression string for item attributes like
+         - autotimer
+         - cycle
+         - hysteresis_upper_threshold
+         - hysteresis_lower_threshold
+
+        :param eval_expression: string to evaluate
+        :param result_type: type for the result (num | str)
+        :return:
+        """
 
         # set up environment for calculating eval-expression
         sh = self._sh
@@ -1362,14 +1373,15 @@ class Item():
         import math
         import lib.userfunctions as uf
 
+        eval_expression = str(eval_expression)
         try:
-            result = eval(str(eval_expression))
+            result = eval(eval_expression)
         except Exception as e:
-            logger.error(f"__run_attribute_eval: evel(str({eval_expression})) - Exception {e}")
+            logger.error(f"Item {self._path}: __run_attribute_eval(): Problem evaluating {eval_expression} - Exception {e}")
             result = ''
         if result_type == 'num':
             if not isinstance(result, (int, float)):
-                logger.error(f"Item '{self._path}': Attribute expression '{eval_expression}' evaluated to a non-numeric value '{result}', using 0 instead")
+                logger.error(f"Item '{self._path}': __run_attribute_eval(): Attribute expression '{eval_expression}' evaluated to a non-numeric value '{result}', using 0 instead")
                 result = 0
 
         return result
@@ -1439,9 +1451,9 @@ class Item():
                     # uf.import_user_modules()  -  Modules were loaded during initialization phase of shng
 
                     cond = eval(self._trigger_condition)
-                    logger.warning("Item {}: Condition result '{}' evaluating trigger condition {}".format(self._path, cond, self._trigger_condition))
+                    logger.warning(f"Item {self._path}: Condition result '{cond}' evaluating trigger condition {self._trigger_condition}")
                 except Exception as e:
-                    log_msg = "Item {}: Problem evaluating trigger condition '{}': {}".format(self._path, self._trigger_condition, e)
+                    log_msg = f"Item {self._path}: Problem evaluating trigger condition '{self._trigger_condition}': {e}"
                     if (self._sh.shng_status['code'] != 20) and (caller != 'Init'):
                         logger.debug(log_msg)
                     else:
@@ -1468,13 +1480,11 @@ class Item():
                     self.__last_trigger = self.shtime.now()
 
                     logger.debug("Item {}: Eval triggered by: {}. Evaluating item with value {}. Eval expression: {}".format(self._path, self.__triggered_by, value, self._eval))
-                    #value = eval(self._eval)
 
                     # ms if contab: init = x is set, x is transfered as a string, for that case re-try eval with x converted to float
                     try:
                        value = eval(self._eval)
                     except:
-                        #value = float(value)
                         value = self._value = self.cast(value)
                         value = eval(self._eval)
                     # ms end
@@ -1540,7 +1550,7 @@ class Item():
         try:
             dest_value = eval(on_eval)       # calculate to test if expression computes and see if it computes to None
         except Exception as e:
-            logger.warning("Item {}: '{}' item-value='{}' problem evaluating {}: {}".format(self._path, attr, value, on_eval, e))
+            logger.warning(f"Item {self._path}: '{attr}' item-value='{value}' problem evaluating {on_eval}: {e}")
         else:
             if dest_value is not None:
                 # expression computes and does not result in None
@@ -1550,7 +1560,7 @@ class Item():
                         dest_item.__update(dest_value, caller=attr, source=self._path)
                         logger.debug(" - : '{}' finally evaluating {} = {}, result={}".format(attr, on_dest, on_eval, dest_value))
                     else:
-                        logger.error("Item {}: '{}' has not found dest_item '{}' = {}, result={}".format(self._path, attr, on_dest, on_eval, dest_value))
+                        logger.error(f"Item {self._path}: '{attr}' has not found dest_item '{on_dest}' = {on_eval}, result={dest_value}")
                 else:
                     dummy = eval(on_eval)
                     logger.debug(" - : '{}' finally evaluating {}, result={}".format(attr, on_eval, dest_value))
@@ -1844,18 +1854,16 @@ class Item():
         return self._hysteresis_items_to_trigger
 
 
-    def timer(self, time, value, auto=False, caller=None, source=None, compat=ATTRIB_COMPAT_DEFAULT):
+    def timer(self, time, value, auto=False, caller=None, source=None, compat=ATTRIB_COMPAT_LATEST):
         """
+        Starts a timer for this item
 
         :param time: Duration till the value of the item is set
         :param value: Value the item should be set to
-        :param auto: Optional: If False a single timer is started, else the duration/value information is set as autotimer
+        :param auto: Optional: If False a single timer is started, else the duration/value information is set as an autotimer
         :param caller: Optional: The caller of this function
         :param source: Optional: The source of the timer-request
-        :param compat: Optional: The attribute comatibility (only used if an autotimer is set)
-
-        :return: None
-
+        :param compat: Not used anymore, only defined for backward compatibility
         """
         time = self._cast_duration(time)
         value = self._castvalue_to_itemtype(value, compat)
@@ -1876,21 +1884,29 @@ class Item():
 
     def remove_timer(self):
         """
-        Remove a running timer
-
-        :return: None
+        Remove a running timer for this item from the scheduler
         """
         self._sh.scheduler.remove(self._itemname_prefix+self.id() + '-Timer')
         return
 
 
-    def autotimer(self, time=None, value=None, compat=ATTRIB_COMPAT_V12):
+    def autotimer(self, time=None, value=None, compat=ATTRIB_COMPAT_LATEST):
+        """
+        Defines or removes an autotimer for the item
+
+        If time and value are not given (or None), an existing autotimer is removed
+
+        :param time: Time until the value is set
+        :param value: Value to set the item to
+        :param compat: Not used anymore, only defined for backward compatibility
+        """
         if time is not None and value is not None:
             time = self._cast_duration(time)
             self._autotimer_time = time
             self._autotimer_value = value
         else:
             self._autotimer_time = None
+            self._autotimer_value = None
 
 
     def fade(self, dest, step=1, delta=1):
