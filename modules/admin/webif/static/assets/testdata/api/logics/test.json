@@ -2,6 +2,7 @@
   "cycle": 200,
   "last_run": "2019-03-04 16:33:48+0200",
   "filename": "test.py",
+  "group": ["test", "Group 2"],
   "name": "test",
   "watch_item": [],
   "next_exec": "2019-05-04 16:37:01+0200"

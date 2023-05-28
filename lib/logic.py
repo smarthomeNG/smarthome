@@ -83,6 +83,7 @@ class Logics():
     _config_type = None
     _logicname_prefix = 'logics.'     # prefix for scheduler names
 
+    _groups = {}
 
 
     def __init__(self, smarthome, userlogicconf, envlogicconf):
@@ -121,7 +122,10 @@ class Logics():
         _config.update(self._userlogics)
 
         for name in _config:
-            self._load_logic(name, _config)
+            if name == '_groups':
+                self._groups = _config[name]
+            else:
+                self._load_logic(name, _config)
 
 
     def _read_logics(self, filename, directory):
@@ -959,6 +963,7 @@ class Logic():
         self.sh = smarthome               # initialize to use 'logic.sh' in logics
         self.logger = logger              # initialize to use 'logic.logger' in logics
         self._name = name
+        self._logic_groupnames = []
         self.shtime = logics.shtime
         self._logics = logics             # access to the logics api
         self._enabled = True if 'enabled' not in attributes else Utils.to_bool(attributes['enabled'])
@@ -976,6 +981,11 @@ class Logic():
         if attributes != 'None':
             # Fills crontab, cycle and other parameters
             for attribute in attributes:
+                if attribute == 'logic_groupname':
+                    if isinstance(attributes[attribute], list):
+                        vars(self)['_logic_groupnames'] = attributes[attribute]
+                    else:
+                        vars(self)['_logic_groupnames'] = [attributes[attribute]]
                 if attribute == 'pathname':
                     vars(self)['_pathname'] = attributes[attribute]
                 elif attribute == 'filename':
@@ -1015,7 +1025,7 @@ class Logic():
         :param value: name of the logic
         :type value: str
 
-        :return: name of the item
+        :return: name of the logic
         :rtype: str
         """
         return self._name
@@ -1031,6 +1041,29 @@ class Logic():
         #    self._item._name = self._item._path
         #else:
         #    self._item._name = value
+        return
+
+    @property
+    def groupnames(self):
+        """
+        Property: groupname
+
+        :param value: groupname of the logic
+        :type value: str
+
+        :return: groupname of the logic
+        :rtype: str
+        """
+        return self._logic_groupnames
+
+    @groupnames.setter
+    def groupnames(self, value):
+
+        # self.logger.warning(f"'logic.groupnames' is a readonly property and the value '{value}' can not be assigned to it")
+        if not isinstance(value, (list, str)):
+            self.logger.warning(f"'logic.groupnames': Only a string or a list can be assigned to  - '{value}' can not be assigned to it")
+        else:
+            self._logic_groupnames = value
         return
 
     def log_readonly_warning(self, prop, value):

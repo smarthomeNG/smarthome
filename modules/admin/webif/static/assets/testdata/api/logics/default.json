@@ -10,9 +10,11 @@
       "logictype": "None",
       "filename": "testlogik_neu2.py",
       "userlogic": true,
+      "group": ["Group 4"],
       "name": "testlogik_neu2"
     }
   ],
+
   "logics":[
     {
       "enabled":true,
@@ -21,6 +23,7 @@
       "logictype":"Python",
       "crontab":"0 6 * 0,1,2,3,4",
       "cycle":"",
+      "group": ["Group 4"],
       "name":"AutomaticGateControlLogicDay",
       "visu_acl":"",
       "knx_listen":"1/2/3",
@@ -42,6 +45,7 @@
       "logictype":"Python",
       "crontab":"30 04 * *",
       "cycle":"",
+      "group": ["Group 1"],
       "name":"AutomaticTemperatureControlLogicDay",
       "visu_acl":"",
       "next_exec":"2019-01-16 04:30:00+0100",
@@ -59,6 +63,7 @@
       "logictype":"Python",
       "crontab":"0 19 * *",
       "cycle":"",
+      "group": [],
       "name":"AutomaticTemperatureControlLogicNight",
       "visu_acl":"",
       "next_exec":"2019-01-15 19:00:00+0100",
@@ -76,6 +81,7 @@
       "logictype":"Python",
       "crontab":"init",
       "cycle":"",
+      "group": ["Group 2"],
       "name":"CallListCSVLogic",
       "visu_acl":"false",
       "next_exec":"",
@@ -93,6 +99,7 @@
       "logictype":"Python",
       "crontab":"",
       "cycle":"",
+      "group": ["Group 2"],
       "name":"CommunicationLogic",
       "visu_acl":"",
       "next_exec":"",
@@ -127,6 +134,7 @@
       "logictype":"Python",
       "crontab":"1 0 * *",
       "cycle":"",
+      "group": ["Group 2"],
       "name":"DateSpecifc",
       "visu_acl":"",
       "next_exec":"2019-01-16 00:01:00+0100",
@@ -144,6 +152,7 @@
       "logictype":"Python",
       "crontab":"",
       "cycle":"",
+      "group": ["Group 4"],
       "name":"GateOpenLogic",
       "visu_acl":"",
       "next_exec":"",
@@ -842,6 +851,7 @@
       "logictype":"Python",
       "crontab":"",
       "cycle":"",
+      "group": ["test", "Group 2"],
       "name":"test",
       "visu_acl":"",
       "next_exec":"",
@@ -866,5 +876,20 @@
       "userlogic":true,
       "filename":"zeit.py"
     }
-  ]
+  ],
+
+  "groups": {
+    "raeume": {
+      "title": "Logiken, die sich auf bestimmte Räume beziehen"
+    },
+    "test": {
+      "title": "Test-Logiken",
+      "description": "In diesem Abschnitt sind alle Testlogiken zusammengefast."
+    },
+    "Group 2": {
+      "title": "Logiken der Gruppe 2",
+      "description": ""
+    }
+
+  }
 }
