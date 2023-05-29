@@ -1,8 +1,10 @@
 
 .. index:: Entwicklung
 
-.. role:: bluesup
 .. role:: redsup
+.. role:: bluesup
+.. role:: greensup
+.. role:: blacksup
 
 
 Entwicklung
