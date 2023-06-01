@@ -28,8 +28,8 @@ muss. Um dem Item einen neuen Wert zuzuweisen, wird dieser einfach als Argument 
    Anschließend ist **sh.path.item** eine normale Variable und kein Item Objekt mehr.
 
    In diesem Fall kann die mitgelieferte Logik **check_items.py** verwendet werden, um auf Vorhandensein
-   entsprechend beschädigter Items zu prüfen und diese wiederherzustellen. Alternativ werden die Items nach
-   einem Neustart von SmartHomeNG neu erstellt.
+   entsprechend beschädigter Items zu prüfen und diese wiederherzustellen. Alternativ werden die Items durch
+   einen Neustart von SmartHomeNG neu erstellt.
 
 
 Alternativ kann auch über die Item-Properties auf den Wert zugegriffen werden: **sh.path.item.propery.value**

@@ -1,6 +1,6 @@
 
-.. index:: Administrations GUI; Logiken
-.. index:: Logiken
+.. index:: Admin GUI; Logiken
+.. index:: Logiken; Admin GUI
 
 =======
 Logiken

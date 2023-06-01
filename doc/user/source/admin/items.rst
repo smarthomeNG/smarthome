@@ -1,5 +1,6 @@
 
-.. index:: Items
+.. index:: Admin GUI; Items
+.. index:: Items; Admin GUI
 
 =====
 Items

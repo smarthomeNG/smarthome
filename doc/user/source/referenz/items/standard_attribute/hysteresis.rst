@@ -1,11 +1,4 @@
 
-.. index:: Standard-Attribute; hysteresis_input
-.. index:: hysteresis_input
-.. index:: Standard-Attribute; hysteresis_upper_threshold
-.. index:: hysteresis_upper_threshold
-.. index:: Standard-Attribute; hysteresis_lower_threshold
-.. index:: hysteresis_lower_threshold
-
 
 .. index:: Items; Hysterese
 .. index:: Hysterese
@@ -21,6 +14,7 @@ Mit Hilfe der drei folgenden Attribute kann eine Hysterese konfiguriert werden.
 `hysteresis_input`
 ==================
 
+.. index:: Item Standardattribute; hysteresis_input
 .. index:: Standard-Attribute; hysteresis_input
 .. index:: hysteresis_input
 
@@ -59,6 +53,7 @@ anschließend weitere Werte unterhalb des unteren Schwellwertes annimmt, findet 
 `hysteresis_upper_threshold`
 ============================
 
+.. index:: Item Standardattribute; hysteresis_upper_threshold
 .. index:: Standard-Attribute; hysteresis_upper_threshold
 .. index:: hysteresis_upper_threshold
 
@@ -78,6 +73,7 @@ Werte auch **eval**-Ausdrücke enthalten. Diese Ausdrücke dürfen auch relative
 `hysteresis_lower_threshold`
 ============================
 
+.. index:: Item Standardattribute; hysteresis_lower_threshold
 .. index:: Standard-Attribute; hysteresis_lower_threshold
 .. index:: hysteresis_lower_threshold
 

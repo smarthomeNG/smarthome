@@ -14,9 +14,12 @@ Items: Tipps und Tricks :bluesup:`Update`
 
 
 .. index:: Zeitglied
+.. index:: Timer
+.. index:: Items; Zeitglied
 
-Erstellen eines Zeitgieds
-=========================
+
+Erstellen eines Zeitgiedes
+==========================
 
 Wenn man ein Item benötigt, welches seinen Wert erst nach einer zeitlichen Verzögerung ändert, kann man das mit
 Hilfe eines zweiten Items realisieren. Das erste Item (Eingang) wird dabei durch ein Ereignis (Plugins, eval, ...)
@@ -41,6 +44,9 @@ implementiert.
             type: num
 
 |
+
+
+.. index:: Items; Wert invertieren
 
 Invertieren eines Item Wertes
 =============================
