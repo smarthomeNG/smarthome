@@ -128,6 +128,7 @@ class LogicsController(RESTResource):
             mylogic['group'] = loaded_logic.groupnames
 
             mylogic['name'] = loaded_logic.name
+            mylogic['description'] = loaded_logic.description
             try:
                 mylogic['enabled'] = loaded_logic._enabled
             except Exception as e:
@@ -385,6 +386,12 @@ class LogicsController(RESTResource):
                     param = 'logic_groupname'
                     # change group(s) for the running logic too
                     self._sh.logics.return_logic(logicname).groupnames = value
+                    # if only one group is specified, make it a string
+                    if isinstance(value, list) and len(value) == 1:
+                        value = value[0]
+                if param == 'logic_description':
+                    # change descriptipn for the running logic too
+                    self._sh.logics.return_logic(logicname).description = value
                 if value == None:
                     sect.pop(param, None)
                 else:

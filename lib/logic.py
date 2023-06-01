@@ -963,8 +963,9 @@ class Logic():
     def __init__(self, smarthome, name, attributes, logics):
         self.sh = smarthome               # initialize to use 'logic.sh' in logics
         self.logger = logger              # initialize to use 'logic.logger' in logics
-        self._name = name
         self._logic_groupnames = []
+        self._name = name
+        self._logic_description = ''
         self.shtime = logics.shtime
         self._logics = logics             # access to the logics api
         self._enabled = True if 'enabled' not in attributes else Utils.to_bool(attributes['enabled'])
@@ -987,6 +988,8 @@ class Logic():
                         vars(self)['_logic_groupnames'] = attributes[attribute]
                     else:
                         vars(self)['_logic_groupnames'] = [attributes[attribute]]
+                if attribute == 'logic_description':
+                    vars(self)['_logic_description'] = attributes[attribute]
                 if attribute == 'pathname':
                     vars(self)['_pathname'] = attributes[attribute]
                 elif attribute == 'filename':
@@ -1065,6 +1068,29 @@ class Logic():
             self.logger.warning(f"'logic.groupnames': Only a string or a list can be assigned to  - '{value}' can not be assigned to it")
         else:
             self._logic_groupnames = value
+        return
+
+    @property
+    def description(self):
+        """
+        Property: groupname
+
+        :param value: description of the logic
+        :type value: str
+
+        :return: description of the logic
+        :rtype: str
+        """
+        return self._logic_description
+
+    @description.setter
+    def description(self, value):
+
+        # self.logger.warning(f"'logic.description' is a readonly property and the value '{value}' can not be assigned to it")
+        if not isinstance(value, str):
+            self.logger.warning(f"'logic.description': Only a string or a list can be assigned to  - '{value}' can not be assigned to it")
+        else:
+            self._logic_description = value
         return
 
     def log_readonly_warning(self, prop, value):

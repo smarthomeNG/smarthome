@@ -1,14 +1,14 @@
 
-.. index:: Virtual Environments
+.. index:: Virtual Python Environments
 .. index:: Virtuelle Umgebungen
 
 .. role:: bluesup
 .. role:: greensup
 .. role:: redsup
 
-====================================
-Virtuelle Environments :redsup:`Neu`
-====================================
+===========================================
+Virtuelle Python Environments :redsup:`Neu`
+===========================================
 
 Virtual Environments sind isolierte und unabhängige Umgebungen, die den Code und die Abhängigkeiten eines Projekts
 enthalten. Mit virtuellen Environments kann man parallel Umgebungen schaffen, in denen zum Beispiel Python Packages in
