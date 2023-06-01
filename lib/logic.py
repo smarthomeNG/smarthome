@@ -640,20 +640,21 @@ class Logics():
 
         if config is not None:
             for section in config:
-                logic_dict = {}
-                filename = config[section]['filename']
-                blocklyname = os.path.splitext(os.path.basename(filename))[0]+'.xml'
-                logic_type = 'None'
-                if os.path.isfile(os.path.join(self.get_logics_dir(), filename)):
-                    logic_type = 'Python'
-                    if os.path.isfile(os.path.join(self.get_logics_dir(), blocklyname)):
-                        logic_type = 'Blockly'
-                logger.debug("return_defined_logics: section '{}', logic_type '{}'".format(section, logic_type))
+                if section != '_groups':
+                    logic_dict = {}
+                    filename = config[section]['filename']
+                    blocklyname = os.path.splitext(os.path.basename(filename))[0]+'.xml'
+                    logic_type = 'None'
+                    if os.path.isfile(os.path.join(self.get_logics_dir(), filename)):
+                        logic_type = 'Python'
+                        if os.path.isfile(os.path.join(self.get_logics_dir(), blocklyname)):
+                            logic_type = 'Blockly'
+                    logger.debug(f"return_defined_logics: section '{section}', logic_type '{logic_type}'")
 
-                if withtype:
-                    logic_list[section] = logic_type
-                else:
-                    logic_list.append(section)
+                    if withtype:
+                        logic_list[section] = logic_type
+                    else:
+                        logic_list.append(section)
 
         return logic_list
 
@@ -880,7 +881,7 @@ class Logics():
         for name in conf:
             section = conf.get(name, None)
             fn = section.get('filename', None)
-            if fn.lower() == filename.lower():
+            if fn is not None and fn.lower() == filename.lower():
                 count += 1
         return count
 
@@ -906,7 +907,7 @@ class Logics():
 
         # Logik entladen
         if self.is_logic_loaded(name):
-            logger.warning("delete_logic: Logic '{}' unloaded".format(name))
+            logger.notice("delete_logic: Logic '{}' unloaded".format(name))
             self.unload_logic(name)
 
         # load /etc/logic.yaml
@@ -934,14 +935,14 @@ class Logics():
                     logger.warning("delete_logic: Blockly-Logic file '{}' deleted".format(blocklyname))
                 if os.path.isfile(filename):
                     os.remove(filename)
-                    logger.warning("delete_logic: Logic file '{}' deleted".format(filename))
+                    logger.notice("delete_logic: Logic file '{}' deleted".format(filename))
             else:
                 logger.warning("delete_logic: Skipped deletion of logic file '{}' because it is used by {} other logic(s)".format(filename, count-1))
 
         # delete logic configuration from ../etc/logic.yaml
         if conf.get(name, None) is not None:
             del conf[name]
-            logger.warning("delete_logic: Section '{}' from configuration deleted".format(name))
+            logger.notice("delete_logic: Section '{}' from configuration deleted".format(name))
 
         # save /etc/logic.yaml
         shyaml.yaml_save_roundtrip(conf_filename, conf, True)

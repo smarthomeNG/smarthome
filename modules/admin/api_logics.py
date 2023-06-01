@@ -310,7 +310,7 @@ class LogicsController(RESTResource):
     def set_logic_state(self, logicname, action, filename):
         """
 
-        :param logic_name:
+        :param logicname:
         :param action:
         :return:
 
@@ -341,9 +341,11 @@ class LogicsController(RESTResource):
                 self.logics.trigger_logic(logicname, by='Admin')
             return json.dumps({"result": "ok"})
         elif action == 'delete':
+            self.logger.notice(f"set_logic_state: action={action}")
             self.logics.delete_logic(logicname)
             return json.dumps({"result": "ok"})
         elif action == 'create':
+            self.logger.notice(f"set_logic_state: action={action} filename={filename}, logicname={logicname}")
             filename = filename.lower() + '.py'
 
             if logicname in self.logics.return_defined_logics():

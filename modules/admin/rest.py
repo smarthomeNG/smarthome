@@ -345,12 +345,12 @@ class RESTResource:
             try:
                 return m(resource, **params)
             except Exception as e:
-                if self.REST_dispatch_execute_warnlevel == 'WARNING':
-                    self.logger.warning("REST_dispatch_execute: {}: {}".format(resource, e))
-                else:
+                if self.module.rest_dispatch_force_exception:
                     self.logger.notice("The following exception is thrown, due to the configuration in etc/module.yaml:")
-                    self.logger.exception("REST_dispatch_execute: {}: {}".format(resource, e))
-                response = {'result': 'error', 'description': format(e)}
+                    self.logger.exception(f"REST_dispatch_execute: {resource}: {e.__class__.__name__} {e}")
+                else:
+                    self.logger.warning(f"REST_dispatch_execute: {resource}: {e.__class__.__name__} {e}")
+                response = {'result': 'error', 'description': f"{e.__class__.__name__} {e}"}
                 return json.dumps(response)
         return None
 
